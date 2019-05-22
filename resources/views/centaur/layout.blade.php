@@ -17,6 +17,17 @@
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
 		
+		
+		<!--Awesome icons -->
+		<link rel="stylesheet" href="{{ URL::asset('node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}"/>
+		
+		<!-- Datatables -->
+		<link rel="stylesheet" href="{{ URL::asset('node_modules/DataTables/datatables.min.css') }}"/>
+		
+		<!-- CSS -->
+		<link rel="stylesheet" href="{{ URL::asset('css/layout.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}"/>
+		
 		<!--Jquery -->
 		<script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
 		
@@ -33,32 +44,58 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">Duplico</a>
+                    <a class="navbar-brand" href="/">ICOM</a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li class="{{ Request::is('/dashboard') ? 'active' : '' }}"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                        @if (Sentinel::check() && Sentinel::inRole('administrator'))
-                            <li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ route('users.index') }}">Users</a></li>
-                            <li class="{{ Request::is('roles*') ? 'active' : '' }}"><a href="{{ route('roles.index') }}">Roles</a></li>
-                        @endif
-                    </ul>
+                <div class="collapse navbar-collapse links" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
                         @if (Sentinel::check())
                             <li><p class="navbar-text">{{ Sentinel::getUser()->email }}</p></li>
-                            <li><a href="{{ route('auth.logout') }}">Log Out</a></li>
+                            <li><a href="{{ route('auth.logout') }}">@lang('welcome.logout')</a></li>
                         @else
-                            <li><a href="{{ route('auth.login.form') }}">Login</a></li>
-                            <li><a href="{{ route('auth.register.form') }}">Register</a></li>
+                            <li><a href="{{ route('auth.login.form') }}">@lang('welcome.login')</a></li>
+                            <li><a href="{{ route('client_requests.create') }}">@lang('welcome.register')</a></li>
                         @endif
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
-        <div class="container">
-            @include('Centaur::notifications')
-            @yield('content')
+		
+        <div class="container layout col-xs-12 col-sm-12 col-md-12 col-lg-12">
+           @if (Sentinel::check())
+				<aside class="side-bar col-xs-12 col-sm-12 col-md-2 col-lg-2">
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="side-nav">
+								<li class="{{ Request::is('/dashboard') ? 'active' : '' }}"><a href="{{ route('dashboard') }}">@lang('welcome.home')</a></li>
+								@if (Sentinel::check())
+									@if(Sentinel::getUser()->hasAccess(['users.view']))
+										<li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ route('users.index') }}">@lang('basic.users')</a></li>
+									@endif
+									@if(Sentinel::getUser()->hasAccess(['roles.view']))
+										<li class="{{ Request::is('roles*') ? 'active' : '' }}"><a href="{{ route('roles.index') }}">@lang('basic.roles')</a></li>
+									@endif
+									@if(Sentinel::getUser()->hasAccess(['clients.view']))
+										<li class="{{ Request::is('clients*') ? 'active' : '' }} {!! !Sentinel::getUser()->hasAccess(['clients.view']) ? 'hide' : ''  !!}"><a href="{{ route('clients.index') }}">@lang('basic.clients')</a></li>
+									@endif
+									@if(Sentinel::getUser()->hasAccess(['modules.view']))
+										<li class="{{ Request::is('modules*') ? 'active' : '' }} {!! !Sentinel::getUser()->hasAccess(['modules.view']) ? 'hide' : ''  !!}"><a href="{{ route('modules.index') }}">@lang('basic.modules')</a></li>
+									@endif
+									@if(Sentinel::getUser()->hasAccess(['client_requests.view']))
+										<li class="{{ Request::is('client_requests*') ? 'active' : '' }} {!! !Sentinel::getUser()->hasAccess(['client_requests.view']) ? 'hide' : ''  !!}"><a href="{{ route('client_requests.index') }}">@lang('clients.requests')</a></li>
+									@endif
+								@endif
+							</ul>
+					</div><!-- /.navbar-collapse -->
+				</aside>
+			@endif
+			@if (Sentinel::check())
+				<main class="main col-xs-12 col-sm-12 col-md-10 col-lg-10">
+			@else
+				<main class="main col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			@endif
+				@include('Centaur::notifications')
+				@yield('content')
+			</main>
         </div>
 
         <!-- Latest compiled and minified Bootstrap JavaScript -->
@@ -67,6 +104,12 @@
 		<script src="{{ URL::asset('node_modules/popper.js/dist/umd/popper.min.js') }}"></script>
         <!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
         <script src="{{ asset('restfulizer.js') }}"></script>
+		
+		<!-- Datatables -->
+		<script type="text/javascript" src="{{ URL::asset('node_modules/DataTables/datatables.min.js') }}"></script>
+		
+		<!--Awesome icons -->
+		<script src="{{ URL::asset('node_modules/@fortawesome/fontawesome-free/js/all.min.js') }}"></script>
 		
 		@stack('script')
     </body>

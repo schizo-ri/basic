@@ -4,13 +4,15 @@
 
 @section('content')
     <div class="page-header">
-        <div class='btn-toolbar pull-right'>
-            <a class="btn btn-primary btn-lg" href="{{ route('users.create') }}">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                Create User
-            </a>
-        </div>
-        <h1>Users</h1>
+        @if(Sentinel::getUser()->hasAccess(['users.create']))
+			<div class='btn-toolbar pull-right'>
+				<a class="btn btn-primary btn-lg" href="{{ route('users.create') }}">
+				   <i class="fas fa-plus"></i>
+					@lang('basic.create_user')
+				</a>
+			</div>
+		@endif
+        <h1>@lang('basic.users')</h1>
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -36,14 +38,18 @@
                             </li>
                         </ul>
                         <div class="panel-footer">
-                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-default">
-                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                Edit
-                            </a>
-                            <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger" data-method="delete" data-token="{{ csrf_token() }}">
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                Delete
-                            </a>
+                            @if(Sentinel::getUser()->hasAccess(['users.update']))
+								<a href="{{ route('users.edit', $user->id) }}" class="btn-edit">
+									<i class="far fa-edit"></i>
+									Edit
+								</a>
+							@endif
+							@if(Sentinel::getUser()->hasAccess(['users.delete']))
+								<a href="{{ route('users.destroy', $user->id) }}" class="btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+								   <i class="far fa-trash-alt"></i>
+									Delete
+								</a>
+							@endif
                         </div>
                     </div>
                 </div>

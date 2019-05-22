@@ -41,6 +41,15 @@ Route::resource('users', 'UserController');
 // Roles
 Route::resource('roles', 'RoleController');
 
+// Clients
+Route::resource('clients', 'ClientController');
+
+// Client requests
+Route::resource('client_requests', 'ClientRequestController');
+
+// Modules
+Route::resource('modules', 'ModuleController');
+
 // Dashboard
 Route::get('dashboard', function () {
     return view('Centaur::dashboard');

@@ -42,9 +42,9 @@
                         <input class="form-control" placeholder="Confirm Password" name="password_confirmation" type="password" />
                         {!! ($errors->has('password_confirmation') ? $errors->first('password_confirmation', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
-                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
-                    <input name="_method" value="PUT" type="hidden">
-                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Update">
+                    {{ csrf_field() }}
+					{{ method_field('PUT') }}
+                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('basic.edit')}}">
                 </fieldset>
                 </form>
             </div>

@@ -70,6 +70,78 @@
                             roles.delete
                         </label>
                     </div>
+					<div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[clients.create]" value="1" {{ $role->hasAccess('clients.create') ? 'checked' : '' }}>
+                            clients.create
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[clients.update]" value="1" {{ $role->hasAccess('clients.update') ? 'checked' : '' }}>
+                            clients.update
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[clients.view]" value="1" {{ $role->hasAccess('clients.view') ? 'checked' : '' }}>
+                            clients.view
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[clients.delete]" value="1" {{ $role->hasAccess('clients.delete') ? 'checked' : '' }}>
+                            clients.delete
+                        </label>
+                    </div>
+					<div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[modules.create]" value="1" {{ $role->hasAccess('modules.create') ? 'checked' : '' }}>
+                            modules.create
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[modules.update]" value="1" {{ $role->hasAccess('modules.update') ? 'checked' : '' }}>
+                            modules.update
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[modules.view]" value="1" {{ $role->hasAccess('modules.view') ? 'checked' : '' }}>
+                            modules.view
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[modules.delete]" value="1" {{ $role->hasAccess('modules.delete') ? 'checked' : '' }}>
+                            modules.delete
+                        </label>
+                    </div>
+					<div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[client_requests.create]" value="1" {{ $role->hasAccess('client_requests.create') ? 'checked' : '' }}>
+                            client_requests.create
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[client_requests.update]" value="1" {{ $role->hasAccess('client_requests.update') ? 'checked' : '' }}>
+                            client_requests.update
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[client_requests.view]" value="1" {{ $role->hasAccess('client_requests.view') ? 'checked' : '' }}>
+                            client_requests.view
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[client_requests.delete]" value="1" {{ $role->hasAccess('client_requests.delete') ? 'checked' : '' }}>
+                            client_requests.delete
+                        </label>
+                    </div>
                     <input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input name="_method" value="PUT" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Update">

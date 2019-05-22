@@ -48,7 +48,7 @@
                         </label>
                     </div>
                     <input name="_token" value="{{ csrf_token() }}" type="hidden">
-                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Create">
+                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('basic.save')}}">
                 </fieldset>
                 </form>
             </div>

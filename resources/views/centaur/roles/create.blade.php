@@ -70,6 +70,78 @@
                             roles.delete
                         </label>
                     </div>
+					<div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[clients.create]" value="1">
+                            clients.create
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[clients.update]" value="1">
+                            clients.update
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[clients.view]" value="1">
+                            clients.view
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[clients.delete]" value="1">
+                            clients.delete
+                        </label>
+                    </div>
+					<div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[modules.create]" value="1">
+                            modules.create
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[modules.update]" value="1">
+                            modules.update
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[modules.view]" value="1">
+                            modules.view
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[modules.delete]" value="1">
+                            modules.delete
+                        </label>
+                    </div>
+					<div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[client_requests.create]" value="1">
+                            client_requests.create
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[client_requests.update]" value="1">
+                            client_requests.update
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[client_requests.view]" value="1">
+                            client_requests.view
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="permissions[client_requests.delete]" value="1">
+                            client_requests.delete
+                        </label>
+                    </div>
                     <input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Create">
                 </fieldset>

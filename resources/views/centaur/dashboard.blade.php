@@ -1,19 +1,16 @@
 @extends('Centaur::layout')
 
-@section('title', 'Dashboard')
+@section('title', __('welcome.dashboard'))
 
 @section('content')
 <div class="row">
     @if (Sentinel::check())
-    <div class="jumbotron">
-        <h1>Hello, {{ Sentinel::getUser()->email }}!</h1>
-        <p>You are now logged in.</p>
-    </div>
+    
     @else
         <div class="jumbotron">
-            <h1>Welcome, Guest!</h1>
-            <p>You must login to continue.</p>
-            <p><a class="btn btn-primary btn-lg" href="{{ route('auth.login.form') }}" role="button">Log In</a></p>
+            <h1>@lang('welcome.welcome')</h1>
+            <p>@lang('welcome.must_login')</p>
+            <p><a class="btn btn-primary btn-lg" href="{{ route('auth.login.form') }}" role="button">@lang('welcome.login')</a></p>
         </div>
     @endif
 

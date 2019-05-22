@@ -90,6 +90,7 @@ class UserController extends Controller
         if (!$activate) {
             $code = $result->activation->getCode();
             $email = $result->user->email;
+			
             Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code));
         }
 
@@ -153,10 +154,10 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validate the form data
+
+	   // Validate the form data
         $result = $this->validate($request, [
             'email' => 'required|email|max:255|unique:users,email,'.$id,
-            'password' => 'nullable|confirmed|min:6',
         ]);
 
         // Assemble the updated attributes
@@ -167,7 +168,10 @@ class UserController extends Controller
         ];
 
         // Do we need to update the password as well?
-        if ($request->has('password')) {
+        if ($request->has('password') && $request->get('password') != null) {
+			$result = $this->validate($request, [
+				'password' => 'nullable|confirmed|min:8',
+			]);
             $attributes['password'] = $request->get('password');
         }
 
