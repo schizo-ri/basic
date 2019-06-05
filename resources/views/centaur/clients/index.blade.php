@@ -7,7 +7,7 @@
         <div class='btn-toolbar pull-right'>
 			@if(Sentinel::getUser()->hasAccess(['clients.create']))
 			   <a class="btn btn-primary btn-lg" href="{{ route('clients.create') }}">
-					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+					<i class="fas fa-plus"></i>
 					@lang('clients.add_client')
 				</a>
 			@endif

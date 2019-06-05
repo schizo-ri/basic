@@ -13,7 +13,6 @@ return [
 	'f_name' 		=> 'Ime',
 	'l_name' 		=> 'Prezime',
 	'requests' 		=> 'Zahtjevi klijenata',
-	
 ];
 
 ?>
