@@ -44,7 +44,10 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('Centaur::roles.create');
+        $tables = array('users','roles','companies','departments','works','employees','department_roles','ads','ad_categories','educations','education_themes','education_articles','events','documents','posts');
+		$methodes = array('create','update','view','delete');
+		
+		return view('Centaur::roles.create',['tables' => $tables, 'methodes' => $methodes]);
     }
 
     /**
@@ -110,10 +113,12 @@ class RoleController extends Controller
         // Fetch the role object
         // $id = $this->decode($hash);
         $role = $this->roleRepository->findById($id);
-
+		
+		$tables = array('users','roles','companies','departments','works','employees','department_roles','ads','ad_categories','educations','education_themes','education_articles','events','documents','posts');
+		$methodes = array('create','update','view','delete');
+		
         if ($role) {
-            return view('Centaur::roles.edit')
-                ->with('role', $role);
+            return view('Centaur::roles.edit',['role' => $role,'tables' => $tables, 'methodes' => $methodes]);
         }
 
         session()->flash('error', 'Invalid role.');

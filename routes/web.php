@@ -41,7 +41,50 @@ Route::resource('users', 'UserController');
 // Roles
 Route::resource('roles', 'RoleController');
 
+// Company
+Route::resource('companies', 'CompanyController');
+
+// Department
+Route::resource('departments', 'DepartmentController');
+
+// Department_role
+Route::resource('department_roles', 'DepartmentRoleController');
+
+// Work
+Route::resource('works', 'WorkController');
+
+// Employee
+Route::resource('employees', 'EmployeeController');
+
+// Education
+Route::resource('education', 'EducationController');
+
+// Education theme
+Route::resource('education_themes', 'EducationThemeController');
+
+// Education article
+Route::resource('education_articles', 'EducationArticleController');
+
+// Document
+Route::resource('documents', 'DocumentController');
+
+// AdCategory
+Route::resource('ad_categories', 'AdCategoryController');
+
+// Ad
+Route::resource('ads', 'AdController');
+
+// Post
+Route::resource('posts', 'PostController');
+Route::post('/comment/store', ['as' => 'comment.store', 'uses' => 'PostController@storeComment']);
+
+// Event
+Route::resource('events', 'EventController');
+
 // Dashboard
 Route::get('dashboard', function () {
     return view('Centaur::dashboard');
 })->name('dashboard');
+
+// Oglasnik
+Route::get('oglasnik', ['as' => 'oglasnik', 'uses' => 'AdController@oglasnik']);

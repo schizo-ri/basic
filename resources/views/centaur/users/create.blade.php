@@ -13,15 +13,15 @@
                 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('users.store') }}">
                 <fieldset>
                     <div class="form-group {{ ($errors->has('first_name')) ? 'has-error' : '' }}">
-                        <input class="form-control" placeholder="First Name" name="first_name" type="text" value="{{ old('first_name') }}" />
+                        <input class="form-control" placeholder="First Name" name="first_name" type="text" value="{{ old('first_name') }}" required />
                         {!! ($errors->has('first_name') ? $errors->first('first_name', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
                     <div class="form-group {{ ($errors->has('last_name')) ? 'has-error' : '' }}">
-                        <input class="form-control" placeholder="Last Name" name="last_name" type="text" value="{{ old('last_name') }}" />
+                        <input class="form-control" placeholder="Last Name" name="last_name" type="text" value="{{ old('last_name') }}" required />
                         {!! ($errors->has('last_name') ? $errors->first('last_name', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
                     <div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
-                        <input class="form-control" placeholder="E-mail" name="email" type="text" value="{{ old('email') }}">
+                        <input class="form-control" placeholder="E-mail" name="email" type="text" value="{{ old('email') }}" required >
                         {!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
                     <h5>Roles</h5>
@@ -35,7 +35,7 @@
                     @endforeach
                     <hr />
                     <div class="form-group  {{ ($errors->has('password')) ? 'has-error' : '' }}">
-                        <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                        <input class="form-control" placeholder="Password" name="password" type="password" value="" required>
                         {!! ($errors->has('password') ? $errors->first('password', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
                     <div class="form-group {{ ($errors->has('password_confirmation')) ? 'has-error' : '' }}">

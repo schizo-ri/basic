@@ -7,6 +7,9 @@ use Sentinel;
 use App\Http\Requests;
 use Centaur\AuthManager;
 use Illuminate\Http\Request;
+use App\Models\Employee;
+use App\Models\Work;
+use App\Models\DepartmentRole;
 use Centaur\Mail\CentaurWelcomeEmail;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 
@@ -39,9 +42,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->userRepository->createModel()->with('roles')->paginate(15);
+        $users = $this->userRepository->createModel()->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->get();
+		$employees = Employee::get();
+		$departmentRoles = DepartmentRole::get();
+		$works = Work::get();
 
-        return view('Centaur::users.index', ['users' => $users]);
+        return view('Centaur::users.index', ['users' => $users, 'employees' => $employees, 'works' => $works, 'departmentRoles' => $departmentRoles]);
     }
 
     /**
@@ -156,7 +162,6 @@ class UserController extends Controller
         // Validate the form data
         $result = $this->validate($request, [
             'email' => 'required|email|max:255|unique:users,email,'.$id,
-            'password' => 'nullable|confirmed|min:6',
         ]);
 
         // Assemble the updated attributes
@@ -167,8 +172,11 @@ class UserController extends Controller
         ];
 
         // Do we need to update the password as well?
-        if ($request->has('password')) {
-            $attributes['password'] = $request->get('password');
+        if ($request->has('password')  && $request->get('password') != null) {
+            $result = $this->validate($request, [
+				'password' => 'nullable|confirmed|min:8',
+			]);
+			$attributes['password'] = $request->get('password');
         }
 
         // Fetch the user object

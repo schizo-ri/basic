@@ -21,11 +21,11 @@
         <div class="flex-center position-ref full-height">
 			<div class="top-right links">
 				@auth
-					<a href="{{ url('/home') }}">Home</a>
+					<a href="{{ url('/home') }}">@lang('welcome.home')</a>
 				@else
-					<a href="{{ route('auth.login.form') }}">Login</a>
-					@if (Route::has('register'))
-						<a href="{{ route('auth.register.form') }}">Register</a>
+					<a href="{{ route('auth.login.form') }}">@lang('welcome.login')</a>
+					@if (Route::has('auth.register.form'))
+						<a href="{{ route('auth.register.form') }}">@lang('welcome.register')</a>
 					@endif
                 @endauth
 			</div>

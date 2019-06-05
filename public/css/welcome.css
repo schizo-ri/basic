@@ -5,6 +5,7 @@ html, body {
 	font-weight: 200;
 	height: 100vh;
 	margin: 0;
+	overflow: hidden;
 }
 
 .full-height {
@@ -47,4 +48,8 @@ html, body {
 
 .m-b-md {
 	margin-bottom: 30px;
+}
+
+.navbar {
+	z-index:1;
 }
