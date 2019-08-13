@@ -39,7 +39,7 @@
 					</div>
 					{{ csrf_field() }}
 					{{ method_field('PUT') }}
-					<input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1">
+					<input class="btn-submit" type="submit" value="{{ __('basic.edit')}}" id="stil1">
 				</form>
             </div>
         </div>

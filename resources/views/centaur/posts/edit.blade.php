@@ -10,7 +10,7 @@
                 <h3 class="panel-title">@lang('basic.edit_post')</h3>
             </div>
             <div class="panel-body">
-                <form accept-charset="UTF-8" role="form" method="post" action="{{ route('posts.update',$post->id) }}" enctype="multipart/form-data">
+                <form accept-charset="UTF-8" role="form" method="post" action="{{ route('posts.update',$post->id) }}">
 					<fieldset>
 						<div class="form-group {{ ($errors->has('to_employee_id')) ? 'has-error' : '' }}">
 							<label>@lang('basic.to')</label>
@@ -21,11 +21,11 @@
 							</select>
 							{!! ($errors->has('to_employee_id') ? $errors->first('to_employee_id', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
-						<div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}" >
+						<!--<div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}" >
 							<label>@lang('basic.title')</label>
-							<input class="form-control" placeholder="{{ __('basic.title')}}" name="title" type="text" value="{{ $post->title }}" required />
+							<input class="form-control" placeholder="{{ __('basic.title')}}" name="title" type="text" value="{{ $post->title }}"  />
 							{!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
-						</div>
+						</div>-->
 						<div class="form-group {{ ($errors->has('content')) ? 'has-error' : '' }}">
 							<label>@lang('basic.content')</label>
 							<textarea name="content" type="text" class="form-control" rows="5" >{{ $post->content }}</textarea>
@@ -33,7 +33,7 @@
 						</div>
 						{{ csrf_field() }}
 						{{ method_field('PUT') }}
-						<input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('basic.save')}}">
+						<input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('basic.edit')}}">
 					</fieldset>
                 </form>
             </div>

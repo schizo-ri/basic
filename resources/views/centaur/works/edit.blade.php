@@ -35,6 +35,7 @@
 						<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 							<label>@lang('basic.director')</label>
 							<select class="form-control" name="employee_id">
+								<option value="" disabled selected ></option>
 								@foreach($employees as $employee)
 									<option value="{{ $employee->id}}" {!! $work->employee_id == $employee->id ? 'selected' : '' !!} >{{ $employee->first_name . ' ' .  $employee->last_name }}</option>
 								@endforeach

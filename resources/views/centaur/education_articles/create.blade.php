@@ -10,7 +10,7 @@
                 <h3 class="panel-title">@lang('basic.add_educationArticle')</h3>
             </div>
             <div class="panel-body">
-                <form accept-charset="UTF-8" role="form" method="post" action="{{ route('education_articles.store') }}">
+                <form accept-charset="UTF-8" role="form" method="post" action="{{ route('education_articles.store') }}" enctype="multipart/form-data">
 					<div class="form-group {{ ($errors->has('theme_id'))  ? 'has-error' : '' }}">
 						<label>@lang('basic.educationTheme')</label>
 						<select  class="form-control"  name="theme_id" value="{{ old('theme_id') }}"  >
@@ -37,6 +37,7 @@
 						<input type="radio" class="" name="status" value="aktivan" />@lang('basic.active')
 						{!! ($errors->has('status') ? $errors->first('status', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
+					
 					{{ csrf_field() }}
 					<input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1">
 				</form>

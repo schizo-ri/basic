@@ -1,0 +1,10 @@
+	$('.efc_show').click(function(){
+        $('.efc').css('visibility','initial');
+        $('.efc_show').hide();
+        $('.efc_hide').show();
+    });
+    $('.efc_hide').click(function(){
+        $('.efc').css('visibility','hidden');
+        $('.efc_show').show();
+        $('.efc_hide').hide();
+    });

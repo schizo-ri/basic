@@ -1,0 +1,125 @@
+.index_main.main_absence {
+    box-shadow: none;
+    border: none;
+    background: inherit;
+}
+.index_main header.header_absence {
+    background-color: #071e57;
+    line-height: 50px;
+    color: #ffffff;
+    border: none;
+}
+
+.curve_arrow_left {
+    background-image: url('../icons/curve_arrow_left.png');
+    width: 22px;
+    height: 14px;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+
+.main_absence main >header {
+    background: #051847;
+    border: 1px solid #051847;
+    border-radius: 3px;
+    height: auto;
+    padding: 20px;
+    clear: left;
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 20px;
+}
+main.all_absences >section {
+    height: calc(100% - 180px);
+    background: white;
+}
+
+.main_header .info_abs:first-child {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.main_header .info_abs img {
+    width: 50px;
+    height: 50px;
+}
+
+.main_header .info_abs .empl_name {
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: #FFFFFF;
+    padding-top: 20px;
+}
+
+.main_header .info_abs .empl_work {
+    font-weight: 400;
+    font-size: 0.8125rem;
+    color: #FFFFFF;
+}
+
+.main_header .info_abs:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.2); 
+}
+
+.info_abs .title {
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 0.625rem;
+    color: #FFFFFF;
+    display: block;
+    margin-bottom: 25px;
+}
+
+.info_abs>p, .info_abs>p>.go_og, .info_abs>p>.go_pg, .info_abs>p>.bol_og, .info_abs>p>.bol_pg, .info_abs>p>.bol_om {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #FFFFFF;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.info_abs>p>span {
+    font-weight: 600;
+    font-size: 10px;
+    text-align: center;
+    color: #FFFFFF;
+    margin-top: 15px;
+    display: block;
+}
+
+.info_abs .title .year_select {
+    float: right;
+    font-weight: 400;
+    font-size: 0.625rem;
+    text-align: center;
+    color: #53689B;
+    background: inherit;
+    border: none;
+    outline-color: #051847;
+    padding: 0 10px;
+}
+
+.info_abs .title .year_select option {
+    background: #051847;
+    border: none;
+    outline-color: #051847;
+}
+
+.info_abs>p>span.go_og {
+    display: block;
+}
+.info_abs>p>span.go_pg, .info_abs>p>span.bol_pg {
+    display: none;
+}
+
+.index_main main.all_absences {
+    overflow: hidden;
+    box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+
+}

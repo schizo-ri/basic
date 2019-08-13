@@ -5,6 +5,8 @@
 @section('content')
 <div class="row">
 	<div class="page-header">
+		<a href="{{ route('departments.index') }}" class="load_page" >@lang('basic.departments')</a> / 
+		<a href="{{ route('department_roles.index') }}" class="load_page" >@lang('basic.department_roles')</a>
         <div class='btn-toolbar pull-right'>
 			@if(Sentinel::getUser()->hasAccess(['departments.create']) || in_array('departments.create', $permission_dep))
 			    <a class="btn btn-primary btn-lg" href="{{ route('departments.create') }}">
@@ -27,8 +29,7 @@
 							<th>@lang('basic.level')</th>
 							<th>@lang('basic.roof')</th>
 							<th>e-mail</th>
-							<th>@lang('basic.options')</th>
-						</tr>
+							<th class="not-export-column">@lang('basic.options')</th>
 					</thead>
 					<tbody>
 						@foreach ($departments as $department)
@@ -78,12 +79,5 @@
 		</div>
 	</div>
 </div>
-<!-- Datatables -->
-<script type="text/javascript" src="{{ URL::asset('dataTables/datatables.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
 
-<script src="{{ URL::asset('js/datatables.js') }}"></script>
 @stop

@@ -10,7 +10,7 @@
                 <h3 class="panel-title">@lang('basic.add_ad')</h3>
             </div>
             <div class="panel-body">
-                <form accept-charset="UTF-8" role="form" method="post" action="{{ route('ads.store') }}">
+                <form accept-charset="UTF-8" role="form" method="post" action="{{ route('ads.store') }}" enctype="multipart/form-data" >
 					<div class="form-group {{ ($errors->has('category_id'))  ? 'has-error' : '' }}">
 						<label>@lang('basic.ad_category')</label>
 						<select  class="form-control" name="category_id" value="{{ old('category_id') }}" >
@@ -28,8 +28,12 @@
 					</div>
 					<div class="form-group {{ ($errors->has('description'))  ? 'has-error' : '' }}">
 						<label>@lang('basic.description'):</label>
-						<textarea id="summernote" name="description"  ></textarea>
+						<textarea name="description" rows="5"></textarea>
 						{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
+					</div>
+					<div class="form-group">
+						<label>Dodaj sliku</label>
+						<input class="" type="file" name="fileToUpload">
 					</div>
 					<div class="form-group {{ ($errors->has('price'))  ? 'has-error' : '' }}">
 						<label>@lang('basic.price')</label>
@@ -43,12 +47,4 @@
         </div>
     </div>
 </div>
-<!-- Summernote -->
-<link href="{{ URL::asset('node_modules/summernote/summernote-lite.css') }}" rel="stylesheet">
-<script src="{{ URL::asset('node_modules/summernote/summernote-lite.min.js') }}" ></script>
-<script>
-$(document).ready(function() {
-  $('#summernote').summernote();
-});
-</script>
 @stop

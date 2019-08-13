@@ -26,7 +26,7 @@
 							<th>@lang('basic.b_day')</th>
 							<th>@lang('basic.work')</th>
 							<th>@lang('basic.reg_date')</th>
-							<th>Options</th>
+							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -58,12 +58,4 @@
 		</div>
 	</div>
 </div>
-<!-- Datatables -->
-<script type="text/javascript" src="{{ URL::asset('dataTables/datatables.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
-
-<script src="{{ URL::asset('js/datatables.js') }}"></script>
 @stop

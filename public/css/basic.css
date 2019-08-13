@@ -1,0 +1,133 @@
+
+.col-12 {
+    width: 100%
+}
+.col-11 {
+    width: 91.66666667%
+}
+.col-10 {
+    width: 83.33333333%
+}
+.col-9 {
+    width: 75%
+}
+.col-8 {
+    width: 66.66666667%
+}
+.col-7 {
+    width: 58.33333333%
+}
+.col-6 {
+    width: 50%
+}
+.col-5 {
+    width: 41.66666667%
+}
+.col-4 {
+    width: 33.33333333%
+}
+.col-3 {
+    width: 25%
+}
+.col-2 {
+    width: 16.66666667%
+}
+.col-1 {
+    width: 8.333333333%
+}
+
+.align_c {
+    text-align: center;
+}
+
+.padd_0 {
+    padding: 0;
+}
+
+.padd_tb_5 {
+    padding: 5px 0;
+}
+
+.padd_tb_17 {
+    padding: 17px 0;
+}
+
+.padd_t_15 {
+    padding-top: 15px;
+}
+
+.padd_r_30 {
+    padding-right: 30px;
+}
+
+.float_right {
+    float: right;
+}
+
+.float_left {
+    float: left;
+}
+
+.radius50 {
+    border-radius: 50%;
+}
+
+.height100 {
+    height: 100%;
+}
+
+.height_auto {
+    height: auto;
+}
+
+.margin_0 {
+    margin:0;
+}
+
+.margin_b_15 {
+    margin-bottom:15px;
+}
+
+.margin_b_30 {
+    margin-bottom:30px;
+}
+
+.position_rel {
+    position: relative;
+}
+
+.clear_r {
+    clear: right;
+}
+
+.clear_l {
+    clear: left;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #C9C9C9;
+    font-size: 0.6875rem;
+    opacity: 1; /* Firefox */
+  }
+  
+  :-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #C9C9C9;
+    font-size: 0.6875rem;
+  }
+  
+  ::-ms-input-placeholder { /* Microsoft Edge */
+    color: #C9C9C9;
+    font-size: 0.6875rem;
+  }
+
+  .overflow_hidd {
+      overflow: hidden;
+  }
+
+  .overflow_auto {
+      overflow: auto;
+  }
+
+  .bg_white {
+      background-color: white;
+  }

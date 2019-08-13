@@ -139,6 +139,28 @@
 							</select>
 							{!! ($errors->has('work_id') ? $errors->first('work_id', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
+						<div class="form-group {{ ($errors->has('superior_id'))  ? 'has-error' : '' }}">
+							<span><b>Nadređeni djelatnik:</b></span>
+							<select class="form-control" name="superior_id" id="sel1" >
+								<option selected value="0"></option>
+								@foreach($employees as $djelatnik)
+									<option name="superior_id" value="{{ $djelatnik->id }}" {!! $employee->superior_id == $djelatnik->id ? 'selected' : '' !!} >{{ $djelatnik->user['last_name'] . ' '. $djelatnik->user['first_name'] }}</option>
+								@endforeach	
+							</select>
+							{!! ($errors->has('superior_id') ? $errors->first('superior_id', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
+						<div class="form-group {{ ($errors->has('effective_cost'))  ? 'has-error' : '' }}">
+							<span><b>Efektivna cijena sata:</b></span>
+							<input class="form-control" name="effective_cost" type="text"  value="{{ $employee->effective_cost }}" pattern="[-+]?[0-9]*[.,]?[0-9]+"
+							title="This must be a number with up to 2 decimal places" />
+							{!! ($errors->has('effective_cost') ? $errors->first('effective_cost', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
+						<div class="form-group {{ ($errors->has('brutto'))  ? 'has-error' : '' }}">
+							<span><b>Brutto godišnja plaća:</b></span>
+							<input class="form-control" name="brutto" type="text"  value="{{ $employee->brutto }}" pattern="[-+]?[0-9]*[.,]?[0-9]+"
+							title="This must be a number with up to 2 decimal places" />
+							{!! ($errors->has('brutto') ? $errors->first('brutto', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
 						<div class="form-group {{ ($errors->has('reg_date')) ? 'has-error' : '' }}">
 							<label>@lang('basic.reg_date')</label>
 							<input class="form-control" placeholder="{{ __('basic.reg_date')}}" name="reg_date" type="date" value="{{ $employee->reg_date }}" required />
@@ -151,9 +173,9 @@
 						</div>
 						<div class="form-group {{ ($errors->has('years_service'))  ? 'has-error' : '' }}">
 							<label>Staž kod prošlog poslodavca (godina-mjeseci-dana):</label><br>
-							<input name="stazY" type="text" class="staz" value="{{ $stazY }}" maxlength="2">-
-							<input name="stazM" type="text" class="staz" value="{{ $stazM }}" maxlength="2">-
-							<input name="stazD" type="text" class="staz" value="{{ $stazD }}" maxlength="2">
+							<input name="stazY" type="text" class="staz" value="{{ $stazY }}" maxlength="2" required>-
+							<input name="stazM" type="text" class="staz" value="{{ $stazM }}" maxlength="2" required>-
+							<input name="stazD" type="text" class="staz" value="{{ $stazD }}" maxlength="2" required>
 							{!! ($errors->has('years_service') ? $errors->first('years_service', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<div class="form-group {{ ($errors->has('termination_service'))  ? 'has-error' : '' }}">
@@ -170,7 +192,7 @@
 						</div>
 						{{ csrf_field() }}
 						{{ method_field('PUT') }}
-						<input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('basic.save')}}">
+						<input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('basic.edit')}}">
 					</fieldset>
                 </form>
             </div>

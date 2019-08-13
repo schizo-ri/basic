@@ -8,6 +8,7 @@ use App\Http\Requests\ThemeRequest;
 use App\Http\Requests\EducationThemeRequest;
 use App\Models\EducationTheme;
 use App\Models\Education;
+use Sentinel;
 
 class EducationThemeController extends Controller
 {
@@ -28,15 +29,22 @@ class EducationThemeController extends Controller
      */
     public function index(Request $request)
     {
+		$empl = Sentinel::getUser()->employee;
+        $permission_dep = array();
+        
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
+		
 		if($request->education_id){
 			$education = Education::where('id', $request->education_id)->first();
 			$educationThemes = EducationTheme::where('education_id',$request->education_id )->get();
 			
-			return view('Centaur::education_themes.index', ['education' => $education, 'educationThemes' => $educationThemes]);
+			return view('Centaur::education_themes.index', ['education' => $education, 'educationThemes' => $educationThemes, 'permission_dep' => $permission_dep]);
 		} else {
 			$educationThemes = EducationTheme::get();
 			
-			return view('Centaur::education_themes.index', ['educationThemes' => $educationThemes]);
+			return view('Centaur::education_themes.index', ['educationThemes' => $educationThemes, 'permission_dep' => $permission_dep]);
 		}
 		
 		

@@ -1,0 +1,421 @@
+/* ANKETE CSS */
+form {
+	text-align:left;
+}
+
+.ev_empl {
+	display:block;
+	width:25%;
+	float:left;
+	text-align:left;
+}
+
+.empl {
+	clear:left;
+	display:block;
+	text-align:left;
+}
+
+.clearfix {
+  overflow: auto;
+}
+
+.btn_align {
+	width:20%;
+	margin: 20px 0;
+	background-color: inherit;
+	padding:5px;
+	color:green;
+	font-size: 20px;
+	font-weight:bold;
+	border-radius: 5px;
+	display:block;
+	float:right;
+}
+.btn_align:hover {
+	background-color: #eee;
+}
+
+.fa-edit {
+	float:right;
+	margin: 0;
+}
+
+.box{
+	padding: 20px 0;
+	text-align: left;
+	clear: left;
+	position: relative;
+	position: relative;
+    width: fit-content;
+}
+
+.datum1 {
+	width: auto;
+	float: left;
+	text-align: left;
+}
+
+.fa-calendar-alt {
+
+}
+
+.block {
+	display:block;
+}
+
+#table_id #myTable tr td {
+	border-bottom: 1px solid #ccc;
+}
+
+.date-own {
+	padding: 5px;
+	border-radius:5px;
+	margin-left:10px;
+}
+
+.ev_employee_id, .tip_ankete {
+	max-width: 300px;
+}
+.ankete {
+	text-align:left;
+	margin-top: 20px;
+	display: flex;
+}
+
+h2 {
+	text-align:center;
+}
+
+h3 {
+	margin: 30px 20px;
+}
+
+h4 {
+	margin:20px;
+}
+
+dl {
+	margin-left:40px;
+}
+
+.dl_list {
+	margin: 20px 0;
+	margin-bottom:0;
+	float:right;
+	font-size:12px;
+}
+
+.dl_list dt{
+	display:inline;
+}
+
+.dl_list dd {
+	display:inline;
+	padding-left:20px;
+}
+
+input[type="radio"]{
+	display: inline  !important;
+}
+
+.kategorije {
+	padding:0 20px;
+	margin: 30px 0;
+}
+
+.tabcontent {
+	padding:30px !important;
+}
+
+.ocjene {
+	text-align:center;
+}
+
+.ocjene input { 
+	margin-left: 15px;
+    margin-right: 4px;
+}
+
+.zaposlenik {
+	border-bottom: 1px solid #ccc;
+}
+.aktivna label {
+	display:block;
+}
+
+.ocj {
+	position:relative;
+}
+
+.ocj input[type="radio"] { 
+	margin-left: 20px;
+    margin-right: 4px;
+
+}
+
+.aktivna input:nth-child(3) {
+	margin-left: 20px !important;
+	margin-right: 10px !important;
+	display:inline-block;
+}
+
+.aktivna input:nth-child(2){
+	margin-right: 10px !important;
+}
+
+.anketa {
+	padding:20px 30px;
+}
+
+.anketa form .ime {
+	/*border-bottom: 1px solid #ccc;*/
+}
+
+.anketa form .ime select{
+	display:inline-block;
+	width: 50%;
+}
+
+.anketa form .pitanja {
+	margin-top: 30px;
+}
+.anketa form .pitanja>details{
+	border-bottom: 1px solid #ccc;
+}
+
+.anketa form .pitanja>details summary {
+	padding:20px;
+	font-size:16px;
+	font-weight:bold;
+	margin-left: 0;
+}
+
+.anketa form .pitanje {
+	padding-bottom:10px;
+	position:relative;
+	margin-left: 30px;
+}
+
+.pitanje:hover {
+	background-color: #f2f2f2;
+}
+
+.anketa form .pitanje .ocj {
+	position:absolute;
+	top:0;
+	right:0;
+}
+
+details {
+	position:relative;
+	padding:20px;
+	font-size:16px;
+	margin-left: 30px;
+}
+
+details .ocj {
+	position:absolute;
+	top:20px;
+	right:20px;
+}
+
+.anketa form .pitanje .opis {
+	opacity: 0.5;
+	padding-top: 5px;
+}
+
+.anketa form #stil1 {
+	width: 200px;
+	position: absolute;
+	left: 50%;
+	margin: 20px 0;
+	transform: translateX(-50%);
+}
+
+th {
+	text-align: center !important;
+	font-size: 12px;
+}
+
+#myTable1 tr:hover{
+	background-color:#f2f2f2;
+}
+
+#myTable1 tr td:not(:first-child) {
+	width: 10%;
+	text-align: center !important;
+}
+
+#table_id1 {
+	position: relative;
+	margin: 20px 0;
+}
+
+#table_id1 thead tr {
+	position: sticky;
+	top: 0;
+	padding: 5px;
+}
+
+@media screen and (max-width: 1100px){
+	
+	.dl_list {
+		float:none;
+		width:100%;
+	}
+}
+@media screen and (max-width: 1000px){
+	details .ocj {
+		display:block;
+		width:100%;
+		position:static;
+		margin: 10px 0;
+		}
+}
+
+@media only screen and (max-width: 600px){
+	.anketa form .pitanje .ocj, .anketa form .pitanje>input  {
+		display:block;
+		width:100%;
+		position: relative;
+		padding:10px 0;
+	}
+	
+	.anketa {
+		padding:0 !important;
+	}
+	details {
+		padding:0 !important;
+		margin:0 !important;
+		font-size: 12px;
+	}
+	summary {
+		font-size: 16px !important;
+	}
+	
+	.anketa form .pitanja {
+		margin-top: 10px;
+	}
+	
+	#anketa_2, #anketa_1 {
+		padding: 0 20px;
+	} 
+	.evaluation {
+	width:100% !important;
+	}
+	table.tbl_ocjene {
+		font-size:12px !important;
+	}
+	.gumb_natrag {
+		display:none !important;
+	}
+	.anketa form .ime select{
+	display:block;
+	width: 100%;
+	margin-top:20px;
+}
+}
+
+.display_none {
+	display:none;
+}
+
+.visible_hidden {
+	visibility: hidden;
+}
+
+summary {
+    font-size: 20px;
+}
+
+#anketa_2, #anketa_1 {
+	padding: 20px;
+} 
+
+.evaluation {
+	width:100%;
+	padding:20px;
+	position:relative;
+}
+
+.tbl_ocjene {
+	width:100%;
+
+}
+
+.tbl_ocjene tr td {
+	padding: 5px 0;
+}
+.tbl_ocjene tr td:first-child {
+	width:50%;
+}
+
+.tbl_ocjene tr td:not(:first-child){
+	text-align: center;
+}
+
+.tbl_ocjene thead tr th{
+	border-bottom: 1px solid #ccc;
+	padding: 10px 0 !important;
+}
+
+.tbl_ocjene tbody  tr td:not(.question_description ){
+	border-bottom: 1px solid #ccc;
+	
+	
+}
+
+.tbl_ocjene tfoot  tr td{
+	padding: 20px 0 !important;
+	border-top: 1px solid #ccc;
+	font-weight:bold
+}
+
+.target, .comment, .rating {
+	border-radius:5px;
+	padding: 2px 0;
+}
+
+.target {
+	width:35%;
+}
+.rating  {
+	min-width: 50px;
+}
+
+.comment {
+	width:100%;
+	display:block;
+	background-color: cornsilk;
+}
+
+.comment_upravi {
+	width:100%;
+	display:block;
+	background-color: #f2dede;
+}
+
+.evaluation form {
+	position:relative;
+}
+.evaluation input#stil1 {
+	min-width: 100px;
+	max-width: 200px;
+}
+
+.question_description {
+	padding-left:20px;
+}
+
+.description {
+	padding: 5px 40px !important;
+	color: #337ab7;
+}
+.group {
+	box-shadow: 5px 5px 5px #ddd;
+}
+
+.tbl_ocjene tbody tr .question_description{
+	padding-left: 20px;
+}

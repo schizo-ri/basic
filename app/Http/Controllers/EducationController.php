@@ -7,6 +7,7 @@ use App\Http\Requests\EducationRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Education;
 use App\Models\Department;
+use Sentinel;
 
 class EducationController extends Controller
 {
@@ -27,10 +28,16 @@ class EducationController extends Controller
      */
     public function index()
     {
-        $educations = Education::get();
+		$educations = Education::get();
 		$departments = Department::get();
+		$empl = Sentinel::getUser()->employee;
+        $permission_dep = array();
+        
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
 		
-		return view('Centaur::education.index', ['educations' => $educations, 'departments' => $departments]);
+		return view('Centaur::education.index', ['educations' => $educations, 'departments' => $departments, 'permission_dep' => $permission_dep]);
     }
 
     /**

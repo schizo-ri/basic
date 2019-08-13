@@ -8,6 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Work;
 use App\Models\Employee;
 use App\User;
+use Sentinel;
+use App\Mail\EmployeeCreate;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Emailing;
+use App\Models\Department;
 
 class EmployeeController extends Controller
 {
@@ -29,8 +34,14 @@ class EmployeeController extends Controller
     public function index()
     {
         $employees = Employee::get();
+		$empl = Sentinel::getUser()->employee;
+		$permission_dep = array();
+        
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
 		
-		return view('Centaur::employees.index', ['employees' => $employees]);
+		return view('Centaur::employees.index', ['employees' => $employees, 'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -42,16 +53,14 @@ class EmployeeController extends Controller
     {
 		$users = User::get();
 		$works = Work::get();
-		
+		$employees = Employee::get();
+
 		if(isset($request->user_id)) {
 			$user1 = User::find($request->user_id);
-			return view('Centaur::employees.create', ['works' => $works, 'user1' => $user1, 'users' => $users]);
+			return view('Centaur::employees.create', ['works' => $works,'employees' => $employees, 'user1' => $user1, 'users' => $users]);
 		} else {
-			return view('Centaur::employees.create', ['works' => $works, 'users' => $users]);
+			return view('Centaur::employees.create', ['works' => $works, 'employees' => $employees,'users' => $users]);
 		}
-		
-		
-		
     }
 
     /**
@@ -106,8 +115,47 @@ class EmployeeController extends Controller
 			'comment' 	   		    => $input['comment']
 		);
 		
+		if( $input['superior_id'] != 0 ) {
+			$data += ['superior_id'  => $input['superior_id']];
+		} 
+		if( $request ['effective_cost']) {
+			$data += ['effective_cost'  => str_replace(',','.', $input['effective_cost'])];
+		} 
+		if( $request ['brutto']) {
+			$data += ['brutto'  => str_replace(',','.', $input['brutto'])];
+		} 
+		
 		$employee = new Employee();
 		$employee->saveEmployee($data);
+		
+		/* mail obavijest o novoj poruci */
+		$emailings = Emailing::get();
+		$send_to = array();
+		$departments = Department::get();
+		$employees = Employee::get();
+
+		if(isset($emailings)) {
+			foreach($emailings as $emailing) {
+				if($emailing->table['name'] == 'employees' && $emailing->method == 'create') {
+					
+					if($emailing->sent_to_dep) {
+						foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
+							array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
+						}
+					}
+					if($emailing->sent_to_empl) {
+						foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
+							array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
+						}
+					}
+				}
+			}
+		}
+
+		foreach($send_to as $send_to_mail) {
+			if( $send_to_mail != null & $send_to_mail != '' )
+			Mail::to($send_to_mail)->send(new EmployeeCreate($employee)); // mailovi upisani u mailing 
+		}
 		
 		session()->flash('success', "Podaci su spremljeni");
 		
@@ -122,7 +170,24 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        //
+        $employee = Employee::find($id);
+		
+		
+		$user_name = explode('.',strstr($employee->email,'@',true));
+		if(count($user_name) == 2) {
+			$user_name = $user_name[1] . '_' . $user_name[0];
+		} else {
+			$user_name = $user_name[0];
+		}
+
+		$path = 'storage/' . $user_name . "/profile_img/";
+		if(file_exists($path)){
+			$docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
+		}else {
+			$docs = '';
+		}
+
+		return view('Centaur::employees.show', ['employee' => $employee,'docs' => $docs,'user_name' => $user_name]);
     }
 
     /**
@@ -136,8 +201,9 @@ class EmployeeController extends Controller
 		$employee = Employee::find($id);
 		$users = User::get();
 		$works = Work:: get();
+		$employees = Employee::get();
 		
-		return view('Centaur::employees.edit', ['works' => $works, 'users' => $users, 'employee' => $employee]);
+		return view('Centaur::employees.edit', ['works' => $works, 'users' => $users, 'employee' => $employee, 'employees' => $employees]);
 		
     }
 
@@ -194,8 +260,46 @@ class EmployeeController extends Controller
 			'comment' 	   		    => $input['comment']
 		);
 
-		$employee->updateEmployee($data);
+		if( $input['superior_id'] != 0 ) {
+			$data += ['superior_id'  => $input['superior_id']];
+		} 
+		if( $request ['effective_cost']) {
+			$data += ['effective_cost'  => str_replace(',','.', $input['effective_cost'])];
+		} 
+		if( $request ['brutto']) {
+			$data += ['brutto'  => str_replace(',','.', $input['brutto'])];
+		} 
 		
+		$employee->updateEmployee($data);
+		/* mail obavijest o novoj poruci */
+		$emailings = Emailing::get();
+		$send_to = array();
+		$departments = Department::get();
+		$employees = Employee::get();
+
+		if(isset($emailings)) {
+			foreach($emailings as $emailing) {
+				if($emailing->table['name'] == 'employees' && $emailing->method == 'create') {
+					
+					if($emailing->sent_to_dep) {
+						foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
+							array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
+						}
+					}
+					if($emailing->sent_to_empl) {
+						foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
+							array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
+						}
+					}
+				}
+			}
+		}
+		/*
+		foreach($send_to as $send_to_mail) {
+			if( $send_to_mail != null & $send_to_mail != '' )
+			Mail::to($send_to_mail)->send(new EmployeeCreate($employee)); // mailovi upisani u mailing 
+		}
+		*/
 		session()->flash('success', "Podaci su ispravljeni");
 		
         return redirect()->route('employees.index');

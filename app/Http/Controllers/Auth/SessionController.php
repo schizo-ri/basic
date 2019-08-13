@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Sentinel;
+use Session;
 use Centaur\AuthManager;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -56,10 +57,21 @@ class SessionController extends Controller
         $result = $this->authManager->authenticate($credentials, $remember);
 
         // Return the appropriate response
-        $path = session()->pull('url.intended', route('dashboard'));
-        return $result->dispatch($path);
+        if(Sentinel::check()) {
+            $path = session()->pull('url.intended', route('dashboard'));
+            Session::flash('success', "Prijavljen si");
+            return $result->dispatch($path);
+        }
+       
+        session()->flash('error', 'Prijava nije uspjela.');
+		
+        return redirect()->back();
+        /*
+        session()->flash('success','Prijava nije uspjela.');
+       
+        return view('Centaur::auth.login');*/
+      
     }
-
     /**
      * Handle a Logout Request
      * @return Response|Redirect
@@ -71,6 +83,6 @@ class SessionController extends Controller
         $result = $this->authManager->logout(null, null);
 
         // Return the appropriate response
-        return $result->dispatch(route('dashboard'));
+        return view('welcome');
     }
 }

@@ -9,6 +9,7 @@ use Centaur\AuthManager;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Work;
+use App\Models\Department;
 use App\Models\DepartmentRole;
 use Centaur\Mail\CentaurWelcomeEmail;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
@@ -46,8 +47,13 @@ class UserController extends Controller
 		$employees = Employee::get();
 		$departmentRoles = DepartmentRole::get();
 		$works = Work::get();
+		$empl = Sentinel::getUser()->employee;
+        $permission_dep = array();
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
 
-        return view('Centaur::users.index', ['users' => $users, 'employees' => $employees, 'works' => $works, 'departmentRoles' => $departmentRoles]);
+        return view('Centaur::users.index', ['users' => $users, 'employees' => $employees, 'works' => $works, 'departmentRoles' => $departmentRoles,'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -257,4 +263,35 @@ class UserController extends Controller
     //         return null;
     //     }
     // }
+
+    /**
+     * Show the form for editing the specified user.
+     *
+     * @param  string  $hash
+     * @return \Illuminate\Http\Response
+     */
+    public function edit_user($id)
+    {
+        // Fetch the user object
+        // $id = $this->decode($hash);
+        $user = $this->userRepository->findById($id);
+		
+		$employee = Employee::where('user_id',$user->id)->first();
+		$departments = Department::orderBy('name','ASC')->get();
+		
+        // Fetch the available roles
+        $roles = app()->make('sentinel.roles')->createModel()->all();
+		
+        if ($user) {
+            return view('Centaur::users.edit_user', [
+                'user' => $user,
+				'employee' => $employee,
+				'departments' => $departments,
+                'roles' => $roles
+            ]);
+        }
+
+        session()->flash('error', 'Invalid user.');
+        return redirect()->back();
+    }
 }

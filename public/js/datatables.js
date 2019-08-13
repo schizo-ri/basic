@@ -2,15 +2,20 @@ $(document).ready(function() {
 	$('table.display').DataTable( {
 		"language": {
             "search": "",
-          
         },
 		"lengthMenu": [ 10, 25, 50, 75, 100 ],
 		"order": [[ 0, "asc" ]],
 		"pageLength": 50,
-		"paging": true,
+		"paging": false,
 		"searching": true,
 		"ordering": true,
+		"info":     true,
 		"lengthChange": true,
+		"columnDefs": [ {
+			"targets"  : 'no-sort',
+			"orderable": false,
+			"order": []
+		  }],
 		stateSave: true,
 		dom: 'Bfrtip',
 		buttons: [
@@ -48,10 +53,6 @@ $(document).ready(function() {
 				}	
 			}
 		]
-		
 	});
-
-	$('#table_id_filter input').attr('placeholder', 'Search');
-	$('#table_id_filter').append('<i class="fas fa-search"></i>');
 	
 });

@@ -25,7 +25,7 @@ class PostRequest extends FormRequest
     {
         return [
             'to_employee_id'	=> 'required',
-            'title'				=> 'required|max:255',
+            'title'				=> 'max:255',
             'content'			=> 'required|max:65535',
         ];
     }

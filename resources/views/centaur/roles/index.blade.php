@@ -1,6 +1,6 @@
 @extends('Centaur::layout')
 
-@section('title', 'Roles')
+@section('title', __('basic.roles'))
 
 @section('content')
 <div class="row">    
@@ -9,22 +9,21 @@
 		@if(Sentinel::getUser()->hasAccess(['roles.create']) || in_array('roles.create', $permission_dep))
 			<a class="btn btn-primary btn-lg" href="{{ route('roles.create') }}">
 				<i class="fas fa-plus"></i>
-				Create Role
+				@lang('basic.create_role')
 			</a>
 		@endif
 	</div>
-	<h1>Roles</h1>
+	<h1>@lang('basic.roles')</h1>
 </div>
-
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="table-responsive">
 			<table id="index_table" class="display table table-hover">
 				<thead>
 					<tr>
-						<th>Name</th>
-						<th>Slug</th>
-						<th>Permissions</th>
-						<th>Options</th>
+						<th>@lang('basic.name')</th>
+						<th>@lang('absence.mark')</th>
+						<th>@lang('basic.permissions')</th>
+						<th class="not-export-column">@lang('basic.options')</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -54,12 +53,4 @@
 		</div>
 	</div>
 </div>
-<!-- Datatables -->
-<script type="text/javascript" src="{{ URL::asset('dataTables/datatables.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
-
-<script src="{{ URL::asset('js/datatables.js') }}"></script>
 @stop

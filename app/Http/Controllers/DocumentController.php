@@ -28,7 +28,13 @@ class DocumentController extends Controller
     public function index()
     {
 		$user = Employee::where('user_id',Sentinel::getUser()->id)->first();
+		$empl = Sentinel::getUser()->employee;
+		$permission_dep = array();
 
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+		}
+		
 		if(isset($user)) {
 			
 			$user_name = explode('.',strstr($user->email,'@',true));
@@ -56,7 +62,7 @@ class DocumentController extends Controller
 				$docs2 = array();
 			}
 			
-			return view('Centaur::documents.index', ['docs' => $docs,'docs2' => $docs2,'documents' => $documents, 'employees' => $employees, 'user_name' => $user_name]);
+			return view('Centaur::documents.index', ['docs' => $docs,'docs2' => $docs2,'documents' => $documents, 'employees' => $employees, 'user_name' => $user_name, 'permission_dep' => $permission_dep]);
 		} else {
 			$message = session()->flash('error', 'Putanja nije dozvoljena');
 			return redirect()->back()->withFlashMessage($message);
@@ -90,15 +96,28 @@ class DocumentController extends Controller
 			$user_name = $user_name[1] . '_' . $user_name[0];
 		}
 		
-		// Create directory
-		$path = 'storage/' . $user_name . '/';
-		if (!file_exists($path)) {
-			mkdir($path);
-		}
-		
-		$path = 'storage/' . $user_name . '/documents/';
-		if (!file_exists($path)) {
-			mkdir($path);
+
+		if(isset($request['profileIMG'])) {
+			$path = 'storage/' . $user_name . "/profile_img/";  //specifies the directory where the file is going to be placed
+			$files = glob($path .'*'); // get all file names
+			foreach($files as $file){ // iterate files
+			  if(is_file($file))
+				unlink($file); // delete file
+			}
+				// Create directory
+				if(!file_exists($path)){
+					mkdir($path);
+				}
+		} else {
+			$path = 'storage/' . $user_name . '/';
+			if (!file_exists($path)) {
+				mkdir($path);
+			}
+			
+			$path = 'storage/' . $user_name . '/documents/';
+			if (!file_exists($path)) {
+				mkdir($path);
+			}
 		}
 
 		$target_file = $path . basename($_FILES["fileToUpload"]["name"]); //$target_file specifies the path of the file to be uploaded

@@ -5,9 +5,9 @@
 @section('content')
 <div class="row">
     <div class="page-header">
-		<a href="{{ route('education.index') }}" >@lang('basic.educations')</a> / 
-		<a href="{{ route('education_themes.index') }}" >@lang('basic.educationThemes')</a> / 
-		<a href="{{ route('education_articles.index') }}" >@lang('basic.educationArticles')</a>
+		<a href="{{ route('education.index') }}" class="load_page" >@lang('basic.educations')</a> / 
+		<a href="{{ route('education_themes.index') }}" class="load_page" >@lang('basic.educationThemes')</a> / 
+		<a href="{{ route('education_articles.index') }}"  class="load_page" >@lang('basic.educationArticles')</a>
         <div class='btn-toolbar pull-right'>
 			@if(Sentinel::getUser()->hasAccess(['educations.create']) || in_array('educations.view', $permission_dep))
 			    <a class="btn btn-primary btn-lg" href="{{ route('education.create') }}">
@@ -27,7 +27,7 @@
 							<th>@lang('basic.name')</th>
 							<th>@lang('basic.to_department')</th>
 							<th>Status</th>
-							<th>@lang('basic.options')</th>
+							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -69,13 +69,6 @@
 			@endif
 		</div>
 	</div>
-	<!-- Datatables -->
-<script type="text/javascript" src="{{ URL::asset('dataTables/datatables.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
-
-	<script src="{{ URL::asset('js/datatables.js') }}"></script>
 </div>
+
 @stop

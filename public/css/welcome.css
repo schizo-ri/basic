@@ -1,11 +1,64 @@
-html, body {
-	background-color: #fff;
-	color: #636b6f;
-	font-family: 'Nunito', sans-serif;
-	font-weight: 200;
-	height: 100vh;
+@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap');
+
+* {
+	padding: 0;
 	margin: 0;
+	
+}
+
+html {
+	width: 100vw;
+	height: 100vh;
+	background-color: #fff;
+	font-family: Montserrat, sans-serif;
+	font-weight: 400;
 	overflow: hidden;
+	font-size: 16px;
+	scroll-behavior: smooth;
+	overscroll-behavior-y: contain;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	font-family: Montserrat, sans-serif;
+}
+
+body>.welcome_page {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+body section.welcome {
+	height: 100%;
+	position: relative;
+	padding-left: 128px;
+}
+
+body section.welcome>div {
+	height: 50%;
+    width: 100%;
+    top: 50%;
+    bottom: 50%;
+    transform: translateY(50%);
+    margin: auto;
+}
+body section.welcome>div .title {
+	font-weight: 700;
+	font-size: 2.5rem;
+	color: #071E57;
+}
+
+body section.welcome>div>h4{
+	font-weight: 500;
+	font-size: 1.25rem;
+	color: #636363;
+	padding-bottom: 100px;
+}
+
+body section {
+	width:100%;
+	height: 100%;
 }
 
 .full-height {
@@ -33,7 +86,7 @@ html, body {
 }
 
 .title {
-	font-size: 84px;
+	/*font-size: 84px;*/
 }
 
 .links > a {
@@ -53,3 +106,274 @@ html, body {
 .navbar {
 	z-index:1;
 }
+
+.alert {
+	padding: 0px 20px;
+}
+
+.alert>button.close {
+    margin-left: 20px;
+}
+
+.form_login {
+	max-width: 408px;
+}
+
+.form_login input.form-control.form_email {
+	border:none;
+	background-color: white !important;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+	border-radius:0;
+	font-size: 1rem;
+}
+
+.btn-login {
+	width: 162px;
+	height: 52px;
+	background: #1292EE;
+	border-radius: 5px;
+	clear: right;
+	float: right;
+	margin-top: 34px;
+	font-weight: 600;
+	font-size: 0.9375rem;
+	line-height: 52px;
+	text-align: center;
+
+	color: #FFFFFF;
+}
+
+a.forgot_pass{
+	border: none !important;
+	background-color: inherit;
+	-webkit-appearance: inherit;
+	font-weight: 400;
+	font-size: 0.875rem;
+	text-decoration-line: underline;
+	color: #C5C5C5;
+	float: right;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+
+.form-group img {
+	position: absolute;
+	top: 10px;
+	right: 0;
+}
+.form_login .form-group {
+
+	position: relative;
+}
+
+.form_login .form-group:first-child {
+    margin-bottom: 60px;
+}
+
+.remember {
+	display: inline-block;
+	position: relative;
+	padding-left: 35px;
+	margin-bottom: 12px;
+	cursor: pointer;
+	font-size: 0.875rem;
+	font-weight: 400;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	color: #202020;
+	line-height: 15px;
+	float: left;
+  }
+  
+  /* Hide the browser's default checkbox */
+  .remember input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 15px;
+	width: 15px;
+	background-color: #ffffff;
+	border: 1px solid #000000;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .remember:hover input ~ .checkmark {
+	background-color: #ccc;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .remember input:checked ~ .checkmark {
+	background-color: #ffffff;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+	content: "";
+	position: absolute;
+	display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .remember input:checked ~ .checkmark:after {
+	display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .remember .checkmark:after {
+    left: 4px;
+    top: 0;
+    width: 5px;
+    height: 10px;
+	border: solid black;
+	border-width: 0 2px 2px 0;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+  }
+
+  p.terms {
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 18px;
+    color: #A6A6A6;
+    clear: right;
+    padding-top: 70px;
+}
+
+p.terms>span {
+	display: block;
+	width: 100%;
+	text-decoration: underline;
+	color:#202020
+}
+
+.welcome_right {
+	background: #071E57;
+	height: 100%;
+	position: relative;
+	z-index: 1;
+}
+
+.welcome_right>div {
+	width: 100%;
+	height: 401px;
+	position: absolute;
+	background: #FFFFFF;
+	box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.15),0px -15px 35px rgba(0, 0, 0, 0.15);
+	border-radius: 5px;
+}
+.welcome_right>div:first-child {
+	top:111px;
+	right: 127px;
+	z-index: 3;
+}
+.welcome_right>div:nth-child(2) {
+	top:339px;
+	right: 219px;
+	z-index: 4;
+}
+.welcome_right>div:nth-child(3) {
+	top:502px;
+	right: 59px;
+	z-index: 5;
+	
+}
+	/* width */
+	::-webkit-scrollbar {
+		width: 5px;
+		background-color: transparent;
+	}
+
+	/* Track */
+	::-webkit-scrollbar-track {
+		background: inherit; 
+	}
+
+
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+		background-color: transparent;
+		border-radius:20px;
+
+	}
+
+	/* Handle on hover */
+	main:hover > ::-webkit-scrollbar-thumb, section:hover > ::-webkit-scrollbar-thumb, div:hover > ::-webkit-scrollbar-thumb {
+		background: #ccc; 
+	}
+
+	.container {
+		overflow: auto;
+		padding: 0 30px;
+		padding-bottom: 30px;
+	}
+
+	@media (max-width: 1200px) {
+		html, body{
+			font-size: 15px;
+		}
+		.welcome_right>div {
+			width: 80%;
+			position: static;
+			margin: auto;
+			margin-bottom: 20px;
+			margin-top: 20px;
+			
+		}
+		.welcome_right {
+			height: auto;
+		}
+	}
+	@media (max-width: 992px) {
+		body {
+			overflow: auto;
+		}
+		html, body{
+			font-size: 14px;
+		}
+	}
+	@media (max-width: 768px) {
+		html, body{
+			font-size: 13px;
+		}
+		body section.welcome {
+			padding: 30px;
+		}
+		.container {
+			padding: 0 10px;
+		}
+
+	}
+	@media (max-width: 576px) {
+		html, body{
+			font-size: 12px;
+		}
+	}
+
+	@media (max-width: 1300px) {
+		.welcome_right>div {
+			width: 90%;
+		}
+	}
+	@media (max-width: 1250px) {
+		.welcome_right>div {
+			width: 80%;
+		}
+	}

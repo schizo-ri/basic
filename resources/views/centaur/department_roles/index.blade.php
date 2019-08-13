@@ -5,7 +5,9 @@
 @section('content')
 <div class="row">
     <div class="page-header">
-        <div class='btn-toolbar pull-right'>
+        <a href="{{ route('departments.index') }}" class="load_page" >@lang('basic.departments')</a> / 
+		<a href="{{ route('department_roles.index') }}" class="load_page" >@lang('basic.department_roles')</a>
+		<div class='btn-toolbar pull-right'>
 			@if(Sentinel::getUser()->hasAccess(['department_roles.create']) || in_array('department_roles.create', $permission_dep))
 			    <a class="btn btn-primary btn-lg" href="{{ route('department_roles.create') }}">
 					<i class="fas fa-plus"></i>
@@ -23,7 +25,7 @@
 						<tr>
 							<th>@lang('basic.department')</th>
 							<th>@lang('basic.dep_permissions')</th>
-							<th>@lang('basic.options')</th>
+							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -53,12 +55,5 @@
 		</div>
 	</div>
 </div>
-<!-- Datatables -->
-<script type="text/javascript" src="{{ URL::asset('dataTables/datatables.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
 
-<script src="{{ URL::asset('js/datatables.js') }}"></script>
 @stop

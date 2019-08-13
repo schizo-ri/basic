@@ -9,6 +9,7 @@ use App\Models\Department;
 use App\Models\DepartmentRole;
 use App\Models\Company;
 use App\Models\Work;
+use Sentinel;
 
 class DepartmentController extends Controller
 {
@@ -32,8 +33,14 @@ class DepartmentController extends Controller
         $departments = Department::get();
         $department_roles = DepartmentRole::get();
 		$works = Work::get();
+        $empl = Sentinel::getUser()->employee;
+        $permission_dep = array();
+
+		if($empl) {
+        	$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+		}
 		
-		return view('Centaur::departments.index', ['departments' => $departments, 'works' => $works, 'department_roles' => $department_roles]);
+		return view('Centaur::departments.index', ['departments' => $departments, 'works' => $works, 'department_roles' => $department_roles, 'permission_dep' => $permission_dep]);
     }
 
     /**

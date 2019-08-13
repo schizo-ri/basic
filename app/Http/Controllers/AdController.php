@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Ad;
 use App\Models\AdCategory;
 use App\Models\Employee;
+use App\Models\Notice;
+use App\Models\Department;
 use Sentinel;
 
 class AdController extends Controller
@@ -29,15 +31,21 @@ class AdController extends Controller
      */
     public function index(Request $request)
     {
-       
+        $empl = Sentinel::getUser()->employee;
+		$permission_dep = array();
+		
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+		} 
+		
 		if(isset($request->category_id)) {
 			$category = AdCategory::where('id',$request->category_id)->first();
 			$ads = Ad::where('category_id',$category->id )->get();
 
-			return view('Centaur::ads.index', ['ads' => $ads, 'category' => $category]);
+			return view('Centaur::ads.index', ['ads' => $ads, 'category' => $category, 'permission_dep' => $permission_dep]);
 		} else {
 			$ads = Ad::get();
-			return view('Centaur::ads.index', ['ads' => $ads]);
+			return view('Centaur::ads.index', ['ads' => $ads, 'permission_dep' => $permission_dep]);
 		}
     }
 
@@ -79,8 +87,61 @@ class AdController extends Controller
 			
 		$ad = new Ad();
 		$ad->saveAd($data);
-		
-		session()->flash('success', "Podaci su spremljeni");
+
+        if(isset($request['fileToUpload'])) {
+			$target_dir = 'storage/ads/' . $ad->id . '/';  //specifies the directory where the file is going to be placed	
+
+			// Create directory
+			if(!file_exists($target_dir)){
+				mkdir($target_dir);
+            }
+
+			$target_file = $target_dir . '/' . basename($_FILES["fileToUpload"]["name"]); //$target_file specifies the path of the file to be uploaded
+			if(isset($request['fileToUpload']) && file_exists($target_file)){
+				array_map('unlink', glob($target_file)); // ako postoji file - briše ga
+				$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]); 
+			} 
+
+			$uploadOk = 1;
+			$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));  //holds the file extension of the file (in lower case)
+			// Check if image file is a actual image or fake image
+			
+			// Check if file already exists
+			if (file_exists($target_file)) {
+				return redirect()->back()->with('error', 'Sorry, file already exists.');  
+				$uploadOk = 0;
+			}
+			
+			/* Check file size*/
+			if ($_FILES["fileToUpload"]["size"] > 5000000) {
+				return redirect()->back()->with('error', 'Sorry, your file is too large.');  
+				$uploadOk = 0;
+			}
+			/* Allow certain file formats
+			if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+			&& $imageFileType != "gif" && $imageFileType != "pdf") {
+				return redirect()->back()->with('error', 'Dozvoljen unos samo jpg, png, pdf, gif');  
+				$uploadOk = 0;
+			}*/
+			if($imageFileType == "exe" || $imageFileType == "bin") {
+				return redirect()->back()->with('error', 'Nije dozvoljen unos exe, bin dokumenta');  
+				$uploadOk = 0;
+			}
+			// Check if $uploadOk is set to 0 by an error
+			if ($uploadOk == 0) {
+				return redirect()->back()->with('error', 'Sorry, your file was not uploaded.'); 
+			// if everything is ok, try to upload file
+			} else {
+				if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                    return redirect()->route('oglasnik')->with('success',"The ad has been uploaded.");
+                    return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
+				} else {
+					return redirect()->route('oglasnik')->with('error', 'Sorry, there was an error uploading your file.'); 
+				}
+			}
+        }
+
+        session()->flash('success', "Podaci su spremljeni");
 		
         return redirect()->route('ads.index', ['category_id' => $request['category_id']]);
     }
@@ -165,7 +226,17 @@ class AdController extends Controller
     public function oglasnik()
     {
 		$ads = Ad::orderBy('created_at','DESC')->get();
-
-		return view('Centaur::oglasnik',['ads'=> $ads]);
+		$user = Sentinel::getUser()->employee;
+		$user_department = array();
+		$permission_dep = array();
+        $departments = Department::get();
+		
+		if($user) {
+			$user_department = $user->work->department->id;
+			$permission_dep = explode(',', count($user->work->department->departmentRole) > 0 ? $user->work->department->departmentRole->toArray()[0]['permissions'] : '');
+		} 
+		return view('Centaur::oglasnik',['ads'=> $ads,'user_department'=> $user_department,'permission_dep'=> $permission_dep, 'departments' => $departments]);
     }
+
 }
+

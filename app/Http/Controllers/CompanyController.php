@@ -7,6 +7,8 @@ use App\Http\Requests\CompanyRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\Department;
+use DB;
+use Sentinel;
 
 class CompanyController extends Controller
 {
@@ -29,8 +31,15 @@ class CompanyController extends Controller
     {
         $companies = Company::get();
 		$departments = Department::get();
+		$modules = $this->getModules(); //moduli iz superadmin baze
+		$empl = Sentinel::getUser()->employee;
+		$permission_dep = array();
+        
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
 		
-		return view('Centaur::companies.index', ['companies' => $companies, 'departments' => $departments]);
+		return view('Centaur::companies.index', ['companies' => $companies, 'departments' => $departments, 'modules' => $modules, 'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -244,4 +253,28 @@ class CompanyController extends Controller
 		
 		return redirect()->back()->withFlashMessage($message);
     }
+	
+	public static function getModules () 
+	{
+		$moduli_company = array(); 
+		
+		$company_oib = Company::first()->oib;
+		if($company_oib) {
+			//konektiranje na superadmin bazu
+			$db_ext = DB::connection('mysql_external'); 
+			//dohvaćanje iz tbl zahtjeva zahtjev korisnika
+			$client_request = $db_ext->table('client_requests')->join('clients','client_requests.client_id','clients.id')->select('client_requests.modules','clients.*')->where('clients.oib',$company_oib)->orderBy('client_requests.updated_at','DESC')->first();
+			if($client_request) {
+				$modules = explode(',',$client_request->modules);
+				
+				$moduli = $db_ext->table('modules')->get(); //dobvaćanje modula
+				
+				foreach($modules as $module){
+					array_push($moduli_company,$moduli->where('id',$module)->first()->name); // array sa nazivima  modulima korisnika
+				}
+			}
+		}
+		
+		return $moduli_company;
+	}
 }

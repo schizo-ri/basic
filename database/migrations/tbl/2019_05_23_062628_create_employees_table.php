@@ -35,13 +35,16 @@ class CreateEmployeesTable extends Migration
             $table->string('qualifications',20)->nullable()->comment('stručna sprema');
             $table->string('marital',10)->comment('bračno stanje');
             $table->integer('work_id')->comment('radno mjesto');
+			$table->integer('superior_id')->comment('nadređeni djelatnik');
 			$table->date('reg_date')->comment('datum prijave');
 			$table->integer('probation')->nullable()->comment('probni rok, broj mjeseci');
 			$table->string('years_service',10)->nullable()->comment('godine staža');
 			$table->string('termination_service',10)->comment('prekid staža')->nullable();
 			$table->string('first_job',10)->comment('prekid staža prije prijave')->nullable();
 			$table->date('checkout',10)->comment('datum odjave')->nullable();
-			$table->text('comment');
+            $table->text('comment');
+            $table->double('effective_cost', 8, 2)->comment('efektivna nijena sata rada')->nullable();
+            $table->double('brutto', 8, 2)->comment('brutto godišnja plaća')->nullable();
             $table->timestamps();
         });
     }

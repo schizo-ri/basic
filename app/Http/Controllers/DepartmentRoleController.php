@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\DepartmentRole;
 use App\Models\Department;
+use App\Models\Table;
+use Sentinel;
 
 class DepartmentRoleController extends Controller
 {
@@ -27,8 +29,14 @@ class DepartmentRoleController extends Controller
     public function index()
     {
 		$department_roles = DepartmentRole::get();
+		$empl = Sentinel::getUser()->employee;
+        $permission_dep = array();
+        
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
 		
-		return view('Centaur::department_roles.index', ['department_roles' => $department_roles]);
+		return view('Centaur::department_roles.index', ['department_roles' => $department_roles, 'permission_dep' => $permission_dep]);
 	}
 	
     /**
@@ -38,7 +46,13 @@ class DepartmentRoleController extends Controller
      */
     public function create(Request $request)
     {
-		$tables = array('users','roles','companies','departments','works','employees','department_roles','ads','ad_categories','educations','education_themes','education_articles','events','documents','posts');
+		$tables1 = Table::get();
+		$tables = array();
+		
+		foreach($tables1 as $table) {
+			array_push($tables,$table->name);
+		}
+		
 		$methodes = array('create','update','view','delete');
 		
 		if(isset($request->department_id)) {
@@ -101,7 +115,12 @@ class DepartmentRoleController extends Controller
 
 		$permissions = explode(',', $departmentRole->permissions);
 
-		$tables = array('users','roles','companies','departments','works','employees','department_roles','ads','ad_categories','educations','education_themes','education_articles','events','documents','posts');
+		$tables1 = Table::get();
+		$tables = array();
+		
+		foreach($tables1 as $table) {
+			array_push($tables,$table->name);
+		}
 		$methodes = array('create','update','view','delete');
 		
 		return view('Centaur::department_roles.edit',['departmentRole' => $departmentRole,'tables' => $tables, 'methodes' => $methodes, 'permissions' => $permissions]);

@@ -28,6 +28,7 @@
 							<th>@lang('basic.director')</th>
 							<th>e-mail</th>
 							<th>@lang('basic.phone')</th>
+							<th>Modules</th>
 							<th>@lang('basic.options')</th>
 						</tr>
 					</thead>
@@ -41,6 +42,7 @@
 								<td>{{ $company->director }}</td>
 								<td>{{ $company->email }}</td>
 								<td>{{ $company->phone }}</td>
+								<td>@foreach($modules as $key => $value) {{ $value }} <br>@endforeach</td>
 								<td class="center">
 									@if(Sentinel::getUser()->hasAccess(['companies.update']) || in_array('companies.update', $permission_dep))
 										<a href="{{ route('companies.edit', $company->id) }}" class="btn-edit">
@@ -62,13 +64,7 @@
 			@endif
 		</div>
 	</div>
+	
 </div>
-<!-- Datatables -->
-<script type="text/javascript" src="{{ URL::asset('dataTables/datatables.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
 
-<script src="{{ URL::asset('js/datatables.js') }}"></script>
 @stop

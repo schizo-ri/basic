@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Models\Table;
 use Illuminate\Http\Request;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
@@ -31,9 +32,15 @@ class RoleController extends Controller
     {
         $roles = $this->roleRepository->createModel()->all();
         $userRoleIds = Sentinel::getUser()->roles()->pluck('id');
+		$empl = Sentinel::getUser()->employee;
+		$permission_dep = array();
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+		} 
 
         return view('Centaur::roles.index')
             ->with('userRoleIds', $userRoleIds)
+			->with('permission_dep', $permission_dep)
             ->with('roles', $roles);
     }
 
@@ -44,7 +51,14 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $tables = array('users','roles','companies','departments','works','employees','department_roles','ads','ad_categories','educations','education_themes','education_articles','events','documents','posts');
+        $tables1 = Table::get();
+		$tables = array();
+		
+		foreach($tables1 as $table) {
+			array_push($tables,$table->name);
+        }
+        asort($tables);
+		
 		$methodes = array('create','update','view','delete');
 		
 		return view('Centaur::roles.create',['tables' => $tables, 'methodes' => $methodes]);
@@ -114,7 +128,13 @@ class RoleController extends Controller
         // $id = $this->decode($hash);
         $role = $this->roleRepository->findById($id);
 		
-		$tables = array('users','roles','companies','departments','works','employees','department_roles','ads','ad_categories','educations','education_themes','education_articles','events','documents','posts');
+		$tables1 = Table::get();
+		$tables = array();
+		
+		foreach($tables1 as $table) {
+			array_push($tables,$table->name);
+        }
+        asort($tables);
 		$methodes = array('create','update','view','delete');
 		
         if ($role) {

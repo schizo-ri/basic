@@ -9,6 +9,10 @@ use App\Models\EducationArticle;
 use App\Models\EducationTheme;
 use App\Models\Employee;
 use Sentinel;
+use App\Mail\EducationArticleMail;
+use Illuminate\Support\Facades\Mail;
+use App\Models\Emailing;
+use App\Models\Department;
 
 class EducationArticleController extends Controller
 {
@@ -29,16 +33,23 @@ class EducationArticleController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->theme_id){
+        $empl = Sentinel::getUser()->employee;
+		$permission_dep = array();
+        
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
+		
+		if($request->theme_id){
 			$educationArticles = EducationArticle::where('theme_id',$request->theme_id)->get();
 			$educationTheme = EducationTheme::where('id', $request->theme_id)->first();
 
-			return view('Centaur::education_articles.index', ['educationArticles' => $educationArticles,'educationTheme' => $educationTheme]);
+			return view('Centaur::education_articles.index', ['educationArticles' => $educationArticles,'educationTheme' => $educationTheme,'permission_dep' => $permission_dep]);
 
 		} else {
 			$educationArticles = EducationArticle::get();
 			
-			return view('Centaur::education_articles.index', ['educationArticles' => $educationArticles]);
+			return view('Centaur::education_articles.index', ['educationArticles' => $educationArticles, 'permission_dep' => $permission_dep]);
 		}
 		
 		
@@ -96,6 +107,36 @@ class EducationArticleController extends Controller
 		
 		$educationArticle = new EducationArticle();
 		$educationArticle->saveEducationArticle($data);
+		
+		if($educationArticle->status == 'aktivan') {
+			/* mail obavijest o novoj poruci */
+			$emailings = Emailing::get();
+			$send_to = array();
+			$departments = Department::get();
+			$employees = Employee::get();
+
+			if(isset($emailings)) {
+				foreach($emailings as $emailing) {
+					if($emailing->table['name'] == 'education_articles' && $emailing->method == 'create') {
+						if($emailing->sent_to_dep) {
+							foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
+								array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
+							}
+						}
+						if($emailing->sent_to_empl) {
+							foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
+								array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
+							}
+						}
+					}
+				}
+			}
+
+			foreach($send_to as $send_to_mail) {
+				if( $send_to_mail != null & $send_to_mail != '' )
+				Mail::to($send_to_mail)->send(new EducationArticleMail($educationArticle)); // mailovi upisani u mailing 
+			}
+		}
 		
 		session()->flash('success', "Podaci su spremljeni");
 		

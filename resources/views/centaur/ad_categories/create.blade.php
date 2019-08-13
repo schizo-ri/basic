@@ -1,13 +1,13 @@
 @extends('Centaur::layout')
 
-@section('title', __('basic.ad_categories'))
+@section('title', __('basic.abs_type'))
 
 @section('content')
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">@lang('basic.ad_categories')</h3>
+                <h3 class="panel-title">@lang('basic.add_abs_type')</h3>
             </div>
             <div class="panel-body">
                 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('ad_categories.store') }}">

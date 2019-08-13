@@ -1,22 +1,20 @@
 @extends('Centaur::layout')
 
-@section('title', 'Users')
+@section('title', __('basic.users'))
 
 @section('content')
 <div class="row">
     <div class="page-header">
         <div class='btn-toolbar pull-right'>
-            @if(Sentinel::getUser()->hasAccess(['users.create'])))
+            @if(Sentinel::getUser()->hasAccess(['users.create']))
 				<a class="btn btn-primary btn-lg" href="{{ route('users.create') }}">
 					<i class="fas fa-plus"></i>
-					Create User
+					@lang('basic.create_user')
 				</a>
 			@endif
         </div>
-        <h1>Users</h1>
+        <h1>@lang('basic.users')</h1>
     </div>
-	
-	
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="table-responsive">
 			@if(count($users))
@@ -29,7 +27,7 @@
 							<th>@lang('basic.work')</th>
 							<th>@lang('basic.dep_permissions')</th>
 							<th>@lang('basic.permissions')</th>
-							<th>Options</th>
+							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -76,12 +74,5 @@
 			@endif
 		</div>
 	</div>
-<!-- Datatables -->
-<script type="text/javascript" src="{{ URL::asset('dataTables/datatables.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-<script type="text/javascript" src="{{ URL::asset('dataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
-<script src="{{ URL::asset('js/datatables.js') }}"></script>
 </div>
 @stop
