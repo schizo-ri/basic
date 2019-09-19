@@ -1,4 +1,4 @@
-<form accept-charset="UTF-8" role="form" method="post" action="{{ route('notices.update', $notice->id ) }}" >
+<form accept-charset="UTF-8" role="form" method="post" action="{{ route('notices.update', $notice->id ) }}" enctype="multipart/form-data"  >
     <div class="modal-header">
         <a class="link_back" rel="modal:close">
             <img src="{{ URL::asset('icons/arrow_left2.png') }}" />
@@ -30,6 +30,10 @@
             <input name="title" type="text" class="form-control" value="{{ $notice->title }}" required>
             {!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
         </div>
+        <div class="form-group">
+                <label class="label_file" for="file">Top notice image<span><img src="{{ URL::asset('icons/download.png') }}" />Upload image</span></label>
+                <input type='file' id="file" name="fileToUpload" >
+            </div>
         <div class="form-group last">
             <label>@lang('basic.notice'):</label>
             <textarea id="summernote" name="notice" required>{!!  $notice->notice  !!}</textarea>
@@ -38,44 +42,48 @@
         {{ method_field('PUT') }}
     </div>
 </form>
-
 <script>
-    $(function() {
-        $("#summernote").summernote({
-         
+        $(function() {
+            $("#summernote").summernote({
+           
+            });
+             $('.modal').addClass('modal_notice');
+            var height = 0;
+            var modal_height = $('.modal.modal_notice').height();
+            var header_height =  $('.modal-header').height();
+            var body_height =  modal_height - header_height;
+            $('.modal-body').height(body_height);
+            if(modal_height > 1000 ) {
+                $( '.form-group' ).each(function() {
+                    height += $( this ).height();
+                });
+                var height2 = height - $( '.form-group' ).filter(':nth-child(4n)').height();
+                
+                var last_height = body_height - height2 - 80;
+                $('.form-group.last').height(last_height);
+                $('.note-editable').height(last_height - 150 );
+            }
+           
         });
-         $('.modal').addClass('modal_notice');
-        var height = 0;
-        var modal_height = $('.modal.modal_notice').height();
-        var header_height =  $('.modal-header').height();
-        var body_height =  modal_height - header_height - 65;
-        $('.modal-body').height(body_height);
-        
-        $( '.form-group' ).each(function() {
-                height += $( this ).height();
-        });
-        var height2 = height - $( '.form-group' ).filter(':nth-child(3n)').height();
-        
-        var last_height = body_height - height2 - 80;
-        $('.form-group.last').height(last_height);
-        $('.note-editable').height(last_height - 150 );
-    });
-
     
-    $( window ).resize(function() {
-        var height = 0;
-        var modal_height = $('.modal.modal_notice').height();
-        var header_height =  $('.modal-header').height();
-        var body_height =  modal_height - header_height - 65;
-        $('.modal-body').height(body_height);
         
-        $( '.form-group' ).each(function() {
-                height += $( this ).height();
+        $( window ).resize(function() {
+            var height = 0;
+            var modal_height = $('.modal.modal_notice').height();
+            var header_height =  $('.modal-header').height();
+            var body_height =  modal_height - header_height - 65;
+            $('.modal-body').height(body_height);
+            
+            if(modal_height > 1000 ) {
+                $( '.form-group' ).each(function() {
+                    height += $( this ).height();
+                });
+                var height2 = height - $( '.form-group' ).filter(':nth-child(4n)').height();
+                
+                var last_height = body_height - height2 - 80;
+                $('.form-group.last').height(last_height);
+                $('.note-editable').height(last_height - 150 );
+            }
+           
         });
-        var height2 = height - $( '.form-group' ).filter(':nth-child(3n)').height();
-        
-        var last_height = body_height - height2 - 80;
-        $('.form-group.last').height(last_height);
-        $('.note-editable').height(last_height - 150 );
-    });
-</script>
+    </script>

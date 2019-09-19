@@ -25,7 +25,7 @@ class NoticeRequest extends FormRequest
     {
         return [
             'to_department'	=> 'required|max:100',
-            'to_employee'	=> 'required|max:100',
+            'employee_id'	=> 'required|max:100',
             'title'		    => 'required|max:100',
             'notice'	    => 'required|max:16777215',
         ];

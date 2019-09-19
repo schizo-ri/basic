@@ -1,12 +1,18 @@
 .container .noticeboard, .container .posts, .container .calendar {
-    height: 100%;
     overflow: hidden;
 }
 
 .container .noticeboard:hover, .container .posts:hover {
-    /* height: 100%;*/
-     overflow: auto;
- }
+    overflow: auto;
+}
+
+.container .noticeboard {
+    height: 98%;
+}
+
+.container .posts, .container .calendar {
+    height: 100%;
+}
 
 .container .noticeboard {
     padding: 45px 30px 0 0;
@@ -61,7 +67,7 @@
 
 .container .posts .all_post .post_empl .post_send {
     font-weight: 700;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     color: #071E57;
     line-height: 24px;
 }
@@ -74,7 +80,7 @@
 
 .container .posts .all_post .post_empl .post_time {
     font-weight: 600;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     color: #071E57;
     line-height: 24px;
     float: right;
@@ -82,7 +88,7 @@
 
 .container .posts .all_post .post_text {
     font-weight: 400;
-    font-size: 0.6875rem;
+    font-size: 0.875rem;
     color: #606060;
     width: 100%;
     display: block;
@@ -95,6 +101,7 @@
     overflow: hidden;
     margin-top: 40px; 
     padding-bottom: 15px;
+    border-bottom: 1px solid rgba(154, 154, 154, 0.3);
 }
 
 .noticeboard .notice:not(:last-child) {
@@ -136,7 +143,7 @@
 }
 .notice>div:nth-child(2) span {
     font-weight: 500;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     line-height: 22px;
     color: #606060;
 }
@@ -150,8 +157,9 @@
     margin: auto;
     padding: 25px 0;
     position: relative;
-    
+    overflow: hidden;
 }
+
 .container .calendar .cal_days {
     display: flex;
     flex-wrap: nowrap;
@@ -169,7 +177,6 @@
 
 .container .calendar h2 {
     margin-bottom: 15px;
-    padding: 0 30px;
 }
 
 .container h2> a.view_all {
@@ -180,6 +187,7 @@
     float: right;
     text-transform: uppercase;
     text-decoration-line: underline;
+    line-height: 26px;
 }
 
 .container .cal_days p.date {
@@ -248,11 +256,6 @@
 .comming_agenda {
     width: 100%;
     padding: 20px 30px;
-    margin-left: 0 !important;
-    float: none !important;
-    clear: left;
-    overflow: auto;
-
 }
 
 .comming_agenda .agenda_title {
@@ -301,7 +304,7 @@
 
 .comming_agenda .agenda_time>span {
 	font-weight: normal;
-	font-size: 0.625rem;
+	font-size: 0.75rem;
 	text-align: center;
 	color: #071E57;
 	width: 100%;
@@ -310,7 +313,7 @@
 
 .comming_agenda .agenda_comment {
     font-weight: 500;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: #606060;
     width: 79%;
     text-align: left;
@@ -330,28 +333,44 @@
     float: right;
     width: 30px;
     height: 26px;
+    line-height: 26px;
+    padding: 0 10px;
 }
 
 .noticeboard .btn-new {
     margin-left: 30px;
 }
 
-.comming_agenda .btn-new svg, .comming_agenda .btn-new i, .noticeboard .btn-new svg, .noticeboard .btn-new i {
-    top: 40%;
-    bottom: 60%;
-    transform: translateY(-40%);
-}
 
 @media (max-width: 768px) {
+    .container .noticeboard, .container .posts, .container .calendar, .container .calendar>div {
+        height: auto;
+    }
+    .notice>div:first-child span.notice_time {
+        font-size: 1rem;
+    }
     .comming_agenda .agenda_comment {
         float: right;
         padding-left: 20px;
     }
-    .comming_agenda .agenda_mark {
+    .comming_agenda .agenda_mark, .container .posts .all_post {
         height: auto;
     }
     .comming_agenda .agenda {
         margin-bottom: 23px;
         padding-bottom: 35px;
+    }
+    .container .noticeboard, .container .posts, .container .calendar {
+        padding: 10px;
+        width: 100%;
+    }
+    .container .calendar>div, .container .posts .all_post {
+        box-shadow: none;
+        width:100% ;
+        padding: 10px 0;
+    }
+    
+    .container .calendar h2, .container .calendar .cal_days, .comming_agenda {
+        padding: 10px 0;
     }
 }

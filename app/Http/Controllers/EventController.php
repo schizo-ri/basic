@@ -73,7 +73,8 @@ class EventController extends Controller
         $employees = Employee::get();
 
         foreach($employees as $employee) {
-            array_push($dataArr, ['name' => "birthday", 'date' => $employee->b_day, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'] ]);
+            $dan = $god_select . '-' . date('m-d', strtotime($employee->b_day));
+            array_push($dataArr, ['name' => 'birthday', 'date' => $dan, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'] ]);
         }
         
         $start = new DateTime('00:00');
@@ -83,7 +84,7 @@ class EventController extends Controller
             $hours_array[] = $start->add(new DateInterval('PT1H'))->format('H:i');
         }
 
-		return view('Centaur::events.index',['dataArr'=>$dataArr,'events'=>$events,'employees'=>$employees, 'absences'=>$absences, 'permission_dep' => $permission_dep,'hours_array' => $hours_array]);
+		return view('Centaur::events.index',['dataArr'=> $dataArr,'events'=>$events,'employees'=>$employees, 'absences'=>$absences, 'permission_dep' => $permission_dep,'hours_array' => $hours_array]);
     }
 
     /**
@@ -91,9 +92,21 @@ class EventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('Centaur::events.create');
+        $type = 'event';
+
+        if(isset($request['type'])) {
+            if($request['type'] == 'task') {
+                $type = 'task';
+            }
+        }
+
+        if( isset($request)) {
+            return view('Centaur::events.create', ['date'=> $request['date'],'time1'=> $request['time1'], 'type' => $type]);
+        } else{
+            return view('Centaur::events.create');
+        }
     }
 
     /**
@@ -104,12 +117,15 @@ class EventController extends Controller
      */
     public function store(EventRequest $request)
     {
+        $host = $_SERVER['REQUEST_URI'];
+
         $user = Sentinel::getUser();
 		$employee = Employee::where('user_id', $user->id)->first();
 		
 		$data = array(
 			'employee_id'  	=> $employee->id,
 			'title'  		=> $request['title'],
+			'type'  		=> $request['type'],
 			'date'  		=> $request['date'],
 			'time1' 		=> $request['time1'],
 			'time2' 		=> $request['time2'],
@@ -120,8 +136,12 @@ class EventController extends Controller
 		$event->saveEvent($data);
 		
 		session()->flash('success', "Podaci su spremljeni");
-		
-        return redirect()->route('events.index');
+		if($host == '/event') {
+            return redirect()->route('events.index');
+        } else {
+            return redirect()->back();
+        }
+        
     }
 
     /**
@@ -211,4 +231,5 @@ class EventController extends Controller
 
         return ['week_day' => $week_day, 'month' => $month, 'dan_select' => $dan_select, 'mj_select' => $mj_select, 'god_select' => $god_select];
     }
+
 }

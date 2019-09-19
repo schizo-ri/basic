@@ -26,7 +26,7 @@ class TableController extends Controller
      */
     public function index()
     {
-        $tables = Table::get();
+        $tables = Table::orderBy('name')->get();
         $empl = Sentinel::getUser()->employee;
         $permission_dep = array();
 		if($empl) {

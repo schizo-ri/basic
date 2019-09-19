@@ -74,7 +74,6 @@ class EvaluationController extends Controller
      */
     public function store(Request $request)
     {
-		
 		$datum = new DateTime('now');
 		$mjesec_godina = date_format($datum,'Y-m');
 		$emp = Employee::where('id', $request['employee_id'])->first(); // djelatnik koji ocjenjuje
@@ -179,9 +178,9 @@ class EvaluationController extends Controller
 			$evaluatingRatings = EvaluationRating::get();
 			$evaluatingEmployees = EvaluationEmployee::where('employee_id', $employee->id)->where('status', null)->get();
 			
-			$message = session()->flash('success', 'Ocjene su spremljene!');
+			$message = session()->flash('success', __('questionnaire.completed'));
 			
-			return redirect()->route('questionnaires.show',$questionnaire->id)->withFlashMessage($message);
+			return redirect()->route('dashboard',$questionnaire->id)->with('modal','true')->with('evaluation','true')->withFlashMessage($message);
     
 	}
 

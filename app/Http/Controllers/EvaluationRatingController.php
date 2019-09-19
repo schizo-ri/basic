@@ -56,8 +56,8 @@ class EvaluationRatingController extends Controller
     public function store(EvaluationRatingRequest $request)
     {
         $data = array(
-			'name'		=> $request['name'],
-			'rating'	=> $request['rating']
+			'name'		    => $request['name'],
+			'rating'	    => $request['rating']
 		);
 			
 		$evaluationRating = new EvaluationRating();
@@ -105,7 +105,7 @@ class EvaluationRatingController extends Controller
 		
 		$data = array(
 			'name'		=> $request['name'],
-			'rating'	=> $request['rating']
+            'rating'	=> $request['rating']
 		);
 			
 		$evaluationRating->updateEvaluationRating($data);

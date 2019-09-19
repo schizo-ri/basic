@@ -7,6 +7,7 @@ use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Employee;
+use App\Models\Department;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use Sentinel;
@@ -28,16 +29,35 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 		$empl = Sentinel::getUser()->employee;
 		$comments = Comment::orderBy('created_at','ASC')->get();
+	
+		if(isset($_GET['id'])) {
+			$post = Post::where('id',$_GET['id'])->first();
+			$comments_post = Comment::where('post_id',$post->id)->get();
+
+			if($post->employee_id != $empl->id) {
+				$post->updatePost(['status' => '1']);
+			}
+
+			if(count($comments_post) > 0){
+				foreach($comments_post as $comment) {
+					if($comment->employee_id != $empl->id ) {
+						$comment->updateComment(['status' => '1']);
+					}
+				}
+			}
+		}
 		$permission_dep = array();
+
 		if($empl) {
 			if(Sentinel::inRole('administrator')) {
-				$posts = Post::get();
+				$posts = Post::orderBy('to_department_id','DESC')->get();
 			} else {
 				$posts = Post::where('employee_id', $empl->id)->orWhere('to_employee_id', $empl->id)->get();
+				
 			}
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 			
@@ -57,8 +77,8 @@ class PostController extends Controller
     public function create()
     {
         $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name','ASC')->get();
-		
-		return view('Centaur::posts.create', ['employees' => $employees]);
+		$departments = Department::orderBy('name','ASC')->get();
+		return view('Centaur::posts.create', ['employees' => $employees, 'departments' => $departments]);
     }
 
     /**
@@ -69,28 +89,38 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        $user = Sentinel::getUser();
+		$user = Sentinel::getUser();
 		$employee = Employee::where('user_id', $user->id)->first();
-		
+
 		$data = array(
 			'employee_id'  		=> $employee->id,
-			'to_employee_id'  	=> $request['to_employee_id'],
 			'content'  			=> $request['content']
 		);
-
 		$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->get();
 		
-		if($posts->where('to_employee_id', $request['to_employee_id'])->first()) {
-			$post = $posts->where('to_employee_id', $request['to_employee_id'])->first();
-			$post->updatePost($data);
-		} elseif($posts->where('employee_id', $request['to_employee_id'] )->first()) {
-			$post = $posts->where('employee_id', $request['to_employee_id'] )->first();
-			$post->updatePost($data);
-		} else {
-			$post = new Post();
-			$post->savePost($data);
+		if($request['to_employee_id'] != null ) {	
+			$data += ['to_employee_id'  	=> $request['to_employee_id']];		
+			if($posts->where('to_employee_id', $request['to_employee_id'])->first()) {
+				$post = $posts->where('to_employee_id', $request['to_employee_id'])->first();
+				$post->updatePost($data);
+			} elseif($posts->where('employee_id', $request['to_employee_id'] )->first()) {
+				$post = $posts->where('employee_id', $request['to_employee_id'] )->first();
+				$post->updatePost($data);
+			} else {
+				$post = new Post();
+				$post->savePost($data);
+			}
 		}
-		
+		if($request['to_department_id'] != null) {
+			$data += ['to_department_id'  => $request['to_department_id']];
+			if($posts->where('to_department_id', $request['to_department_id'])->first()) {
+				$post->updatePost($data);
+			} else {
+				$post = new Post();
+				$post->savePost($data);
+			}
+		}
+
 		$data1 = array(
 			'employee_id'   =>  $employee->id,
 			'post_id'  		=>  $post->id,
@@ -167,6 +197,7 @@ class PostController extends Controller
 		$data = array(
 			'employee_id'  		=> $employee->id,
 			'to_employee_id'  	=> $request['to_employee_id'],
+			'to_department_id'  	=> $request['to_department_id'],
 		//	'title'  			=> $request['title'],
 			'content'  			=> $request['content']
 		);
@@ -287,26 +318,34 @@ class PostController extends Controller
 
 	public static function profile($post) {
 		$docs = '';
+		$user_name = '';
+		
 		$comments = Comment::orderBy('created_at','DESC')->get();
 		$employee = Sentinel::getUser()->employee;
 
-		if($post->employee_id == $employee->id ) {
-			$empl = Employee::where('id',$post->to_employee_id)->first();
+		if($post->to_employee_id != null) {
+			if($post->employee_id == $employee->id ) {
+				$empl = Employee::where('id',$post->to_employee_id)->first();
+			} else {
+				$empl = Employee::where('id',$post->employee_id)->first();
+			}
+			
+			$user_name = explode('.',strstr($empl->email,'@',true));
+			if(count($user_name) == 2) {
+				$user_name = $user_name[1] . '_' . $user_name[0];
+			} else {
+				$user_name = $user_name[0];
+			}
+	
+			$path = 'storage/' . $user_name . "/profile_img/";
+			if(file_exists($path)){
+				$docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
+			}
 		} else {
-			$empl = Employee::where('id',$post->employee_id)->first();
+			$empl = Employee::where('id', $post->employee_id)->first();
+			$user_name = Department::where('id', $post->to_department_id)->first()->name;
 		}
 		
-		$user_name = explode('.',strstr($empl->email,'@',true));
-		if(count($user_name) == 2) {
-			$user_name = $user_name[1] . '_' . $user_name[0];
-		} else {
-			$user_name = $user_name[0];
-		}
-
-		$path = 'storage/' . $user_name . "/profile_img/";
-		if(file_exists($path)){
-			$docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
-		}
 		$post_comment = $comments->where('post_id',$post->id)->first(); //zadnji komentar na poruku
 
 		$podaci = array(

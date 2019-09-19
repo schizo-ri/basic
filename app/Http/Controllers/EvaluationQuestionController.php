@@ -30,19 +30,24 @@ class EvaluationQuestionController extends Controller
     {
 		$empl = Sentinel::getUser()->employee;
         $permission_dep = array();
+
 		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-		} 
+            $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+            if(isset($request['category_id'])) {
+                $evaluationQuestions = EvaluationQuestion::where('category_id', $request['category_id'])->get();
+                
+                return view('Centaur::evaluation_questions.index', ['evaluationQuestions' => $evaluationQuestions, 'category_id' => $request['category_id'],'permission_dep' => $permission_dep]);
+            } else {
+                $evaluationQuestions = EvaluationQuestion::get();
+                
+                return view('Centaur::evaluation_questions.index', ['evaluationQuestions' => $evaluationQuestions,'permission_dep' => $permission_dep]);
+            }
+		}  else {
+            session()->flash('error', __('ctrl.not_registered'));
+
+            return redirect()->back();
+        }
 		
-		if(isset($request['category_id'])) {
-			$evaluationQuestions = EvaluationQuestion::where('category_id', $request['category_id'])->get();
-			
-			return view('Centaur::evaluation_questions.index', ['evaluationQuestions' => $evaluationQuestions, 'category_id' => $request['category_id'],'permission_dep' => $permission_dep]);
-		} else {
-			$evaluationQuestions = EvaluationQuestion::get();
-			
-			return view('Centaur::evaluation_questions.index', ['evaluationQuestions' => $evaluationQuestions,'permission_dep' => $permission_dep]);
-		}
     }
 
     /**
@@ -70,9 +75,11 @@ class EvaluationQuestionController extends Controller
     public function store(EvaluationQuestionRequest $request)
     {
 		$data = array(
-			'name'  			=> $request['name'],
+			'name_question'  	=> $request['name_question'],
 			'category_id'		=> $request['category_id'],
-			'description'  	 	=> $request['description']
+            'description'  	 	=> $request['description'],
+            'type'  	 	    => $request['type']
+            
 		);
 			
 		$evaluationQuestion = new EvaluationQuestion();
@@ -120,16 +127,18 @@ class EvaluationQuestionController extends Controller
         $evaluationQuestion = EvaluationQuestion::find($id);
 		
 		$data = array(
-			'name'  			=> $request['name'],
+			'name_question'  	=> $request['name_question'],
 			'category_id'		=> $request['category_id'],
-			'description'  	 	=> $request['description']
+            'description'  	 	=> $request['description'],
+            'type'  	 	    => $request['type']
 		);
 			
 		$evaluationQuestion->updateEvaluatingQuestion($data);
 		
 		session()->flash('success', "Podaci su ispravljeni");
 		
-        return redirect()->route('evaluation_questions.index');
+        //return redirect()->route('evaluation_questions.index');
+        return redirect()->back()->withFlashMessage($message);
     }
 
     /**
@@ -140,6 +149,7 @@ class EvaluationQuestionController extends Controller
      */
     public function destroy($id)
     {
+        dd($id);
         $evaluationQuestion = EvaluationQuestion::find($id);
 		$evaluationQuestion->delete();
 		

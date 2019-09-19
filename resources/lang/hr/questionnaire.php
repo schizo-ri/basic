@@ -13,12 +13,18 @@ return [
     'edit_category'			=> 'Ispravi kategoriju',
     'coef'					=> 'Koeficijent',
     'evaluation_question'	=> 'Podkategorija evaluacije',
-    'add_question'			=> 'Dodaj podkategoriju',
-    'edit_question'			=> 'Ispravi podkategoriju',
+    'question'			    => 'Pitanje',
+    'add_question'			=> 'Dodaj pitanje',
+    'edit_question'			=> 'Ispravi pitanje',
     'evaluation_ratings'	=> 'Ocjene evaluacije',
     'rating'				=> 'Ocjene',
 	'add_rating'			=> 'Dodaj ocjenu',
 	'edit_rating'			=> 'Ispravi ocjenu',
-	'results'				=> 'Rezultati ankete',
+    'results'				=> 'Rezultati ankete',
+    'completed'				=> 'Anketa je uspješno završena',
+    'single_choice'			=> 'Jedan izbor',
+    'multiple_choices'		=> 'Više izbora',
+    'text_field'		    => 'Tekstualno polje',
+
 ];
 ?>

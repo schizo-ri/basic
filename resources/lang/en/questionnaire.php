@@ -13,6 +13,7 @@ return [
     'edit_category'			=> 'Edit category',
     'coef'					=> 'Coefficient',
     'evaluation_question'	=> 'Evaluation question',
+    'question'			    => 'Question',
 	'add_question'			=> 'Add question',
     'edit_question'			=> 'Edit question',
     'evaluation_ratings'	=> 'Evaluation ratings',
@@ -20,5 +21,10 @@ return [
     'add_rating'			=> 'Add rating',
     'edit_rating'			=> 'Edit rating',
     'results'				=> 'Results',
+    'completed'				=> 'Survey completed successfully',
+    'single_choice'			=> 'Single choice',
+    'multiple_choices'		=> 'Multiple choices',
+    'text_field'		    => 'Text field',
+    
 ];
 ?>

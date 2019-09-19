@@ -37,7 +37,7 @@ class EmailingController extends Controller
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
         } 
 		
-		$emailings = Emailing::get();
+		$emailings = Emailing::join('tables','emailings.model','tables.id')->select('emailings.*','tables.name')->orderBy('tables.name','ASC')->get();
 		$departments = Department::orderBy('name', 'ASC')->get();
 		$employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->get();
 		 
@@ -54,7 +54,7 @@ class EmailingController extends Controller
         $models = Table::where('emailing',1)->orderBy('name', 'ASC')->get();
         $departments = Department::where('email','<>', null)->orderBy('name', 'ASC')->get();
         $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->get();
-		$methods = array('create', 'update', 'confirm', 'cron');
+		$methods = array('activate','create', 'update', 'confirm', 'cron');
 
 		return view('Centaur::emailings.create', ['models' => $models, 'departments' => $departments, 'employees' => $employees, 'methods' => $methods]);
 		
@@ -117,7 +117,7 @@ class EmailingController extends Controller
 		$models = Table::where('emailing',1)->orderBy('name', 'ASC')->get();
         $departments = Department::where('email','<>', null)->orderBy('name', 'ASC')->get();
         $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->get();
-		$methods = array('create', 'update', 'confirm', 'cron');
+		$methods = array('activate','create', 'update', 'confirm', 'cron');
 
 		return view('Centaur::emailings.edit', ['emailing'=>$emailing, 'models' => $models, 'departments' => $departments, 'employees' => $employees, 'methods' => $methods]);
 

@@ -25,7 +25,7 @@
 							<tr>
 								<td>{{ $notice->employee->user['first_name'] . ' ' . $notice->employee->user['last_name']  }}</td>
 								<td>{{ $notice->to_department }}</td>
-								<td><a href="{{ route('notices.show', $notice->id) }}" >{{ $notice->title }}</a></td>
+								<td><a href="{{ route('notices.show', $notice->id) }}" rel="modal:open" >{{ $notice->title }}</a></td>
 								<td>{!! str_limit(strip_tags($notice->notice),100) !!}</td>
 								<td class="center">
 									@if(Sentinel::getUser()->hasAccess(['notices.update']) || in_array('notices.update', $permission_dep) )

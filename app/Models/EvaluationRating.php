@@ -11,19 +11,16 @@ class EvaluationRating extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['rating','name'];
+	protected $fillable = ['rating','name','question_id'];
+	
 	
 	/*
-	* Save EvaluationRating
+	* The Eloquent EvaluationQuestion model name
 	* 
-	* @param array $evaluationRating
-	* @return void
+	* @var string
 	*/
-	public function saveEvaluationRating($evaluationRating=array())
-	{
-		return $this->fill($evaluationRating)->save();
-	}
-	
+	protected static $questionModel = 'App\Models\EvaluationQuestion'; 
+		
 	/*
 	* Update EvaluationRating
 	* 

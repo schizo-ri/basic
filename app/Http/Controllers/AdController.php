@@ -223,9 +223,14 @@ class AdController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function oglasnik()
+    public function oglasnik(Request $request)
     {
-		$ads = Ad::orderBy('created_at','DESC')->get();
+		if(isset($request['sort'])) {
+			$ads = Ad::orderBy('created_at', $request['sort'])->get();
+		} else {
+			$ads = Ad::orderBy('created_at','DESC')->get();
+		}
+		
 		$user = Sentinel::getUser()->employee;
 		$user_department = array();
 		$permission_dep = array();
@@ -236,7 +241,14 @@ class AdController extends Controller
 			$permission_dep = explode(',', count($user->work->department->departmentRole) > 0 ? $user->work->department->departmentRole->toArray()[0]['permissions'] : '');
 		} 
 		return view('Centaur::oglasnik',['ads'=> $ads,'user_department'=> $user_department,'permission_dep'=> $permission_dep, 'departments' => $departments]);
-    }
+	}
+	
+	public function sort ( Request $request ) {	
+		$ads = Ad::orderBy('created_at',$request['sort'] )->get();
+
+		return $ads;
+		
+	}
 
 }
 

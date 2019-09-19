@@ -1,0 +1,227 @@
+div#calendar{
+    padding: 0 30px;
+    width: 100%;
+    font-family: Helvetica, "Times New Roman", Times, serif;
+}
+ 
+div#calendar div.box{
+    position:relative;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:auto;
+}
+ 
+div#calendar div.header{
+    line-height:40px;  
+    vertical-align:middle;
+    width:100%;
+    height:auto;   
+    padding-top: 30px;
+}
+ 
+div#calendar div.header a.prev,div#calendar div.header a.next{ 
+    position:absolute;
+    top:0px;   
+    height: 17px;
+    display:block;
+    cursor:pointer;
+    text-decoration:none;
+    color:#000000;
+}
+ 
+div#calendar div.header span.title{
+    color:#FFF;
+    font-size:18px;
+}
+ 
+ 
+div#calendar div.header a.prev{
+    left:0px;
+}
+ 
+div#calendar div.header a.next{
+    right:0px;
+}
+ 
+
+/*******************************Calendar Content Cells*********************************/
+div#calendar div.box-content{
+    border-top:none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+div#calendar ul.label{
+    float:left;
+    margin: 0px;
+    padding: 0px;
+    margin-top:5px;
+    margin-left: 5px;
+    display: none;
+}
+ 
+div#calendar ul li{
+    margin:0px;
+    padding:0px;
+    margin-right:5px;  
+    float:left;
+    list-style-type:none;
+    width:80px;
+    height:40px;
+    line-height:40px;
+    vertical-align:middle;
+    text-align:center;
+    color:#000;
+    font-size: 15px;
+    background-color: transparent;
+}
+ 
+div#calendar ul.dates{
+    height: 92px;
+    width: 100%;
+    background: inherit;
+    color: white;
+    margin-bottom: 15px;
+    overflow-x: scroll;
+    white-space: nowrap;
+    display: flex;
+}
+ 
+/** overall width = width+padding-right**/
+div#calendar ul.dates li{
+    /*float: left;*/
+    flex: 0 0 64px;
+    height: 89px;
+    background: #F8FAFF;
+    margin-right: 5px;
+    padding: 10px;
+}
+ 
+:focus{
+    outline:none;
+}
+ 
+div.clear{
+    clear:both;
+}     
+
+.container #calendar ul.dates > li > .month {
+    font-weight: 400;
+    font-size: 0.75rem;
+    display: block;
+    text-align: center;
+    color: #7C93CD;
+    text-transform: capitalize;
+    margin-bottom: 5px;
+    padding: 0;
+    line-height: initial;
+}
+
+.container #calendar ul.dates > li > .day {
+    font-weight: 500;
+    font-size: 1rem;
+    display: block;
+    text-align: center;
+    color: #7C93CD;
+    margin-bottom: 5px;
+    padding: 0;
+    line-height: initial;
+}
+
+.container #calendar ul.dates > li > .week_day {
+    font-weight: 500;
+    font-size: 0.625rem;
+    display: block;
+    text-align: center;
+    color: rgba(7, 30, 87, 0.5);
+    text-transform: uppercase;
+    padding: 0;
+    line-height: initial;
+    
+}
+
+#calendar button.scroll_right_cal, #calendar button.scroll_left_cal, #calendar a.scroll_right_cal, #calendar a.scroll_left_cal  {
+    width: 8.5px;
+    height: 14px;
+    background-position: center;
+    border-radius: 50%;
+    float: right;
+    border: none;
+    line-height: 1rem;
+    margin-right: 30px;
+    line-height: 1rem;
+}
+
+#calendar button.scroll_left_cal, #calendar a.scroll_left_cal {
+    background: #ffffff url(/icons/arrow_left.png) no-repeat;
+}
+
+button.scroll_right_cal, a.scroll_right_cal  {
+    background: #ffffff url(/icons/arrow_right.png) no-repeat;
+}
+.dates::-webkit-scrollbar {
+    display: none;
+}
+div#calendar ul li.active_date {
+    background: #1594F0;
+}
+
+.container #calendar ul.dates > li.active_date > .month, .container #calendar ul.dates > li.active_date > .day, .container #calendar ul.dates > li.active_date > .week_day {
+    color:#ffffff;
+}
+
+.event_hidden {
+    display: none;
+   
+}
+
+.event_show {
+    background: #051847;
+    padding: 30px 35px;
+    margin: -25px -35px;
+}
+
+.event_show >div:not(:last-child) {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #53689B;
+}
+
+.event_show >div >h3 {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: #FFFFFF;
+}
+
+.event_show >div >p {
+    font-weight: 500;
+    font-size: 0.6875rem;
+    color: #FFFFFF;
+    padding-left: 37px;
+}
+
+.event_show span.blue, .event_show span.orange, .event_show span.green {
+    width: 17px;
+    height: 17px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.event_show span.blue {
+    background: #1390EA;
+}
+
+.event_show span.orange {
+    background: #EA9413;
+}
+
+.event_show span.green {
+    background: #13EA90;
+}
+
+@media (max-width: 768px) {
+    div#calendar {
+        padding: 0;
+    }
+}

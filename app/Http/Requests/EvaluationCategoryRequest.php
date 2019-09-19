@@ -24,7 +24,7 @@ class EvaluationCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' 				=> 'required|max:255',
+            'name_category' 	=> 'required|max:255',
             'questionnaire_id' 	=> 'required',
             'coefficient' 		=> 'required',
         ];

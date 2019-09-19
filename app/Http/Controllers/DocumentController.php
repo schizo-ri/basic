@@ -76,7 +76,9 @@ class DocumentController extends Controller
      */
     public function create()
     {
-        //
+		$employees = Employee::where('checkout',null)->get();
+		
+		return view('Centaur::documents.create',['employees' => $employees]);
     }
 
     /**
@@ -93,6 +95,7 @@ class DocumentController extends Controller
 			$user_name = 'svi';
 		} else {
 			$user_name = explode('.',strstr($employee->email,'@',true));
+			
 			$user_name = $user_name[1] . '_' . $user_name[0];
 		}
 		

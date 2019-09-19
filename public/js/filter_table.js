@@ -1,9 +1,22 @@
 function mySearchTable() {
-  $("#mySearch").on("keyup", function() {
+  $("#mySearchTbl").keyup(function() {
     var value = $(this).val().toLowerCase();
-    $("#table_id tbody tr").filter(function() {
+    
+    $("#index_table tbody tr").filter(function() {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
+  });
+}
+
+function mySearchDoc() {
+  $("#mySearch").keyup(function() {
+    var value = $(this).val().toLowerCase();
+    $("#index_table tbody tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+    $(".panel").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+		});
   });
 }
 

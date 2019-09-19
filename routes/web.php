@@ -77,6 +77,9 @@ Route::resource('ads', 'AdController');
 // Questionnaire
 Route::resource('questionnaires', 'QuestionnaireController');
 
+// QuestionnaireResult
+Route::resource('questionnaire_results', 'QuestionnaireResultController');
+
 // EvaluationCategory
 Route::resource('evaluation_categories', 'EvaluationCategoryController');
 
@@ -126,9 +129,11 @@ Route::get('dashboard', function () {
 
 // Oglasnik
 Route::get('oglasnik', ['as' => 'oglasnik', 'uses' => 'AdController@oglasnik']);
+Route::get('sort', ['as' => 'sort', 'uses' => 'AdController@sort']);
 
 // Noticeboard
 Route::get('noticeboard', ['as' => 'noticeboard', 'uses' => 'NoticeController@noticeboard']);
+Route::get('notices.schedule', ['as' => 'notices.schedule', 'uses' => 'NoticeController@schedule']);
 
 // Send mail questionnaire
 Route::get('sendEmail', ['as' => 'sendEmail', 'uses' => 'QuestionnaireController@sendEmail']);

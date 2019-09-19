@@ -3,6 +3,7 @@
 @section('title', __('basic.ads'))
 <?php
 use App\Http\Controllers\AdController;
+use App\Models\Ads;
 ?>
 @section('content')
 <div class="index_page ads_index">
@@ -20,29 +21,33 @@ use App\Http\Controllers\AdController;
 					<div class="float_right col-6 height100  position_rel padd_tb_5">
 						<div class='add_ads float_right '>
 							@if(Sentinel::getUser()->employee)
-								<a class="btn btn-primary btn-new" href="{{ route('ads.create') }}">
+								<a class="btn btn-primary btn-new" href="{{ route('ads.create') }}" rel="modal:open">
 									<i class="fas fa-plus"></i> Add
 								</a>
 							@endif
 						</div>
+						
 						<select id="filter" class="select_filter" >
 							<option>all</option>
 							@foreach($ads->unique('category_id') as $ad)
 								<option value="{{  $ad->category['name'] }}">{{ $ad->category['name'] }}</option>
 							@endforeach
 						</select>
-						<img class="img_filter" src="{{ URL::asset('icons/filter.png') }}" alt="Filter"/></a>
+						<select id="filter1" class="select_filter sort" onchange="location = this.value;">
+							<option class="sort_desc" value="{{ route('oglasnik', ['sort' => 'DESC'])}}">
+								@lang('basic.new_first')
+							</option>
+							<option class="sort_asc" value="{{ route('oglasnik', ['sort' => 'ASC']) }} ">
+								@lang('basic.old_first')
+							</option>
+						</select>
 					</div>
 				</div>
-				
 			</header>
 			<main class="main_ads">
-				<!--<a href="{{ route('ad_categories.index') }}">@lang('basic.ad_categories')</a> |-->
-			<!--	<a href="{{ route('ads.index') }}">@lang('basic.ads')</a>-->
 				@if(isset($ads))
 					@foreach($ads as $ad)
 						<?php
-							
 							$path = 'storage/ads/' . $ad->id . '/';
 							if(file_exists($path)) {
 								$docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
@@ -62,47 +67,48 @@ use App\Http\Controllers\AdController;
 							}else {
 								$profile_img = '';
 							}
-
 						?>
 						<article class="ad panel col-sm-12 col-md-6 col-lg-4 col-xl-3 float_left">
-							<div>
-								<header class="ad_header">
-									@if(isset($docs))
-										@foreach($docs as $doc)
-											@if(file_exists($path . $doc))
-												<img src="{{ asset($path . $doc) }}" alt="Ad image"/>
-											@endif
-										@endforeach
-									@endif
-								</header>
-								<main class="ad_main">
-									<span class="ad_category">{{ $ad->category['name'] }}</span>
-									<span class="ad_content">{{ $ad->subject }} | {!!  $ad->description !!}</span>
-								</main>
-								<footer class="ad_footer">
-									<div class="ad_empl">
-										@if($profile_img)
-											<img class="radius50 profile_img" src="{{ URL::asset($path_profile . end($profile_img)) }}" alt="Profile image"  />
-										@else
-											<img class="radius50 profile_img" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+							<a href="{{ route('ads.show', $ad->id) }}" rel="modal:open">
+								<div>
+									<header class="ad_header">
+										@if(isset($docs))
+											@foreach($docs as $doc)
+												@if(file_exists($path . $doc))
+													<img src="{{ asset($path . $doc) }}" alt="Ad image"/>
+												@endif
+											@endforeach
 										@endif
-										<p class="employee">{{ $ad->employee->user['first_name'] . ' ' . $ad->employee->user['last_name'] }} <span>{{  $ad->employee->work['name'] }}</span></p>  <!--  .' | ' . \Carbon\Carbon::createFromTimeStamp(strtotime($ad->created_at))->diffForHumans()-->
-										<span class="contact">
-											<a class="btn-send" href="{{ route('posts.create') }}">
-												<img class="img_send" src="{{ URL::asset('icons/chat.png') }}" alt="messages"/></a>
-											</a>
-										</span>
-										<span class="contact">
-											<a class="btn-send" href="{{ route('posts.create') }}">
-												<img class="img_send" src="{{ URL::asset('icons/envelope.png') }}" alt="messages"/></a>
-											</a>
-										</span>
-									</div>
-									<div class="price">
-										<p>100 kn</p>
-									</div>
-								</footer>
-							</div>
+									</header>
+									<main class="ad_main">
+										<span class="ad_category">{{ $ad->category['name'] }}</span>
+										<span class="ad_content">{{ $ad->subject }} | {!! str_limit(strip_tags($ad->description),100) !!} </span>
+									</main>
+									<footer class="ad_footer">
+										<div class="ad_empl">
+											@if($profile_img)
+												<img class="radius50 profile_img" src="{{ URL::asset($path_profile . end($profile_img)) }}" alt="Profile image"  />
+											@else
+												<img class="radius50 profile_img" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+											@endif
+											<p class="employee">{{ $ad->employee->user['first_name'] . ' ' . $ad->employee->user['last_name'] }} <span>{{  $ad->employee->work['name'] }}</span></p>  <!--  .' | ' . \Carbon\Carbon::createFromTimeStamp(strtotime($ad->created_at))->diffForHumans()-->
+											<span class="contact">
+												<a class="btn-send" href="{{ route('posts.create') }}">
+													<img class="img_send" src="{{ URL::asset('icons/chat.png') }}" alt="messages"/></a>
+												</a>
+											</span>
+											<span class="contact">
+												<a class="btn-send" href="{{ route('posts.create') }}">
+													<img class="img_send" src="{{ URL::asset('icons/envelope.png') }}" alt="messages"/></a>
+												</a>
+											</span>
+										</div>
+										<div class="price">
+											<p>100 kn</p>
+										</div>
+									</footer>
+								</div>
+							</a>
 						</article>
 					@endforeach
 				@endif
@@ -110,12 +116,8 @@ use App\Http\Controllers\AdController;
 		</section>
 	</main>
 </div>
-
 <script>
-$(function() {
-	$('.link_ads').css('color','orange');
-});
+	$.getScript( 'js/filter.js');
+	$.getScript( 'js/filter_dropdown.js');
 </script>
-<script src="{{ URL::asset('js/filter.js') }}" ></script>
-<script src="{{URL::asset('js/filter_dropdown.js') }}" ></script>
 @stop

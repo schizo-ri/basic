@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Questionnaire;
 use App\Models\EvaluationCategory;
 use Sentinel;
+use Session;
 
 class EvaluationCategoryController extends Controller
 {
@@ -51,12 +52,12 @@ class EvaluationCategoryController extends Controller
      */
     public function create(Request $request)
     {
-		$questionnaires = Questionnaire::get();
-		
-		if(isset($request['questionnaire_id'])) {
+        $questionnaires = Questionnaire::get();
+
+        if(isset($request['questionnaire_id'])) {
 			return view('Centaur::evaluation_categories.create', ['questionnaires' => $questionnaires, 'questionnaire_id' => $request['questionnaire_id']]);
-		}
-		
+        }
+
 		return view('Centaur::evaluation_categories.create', ['questionnaires' => $questionnaires]);
     }
 
@@ -69,11 +70,15 @@ class EvaluationCategoryController extends Controller
     public function store(EvaluationCategoryRequest $request)
     {
 		$data = array(
-			'name'  			=> $request['name'],
-			'questionnaire_id'	=> $request['questionnaire_id'],
-			'coefficient'  	 	=> str_replace(',', '.', $request['coefficient'])
+			'name_category'  	=> $request['name_category'],
+			'questionnaire_id'	=> $request['questionnaire_id']
 		);
-			
+        
+        if($request['coefficient'] != '') {
+            $data += ['coefficient'  => str_replace(',', '.', $request['coefficient'] ) ];
+        }
+
+        dd($data);
 		$evaluationCategory = new EvaluationCategory();
 		$evaluationCategory->saveCategory($data);
 		
@@ -118,12 +123,15 @@ class EvaluationCategoryController extends Controller
     {
         $evaluationCategory = EvaluationCategory::find($id);
 		
-		$data = array(
-			'name'  			=> $request['name'],
-			'questionnaire_id'	=> $request['questionnaire_id'],
-			'coefficient'  	 	=> str_replace(',', '.', $request['coefficient'])
+		$data = array (
+			'name_category'  	=> $request['name_category'],
+			'questionnaire_id'	=> $request['questionnaire_id']
+	
 		);
 
+        if($request['coefficient'] != '') {
+            $data += [	'coefficient'  	 	=> str_replace(',', '.', $request['coefficient']];
+        }
 		$evaluationCategory->updateCategory($data);
 		
 		session()->flash('success', "Podaci su ispravljeni");

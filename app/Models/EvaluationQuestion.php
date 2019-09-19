@@ -12,7 +12,7 @@ class EvaluationQuestion extends Model
 	* @var array
 	*/
 	
-	protected $fillable = ['category_id','name','description','description2'];
+	protected $fillable = ['category_id','name_question','description','description2','type'];
 	
 	/*
 	* The Eloquent group model name
@@ -30,7 +30,7 @@ class EvaluationQuestion extends Model
 	{
 		return $this->belongsTo(static::$groupModel,'category_id');
 	}
-	
+
 	/*
 	* Save EvaluatingQuestion
 	* 

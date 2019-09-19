@@ -1,8 +1,62 @@
 @extends('Centaur::layout')
 
-@section('title', 'Employees')
+@section('title', __('basic.profile'))
 
 @section('content')
+@php
+use App\Http\Controllers\DashboardController;
+@endphp
+<div class="index_page index_profile">
+	<aside class="col-lg-12 col-xl-12 float_left">
+		@include('Centaur::side_noticeboard')
+	</aside>
+	<main class="col-lg-12 col-xl-8 index_main profile_main float_right">
+		<section>
+			<div class="page-header header_profile">
+				<a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a>
+				@lang('basic.profile')
+			</div>
+			<main class="main_profile">
+				<div class="user_profile">
+					@php
+						$profile_image = DashboardController::profile_image(Sentinel::getUser()->employee['id']);
+						$user_name =  DashboardController::user_name(Sentinel::getUser()->employee['id']);
+					@endphp
+					@if($profile_image)
+						<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image"  />
+					@else
+						<img class="radius50 " src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+					@endif
+					<h2>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</h2>
+					<p>@if($employee){{ $employee->work['name'] }}@endif</p>
+					<span class="user_links">
+						<a class="iclude_event"  href="{{ route('events.create') }}" rel="modal:open"><span class="img-calendar">Include in event</span></a>
+						<a class="chat"  href="{{ route('posts.create') }}" rel="modal:open"></a>
+					</span>
+					<div class="user_info">	
+						<p class="label_name">@lang('basic.department')</p>
+						<p  class="label_value">{{ $employee->work->department['name'] }}</p>
+						<p class="label_name">@lang('basic.vacation')</p>
+						<p  class="label_value"></p>
+						<p class="label_name">@lang('basic.phone')</p>
+						<p  class="label_value">{{ $employee['mobile'] }}</p>
+						<p class="label_name">E-mail</p>
+						<p  class="label_value">{{ $employee['email'] }}</p>
+					</div>
+				</div>
+			</main>
+		</section>
+	</main>
+</div>
+
+<script>
+	$( function () {
+		$.getScript( '/../js/profile.js');
+
+	});
+</script>
+@stop
+<!--
 	<div class="index_page">
 		<header class="index_head user_head">
 			<a class="back" href="{{ url()->previous() }}">
@@ -80,4 +134,5 @@
 			</div>
 		</div>
 	</div>
-@stop
+
+-->

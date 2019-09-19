@@ -3,10 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Spatie\MediaLibrary\Models\Media;
 
-class Document extends Model
+class Document extends Model implements HasMedia
 {
-    protected $fillable = ['employee_id','path','title'];
+	use HasMediaTrait;
+	
+	protected $fillable = ['employee_id','path','title'];
 	
 	/*
 	* The Eloquent user model name
@@ -49,4 +54,15 @@ class Document extends Model
 	{
 		return $this->update($document);
 	}	
+
+	public function getCoverAttribute() {
+		return $this->getMedia( collectionName['cover'])->last();
+	}
+
+	public function registerMediaConversions(Media $media = null)
+    {
+        $this->addMediaConversion(name['thumb'] )
+              ->width(150)
+              ->height(100);
+    }
 }

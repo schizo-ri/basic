@@ -9,8 +9,11 @@ use App\Models\Post;
 use App\Models\Comment;
 use App\Models\Notice;
 use App\Models\Event;
+use App\Models\Employee;
 use App\Models\Department;
+use App\Http\Controllers\BasicAbsenceController;
 use Sentinel;
+use DateTime;
 
 class DashboardController extends Controller
 {
@@ -23,89 +26,71 @@ class DashboardController extends Controller
     {
         if(Sentinel::check()) {
             $questionnaires = Questionnaire::where('status','1')->get();
-            $user = Sentinel::getUser()->employee;
+            $employee = Sentinel::getUser()->employee;
             $notices = Notice::orderBy('created_at','DESC')->get();
             $departments = Department::get();
+            //dohvaća module firme
+            $moduli = CompanyController::getModules();
+    
+            $docs = '';
+            if($employee) {
+                $data_absence = array(
+                    'zahtjevi' => BasicAbsenceController::zahtjevi( $employee )
+                );
+                
+                //dohvaća dopuštenja odjela za korisnika
+                try{
+                    $permission_dep = explode(',', $employee->work->department->departmentRole->toArray()[0]['permissions']);
+                } catch (Exception $e) {
+                    $permission_dep = array();
+                } 
 
-            if($user) {
-                $posts = Post::where('employee_id',$user->id)->orWhere('to_employee_id',$user->id)->orderBy('updated_at','DESC')->get();
+                $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id',$employee->id)->orderBy('updated_at','DESC')->get();
                 $comments = Comment::orderBy('created_at','DESC')->get();
-                $user_department = $user->work->department->id;
-                $events = Event::where('employee_id',$user->id)->orderBy('created_at','ASC')->get();
+                $user_department = $employee->work->department->id;
 
-                return view('Centaur::dashboard',['questionnaires' => $questionnaires, 'posts' => $posts, 'comments' => $comments, 'notices' => $notices, 'user_department' => $user_department,'events' => $events,'departments' => $departments]);
+                $date = new DateTime();
+                $date->modify('-30 day');
+
+                $events = Event::where('employee_id',$employee->id)->where('date','>=', $date->format('Y-m-d'))->orderBy('created_at','ASC')->get();
+
+                return view('Centaur::dashboard',['questionnaires' => $questionnaires, 'posts' => $posts, 'comments' => $comments, 'notices' => $notices, 'user_department' => $user_department,'events' => $events,'departments' => $departments,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence]);
             } else {
-                return view('Centaur::dashboard',['questionnaires' => $questionnaires, 'notices' => $notices,'departments' => $departments]);
+                return view('Centaur::dashboard',['questionnaires' => $questionnaires, 'notices' => $notices,'departments' => $departments,'moduli' => $moduli,'docs' => $docs]);
             }
         } else {
 
-            return view('Centaur::dashboard');
+            return view('welcome');
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public static function profile_image( $employee_id ) 
     {
-        //
+        $image = '';
+		$user_name = DashboardController::user_name( $employee_id );
+        
+        $path = 'storage/' . $user_name . "/profile_img/";
+        
+        if(file_exists($path)){
+            $image = array_diff(scandir($path), array('..', '.', '.gitignore'));
+        }
+        
+		return $image;
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    
+    public static function user_name( $employee_id ) 
     {
-      //
-    }
+        $user_name = '';
+        $employee = Employee::where('id', $employee_id )->first();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-       //
-    }
+        $user_name = explode('.',strstr($employee->email,'@',true));
+        
+        if(count($user_name) == 2) {
+            $user_name = $user_name[1] . '_' . $user_name[0];
+        } else {
+            $user_name = $user_name[0];
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return $user_name;
     }
 }

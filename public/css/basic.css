@@ -56,8 +56,24 @@
     padding-top: 15px;
 }
 
+.padd_t_20 {
+    padding-top: 20px;
+}
+
+.padd_r_20 {
+    padding-right: 20px; 
+}
+
 .padd_r_30 {
     padding-right: 30px;
+}
+
+.padd_l_15 {
+    padding-left: 15px;
+}
+
+.padd_l_20 {
+    padding-left: 20px;
 }
 
 .float_right {
@@ -102,6 +118,13 @@
 
 .clear_l {
     clear: left;
+}
+.display_none {
+    display: none;
+}
+
+.font_14 {
+    font-size: 0.875rem;
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */

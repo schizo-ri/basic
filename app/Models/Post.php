@@ -26,7 +26,7 @@ class Post extends Model
 	* 
 	* @var string
 	*/
-	protected static $deparmentModel = 'App\Models\Deparment';
+	protected static $deparmentModel = 'App\Models\Department';
 	
 	/*
 	* Returns the users relationship
@@ -38,6 +38,12 @@ class Post extends Model
 	{
 		return $this->belongsTo(static::$employeeModel,'employee_id');
 	}
+
+	/*
+	* Returns the employee relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
 	
 	public function to_employee()
 	{
@@ -45,12 +51,12 @@ class Post extends Model
 	}
 	
 	/*
-	* Returns the deparment relationship
+	* Returns the employee relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	*/
 	
-	public function deparment()
+	public function to_department()
 	{
 		return $this->belongsTo(static::$deparmentModel,'to_department_id');
 	}

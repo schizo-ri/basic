@@ -18,6 +18,7 @@
 
         <!-- Styles -->
 		<link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}" type="text/css" >
+		<link rel="stylesheet" href="{{ URL::asset('css/modal.css') }}"/>
 		
 		<!--Jquery -->
 		<script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
@@ -53,9 +54,11 @@
 				</div>
 			</section>
 			<section class="col-md-12 col-lg-12 col-xl-5 float_left welcome_right">
-				<div></div>
-				<div></div>
-				<div></div>
+				
+				<div class="first_img"></div>
+				<div class="second_img"></div>
+				<div class="third_img"></div>
+				<img src="{{ URL::asset('storage/company_img/logo.png')}}" class="company_logo" alt="company_logo"/>
 			</section>
 		</section>
 		<!--
@@ -85,6 +88,16 @@
 		</div>
         </div>
 		-->
+		@include('Centaur::notifications', ['modal' => 'true'])
+		@stack('script')
+		<!-- Jquery modal -->
+		<script src="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
+		<link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" >
+		<script>
+			@if(session()->has('modal'))
+				$('.row.notification').modal();
+			@endif
+		</script>
 		@stack('script')
     </body>
 </html>

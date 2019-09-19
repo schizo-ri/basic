@@ -152,7 +152,7 @@ class UserController extends Controller
             ]);
         }
 
-        session()->flash('error', 'Invalid user.');
+        session()->flash('error', __('ctrl.invalid_user') );
         return redirect()->back();
     }
 
@@ -191,7 +191,7 @@ class UserController extends Controller
             if ($request->expectsJson()) {
                 return response()->json("Invalid user.", 422);
             }
-            session()->flash('error', 'Invalid user.');
+            session()->flash('error', __('ctrl.invalid_user'));
             return redirect()->back()->withInput();
         }
 
@@ -207,7 +207,7 @@ class UserController extends Controller
             return response()->json(['user' => $user], 200);
         }
 
-        session()->flash('success', "{$user->email} has been updated.");
+        session()->flash('success', "{$user->email}" . __('auth_update'));
         return redirect()->route('users.index');
     }
 
@@ -225,7 +225,7 @@ class UserController extends Controller
 
         // Check to be sure user cannot delete himself
         if (Sentinel::getUser()->id == $user->id) {
-            $message = "You cannot remove yourself!";
+            $message = @lang('ctrl.delete_self') ;
 
             if ($request->expectsJson()) {
                 return response()->json($message, 422);
@@ -239,7 +239,7 @@ class UserController extends Controller
         $user->delete();
 
         // All done
-        $message = "{$user->email} has been removed.";
+        $message = "{$user->email}" . __('ctrl.removed');
         if ($request->expectsJson()) {
             return response()->json([$message], 200);
         }
@@ -276,22 +276,29 @@ class UserController extends Controller
         // $id = $this->decode($hash);
         $user = $this->userRepository->findById($id);
 		
-		$employee = Employee::where('user_id',$user->id)->first();
+        $employee =  $user->employee;
+
 		$departments = Department::orderBy('name','ASC')->get();
 		
         // Fetch the available roles
         $roles = app()->make('sentinel.roles')->createModel()->all();
 		
         if ($user) {
-            return view('Centaur::users.edit_user', [
-                'user' => $user,
-				'employee' => $employee,
-				'departments' => $departments,
-                'roles' => $roles
-            ]);
+            if($employee) {
+                return view('Centaur::users.edit_user', [
+                    'user' => $user,
+                    'employee' => $employee,
+                    'departments' => $departments,
+                    'roles' => $roles
+                ]);
+            } else {
+                session()->flash('error', __('ctrl.not_registered'));
+                return redirect()->back();
+            }
+            
         }
 
-        session()->flash('error', 'Invalid user.');
+        session()->flash('error', __('auth.invalid_user'));
         return redirect()->back();
     }
 }

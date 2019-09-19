@@ -17,10 +17,10 @@
         </a>
     @endif
     <section class="statistic">
-    <div class="col-3 float_l"><p class="info_statistic">{{ number_format($statistic, 0) . '%' }}</p><span class="info_statistic">READ THIS NOTICE</span></div>
+        <div class="col-3 float_l"><p class="info_statistic">{{ number_format($statistic, 0) . '%' }}</p><span class="info_statistic">READ THIS NOTICE</span></div>
         <div class="col-3 float_l"><p class="info_statistic">{{ number_format($statistic, 0) . '%' }}</p><span class="info_statistic">READ WHOLE NOTICE</span></div>
         <div class="col-3 float_l"><p class="info_statistic">{{ number_format($statistic, 0) . '%' }}</p><span class="info_statistic">READ AT LEAST 50%</span></div>
-        <div class="col-3 float_l"><p class="info_statistic"><img src="{{ URL::asset('icons/horiz_dots.png') }}" /></p><span class="info_statistic">DETAILED STATS</span></div>
+        <div class="col-3 float_l"><a href="{{ route('notice_statistics.index', ['notice_id' => $notice->id] ) }}" rel="modal:open" ><p class="info_statistic"><img src="{{ URL::asset('icons/horiz_dots.png') }}" /></p><span class="info_statistic">DETAILED STATS</span></a></div>
     </section>
     <h3 class="panel-title">{{ $notice->title }}</h3>
     @php
@@ -38,6 +38,13 @@
         }else {
             $docs = '';
         }
+        $notice_img = '';
+        $path_notice = 'storage/notice/' . $notice->id . '/';
+        if(file_exists($path_notice)){
+            $notice_img = array_diff(scandir($path_notice), array('..', '.', '.gitignore'));
+        } else {
+            $notice_img = '';
+        }
     @endphp
     <span class="notice_name">
         @if($docs)
@@ -50,7 +57,12 @@
     <p class="notice_date">{{  date('l, d.F Y.', strtotime($notice->created_at)) }}</p>
 </div>
 <div class="modal-body">
-    {!! $notice->notice !!}
+    @if($notice_img)
+        <img class="img_notice" src="{{ URL::asset('storage/notice/' . $notice->id . '/' . end($notice_img)) }}" alt="Notice image" title="Notice image"  />
+    @endif
+    <div class="notice_content" >
+        {!! $notice->notice !!}
+    </div>
 </div>
 <script>
     $(function() {
@@ -64,8 +76,6 @@
        
     });
     $( window ).resize(function() {
-        $('.modal').addClass('modal_notice');
-        $('.modal').addClass('notice_show');
         var height = 0;
         var modal_height = $('.modal.modal_notice').height();
         var header_height =  $('.modal-header').height();
@@ -75,6 +85,11 @@
     });
     $('.btn-statistic').click(function(){
         $('.statistic').toggle();
+        var height = 0;
+        var modal_height = $('.modal.modal_notice').height();
+        var header_height =  $('.modal-header').height();
+        var body_height =  modal_height - header_height - 65;
+        $('.modal-body').height(body_height);
     });
     
 

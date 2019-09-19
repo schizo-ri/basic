@@ -1,7 +1,9 @@
-$(document).ready(function() {
+$( function () {
+
 	$('table.display').DataTable( {
 		"language": {
-            "search": "",
+			"search": "",
+			"searchPlaceholder": "Search"
         },
 		"lengthMenu": [ 10, 25, 50, 75, 100 ],
 		"order": [[ 0, "asc" ]],

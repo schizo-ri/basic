@@ -12,7 +12,7 @@ class EvaluationCategory extends Model
 	* @var array
 	*/
 	
-	protected $fillable = ['name','coefficient','questionnaire_id'];
+	protected $fillable = ['name_category','coefficient','questionnaire_id'];
 	
 	/*
 	* The Eloquent group model name

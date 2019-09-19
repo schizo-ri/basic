@@ -96,6 +96,10 @@ return [
 	'article'	=> 'Article',
 	'subject'	=> 'Subject',
 	'documents'	=> 'Documents',
+	'document'	=> 'Document',
+	'add_document'	=> 'Add document',
+	'upload_file'	=> 'Upload file',
+	'read_file'	=> 'Upload file',
 	'title'		=> 'Title',
 	'path'	=> 'Path',
 	'date'	=> 'Date',
@@ -114,7 +118,12 @@ return [
 	'post'		=> 'Messege',
 	'new_post'		=> 'New messege',
 	'send_post'	=> 'Send messege',
+	'send'		=> 'Send',
 	'edit_post'	=> 'Edit messege',
+	'message_to_empl'=> 'Send message to employee',
+	'message_to_dep'=> 'Send message to department',
+	'message_to'=> 'Send message to',
+	'message'  => 'Message',
 	'content'	=> 'Content',
 	'from'		=> 'From',
 	'to'		=> 'To',
@@ -140,6 +149,12 @@ return [
 	'edit_notice'	=> 'Edit notice',
 	'cancel'		=> 'Cancel',
 	'notice_board'	=> 'Noticeboard',
-
+	'publish'		=> 'Publish',
+	'profile'		=> 'Profile',
+	'vacation'		=> 'Vacation',
+	'new_first'		=> 'New first',
+	'old_first'		=> 'Old first',
+	'schedule'		=> 'Schedule',
+	
 ];	
 ?>

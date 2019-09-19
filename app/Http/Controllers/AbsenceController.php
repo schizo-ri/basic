@@ -162,7 +162,6 @@ class AbsenceController extends BasicAbsenceController
     {
         $empl = Employee::find($id);
 
-		
 		if($empl) {
 			$permission_dep = explode(',', $empl->work->department->departmentRole->toArray()[0]['permissions']);
 			$absences = Absence::where('employee_id',$empl->id)->get();

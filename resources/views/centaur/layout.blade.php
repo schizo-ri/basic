@@ -7,9 +7,10 @@
         <meta name="author" content="Jelena Juras">
 		<meta name="description" content="Portal za zaposlenike">
         <title>@yield('title')</title>
+		<meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Bootstrap - Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('node_modules/bootstrap/dist/css/bootstrap.min.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/bootstrap/dist/css/bootstrap.min.css') }}"/>
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -18,22 +19,23 @@
         <![endif]-->
 		
 		<!--Awesome icons -->
-		<link rel="stylesheet" href="{{ URL::asset('node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}"/>
 		
 		<!-- Datatables -->
-		<link rel="stylesheet" href="{{ URL::asset('node_modules/DataTables/datatables.min.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../dataTables/datatables.css') }}"/>
 		
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('css/layout.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('css/basic.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('css/modal.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('css/dashboard.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('css/index.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('css/responsive_top_nav.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/layout.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/welcome.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/basic.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/modal.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/dashboard.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/index.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/responsive_top_nav.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('css/calendar.css') }}"/>
 		<!--Jquery -->
-		<script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
-			
+		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
+		<script src="{{ URL::asset('/../node_modules/chart.js/dist/Chart.js') }}"></script>
 		@stack('stylesheet')
 		<?php 
 			use App\Http\Controllers\PostController;
@@ -45,7 +47,6 @@
 			<header class="header_nav">
 				<nav class="nav_top col-md-12 ">
 					<a class="" href="#"><img src="{{ URL::asset('storage/company_img/logo.png')}}" alt="company_logo"/></a>
-						@include('Centaur::notifications')
 						<ul class="nav_ul float_right">
 							@if (Sentinel::check())
 								@if(Sentinel::inRole('administrator'))
@@ -71,7 +72,7 @@
 						</div>
 						@if(Sentinel::getUser()->hasAccess(['posts.view']) || in_array('posts.view', $permission_dep) )
 							<div class="col-sm-12 col-md-12 col-lg-6 float_left">
-								<a class="button_nav post_button" href="{{ route('posts.index') }}">
+								<a class="button_nav load_button post_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('posts.index') }}">
 									<span class="button_nav_img messages">
 										<span class="line_btn">
 											@if(PostController::countComment_all() >0)<span class="count_comment">{{ PostController::countComment_all() }}</span>@endif  
@@ -83,7 +84,7 @@
 						@endif
 						@if(Sentinel::getUser()->hasAccess(['documents.view']) || in_array('documents.view', $permission_dep) )
 							<div class="col-sm-12 col-md-12 col-lg-6 float_left">
-								<a class="button_nav load_button" href="{{ route('documents.index') }}">
+								<a class="button_nav load_button doc_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('documents.index') }}">
 									<span class="button_nav_img documents"></span>
 									<p>Dokumenti</p>
 								</a>
@@ -91,7 +92,7 @@
 						@endif
 						@if(Sentinel::getUser()->hasAccess(['events.view']) || in_array('events.view', $permission_dep) )
 							<div class="col-sm-12 col-md-12 col-lg-6 float_left">
-								<a class="button_nav event_button " href="{{ route('events.index') }}" >
+								<a class="button_nav load_button event_button isDisabled" href="{{ route('events.index') }}" >
 									<span class="button_nav_img calendar"></span>
 									<p>Kalendar</p>
 								</a>
@@ -99,7 +100,7 @@
 						@endif
 						@if(Sentinel::getUser()->hasAccess(['questionnaires.view']) || in_array('questionnaires.view', $permission_dep) )
 							<div class="col-sm-12 col-md-12 col-lg-6 float_left">
-								<a class="button_nav load_button" href="{{ route('questionnaires.index') }}">
+								<a class="button_nav load_button quest_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('questionnaires.index') }}">
 									<span class="button_nav_img questionnaire"></span>
 									<p>@lang('questionnaire.questionnaires')</p>	
 								</a>
@@ -107,7 +108,7 @@
 						@endif
 						@if(Sentinel::getUser()->hasAccess(['ads.view']) || in_array('ads.view', $permission_dep) )
 							<div class="col-sm-12 col-md-12 col-lg-6 float_left">
-								<a class="button_nav load_button" href="{{ route('oglasnik') }}">
+								<a class="button_nav load_button ads_button isDisabled" href="{{ route('oglasnik') }}">
 									<span class="button_nav_img ads"></span>
 									<p>Njuškalo</p>	
 								</a>	
@@ -122,6 +123,7 @@
 			@endif
 			<div class="container col-sm-12 col-md-12 col-lg-12">
 				@yield('content')
+
 				@if(Sentinel::check()  && Sentinel::inRole('administrator'))
 					<section class="admin-panel padd_0">
 						<ul class="" >
@@ -144,76 +146,61 @@
 				@endif
 			</div>
 			<span id="hiddenId"></span>
+			@include('Centaur::notifications', ['modal' => 'true'])
 		</section>
-		@include('Centaur::notifications')
 		<script>
 			function myTopNav() {
-				var x = document.getElementById("myTopnav");
-				if (x.className === "topnav") {
-				x.className += " responsive";
+				var x = $("#myTopnav");
+				if (x.hasClass("responsive") && x.hasClass("topnav") ) {
+					x.removeClass("responsive");
 				} else {
-				x.className = "topnav";
-				}
+					x.addClass("responsive");
+				} 
 			}
 		</script>
         <!-- Latest compiled and minified Bootstrap JavaScript -->
         <!-- Bootstrap js -->
-		<script src="{{ URL::asset('node_modules/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-		<script src="{{ URL::asset('node_modules/popper.js/dist/umd/popper.min.js') }}"></script>
+		<script src="{{ URL::asset('/../node_modules/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+		<script src="{{ URL::asset('/../node_modules/popper.js/dist/umd/popper.min.js') }}"></script>
         <!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
-        <script src="{{ asset('restfulizer.js') }}"></script>
+        <script src="{{ asset('/../restfulizer.js') }}"></script>
 		
 		<!--Awesome icons -->
-		<script src="{{ URL::asset('node_modules/@fortawesome/fontawesome-free/js/all.min.js') }}"></script>
+		<script src="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/js/all.min.js') }}"></script>
 	
 		<!-- Jquery modal -->
-		<script src="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
+		<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
 		<link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" >
 
-		<!-- Scripts 
-		<script src="{{ URL::asset('js/filter.js') }}" ></script>
-		<script src="{{ URL::asset('js/filter_table.js') }}" ></script>
-		<script src="{{URL::asset('js/filter_dropdown.js') }}" ></script>-->
-	    <script src="{{URL::asset('js/nav_active.js') }}"></script>
-		<script src="{{URL::asset('js/open_admin.js') }}"></script>
-		<script src="{{URL::asset('js/efc_toggle.js') }}"></script>
-		<script src="{{URL::asset('js/set_height.js') }}"></script>
-		<!-- Datatables -->
-		<script type="text/javascript" src="{{ URL::asset('dataTables/datatables.min.js') }}"></script>
-		<script type="text/javascript" src="{{ URL::asset('dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
-		<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
-		<script type="text/javascript" src="{{ URL::asset('dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-		<script type="text/javascript" src="{{ URL::asset('dataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
-		
-		<script src="{{ URL::asset('js/datatables.js') }}"></script>
-		<!-- Summernote -->
-		<link href="{{ URL::asset('node_modules/summernote/summernote-lite.css') }}" rel="stylesheet">
-		<script src="{{ URL::asset('node_modules/summernote/summernote-lite.min.js') }}" ></script>
-		<script>
-			$( document ).ready(function() {
-				$("a[rel='modal:open']").show();
-				$.modal.defaults = {
-				closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
-				escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-				clickClose: true,       // Allows the user to close the modal by clicking the overlay
-				closeText: 'Close',     // Text content for the close <a> tag.
-				closeClass: '',         // Add additional class(es) to the close <a> tag.
-				showClose: true,        // Shows a (X) icon/link in the top-right corner
-				modalClass: "modal",    // CSS class added to the element being displayed in the modal.
-				// HTML appended to the default spinner during AJAX requests.
-				spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+		<!-- Scripts -->
+	    <script src="{{URL::asset('/../js/nav_active.js') }}"></script>
+		<script src="{{URL::asset('/../js/open_admin.js') }}"></script>
+		<script src="{{URL::asset('/../js/efc_toggle.js') }}"></script>
+		<script src="{{URL::asset('/../js/set_height.js') }}"></script>
+		<script src="{{ URL::asset('/../js/collaps.js') }}"></script>
+		<script src="{{URL::asset('/../js/calendar.js') }}"></script>
 
-				showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
-				fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
-				fadeDelay: 1.0          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
-				};
-			});
-		</script>
-		<script>
-			@if(session()->has('modal'))
+		<!-- Pignoise calendar -->
+		<script src="{{ URL::asset('/../node_modules/moment/moment.js') }}"></script>
+		<script src="{{ URL::asset('/../node_modules/pg-calendar/dist/js/pignose.calendar.min.js') }}"></script>
+
+		<!-- Datatables -->
+		<script type="text/javascript" src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
+		<script type="text/javascript" src="{{ URL::asset('/../dataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
+
+		<!-- Summernote js -->
+		<link href="{{ URL::asset('/../node_modules/summernote/summernote-lite.css') }}" rel="stylesheet">
+		<script src="{{ URL::asset('/../node_modules/summernote/summernote-lite.min.js') }}" ></script>
+		<!-- Modal js -->
+		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
+		
+		@if(session()->has('modal'))
+			<script>
 				$("#modal_notification").modal();
-			@endif
+				$('.row.notification').modal();
+				$('#schedule_modal').modal();
 			</script>
+		@endif
 		@stack('script')
     </body>
 </html>

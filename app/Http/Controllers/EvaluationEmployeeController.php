@@ -39,7 +39,8 @@ class EvaluationEmployeeController extends Controller
 			return view('Centaur::evaluation_employees.index', ['evaluationEmployees' => $evaluationEmployees, 'questionnaire_id' => $request['questionnaire_id'],'permission_dep' => $permission_dep]);
 		} else {
 			$evaluationEmployees = EvaluationEmployee::get();
-			return view('Centaur::evaluation_categories.index', ['evaluationEmployees' => $evaluationEmployees],'permission_dep' => $permission_dep);
+            
+            return view('Centaur::evaluation_employees.index', ['evaluationEmployees' => $evaluationEmployees]);
 		}
     }
 

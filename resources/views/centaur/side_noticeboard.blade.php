@@ -1,9 +1,13 @@
 @php
     use App\Models\Notice;
+    use App\Models\Department;
+    use App\Http\Controllers\DashboardController;
 
     $user = Sentinel::getUser()->employee;
+    $departments = Department::get();
     $user_department = array();
     $permission_dep = array();
+
     if($user) {
         array_push($user_department, $user->work->department->id);
 
@@ -20,7 +24,9 @@
                 <i style="font-size:11px" class="fa">&#xf067;</i>
             </a>
         @endif
-        <a class="view_all" href="{{ route('noticeboard') }}" >@lang('basic.view_all')</a>
+        @if(Sentinel::getUser()->employee)
+            <a class="view_all" href="{{ route('noticeboard') }}" >@lang('basic.view_all')</a>
+        @endif
     </h2>
     @if(count($notices))
         @foreach ($notices as $notice)
@@ -30,33 +36,21 @@
             @if(array_intersect($user_department, $notice_dep) )
                 <a href="{{ route('notices.show', $notice->id) }}" rel="modal:open">    
                     <article class="notice">
-                        <div class="col-md-2 float_left">
+                        <div class="col-1 float_left">
                             <span class="notice_time">{{ date('H:i',strtotime($notice->created_at))}}<span>{{ date('l',strtotime($notice->created_at))}}</span></span>
                             <span class="notice_empl">
                                 @php
-                                    $docs = '';
-                                    $user_name = explode('.',strstr($notice->employee['email'],'@',true));
-                                    if(count($user_name) == 2) {
-                                        $user_name = $user_name[1] . '_' . $user_name[0];
-                                    } else {
-                                        $user_name = $user_name[0];
-                                    }
-
-                                    $path = 'storage/' . $user_name . "/profile_img/";
-                                    if(file_exists($path)){
-                                        $docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
-                                    }else {
-                                        $docs = '';
-                                    }
+                                    $profile_image_notice = DashboardController::profile_image($notice->employee_id);
+                                    $user_name_notice =  DashboardController::user_name($notice->employee_id);
                                 @endphp
-                                @if($docs)
-                                <img class="notice_img radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($docs)) }}" alt="Profile image" title="{{ $notice->employee->user['first_name'] . ' ' . $notice->employee->user['last_name'] }}"  />
+                                @if($profile_image_notice)
+                                    <img class="notice_img radius50" src="{{ URL::asset('storage/' . $user_name_notice . '/profile_img/' . end($profile_image_notice)) }}" alt="Profile image"  />
                                 @else
-                                    <img class="notice_img radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+                                    <img class="notice_img radius50 " src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
                                 @endif
                             </span>
                         </div>
-                        <div class="col-md-10 float_left">
+                        <div class="col-11 float_left">
                             <span class="notice_text">{!! str_limit(strip_tags($notice->notice),300) !!}</span>
                         </div>
                     </article>
@@ -65,3 +59,11 @@
         @endforeach
     @endif
 </section>
+<script>
+    $(function(){
+        var aside_height = $('.index_page.index_documents aside').height();
+        $('section.noticeboard').height(aside_height);
+
+    });
+   
+</script>

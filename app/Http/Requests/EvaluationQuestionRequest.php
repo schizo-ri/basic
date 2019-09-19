@@ -24,9 +24,9 @@ class EvaluationQuestionRequest extends FormRequest
     public function rules()
     {
         return [
-            'category_id' => 'required',
-			'name' 		  => 'required|max:255',
-            'description' => 'required|max:65535',
+            'category_id'   => 'required',
+			'name_question' => 'required|max:255',
+            'description'    => 'required|max:65535',
         ];
     }
 }

@@ -46,25 +46,20 @@ class BasicAbsenceController extends Controller
 			$serviceD = $stazPrijasnji[2];
 		} 
 		/* Staž ukupan */
-		$all_days = 0;
-		$all_month = 0;
-		$all_years = 0;
+		$all_days = $days+$serviceD;
+		$all_month = $months+$serviceM;
+		$all_years = $years + $serviceY;
 		
-		if(($days+$serviceD) > 30){
-			$all_days = ($days+$serviceD) -30;
-			$all_month = 1;
-		} else {
-			$all_days = ($days+$serviceD);
-		}
+		if( $all_days >= 30 ) {
+			$all_days -= 30;
+			$all_month += 1;
+		} 
 		
-		if(($months+$serviceM) > 12){
-			$all_month += ($months+$serviceM) -12;
-			$all_years = 1;
-		} else {
-			$all_month += ($months+$serviceM);
-		}
-		$all_years += ($years + $serviceY);
-								
+		if( $all_month >= 12 ){
+			$all_month -= 12;
+			$all_years += 1;
+		} 
+	
 		$staz = array($all_years, $all_month, $all_days);
 		
 		return $staz;
