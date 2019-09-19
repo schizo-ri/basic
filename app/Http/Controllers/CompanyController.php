@@ -257,24 +257,33 @@ class CompanyController extends Controller
 	public static function getModules () 
 	{
 		$moduli_company = array(); 
-		
-		$company_oib = Company::first()->oib;
-		if($company_oib) {
-			//konektiranje na superadmin bazu
-			$db_ext = DB::connection('mysql_external'); 
-			//dohvaćanje iz tbl zahtjeva zahtjev korisnika
-			$client_request = $db_ext->table('client_requests')->join('clients','client_requests.client_id','clients.id')->select('client_requests.modules','clients.*')->where('clients.oib',$company_oib)->orderBy('client_requests.updated_at','DESC')->first();
-			if($client_request) {
-				$modules = explode(',',$client_request->modules);
+		$company = Company::first();
+		if ($company) {
+			$company_oib = Company::first()->oib;
+			if($company_oib) {
+				//konektiranje na superadmin bazu
+				$db_ext = DB::connection('mysql_external'); 
+				//dohvaćanje iz tbl zahtjeva zahtjev korisnika
+				try {
+					$client_request = $db_ext->table('client_requests')->join('clients','client_requests.client_id','clients.id')->select('client_requests.modules','clients.*')->where('clients.oib',$company_oib)->orderBy('client_requests.updated_at','DESC')->first();
+					if($client_request) {
+						$modules = explode(',',$client_request->modules);
+						
+						$moduli = $db_ext->table('modules')->get(); //dobvaćanje modula
+						
+						foreach($modules as $module){
+							array_push($moduli_company,$moduli->where('id',$module)->first()->name); // array sa nazivima  modulima korisnika
+						}
+					}
 				
-				$moduli = $db_ext->table('modules')->get(); //dobvaćanje modula
-				
-				foreach($modules as $module){
-					array_push($moduli_company,$moduli->where('id',$module)->first()->name); // array sa nazivima  modulima korisnika
+				} catch (Exception $e) {
+					echo 'Caught exception: ',  $e->getMessage(), "\n";
+					
 				}
+				
 			}
 		}
-		
+
 		return $moduli_company;
 	}
 }

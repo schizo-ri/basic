@@ -82,15 +82,36 @@ class DashboardController extends Controller
     {
         $user_name = '';
         $employee = Employee::where('id', $employee_id )->first();
-
-        $user_name = explode('.',strstr($employee->email,'@',true));
+		
+		if( $employee ) {
+			$user_name = explode('.',strstr($employee->email,'@',true));
         
-        if(count($user_name) == 2) {
-            $user_name = $user_name[1] . '_' . $user_name[0];
-        } else {
-            $user_name = $user_name[0];
-        }
+			if(count($user_name) == 2) {
+				$user_name = $user_name[1] . '_' . $user_name[0];
+			} else {
+				$user_name = $user_name[0];
+			}
+		}
 
         return $user_name;
     }
+	
+	public static function getDepartmentPermission () {
+		
+		$employee = Sentinel::getUser()->employee;
+		$departments = Department::get();
+		$user_department = array();
+		$permission_dep = array();
+
+		if($employee) {
+			array_push($user_department, $employee->work->department->id);
+
+			array_push($user_department, $departments->where('level1',0)->first()->id);
+			$permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
+		}
+		
+		return $permission_dep;	
+		
+	}
+		
 }

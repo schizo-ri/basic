@@ -2,19 +2,9 @@
     use App\Models\Notice;
     use App\Models\Department;
     use App\Http\Controllers\DashboardController;
-
-    $user = Sentinel::getUser()->employee;
-    $departments = Department::get();
-    $user_department = array();
-    $permission_dep = array();
-
-    if($user) {
-        array_push($user_department, $user->work->department->id);
-
-        array_push($user_department, $departments->where('level1',0)->first()->id);
-        $permission_dep = explode(',', count($user->work->department->departmentRole) > 0 ? $user->work->department->departmentRole->toArray()[0]['permissions'] : '');
-    }
-    
+	
+	$permission_dep = DashboardController::getDepartmentPermission();
+	
     $notices = Notice::orderBy('created_at','DESC')->get();
 @endphp
 <section class="col-md-12 col-lg-4 float_left noticeboard">

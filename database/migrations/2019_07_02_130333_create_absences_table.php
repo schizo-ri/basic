@@ -14,7 +14,7 @@ class CreateAbsencesTable extends Migration
     public function up()
     {
         Schema::create('absences', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
 			$table->string('type',50)->comment('vrsta zahtjeva');
 			$table->integer('employee_id');
 			$table->date('start_date');

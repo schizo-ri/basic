@@ -39,6 +39,9 @@
 		@stack('stylesheet')
 		<?php 
 			use App\Http\Controllers\PostController;
+			use App\Http\Controllers\DashboardController;
+	
+			$permission_dep = DashboardController::getDepartmentPermission();
 		?>
     </head>
     <body>
@@ -47,7 +50,9 @@
 			<header class="header_nav">
 				<nav class="nav_top col-md-12 ">
 					<a class="" href="#"><img src="{{ URL::asset('storage/company_img/logo.png')}}" alt="company_logo"/></a>
+
 						<ul class="nav_ul float_right">
+					
 							@if (Sentinel::check())
 								@if(Sentinel::inRole('administrator'))
 									<li><a id="open-admin" ><img class="img_button" src="{{ URL::asset('icons/flash.png') }}" alt="messages"/></a></li>
@@ -122,27 +127,34 @@
 			</header>
 			@endif
 			<div class="container col-sm-12 col-md-12 col-lg-12">
-				@yield('content')
-
-				@if(Sentinel::check()  && Sentinel::inRole('administrator'))
-					<section class="admin-panel padd_0">
-						<ul class="" >
-							@if (Sentinel::inRole('administrator'))
-								<li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ route('users.index') }}" id="click_users">@lang('basic.users')</a></li>
-								<li class="{{ Request::is('roles*') ? 'active' : '' }}"><a href="{{ route('roles.index') }}">@lang('basic.roles')</a></li>
-								<li class="{{ Request::is('employees*') ? 'active' : '' }}"><a href="{{ route('employees.index') }}">@lang('basic.employees')</a></li>
-								<li class="{{ Request::is('departments*') ? 'active' : '' }}"><a href="{{ route('departments.index') }}">@lang('basic.departments')</a></li>
-								<!--<li class="{{ Request::is('department_roles*') ? 'active' : '' }}"><a href="{{ route('department_roles.index') }}">@lang('basic.department_roles')</a></li>-->
-								<li class="{{ Request::is('works*') ? 'active' : '' }}"><a href="{{ route('works.index') }}">@lang('basic.works')</a></li>
-								<li class="{{ Request::is('questionnaires*') ? 'active' : '' }}"><a href="{{ route('questionnaires.index') }}">@lang('questionnaire.questionnaires')</a></li>
-								<li class="{{ Request::is('companies*') ? 'active' : '' }}"><a href="{{ route('companies.index') }}">@lang('basic.company')</a></li>
-								<li class="{{ Request::is('emailings*') ? 'active' : '' }}"><a href="{{ route('emailings.index') }}">@lang('basic.emailings')</a></li>
-							@endif
-							@if (Sentinel::inRole('superadmin'))
-								<li class="{{ Request::is('tables*') ? 'active' : '' }}"><a href="{{ route('tables.index') }}">@lang('basic.tables')</a></li>
-							@endif
-						</ul>
-					</section>
+				@if(Sentinel::check())
+					@if(Sentinel::getUser()->employee)
+						@yield('content')
+					@else
+						<section class="padd_20">
+							<h2>Nisi prijavljeni djelatnik</h2>
+						</section>
+					@endif
+					@if(Sentinel::inRole('administrator'))
+						<section class="admin-panel padd_0">
+							<ul class="" >
+								@if (Sentinel::inRole('administrator') || Sentinel::inRole('superadmin'))
+									<li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ route('users.index') }}" id="click_users">@lang('basic.users')</a></li>
+									<li class="{{ Request::is('roles*') ? 'active' : '' }}"><a href="{{ route('roles.index') }}">@lang('basic.roles')</a></li>
+									<li class="{{ Request::is('employees*') ? 'active' : '' }}"><a href="{{ route('employees.index') }}">@lang('basic.employees')</a></li>
+									<li class="{{ Request::is('departments*') ? 'active' : '' }}"><a href="{{ route('departments.index') }}">@lang('basic.departments')</a></li>
+									<!--<li class="{{ Request::is('department_roles*') ? 'active' : '' }}"><a href="{{ route('department_roles.index') }}">@lang('basic.department_roles')</a></li>-->
+									<li class="{{ Request::is('works*') ? 'active' : '' }}"><a href="{{ route('works.index') }}">@lang('basic.works')</a></li>
+									<li class="{{ Request::is('questionnaires*') ? 'active' : '' }}"><a href="{{ route('questionnaires.index') }}">@lang('questionnaire.questionnaires')</a></li>
+									<li class="{{ Request::is('companies*') ? 'active' : '' }}"><a href="{{ route('companies.index') }}">@lang('basic.company')</a></li>
+									<li class="{{ Request::is('emailings*') ? 'active' : '' }}"><a href="{{ route('emailings.index') }}">@lang('basic.emailings')</a></li>
+								@endif
+								@if (Sentinel::inRole('superadmin'))
+									<li class="{{ Request::is('tables*') ? 'active' : '' }}"><a href="{{ route('tables.index') }}">@lang('basic.tables')</a></li>
+								@endif
+							</ul>
+						</section>
+						@endif
 				@endif
 			</div>
 			<span id="hiddenId"></span>

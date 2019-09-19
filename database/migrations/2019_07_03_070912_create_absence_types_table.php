@@ -14,11 +14,11 @@ class CreateAbsenceTypesTable extends Migration
     public function up()
     {
         Schema::create('absence_types', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('name',50)->comment('vrsta izostanka');
             $table->string('mark',5)->comment('kratka oznaka');
-            $table->integer('min_days',2)->comment('minimalno dana GO')->nullable();
-            $table->integer('max_days',2)->comment('maximalno dana GO')->nullable();
+            $table->integer('min_days')->comment('minimalno dana GO')->nullable();
+            $table->integer('max_days')->comment('maximalno dana GO')->nullable();
             $table->timestamps();
         });
     }

@@ -34,6 +34,7 @@ class RoleController extends Controller
         $userRoleIds = Sentinel::getUser()->roles()->pluck('id');
 		$empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
+
 		if($empl) {
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 		} 

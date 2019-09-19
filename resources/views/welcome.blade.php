@@ -51,6 +51,7 @@
 						<input class="btn-login" type="submit" value="{{ __('welcome.login') }}">
 					</form>
 					<p class="terms">By log in you agree to Intranets <span>terms and conditions</span></p>
+					<li><a href="{{ route('auth.register.form') }}">@lang('welcome.register')</a></li>
 				</div>
 			</section>
 			<section class="col-md-12 col-lg-12 col-xl-5 float_left welcome_right">
