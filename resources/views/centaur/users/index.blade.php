@@ -5,10 +5,7 @@
 @section('content')
     <div class="page-header">
         <div class='btn-toolbar pull-right'>
-            <a class="btn btn-primary btn-lg" href="{{ route('users.create') }}">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                Create User
-            </a>
+            <a href="{{ route('users.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" /></a>
         </div>
         <h1>Users</h1>
     </div>
@@ -36,7 +33,7 @@
                             </li>
                         </ul>
                         <div class="panel-footer">
-                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-default">
+                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-default" rel="modal:open">
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                 Edit
                             </a>

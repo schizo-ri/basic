@@ -41,7 +41,23 @@ Route::resource('users', 'UserController');
 // Roles
 Route::resource('roles', 'RoleController');
 
+// Employee
+Route::resource('employees', 'EmployeeController');
+
+// Project
+Route::resource('projects', 'ProjectController');
+
+// Project Employees
+Route::resource('project_employees', 'ProjectEmployeeController');
+
+
 // Dashboard
+ /*
 Route::get('dashboard', function () {
     return view('Centaur::dashboard');
-})->name('dashboard');
+})->name('dashboard');*/
+
+// Dashboard 
+Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
+
+Route::get('save/{employee?}/{date?}/{project?}', ['as' => 'save', 'uses' => 'ProjectEmployeeController@save']);

@@ -18,8 +18,23 @@
         <![endif]-->
 		
 		<!--Jquery -->
-		<script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
-		
+        <script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
+        <script src="{{ URL::asset('/../node_modules/moment/moment.js') }}"></script>
+        
+       <!-- CSS modal -->
+        <link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.css') }}" type="text/css" />
+        <link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}" type="text/css" />
+ 
+        <link href="{{ URL::asset('node_modules/@fullcalendar/core/main.css') }}" rel='stylesheet' />
+        <link href="{{ URL::asset('node_modules/@fullcalendar/daygrid/main.css') }}" rel='stylesheet' />
+        <link href="{{ URL::asset('node_modules/@fullcalendar/list/main.css') }}" rel='stylesheet' />
+    
+        <script  src="{{ URL::asset('node_modules/@fullcalendar/core/main.js') }}"></script>
+        <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/daygrid/main.js') }}"></script>
+        <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/interaction/main.js') }}"></script>
+        <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/list/main.js') }}"></script>
+        <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/resource-common/main.js') }}"></script>
+ 
 		@stack('stylesheet')
     </head>
     <body>
@@ -42,6 +57,8 @@
                         @if (Sentinel::check() && Sentinel::inRole('administrator'))
                             <li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ route('users.index') }}">Users</a></li>
                             <li class="{{ Request::is('roles*') ? 'active' : '' }}"><a href="{{ route('roles.index') }}">Roles</a></li>
+                            <li class="{{ Request::is('employees*') ? 'active' : '' }}"><a href="{{ route('employees.index') }}">Djelatnici</a></li>
+                            <li class="{{ Request::is('projects*') ? 'active' : '' }}"><a href="{{ route('projects.index') }}">Projekti</a></li>
                         @endif
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -67,7 +84,11 @@
 		<script src="{{ URL::asset('node_modules/popper.js/dist/umd/popper.min.js') }}"></script>
         <!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
         <script src="{{ asset('restfulizer.js') }}"></script>
-		
+        
+        <!-- Jquery modal -->
+        <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.js') }}"></script>
+        <!-- Modal js -->
+		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
 		@stack('script')
     </body>
 </html>

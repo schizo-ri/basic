@@ -5,9 +5,7 @@
 @section('content')
     <div class="page-header">
         <div class='btn-toolbar pull-right'>
-            <a class="btn btn-primary btn-lg" href="{{ route('roles.create') }}">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                Create Role
+            <a href="{{ route('roles.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" /></a>
             </a>
         </div>
         <h1>Roles</h1>
@@ -31,7 +29,7 @@
                                 <td>{{ $role->slug }}</td>
                                 <td>{{ implode(", ", array_keys($role->permissions)) }}</td>
                                 <td>
-                                    <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-default">
+                                    <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-default" rel="modal:open">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                         Edit
                                     </a>
