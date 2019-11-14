@@ -19,6 +19,8 @@ table.dataTable {
   clear: both;
   border-collapse: separate;
   border-spacing: 0;
+  display: table;
+  margin-bottom: 20px;
   /*
    * Header and footer styles
    */
@@ -80,9 +82,15 @@ table.dataTable tbody tr.selected {
 table.dataTable tbody th,
 table.dataTable tbody td {
   /*padding: 8px 10px;*/
-  padding: 25px;
+  padding: 25px 10px;
   border: none;
   position: relative;
+}
+table.dataTable tbody td:last-child {
+  padding-right: 15px;
+}
+table.dataTable tbody td:last-child > a {
+  display: none;
 }
 table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
   border-top: 1px solid #ddd;
@@ -189,6 +197,7 @@ table.dataTable.display tbody tr:hover.selected > .sorting_3, table.dataTable.or
 table.dataTable.no-footer {
   border-bottom: 1px solid #111;
   border-bottom: none;
+
 }
 table.dataTable.nowrap th, table.dataTable.nowrap td {
   white-space: nowrap;

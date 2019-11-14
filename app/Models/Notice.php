@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notice extends Model
 {
-    protected $fillable = ['employee_id','to_department','to_employee','title','notice','schedule_date'];
-
+	protected $fillable = ['employee_id','to_department','to_employee','title','notice','schedule_date'];
+	
     /*
 	* The Eloquent employee model name
 	* 
@@ -48,5 +48,5 @@ class Notice extends Model
 	public function updateNotice($notice=array())
 	{
 		return $this->update($notice);
-	}	
+	}
 }

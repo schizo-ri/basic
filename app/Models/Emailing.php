@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Emailing extends Model
-{
-     protected $fillable = ['model','method','sent_to_dep','sent_to_empl'];
+{	
+	protected $fillable = ['model','method','sent_to_dep','sent_to_empl'];
 	 
 	 /*
 	* The Eloquent user model name

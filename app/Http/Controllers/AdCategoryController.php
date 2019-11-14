@@ -109,7 +109,7 @@ class AdCategoryController extends Controller
 			
 		$category->updateCategory($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('ad_categories.index');
     }
@@ -125,7 +125,7 @@ class AdCategoryController extends Controller
         $category = AdCategory::find($id);
 		$category->delete();
 		
-		$message = session()->flash('success', 'Kategorija je obrisana.');
+		$message = session()->flash('success', __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

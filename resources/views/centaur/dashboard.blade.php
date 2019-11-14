@@ -5,12 +5,10 @@
 	use App\Models\Employee;
 	use App\Http\Controllers\PostController;
 	use App\Http\Controllers\DashboardController;
-	use App\Models\Calendar;
 @endphp
-<link rel="stylesheet" href="{{ URL::asset('/../css/dashboard.css') }}"/>
 @section('content')
 	@if (Sentinel::check())
-		<div class="user_header col-sm-12 col-md-12 col-lg-12 col-xl-8  float_left " >
+		<div class="user_header col-xs-8 col-sm-8 float_left " >
 			<div class="info">
 				<div class="col-md-3 float_left ">
 					@php
@@ -28,46 +26,46 @@
 					<div class="header_user_go">
 						<p>
 							<span>{{ $data_absence['zahtjevi']['preostalo_OG'] }}</span>
-							<span>Vacation<br>days left</span>
+							<span>@lang('absence.vacation')<br>@lang('absence.days_left')</span>
 						</p>
 						<p>
 							<span>{{ $data_absence['zahtjevi']['zahtjevi_Dani_OG'] }}</span>
-							<span>Vacation<br>days used</span>
+							<span>@lang('absence.vacation')<br>@lang('absence.days_used')</span>
 						</p>
 					</div>
 					@endif
 				</div>
 				@if(isset($employee))
 				<div class="col-md-9 padd_0 float_left salary ">
-					<span class="efc_hide">Hide your salary <img class="radius50" src="{{ URL::asset('icons/arrow_up.png') }}" alt="arrow" /></span>
-					<span class="efc_show">Show your salary <img class="radius50" src="{{ URL::asset('icons/arrow_down.png') }}" alt="arrow" /></span>
+					<span class="efc_hide">@lang('basic.hide_salery')<img class="radius50" src="{{ URL::asset('icons/arrow_up.png') }}" alt="arrow" /></span>
+					<span class="efc_show">@lang('basic.show_salery')<img class="radius50" src="{{ URL::asset('icons/arrow_down.png') }}" alt="arrow" /></span>
 					<div class="efc col-md-12">
-						<p class="col-4"><span class="salery_show">{{ number_format($employee->brutto, 2, ',', '.') }} kn</span><span class="salery_hidden">- Kn</span> Yearly salary</p>
-						<p class="col-4"><span class="salery_show">{{ number_format($employee->brutto /12, 2, ',', '.') }}  kn</span><span class="salery_hidden">- Kn</span>Company's monthly cost</p>
-						<p class="col-4"><span class="salery_show">{{ number_format($employee->effective_cost, 2, ',', '.')}}  kn</span><span class="salery_hidden">- Kn</span>Hourly rate</p>
+						<p class="col-4"><span class="salery_show">{{ number_format($employee->brutto, 2, ',', '.') }} kn</span><span class="salery_hidden">- Kn</span>@lang('basic.yearly_salary')</p>
+						<p class="col-4"><span class="salery_show">{{ number_format($employee->brutto /12, 2, ',', '.') }}  kn</span><span class="salery_hidden">- Kn</span>@lang('basic.monthly_cost')</p>
+						<p class="col-4"><span class="salery_show">{{ number_format($employee->effective_cost, 2, ',', '.')}}  kn</span><span class="salery_hidden">- Kn</span>@lang('basic.hourly_rate')</p>
 					</div>
 					<div class="col-md-12 padd_0 float_left layout_button ">
 						<button class=""><a href="{{ route('absences.create', ['type' => 'GO']) }}" rel="modal:open">
 							<span>
 								<span class="img beach"></span>
-								<p>Request for Vacation days</p></a>
+								<p>@lang('absence.request_vacation')</p></a>
 							</span>
 						</button>
 						<button class="" ><a href="{{ route('absences.create') }}" rel="modal:open">
 							<span>
 								<span class="img overtime"></span>
-								<p>Request for overtimes</p></a>
+								<p>@lang('absence.request_overtimes')</p></a>
 							</span>
 						</button>
 						<button class="" ><a href="{{ route('absences.create', ['type' => 'BOL']) }}" rel="modal:open">
 							<span>
 								<span class="img sick"></span>
-								<p>Sick leave</p></a>
+								<p>@lang('absence.sick_leave')</p></a>
 							</span>
 						</button>
 						<button class="button_absence" ><a href="{{ route('absences.index') }}" >
 							<span>
-								<span class="img all_req"><p>View all requests</p></span></a>
+								<span class="img all_req"><p>@lang('absence.view_all_request')</p></span></a>
 							</span>
 						</button>
 					</div>
@@ -76,7 +74,7 @@
 			</div>
 		</div>
 		@include('Centaur::side_noticeboard')
-		<section class="col-md-12 col-lg-5 float_left calendar">
+		<section class="col-xs-12 col-sm-5 float_left calendar">
 			<div>
 				<div id="calendar">
 					<div class="box">
@@ -99,8 +97,9 @@
 							<i style="font-size:11px" class="fa">&#xf067;</i>
 					</a>@endif
 					<h3 class="agenda_title">@lang('calendar.your_agenda') </h3>
+
 					@if(isset($events) && count($events) > 0)
-						@foreach($events as $event)
+						@foreach($events->take(5) as $event)
 							<p class="agenda display_none" id="{{ $event->date }}">
 								<span class="agenda_mark"><span class="green"></span></span>
 								<span class="agenda_time">{{ date('H:i',strtotime($event->time1)) }}<br><span>{{ date('H:i',strtotime($event->time2)) }}</span></span>
@@ -108,12 +107,16 @@
 							</p>
 						@endforeach
 					@endif
+					<div class="placeholder">
+						<img class="" src="{{ URL::asset('icons/placeholder_calendar.png') }}" alt="Placeholder image" />
+						<p><span>@lang('basic.no_schedule')</span></p>
+					</div>
 				</div>
 			</div>
 		</section>
-		<section class="col-md-12 col-lg-3 float_left posts">
+		<section class="col-xs-12 col-sm-3 float_left posts">
 			<div class="all_post">
-				<h2>Latest messages <a class="view_all" href="{{ route('posts.index') }}" >@lang('basic.view_all')</a></h2>
+				<h2>@lang('basic.latest_messages') <a class="view_all" href="{{ route('posts.index') }}" >@lang('basic.view_all')</a></h2>
 				@if(isset($posts) && count( $posts))
 					@foreach($posts as $post)
 						@php
@@ -123,12 +126,13 @@
 							if($post->to_employee_id != null) {
 								$image_employee = DashboardController::profile_image($post->to_employee_id);
 							}
+
 						@endphp
 						<article class="main_post">
 							<a href="{{ route('posts.index',['id' =>  $post->id ]) }}">
 								<span class="post_empl">
 									@if($post->to_employee_id != null)
-										@if(isset($image_employee) && $image_employee != '')
+										@if(isset($image_employee) && $image_employee)
 											<img class="radius50" src="{{ URL::asset('storage/' . $user_name_post . '/profile_img/' . end($image_employee)) }}" alt="Profile image"  />
 										@else
 											<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
@@ -150,14 +154,19 @@
 										@endif
 									</span>
 									@if(PostController::countComment($post->id) > 0)<span class="count_coments">{{ PostController::countComment($post->id) }}</span>@endif
-									<span class="post_time">13:25</span>
+								<span class="post_time">{{ date('d.m. H:i',strtotime($post->updated_at)) }}</span>
 								</span>
 								<span class="post_text">
-									{{	$post_comment->content }}
+									{{	$post_comment['content'] }}								
 								</span>
 							</a>
 						</article>
 					@endforeach
+				@else
+					<div class="placeholder">
+						<img class="" src="{{ URL::asset('icons/placeholder_noticeadd.png') }}" alt="Placeholder image" />
+						<p>@lang('basic.no_post')</p>
+					</div>
 				@endif
 			</div>
 		</section>
@@ -166,13 +175,24 @@
 			<div class="jumbotron">
 				<h1>@lang('welcome.welcome')</h1>
 				<p>@lang('welcome.must_login')</p>
-				<p><a class="btn btn-primary btn-lg" href="{{ route('auth.login.form') }}" role="button">Log In</a></p>
+				<p><a class="btn btn-primary btn-lg" href="{{ route('auth.login.form') }}" role="button">@lang('welcome.login')</a></p>
 			</div>
 		</div>
 	@endif
 <script>
 	$( function () {
+		if($('.comming_agenda'))
+		$('.placeholder').show();
+		
+		var placeholder_height =  $('.placeholder img').height();
+        $('.calendar .comming_agenda').height(placeholder_height + 60);
+		
 		$.getScript( '/../js/event_click.js');
+		
+	});
+	$( window ).resize(function() {
+		var placeholder_height = $('.placeholder_cal>img').height();
+		$('.placeholder_cal>p').height(placeholder_height);
 	});
 </script>
 @stop

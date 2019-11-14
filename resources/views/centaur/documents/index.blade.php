@@ -12,11 +12,10 @@
 			<div class="page-header header_document">
 				<a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a>
 				@lang('basic.documents')
-				<span class="show float_r">show<i class="fas fa-caret-down"></i></span>
-				<span class="hide float_r">hide<i class="fas fa-caret-up"></i></span>
+				<span class="show float_r">@lang('basic.show')<i class="fas fa-caret-down"></i></span>
+				<span class="hide float_r">@lang('basic.hide')<i class="fas fa-caret-up"></i></span>
 				<div class="preview_doc">
-					<button id="left-button" class="scroll_left">
-					</button>
+					<button id="left-button" class="scroll_left"></button>
 					@if(Sentinel::getUser()->hasAccess(["documents.create"]) || in_array("documents.create", $permission_dep) )
 						<a class="add_new new_document" href="{{ route('documents.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i></a>
 					@endif
@@ -27,71 +26,80 @@
 						</span>
 					@endforeach
 					
-					<button id="right-button" class="scroll_right">
-					</button>
+					<button id="right-button" class="scroll_right"></button>
 				</div>
 			</div>
 			<main class="all_documents">
-				<div class="table-responsive">
-					<div class="index_table_filter">
-						<label>
-							<input type="search" placeholder="Search" onkeyup="mySearchTable()" id="mySearchTbl">
-						</label>
-						<span class="change_view"></span>
-						@if(Sentinel::getUser()->hasAccess(["documents.create"]) || in_array("documents.create", $permission_dep) )
-							<a class="add_new" href="{{ route('documents.create') }}" class="" rel="modal:open">
-								<i style="font-size:11px" class="fa">&#xf067;</i>
-								<!-- @lang("basic.add_document")-->
-							</a>
-						@endif
-					</div>
-
-					@if(count($documents))
-						<table id="index_table" class="display table table-hover">
-							<thead>
-								<tr>
-									<th></th><!--type -->
-									<th>@lang('basic.title')</th>
-								<!--<th>@lang('basic.employee')</th>-->
-								<!--<th>@lang('basic.path')</th>-->
-									<th>Type</th>
-									<th>@lang('basic.date')</th>
-									<th class="not-export-column no-sort"></th>
-								</tr>
-							</thead>
-							<tbody>
-								@foreach ($documents as $document)
-									<?php  
-										$open = $document->path . $document->title;
-									?>
+					<div class="table-responsive">
+						<header class="page-header">
+							<div class="index_table_filter">
+								<label>
+									<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
+								</label>
+								<span class="change_view"></span>
+								@if(Sentinel::getUser()->hasAccess(["documents.create"]) || in_array("documents.create", $permission_dep) )
+									<a class="add_new" href="{{ route('documents.create') }}" class="" rel="modal:open">
+										<i style="font-size:11px" class="fa">&#xf067;</i>
+										<!-- @lang("basic.add_document")-->
+									</a>
+								@endif
+							</div>
+						</header>
+						@if(count($documents)>0)
+							<table id="index_table" class="display table table-hover">
+								<thead>
 									<tr>
-										<th>@if(file_exists('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png'))<img src="{{ URL::asset('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png' )  }}" /> @endif</th><!--type -->
-										<td><a href="{{ asset($open) }}" target="_blank">{{ $document->title }}</a></td>
-								<!--	<td>{{ $document->employee->user['first_name'] . ' ' .  $document->employee->user['last_name'] }}</td>-->
-								<!--	<td>{{ $document->path }}</td>-->
-										<td>{{ __('doc_type.' . pathinfo($open, PATHINFO_EXTENSION) ) }}</td>
-										<td>{{ Carbon\Carbon::parse($document->created_at)->diffForHumans()  }}</td>
-										<td class="options center">
-											@if(Sentinel::getUser()->hasAccess(['documents.update']) || in_array('documents.update', $permission_dep) || Sentinel::getUser()->hasAccess(['documents.delete']) || in_array('abdocumentssences.delete', $permission_dep))
-												<button class="collapsible option_dots float_r"></button>
-												<div class="content">
-													@if(Sentinel::getUser()->hasAccess(["documents.update"]) || in_array("documents.update", $permission_dep) )
-														<a href="{{ route("documents.edit", $document->id) }}" class="btn-edit" rel="modal:open"><i class="far fa-edit"></i></a>
-													@endif
+										<th class="not-export-column no-sort"></th><!--type -->
+										<th>@lang('basic.title')</th>
+									<!--<th>@lang('basic.employee')</th>-->
+									<!--<th>@lang('basic.path')</th>-->
+										<th>Type</th>
+										<th>@lang('basic.date')</th>
+										<th class="not-export-column no-sort"></th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach ($documents as $document)
+										<?php  
+											$open = $document->path . $document->title;
+										?>
+										<tr>
+											<th>
+												@if(file_exists('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png'))<img class="doc_icons" src="{{ URL::asset('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png' )  }}" /> @endif
+											
+											</th><!--type -->
+											<td><a href="{{ asset($open) }}" target="_blank">{{ $document->title }}</a></td>
+									<!--	<td>{{ $document->employee->user['first_name'] . ' ' .  $document->employee->user['last_name'] }}</td>-->
+									<!--	<td>{{ $document->path }}</td>-->
+											<td>{{ __('doc_type.' . pathinfo($open, PATHINFO_EXTENSION) ) }}</td>
+											<td>{{ Carbon\Carbon::parse($document->created_at)->diffForHumans()  }}</td>
+											<td class="options center">
+												@if(Sentinel::getUser()->hasAccess(['documents.update']) || in_array('documents.update', $permission_dep) || Sentinel::getUser()->hasAccess(['documents.delete']) || in_array('abdocumentssences.delete', $permission_dep))
+													<button class="collapsible option_dots float_r"></button>
+													
 													@if(Sentinel::getUser()->hasAccess(["documents.delete"]) || in_array("documents.delete", $permission_dep))
 														<a href="{{ route("documents.destroy", $document->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>
 													@endif
-												</div>
-											@endif
-										</td>
-									</tr>
-								@endforeach
-							</tbody>
-						</table>
-					@else
-						@lang('basic.no_data')
-					@endif
-				</div>
+													
+												@endif
+											</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+						@else
+							<div class="placeholder">
+								<img class="" src="{{ URL::asset('icons/placeholder_document.png') }}" alt="Placeholder image" />
+								<p> @lang('basic.no_file1')
+									<label type="text" class="add_new" rel="modal:open" >
+										<i style="font-size:11px" class="fa">&#xf067;</i>
+									</label>
+								@lang('basic.no_file2')
+								</p>
+							</div>
+						@endif
+					</div>
+				
 			</main>
 		</section>
 	</main>

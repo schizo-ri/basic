@@ -82,7 +82,7 @@ class EvaluationCategoryController extends Controller
 		$evaluationCategory = new EvaluationCategory();
 		$evaluationCategory->saveCategory($data);
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('evaluation_categories.index',['questionnaire_id' => $request['questionnaire_id']]);
     }
@@ -130,11 +130,11 @@ class EvaluationCategoryController extends Controller
 		);
 
         if($request['coefficient'] != '') {
-            $data += [	'coefficient'  	 	=> str_replace(',', '.', $request['coefficient']];
+            $data += ['coefficient'	=> str_replace(',', '.', $request['coefficient'])];
         }
 		$evaluationCategory->updateCategory($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('evaluation_categories.index');
     }
@@ -150,7 +150,7 @@ class EvaluationCategoryController extends Controller
         $evaluationCategory = EvaluationCategory::find($id);
 		$evaluationCategory->delete();
 		
-		$message = session()->flash('success', 'Kategorija je obrisana.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

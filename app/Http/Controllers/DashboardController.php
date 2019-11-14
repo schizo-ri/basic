@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CompanyController;
 use App\Models\Questionnaire;
 use App\Models\Post;
 use App\Models\Comment;
@@ -11,9 +12,12 @@ use App\Models\Notice;
 use App\Models\Event;
 use App\Models\Employee;
 use App\Models\Department;
+use App\Models\Company;
 use App\Http\Controllers\BasicAbsenceController;
 use Sentinel;
 use DateTime;
+use PDO;
+use DB;
 
 class DashboardController extends Controller
 {
@@ -24,39 +28,43 @@ class DashboardController extends Controller
      */
     public function index()
     {
+
+    //  $company = Company::where('url', CompanyController::getCompanyURL()['host'])->first()->db;
+    //  dd($company);
+
         if(Sentinel::check()) {
             $questionnaires = Questionnaire::where('status','1')->get();
             $employee = Sentinel::getUser()->employee;
-            $notices = Notice::orderBy('created_at','DESC')->get();
+
             $departments = Department::get();
             //dohvaća module firme
             $moduli = CompanyController::getModules();
-    
+
             $docs = '';
             if($employee) {
                 $data_absence = array(
                     'zahtjevi' => BasicAbsenceController::zahtjevi( $employee )
                 );
-                
-                //dohvaća dopuštenja odjela za korisnika
-                try{
-                    $permission_dep = explode(',', $employee->work->department->departmentRole->toArray()[0]['permissions']);
-                } catch (Exception $e) {
-                    $permission_dep = array();
-                } 
 
-                $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id',$employee->id)->orderBy('updated_at','DESC')->get();
+                //dohvaća dopuštenja odjela za korisnika
+                if($employee->work->department->departmentRole->isNotEmpty()) {
+                    $permission_dep = explode(',', $employee->work->department->departmentRole->toArray()[0]['permissions']);
+                } else {
+                    $permission_dep = array();
+                }
+
+                $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id',$employee->id)->orderBy('updated_at','DESC')->take(5)->get();
                 $comments = Comment::orderBy('created_at','DESC')->get();
                 $user_department = $employee->work->department->id;
 
                 $date = new DateTime();
                 $date->modify('-30 day');
 
-                $events = Event::where('employee_id',$employee->id)->where('date','>=', $date->format('Y-m-d'))->orderBy('created_at','ASC')->get();
+                $events = Event::where('employee_id',$employee->id)->where('date','>=', $date->format('Y-m-d'))->orderBy('date','DESC')->get();
 
-                return view('Centaur::dashboard',['questionnaires' => $questionnaires, 'posts' => $posts, 'comments' => $comments, 'notices' => $notices, 'user_department' => $user_department,'events' => $events,'departments' => $departments,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence]);
+                return view('Centaur::dashboard',['questionnaires' => $questionnaires, 'posts' => $posts, 'comments' => $comments,'user_department' => $user_department,'events' => $events,'departments' => $departments,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence]);
             } else {
-                return view('Centaur::dashboard',['questionnaires' => $questionnaires, 'notices' => $notices,'departments' => $departments,'moduli' => $moduli,'docs' => $docs]);
+                return view('Centaur::dashboard',['questionnaires' => $questionnaires, 'departments' => $departments,'moduli' => $moduli,'docs' => $docs]);
             }
         } else {
 
@@ -74,7 +82,6 @@ class DashboardController extends Controller
         if(file_exists($path)){
             $image = array_diff(scandir($path), array('..', '.', '.gitignore'));
         }
-        
 		return $image;
     }
     
@@ -96,22 +103,72 @@ class DashboardController extends Controller
         return $user_name;
     }
 	
-	public static function getDepartmentPermission () {
-		
-		$employee = Sentinel::getUser()->employee;
-		$departments = Department::get();
-		$user_department = array();
-		$permission_dep = array();
+    public static function getDepartmentPermission () 
+    {
+		if(Sentinel::check()) {
+            $employee = Sentinel::getUser()->employee;
+            $permission_dep = array();
 
-		if($employee) {
-			array_push($user_department, $employee->work->department->id);
+            if($employee) {
+                    $permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
+            }
+            
+            return $permission_dep;	
+        } 
+    }
+    
+    public static function getUserDepartment () {
+        if(Sentinel::check()) {
+            $employee = Sentinel::getUser()->employee;
+            $departments = Department::get();
+            $user_department = array();
+    
+            if($employee) {
+                array_push($user_department, $employee->work->department->id);
+                array_push($user_department, $departments->where('level1', 0)->first()->id);
+            }
+            return $user_department;	
+        } 
+    }
 
-			array_push($user_department, $departments->where('level1',0)->first()->id);
-			$permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
-		}
-		
-		return $permission_dep;	
-		
-	}
-		
+    public static function getDBName ()
+    {
+       
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+     /*
+            $servername = "icom-superadmin.duplico.hr";
+            $username = "duplicoh_jelena";
+            $password = "Sifra123jj";*/
+
+        try {
+           
+                $conn = new PDO("mysql:host=$servername;dbname=novi_portal", $username, $password);
+          
+              //  $conn = new PDO("mysql:host=$servername;dbname=duplicoh_icom-superadmin", $username, $password);
+          
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            if (isset($_SERVER['HTTP_HOST'])) {
+                $host = $_SERVER['HTTP_HOST'];
+            } else {
+                $host = 'localhost:8000'; 
+            }
+            $stmt = $conn->prepare("SELECT db FROM client_requests WHERE url='" . $host . "' LIMIT 1");
+            $stmt->execute();
+            $db = $stmt->fetch()['db'];
+
+            $conn = null;
+        } catch(PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+        }
+       
+        return $db;
+    }
+
+    public function openAdmin() {
+        return view('Centaur::admin_panel');
+    }
+    
+   
 }

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'calendar' 	    => 'calendar',
+    'calendar' 	    => 'Calendar',
     'your_agenda'   => 'Your agenda',
     'events'        => 'Events',
     'event'         => 'Event',
@@ -29,7 +29,12 @@ return [
     'fri'		    => 'F',
     'sat'		    => 'S',
     'sun'		    => 'S',
-
+    'add_event'		    => 'Add event',
+    'add_task'		    => 'Add task',
+    'add_other_event'	=> 'Add other events',
+    'create_event'	    => 'Creat your event',
+    'create_task'	    => 'Save any task so you don’t miss any',
+    'create_other_event'    => 'Add celebrating, birthdays for office parties',
     
 ];
 

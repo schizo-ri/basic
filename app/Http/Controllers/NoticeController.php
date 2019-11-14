@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\NoticeRequest;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\Controller;
 use App\Models\Notice;
 use App\Models\NoticeStatistic;
 use App\Models\Department;
 use App\Models\Employee;
 use Sentinel;
+use App\Mail\NoticeMail;
+use Illuminate\Support\Facades\Mail;
 
 class NoticeController extends Controller
 {
@@ -65,14 +68,14 @@ class NoticeController extends Controller
      */
     public function store(Request $request)
     {
-
-        $to_department_id = implode(',', $request['to_department']);
-
         if(Sentinel::getUser()->employee) {
+           
             $employee_id = Sentinel::getUser()->employee->id;
+            $to_department_id = implode(',', $request['to_department']);
 
             $notice = $request['notice'];
             $dom = new \DomDocument();
+            libxml_use_internal_errors(true);
             $dom->loadHtml(mb_convert_encoding($notice, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
             $images = $dom->getElementsByTagName('img');
             
@@ -94,10 +97,17 @@ class NoticeController extends Controller
             }
                 
             $notice = $dom->saveHTML();
-    
+
+            if($request['schedule_time'] != null) {
+                $shedule = $request['schedule_date'] . ' ' . $request['schedule_time'];
+            } else {
+                $shedule = $request['schedule_date'] . ' 08:00';
+            }
+
             $data1 = array(
                 'employee_id'   	=> $employee_id,
-                'to_department'  => $to_department_id,
+                'to_department'     => $to_department_id,
+                'schedule_date'     => $shedule,
                 'title'  			=> $request['title'],
                 'notice'  			=> $notice
             );
@@ -105,6 +115,8 @@ class NoticeController extends Controller
             $notice1 = new Notice();
             $notice1->saveNotice($data1);
             
+            $now = date('Y-m-d H:i');
+
             /* ***************************  posebna slika  ******************************** */
 
             if(isset($request['fileToUpload'])) {
@@ -132,65 +144,73 @@ class NoticeController extends Controller
 
                 // Check if file already exists
                 if (file_exists($target_file)) {
-                    return redirect()->back()->with('error', 'Sorry, file already exists.');  
+                    return redirect()->back()->with('error',  __('ctrl.file_exists'));  
                     $uploadOk = 0;
                 }
                 
                 /* Check file size*/
                 if ($_FILES["fileToUpload"]["size"] > 5000000) {
                     $uploadOk = 0;
-                    return redirect()->back()->with('error', 'Sorry, your file is too large.');  
+                    return redirect()->back()->with('error',  __('ctrl.file_toolarge'));  
                 }
                 /* Allow certain file formats */
                 if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif") {
                     $uploadOk = 1;
                 } else {
                     $uploadOk = 0;
-                    return redirect()->back()->with('error', 'Dozvoljen unos samo jpg, png, pdf, gif');  
+                    return redirect()->back()->with('error', __('ctrl.allow') . ' jpg, png, pdf, gif');  
                 }
                 if($imageFileType == "exe" || $imageFileType == "bin") {
                     $uploadOk = 0;
-                    return redirect()->back()->with('error', 'Nije dozvoljen unos exe, bin dokumenta');  
+                    return redirect()->back()->with('error',  __('ctrl.not_allow'));  
                 }
                 // Check if $uploadOk is set to 0 by an error
                 if ($uploadOk == 0) {
-                    return redirect()->back()->with('error', 'Sorry, your file was not uploaded.'); 
+                    return redirect()->back()->with('error', __('ctrl.not_uploaded')); 
                 // if everything is ok, try to upload file
                 } else {
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                        return redirect()->route('notices.index')->with('success',"The notice has been uploaded.");
+
+                        if($now >= $notice1->schedule_date ) {
+                            foreach($request['to_department'] as $department) {
+                                $department = Department::where('id', $department)->first();
+                                $prima = $department->email;
+                               
+                                Mail::to($prima)->send(new NoticeMail($notice1));
+                            }
+
+                            $message = session()->flash('success',  __('ctrl.notice_saved'));
+                            return redirect()->back()->withFlashMessage($message);
+                        }
+
+                        return redirect()->back()->with('success', __('ctrl.notice_saved'));
                       //  return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
                     } else {
-                        return redirect()->route('notices.index')->with('error', 'Sorry, there was an error uploading your file.'); 
+                        return redirect()->route('notices.index')->with('error', __('ctrl.notice_error')); 
                     }
                 }
             }
 
            /* ********************************************************************* */
+          /*  if($request['schedule'] == true ) {
+                $message = session()->flash('data', $notice1->id);
+                //return redirect()->route('notices.index')->withFlashMessage($message);
+                return redirect()->back()->with('modal', 'true')->with('schedule', 'true')->withFlashMessage($message);
+            } */
+            if($now >= $notice1->schedule_date ) {
 
-            foreach($request['to_department'] as $department) {
-                $department = Department::where('id', $department)->first();
-                $prima = $department->email;
-                
-                /*	Mail::queue(
-                    'email.notice',
-                    ['poruka' => $notice1->subject],
-                    function ($message) use ($prima , $notice1->subject) {
-                        $message->to($prima)
-                            ->from('info@duplico.hr', 'Duplico')
-                            ->subject('Obavijest uprave');
-                    }
-                );*/
-                
+                foreach($request['to_department'] as $department) {
+                    $department = Department::where('id', $department)->first();
+                    $prima = $department->email;
+                    
+                    Mail::to($prima)->send(new NoticeMail($notice1));
+                }
             }
-            
-            $message = session()->flash('success', 'Obavijest je poslana');
- 
-            return redirect()->route('notices.index')->withFlashMessage($message);
-
+            $message = session()->flash('success', __('ctrl.notice_saved'));
+            return redirect()->back()->withFlashMessage($message);
             
         } else {
-            $message = session()->flash('error', 'Putanja nije dozvoljena, obavijest može generirat samo zaposlenik.');
+            $message = session()->flash('error', __('ctrl.path_not_allow') . ', ' .  __('ctrl.notice_only_employee'));
             return redirect()->back()->withFlashMessage($message);
         }
     }
@@ -204,7 +224,10 @@ class NoticeController extends Controller
     public function show($id)
     {
         $notice = Notice::find($id);
-        $employee_id = Sentinel::getUser()->employee->id;
+        $employee = Sentinel::getUser()->employee;
+        $employee_id =  $employee->id;
+
+        $permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
 
         if(! NoticeStatistic::where('notice_id', $notice->id)->where('employee_id',  $employee_id)->first() ) {
             $data = array(
@@ -223,7 +246,7 @@ class NoticeController extends Controller
         $count_employees = count($employees);
         $statistic = $count_statistic /  $count_employees *100 ;
 
-        return view('Centaur::notices.show', ['notice' => $notice, 'statistic' => $statistic]);
+        return view('Centaur::notices.show', ['notice' => $notice,'permission_dep' => $permission_dep, 'statistic' => $statistic]);
     }
 
    /**
@@ -254,25 +277,15 @@ class NoticeController extends Controller
     public function update(Request $request, $id)
     {
         $notice1 = Notice::find($id);
-
-        if($request['schedule'] == true) {
-            $data1 = array(
-                'schedule_date'  => $request['date']
-            );
-            $notice1->updateNotice($data1);
-
-            $message = session()->flash('success', 'Raspored za objavu obavijesti je postavljen ');
-            return redirect()->back()->withFlashMessage($message);
-        }
-
-        $to_department_id = implode(',', $request['to_department']);
-
+ 
         if(Sentinel::getUser()->employee) {
             $employee_id = Sentinel::getUser()->employee->id;
 
             $notice = $request['notice'];
+           
             $dom = new \DomDocument();
-            $dom->loadHtml(mb_convert_encoding($notice, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            libxml_use_internal_errors(true);
+            $dom->loadHtml(mb_convert_encoding( $notice , 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
             $images = $dom->getElementsByTagName('img');
             
             foreach($images as $k => $img){
@@ -293,17 +306,24 @@ class NoticeController extends Controller
             }
                 
             $notice = $dom->saveHTML();
-    
-            $data1 = array(
-                'employee_id'   	=> $employee_id,
-                'to_department'     => $to_department_id,
-                'title'  			=> $request['title'],
-                'notice'  			=> $notice
-            );
             
+            $now = date('Y-m-d H:i');
 
-            $notice1->updateNotice($data1);
+            if($request['schedule'] == true) {
+                $data1 = array('schedule_date'  => date("Y-m-d h:i", strtotime($request['date'])));
+            } else {
+                $to_department_id = implode(',', $request['to_department']);
+                $data1 = array(
+                    'employee_id'   	=> $employee_id,
+                    'to_department'     => $to_department_id,
+                    'title'  			=> $request['title'],
+                    'notice'  			=> $notice,
+                   
+                );
+            }
             
+            $notice1->updateNotice($data1);
+
             /* ***************************  posebna slika  ******************************** */
 
             if(isset($request['fileToUpload'])) {
@@ -331,62 +351,55 @@ class NoticeController extends Controller
 
                 // Check if file already exists
                 if (file_exists($target_file)) {
-                    return redirect()->back()->with('error', 'Sorry, file already exists.');  
+                    return redirect()->back()->with('error',  __('ctrl.file_exists'));  
                     $uploadOk = 0;
                 }
                 
                 /* Check file size*/
                 if ($_FILES["fileToUpload"]["size"] > 5000000) {
                     $uploadOk = 0;
-                    return redirect()->back()->with('error', 'Sorry, your file is too large.');  
+                    return redirect()->back()->with('error',  __('ctrl.file_toolarge'));  
                 }
                 /* Allow certain file formats */
                 if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif") {
                     $uploadOk = 1;
                 } else {
                     $uploadOk = 0;
-                    return redirect()->back()->with('error', 'Dozvoljen unos samo jpg, png, pdf, gif');  
+                    return redirect()->back()->with('error', __('ctrl.allow') . ' jpg, png, pdf, gif');  
                 }
                 if($imageFileType == "exe" || $imageFileType == "bin") {
                     $uploadOk = 0;
-                    return redirect()->back()->with('error', 'Nije dozvoljen unos exe, bin dokumenta');  
+                    return redirect()->back()->with('error', __('ctrl.not_allow'));  
                 }
                 // Check if $uploadOk is set to 0 by an error
                 if ($uploadOk == 0) {
-                    return redirect()->back()->with('error', 'Sorry, your file was not uploaded.'); 
+                    return redirect()->back()->with('error', __('ctrl.not_uploaded')); 
                 // if everything is ok, try to upload file
                 } else {
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                        return redirect()->route('notices.index')->with('success',"The notice has been uploaded.");
+                        return redirect()->back()->with('success', __('ctrl.notice_saved'));
                       //  return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
                     } else {
-                        return redirect()->route('notices.index')->with('error', 'Sorry, there was an error uploading your file.'); 
+                        return redirect()->route('notices.index')->with('error', __('ctrl.notice_error')); 
                     }
                 }
             }
+            if($now >= $notice1->schedule_date ) {
+                foreach($request['to_department'] as $department) {
+                    $department = Department::where('id', $department)->first();
+                    $prima = $department->email;
+                    
+                    Mail::to($prima)->send(new NoticeMail($notice1));
+                }
+            }
+ 
+            $message = session()->flash('success', __('ctrl.notice_saved'));
+            return redirect()->back()->withFlashMessage($message);
 
            /* ********************************************************************* */
 
-            foreach($request['to_department'] as $department) {
-                $department = Department::where('id', $department)->first();
-                $prima = $department->email;
-                
-                /*	Mail::queue(
-                    'email.notice',
-                    ['poruka' => $notice1->subject],
-                    function ($message) use ($prima , $notice1->subject) {
-                        $message->to($prima)
-                            ->from('info@duplico.hr', 'Duplico')
-                            ->subject('Obavijest uprave');
-                    }
-                );*/
-                
-            }
-            
-            $message = session()->flash('success', 'Obavijest je poslana');
-            return redirect()->route('notices.index')->withFlashMessage($message);
         } else {
-            $message = session()->flash('error', 'Putanja nije dozvoljena, obavijest može generirat samo zaposlenik.');
+            $message = session()->flash('error', __('ctrl.path_not_allow') . ', ' .  __('ctrl.notice_only_employee'));
             return redirect()->back()->withFlashMessage($message);
         }
     }
@@ -399,7 +412,12 @@ class NoticeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $notice = Notice::find($id);
+        $notice->delete();
+		
+		$message = session()->flash('success',  __('ctrl.data_delete'));
+		
+		return redirect()->back()->withFlashMessage($message);
     }
 
     /**
@@ -409,23 +427,52 @@ class NoticeController extends Controller
     */
     public function noticeboard(Request $request)
     {
-        $notices = Notice::get();
+        $today = date('Y-m-d'); // 2019-10-16
+        $time = date('H:i:s'); // 14:49:05
         $departments = Department::get();
-        $dataArr = array();
-        
-        $sort = 'DESC';
-        $empl = Sentinel::getUser()->employee;
+        $user_department = array();
         $permission_dep = array();
+        $sort = 'DESC';	
+        $dataArr = EventController::getDataArr();
+
+        if(Sentinel::inRole('administrator')) {
+            if(isset($request['sort'])) {
+                $notices = Notice::orderBy('created_at', $request['sort'])->get();
+                $sort = $request['sort'];
+            } else {
+                $notices = Notice::orderBy('created_at','DESC')->get();
+            }
+        } else {
+            $notices = NoticeController::getNotice($sort);
+        }
+
+        $empl = Sentinel::getUser()->employee;
         
 		if($empl) {
+            array_push($user_department, $empl->work->department->id);  // odjel korisnika
+            array_push($user_department, $departments->where('level1',0)->first()->id);  //svi
+
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 		}
-        
-        return view('Centaur::noticeboard', ['notices' => $notices,'sort' => $sort,'user' => $empl,'departments' => $departments, 'permission_dep' => $permission_dep, 'dataArr' => $dataArr]);
+ 
+        return view('Centaur::noticeboard', ['notices' => $notices,'user' => $empl,'dataArr' => $dataArr,'sort' => $sort,'departments' => $departments, 'permission_dep' => $permission_dep, 'user_department' => $user_department, 'today' => $today, 'time' => $time]);
     }
 
     public function schedule ()
     {
         return view('Centaur::notices.schedule');
     }
+
+    public static function getNotice ($sort) {
+        $today = date('Y-m-d'); // 2019-10-16
+        $time = date('H:i:s'); // 14:49:05
+       
+        $notices1 = Notice::whereDate('schedule_date','=', $today )->whereTime('schedule_date','<',  $time )->orderBy('schedule_date',$sort)->get();
+        $notices2 = Notice::whereDate('schedule_date','<', $today )->orderBy('schedule_date',$sort)->get();
+        $notices3 = Notice::where('schedule_date', null)->orderBy('schedule_date',$sort)->get();
+        $notices = $notices1->merge( $notices2, $notices3 );
+
+        return $notices;
+    }
+
 }

@@ -16,7 +16,8 @@ class CreateEvaluationQuestionsTable extends Migration
         Schema::create('evaluation_questions', function (Blueprint $table) {
             $table->bigIncrements('id');
 			$table->integer('category_id');
-			$table->string('name',255);
+			$table->string('name_question',255);
+			$table->string('type',3);
 			$table->text('description');
 			$table->text('description2');
             $table->timestamps();

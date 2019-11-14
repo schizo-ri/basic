@@ -1,5 +1,5 @@
 .container .noticeboard, .container .posts, .container .calendar {
-    overflow: hidden;
+    overflow: auto;
 }
 
 .container .noticeboard:hover, .container .posts:hover {
@@ -8,17 +8,39 @@
 
 .container .noticeboard {
     height: 98%;
+    padding: 45px 30px 0 0;
 }
+
+.container .noticeboard>div {
+    width: 100%;
+    height: 100%;
+    position: static;
+}
+.container .noticeboard>div >a {
+    display: block;
+    padding: 15px;
+    position: relative;
+    border-bottom: 1px solid rgba(154, 154, 154, 0.3);
+    padding-bottom: 10px;
+}
+
+.container .noticeboard>div >a:before {
+    content : "";
+    position: absolute;
+    left    : 0;
+    bottom  : 0;
+    height  : 1px;
+    width   : 15px; 
+    border-bottom:1px solid inherit;
+  }
+
 
 .container .posts, .container .calendar {
     height: 100%;
 }
 
-.container .noticeboard {
-    padding: 45px 30px 0 0;
-}
 .container .posts, .container .calendar {
-    padding: 95px 10px 0 0;
+    padding: 95px 10px 8px 10px;
   /*  margin-top: -90px;*/
 }
 .container .noticeboard h2 {
@@ -26,21 +48,28 @@
     font-size: 1.375rem;
     color: #071E57;
     line-height: 26px;
+    padding-left: 15px;
 }
 
 .container .posts .all_post {
     box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
-    width: 96%;
-    height: 98%;
+    width: 100%;
+    height:96%;
     background: #ffffff;
     color: #071E57;
     border-radius: 3px;
     margin: auto;
     float: right;
     padding: 25px;
+    overflow: hidden;
+    
 }
 
-.container .posts .all_post img {
+.latest_messages .posts .all_post  {
+    height: auto;
+}
+
+.container .posts .all_post img:not(.placeholder>img) {
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -77,7 +106,10 @@
     padding-bottom: 20px;
     border-bottom: 1px solid rgba(154, 154, 154, 0.3);
 }
-
+.main_post .post_empl >img{
+    max-width: 24px;
+    max-height: 24px;
+}
 .container .posts .all_post .post_empl .post_time {
     font-weight: 600;
     font-size: 0.75rem;
@@ -99,11 +131,11 @@
 .noticeboard .notice {
     width: 100%;
     overflow: hidden;
-    margin-top: 40px; 
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(154, 154, 154, 0.3);
+    padding: 15px 0;
 }
-
+.noticeboard >div>a:hover {
+    background-color: #fafafa;
+}
 .noticeboard .notice:not(:last-child) {
     border-bottom: 1px solid rgba(154, 154, 154, 0.3);
 }
@@ -128,13 +160,11 @@
     display: block;
 }
 
-
 .notice>div:first-child span.notice_empl {
     font-weight: 500;
     font-size: 0.5rem;
     color: #919191;
     display: inline-block;
-
 }
 
 .notice>div:first-child span.notice_empl .notice_img {
@@ -152,12 +182,13 @@
     background: #FFFFFF;
     box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
     border-radius: 3px;
-    width: 96%;
-    height: 98%;
+    width: 100%;
+    height: 96%;
     margin: auto;
     padding: 25px 0;
     position: relative;
-    overflow: hidden;
+    overflow: auto;
+    overscroll-behavior-y: contain;
 }
 
 .container .calendar .cal_days {
@@ -187,7 +218,7 @@
     float: right;
     text-transform: uppercase;
     text-decoration-line: underline;
-    line-height: 26px;
+
 }
 
 .container .cal_days p.date {
@@ -256,6 +287,9 @@
 .comming_agenda {
     width: 100%;
     padding: 20px 30px;
+    position: relative;
+    height: auto;
+    min-height: 250px;
 }
 
 .comming_agenda .agenda_title {
@@ -341,13 +375,227 @@
     margin-left: 30px;
 }
 
+.placeholder {
+    width: auto;
+    height: auto;
+    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
 
+}
+
+.placeholder_cal {
+    height: auto;
+    display: none;
+    padding: 0 30px;
+    overflow: hidden;
+    margin-top: -30px;
+}
+.placeholder_cal>p, .placeholder_cal>img {
+    width: 50%;
+    float: left;
+}
+.placeholder p, .placeholder_cal>p {
+    font-weight: 500;
+    font-size: 1rem;
+    text-align: center;
+    color: #D8DCEF;
+    margin: 0;
+    position: relative;
+}
+
+.placeholder_cal>p >span {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.placeholder img {
+    display: block;
+    margin: auto;
+}
+.placeholder p label, .index_page .placeholder p label, .index_page.ads_index .index_main .placeholder label {
+    width: 21px;	
+    height: 20px;
+    line-height: 20px;
+    padding: 5px;
+    display: inline-flex;
+    float:none;
+    background: #1594F0;
+    color: #fff;
+    position: initial;
+    border: none;
+    border-radius: 5px ;
+}
+
+.placeholder p label svg {
+    width: 11px;	
+    height: 11px;
+    position: static;
+    transform: none;
+}
+
+@media (max-width: 1024px) {
+    .container .noticeboard {
+        padding: 20px 0 0 0;
+    }
+    .placeholder, .placeholder_cal {
+        position: relative;
+    }
+    .placeholder >img {
+        width: 60%;
+        position: absolute;
+        left: 50%;
+        top: 10%;
+        transform: translate(-50%, -90%);
+    }
+    .placeholder >p {
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        transform: translate(-50%,100%);
+        width: 100%;
+        font-size: 0.75rem;
+    }
+    .index_page.ads_index .placeholder {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .index_page.ads_index  .placeholder >img {
+        position: static;
+        width: 100%;
+        transform: none;
+    }
+    .index_page.ads_index .placeholder {
+        position: static    ;
+        transform: none;
+    }
+
+}
 @media (max-width: 768px) {
+    .posts_index .posts {
+        height: auto;
+    }
+    .container .noticeboard, .container .posts, .container .calendar {
+        height: auto;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    .container .calendar>div, .container .noticeboard>div {
+		height: auto;
+		margin: auto;
+		width: 97%;
+    }
+    	
+	.container .posts {
+		height: auto;
+		margin: 0 auto;
+		width: 100%;
+	}
+	.container .posts .all_post {
+		width: 97%;
+		float: none;
+		margin: 10px auto;
+		height: auto;
+    }
+    .container .noticeboard, .container .posts, .container .calendar {
+        overflow: hidden;
+        padding: 10px;
+    }
+    .placeholder, .placeholder_cal {
+        display: none;
+        position: static;
+        top: auto;
+        left: auto;
+        transform: none;
+        margin: 20px auto;
+        width: 70%;
+    }
+    .all_documents .placeholder {
+        position: static;
+    
+    }
+    .placeholder_cal {
+        width: 100%;
+    }
+    .placeholder >img {
+        width: 60%;
+        position: static;
+        transform: none;
+        margin: auto;
+        display: block;
+    }
+    .placeholder >p {
+        position: static;
+        transform:none;
+        width: 100%;
+        font-size: 0.75rem;
+    }
+    
+}
+
+@media (min-width: 768px) and (max-height: 650px) {
+	.user_header {
+		position: static;
+		width: 100%;
+		max-width: 100%;
+		margin-top: 20px;
+		padding: 0;
+	}
+	.user_header .info, .user_header .info>div, .info .layout_button, .container .noticeboard  {
+		height: auto;
+	}
+	.topnav, .container .noticeboard {
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		padding: 0 25px;
+		margin: 20px;
+	}
+	 
+	.container .posts, .container .calendar {
+		width: 50%;
+		max-width: 50%;
+		padding: 10px 0;
+		height: auto;
+	}
+	.container .posts .all_post {
+		float: none;
+    }
+    
+}
+
+@media (max-width: 450px) {
     .container .noticeboard, .container .posts, .container .calendar, .container .calendar>div {
         height: auto;
     }
+    .container .noticeboard>div {
+        background: #FFFFFF;
+        box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
+        border-radius: 3px;
+        width: 100%;
+        height: auto;
+        margin: auto;
+        padding: 15px;
+        padding-left: 0;
+        position: relative;
+        overflow: hidden;
+        overscroll-behavior-y: contain;
+    }
     .notice>div:first-child span.notice_time {
         font-size: 1rem;
+    }
+    .comming_agenda {
+        min-height: 100px;
     }
     .comming_agenda .agenda_comment {
         float: right;
@@ -355,6 +603,7 @@
     }
     .comming_agenda .agenda_mark, .container .posts .all_post {
         height: auto;
+        margin: auto;
     }
     .comming_agenda .agenda {
         margin-bottom: 23px;
@@ -365,12 +614,29 @@
         width: 100%;
     }
     .container .calendar>div, .container .posts .all_post {
-        box-shadow: none;
+     /*   box-shadow: none;*/
         width:100% ;
         padding: 10px 0;
     }
     
     .container .calendar h2, .container .calendar .cal_days, .comming_agenda {
         padding: 10px 0;
+    }
+    .placeholder_cal>p, .placeholder_cal>img {
+        float: none;
+        margin: auto;
+        display: block;
+    }
+    .placeholder_cal>p {
+        width: 100%;
+    }
+    .placeholder_cal {
+        margin-top: 0;
+    }
+    .all_documents .placeholder, .index_page.ads_index .placeholder  {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 }

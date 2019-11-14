@@ -79,7 +79,7 @@ class EvaluationController extends Controller
 		$emp = Employee::where('id', $request['employee_id'])->first(); // djelatnik koji ocjenjuje
 
 		if(!$request['rating']) {
-				$message = session()->flash('error', 'Ne može se spremiti anketa bez ocjena');
+				$message = session()->flash('error', __('basic.survey_without_rating'));
 				return redirect()->back()->withFlashMessage($message);
 		}
 			
@@ -88,7 +88,7 @@ class EvaluationController extends Controller
 			if($input['tip_ankete'] == 'podgrupa') {
 
 				if(count($input['question_id']) != count($input['rating'])) {
-					$message = session()->flash('error', 'Anketa nije potpuna, sva pitanja su obavezna. Ponoviti anketu i odgovori na sva pitanja');
+					$message = session()->flash('error', __('basic.survey_not_complete'));
 					return redirect()->back()->withFlashMessage($message);
 				} else {
 					foreach($input['question_id'] as $key => $question){
@@ -121,7 +121,7 @@ class EvaluationController extends Controller
 			} elseif ($input['tip_ankete'] == 'grupa' ) {
 				
 				if(count($input['group_id']) != count($input['rating'])) {
-					$message = session()->flash('error', 'Anketa nije potpuna, sva pitanja su obavezna. Ponoviti anketu i odgovori na sva pitanja');
+					$message = session()->flash('error',  __('basic.survey_not_complete'));
 					return redirect()->back()->withFlashMessage($message);
 				} else {
 					foreach($input['group_id'] as $key => $question){

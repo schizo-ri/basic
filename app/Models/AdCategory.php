@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class AdCategory extends Model
 {
-     /**
+	/**
 	* The attributes thet are mass assignable
 	*
 	* @var array

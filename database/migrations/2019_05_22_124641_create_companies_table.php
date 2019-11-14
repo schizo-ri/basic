@@ -21,7 +21,9 @@ class CreateCompaniesTable extends Migration
 			$table->string('oib',20);
 			$table->string('email',50)->nullable();
 			$table->string('phone',50)->nullable();
-			$table->string('director',50)->nullable();
+            $table->string('director',50)->nullable();
+            $table->string('url',255);
+            $table->string('db',50);
             $table->timestamps();
         });
     }

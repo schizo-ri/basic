@@ -16,7 +16,7 @@
 			</div>
 		@else
 			<p class="padd_10">Ja, {{ $user->first_name  . ' ' . $user->last_name }} 
-				<span class="">molim da mi se odobri</span>
+				<span class="">@lang('absence.please_approve') </span>
 			</p>
 			<input name="employee_id" type="hidden" value="{{ $user->employee->id }}" />
 		@endif
@@ -61,7 +61,7 @@
 		</div>
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group">
-				<label for="email">Slanje emaila:</label>
+				<label for="email">@lang('absence.email_send')</label>
 				<span><input type="radio" name="email" value="DA" checked /> @lang('basic.send_mail') </span>
 				<span><input type="radio" name="email" value="NE" /> @lang('basic.dont_send_mail')</span>
 			</div>

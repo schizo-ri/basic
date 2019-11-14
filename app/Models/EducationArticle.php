@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class EducationArticle extends Model
 {
-    /**
+	/**
 	* The attributes thet are mass assignable
 	*
 	* @var array

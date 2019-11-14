@@ -87,7 +87,7 @@ class DepartmentRoleController extends Controller
 		$departmentRole = new DepartmentRole();
 		$departmentRole->saveDepartmentRole($data);
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('department_roles.index');
     }
@@ -150,7 +150,7 @@ class DepartmentRoleController extends Controller
 		
 		$departmentRole->updateDepartmentRole($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('department_roles.index');
 		
@@ -168,7 +168,7 @@ class DepartmentRoleController extends Controller
 		
 		$departmentRole->delete();
 		
-		$message = session()->flash('success', 'Dopuštenje je obrisano.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

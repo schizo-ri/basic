@@ -126,7 +126,7 @@ class CompanyController extends Controller
 		}
 		
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('Centaur::companies.index');
     }
@@ -232,7 +232,7 @@ class CompanyController extends Controller
 			}
 		}
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('companies.index');
 		
@@ -249,7 +249,7 @@ class CompanyController extends Controller
         $company = Company::find($id);
 		$company->delete();
 		
-		$message = session()->flash('success', 'Tvrtka je obrisana.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }
@@ -285,5 +285,11 @@ class CompanyController extends Controller
 		}
 
 		return $moduli_company;
+	}
+
+	public static function getCompanyURL() {
+		$url = array( 'SERVER_NAME' => $_SERVER['SERVER_NAME'],'SERVER_NAME'=>  $_SERVER['SERVER_NAME'], 'host' => $_SERVER['HTTP_HOST'], 'uri' => $_SERVER['REQUEST_URI'],);
+		
+		return $url;
 	}
 }

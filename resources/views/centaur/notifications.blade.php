@@ -6,6 +6,7 @@
             case 'error':
             case 'warning':
             case 'info':
+            
 ?>
             <div class="row notification {!! session()->has('evaluation') ? 'modal_questionnaire' : ''!!}">
                 <div class="modal-header">
@@ -22,10 +23,10 @@
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             <strong>{{ ucfirst($key) }}:</strong> {!! $value !!}
                             @if(session()->has('absence'))
-                                To see you request status and see all request visit <br>all requests page. </p>
+                               @lang('ctrl.status_requests')<br>@lang('ctrl.all_requests_page'). </p>
                             @endif
                             @if(session()->has('evaluation'))
-                                <p class="padd_t_15 margin_0">Thank you for participating in this survey, considered finishing another one if available.</p>
+                                <p class="padd_t_15 margin_0">@lang('ctrl.q_thanks')</p>
                             @endif
                         </div>
                     </div>
@@ -35,15 +36,50 @@
                                 <button class="btn_all" ><a href="{{ route('absences.index') }}" >@lang('absence.all_requests')</a></button>
                             </span>
                         @endif
+                        <!--
                         @if(session()->has('evaluation'))
                             <span>
                                 <button class="btn_all" ><a href="#" >Redo survay</a></button>
                             </span>
-                        @endif
+                        @endif-->
                         <button class="done"><a href="#close" rel="modal:close" >@lang('absence.done')</a></button>
                     </div>
                 </div>
             </div>
+<?php
+                Session::forget($key);
+                break;
+             case 'data':
+?>
+             @if( session()->has('schedule') )
+                <div class="row notification">
+                    <div class="modal-header">
+                        
+                    </div>
+                    <div class="group_body_footer">
+                        <div class="modal-body">
+                            <form id="schedule_form" accept-charset="UTF-8" role="form" method="post" action="{{ route('notices.update', $value) }}" enctype="multipart/form-data" >
+                                <div class="modal-header">
+                                    <h3 class="panel-title">@lang('basic.schedule')</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>@lang('basic.date')</label>
+                                        <input name="date" type="datetime-local" class="form-control" value="{{ old('date') }}" required>
+                                        <input name="schedule" type="hidden" value="true">
+                                    </div>
+                                    {{ csrf_field() }}
+                                    {{ method_field('PUT') }}
+                                    <input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                          
+                        </div>
+                    </div>
+                </div>
+            @endif
 <?php
                 Session::forget($key);
                 break;

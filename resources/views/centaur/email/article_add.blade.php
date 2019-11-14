@@ -10,6 +10,6 @@ body {
 }
 </style>
 	<body>
-		Na portalu je objavljen novi članak edukacije - {{ $educationArticle->subject }}
+		@lang('emailing.new_article_publish') - {{ $educationArticle->subject }}
 	</body>
 </html>

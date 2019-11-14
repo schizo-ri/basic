@@ -1,0 +1,135 @@
+.index_page.index_admin h1 {
+    margin: 40px 0 35px;
+}
+ul.admin_pages {
+    list-style: none;  
+}
+ul.admin_pages li {
+    font-weight: 500;
+    font-size: 0.9375rem;
+    color: #A2A2A2;
+    margin-bottom: 9px;
+    clear: left;
+    overflow: hidden;
+}
+ul.admin_pages li.first_group {
+    margin-bottom: 0;
+}
+ul.admin_pages li >span, ul.admin_pages li >a {
+    float: left;
+}
+
+ul.admin_pages li >span {
+    width: 62px;
+    height: 61px;
+    margin-right: 42px;
+    display: inline-block;
+}
+ul.admin_pages li >span.space {
+    width: 62px;
+    height:45px;
+    margin-right: 42px;
+    display: inline-block;
+}
+.image_users {
+    background: url(../icons/users.png) no-repeat center;
+} 
+.image_company {
+    background: url(../icons/company.png) no-repeat center;
+} 
+.image_emailings{
+    background: url(../icons/emailings.png) no-repeat center;
+} 
+.image_tables {
+    background: url(../icons/tables.png) no-repeat center;
+} 
+#admin_page {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+#admin_page .index_table_filter {
+    height: 100%;
+}
+#admin_page .btn-new {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 41px;
+    height: 35px;
+}
+#admin_page table img {
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    margin-right: 25px;
+}
+.admin_main .link_back {
+    display: none;
+}
+#admin_page table span.role {
+    display: none;
+}
+#admin_page table span.role {
+    display: none;
+}
+#admin_page table span.role._1, #admin_page table span.role._0 {
+    display: block;
+}
+.more {
+    cursor: pointer;
+    color: inherit;
+    font-weight: 700;
+    font-size: 0.625rem;
+}
+#admin_page table span.hide {
+    color: inherit;
+
+}
+
+#admin_page .user_name {
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: #2B2B2B;
+}
+#admin_page .user_mail {
+    font-weight: normal;
+    font-size: 0.625rem;
+    line-height: 12px;
+}
+@media (max-width: 450px) {
+    section.admin_panel {
+        padding: 0;
+    }
+
+    .index_page.index_admin h1 {
+        margin: 10px 0;
+    }
+    ul.admin_pages li >span {
+        width: 52px;
+        height: 51px;
+        margin-right: 30px;
+    }
+    ul.admin_pages li >span.space {
+        width: 52px;
+        margin-right: 30px;
+    }
+    .index_page .index_main.admin_main {
+        display: none;
+    }
+
+    .admin_main .link_back {
+        display: block;
+    }
+    .index_main #admin_page header {
+        padding: 25px 0;
+    }
+    .admin_main .index_table_filter input {
+        height: 30px;
+    }
+    #admin_page .btn-new {
+        width: 36px;
+        height: 30px;
+    }
+}

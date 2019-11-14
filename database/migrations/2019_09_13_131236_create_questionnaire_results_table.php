@@ -16,6 +16,7 @@ class CreateQuestionnaireResultsTable extends Migration
         Schema::create('questionnaire_results', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('employee_id')->comment('zaposlenik koji ocjenjuje');
+            $table->integer('questionnaire_id');
             $table->integer('question_id');
             $table->integer('answer_id')->nullable();
             $table->string('answer')->nullable();

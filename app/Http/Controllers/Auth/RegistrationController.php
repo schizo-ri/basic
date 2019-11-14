@@ -67,10 +67,10 @@ class RegistrationController extends Controller
         // Send the activation email
         $code = $result->activation->getCode();
         $email = $result->user->email;
-        Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code, 'Your account has been created!'));
-
+        Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code, __('ctrl.acc_created')));
+        
         // Ask the user to check their email for the activation link
-        $result->setMessage('Registration complete.  Please check your email for activation instructions.');
+        $result->setMessage( __('ctrl.reg_complete') );
 
         // There is no need to send the payload data to the end user
         $result->clearPayload();
@@ -93,13 +93,13 @@ class RegistrationController extends Controller
             // Normally an exception would trigger a redirect()->back() However,
             // because they get here via direct link, back() will take them
             // to "/";  I would prefer they be sent to the login page.
-            $result->setRedirectUrl(route('auth.login.form'));
+            $result->setRedirectUrl(route('welcome'));
             return $result->dispatch();
         }
 
         // Ask the user to check their email for the activation link
-        $result->setMessage('Registration complete.  You may now log in.');
-
+        $result->setMessage( __('ctrl.reg_complete_login'));
+        
         // There is no need to send the payload data to the end user
         $result->clearPayload();
 
@@ -138,11 +138,11 @@ class RegistrationController extends Controller
             // Send the email
             $code = $activation->getCode();
             $email = $user->email;
-            Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code, 'Account Activation Instructions'));
+            Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code,  __('ctrl.activation_instructions')));
         }
 
-        $message = 'New instructions will be sent to that email address if it is associated with a inactive account.';
-
+        $message =  __('ctrl.instructions');
+        
         if ($request->expectsJson()) {
             return response()->json(['message' => $message], 200);
         }

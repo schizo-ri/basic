@@ -1,4 +1,5 @@
 $('.button_nav').click(function(e){
+   
     if($( this).hasClass('not_employee')){
         e.preventDefault();
     } else {
@@ -6,8 +7,8 @@ $('.button_nav').click(function(e){
     
         if($( this).hasClass('load_button')) {
             e.preventDefault();
-            var page = $(this).attr('href');   
-            
+            var page = $(this).attr('href');  
+
             $('.button_nav').css({
                 'background': '#051847',
                 'color': '#ffffff'
@@ -22,11 +23,14 @@ $('.button_nav').click(function(e){
                     $.getScript( '/../js/load_calendar2.js');
                 }
                 if( $( '.button_nav.active' ).hasClass('doc_button')) {
+                    $('.placeholder').show();
                     $.getScript( '/../js/datatables.js');
                     $.getScript( '/../js/documents.js');
                     $.getScript( '/../js/collaps.js');
+                    $.getScript( '/../js/filter_table.js');
                 }
                 if( $( '.button_nav.active' ).hasClass('quest_button')) {
+                    $('.placeholder').show();
                     $.getScript( '/../js/datatables.js');
                     $.getScript( '/../js/questionnaire.js');
                     $.getScript( '/../js/collaps.js');
@@ -37,11 +41,19 @@ $('.button_nav').click(function(e){
                     $.getScript( '/../js/filter.js');
                 }
                 if( $( '.button_nav.active' ).hasClass('ads_button')) {
-                    $.getScript( 'js/filter.js');
+                    $('.placeholder').show();
+                    var body_width = $('body').width();
+                    if(body_width > 450) {
+                    var header_width = $('.index_main header.ad_header').width();
+                    $('.index_main header.ad_header').css('max-height',header_width);
+                    $.getScript( '/../js/filter.js');
+                    $.getScript( 'js/filter_dropdown.js');
+                    $.getScript( '/../js/ads.js');
+                    }
                 }
             });
         }
-        $( this ).addClass('active');
+        $( this).addClass('active');
         $.getScript( "/../js/nav_button_color.js" );
 
     }

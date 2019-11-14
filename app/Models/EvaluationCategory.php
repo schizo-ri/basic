@@ -1,12 +1,12 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class EvaluationCategory extends Model
 {
-	 /**
+	
+	/**
 	* The attributes thet are mass assignable
 	*
 	* @var array

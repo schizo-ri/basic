@@ -61,9 +61,6 @@ class WorkController extends Controller
 		} else {
 			return view('Centaur::works.create', ['departments' => $departments,'employees' => $employees]);
 		}
-		
-		
-		
     }
 
     /**
@@ -84,7 +81,7 @@ class WorkController extends Controller
 		$work = new Work();
 		$work->saveWork($data);
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('works.index');
     }
@@ -135,7 +132,7 @@ class WorkController extends Controller
 
 		$work->updateWork($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('works.index');
 		
@@ -152,7 +149,7 @@ class WorkController extends Controller
         $work = Work::find($id);
 		$work->delete();
 		
-		$message = session()->flash('success', 'Radno mjesto je obrisano.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

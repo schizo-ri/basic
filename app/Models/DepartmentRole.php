@@ -1,12 +1,12 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class DepartmentRole extends Model
 {
-    /**
+
+	/**
 	* The attributes that are mass assignable.
 	*
 	* @var array

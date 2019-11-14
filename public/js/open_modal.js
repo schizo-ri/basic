@@ -1,5 +1,7 @@
-$( document ).ready(function() {
+$( document ).ready(function() {  
+
     $("a[rel='modal:open']").show();
+
     $.modal.defaults = {
     closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
     escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -13,6 +15,7 @@ $( document ).ready(function() {
 
     showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
     fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
-    fadeDelay: 1.0          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+    fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
     };
+   
 });

@@ -93,6 +93,10 @@
     border-radius: 50%;
 }
 
+.red_border_imp {
+    border: 1px solid red !important;
+}
+
 .height100 {
     height: 100%;
 }
@@ -154,8 +158,34 @@
 
   .overflow_auto {
       overflow: auto;
+      overscroll-behavior-y: contain;
   }
 
   .bg_white {
       background-color: white;
   }
+
+  .pop-up {
+    display: none;
+    width: 300px;
+    max-width: 100%;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15);
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #fff;
+  }
+
+ .fa-question-circle.show_popUp, svg.fa-question-circle {
+      cursor: pointer;
+  }
+
+  .line_height_61 {
+      line-height: 61px;
+  }
+  .line_height_45 {
+    line-height: 45px;
+   }

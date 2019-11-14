@@ -73,7 +73,7 @@ class EducationController extends Controller
 		$education = new Education();
 		$education->saveEducation($data);
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('education.index');
     }
@@ -126,7 +126,7 @@ class EducationController extends Controller
 		
 		$education->updateEducation($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('education.index');
     }
@@ -142,7 +142,7 @@ class EducationController extends Controller
         $education = Education::find($id);
 		$education->delete();
 		
-		$message = session()->flash('success', 'Edukacija je obrisana.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

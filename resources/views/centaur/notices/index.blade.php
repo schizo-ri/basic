@@ -1,8 +1,3 @@
-@extends('Centaur::layout')
-
-@section('title', __('basic.notices'))
-
-@section('content')
 <div class="row">  
 	<div class="page-header">
         <h1>@lang('basic.notices')</h1>
@@ -16,6 +11,7 @@
 							<th>@lang('basic.employee')</th>
 							<th>@lang('basic.to_department')</th>
 							<th>@lang('basic.title')</th>
+							<th>@lang('basic.scheduled_for')</th>
 							<th>@lang('basic.notice')</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
@@ -26,10 +22,11 @@
 								<td>{{ $notice->employee->user['first_name'] . ' ' . $notice->employee->user['last_name']  }}</td>
 								<td>{{ $notice->to_department }}</td>
 								<td><a href="{{ route('notices.show', $notice->id) }}" rel="modal:open" >{{ $notice->title }}</a></td>
+								<td>{{ $notice->schedule_date }}</a></td>
 								<td>{!! str_limit(strip_tags($notice->notice),100) !!}</td>
 								<td class="center">
 									@if(Sentinel::getUser()->hasAccess(['notices.update']) || in_array('notices.update', $permission_dep) )
-										<a href="{{ route('notices.edit', $notice->id) }}" class="btn-edit">
+										<a href="{{ route('notices.edit', $notice->id) }}" class="btn-edit" rel="modal:open">
 											<i class="far fa-edit"></i>
 										</a>
 									@endif
@@ -49,4 +46,3 @@
 		</div>
 	</div>
 </div>
-@stop

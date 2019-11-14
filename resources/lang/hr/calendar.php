@@ -29,8 +29,13 @@ return [
     'fri'		    => 'P',
     'sat'		    => 'S',
     'sun'		    => 'N',
-
+    'add_event'		    => 'Dodajte događaj',
+    'add_task'		    => 'Dodajte zadatak',
+    'add_other_event'	=> 'Dodajte druge događaje',
+    'create_event'	    => 'Kreirajte svoj događaj',
+    'create_task'	    => 'Spremite zadatak kako ga ne biste propustili',
+    'create_other_event'    => 'Dodajte proslave, rođendane za uredske zabave',
+    
 
 ];
-
 ?>

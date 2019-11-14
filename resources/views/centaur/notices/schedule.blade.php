@@ -9,7 +9,7 @@
         <div class="modal-body">
             <div class="form-group">
                 <label>@lang('basic.date')</label>
-                <input name="date" type="datetime-local" class="form-control" value="{{ old('date') }}" required>
+                <input name="schedule_date" type="date" class="form-control" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" required>
                 <input name="schedule" type="hidden" value="true">
             </div>
             {{ csrf_field() }}
@@ -18,20 +18,3 @@
         </div>
     </form>
 </div>
-<script>
-  //  $('form#schedule_form').submit(function(event){
-    //    event.preventDefault();
-       // $('form#notice_form').submit();
-       // $('form#schedule_form').submit();
-   //    $('form').submit();
-     
-  //  });
-  
-    $( 'form#schedule_form').one( "submit", function() {
-        event.preventDefault();
-        $('form').each(function(){
-             $( this ).submit();
-        });
-       
-    });
-</script>

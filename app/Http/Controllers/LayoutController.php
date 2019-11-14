@@ -10,6 +10,8 @@ use Sentinel;
 
 class LayoutController extends Controller
 {
+   
+    
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +19,7 @@ class LayoutController extends Controller
      */
     public function index()
     {
-		dd(Sentinel::getUser() );
+        dd("LayoutController!!!");
 		//dohvaća dopuštenja odjela za korisnika
 		$permission_dep = explode(',', Sentinel::getUser()->employee->work->department->departmentRole->toArray()[0]['permissions']);
 		//dohvaća module firme

@@ -3,19 +3,21 @@
 @section('title', 'Events')
 <script src="{{ URL::asset('node_modules/jquery/dist/jquery.js') }}"></script>
 <script src="{{ URL::asset('node_modules/moment/moment.js') }}"></script>
-<link rel="stylesheet" href="{{ URL::asset('/../css/calendar.css') }}"/>
-
 <?php 
 	use App\Http\Controllers\EventController;
-
+	use App\Http\Controllers\DashboardController;
 	if(isset($_GET['dan'])) {
 		$dan = $_GET['dan'];
 	} else {
 		$dan = date('Y-m-d');
 	}
-	
+
 	$count_days = EventController::countDays($dataArr, $dan);
 	$selected = EventController::selectedDay( $dan);
+	$dataArr_day = EventController::event_for_selected_day( $dan );
+
+	$uniqueType = array_unique(array_column($dataArr_day, 'type'));
+	
 	if(count($events)>0) {
 		$events_day = $events->where('date', $dan);
 	}
@@ -25,7 +27,7 @@
 	<aside class="col-4 index_aside calendar_aside">
 		@include('Centaur::side_calendar')
 	</aside>
-	<main class="col-8 index_main">
+	<main class="col-8 index_main index_event">
 		<section>
 			<header class="header_calendar">
 				<div class="col-6 float_left padd_0">
@@ -39,16 +41,16 @@
 					<span class="month_year">{{ $selected['month'] . ' ' .  $selected['god_select'] }}</span>
 				</div>
 				<div class="col-6 float_left padd_0">
-					<span class="meeting col-4"><span class="blue"></span>Meeting<span>{{ $count_days['dani_event'] }}</span></span>
-					<span class="tasks col-4"><span class="orange"></span>Birthdays<span>{{ $count_days['dani_rodjendani'] }}</span></span>
-					<span class="on_vacation col-4"><span class="green"></span>On vacation<span>{{ $count_days['dani_odmor'] }}</span></span>
+					<span class="meeting col-4"><span class="blue"></span>@lang('basic.meeting')<span>{{ $count_days['dani_event'] }}</span></span>
+					<span class="tasks col-4"><span class="orange"></span>@lang('basic.birthdays')<span>{{ $count_days['dani_rodjendani'] }}</span></span>
+					<span class="on_vacation col-4"><span class="green"></span>@lang('basic.on_vacation')<span>{{ $count_days['dani_odmor'] }}</span></span>
 				</div>
 			</header>
 			<main class="main_calendar" >
 				<div class="all_events">
 					@foreach($hours_array as $hour)
 						<div class="hour_in_day">
-							<a href="{{ route('events.create', ['time1' => $hour, 'date' => $selected['god_select'] . '-' .  $selected['mj_select'] . '-' . $selected['dan_select'] ]) }}" rel="modal:open" ><span class="hour_val">{{ $hour}}</span></a>
+							<a href="{{ route('events.create', ['time1' => $hour, 'date' => $selected['god_select'] . '-' .  $selected['mj_select'] . '-' . $selected['dan_select'] ]) }}" title="{{ __('calendar.add_event')}}" rel="modal:open" ><span class="hour_val">{{ $hour}}</span></a>
 							@if(isset($dan))
 								@if( isset($events_day))
 									@foreach($events_day->where('time1',  $hour . ":00")  as $event)
@@ -61,10 +63,11 @@
 								@endif
 								@foreach($dataArr as $key => $data)
 									@if($data['name'] != 'birthday' && $data['name'] != 'event')	
-										@if( $data['date'] == $dan && $hour == "08:00")
+										@if( $data['date'] == $dan && date('H', strtotime($hour)) == date('H', strtotime($data['start_time'])) )
 											<div class="show_event green" >
 												<div class="event">
-													{{ isset($data['employee']) ? $data['name'] . ' - ' . $data['employee'] : '' }}
+													{{ isset($data['employee']) ? $data['type'] . ' - ' . $data['employee'] : ''  }}
+													{!! $data['name'] == 'IZL' ? '('. date('H:i', strtotime($data['start_time'])) . '-' . date('H:i', strtotime($data['end_time'] )) . ')' : '' !!}
 												</div>
 											</div>
 										@endif
@@ -73,7 +76,7 @@
 										@if(date("m-d",strtotime($data['date'])) == date("m-d",strtotime($dan)) && $hour == "08:00" )
 											<div class="show_event orange" >
 												<div class="event">
-													{{ $data['name'] . ' - ' . $data['employee'] }}
+													{{ $data['type'] . ' - ' . $data['employee'] }}
 												</div>
 											</div>
 										@endif
@@ -90,5 +93,6 @@
 </div>
 <script>
 	$.getScript( '/../js/load_calendar2.js');
+	$.getScript( '/../js/event.js');
 </script>
 @stop

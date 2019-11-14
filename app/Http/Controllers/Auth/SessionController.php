@@ -31,7 +31,7 @@ class SessionController extends Controller
      */
     public function getLogin()
     {
-        return view('Centaur::auth.login');
+        return view('welcome');
     }
 
     /**

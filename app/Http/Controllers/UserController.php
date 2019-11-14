@@ -9,6 +9,7 @@ use Centaur\AuthManager;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Work;
+use App\Models\UserInteres;
 use App\Models\Department;
 use App\Models\DepartmentRole;
 use Centaur\Mail\CentaurWelcomeEmail;
@@ -282,23 +283,97 @@ class UserController extends Controller
 		
         // Fetch the available roles
         $roles = app()->make('sentinel.roles')->createModel()->all();
-		
+        
         if ($user) {
-            if($employee) {
+            if(isset($employee)) {
+                $user_interes = UserInteres::where('employee_id',$employee->id)->first();
+                if( $user_interes ) {
+                    if($user_interes->category != null) {
+                        $interes_tags = explode(',', $user_interes->category);
+                    } else {
+                        $interes_tags = array();
+                    }
+                    $interes_info = $user_interes->description;
+                } else {
+                    $interes_tags = array();
+                    $user_interes = array();
+                    $interes_info = '';
+                }
+                
+                $images_interest = array();
+                $images_interesting_fact = array();
+                $path = '';
+                $path2 = '';
+                if($employee->email) {
+                    $user_name = explode('.',strstr($employee->email,'@',true));
+
+                    $user_name = $user_name[1] . '_' . $user_name[0];
+     
+                    $path = 'storage/' . $user_name . '/interest/';
+                    $path2 = 'storage/' . $user_name . '/interesting_fact/';
+                    
+                    if(file_exists($path)){
+                      $images_interest = array_diff(scandir($path), array('..', '.', '.gitignore'));
+                    }
+    
+                    if(file_exists($path2)){
+                      $images_interesting_fact = array_diff(scandir($path2), array('..', '.', '.gitignore'));
+                    }
+                }
+               
+              
                 return view('Centaur::users.edit_user', [
                     'user' => $user,
                     'employee' => $employee,
                     'departments' => $departments,
-                    'roles' => $roles
+                    'roles' => $roles,
+                    'path' => $path,
+                    'path2' => $path2,
+                    'images_interest' => $images_interest,
+                    'images_interesting_fact' => $images_interesting_fact,
+                    'user_interes' => $user_interes,
+                    'interes_info' => $interes_info,
+                    'interes_tags' => $interes_tags,
                 ]);
             } else {
                 session()->flash('error', __('ctrl.not_registered'));
                 return redirect()->back();
             }
-            
         }
 
         session()->flash('error', __('auth.invalid_user'));
         return redirect()->back();
+    }
+
+
+    public function slide_show($id)
+    {
+        $employee = Sentinel::getUser()->employee;
+       
+        if(isset($employee)) {
+            $images_interest = array();
+            $path = '';
+            if($employee->email) {
+                $user_name = explode('.',strstr($employee->email,'@',true));
+
+                $user_name = $user_name[1] . '_' . $user_name[0];
+    
+                $path = 'storage/' . $user_name . '/interest/';
+                
+                if(file_exists($path)){
+                    $images_interest = array_diff(scandir($path), array('..', '.', '.gitignore'));
+                }
+            }
+
+            return view('Centaur::users.slide_show', [
+                'employee' => $employee,
+                'path' => $path,
+                'images_interest' => $images_interest,
+                'id'    => $id     
+            ]);
+        } else {
+            session()->flash('error', __('ctrl.not_registered'));
+            return redirect()->back();
+        }
     }
 }

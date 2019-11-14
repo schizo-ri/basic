@@ -13,10 +13,10 @@ return [
     |
     */
 
-    'accepted' => 'The :attribute must be accepted.',
-    'active_url' => 'The :attribute is not a valid URL.',
-    'after' => 'The :attribute must be a date after :date.',
-    'after_or_equal' => 'The :attribute must be a date after or equal to :date.',
+    'accepted' => ':attribute mora biti prihvaćen.',
+    'active_url' => ':attribute nije važeći URL.',
+    'after' => ':attribute mora biti poslije :date.',
+    'after_or_equal' => ' :attribute mora biti datum nakon ili jednak :date.',
     'alpha' => 'The :attribute may only contain letters.',
     'alpha_dash' => 'The :attribute may only contain letters, numbers, dashes and underscores.',
     'alpha_num' => 'The :attribute may only contain letters and numbers.',
@@ -41,9 +41,9 @@ return [
     'distinct' => 'The :attribute field has a duplicate value.',
     'email' => 'The :attribute must be a valid email address.',
     'ends_with' => 'The :attribute must end with one of the following: :values',
-    'exists' => 'The selected :attribute is invalid.',
-    'file' => 'The :attribute must be a file.',
-    'filled' => 'The :attribute field must have a value.',
+    'exists' => ' Odabrani :attribute nije važeći.',
+    'file' => ':attribute mora biti datoteka.',
+    'filled' => ' :attribute polje mora imati vrijednost.',
     'gt' => [
         'numeric' => 'The :attribute must be greater than :value.',
         'file' => 'The :attribute must be greater than :value kilobytes.',

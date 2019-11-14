@@ -85,7 +85,7 @@ class EvaluationQuestionController extends Controller
 		$evaluationQuestion = new EvaluationQuestion();
 		$evaluationQuestion->saveEvaluatingQuestion($data);
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('evaluation_questions.index',['category_id' => $request['category_id']]);
     }
@@ -135,7 +135,7 @@ class EvaluationQuestionController extends Controller
 			
 		$evaluationQuestion->updateEvaluatingQuestion($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         //return redirect()->route('evaluation_questions.index');
         return redirect()->back()->withFlashMessage($message);
@@ -153,7 +153,7 @@ class EvaluationQuestionController extends Controller
         $evaluationQuestion = EvaluationQuestion::find($id);
 		$evaluationQuestion->delete();
 		
-		$message = session()->flash('success', 'Podkategorija je obrisana.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

@@ -12,6 +12,7 @@ use App\Http\Requests\EventRequest;
 use DateTime;
 use DateInterval;
 use DatePeriod;
+use Spatie\CalendarLinks\Link;
 
 class EventController extends Controller
 {
@@ -33,58 +34,57 @@ class EventController extends Controller
     public function index()
     {
         $empl = Sentinel::getUser()->employee;
+        $permission_dep = array();
+
         if($empl) {
             $events = Event::where('employee_id', $empl->id)->get();
-        } else {
-            $events = array();
-        }
-        
-    	$permission_dep = array();
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-		} 
-        
-        $dataArr = array();
-        
-		foreach($events as $event1) {
-			array_push($dataArr, ['name' => "event", 'date' => $event1->date]);
-        }
-        
-        $absences = Absence::where('approve',1)->get();
-        $today = date('Y-m-d');
-        $select_day = explode('-',$today);  //get from URL
-        $dan_select = $select_day[2];
-        $mj_select = $select_day[1];
-        $god_select = $select_day[0];
+            $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+            
+            $dataArr = array();
+            
+            foreach($events as $event1) {
+                array_push($dataArr, ['name' => "event", 'type' => __('calendar.event'), 'date' => $event1->date, 'title' => $event1->title]);
+            }
+            
+            $absences = Absence::where('approve',1)->get();
+            $today = date('Y-m-d');
+            $select_day = explode('-',$today);  //get from URL
+            $dan_select = $select_day[2];
+            $mj_select = $select_day[1];
+            $god_select = $select_day[0];
 
-        foreach($absences as $absence) {
-            $begin = new DateTime($absence->start_date);
-            $end = new DateTime($absence->end_date);
-            $end->setTime(0,0,1);
-            $interval = DateInterval::createFromDateString('1 day');
-            $period = new DatePeriod($begin, $interval, $end);
-            foreach ($period as $dan) {
-                if(date_format($dan,'Y') == $god_select) {  // ako je trenutna godina
-                    array_push($dataArr, ['name' => $absence->absence['mark'], 'date' => date_format($dan,'Y-m-d'), 'employee' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name']]);
+            foreach($absences as $absence) {
+                $begin = new DateTime($absence->start_date);
+                $end = new DateTime($absence->end_date);
+                $end->setTime(0,0,1);
+                $interval = DateInterval::createFromDateString('1 day');
+                $period = new DatePeriod($begin, $interval, $end);
+                foreach ($period as $dan) {
+                    if(date_format($dan,'Y') == $god_select) {  // ako je trenutna godina
+                        array_push($dataArr, ['name' => $absence->absence['mark'],'type' => $absence->absence['name'], 'date' => date_format($dan,'Y-m-d'), 'start_time' =>  $absence->start_time, 'end_time' =>  $absence->end_time, 'employee' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name']]);
+                    }
                 }
             }
+
+            $employees = Employee::get();
+
+            foreach($employees as $employee) {
+                $dan = $god_select . '-' . date('m-d', strtotime($employee->b_day));
+                array_push($dataArr, ['name' => 'birthday','type' => __('basic.birthday'), 'date' => $dan, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'] ]);
+            }
+            
+            $start = new DateTime('00:00');
+            $times = 24;
+
+            for ($i = 0; $i < $times-1; $i++) {
+                $hours_array[] = $start->add(new DateInterval('PT1H'))->format('H:i');
+            }
+
+            return view('Centaur::events.index',['dataArr'=> $dataArr,'events'=>$events,'employees'=>$employees, 'absences'=>$absences, 'permission_dep' => $permission_dep,'hours_array' => $hours_array]);
+        } else {
+            $message = session()->flash('error', __('ctrl.path_not_allow'));
+            return redirect()->back()->withFlashMessage($message);
         }
-
-        $employees = Employee::get();
-
-        foreach($employees as $employee) {
-            $dan = $god_select . '-' . date('m-d', strtotime($employee->b_day));
-            array_push($dataArr, ['name' => 'birthday', 'date' => $dan, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'] ]);
-        }
-        
-        $start = new DateTime('00:00');
-        $times = 24;
-
-        for ($i = 0; $i < $times-1; $i++) {
-            $hours_array[] = $start->add(new DateInterval('PT1H'))->format('H:i');
-        }
-
-		return view('Centaur::events.index',['dataArr'=> $dataArr,'events'=>$events,'employees'=>$employees, 'absences'=>$absences, 'permission_dep' => $permission_dep,'hours_array' => $hours_array]);
     }
 
     /**
@@ -103,7 +103,10 @@ class EventController extends Controller
         }
 
         if( isset($request)) {
-            return view('Centaur::events.create', ['date'=> $request['date'],'time1'=> $request['time1'], 'type' => $type]);
+            $time1 = new DateTime($request['time1']);
+            $time2 =  $time1->modify('+1 hour')->format('H:i');
+
+            return view('Centaur::events.create', ['date'=> $request['date'],'time1'=> $request['time1'],'time2'=> $time2, 'type' => $type]);
         } else{
             return view('Centaur::events.create');
         }
@@ -117,6 +120,7 @@ class EventController extends Controller
      */
     public function store(EventRequest $request)
     {
+
         $host = $_SERVER['REQUEST_URI'];
 
         $user = Sentinel::getUser();
@@ -125,17 +129,29 @@ class EventController extends Controller
 		$data = array(
 			'employee_id'  	=> $employee->id,
 			'title'  		=> $request['title'],
-			'type'  		=> $request['type'],
 			'date'  		=> $request['date'],
 			'time1' 		=> $request['time1'],
 			'time2' 		=> $request['time2'],
 			'description'   => $request['description']
-		);
-		
-		$event = new Event();
+        );
+
+        $event = new Event();
+
 		$event->saveEvent($data);
-		
-		session()->flash('success', "Podaci su spremljeni");
+
+        /*
+        $from = DateTime::createFromFormat('Y-m-d H:i', $event->date . ' ' . $event->time1 );
+        $to = DateTime::createFromFormat('Y-m-d H:i',  $event->date . ' ' . $event->time2 );
+
+        $link = Link::create($event->title, $from, $to)
+            ->description($event->description)
+            ->address('Svetonedeljska 18');
+        
+        // Generate a link to create an event on Google calendar
+        echo $link->google();
+
+        */
+		session()->flash('success',  __('ctrl.data_save'));
 		if($host == '/event') {
             return redirect()->route('events.index');
         } else {
@@ -232,4 +248,99 @@ class EventController extends Controller
         return ['week_day' => $week_day, 'month' => $month, 'dan_select' => $dan_select, 'mj_select' => $mj_select, 'god_select' => $god_select];
     }
 
+    public static function event_for_selected_day ($date) {
+       
+        $empl = Sentinel::getUser()->employee;
+        $dataArr = array();
+
+        if($empl) {
+            
+            $events = Event::where('employee_id', $empl->id)->get();
+/*
+            foreach($events as $event1) {
+                array_push($dataArr, ['name' => "event", 'type' => __('calendar.event'), 'date' => $event1->date, 'title' => $event1->title]);
+            }
+*/
+            $absences = Absence::where('approve',1)->get();
+            
+            foreach($absences as $absence) {
+                
+                $begin = new DateTime($absence->start_date);
+                $end = new DateTime($absence->end_date);
+                $end->setTime(0,0,1);
+                $interval = DateInterval::createFromDateString('1 day');
+                $period = new DatePeriod($begin, $interval, $end);
+                foreach ($period as $dan) {
+                      if(date_format($dan,'Y-m-d') == $date) {  // ako je selektirani datum
+                        array_push($dataArr, ['name' => $absence->absence['mark'],'type' => $absence->absence['name'], 'date' => date_format($dan,'Y-m-d'), 'employee' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name'], 'employee_id' => $absence->employee_id ]);
+                    }
+                }
+            }
+
+            $employees = Employee::get();
+            
+            $select_day = explode('-', $date);  //get from URL
+            $dan_select = $select_day[2];
+            $mj_select = $select_day[1];
+            $god_select = $select_day[0];
+
+            foreach($employees as $employee) {
+                $dan_birthday = $god_select . '-' . date('m-d', strtotime($employee->b_day));
+                if($dan_birthday == $date) {
+                    array_push($dataArr, ['name' => 'birthday','type' => __('basic.birthday'), 'date' => $dan_birthday, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'], 'employee_id' => $employee->id  ]);
+                }
+               
+            } 
+        }
+        return $dataArr;
+    }
+
+    public function modal_event(Request $request)
+    {
+        $empl = Sentinel::getUser()->employee;
+        $events = Event::where('employee_id', $empl->id)->get();
+        
+        return view('Centaur::all_event', ['dataArr_day' => $request['dataArr_day'], 'uniqueType' => $request['uniqueType'], 'dan' => $request['dan'], 'events' => $events  ]);
+    }
+
+    public static function getDataArr () {
+
+        $empl = Sentinel::getUser()->employee;
+        $events = Event::where('employee_id', $empl->id)->get();
+        $dataArr = array();
+        
+        foreach($events as $event1) {
+            array_push($dataArr, ['name' => "event", 'type' => __('calendar.event'), 'date' => $event1->date, 'title' => $event1->title]);
+        }
+        
+        $absences = Absence::where('approve',1)->get();
+        $today = date('Y-m-d');
+        $select_day = explode('-',$today);  //get from URL
+        $dan_select = $select_day[2];
+        $mj_select = $select_day[1];
+        $god_select = $select_day[0];
+
+        foreach($absences as $absence) {
+            $begin = new DateTime($absence->start_date);
+            $end = new DateTime($absence->end_date);
+            $end->setTime(0,0,1);
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
+            foreach ($period as $dan) {
+                if(date_format($dan,'Y') == $god_select) {  // ako je trenutna godina
+                    array_push($dataArr, ['name' => $absence->absence['mark'],'type' => $absence->absence['name'], 'date' => date_format($dan,'Y-m-d'), 'start_time' =>  $absence->start_time, 'end_time' =>  $absence->end_time, 'employee' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name']]);
+                }
+            }
+        }
+
+        $employees = Employee::get();
+
+        foreach($employees as $employee) {
+            $dan = $god_select . '-' . date('m-d', strtotime($employee->b_day));
+            array_push($dataArr, ['name' => 'birthday','type' => __('basic.birthday'), 'date' => $dan, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'] ]);
+        }
+
+        return $dataArr;
+    }
+    
 }

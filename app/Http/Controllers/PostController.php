@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Request;
+use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
@@ -11,6 +11,7 @@ use App\Models\Department;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use Sentinel;
+use DateTime;
 
 class PostController extends Controller
 {
@@ -31,6 +32,7 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
+		
 		$empl = Sentinel::getUser()->employee;
 		$comments = Comment::orderBy('created_at','ASC')->get();
 	
@@ -62,7 +64,7 @@ class PostController extends Controller
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 			
 		} else {
-				$message = session()->flash('error', 'Putanja nije dozvoljena.');
+				$message = session()->flash('error',  __('ctrl.path_not_allow'));
 				return redirect()->back()->withFlashMessage($message);
 		}
 		
@@ -74,11 +76,17 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name','ASC')->get();
+		
+		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name','ASC')->get();
 		$departments = Department::orderBy('name','ASC')->get();
-		return view('Centaur::posts.create', ['employees' => $employees, 'departments' => $departments]);
+		if(isset($request['employee_publish'])) {
+			$employee_publish = Employee::find($request['employee_publish']);
+			return view('Centaur::posts.create', ['employees' => $employees, 'departments' => $departments, 'employee_publish' => $employee_publish]);
+		} else {
+			return view('Centaur::posts.create', ['employees' => $employees, 'departments' => $departments]);
+		}
     }
 
     /**
@@ -133,7 +141,7 @@ class PostController extends Controller
 
 		session()->flash('success', "Poruka je poslana");
 		
-        return redirect()->route('posts.index');
+        return redirect()->back();
     }
 
     /**
@@ -220,7 +228,7 @@ class PostController extends Controller
         $post = Post::find($id);
 		$post->delete();
 		
-		$message = session()->flash('success', 'Poruka je obrisana.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }
@@ -356,6 +364,38 @@ class PostController extends Controller
 		);
 
 		return $podaci;
+	}
 
+	public function updated($id, $year, $month, $day, $hour, $minute, $second)
+	{
+		$post = Post::findOrFail($id);
+		$date = new DateTime($year . '-' .  $month . '-' . $day . ' ' . $hour . ':' . $minute . ':' . $second);
+		$date->modify('-10 seconds');
+
+		if ($post && ($post->updated_at > $date) ) {
+			PostController::setCommentAsRead($id, true);
+			
+			return 'true';
+		} 
+		return 'false';
+	}
+
+	public static function setCommentAsRead ($id) 
+	{
+		$empl = Sentinel::getUser()->employee;
+		$post = Post::where('id', $id)->first();
+		$comments_post = Comment::where('post_id',$post->id)->get();
+
+		if($post->employee_id != $empl->id) {
+			$post->updatePost(['status' => '1']);
+		}
+
+		if(count($comments_post) > 0){
+			foreach($comments_post as $comment) {
+				if($comment->employee_id != $empl->id ) {
+					$comment->updateComment(['status' => '1']);
+				}
+			}
+		}
 	}
 }

@@ -96,6 +96,7 @@ div#calendar ul.dates li{
     background: #F8FAFF;
     margin-right: 5px;
     padding: 10px;
+    cursor: pointer;
 }
  
 :focus{
@@ -220,8 +221,20 @@ div#calendar ul li.active_date {
     background: #13EA90;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 450px) {
     div#calendar {
         padding: 0;
     }
+}
+@media (max-width: 1024px) {
+    div#calendar div.header {
+        padding-top: 10px;
+    }
+    div#calendar {
+        padding: 0 15px;
+    }
+    .comming_agenda {
+        padding: 15px;
+    }
+
 }

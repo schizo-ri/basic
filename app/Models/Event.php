@@ -1,12 +1,12 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillable = ['employee_id','type','title','date','time1','time2','description'];
+
+	protected $fillable = ['employee_id','type','title','date','time1','time2','description'];
 	
 	/*
 	* The Eloquent employee model name

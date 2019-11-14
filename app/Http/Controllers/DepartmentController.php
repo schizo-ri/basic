@@ -75,7 +75,7 @@ class DepartmentController extends Controller
 		$department = new Department();
 		$department->saveDepartment($data);
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('departments.index');
     }
@@ -127,7 +127,7 @@ class DepartmentController extends Controller
 		
 		$department->updateDepartment($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success',__('ctrl.data_edit'));
 		
         return redirect()->route('departments.index');
 		
@@ -145,7 +145,7 @@ class DepartmentController extends Controller
         $department = Department::find($id);
 		$department->delete();
 		
-		$message = session()->flash('success', 'Odjel je obrisan.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

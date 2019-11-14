@@ -62,7 +62,6 @@
 						<span class="empl_work">{{ $employee->work['name'] }}</span>
 					</div>
 					<div class="col-3 info_abs">
-
 						<span class="title">@lang('absence.work_history')</span>
 						<p class="col-6 float_l">
 							{{ $data_absence['years_service']->y . '-' . 
@@ -118,7 +117,7 @@
 									<input type="search" placeholder="Search" onkeyup="mySearchTable()" id="mySearchTbl">
 								</label>
 							</div>
-							@if(count($absences))
+							@if(count($absences)>0)
 								<table id="index_table" class="display table table-hover">
 									<thead>
 										<tr>
@@ -129,8 +128,8 @@
 											<!--<th>Period</th>
 												<th>@lang('absence.time')</th>-->
 											<th>@lang('basic.comment')</th>
-											<th>@lang('absence.aprove')</th>
-											<!--<th>@lang('absence.aproved')</th>
+											<th>@lang('absence.approved')</th>
+											<!--<th>@lang('absence.aproved_by')</th>
 											<th>@lang('absence.aprove_date')</th>-->
 											<th class="not-export-column no-sort"></th>
 										</tr>
@@ -172,7 +171,15 @@
 									</tbody>
 								</table>
 							@else
-								@lang('basic.no_data')
+								<div class="placeholder">
+									<img class="" src="{{ URL::asset('icons/placeholder_absence.png') }}" alt="Placeholder image" />
+									<p>@lang('basic.no_absence1')
+										<label type="text" class="add_new" rel="modal:open" >
+											<i style="font-size:11px" class="fa">&#xf067;</i>
+										</label>
+										@lang('basic.no_absence2')
+									</p>
+								</div>
 							@endif
 						</div>
 					</div>
@@ -181,19 +188,24 @@
 		</section>
 	</main>
 </div>
-<script>
-$( function () {
-	$.getScript( 'js/datatables.js');
-    $.getScript( 'js/filter_table.js');
-	$.getScript( 'js/absence.js');
-	
-	$('#index_table_filter').show();
-	$('.table-responsive').prepend('<a class="add_new" href="{{ route('absences.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('absence.new_request')</a>');
-	$('.content').append('@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep) )
-			<a href="{{ route('absences.edit', $absence->id) }}" class="btn-edit" rel="modal:open"><i class="far fa-edit"></i></a>@endif
-		@if(Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
-			<a href="{{ route('absences.destroy', $absence->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>@endif');
+@if(isset($absence))
+	<script>
+	$( function () {
+		$.getScript( 'js/datatables.js');
+		$.getScript( 'js/filter_table.js');
+		$.getScript( 'js/absence.js');
+		
+		$('#index_table_filter').show();
+		$('.table-responsive').prepend('<a class="add_new" href="{{ route('absences.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('absence.new_request')</a>');
+		$('.content').append('@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep) )
+				<a href="{{ route('absences.edit', $absence->id) }}" class="btn-edit" rel="modal:open"><i class="far fa-edit"></i></a>@endif
+			@if(Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
+				<a href="{{ route('absences.destroy', $absence->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>@endif');
 
-});
-</script>
+	});
+	$('.button_nav').click(function(e){
+		$.getScript( '/../js/nav_active.js');
+	});
+	</script>
+@endif
 @stop

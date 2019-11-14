@@ -58,7 +58,9 @@
 </div>
 <div class="modal-body">
     @if($notice_img)
-        <img class="img_notice" src="{{ URL::asset('storage/notice/' . $notice->id . '/' . end($notice_img)) }}" alt="Notice image" title="Notice image"  />
+        <div class="image_notice">
+            <img class="img_notice" src="{{ URL::asset('storage/notice/' . $notice->id . '/' . end($notice_img)) }}" alt="Notice image" title="Zoom"  />
+        </div>
     @endif
     <div class="notice_content" >
         {!! $notice->notice !!}
@@ -90,6 +92,16 @@
         var header_height =  $('.modal-header').height();
         var body_height =  modal_height - header_height - 65;
         $('.modal-body').height(body_height);
+    });
+
+    $('.image_notice').click(function(){
+        if($(this).hasClass('show_all')) {
+            $(this).removeClass('show_all');
+            $(this).find('.img_notice').removeClass('show_all');
+        } else {
+            $(this).addClass('show_all');
+            $(this).find('.img_notice').addClass('show_all');
+        }
     });
     
 

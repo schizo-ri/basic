@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class NoticeStatistic extends Model
 {
-    protected $fillable = ['employee_id','notice_id','status'];
+	protected $fillable = ['employee_id','notice_id','status'];
 
      /*
 	* The Eloquent Employee model name

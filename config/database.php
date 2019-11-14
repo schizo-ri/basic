@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Str;
+use App\Http\Controllers\DashboardController;
+
+$db =  'tenant_' . DashboardController::getDBName();
 
 return [
 
@@ -15,7 +18,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', $db),
 
     /*
     |--------------------------------------------------------------------------
@@ -48,9 +51,9 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'novi_portal_basic'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            'database' => env('DB_DATABASE', 'novi_portal_basic'), // duplicoh_icom-user    /novi_portal_basic
+            'username' => env('DB_USERNAME','root'),                //duplicoh_jelena       /root
+            'password' => env('DB_PASSWORD'),                       // Sifra123jj           / ''
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -62,14 +65,75 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-		 'mysql_external' => [
+        /* Baza PRODUKCIJA duplicoh_icom-user */
+        'tenant_duplicoh_icom-user' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_TEN_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_TEN2_DATABASE','duplicoh_icom-user'),      
+            'username' => env('DB_TEN2_USERNAME','duplicoh_jelena'),
+            'password' => env('DB_TEN2_PASSWORD','Sifra123jj'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        /* Baza proba1 */
+        'tenant_proba' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_TEN_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_TEN_DATABASE', 'proba'),      
+            'username' => env('DB_TEN_USERNAME','root'),
+            'password' => env('DB_TEN_PASSWORD'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+        /* Baza proba1 */
+        'tenant_novi_portal_basic' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_TEN_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_TEN1_DATABASE', 'novi_portal_basic'),
+            'username' => env('DB_TEN1_USERNAME','root'),
+            'password' => env('DB_TEN1_PASSWORD'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+		'mysql_external' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_EXT_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_EXT_DATABASE', 'novi_portal'),
-            'username' => env('DB_EXT_USERNAME', 'root'),
-            'password' => env('DB_EXT_PASSWORD', ''),
+            'database' => env('DB_EXT_DATABASE', 'novi_portal'),        //duplicoh_icom-superadmin      /novi_portal
+            'username' => env('DB_EXT_USERNAME', 'root'),               //duplicoh_jelena               / root
+            'password' => env('DB_EXT_PASSWORD', ''),                   //Sifra123jj                    / ''
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -110,6 +174,7 @@ return [
         ],
 
     ],
+    
 
     /*
     |--------------------------------------------------------------------------

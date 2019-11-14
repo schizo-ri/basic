@@ -1,22 +1,28 @@
 <div class="modal-body body_post">
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('posts.store') }}" >
-		<div class="form-group {{ ($errors->has('to_department_id')) ? 'has-error' : '' }}">
-			<label class="message_to_dep">@lang('basic.message_to_dep')</label>
-			<select class="form-control department_id" name="to_department_id">
-					<option selected disabled></option>
-					@foreach($departments as $department)
-					<option value="{{ $department->id}}" >{{ $department->name }}</option>
-				@endforeach
-			</select>
-		</div>		
+		@if(! isset($employee_publish))
+			<div class="form-group {{ ($errors->has('to_department_id')) ? 'has-error' : '' }}">
+				<label class="message_to_dep">@lang('basic.message_to_dep')</label>
+				<select class="form-control department_id" name="to_department_id">
+						<option selected disabled></option>
+						@foreach($departments as $department)
+						<option value="{{ $department->id}}" >{{ $department->name }}</option>
+					@endforeach
+				</select>
+			</div>		
+		@endif
 		<div class="form-group {{ ($errors->has('to_employee_id')) ? 'has-error' : '' }}">
-			<label class="message_to_empl">@lang('basic.message_to_empl')</label>
-			<select class="form-control employee_id" name="to_employee_id" required>
-					<option selected disabled</option>
-					@foreach($employees as $employee)
-					<option value="{{ $employee->id}}" >{{ $employee->first_name . ' ' .  $employee->last_name }}</option>
-				@endforeach
-			</select>
+			<label class="message_to_empl">@lang('basic.message_to_empl') {!! isset($employee_publish) ? $employee_publish->user['first_name'] . ' ' .  $employee_publish->user['last_name'] : '' !!}</label>
+			@if(isset($employee_publish))
+				<input class="form-control employee_id" type="hidden" name="to_employee_id" value="{{ $employee_publish->id }}" />
+			@else 
+				<select class="form-control employee_id" name="to_employee_id" required>
+						<option selected disabled</option>
+						@foreach($employees as $employee)
+						<option value="{{ $employee->id}}" >{{ $employee->first_name . ' ' .  $employee->last_name }}</option>
+					@endforeach
+				</select>
+			@endif
 		</div>
 		{!! ($errors->has('to_employee_id') ? $errors->first('to_employee_id', '<p class="text-danger">:message</p>') : '') !!}
 		<div class="form-group {{ ($errors->has('content')) ? 'has-error' : '' }}">

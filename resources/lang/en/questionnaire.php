@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'questionnaire' 	=> 'Questionnaire',
-    'questionnaires' 	=> 'Questionnaires',
-    'add_questionnaire' => 'Add questionnaire',
-    'edit_questionnaire'=> 'Edit questionnaire',
+    'questionnaire' 	=> 'Survey',
+    'questionnaires' 	=> 'Surveys',
+    'add_questionnaire' => 'Add survey',
+    'edit_questionnaire'=> 'Edit survey',
     'evaluation_categories'	=> 'Evaluation categories',
     'evaluation_questions'	=> 'Evaluation questions',
 	'evaluation_ratings'	=> 'Evaluation ratings',

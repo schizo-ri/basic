@@ -1,15 +1,14 @@
 $(function() {
     var body_width = $('body').width();
-    if(body_width > 1200) {
+    if(body_width > 450) {
         var index_height = $('.index_main.main_documents').height();
         var header_height = $('.page-header.header_questionnaire').height();
         var body_height = index_height - header_height;
-        $('.all_documents').height(body_height -30);
+        $('.all_documents').height(body_height -65);
     }
 
     $('.index_page table.dataTable.no-footer').css('height','fit-content');
-    $('.index_table_filter input').attr('Placeholder', 'Search');
-  
+
     var div_width = $( '.preview_doc').width();
     var all_width = 217;
 
@@ -21,6 +20,11 @@ $(function() {
         $('.preview_doc .scroll_right').show();
     }
         
+    $(".clickable-row").click(function() {
+     //   window.location = $(this).data("href");
+
+    });
+
     $('#right-button').click(function() {
         event.preventDefault();
         $('.preview_doc').animate({
@@ -52,7 +56,7 @@ $(function() {
             var index_height = $('.index_main.main_documents').height();
             var header_height = $('.page-header.header_questionnaire').height();
             var body_height = index_height - header_height;
-            $('.all_documents').height(body_height -30 );
+            $('.all_documents').height(body_height -65 );
             var thumb_height = $('.preview_doc.preview_q .thumb_container').last().height();
             $('.thumb_container').first().height(thumb_height);
         }
@@ -65,7 +69,7 @@ $(function() {
         var index_height = $('.index_main.main_documents').height();
         var header_height = $('.page-header.header_questionnaire').height();
         var body_height = index_height - header_height;
-        $('.all_documents').height(body_height - 30);
+        $('.all_documents').height(body_height - 65);
     });
 
     $( ".change_view" ).click(function() {
@@ -88,7 +92,7 @@ $( window ).resize(function() {
         var index_height = $('.index_main.main_documents').height();
         var header_height = $('.page-header.header_questionnaire').height();
         var body_height = index_height - header_height;
-        $('.all_documents').height(body_height -30);
+        $('.all_documents').height(body_height -65);
     }
 
 });

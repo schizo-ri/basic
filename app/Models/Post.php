@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
-{
-    //use Sluggable;
+{	
+	//use Sluggable;
     /**
 	* The attributes thet are mass assignable
 	*

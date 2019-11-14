@@ -1,5 +1,4 @@
-@php use App\Http\Controllers\QuestionnaireController; @endphp
-	<div class="modal-header results">
+	<div class="modal-header results modal-open">
 		<a class="link_back" rel="modal:close">
 			<img src="{{ URL::asset('icons/arrow_left2.png') }}" />
 		</a>
@@ -24,11 +23,11 @@
 			<div class="anketa" id="anketa">
 				@foreach($evaluationCategories as $category)
 					@php $i++; @endphp
-					<h4 id="{{ $category->name_category }}"><span class="rbr">{{ $i }}</span>{{ $category->name_category }}</h4>
+					<h4 id="{{ $category->name_category }}"><span class="rbr">{{ $i }}</span><span class="ctg_name">{{ $category->name_category }}</span></h4>
 					@foreach($evaluationQuestions->where('category_id', $category->id) as $question)
 						@php $j++; @endphp
 						<div class="pitanje">
-							<p><span class="rbr">{{ $j }}</span> {{ $question->name_question }}</p>
+							<p><span class="rbr">{{ $j }}</span><span class="ctg_name">{{ $question->name_question }}</span></p>
 						<!--	<p class="opis">{{ $question->description }}</p>	-->
 						</div>
 						<span class="ocj">
@@ -57,4 +56,9 @@
 			</div>
 		</section>
 	</div>
-<script >$(function(){$.getScript( 'js/questionnaire_show.js');});</script>
+
+<script >
+$(function(){
+	$.getScript( 'js/questionnaire_show.js');
+});
+</script>

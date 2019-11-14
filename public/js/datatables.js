@@ -12,6 +12,7 @@ $( function () {
 		"searching": true,
 		"ordering": true,
 		"info":     true,
+		"bDestroy": true,
 		"lengthChange": true,
 		"columnDefs": [ {
 			"targets"  : 'no-sort',

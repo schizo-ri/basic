@@ -88,7 +88,7 @@ class EmailingController extends Controller
 		$emailing = new Emailing();
 		$emailing->saveEmailing($data);
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('emailings.index');
     }
@@ -153,7 +153,7 @@ class EmailingController extends Controller
 		
 		$emailing->updateEmailing($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('emailings.index');
     }
@@ -169,7 +169,7 @@ class EmailingController extends Controller
         $emailing = Emailing::find($id);
 		$emailing->delete();
 		
-		$message = session()->flash('success', 'Emailing je uspješno obrisan');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

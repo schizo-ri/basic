@@ -16,8 +16,8 @@
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 		@else
-			<p class="padd_10">Ja, {{ $absence->employee->user['first_name']  . ' ' . $absence->employee->user['last_name'] }} 
-				<span class="">molim da mi se odobri</span>
+			<p class="padd_10">@lang('absence.i'), {{ $absence->employee->user['first_name']  . ' ' . $absence->employee->user['last_name'] }} 
+				<span class="">@lang('absence.please_approve')</span>
 			</p>
 			<input name="employee_id" type="hidden" value="{{  $absence->employee_id }}" />
 		@endif
@@ -60,7 +60,7 @@
 		</div>
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group">
-				<label for="email">Slanje emaila:</label>
+				<label for="email">@lang('absence.email_send')</label>
 				<input type="radio" name="email" value="DA"  /> @lang('basic.send_mail') 
 				<input type="radio" name="email" value="NE" checked /> @lang('basic.dont_send_mail')
 			</div>

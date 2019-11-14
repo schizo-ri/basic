@@ -10,6 +10,6 @@ body {
 }
 </style>
 	<body>
-		Na portalu je objavljena nova Anketa - {{ $questionnaire->name}}
+		@lang('emailing.new_questinnaire_publish') - {{ $questionnaire->name}}
 	</body>
 </html>

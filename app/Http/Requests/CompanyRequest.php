@@ -27,7 +27,9 @@ class CompanyRequest extends FormRequest
             'name' 		 => 'required|max:100',
             'address' 	 => 'required|max:100',
             'city' 		 => 'required|max:50',
-            'oib' 		 => 'required|max:20'
+            'oib' 		 => 'required|max:20',
+            'url' 	     => 'unique|max:255',
+            'db' 	     => 'unique|max:50',
         ];
     }
 }

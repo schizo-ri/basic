@@ -36,11 +36,16 @@ $(function() {
                         var year = date[0]['_i'].split('-')[0];
                         var datum = year + '-' + month + '-' + day;
                         var url = url_basic + '?dan=' + datum;
+                        
+                        $('.index_aside .day_events').load(url + ' .index_aside .day_events >div');
                         $('.index_main .header_calendar').load( url + ' .index_main .header_calendar > div');
                         $('.index_main .main_calendar').load(url + ' .index_main .main_calendar .all_events');
                         $('.index_main .main_calendar .all_events').load(url + ' .index_main .main_calendar .all_events .show_event');
+                        
                     }
                 }
             }
     });
+    $('.index_aside .day_events ').show();
+
 });

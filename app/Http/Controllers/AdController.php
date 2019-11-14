@@ -134,16 +134,16 @@ class AdController extends Controller
 			} else {
 				if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
                     return redirect()->route('oglasnik')->with('success',"The ad has been uploaded.");
-                    return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
+
 				} else {
 					return redirect()->route('oglasnik')->with('error', 'Sorry, there was an error uploading your file.'); 
 				}
 			}
         }
 
-        session()->flash('success', "Podaci su spremljeni");
+        session()->flash('success',  __('ctrl.data_save'));
 		
-        return redirect()->route('ads.index', ['category_id' => $request['category_id']]);
+        return redirect()->route('oglasnik');
     }
 
     /**
@@ -197,7 +197,7 @@ class AdController extends Controller
 		
 		$ad->updateAd($data);
 		
-		session()->flash('success', "Podaci su ispravjeni");
+		session()->flash('success',__('ctrl.data_edit'));
 		
         return redirect()->route('ads.index', ['category_id' => $request['category_id']]);	
     }
@@ -213,7 +213,7 @@ class AdController extends Controller
         $ad = Ad::find($id);
 		$ad->delete();
 		
-		$message = session()->flash('success', 'Oglas je obrisan.');
+		$message = session()->flash('success', __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }
@@ -225,29 +225,40 @@ class AdController extends Controller
      */
     public function oglasnik(Request $request)
     {
-		if(isset($request['sort'])) {
-			$ads = Ad::orderBy('created_at', $request['sort'])->get();
-		} else {
-			$ads = Ad::orderBy('created_at','DESC')->get();
-		}
-		
 		$user = Sentinel::getUser()->employee;
-		$user_department = array();
-		$permission_dep = array();
-        $departments = Department::get();
-		
+
 		if($user) {
+			if(isset($request['sort'])) {
+				$ads = Ad::orderBy('created_at', $request['sort'])->get();
+			} else {
+				$ads = Ad::orderBy('created_at','DESC')->get();
+			}
+			$user_department = array();
+			$permission_dep = array();
+			$departments = Department::get();
+			
 			$user_department = $user->work->department->id;
 			$permission_dep = explode(',', count($user->work->department->departmentRole) > 0 ? $user->work->department->departmentRole->toArray()[0]['permissions'] : '');
-		} 
-		return view('Centaur::oglasnik',['ads'=> $ads,'user_department'=> $user_department,'permission_dep'=> $permission_dep, 'departments' => $departments]);
+			
+			return view('Centaur::oglasnik',['ads'=> $ads,'user_department'=> $user_department,'permission_dep'=> $permission_dep, 'departments' => $departments]);
+
+		} else {
+			$message = session()->flash('error', __('ctrl.path_not_allow'));
+            return redirect()->back()->withFlashMessage($message);
+		}
 	}
 	
 	public function sort ( Request $request ) {	
-		$ads = Ad::orderBy('created_at',$request['sort'] )->get();
+		if(isset($request['sort'])) {
+			$ads = Ad::orderBy('created_at',$request['sort'] )->get();
 
-		return $ads;
-		
+			return $ads;
+		}
+		if(isset($request['sort_notice'])) {
+			$notices = Notice::orderBy('created_at',$request['sort_notice'] )->get();
+			
+			return $notices;
+		}
 	}
 
 }

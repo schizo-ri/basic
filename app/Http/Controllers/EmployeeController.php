@@ -157,7 +157,7 @@ class EmployeeController extends Controller
 			Mail::to($send_to_mail)->send(new EmployeeCreate($employee)); // mailovi upisani u mailing 
 		}
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('employees.index');
     }
@@ -300,7 +300,7 @@ class EmployeeController extends Controller
 			Mail::to($send_to_mail)->send(new EmployeeCreate($employee)); // mailovi upisani u mailing 
 		}
 		*/
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('employees.index');
 		
@@ -317,7 +317,7 @@ class EmployeeController extends Controller
         $employee = Employee::find($id);
 		$employee->delete();
 		
-		$message = session()->flash('success', 'Zaposlenik je obrisan.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

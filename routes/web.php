@@ -120,8 +120,15 @@ Route::resource('notices', 'NoticeController');
 // NoticeStatistic
 Route::resource('notice_statistics', 'NoticeStatisticController');
 
+// UserInteres
+Route::resource('user_interes', 'UserInteresController');
+
 // Dashboard 
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
+
+// Layout 
+Route::get('layout', ['as' => 'layout', 'uses' => 'LayoutController@index']);
+
 /*
 Route::get('dashboard', function () {
     return view('Centaur::dashboard');
@@ -146,3 +153,25 @@ Route::get('absence/confirmation_show', ['as' => 'confirmation_show', 'uses' => 
 // User edit 
 Route::get('user/edit_user/{id}', ['as' => 'user.edit', 'uses' => 'UserController@edit_user']);
 
+// Upload image 
+Route::get('upload_image', ['as' => 'upload', 'uses' => 'DocumentController@uploadImage']);
+// post update
+
+Route::get('posts/{id}/{year?}/{month?}/{day?}/{hour?}/{minute?}/{second?}', ['as' => 'posts', 'uses' => 'PostController@updated']);
+
+Route::get('setCommentAsRead/{id}', ['as' => 'setCommentAsRead', 'uses' => 'PostController@setCommentAsRead']);
+
+// Open slide show
+Route::get('users.slide_show/{id}', ['as' => 'slide_show', 'uses' => 'UserController@slide_show']);
+
+use App\Models\Event;
+use App\Http\Resources\EventCollection;
+
+Route::get('/event', function () {
+    return new EventCollection(Event::all());
+});
+
+// Admin panel
+Route::get('admin_panel', ['as' => 'admin_panel', 'uses' => 'DashboardController@openAdmin']);
+
+Route::get('all_event', ['as' => 'all_event', 'uses' => 'EventController@modal_event']);

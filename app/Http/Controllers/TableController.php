@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Table;
 use App\Http\Requests\TableRequest;
 use Sentinel;
+
 class TableController extends Controller
 {
     /**
@@ -63,7 +64,7 @@ class TableController extends Controller
 		$table = new Table();
 		$table->saveTable($data);
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('tables.index');
     }
@@ -111,7 +112,7 @@ class TableController extends Controller
 		
 		$table->updateTable($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('tables.index');
 		
@@ -128,7 +129,7 @@ class TableController extends Controller
         $table = Table::find($id);
 		$table->delete();
 		
-		$message = session()->flash('success', 'Tabela je obrisana.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

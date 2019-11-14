@@ -6,8 +6,9 @@
 	<body>
 		<h2>Reset Your Password</h2>
 
-		<p>To change your password, <a href="{{ route('auth.password.reset.form', urlencode($code)) }}">click here.</a></p>
-		<p>Or point your browser to this address: <br /> {!! route('auth.password.reset.form', urlencode($code)) !!} </p>
-		<p>Thank you!</p>
+		<p>@lang('emailing.to_change_password'), <a href="{{ route('auth.password.reset.form', urlencode($code)) }}">@lang('emailing.click_here').</a></p>
+		<p>@lang('emailing.or_point_browser') <br /> {!! route('auth.password.reset.form', urlencode($code)) !!} </p>
+		<p>@lang('emailing.thank_you')</p>	
+		
 	</body>
 </html>

@@ -141,7 +141,7 @@ class QuestionnaireController extends Controller
 			}
 		}
 
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success', __('ctrl.data_save'));
 
 		// return redirect()->route('evaluation_categories.create');
 		return redirect()->route('questionnaires.index');
@@ -190,7 +190,7 @@ class QuestionnaireController extends Controller
 			
 			return view('Centaur::questionnaires.show',['employee'=>$employee,'employees'=>$employees,'questionnaire'=>$questionnaire,'evaluationCategories'=>$evaluationCategories,'evaluationEmployees'=>$evaluationEmployees,'evaluationQuestion'=>$evaluationQuestion,'evaluationRatings'=>$evaluationRatings]); 
 		} else {
-			$message = session()->flash('success', 'Putanja nije dozvoljena!');
+			$message = session()->flash('success',  __('ctrl.path_not_allow'));
 		
 			return redirect()->back()->withFlashMessage($message);
 		}*/
@@ -324,7 +324,7 @@ class QuestionnaireController extends Controller
 			}
 		}
 
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('questionnaires.index');
     }
@@ -337,10 +337,10 @@ class QuestionnaireController extends Controller
      */
     public function destroy($id)
     {
-        $questionnaire = Questionnaire::find($id);
+		$questionnaire = Questionnaire::find($id);
 		$questionnaire->delete();
 		
-		$message = session()->flash('success', 'Anketa je obrisana.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

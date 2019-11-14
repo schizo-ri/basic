@@ -85,7 +85,7 @@ class EducationThemeController extends Controller
 		$educationTheme = new EducationTheme();
 		$educationTheme->saveEducationTheme($data);
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('education_themes.index',['education_id' => $request['education_id']]);
     }
@@ -133,7 +133,7 @@ class EducationThemeController extends Controller
 		
 		$educationTheme->updateEducationTheme($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('education_themes.index',['education_id' => $request['education_id']]);
     }
@@ -149,7 +149,7 @@ class EducationThemeController extends Controller
         $educationTheme = EducationTheme::find($id);
 		$educationTheme->delete();
 		
-		$message = session()->flash('success', 'Tema je obrisana.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

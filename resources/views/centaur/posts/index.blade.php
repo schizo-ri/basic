@@ -10,27 +10,29 @@
 		use App\Models\Employee;
 	@endphp
 	<aside class="col-4 latest_messages">
-		<h1>Latest messages
+		<h1>@lang('basic.latest_messages')
 			@if(Sentinel::getUser()->hasAccess(['posts.create']) || in_array('posts.create', $permission_dep))
-				<a class="btn btn-primary btn-lg btn-new" href="{{ route('posts.create') }}" rel="modal:open">
-						<i style="font-size:11px" class="fa">&#xf067;</i>
+				<a class="btn btn-primary btn-lg btn-new" href="{{ route('posts.create') }}" rel="modal:open" title="{{ __('basic.new_post')}}">
+					<i style="font-size:12px" class="fa">&#xf067;</i>
 				</a>
 			@endif
 			<span class="search_post"></span>
 		</h1>
-		<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="Type ... " class="input_search search_input" autofocus>
+		<div class="input_search search_input">
+			<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="Type ... "  autofocus>
+		</div>
 		<section class="col-md-12 posts">
 			<div class="all_post">
-				@if(count( $posts))
+				@if(count( $posts) >0)
 					@foreach($posts as $post)
 						<?php
 							if($post->to_employee_id != null) {
 								$image_to_employee = DashboardController::profile_image($post->to_employee_id);
 							}
-							$post_comment = $comments->where('post_id',$post->id)->first(); //zadnji komentar na poruku
+							$post_comment = $comments->sortByDesc('created_at')->where('post_id',$post->id)->first(); //zadnji komentar na poruku
 						?>
 						<article class="main_post panel">
-							<button class="tablink" id="{{ $post->id }}"  type="button"> 
+							<button class="tablink" id="{{ $post->id }}" type="button"> 
 								@if($post->to_employee_id != null)
 									@if(isset($image_employee))
 										<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_to_employee)) }}" alt="Profile image"  />
@@ -57,19 +59,30 @@
 									@if(PostController::countComment($post->id) > 0)<span class="count_coments">{{ PostController::countComment($post->id) }}</span>@endif
 									<span class="post_time">{{ \Carbon\Carbon::createFromTimeStamp(strtotime($post->updated_at))->diffForHumans() }} </span>
 									<span class="post_text">
-											{{	$post_comment->content }}
+											{{	$post_comment['content'] }}
 									</span>
 								</span>
 								
 							</button>
 						</article>
 					@endforeach
+				@else 
+					<div class="placeholder">
+						<img class="" src="{{ URL::asset('icons/placeholder_noticeadd.png') }}" alt="Placeholder image" />
+						<p>@lang('basic.no_message_1') 
+							<label type="text" class="add_new" rel="modal:open" >
+								<i style="font-size:11px" class="fa">&#xf067;</i>
+							</label>
+							@lang('basic.on_button')</p>
+						
+					</div>
 				@endif
 			</div>
 		</section>
 	</aside>
 	<main class="col-8 index_main">
-		@if(count( $posts))
+		<div>
+		@if(count( $posts)>0)
 			@foreach($posts as $post)
 				@php
 					$post_comment = PostController::profile($post)['post_comment'];
@@ -81,9 +94,10 @@
 				@endphp
 				<section id="{{ '_' . $post->id }}" class="tabcontent" >
 					<header class="post_sent">
+						<span class="link_back"><span class="curve_arrow_left"></span></span>
 						@if($post->to_employee_id != null)
 							@if(Sentinel::getUser()->employee['id'] == $post->to_employee_id )
-								@if(isset($image_employee) && $image_employee) != null)
+								@if(isset($image_employee) && $image_employee != null)
 									<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_employee)) }}" alt="Profile image"  />
 								@else
 									<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
@@ -116,7 +130,6 @@
 								
 							</span>
 						@endif
-						
 					</header>
 					<main class="comments" >
 						<div class="mess_comm">
@@ -138,7 +151,7 @@
 															<img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
 														@endif
 													@endif
-													<p class="comment_content" id="{{ $comment->id }}">{{ $comment->content }}
+													<p class="comment_content" id="{{ $comment->id }}">{{ $comment['content'] }}
 												</div>
 											</div>
 										</div>
@@ -153,18 +166,29 @@
 						<input type="hidden" name="post_id" id="post_id" value="{{ $post->id }}"  >
 						<input type="hidden" name="user_id" id="user_id" value="{{ Sentinel::getUser()->employee->id }}"  >
 						{{ csrf_field() }}
-						<input class="" type="submit" value="">
+						<input class="" type="submit" value="" title="{{ __('basic.send')}}" >
 					</form>
 				</section>
 			@endforeach
 		@else 
-			<header class="post_sent">
-				<p>	Nema poruka! </p>
-			</header>
+			<div class="placeholder">
+				<img class="" src="{{ URL::asset('icons/placeholder_message.png') }}" alt="Placeholder image" />
+				<p>@lang('basic.no_message') 
+					<label type="text" class="add_new" rel="modal:open" >
+						<i style="font-size:11px" class="fa">&#xf067;</i>
+					</label>
+					@lang('basic.no_message_2')
+				</p>
+			</div>
 		@endif	
+		</div>
 	</main>
 </div>
 <script>
 	$.getScript( '/../js/posts.js');
+	$(function(){
+		$('.placeholder').show();
+		
+	});
 </script>
 @stop

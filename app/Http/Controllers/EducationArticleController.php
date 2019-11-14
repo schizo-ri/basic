@@ -138,7 +138,7 @@ class EducationArticleController extends Controller
 			}
 		}
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success', __('ctrl.data_save'));
 		
         return redirect()->route('education_articles.index', ['theme_id' => $request['theme_id']]);
 
@@ -199,7 +199,7 @@ class EducationArticleController extends Controller
 		
 		$educationArticle->updateEducationArticle($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
        return redirect()->route('education_articles.index', ['theme_id' => $request['theme_id']]);
     }
@@ -215,7 +215,7 @@ class EducationArticleController extends Controller
         $educationArticle = EducationArticle::find($id);
 		$educationArticle->delete();
 		
-		$message = session()->flash('success', 'Članak je obrisan.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

@@ -63,7 +63,7 @@ class EvaluationRatingController extends Controller
 		$evaluationRating = new EvaluationRating();
 		$evaluationRating->saveEvaluationRating($data);
 		
-		session()->flash('success', "Podaci su spremljeni");
+		session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('evaluation_ratings.index');
     }
@@ -110,7 +110,7 @@ class EvaluationRatingController extends Controller
 			
 		$evaluationRating->updateEvaluationRating($data);
 		
-		session()->flash('success', "Podaci su ispravljeni");
+		session()->flash('success', __('ctrl.data_edit'));
 		
         return redirect()->route('evaluation_ratings.index');
     }
@@ -126,7 +126,7 @@ class EvaluationRatingController extends Controller
         $evaluationRating = EvaluationRating::find($id);
 		$evaluationRating->delete();
 		
-		$message = session()->flash('success', 'Ocjena je obrisana.');
+		$message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
     }

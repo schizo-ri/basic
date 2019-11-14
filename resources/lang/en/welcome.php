@@ -18,6 +18,7 @@ return [
     'resend' 			=> 'Resend Activation Instructions',
     'hello' 			=> 'Hello',
     'logged' 			=> 'You are now logged in.',
+    'admin_panel' 		=> 'Admin panel',
     
     
 ];

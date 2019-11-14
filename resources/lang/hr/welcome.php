@@ -18,6 +18,7 @@ return [
 	'resend' 			=> 'Ponovno pošalji upute za aktivaciju',
 	'hello' 			=> 'Pozdrav',
 	'logged' 			=> 'Prijavljen si.',
+	'admin_panel' 		=> 'Upravljačka ploča',
 ];
 
 ?>

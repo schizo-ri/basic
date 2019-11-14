@@ -12,14 +12,14 @@
 			<div class="page-header header_questionnaire">
 				<a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a>
 				@lang('questionnaire.questionnaires')
-				<span class="show float_r">show<i class="fas fa-caret-down"></i></span>
-				<span class="hide float_r">hide<i class="fas fa-caret-up"></i></span>
+				<span class="show float_r">@lang('basic.show')<i class="fas fa-caret-down"></i></span>
+				<span class="hide float_r">@lang('basic.hide')<i class="fas fa-caret-up"></i></span>
 				<div class="preview_doc preview_q">
 					<button id="left-button" class="scroll_left">
 					</button>
 					<span class="thumb_container float_l">
 						@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep))
-							<a class="add_new new_document new_questionnaire" href="{{ route('questionnaires.create') }}" rel="modal:open">
+							<a class="add_new new_document new_questionnaire" href="{{ route('questionnaires.create') }}" rel="modal:open" title="{{ __('questionnaire.add_questionnaire')}}">
 								<i class="fas fa-plus"></i>
 							</a>
 						@endif
@@ -50,25 +50,27 @@
 				</div>
 			</div>
 			<main class="all_documents main_questionnaire">
-				<div class="index_table_filter">
-					<label>
-						<input type="search" placeholder="Search" onkeyup="mySearchDoc()" id="mySearch">
-					</label>
-					<span class="change_view"></span>
-					<span class="change_view2"></span>
-					@if(Sentinel::getUser()->hasAccess(["questionnaires.create"]) || in_array("questionnaires.create", $permission_dep) )
-						<a class="add_new" href="{{ route('questionnaires.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i></a>
-					@endif
-				</div>
 				@if(count($questionnaires))
+					<header class="page-header">
+					<div class="index_table_filter">
+						<label>
+							<input type="search" placeholder="{{ __('basic.search')}}" onkeyup="mySearchDoc()" id="mySearch">
+						</label>
+						<span class="change_view"></span>
+						<span class="change_view2"></span>
+						@if(Sentinel::getUser()->hasAccess(["questionnaires.create"]) || in_array("questionnaires.create", $permission_dep) )
+							<a class="add_new" href="{{ route('questionnaires.create') }}" rel="modal:open"  title="{{ __('questionnaire.add_questionnaire')}}"><i style="font-size:11px" class="fa">&#xf067;</i></a>
+						@endif
+					</div>
+					</header>
 					<div class="table-responsive first_view">
 						<table id="index_table" class="display table dataTable table-hover">
 							<thead>
 								<tr>
 									<th>@lang('basic.name')</th>
-									<th>Upload time</th>
+									<th>@lang('basic.created_at')</th>
 									<th>Status</th>
-									<th>Completion</th>
+									<th>@lang('basic.completion')</th>
 									<th class="not-export-column no-sort"></th>
 								</tr>
 							</thead>
@@ -78,8 +80,8 @@
 										$progress_perc1 = QuestionnaireController::progress_perc( $questionnaire->id);
 										$progress_count1 = QuestionnaireController::progress_count( $questionnaire->id);
 									@endphp
-									<tr>
-										<td>
+									<tr class="clickable-row" data-href="{{ route('questionnaire_results.show', $questionnaire->id) }}" >
+										<td >
 											@if(($questionnaire->status == 1 && ! count(QuestionnaireController::collectResults( $questionnaire->id)->where('employee_id', Sentinel::getUser()->employee->id)) > 0 ))
 												<a class="qname" href="{{ route('questionnaires.show', $questionnaire->id) }}" rel="modal:open" >{{ $questionnaire->name }}</a>
 											@elseif (count(QuestionnaireController::collectResults( $questionnaire->id)->where('employee_id', Sentinel::getUser()->employee->id)) > 0 )
@@ -103,17 +105,17 @@
 										<td class="options center">
 											@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.update']) || in_array('questionnaires.update', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.delete']) || in_array('questionnaires.delete', $permission_dep))
 												<button class="collapsible option_dots float_r"></button>
-												<div class="content">
-													@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep))
-														<a href="{{ action('QuestionnaireController@sendEmail', ['id' => $questionnaire->id ] ) }}" class="btn-edit"><i class="far fa-envelope"></i></a>
-													@endif 
-													@if(Sentinel::getUser()->hasAccess(['questionnaires.update']) || in_array('questionnaires.update', $permission_dep))
-														<a href="{{ route('questionnaires.edit', $questionnaire->id) }}" class="btn-edit" rel="modal:open" ><i class="far fa-edit"  rel="modal:open"></i></a>
-													@endif 
-													@if(Sentinel::getUser()->hasAccess(['questionnaires.delete']) || in_array('questionnaires.delete', $permission_dep))
-														<a href="{{ route('questionnaires.destroy', $questionnaire->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>
-													@endif
-												</div>
+												@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep))
+												<a href="{{ action('QuestionnaireController@sendEmail', ['id' => $questionnaire->id ] ) }}" class="btn-edit" title="{{ __('basic.sendEmail')}}"><i class="far fa-envelope"></i></a>
+												@endif 
+												@if(Sentinel::getUser()->hasAccess(['questionnaires.update']) || in_array('questionnaires.update', $permission_dep))
+													<a href="{{ route('questionnaires.edit', $questionnaire->id) }}" class="btn-edit" rel="modal:open" title="{{ __('basic.edit')}}" ><i class="far fa-edit"  rel="modal:open"></i></a>
+												@endif 
+												@if(Sentinel::getUser()->hasAccess(['questionnaires.delete']) || in_array('questionnaires.delete', $permission_dep))
+													<a href="{{ route('questionnaires.destroy', $questionnaire->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
+														<i class="far fa-trash-alt"></i>
+													</a>
+												@endif
 											@endif
 										</td>
 									</tr>
@@ -124,6 +126,7 @@
 					<div class="table-responsive second_view">
 						<div class="questionnaires">
 							@foreach ($questionnaires as $questionnaire)
+								<button class="collapsible option_dots float_r"></button>
 								<div class="thumb_container panel">
 									<span class="thumbnail thumbnail_q" >
 										<div class="thumb_content">
@@ -142,12 +145,21 @@
 						</div>
 					</div>
 				@else
-					@lang('basic.no_data')
+					<div class="placeholder">
+						<img class="" src="{{ URL::asset('icons/placeholder_survay.png') }}" alt="Placeholder image" />
+						<p>@lang('basic.survey1')
+							<label type="text" class="add_new" rel="modal:open" >
+								<i style="font-size:11px" class="fa">&#xf067;</i>
+							</label>
+							@lang('basic.survey2')
+						</p>
+					</div>
 				@endif
 			</main>
 		</section>
 	</main>
 </div>
+
 <script>
 	$.getScript( '/../js/questionnaire.js');
 </script>

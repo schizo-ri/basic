@@ -1,21 +1,4 @@
-<div class="event_show">
-        <div class="type_event" >
-			<h3><span class="blue"></span>Add event</h3>
-            <p>Creat your event, and add other users</p>
-        </div>
-        <div class="type_task" >
-			<h3><span class="orange"></span>Add task</h3>
-            <p>Save any task so you don’t miss any</p>
-        </div>
-        <div class="type_other" >
-			<h3><span class="green"></span>Add other events</h3>
-            <p>Add celebrating, birthdays for office parties</p>
-        </div>
-</div>
-<script>
-	$.getScript( '/../js/event_create_show.js');
-</script>
-<div class="event_hidden">
+
 	<div class="modal-header">
 		<h3 class="panel-title">@lang('calendar.add_event')</h3>
 	</div>
@@ -40,7 +23,7 @@
 				<span>@lang('calendar.to')</span>
 			</div>
 			<div class="form-group time {{ ($errors->has('time2')) ? 'has-error' : '' }}">
-			<input name="time2" class="form-control" type="time" value="{!! isset($time1 ) ? $time1 : '08:00' !!}" required />
+			<input name="time2" class="form-control" type="time" value="{!! isset($time2 ) ? $time2 : '09:00' !!}" required />
 				{!! ($errors->has('time2') ? $errors->first('time2', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group description clear_l {{ ($errors->has('description')) ? 'has-error' : '' }}">
@@ -54,4 +37,3 @@
 			<a href="" class="modal_close float_r" rel="modal:close">@lang('basic.cancel')</a>
 		</form>
 	</div>
-</div>
