@@ -67,13 +67,25 @@
                         url:  url_store, 
                         dataType: "text",
                         success: function(data) {
-                           
+                           //
                         }, 
                         error: function(xhr,textStatus,thrownError) {
                             console.log("eventMouseLeave store error " + xhr + "\n" + textStatus + "\n" + thrownError);  
                         }
                     });
-
+                    var url_brisi = 'brisi/'+ project_id; 
+                    $.ajax({ 
+                        type: 'GET',
+                        url:  url_brisi, 
+                        dataType: "text",
+                        success: function(data) {
+                           console.log(data);
+                        }, 
+                        error: function(xhr,textStatus,thrownError) {
+                            console.log("eventMouseLeave brisi error " + xhr + "\n" + textStatus + "\n" + thrownError);  
+                        }
+                    });
+                  
                     url_update = location.origin + '/dashboard/?date=' + date;
                 //    window.history.replaceState({url_basic}, document.title, url_basic + '/?date=' + date );
  
@@ -86,7 +98,7 @@
                         },
                         success: function(response) {
                             $('#external-events').load( url_update + ' #external-events .resource');
-                              location.reload();
+                           //   location.reload();
                             $(".fc-content").hover(function(e) {
                                 console.log($(e.currentTarget).data("date")); 
                             });

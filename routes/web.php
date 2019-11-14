@@ -50,6 +50,7 @@ Route::resource('projects', 'ProjectController');
 // Project Employees
 Route::resource('project_employees', 'ProjectEmployeeController');
 Route::get('save/{employee?}/{date?}/{project?}/{all_days?}', ['as' => 'save', 'uses' => 'ProjectEmployeeController@save']);
+Route::get('brisi/{project?}', ['as' => 'brisi', 'uses' => 'ProjectEmployeeController@brisi']);
 
 // Dashboard
  /*

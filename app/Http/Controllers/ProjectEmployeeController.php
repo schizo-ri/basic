@@ -129,7 +129,7 @@ class ProjectEmployeeController extends Controller
         $project = Project::where('id', $project_id)->first();
         $projEmpls  = ProjectEmployee::where('project_id', $project->id)->get(); 
         $count_projEmpl  = $projEmpls->count(); // 11
-
+        
         if( $all_days == 1) {
             $project_employees = ProjectEmployee::where('project_id', $project->project_no)->where('employee_id', $employee_id)->get();
             $modify_day = 0;
@@ -140,15 +140,13 @@ class ProjectEmployeeController extends Controller
             } else {
                 $begin = new DateTime($project->start_date);
                 $end =  new DateTime($project->start_date);
-
                 $broj_dana = $project->duration / $project->day_hours; 
-                if($count_projEmpl > 0) {
+                if ($count_projEmpl > 0) {
                     $broj_dana = $projEmpls->unique('date')->count();
-                    
                 }
                 $end->modify('+' .  $broj_dana . ' day');
                
-                $end->setTime(0,0,1);
+               // $end->setTime(0,0,1);
                 $interval = DateInterval::createFromDateString('1 day');
                 $period = new DatePeriod($begin, $interval, $end);
                 foreach ($period as $dan) {
@@ -157,7 +155,7 @@ class ProjectEmployeeController extends Controller
                     }
                 }
                 $end->modify('+' .  $modify_day . ' day');
-               
+
                 $period = new DatePeriod($begin, $interval, $end);
                 foreach ($period as $dan) {
                     if(date_format($dan,'N') != 7 && date_format($dan,'N') != 6 ) {
@@ -179,6 +177,7 @@ class ProjectEmployeeController extends Controller
                     } 
                 }
             }
+            
         } else {
             $project_employees = ProjectEmployee::where('project_id', $project->project_no)->where('employee_id', $employee_id)->where('date', $date)->first();
             if($project_employees) {
@@ -194,10 +193,17 @@ class ProjectEmployeeController extends Controller
                 $project_employee->saveProjectEmployee($data);
             }
         }
-      
+    
+       return redirect()->back();
+    }
+
+    public static function brisi( $project_id ) 
+    {
+        $project = Project::where('id', $project_id)->first();
+
         $projEmpls  = ProjectEmployee::where('project_id', $project->id)->get(); 
         $count_projEmpl  = $projEmpls->count(); // 11
-       
+        
         $project_duration = round($project->duration / $project->day_hours,0,PHP_ROUND_HALF_UP);  //11 dana
         if($count_projEmpl > 0) {
             $project_duration = $projEmpls->unique('date')->count() / $projEmpls->unique('employee_id')->count();
@@ -205,26 +211,31 @@ class ProjectEmployeeController extends Controller
                 $project_duration++;
             }
         }
-    
+        
         $modify_day = 0;
+        $begin = new DateTime($project->start_date);
         $end =  new DateTime($project->start_date);
+       
         $end->modify('+' .  $project_duration . ' day');
-        $end->setTime(0,0,1);
+    //    $end->setTime(0,0,1);
+        $interval = DateInterval::createFromDateString('1 day');
         $period = new DatePeriod($begin, $interval, $end);
         foreach ($period as $dan) {
-            if(date_format($dan,'N') == 7 || (date_format($dan,'N') == 6 && $project->saturday == 0 ) ) {
+            if(date_format($dan,'N') == 7 ) {
+                $modify_day++;
+            } else if (date_format($dan,'N') == 6 && $project->saturday == 0 ) {
                 $modify_day++;
             }
         }
-      
+       
         $end->modify('+' .  $modify_day . ' day');
        
         foreach ($projEmpls as $projEmpl) {
-            if($projEmpl->date > date_format($end,'Y-m-d')) {
+            if($projEmpl->date >= date_format($end,'Y-m-d')) {
                 $projEmpl->delete();
             }
         }
-   
+        return date_format($end,'Y-m-d');
         return redirect()->back();
     }
 
