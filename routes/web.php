@@ -49,7 +49,7 @@ Route::resource('projects', 'ProjectController');
 
 // Project Employees
 Route::resource('project_employees', 'ProjectEmployeeController');
-
+Route::get('save/{employee?}/{date?}/{project?}/{all_days?}', ['as' => 'save', 'uses' => 'ProjectEmployeeController@save']);
 
 // Dashboard
  /*
@@ -59,5 +59,3 @@ Route::get('dashboard', function () {
 
 // Dashboard 
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
-
-Route::get('save/{employee?}/{date?}/{project?}', ['as' => 'save', 'uses' => 'ProjectEmployeeController@save']);

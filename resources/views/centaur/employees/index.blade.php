@@ -7,7 +7,7 @@
         <div class='btn-toolbar pull-right'>
             <a href="{{ route('employees.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" /></a>
         </div>
-        <h1>Roles</h1>
+        <h1>Djelatnici</h1>
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

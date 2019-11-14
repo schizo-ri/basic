@@ -51,18 +51,25 @@ class EmployeeController extends Controller
      */
     public function store(EmployeeRequest $request)
     {
-        
-        $data = array(
-			'first_name' => trim($request['first_name']),
-			'last_name'  => trim($request['last_name'])
-        );
-       
-        $employee = new Employee();
-        $employee->saveEmployee($data);
-        
-        session()->flash('success', "Podaci su spremljeni");
+        if(Employee::where('first_name',trim($request['first_name']))->where('last_name',trim($request['last_name']))->first() ) {
+            session()->flash('error', "Djelatnik sa tim imenom i prezimenom već postoji");
 		
-        return redirect()->back();
+            return redirect()->back();
+        } else {
+            $data = array(
+                'first_name' => trim($request['first_name']),
+                'last_name'  => trim($request['last_name'])
+            );
+           
+            $employee = new Employee();
+            $employee->saveEmployee($data);
+            
+            session()->flash('success', "Podaci su spremljeni");
+            
+            return redirect()->back();
+        }
+
+       
     }
 
     /**

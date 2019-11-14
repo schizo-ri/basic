@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Project;
 use App\Models\ProjectEmployee;
-
+use DateTime;
+use DatePeriod;
+use DateInterval;
 
 class DashboardController extends Controller
 {
@@ -18,8 +20,7 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         if(isset($request) && isset($request['date'])) {
-            $project_employees  = ProjectEmployee::where('date', $request['date'])->get();
-           
+            $project_employees  = ProjectEmployee::where('date', $request['date'])->get();           
         } else {
             $project_employees  = ProjectEmployee::get();
         }
@@ -29,15 +30,35 @@ class DashboardController extends Controller
         $dataArr = array();
 
         foreach($projects as $project) {
-            $project_duration = $project->duration / $project->day_hours;  //8 dana
-            $count = count(ProjectEmployee::where('project_id', $project->project_no)->get()->unique('employee_id'));
+            $count_people = 0;
+            $unique_people = array();
+            $projEmpls  = ProjectEmployee::where('project_id', $project->id)->get();
+            if($projEmpls->count() > 0) {
+                $project_duration = $projEmpls->unique('date')->count(); // broji unique dane po projektu u project_employees
+               /* $people_onProject = $projEmpls->unique('employee_id')->count();
+               dd( $project_duration);
+                $people_onProject = array();
+                foreach ($projEmpls as $projEmpl) {
+                    foreach ($projEmpls->unique('date') as $unique_date) {
+                        if($projEmpl->value('date') ==  $unique_date->date) {
+                            $count_people ++;
+                            array_push($unique_people, $projEmpl->employee_id);
+                        }
+                    }
+                    
+                }*/
+            } else {
+                $project_duration = $project->duration / $project->day_hours;  //11 dana              
+            }
+
            
-            $title = $project->project_no . ' | ' . $count . ' ljudi dodijeljeno';
            
-            $days = 5;
-            $weekdays = 2;
             if( $project->saturday == 1) {
-                  $weekdays = 1;
+                $weekdays = 1;
+                $days = 6;
+            } else {
+                $weekdays = 2;
+                $days = 5;
             }
 
             for ($i=0; $i <= $project_duration ; $i++) {
@@ -46,75 +67,90 @@ class DashboardController extends Controller
                     
                     switch (date( 'N',strtotime( $start_date)) ) {
                         case 1:
-                            $days = 5;
+                            $days = $days;
                             break;
                         case 2:
-                            $days = 4;
+                            $days = $days-1;
                             break;
                         case 3:
-                            $days = 3;
+                            $days = $days-2;
                             break;
                         case 4:
-                            $days = 2;
+                            $days = $days-3;
                             break;
                         case 5:
-                            $days = 1;
+                            $days = $days-4;
                             break;
-                        default:
-                            $days = 5;
+                        case 5:
+                            $days = $days-5;
+                            break;
+                        case 6:
+                            $days = $days-6;
                             break;
                     }
-                    if( $project->saturday == 1) {
-                        $days++;
+                    if($days == -1) {
+                        $days= 5;
                     }
                     if ($days > $project_duration) {
                         $days = $project_duration;
                     } 
 
-                    $end_date = date('Y-m-d',strtotime("+" .   $days . " day", strtotime($start_date)));
+                    $end_date = date('Y-m-d',strtotime("+" .   $days . " day", strtotime($start_date)));   // *******************
                     $project_duration = $project_duration - $days;
                    
                 } else {
-                    
+                    if( $project->saturday == 1) {
+                        $weekdays = 1;
+                        $days = 6;
+                    } else {
+                        $weekdays = 2;
+                        $days = 5;
+                    }
                     $start_date =  date('Y-m-d',strtotime("+" .   $weekdays . " day", strtotime($end_date) ));
-                    
+                  
                     switch (date( 'N',strtotime( $start_date)) ) {
                         case 1:
-                            $days = 5;
+                            $days = $days;
                             break;
                         case 2:
-                            $days = 4;
+                            $days = $days-1;
                             break;
                         case 3:
-                            $days = 3;
+                            $days = $days-2;
                             break;
                         case 4:
-                            $days = 2;
+                            $days = $days-3;
                             break;
                         case 5:
-                            $days = 1;
+                            $days = $days-4;
                             break;
-                        default:
-                            $days = 5;
+                        case 5:
+                            $days = $days-5;
+                            break;
+                        case 6:
+                            $days = $days-6;
                             break;
                     }
-                    if( $project->saturday == 1) {
-                        $days++;
+                    if($days == -1) {
+                        $days= 5;
                     }
-                   
+
                     if ($days > $project_duration) {
                         $days = $project_duration;
                     } 
-                    $end_date = date('Y-m-d',strtotime("+" .   $days . " day", strtotime($start_date)));
+                   
+                    $end_date = date('Y-m-d',strtotime("+" .   $days . " day", strtotime($start_date)));  // *******************
                     
                     $project_duration = $project_duration - $days;       
                 }
-                $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-                
-                array_push($dataArr, ['id'=>$project->project_no ,'title' => $title , 'start' => $start_date, 'end' => $end_date, 'classNames' => $project->project_no]);
+                $url = "http://$_SERVER[HTTP_HOST]" . "/projects/" . $project->id;
+                $count = count(ProjectEmployee::where('project_id', $project->id)->get()->unique('employee_id'));
+
+                $title = $project->project_no . ' | ' . $count . ' ljudi dodijeljeno';
+                array_push($dataArr, ['id'=>$project->id ,'title' => $title , 'start' => $start_date, 'end' => $end_date, 'classNames' => $project->project_no, 'url' => $url]);
             }
         }
-
-        return view('Centaur::dashboard',['employees' => $employees, 'project_employees' => $project_employees, 'dataArr' => $dataArr]);
+        //http://localhost:8000/projects/7/edit
+        return view('Centaur::dashboard',['employees' => $employees, 'projects' => $projects, 'project_employees' => $project_employees, 'dataArr' => $dataArr]);
     }
 }

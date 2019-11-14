@@ -88,7 +88,10 @@
         <!-- Jquery modal -->
         <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.js') }}"></script>
         <!-- Modal js -->
-		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
+        <script src="{{URL::asset('/../js/open_modal.js') }}"></script>
+        
+         <!-- Fullcalendar js -->
+		<script src="{{URL::asset('/../js/fullCalendar.js') }}"></script>
 		@stack('script')
     </body>
 </html>
