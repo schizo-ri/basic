@@ -140,33 +140,32 @@ class ProjectEmployeeController extends Controller
             } else {
                 $begin = new DateTime($project->start_date);
                 $end =  new DateTime($project->start_date);
+                $end->setTime(0,0,1);
                 $broj_dana = $project->duration / $project->day_hours; 
                 if ($count_projEmpl > 0) {
                     $broj_dana = $projEmpls->unique('date')->count();
                 }
                 $end->modify('+' .  $broj_dana . ' day');
                
-               // $end->setTime(0,0,1);
                 $interval = DateInterval::createFromDateString('1 day');
+                $second_begin = $end;
                 $period = new DatePeriod($begin, $interval, $end);
                 foreach ($period as $dan) {
-                    if(date_format($dan,'N') == 7 || (date_format($dan,'N') == 6 && $project->saturday == 0 ) ) {
-                        $modify_day++;
-                    }
+                    if((date_format($dan,'N') == 7) ||  ( date_format($dan,'N') == 6 && $project->saturday == 0)) {
+                        $end->modify('+1 day');
+                    } 
                 }
-                $end->modify('+' .  $modify_day . ' day');
-
-                $period = new DatePeriod($begin, $interval, $end);
-                foreach ($period as $dan) {
-                    if(date_format($dan,'N') != 7 && date_format($dan,'N') != 6 ) {
-                        $data = array(
-                            'project_id'    => $project_id,
-                            'employee_id'   => $employee_id,
-                            'date'          => $dan
-                        );
-                        $project_employee = new ProjectEmployee();
-                        $project_employee->saveProjectEmployee($data);
-                    }  else if( date_format($dan,'N') == 6 && $project->saturday == 1 ) {
+                $period2 = new DatePeriod($second_begin, $interval, $end);
+                foreach ($period2 as $dan) {   
+                    if((date_format($dan,'N') == 7) ||  ( date_format($dan,'N') == 6 && $project->saturday == 0)) {
+                        $end->modify('+1 day');
+                    }                
+                }
+       
+                $period3 = new DatePeriod($begin, $interval, $end);
+               
+                foreach ($period3 as $dan) {
+                    if((date_format($dan,'N') < 6) || ( $project->saturday == 1 && date_format($dan,'N') == 6 )) {
                         $data = array(
                             'project_id'    => $project_id,
                             'employee_id'   => $employee_id,
@@ -176,8 +175,19 @@ class ProjectEmployeeController extends Controller
                         $project_employee->saveProjectEmployee($data);
                     } 
                 }
+                
+                if( date_format($end,'N') == 7) {
+                    $data = array(
+                        'project_id'    => $project_id,
+                        'employee_id'   => $employee_id,
+                        'date'          => date_format($end->modify('+1 day'),'Y-m-d')
+                    );
+                    $project_employee = new ProjectEmployee();
+                    $project_employee->saveProjectEmployee($data);
+                }
+               
+           
             }
-            
         } else {
             $project_employees = ProjectEmployee::where('project_id', $project->project_no)->where('employee_id', $employee_id)->where('date', $date)->first();
             if($project_employees) {
@@ -204,39 +214,45 @@ class ProjectEmployeeController extends Controller
         $projEmpls  = ProjectEmployee::where('project_id', $project->id)->get(); 
         $count_projEmpl  = $projEmpls->count(); // 11
         
-        $project_duration = round($project->duration / $project->day_hours,0,PHP_ROUND_HALF_UP);  //11 dana
+        $project_duration = round($project->duration / $project->day_hours,0,PHP_ROUND_HALF_DOWN);  //11 dana
         if($count_projEmpl > 0) {
-            $project_duration = $projEmpls->unique('date')->count() / $projEmpls->unique('employee_id')->count();
-            if($projEmpls->unique('date')->count() % $projEmpls->unique('employee_id')->count()) {
-                $project_duration++;
-            }
+            $project_duration =  round( ($project->duration / $project->day_hours /  $projEmpls->unique('employee_id')->count()) ,0,PHP_ROUND_HALF_DOWN);
         }
         
-        $modify_day = 0;
         $begin = new DateTime($project->start_date);
         $end =  new DateTime($project->start_date);
-       
+         //    $end->setTime(0,0,1);
+        $second_begin = $end;
         $end->modify('+' .  $project_duration . ' day');
-    //    $end->setTime(0,0,1);
+
         $interval = DateInterval::createFromDateString('1 day');
+  
         $period = new DatePeriod($begin, $interval, $end);
         foreach ($period as $dan) {
-            if(date_format($dan,'N') == 7 ) {
-                $modify_day++;
-            } else if (date_format($dan,'N') == 6 && $project->saturday == 0 ) {
-                $modify_day++;
+            if((date_format($dan,'N') == 7) ||  ( date_format($dan,'N') == 6 && $project->saturday == 0)) {
+                $end->modify('+1 day');
+            } 
+        }
+        $period2 = new DatePeriod($second_begin, $interval, $end);
+        foreach ($period2 as $dan) {   
+            if((date_format($dan,'N') == 7) ||  ( date_format($dan,'N') == 6 && $project->saturday == 0)) {
+                $end->modify('+1 day');
+            } 
+        }
+        if( date_format($end,'N') == 7) {
+            $end->modify('+1 day');
+        }
+     
+        if((count($projEmpls)>0)) {
+            foreach ($projEmpls as $projEmpl) {
+                if($projEmpl->date > date_format($end,'Y-m-d')) {
+                    $projEmpl->delete();
+                }
             }
         }
        
-        $end->modify('+' .  $modify_day . ' day');
-       
-        foreach ($projEmpls as $projEmpl) {
-            if($projEmpl->date >= date_format($end,'Y-m-d')) {
-                $projEmpl->delete();
-            }
-        }
-        return date_format($end,'Y-m-d');
-        return redirect()->back();
+      
+       // return redirect()->back();
     }
 
 }

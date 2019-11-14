@@ -62,24 +62,24 @@
                     }
                                      
                     var url_store = 'save/' + employee_id  + '/' + date + '/' + project_id + '/' + all_days; 
-                //    window.history.replaceState({}, document.title, url_basic);
                     $.ajax({ 
                         url:  url_store, 
                         dataType: "text",
                         success: function(data) {
-                           //
+                         
                         }, 
                         error: function(xhr,textStatus,thrownError) {
                             console.log("eventMouseLeave store error " + xhr + "\n" + textStatus + "\n" + thrownError);  
                         }
                     });
+                   
                     var url_brisi = 'brisi/'+ project_id; 
                     $.ajax({ 
                         type: 'GET',
                         url:  url_brisi, 
                         dataType: "text",
                         success: function(data) {
-                           console.log(data);
+                            console.log(data);
                         }, 
                         error: function(xhr,textStatus,thrownError) {
                             console.log("eventMouseLeave brisi error " + xhr + "\n" + textStatus + "\n" + thrownError);  
@@ -98,7 +98,7 @@
                         },
                         success: function(response) {
                             $('#external-events').load( url_update + ' #external-events .resource');
-                           //   location.reload();
+                              location.reload();
                             $(".fc-content").hover(function(e) {
                                 console.log($(e.currentTarget).data("date")); 
                             });
