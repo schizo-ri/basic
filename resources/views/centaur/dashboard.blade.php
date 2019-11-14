@@ -36,11 +36,14 @@
             </div>
             <div class='btn-toolbar'>
                 <a href="{{ route('projects.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" /></a>
+               
             </div>
             <div class="projects_list">
                 @foreach ($projects as $project)
                     <div>
-                        <h4>{{ $project->project_no . ' - ' . $project->name }}</h4>
+                        <h4>{{ $project->project_no . ' - ' . $project->name }} 
+                        <a href="{{ action('ProjectEmployeeController@brisi',$project->id) }}">uskladi</a>
+                        </h4>
                         @foreach ($project_employees->where('project_id',$project->id)->where('date', $date) as $project_employee)
                             <div>
                                 <p class="{{ $project_employee->date }}">
@@ -53,13 +56,12 @@
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         </button>
                                     </form>
+                                    
                             </div>
                         @endforeach
-                      
                     </div>
                 @endforeach
-               
-            </div>
+            </div>         
         </aside>
     @else
         Nisi prijavljen

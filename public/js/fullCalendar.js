@@ -72,7 +72,7 @@
                             console.log("eventMouseLeave store error " + xhr + "\n" + textStatus + "\n" + thrownError);  
                         }
                     });
-                   
+                   /*
                     var url_brisi = 'brisi/'+ project_id; 
                     $.ajax({ 
                         type: 'GET',
@@ -85,7 +85,7 @@
                             console.log("eventMouseLeave brisi error " + xhr + "\n" + textStatus + "\n" + thrownError);  
                         }
                     });
-                  
+                  */
                     url_update = location.origin + '/dashboard/?date=' + date;
                 //    window.history.replaceState({url_basic}, document.title, url_basic + '/?date=' + date );
  
