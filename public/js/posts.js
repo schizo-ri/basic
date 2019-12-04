@@ -1,5 +1,6 @@
 // on load
 $( document ).ready(function() {
+   
     // placeholder text
     $('.placeholder').show();
     $( '.type_message' ).attr('Placeholder','Type message...');
@@ -12,7 +13,6 @@ $( document ).ready(function() {
     });
 
     $('.search_post').click(function(){
-
         $('.search_input').show();       
     });
 
@@ -74,7 +74,9 @@ $( '.tablink' ).on( "click", function () {
     var post_id = $( this ).attr('id');
     var tab_id = '_' + post_id;
     var body_width = $('body').width();
-
+    setPostAsRead(post_id);
+    $('.refresh.'+tab_id).find('.message').last().addClass('last');
+  //  $('.refresh.'+tab_id + ' .last').focus();  NE RADI
     if(body_width < 450) {
         $('.latest_messages').hide();
         $('.posts_index .index_main').show();
@@ -109,16 +111,19 @@ $( '.tablink' ).on( "click", function () {
                 
                 var mess_comm_height = $("#" + tab_id ).find('.mess_comm').height();
                 var refresh_height = $("#" + tab_id ).find('.refresh').height();
+                $('.refresh').height(mess_comm_height);
                 if(refresh_height < mess_comm_height ) {
                     $("#" + tab_id ).find('.refresh').css({"position": "absolute", "bottom": "0", "width": "100%"});
-                } 
+                }
               
                 $('.all_post ').load(  url + '/posts .all_post .main_post');
-                $( '.topnav>div .post_button .button_nav_img ').load( url + '/posts .topnav>div .post_button .button_nav_img .line_btn');
+                $( '.topnav>.div_posts').load( url + '/posts .topnav>.div_posts .post_button');
                 if($('.tablink#post_id').find('.count_coments')) {
                    setPostAsRead(post_id);
                }
+              
              }
+             $( '.topnav>.div_posts').load( url + '/posts .topnav>.div_posts .post_button');
              //Setup the next poll recursively
              poll();
            }, dataType: "json"});
@@ -136,7 +141,7 @@ function setPostAsRead(post_id) {
             type: "GET",
             url: url_read, 
             success: function(response) {
-    
+             
             } 
         });
     } catch (error) {

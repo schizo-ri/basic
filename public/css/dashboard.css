@@ -1,9 +1,11 @@
 .container .noticeboard, .container .posts, .container .calendar {
     overflow: auto;
+    scrollbar-width: thin;
 }
 
 .container .noticeboard:hover, .container .posts:hover {
     overflow: auto;
+    scrollbar-width: thin;
 }
 
 .container .noticeboard {
@@ -100,16 +102,33 @@
     color: #071E57;
     line-height: 24px;
 }
+.profile_image {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+.post_empl .profile_image >img {
+    width: 100%;
+    height: auto;
+    margin-top: 50%;
+    transform: translatey(-50%);
+}
 
 .container .posts .all_post article.main_post {
     padding-top: 18px;
     padding-bottom: 20px;
     border-bottom: 1px solid rgba(154, 154, 154, 0.3);
 }
+
 .main_post .post_empl >img{
-    max-width: 24px;
-    max-height: 24px;
+    width: 100%;
+    height: auto;
+    margin-top: 50%;
+    transform: translatey(-50%);
 }
+
 .container .posts .all_post .post_empl .post_time {
     font-weight: 600;
     font-size: 0.75rem;
@@ -165,11 +184,19 @@
     font-size: 0.5rem;
     color: #919191;
     display: inline-block;
+    width: 22px;
+    height: 22px;
+    margin-top: 50%;
+    transform: translatey(-50%);
+    border-radius: 50%;
+     overflow: hidden;
 }
 
 .notice>div:first-child span.notice_empl .notice_img {
-    width: 22px;
-    height: 22px;
+    width: 100%;
+    height: auto;
+    margin-top: 50%;
+    transform: translateY(-50%);
 }
 .notice>div:nth-child(2) span {
     font-weight: 500;
@@ -189,6 +216,7 @@
     position: relative;
     overflow: auto;
     overscroll-behavior-y: contain;
+    scrollbar-width: thin;
 }
 
 .container .calendar .cal_days {
@@ -358,9 +386,9 @@
 }
 
 .comming_agenda .agenda {
-    margin-bottom: 23px;
-    padding-bottom: 25px;
+    padding-bottom: 10px;
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+    overflow: hidden;
 }
 
 .comming_agenda .btn-new, .noticeboard .btn-new {
@@ -604,11 +632,7 @@
     .comming_agenda .agenda_mark, .container .posts .all_post {
         height: auto;
         margin: auto;
-    }
-    .comming_agenda .agenda {
-        margin-bottom: 23px;
-        padding-bottom: 35px;
-    }
+    }    
     .container .noticeboard, .container .posts, .container .calendar {
         padding: 10px;
         width: 100%;

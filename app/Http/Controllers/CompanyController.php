@@ -127,8 +127,8 @@ class CompanyController extends Controller
 		
 		
 		session()->flash('success',  __('ctrl.data_save'));
-		
-        return redirect()->route('Centaur::companies.index');
+		return redirect()->back();	
+     //  return redirect()->route('Centaur::companies.index');
     }
 
     /**
@@ -225,16 +225,20 @@ class CompanyController extends Controller
 			// if everything is ok, try to upload file
 			} else {
 				if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-					return redirect()->route('companies.index')->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
+					session()->flash('success', "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
+					return redirect()->back();	
+				//	return redirect()->route('companies.index')->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
 				} else {
-					return redirect()->route('Centaur::companies.index')->with('error', 'Sorry, there was an error uploading your file.'); 
+					session()->flash('error', 'Sorry, there was an error uploading your file.');
+					return redirect()->back();	
+				//	return redirect()->route('Centaur::companies.index')->with('error', 'Sorry, there was an error uploading your file.'); 
 				}
 			}
 		}
 		
 		session()->flash('success', __('ctrl.data_edit'));
-		
-        return redirect()->route('companies.index');
+		return redirect()->back();	
+    //    return redirect()->route('companies.index');
 		
     }
 

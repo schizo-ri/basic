@@ -76,8 +76,8 @@ class DepartmentController extends Controller
 		$department->saveDepartment($data);
 		
 		session()->flash('success',  __('ctrl.data_save'));
-		
-        return redirect()->route('departments.index');
+		return redirect()->back();
+     //   return redirect()->route('departments.index');
     }
 
     /**
@@ -128,10 +128,8 @@ class DepartmentController extends Controller
 		$department->updateDepartment($data);
 		
 		session()->flash('success',__('ctrl.data_edit'));
-		
-        return redirect()->route('departments.index');
-		
-		
+		return redirect()->back();
+      //  return redirect()->route('departments.index');		
     }
 
     /**

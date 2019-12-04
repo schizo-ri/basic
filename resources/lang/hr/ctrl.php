@@ -34,5 +34,6 @@ return [
 	'reg_complete_login'     => 'Registracija je dovršena. Možete se prijaviti',
 	'activation_instructions'     => 'Upute za aktivaciju računa',
 	'instructions'     => 'Na tu će se adresu slati nove upute ako je povezana s neaktivnim računom.',
+	'method_exist'     => 'E-pošta s tim modelom i metodom već postoji.',
 ];
 ?>

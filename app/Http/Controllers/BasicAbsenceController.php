@@ -147,7 +147,7 @@ class BasicAbsenceController extends Controller
 	}
 	
 	/* Računa staz u Duplicu za prošlu godinu - do 31.12. */
-	public static function yearsCompany_PG($user)      /************ RADI!!!!!!! ***************/
+	public static function yearsCompany_PG($user)     
 	{
 		$date = new DateTime('now');    /* današnji dan */
 		$prosla_godina = date_format($date,'Y')-1;
@@ -210,9 +210,8 @@ class BasicAbsenceController extends Controller
 		return $stazPG;
 	}
 
-
 	/* dani GO PROŠLA godina */
-	public static function godisnjiPG($user)      /************ RADI!!!!!!! ***************/
+	public static function godisnjiPG($user)      
 	{
 		/* Računa ukupan staz za prošlu godinu - do 31.12.*/
 		$stazPG =  BasicAbsenceController::stazUkupnoPG($user);
@@ -252,7 +251,7 @@ class BasicAbsenceController extends Controller
 	}
 
 	/*  razmjeran GO PROŠLA godina*/
-	public static function razmjeranGO_PG($user)    /************ RADI!!!!!!! ***************/
+	public static function razmjeranGO_PG($user)    
 	{
 		$date = new DateTime('now');    /* današnji dan */
 		$ova_godina = date_format($date,'Y');
@@ -373,7 +372,7 @@ class BasicAbsenceController extends Controller
 		return $zahtjevi;
 	}
 
-	//računa iskorištene dane godišnjeg odmora ova godina  /************ RADI!!!!!!! ***************/
+	//računa iskorištene dane godišnjeg odmora ova godina  
 	public static function daniZahtjevi($user)
 	{
 		/* Zahtjevi ova godina */	

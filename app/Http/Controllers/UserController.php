@@ -208,8 +208,9 @@ class UserController extends Controller
             return response()->json(['user' => $user], 200);
         }
 
-        session()->flash('success', "{$user->email}" . __('auth_update'));
-        return redirect()->route('users.index');
+        session()->flash('success', $user->email . ' ' . __('auth.auth_update'));
+        return redirect()->back();
+    //    return redirect()->route('users.index');
     }
 
     /**

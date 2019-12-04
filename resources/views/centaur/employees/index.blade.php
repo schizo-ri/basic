@@ -1,4 +1,3 @@
-
 <header class="page-header">
 	<div class="index_table_filter">
 		<label>
@@ -35,12 +34,12 @@
 							<td class="center">
 								<button class="collapsible option_dots float_r"></button>
 								@if(Sentinel::getUser()->hasAccess(['employees.update']) || in_array('employees.update', $permission_dep))
-									<a href="{{ route('employees.edit', $employee->id) }}" rel="modal:open">
+									<a href="{{ route('employees.edit', $employee->id) }}" style="display:none" rel="modal:open">
 										<i class="far fa-edit"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['employees.delete']) || in_array('employees.delete', $permission_dep))
-									<a href="{{ route('employees.destroy', $employee->id ) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}">
+									<a href="{{ route('employees.destroy', $employee->id ) }}" style="display:none" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -57,6 +56,9 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-		$.getScript( '/../js/collaps.js');
+	//	$.getScript( '/../js/collaps.js');
+	$('.collapsible').click(function(event){        
+       		$(this).siblings().toggle();
+		});
 	});
 </script>

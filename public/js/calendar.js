@@ -39,7 +39,7 @@ $( function () {
     var active_li =  $('.dates li.active_date').attr('id');
     if(active_li) {
         var active_li_id = active_li.replace("li-",""); // selektirani datum
-        $( ".comming_agenda > .agenda" ).each( (index, element) => {
+        $( ".comming_agenda > .agenda" ).each( function(index, element) {
             $(element).addClass('display_none');
             if($(element).attr('id') == active_li_id ) {
                 $(element).removeClass('display_none');
@@ -51,13 +51,12 @@ $( function () {
     if(! $('.comming_agenda .agenda.show_agenda').length) {
         $('.comming_agenda .placeholder').show();
         var placeholder_height =  $('.placeholder img').height();
-        $('.calendar .comming_agenda').height(placeholder_height + 60);
+        $('.calendar .comming_agenda').height(placeholder_height + 30);
  //       $('.placeholder_cal >p').css('line-height',placeholder_height + 'px' );
     } else {
         $('.comming_agenda .placeholder').hide();
     }
     
-
     $('#left-button').click(function() {
         var active_li = $('.dates').find('li.active_date');
 
@@ -102,7 +101,7 @@ $( function () {
             scrollLeft: "+=69"
         }, "slow");
         var count_li = 0;
-        $( ".dates > li" ).each( (index, element) => {
+        $( ".dates > li" ).each(function (index, element) {
             all_width += 69;
             count_li++;
         });
@@ -113,11 +112,8 @@ $( function () {
 
         next_li.addClass('active_date');
         active_li.removeClass('active_date');
-        next_li.click();
-        
+        next_li.click();        
         
         $.getScript( '/../js/event_click.js');
     });
-
-  
 });

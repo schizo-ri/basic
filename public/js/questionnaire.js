@@ -34,6 +34,12 @@ $(function() {
         
     });
 
+    $('.sendEmail').click(function(){
+		if (!confirm("Stvarno želiš poslati obavijest mailom?")) {
+			return false;
+		}
+    });
+    
     $('#left-button').click(function() {
         event.preventDefault();
         $('.preview_doc').animate({
@@ -77,6 +83,7 @@ $(function() {
         $( ".change_view2" ).toggle();
         $('.table-responsive.first_view').toggle();
         $('.table-responsive.second_view').toggle();
+        console.log( ".change_view");
     });
     $( ".change_view2" ).click(function() {
         $( ".change_view" ).toggle();

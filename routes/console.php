@@ -16,3 +16,7 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('email:absence_day', function () {
+    $this->comment(absence_day::quote());
+})->describe('Display an Absences quote');

@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="author" content="Jelena Juras">
+		<meta charset="UTF-8">
 		<meta name="description" content="Portal za zaposlenike">
-        <title>@yield('title')</title>
+		<meta name="author" content="Jelena Juras">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-
+		<title>@yield('title')</title>
         <!-- Bootstrap - Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/bootstrap/dist/css/bootstrap.min.css') }}"/>
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -91,7 +90,7 @@
 								</a>
 							</div>
 							@if(Sentinel::getUser()->hasAccess(['posts.view']) || in_array('posts.view', $permission_dep) )
-								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
+								<div class="col-sm-12 col-md-6 col-lg-6 float_left div_posts">
 									<a class="button_nav load_button post_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('posts.index') }}">
 										<span class="button_nav_img messages">
 											<span class="line_btn">
@@ -186,7 +185,6 @@
 		<script src="{{URL::asset('/../js/set_height.js') }}"></script>
 		<script src="{{ URL::asset('/../js/collaps.js') }}"></script>
 		<script src="{{URL::asset('/../js/calendar.js') }}"></script>
-		
 
 		<!-- Pignoise calendar -->
 		<script src="{{ URL::asset('/../node_modules/moment/moment.js') }}"></script>

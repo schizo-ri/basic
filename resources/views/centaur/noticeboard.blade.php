@@ -99,7 +99,6 @@
 															<span class="user_department">{{ $departments->where('id',$department)->first()->name }}</span>
 														@endforeach
 													@endif
-													
 												</p>
 												<span class="noticeboard_notice_empl">
 													@if($docs)
@@ -171,10 +170,14 @@
 		$.getScript( '/../js/set_height_notice.js');
 		$.getScript( '/../js/load_calendar2.js');
 		$.getScript( '/../js/event.js');
+		$('.button_nav').click(function(){
+			window.history.replaceState({}, document.title, location['origin']+'/dashboard');
+			$.getScript( '/../js/nav_active.js');
+		});
 		$('.select_filter.sort').change(function () {
 			$('.section_notice .notices').load($(this).val() + ' .section_notice .notices .notice_link ');
-
 		});
+		
 		$('.placeholder').show();
 		
 	});

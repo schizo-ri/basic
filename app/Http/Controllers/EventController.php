@@ -102,14 +102,8 @@ class EventController extends Controller
             }
         }
 
-        if( isset($request)) {
-            $time1 = new DateTime($request['time1']);
-            $time2 =  $time1->modify('+1 hour')->format('H:i');
-
-            return view('Centaur::events.create', ['date'=> $request['date'],'time1'=> $request['time1'],'time2'=> $time2, 'type' => $type]);
-        } else{
-            return view('Centaur::events.create');
-        }
+        return view('Centaur::events.create', ['type' => $type]);
+       
     }
 
     /**

@@ -43,7 +43,7 @@
                                 $user_name_notice =  DashboardController::user_name($notice->employee_id);
                             @endphp
                             @if($profile_image_notice)
-                                <img class="notice_img radius50" src="{{ URL::asset('storage/' . $user_name_notice . '/profile_img/' . end($profile_image_notice)) }}" alt="Profile image"  />
+                                <img class="notice_img" src="{{ URL::asset('storage/' . $user_name_notice . '/profile_img/' . end($profile_image_notice)) }}" alt="Profile image"  />
                             @else
                                 <img class="notice_img radius50 " src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
                             @endif

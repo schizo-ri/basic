@@ -54,12 +54,12 @@
 									@endif
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['works.create']) || in_array('works.create', $permission_dep))
-									<a href="{{ route('works.create',['department_id' => $department->id]) }}" class="btn-edit" title="{{ __('basic.add_work')}}" rel="modal:open" >
+									<a href="{{ route('works.create',['department_id' => $department->id]) }}" style="display:none" class="btn-edit" title="{{ __('basic.add_work')}}" rel="modal:open" >
 										<i class="fas fa-plus"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['departments.delete']) || in_array('departments.delete', $permission_dep) && !$works->where('department_id',$department->id)->first())
-								<a href="{{ route('departments.destroy', $department->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
+								<a href="{{ route('departments.destroy', $department->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
 									<i class="far fa-trash-alt"></i>
 								</a>
 								@endif
@@ -76,6 +76,9 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-		$.getScript( '/../js/collaps.js');
+	//	$.getScript( '/../js/collaps.js');
+	$('.collapsible').click(function(event){        
+       		$(this).siblings().toggle();
+		});
 	});
 </script>		

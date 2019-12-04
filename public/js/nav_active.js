@@ -1,5 +1,4 @@
 $('.button_nav').click(function(e){
-   
     if($( this).hasClass('not_employee')){
         e.preventDefault();
     } else {
@@ -28,6 +27,7 @@ $('.button_nav').click(function(e){
                     $.getScript( '/../js/documents.js');
                     $.getScript( '/../js/collaps.js');
                     $.getScript( '/../js/filter_table.js');
+                    $.getScript( '/../restfulizer.js');
                 }
                 if( $( '.button_nav.active' ).hasClass('quest_button')) {
                     $('.placeholder').show();
@@ -35,6 +35,7 @@ $('.button_nav').click(function(e){
                     $.getScript( '/../js/questionnaire.js');
                     $.getScript( '/../js/collaps.js');
                     $.getScript( '/../js/filter_table.js');
+                    $.getScript( '/../restfulizer.js');
                 }
                 if( $( '.button_nav.active' ).hasClass('post_button')) {
                     $.getScript( '/../js/posts.js');
@@ -55,12 +56,9 @@ $('.button_nav').click(function(e){
         }
         $( this).addClass('active');
         $.getScript( "/../js/nav_button_color.js" );
-
     }
 
     if(body_width < 800) {
         $('#myTopnav').removeClass('responsive');
     }
 });
-
-

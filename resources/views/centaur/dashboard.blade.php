@@ -16,7 +16,9 @@
 						$user_name =  DashboardController::user_name(Sentinel::getUser()->employee['id']);
 					@endphp
 					@if($profile_image)
-						<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image"  />
+						<span class="image_prof">
+							<img class="" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image"  />
+						</span>
 					@else
 						<img class="radius50 " src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
 					@endif
@@ -48,25 +50,25 @@
 						<button class=""><a href="{{ route('absences.create', ['type' => 'GO']) }}" rel="modal:open">
 							<span>
 								<span class="img beach"></span>
-								<p>@lang('absence.request_vacation')</p></a>
-							</span>
+								<p>@lang('absence.request_vacation')</p>
+							</span></a>
 						</button>
 						<button class="" ><a href="{{ route('absences.create') }}" rel="modal:open">
 							<span>
 								<span class="img overtime"></span>
-								<p>@lang('absence.request_overtimes')</p></a>
-							</span>
+								<p>@lang('absence.request_overtimes')</p>
+							</span></a>
 						</button>
 						<button class="" ><a href="{{ route('absences.create', ['type' => 'BOL']) }}" rel="modal:open">
 							<span>
 								<span class="img sick"></span>
-								<p>@lang('absence.sick_leave')</p></a>
-							</span>
+								<p>@lang('absence.sick_leave')</p>
+							</span></a>
 						</button>
 						<button class="button_absence" ><a href="{{ route('absences.index') }}" >
 							<span>
-								<span class="img all_req"><p>@lang('absence.view_all_request')</p></span></a>
-							</span>
+								<span class="img all_req"><p>@lang('absence.view_all_request')</p></span>
+							</span></a>
 						</button>
 					</div>
 				</div>
@@ -93,7 +95,7 @@
 					</div>
 				</div>	
 				<div class="comming_agenda">
-					@if(isset($employee))<a class="btn btn-primary btn-lg btn-new" href="{{ route('events.create') }}"" rel="modal:open">
+					@if(isset($employee))<a class="btn btn-primary btn-lg btn-new" href="{{ route('events.create') }}" rel="modal:open">
 							<i style="font-size:11px" class="fa">&#xf067;</i>
 					</a>@endif
 					<h3 class="agenda_title">@lang('calendar.your_agenda') </h3>
@@ -132,11 +134,13 @@
 							<a href="{{ route('posts.index',['id' =>  $post->id ]) }}">
 								<span class="post_empl">
 									@if($post->to_employee_id != null)
-										@if(isset($image_employee) && $image_employee)
-											<img class="radius50" src="{{ URL::asset('storage/' . $user_name_post . '/profile_img/' . end($image_employee)) }}" alt="Profile image"  />
-										@else
-											<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
-										@endif
+										<span class="profile_image">
+											@if(isset($image_employee) && $image_employee)
+												<img class="radius50" src="{{ URL::asset('storage/' . $user_name_post . '/profile_img/' . end($image_employee)) }}" alt="Profile image"  />
+											@else
+												<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+											@endif
+										</span>
 									@endif
 									<span class="post_send">
 										@if($post->to_employee_id != null)

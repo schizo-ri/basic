@@ -88,8 +88,8 @@ class DepartmentRoleController extends Controller
 		$departmentRole->saveDepartmentRole($data);
 		
 		session()->flash('success',  __('ctrl.data_save'));
-		
-        return redirect()->route('department_roles.index');
+        return redirect()->back();	
+     //   return redirect()->route('department_roles.index');
     }
 
     /**
@@ -151,8 +151,8 @@ class DepartmentRoleController extends Controller
 		$departmentRole->updateDepartmentRole($data);
 		
 		session()->flash('success', __('ctrl.data_edit'));
-		
-        return redirect()->route('department_roles.index');
+        return redirect()->back();	
+   //     return redirect()->route('department_roles.index');
 		
     }
 

@@ -23,11 +23,13 @@
                 @endphp
                     @if ($data_day['type'] == $type )
                         <span class="event_user">
-                            @if($image)
-                                <img class="profile_img radius50 float_left" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image)) }}" alt="Profile image"  />
-                            @else
-                                <img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
-                            @endif
+                            <span class="event_user_img">
+                                @if($image)
+                                    <img class="profile_img radius50 float_left" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image)) }}" alt="Profile image"  />
+                                @else
+                                    <img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+                                @endif
+                            </span>
                             {{ $data_day['employee'] }}
                         </span><br>
                     @endif

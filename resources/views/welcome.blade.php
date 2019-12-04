@@ -19,10 +19,14 @@
         <!-- Styles -->
 		<link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}" type="text/css" >
 		<link rel="stylesheet" href="{{ URL::asset('css/modal.css') }}"/>
-		
+		<link rel="stylesheet" href="{{ URL::asset('/../css/modal.css') }}"/>
+
+		<!-- JS modal -->
+		<link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
+
 		<!--Jquery -->
 		<script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
-		
+
 		@stack('stylesheet')
 		
     </head>
@@ -46,17 +50,16 @@
 								<input type="checkbox" name="remember" value="true" {{ old('remember') == 'true' ? 'checked' : ''}}="checked">
 								<span class="checkmark"></span>
 							</label>
-							<a href="{{ route('auth.password.request.form') }}" class="forgot_pass" type="submit">@lang('welcome.forgot')</a>
+							<a href="{{ route('auth.password.request.form') }}" class="forgot_pass" type="submit" rel="modal:open">@lang('welcome.forgot')</a>
 						</div>
-						<input name="_token" value="{{ csrf_token() }}" type="hidden">
+						{{ csrf_field() }}
 						<input class="btn-login" type="submit" value="{{ __('welcome.login') }}">
 					</form>
 					<p class="terms">By log in you agree to Intranets <span>terms and conditions</span></p>
-					<li><a href="{{ route('auth.register.form') }}" rel="modal:open" >@lang('welcome.register')</a></li>
+				<!--	<li><a href="{{ route('auth.register.form') }}" rel="modal:open" >@lang('welcome.register')</a></li>-->
 				</div>
 			</section>
 			<section class="col-sm-5 col-md-5 col-lg-5 col-xl-5 float_left welcome_right">
-				
 				<div class="first_img"><img src="{{ URL::asset('icons/mask2.png')}}" alt="mask image"/></div>
 				<div class="second_img"><img src="{{ URL::asset('icons/mask.png')}}" alt="mask image"/></div>
 				<div class="third_img"><img src="{{ URL::asset('icons/mask3.png')}}" alt="mask image"/></div>
@@ -67,39 +70,15 @@
 				@endif
 				
 			</section>
-		</section>
-		<!--
-        <div class="flex-center position-ref full-height">
-			<div class="top-right links">
-				
-				@auth
-					<a href="{{ url('/home') }}">@lang('welcome.home')</a>
-				@else
-					<a href="{{ route('auth.login.form') }}">@lang('welcome.login')</a>
-					@if (Route::has('auth.register.form'))
-						<a href="{{ route('auth.register.form') }}">@lang('welcome.register')</a>
-					@endif
-                @endauth
-			</div>
-			<div class="content">
-			<div class="title m-b-md">
-				ICOM
-			</div>
-			<div class="links">
-				<a href="#">Link1</a>
-				<a href="#">Link2</a>
-				<a href="#">Link3</a>
-				<a href="#">Link4</a>
-				<a href="#">Link5</a>
-			</div>
-		</div>
-        </div>
-		-->
+		</section>		
 		@include('Centaur::notifications', ['modal' => 'true'])
 		@stack('script')
 		<!-- Jquery modal -->
 		<script src="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
 		<link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" >
+		
+		<!-- Modal js -->
+		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
 		<script>
 			@if(session()->has('modal'))
 				$('.row.notification').modal();

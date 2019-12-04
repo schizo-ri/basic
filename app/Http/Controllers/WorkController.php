@@ -82,8 +82,8 @@ class WorkController extends Controller
 		$work->saveWork($data);
 		
 		session()->flash('success',  __('ctrl.data_save'));
-		
-        return redirect()->route('works.index');
+        return redirect()->back();	
+     //   return redirect()->route('works.index');
     }
 
     /**
@@ -133,9 +133,8 @@ class WorkController extends Controller
 		$work->updateWork($data);
 		
 		session()->flash('success', __('ctrl.data_edit'));
-		
-        return redirect()->route('works.index');
-		
+        return redirect()->back();	
+      //  return redirect()->route('works.index');
     }
 
     /**

@@ -34,7 +34,6 @@ class EmployeeRequest extends FormRequest
             'qualifications' 	=> 'required|max:20',
             'work_id' 			=> 'required',
             'reg_date' 			=> 'required',
-            'probation' 		=> 'integer',
         ];
     }
 }

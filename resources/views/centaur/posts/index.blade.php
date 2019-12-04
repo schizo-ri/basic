@@ -26,19 +26,21 @@
 				@if(count( $posts) >0)
 					@foreach($posts as $post)
 						<?php
-							if($post->to_employee_id != null) {
-								$image_to_employee = DashboardController::profile_image($post->to_employee_id);
-							}
-							$post_comment = $comments->sortByDesc('created_at')->where('post_id',$post->id)->first(); //zadnji komentar na poruku
+							$post_comment = PostController::profile($post)['post_comment'];//zadnji komentar na poruku
+							$employee = PostController::profile($post)['employee'];
+							$user_name = PostController::profile($post)['user_name']; // ime djelatnika kojem je poslana poruka a nije user 
+							$image_to_employee =  PostController::profile($post)['docs']; // profilna slika
 						?>
 						<article class="main_post panel">
 							<button class="tablink" id="{{ $post->id }}" type="button"> 
 								@if($post->to_employee_id != null)
-									@if(isset($image_employee))
-										<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_to_employee)) }}" alt="Profile image"  />
-									@else
-										<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
-									@endif
+									<span class="profile_img">
+										@if(isset($image_to_employee))								
+											<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . $image_to_employee) }}" alt="Profile image"  />
+										@else									
+											<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+										@endif
+									</span>
 								@endif
 								<span class="post_empl">
 									<span class="post_send">
@@ -62,7 +64,6 @@
 											{{	$post_comment['content'] }}
 									</span>
 								</span>
-								
 							</button>
 						</article>
 					@endforeach
@@ -88,41 +89,33 @@
 					$post_comment = PostController::profile($post)['post_comment'];
 					$employee = PostController::profile($post)['employee'];
 					$user_name = PostController::profile($post)['user_name'];
+					
 					if($post->to_employee_id != null) {
-						$image_employee = DashboardController::profile_image($post->to_employee_id);
+						if( Sentinel::getUser()->employee['id'] == $post->to_employee_id ) {
+							$image_employee = DashboardController::profile_image($post->employee_id);
+						} else {
+							$image_employee = DashboardController::profile_image($post->to_employee_id);
+						}
 					}
 				@endphp
 				<section id="{{ '_' . $post->id }}" class="tabcontent" >
 					<header class="post_sent">
 						<span class="link_back"><span class="curve_arrow_left"></span></span>
 						@if($post->to_employee_id != null)
-							@if(Sentinel::getUser()->employee['id'] == $post->to_employee_id )
-								@if(isset($image_employee) && $image_employee != null)
+							<span class="post_img_prof">
+								@if(isset($image_employee))
 									<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_employee)) }}" alt="Profile image"  />
 								@else
 									<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
 								@endif
-								<span class="fl_name">
-									{{ $post->employee->user['first_name'] . ' ' . $post->employee->user['last_name'] }}
-									<span class="" >{{ $post->employee->work['name'] }}</span>
-								</span>
-								<span class="vacation">Vacation<br><span class="" >...</span></span>
-								<span class="phone" >Phone<br><span>{{ $post->employee->mobile }}</span></span>
-								<span class="e-mail" >E-mail<br><span>{{ $post->employee->email }}</span></span>
-							@else
-								<img class="profile_img radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
-								<span class="fl_name">
-									@if($post->to_employee_id != null)
-										{{ $post->to_employee->user['first_name'] . ' ' . $post->to_employee->user['last_name'] }}
-									@elseif($post->to_department_id != null)
-									
-									@endif
-									<span class="" >{{ $post->to_employee->work['name'] }}</span>
-								</span>
-								<span class="vacation">Vacation<br><span class="" >31.12.18 - 07.01.19</span></span>
-								<span class="phone" >Phone<br><span>{{ $post->to_employee->mobile }}</span></span>
-								<span class="e-mail" >E-mail<br><span>{{ $post->to_employee->email }}</span></span>
-							@endif
+							</span>
+							<span class="fl_name">
+								{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}
+								<span class="" >{{ $post->employee->work['name'] }}</span>
+							</span>
+							<span class="vacation">Vacation<br><span class="" >...</span></span>
+							<span class="phone" >Phone<br><span>{{ $employee->mobile }}</span></span>
+							<span class="e-mail" >E-mail<br><span>{{ $employee->email }}</span></span>
 						@endif
 						@if($post->to_department_id != null)
 							<span class="fl_name">
@@ -145,11 +138,13 @@
 															$image_comment = DashboardController::profile_image($comment->employee_id);
 															$user_name_comment =  DashboardController::user_name($comment->employee_id);
 														@endphp
+														<span class="profile_img">
 														@if($image_comment)
-															<img class="profile_img radius50 float_left" src="{{ URL::asset('storage/' . $user_name_comment . '/profile_img/' . end($image_comment)) }}" alt="Profile image"  />
+															<img class="radius50 float_left" src="{{ URL::asset('storage/' . $user_name_comment . '/profile_img/' . end($image_comment)) }}" alt="Profile image"  />
 														@else
 															<img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
 														@endif
+														</span>
 													@endif
 													<p class="comment_content" id="{{ $comment->id }}">{{ $comment['content'] }}
 												</div>
@@ -188,7 +183,6 @@
 	$.getScript( '/../js/posts.js');
 	$(function(){
 		$('.placeholder').show();
-		
 	});
 </script>
 @stop

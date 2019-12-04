@@ -5,6 +5,7 @@ return [
 	'absence' 		=> 'Absence',
 	'add_absence' 	=> 'Add absence',
 	'edit_absence' 	=> 'Edit absence',
+	'delete_absence' => 'Delete absence',
 	'request_type' 	=> 'Request type',
 	'start_date' 	=> 'Start date',
 	'end_date' 		=> 'End date',

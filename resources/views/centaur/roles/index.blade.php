@@ -1,4 +1,3 @@
-
 <header class="page-header">
 	<div class="index_table_filter">
 		<label>
@@ -25,20 +24,31 @@
 			</thead>
 			<tbody>
 				@foreach ($roles as $role)
+				@php
+					$role_permissions = implode(", ", array_keys($role->permissions));
+					$role_permissions = explode(",",$role_permissions);
+
+				@endphp
 					<tr>
 						<td>{{ $role->name }}</td>
 						<td>{{ $role->slug }}</td>
-						<td>{{ implode(", ", array_keys($role->permissions)) }}</td>
+						<td>
+							@for ($i = 0; $i < count($role_permissions); $i++)
+								<span class="role _{{ $i }}">{{ $role_permissions[$i] }}, </span>
+							@endfor
+							<span class="more">+ {{ count($role_permissions)-2 }} @lang('basic.more')</span>
+							<span class="hide">@lang('basic.hide')</span>						
+						</td>
 						<td class="center">
 							<button class="collapsible option_dots float_r"></button>
 							@if(Sentinel::getUser()->hasAccess(['roles.update']) || in_array('roles.update', $permission_dep))
-								<a href="{{ route('roles.edit', $role->id) }}" rel="modal:open">
+								<a href="{{ route('roles.edit', $role->id) }}" style="display:none" rel="modal:open">
 										<i class="far fa-edit"></i>
 								</a>
 							@endif
 							@if(Sentinel::getUser()->hasAccess(['roles.delete']) || in_array('roles.delete', $permission_dep))
 								@if (! $userRoleIds->contains($role->id))
-									<a href="{{ route('roles.destroy', $role->id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}">
+									<a href="{{ route('roles.destroy', $role->id) }}" style="display:none" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -53,7 +63,23 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-		$.getScript( '/../js/collaps.js');
+	//	$.getScript( '/../js/collaps.js');
+	$('.collapsible').click(function(event){        
+       		$(this).siblings().toggle();
+		});
+		
+		$('.more').click(function(){
+			$( this ).siblings('.role').toggle();
+			$( this ).hide();
+			$( this ).siblings('.hide').show();
+		});
+		$('.hide').click(function(){
+			$( this ).siblings('.role').hide();
+			$( this ).siblings('.role._0').show();
+			$( this ).siblings('.role._1').show();
+
+			$( this ).siblings('.more').show();
+			$( this ).hide();
+		});
 	});
 </script>
-

@@ -34,7 +34,8 @@ return [
     'reg_complete_login'     => 'Registration complete.  You may now log in!',
     'activation_instructions'     => 'Account Activation Instructions',
     'instructions'     => 'New instructions will be sent to that email address if it is associated with a inactive account.',
-   
+    'method_exist'     => 'A emailing with that model and method already exists.',
+    
     
     
    

@@ -13,7 +13,9 @@ return [
     |
     */
 
-    'failed' => 'Podaci ne odgovaraju našim zapisima.',
-    'throttle' => 'Previše pokušaja prijave. Pokušajte ponovo za: sekundi sekundi.',
+    'failed'        => 'Podaci ne odgovaraju našim zapisima.',
+    'throttle'      => 'Previše pokušaja prijave. Pokušajte ponovo za: sekundi sekundi.',
+    'auth_update'   => 'Podaci korisnika su ispravljeni.',
+
 
 ];

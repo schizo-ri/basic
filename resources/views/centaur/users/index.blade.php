@@ -14,7 +14,7 @@
 		<span class="change_view"></span>
 	</div>
 </header>
-<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12 users_main">
 	<div class="table-responsive">
 		@if(count($users))
 			<table id="index_table" class="display table table-hover">
@@ -35,7 +35,6 @@
 							$image_employee = DashboardController::profile_image($user->employee->id);
 							$user_name = DashboardController::user_name($user->employee->id);
 						}
-						
 						if(isset($user->work_id) && $departmentRoles->where('department_id', $user->work_id)->first()) {
 							$dep_roles = explode(  ',', $departmentRoles->where('department_id', $user->work_id)->first()->permissions);
 						}
@@ -72,22 +71,22 @@
 							<td class="center">
 								<button class="collapsible option_dots float_r"></button>
 								@if(Sentinel::getUser()->hasAccess(['users.update']))
-									<a href="{{ route('users.edit', $user->id) }}" class="" title="{{ __('basic.edit_user') }}"  rel="modal:open">
+									<a href="{{ route('users.edit', $user->id) }}" class="" title="{{ __('basic.edit_user') }}" style="display:none" rel="modal:open">
 											<i class="far fa-edit"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['employees.create']) && ! $employees->where('user_id',$user->id)->first())
-										<a href="{{ route('employees.create', ['user_id' => $user->id] ) }}" class="" title="{{ __('basic.add_employee') }}"  rel="modal:open">
+									<a href="{{ route('employees.create', ['user_id' => $user->id] ) }}" class="" title="{{ __('basic.add_employee') }}" style="display:none" rel="modal:open">
 										<i class="fas fa-user-plus"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['employees.update']) && $employees->where('user_id',$user->id)->first())
-										<a href="{{ route('employees.edit',$employees->where('user_id',$user->id)->first()->id ) }}" class="" title="{{ __('basic.edit_employee') }}"  rel="modal:open">
+									<a href="{{ route('employees.edit',$employees->where('user_id',$user->id)->first()->id ) }}" class="" title="{{ __('basic.edit_employee') }}" style="display:none" rel="modal:open">
 										<i class="fas fa-user-cog"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['users.delete'])&& !$employees->where('user_id',$user->id)->first())
-									<a href="{{ route('users.destroy', $user->id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}">
+									<a href="{{ route('users.destroy', $user->id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" style="display:none" >
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -98,25 +97,96 @@
 			</table>
 		@endif
 	</div>
+	<div class="second_view">
+		@if(count($users))
+			@foreach ($users as $user)
+				@php
+					$image_employee = '';
+					if($user->employee) {
+						$image_employee = DashboardController::profile_image($user->employee->id);
+						$user_name = DashboardController::user_name($user->employee->id);
+					}
+					if(isset($user->work_id) && $departmentRoles->where('department_id', $user->work_id)->first()) {
+						$dep_roles = explode(  ',', $departmentRoles->where('department_id', $user->work_id)->first()->permissions);
+					}
+				@endphp
+				<div class="user_card">
+					<div>
+						<span>
+							<button class="collapsible option_dots float_r"></button>
+								@if(Sentinel::getUser()->hasAccess(['users.update']))
+									<a href="{{ route('users.edit', $user->id) }}" class="" title="{{ __('basic.edit_user') }}" style="display:none" rel="modal:open">
+										<i class="far fa-edit"></i>
+									</a>
+								@endif
+								@if(Sentinel::getUser()->hasAccess(['employees.create']) && ! $employees->where('user_id',$user->id)->first())
+									<a href="{{ route('employees.create', ['user_id' => $user->id] ) }}" class="" title="{{ __('basic.add_employee') }}" style="display:none" rel="modal:open">
+										<i class="fas fa-user-plus"></i>
+									</a>
+								@endif
+								@if(Sentinel::getUser()->hasAccess(['employees.update']) && $employees->where('user_id',$user->id)->first())
+									<a href="{{ route('employees.edit',$employees->where('user_id',$user->id)->first()->id ) }}" class="" title="{{ __('basic.edit_employee') }}" style="display:none" rel="modal:open">
+										<i class="fas fa-user-cog"></i>
+									</a>
+								@endif
+								@if(Sentinel::getUser()->hasAccess(['users.delete'])&& !$employees->where('user_id',$user->id)->first())
+									<a href="{{ route('users.destroy', $user->id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" style="display:none" >
+										<i class="far fa-trash-alt"></i>
+									</a>
+								@endif
+						</span>					
+						<header>
+							<span class="user_img">
+								@if(isset($image_employee) && $image_employee != '')
+									<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_employee)) }}" alt="Profile image"  />
+								@else
+									<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+								@endif
+							</span>
+						</header>
+						<main>
+							<p class="user_name">{{ $user->first_name . ' ' . $user->last_name }}</p>
+							<p class="user_mail">{{ $user->email }}</p>
+							<p class="user_roles">@if ($user->roles->count() > 0)
+									{{ $user->roles->implode('name', ', ') }}
+								@else
+									<em>No Assigned Role</em>
+								@endif
+							</p>
+						</main>
+					</div>
+				</div>
+			@endforeach
+		@endif
+	</div>
 </main>
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-		$.getScript( '/../js/collaps.js');
+//		$.getScript( '/../js/collaps.js');
 		
 		$('.more').click(function(){
-			$('.role').toggle();
-			$('.more').hide();
-			$('.hide').show();
+			$( this ).siblings('.role').toggle();
+			$( this ).hide();
+			$( this ).siblings('.hide').show();
 		});
 		$('.hide').click(function(){
-			$('.role').hide();
-			$('.role._0').show();
-			$('.role._1').show();
+			$( this ).siblings('.role').hide();
+			$( this ).siblings('.role._0').show();
+			$( this ).siblings('.role._1').show();
 
-			$('.more').show();
-			$('.hide').hide();
+			$( this ).siblings('.more').show();
+			$( this ).hide();
 		});
+
+		$('.change_view').click(function(){
+			if($('.second_view').is(':visible')) {
+				$('.second_view').css('display:none');
+			} else {
+				$('.second_view').css('display:flex');
+			}
+			$('.table-responsive').toggle();
 		
+		});
 	});
 </script>

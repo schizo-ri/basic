@@ -5,12 +5,12 @@
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('absence_types.update', $absenceType->id) }}">
 		<div class="form-group {{ ($errors->has('name'))  ? 'has-error' : '' }}">
 			<label>@lang('basic.name')</label>
-			<input name="name" type="text" class="form-control" value="{{ $absenceType->name }}">
+			<input name="name" type="text" class="form-control" value="{{ $absenceType->name }}" required >
 			{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group {{ ($errors->has('mark'))  ? 'has-error' : '' }}">
 			<label>@lang('absence.mark')</label>
-			<input name="mark" type="text" class="form-control" maxlength="5" value="{{ $absenceType->mark }}">
+			<input name="mark" type="text" class="form-control" maxlength="5" value="{{ $absenceType->mark }}" required>
 			{!! ($errors->has('mark') ? $errors->first('mark', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group {{ ($errors->has('min_days'))  ? 'has-error' : '' }}">

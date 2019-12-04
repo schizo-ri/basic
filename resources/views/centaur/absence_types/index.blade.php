@@ -30,12 +30,12 @@
 							<td class="center">
 								<button class="collapsible option_dots float_r"></button>
 								@if(Sentinel::getUser()->hasAccess(['absence_types.update']) || in_array('absence_types.update', $permission_dep))
-									<a href="{{ route('absence_types.edit', $absenceType->id) }}" class="btn-edit" rel="modal:open">
+									<a href="{{ route('absence_types.edit', $absenceType->id) }}" style="display:none" class="btn-edit" rel="modal:open">
 											<i class="far fa-edit"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['absence_types.delete']) || in_array('absence_types.delete', $permission_dep))
-									<a href="{{ route('absence_types.destroy', $absenceType->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+									<a href="{{ route('absence_types.destroy', $absenceType->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -52,7 +52,10 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-		$.getScript( '/../js/collaps.js');
+	//	$.getScript( '/../js/collaps.js');
+	$('.collapsible').click(function(event){        
+       		$(this).siblings().toggle();
+		});
 	});
 </script>
 	

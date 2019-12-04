@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        \App\Console\Commands\Employee_absence::class,
     ];
 
     /**
@@ -26,6 +26,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->command('email:absence_day')
+				  ->dailyAt('8:00')
+				  ->evenInMaintenanceMode();
     }
 
     /**

@@ -27,7 +27,7 @@ $( document ).ready(function() {
 
         } else {
             var header_height = $('header').height();
-             container_height = body_height - header_height;
+            container_height = body_height - header_height;
             var container_element_height = body_height - 90 - user_header - 20;
             $('.container').height(container_height - 15);
             $('.container .calendar').height(container_element_height);

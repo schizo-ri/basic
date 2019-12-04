@@ -56,37 +56,10 @@
             <main class="col-lg-12 col-xl-8 index_main float_right admin_main">
                 <span class="link_back"><span class="curve_arrow_left"></span></span>
                 <div id="admin_page">
-
                 </div>
             </main>
     @endif
     <script>
-        $('.admin_pages>li>a').click(function(e) {
-            var url = $(this).attr('href');
-            $( '#admin_page' ).load( url, function( response, status, xhr ) {
-                if ( status == "error" ) {
-                    var msg = "Sorry but there was an error: ";
-                    $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
-                }
-                $('#admin_page').show();
-                
-                $.getScript( 'js/datatables.js');
-                
-            });
-            return false
-        });
-
-        var body_width = $('body').width();
-        if(body_width < 450) {
-            $('.admin_pages>li>a').click(function(e) { 
-                $('aside.admin_aside').hide();
-                $('main.admin_main').show();
-            });
-
-            $('.link_back').click(function () {
-                $('aside.admin_aside').show();
-                $('main.admin_main').hide();
-            });
-        }
+        $.getScript( '/../js/open_admin.js');
     </script>
 @stop

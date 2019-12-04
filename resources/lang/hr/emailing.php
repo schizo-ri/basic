@@ -15,9 +15,8 @@ return [
 	'or_point_browser'	=> 'Ili usmjerite preglednik na ovu adresu:',
 	'thank_you'	=> 'Hvala!',
 	'new_notice'				=> 'Nova obavijest',
-	'new_notice_on_app'				=> 'Na portalu je objavljena nova obavijest',
+	'new_notice_on_app'			=> 'Na portalu je objavljena nova obavijest',
 	'click_to_see'				=> 'Klikni da vidiš obavijest',
-	
-	
+	'day_absence'				=> 'Izostanci djelatnika na dan ',	
 ];
 ?>

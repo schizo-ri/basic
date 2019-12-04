@@ -41,7 +41,7 @@
 								</div>
 							</span>
 							<span class="thumb_name">{{ $questionnaire->name }}</span>
-								<span class="thumb_time">{{ Carbon\Carbon::parse($questionnaire->created_at)
+							<span class="thumb_time">{{ Carbon\Carbon::parse($questionnaire->created_at)
 								->diffForHumans()  }}</span>
 						</span>
 					@endforeach
@@ -106,10 +106,10 @@
 											@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.update']) || in_array('questionnaires.update', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.delete']) || in_array('questionnaires.delete', $permission_dep))
 												<button class="collapsible option_dots float_r"></button>
 												@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep))
-												<a href="{{ action('QuestionnaireController@sendEmail', ['id' => $questionnaire->id ] ) }}" class="btn-edit" title="{{ __('basic.sendEmail')}}"><i class="far fa-envelope"></i></a>
+												<a href="{{ action('QuestionnaireController@sendEmail', ['id' => $questionnaire->id ] ) }}" class="btn-edit sendEmail" title="{{ __('basic.sendEmail')}}"><i class="far fa-envelope"></i></a>
 												@endif 
 												@if(Sentinel::getUser()->hasAccess(['questionnaires.update']) || in_array('questionnaires.update', $permission_dep))
-													<a href="{{ route('questionnaires.edit', $questionnaire->id) }}" class="btn-edit" rel="modal:open" title="{{ __('basic.edit')}}" ><i class="far fa-edit"  rel="modal:open"></i></a>
+													<a href="{{ route('questionnaires.edit', $questionnaire->id) }}" class="btn-edit" rel="modal:open" title="{{ __('basic.edit')}}" ><i class="far fa-edit"></i></a>
 												@endif 
 												@if(Sentinel::getUser()->hasAccess(['questionnaires.delete']) || in_array('questionnaires.delete', $permission_dep))
 													<a href="{{ route('questionnaires.destroy', $questionnaire->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
@@ -159,8 +159,7 @@
 		</section>
 	</main>
 </div>
-
 <script>
-	$.getScript( '/../js/questionnaire.js');
+//	$.getScript( '/../js/questionnaire.js');
 </script>
 @stop

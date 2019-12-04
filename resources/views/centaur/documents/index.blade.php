@@ -20,12 +20,19 @@
 						<a class="add_new new_document" href="{{ route('documents.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i></a>
 					@endif
 					@foreach ($documents as $doc)
-						<span class="thumbnail" title="{{ $doc->path . $doc->title }}" >
-							<div class="ajax-content">
-							</div>
+						<span class="thumb_container">
+							<span class="thumbnail" title="{{ $doc->path . $doc->title }}" >
+								<div class="ajax-content">
+									<?php  
+										$open = $doc->path . $doc->title;
+									?>
+									@if(file_exists('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png'))<img class="doc_icons" src="{{ URL::asset('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png' )  }}" /> @endif
+								</div>
+							</span>
+							<span class="thumb_name" title="{{ $doc->title }}">{{ $doc->title }}</span>
+							<span class="thumb_time">{{ Carbon\Carbon::parse($doc->created_at)->diffForHumans()  }}</span>
 						</span>
 					@endforeach
-					
 					<button id="right-button" class="scroll_right"></button>
 				</div>
 			</div>
@@ -36,7 +43,7 @@
 								<label>
 									<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 								</label>
-								<span class="change_view"></span>
+							<!--	<span class="change_view"></span>-->
 								@if(Sentinel::getUser()->hasAccess(["documents.create"]) || in_array("documents.create", $permission_dep) )
 									<a class="add_new" href="{{ route('documents.create') }}" class="" rel="modal:open">
 										<i style="font-size:11px" class="fa">&#xf067;</i>
@@ -64,7 +71,7 @@
 											$open = $document->path . $document->title;
 										?>
 										<tr>
-											<th>
+											<th style="text-align: center;">
 												@if(file_exists('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png'))<img class="doc_icons" src="{{ URL::asset('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png' )  }}" /> @endif
 											
 											</th><!--type -->
@@ -104,4 +111,11 @@
 		</section>
 	</main>
 </div>
+<script>
+$.getScript( '/../js/documents.js');
+$('.button_nav').click(function(){
+	window.history.replaceState({}, document.title, location['origin']+'/dashboard');
+	$.getScript( '/../js/nav_active.js');
+});
+</script>
 @stop

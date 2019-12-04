@@ -47,5 +47,4 @@ $(function() {
             }
     });
     $('.index_aside .day_events ').show();
-
 });

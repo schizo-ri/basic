@@ -86,6 +86,7 @@ div#calendar ul.dates{
     overflow-x: scroll;
     white-space: nowrap;
     display: flex;
+    scrollbar-width: none;
 }
  
 /** overall width = width+padding-right**/

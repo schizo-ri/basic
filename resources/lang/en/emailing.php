@@ -17,7 +17,8 @@ return [
 	'new_notice'			=> 'New notice',
 	'new_notice_on_app'		=> 'A new announcement has been posted on the portal',
 	'click_to_see'				=> 'Click to see the notification',
-
+	'day_absence'				=> 'Employee absences for date ',
+	
 
 ];
 ?>

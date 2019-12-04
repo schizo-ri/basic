@@ -68,29 +68,35 @@ class EmailingController extends Controller
      */
     public function store(EmailingRequest $request)
     {
-		$sent_to_empl = '';
-	    $sent_to_dep = '';
-		
-		if($request->sent_to_empl){
-			$sent_to_empl = implode(",",$request->sent_to_empl);
-		}
-		if($request->sent_to_dep){
-			$sent_to_dep = implode(",",$request->sent_to_dep);
-		}
-
-		$data = array(
-			'model'  		=> $request['model'],
-			'method'  		=> $request['method'],
-			'sent_to_dep'   => $sent_to_dep,
-			'sent_to_empl' 	=> $sent_to_empl
-		);
-		
-		$emailing = new Emailing();
-		$emailing->saveEmailing($data);
-		
-		session()->flash('success',  __('ctrl.data_save'));
-		
-        return redirect()->route('emailings.index');
+        if(Emailing::where('model', $request['model'] )->where('method', $request['method'] )->first()) {
+            session()->flash('success',  __('ctrl.method_exist'));
+            
+            return redirect()->back();
+        } else {
+            $sent_to_empl = '';
+            $sent_to_dep = '';
+            
+            if($request->sent_to_empl){
+                $sent_to_empl = implode(",",$request->sent_to_empl);
+            }
+            if($request->sent_to_dep){
+                $sent_to_dep = implode(",",$request->sent_to_dep);
+            }
+        
+            $data = array(
+                'model'  		=> $request['model'],
+                'method'  		=> $request['method'],
+                'sent_to_dep'   => $sent_to_dep,
+                'sent_to_empl' 	=> $sent_to_empl
+            );
+            
+            $emailing = new Emailing();
+            $emailing->saveEmailing($data);
+            
+            session()->flash('error',  __('ctrl.data_save'));
+            return redirect()->back();
+           // return redirect()->route('emailings.index');
+        }        
     }
 
     /**
@@ -155,7 +161,8 @@ class EmailingController extends Controller
 		
 		session()->flash('success', __('ctrl.data_edit'));
 		
-        return redirect()->route('emailings.index');
+		return redirect()->back();
+	//  return redirect()->route('emailings.index');
     }
 
     /**

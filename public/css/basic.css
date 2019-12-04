@@ -158,7 +158,8 @@
 
   .overflow_auto {
       overflow: auto;
-      overscroll-behavior-y: contain;
+      
+      scrollbar-width: thin;
   }
 
   .bg_white {

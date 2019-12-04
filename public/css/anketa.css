@@ -18,7 +18,8 @@ form {
 
 .clearfix {
   overflow: auto;
-  overscroll-behavior-y: contain;
+  
+  scrollbar-width: thin;
 }
 
 .btn_align {

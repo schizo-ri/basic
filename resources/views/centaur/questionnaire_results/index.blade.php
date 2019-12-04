@@ -1,5 +1,3 @@
-
-<div class="modal">
 <div class="modal-header results">
     <a class="link_back" rel="modal:close">
         <img src="{{ URL::asset('icons/arrow_left2.png') }}" />
@@ -49,7 +47,6 @@
             @endforeach
         </div>
     </section>
-</div>
 </div>
 <script >$(function(){$.getScript( 'js/questionnaire_show.js');});</script>
 

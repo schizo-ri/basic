@@ -35,12 +35,12 @@
 							<td class="center">
 								<button class="collapsible option_dots float_r"></button>
 								@if(Sentinel::getUser()->hasAccess(['works.update']) || in_array('works.update', $permission_dep))
-									<a href="{{ route('works.edit', $work->id) }}" class="btn-edit" rel="modal:open">
+									<a href="{{ route('works.edit', $work->id) }}" class="btn-edit" rel="modal:open" style="display:none">
 											<i class="far fa-edit"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['works.delete']) || in_array('works.delete', $permission_dep) && !$employees->where('work_id',$work->id)->first())
-									<a href="{{ route('works.destroy', $work->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+									<a href="{{ route('works.destroy', $work->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" style="display:none">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -57,6 +57,8 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-		$.getScript( '/../js/collaps.js');
+		$('.collapsible').click(function(event){        
+       		$(this).siblings().toggle();
+		});
 	});
 </script>		

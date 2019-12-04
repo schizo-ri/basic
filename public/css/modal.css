@@ -22,7 +22,8 @@
 	max-width: 54.79%;
 	padding: 0 !important;
 	overflow: auto;
-	overscroll-behavior-y: contain;
+	scrollbar-width: thin;
+	
 }
 .modal.slide {
 	width: 1060px;
@@ -45,6 +46,7 @@
 	height: auto; 
 	max-height: 100%; 
 	overflow: auto;
+	scrollbar-width: thin;
 	-webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     -o-border-radius: 3px;
@@ -233,7 +235,7 @@
 
 .modal-title{margin:0;line-height:1.42857143; font-size: 1.375rem !important;color: #313131;font-weight: 700;text-align:center}
 
-.modal-body{text-align:left;font-size: 0.6875rem !important;color: inherit;font-weight: 500 !important; overflow: auto;padding: 0px;}
+.modal-body{text-align:left;font-size: 0.6875rem !important;color: inherit;font-weight: 500 !important; overflow: auto; scrollbar-width: thin;padding: 0px;}
 .modal-body p {font-size: 0.75rem;color: inherit; font-weight: 500;}
 .modal-body h4 {font-size: 0.8125rem;color: inherit;font-weight: 600; padding-bottom: 10px;}
 .modal-body h5 {font-size: 0.8125rem;color: inherit; padding-bottom: 10px;}
@@ -335,7 +337,8 @@ modal-footer:after,.modal-footer:before,.nav:after,.nav:before,.navbar-collapse:
 	height: auto;
 	max-height: 100%;
 	overflow: auto;
-	overscroll-behavior-y: contain;
+	scrollbar-width: thin;
+	
 }
 
 #myModal_Job  .modal-dialog, #myModal_Job  .modal-dialog .modal-content, .myModal_Job .modal-dialog, .myModal_Job .modal-dialog  .modal-content {
@@ -455,6 +458,16 @@ input[type="time"]::-webkit-inner-spin-button {
 .modal input[type="text"],  .modal input[type="email"], .modal input[type="password"], .modal input[type="tel"], .modal input[type="number"], .modal input[type="url"] {
 	color: #1594F0;
 	font-weight: 600;
+}
+.modal input[type="file"] {
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    outline-color: inherit;
+    padding: 0;
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: #1594F0;
 }
 
 .modal select.multiple_box {
@@ -857,7 +870,8 @@ option::selection {
 .modal.modal_questionnaire .modal-body  {
 	padding: 40px 50px;
 	overflow: auto;
-	overscroll-behavior-y: contain;
+	scrollbar-width: thin;
+	
 }
 
 .modal.modal_questionnaire .progress_bar {
@@ -951,7 +965,6 @@ option::selection {
 }
 
 .modal.modal_notice .modal-body img.img_notice {
-
     width: 100%;
     top: 30%;
     transform: translateY(-30%);
@@ -1080,10 +1093,11 @@ option::selection {
 	overflow: hidden;
 }
 .modal.modal_notice.notice_show .image_notice {
-	height: 60%;
-	overflow: hidden;
-	position: relative;
-	cursor: pointer;
+	height: auto;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    max-height: 50%;
 }
 
 .modal.modal_notice.notice_show .image_notice.show_all {
@@ -1092,8 +1106,9 @@ option::selection {
 
 .modal.modal_notice.notice_show .modal-body {
 	overflow: auto;
+	scrollbar-width: thin;
 	padding: 0;
-	overscroll-behavior-y: contain;
+	
 }
 
 .modal.modal_notice.notice_show .modal-body.statistic_body {
@@ -1701,7 +1716,8 @@ input.form-control.date {
 	.modal.modal_notice .modal-body {
 		padding: 15px;
 		overflow: auto;
-		overscroll-behavior-y: contain;
+		scrollbar-width: thin;
+		
 	}
 
 	.modal select, .modal input[type="text"], .modal input[type="date"],  .modal input[type="time"], .modal input[type="email"], .modal input[type="password"], .modal input[type="tel"], .modal input[type="number"], .modal input[type="url"]{
@@ -1718,7 +1734,8 @@ input.form-control.date {
 	}
 	.modal.modal_notice.notice_show {
 		overflow: auto;
-		overscroll-behavior-y: contain;
+		scrollbar-width: thin;
+		
 	}
 	.notice_read {
 		width: 100%;
@@ -1738,7 +1755,8 @@ input.form-control.date {
 		height: 100%;
 		max-height: 100%;
 		overflow: auto;
-		overscroll-behavior-y: contain;
+		scrollbar-width: thin;
+		
 	}
 	.modal.modal_notice.notice_show .modal-header>h3.statistic_title {
 		margin: 0;
@@ -1918,5 +1936,24 @@ input.form-control.date {
 		padding: 10px 5px;
 	}
 
-
+	.modal.modal_notice.notice_show .image_notice {
+		height: auto;
+	}
+	.modal.modal_notice .modal-body img.img_notice {
+		top: 0;
+		transform: none;
+	}
+	.modal.slide {
+		height: 100%;
+		display: inline-block;
+		max-height: 100%;
+		width: 100%;
+		max-width: 100%;
+	}
+	.mySlides_info> p:last-child {
+		position: static;
+	}
+	.modal-body .next {
+		right: 20px;
+	}
 }

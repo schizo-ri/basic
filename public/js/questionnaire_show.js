@@ -55,7 +55,7 @@
 		var body_height =  modal_height - header_height - 80;
 		$('.modal-body').height(body_height);
 	});
-
+	$.getScript( '/../js/collaps.js');
 	/*
 
 	$("#ev_employee_id1").change(function(){

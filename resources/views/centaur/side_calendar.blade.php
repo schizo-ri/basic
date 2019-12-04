@@ -29,7 +29,11 @@
 </div>
 <div class="col-12 day_events">
     <div class="col-12">
-        <a class="three_dots" rel="modal:open" href="{{ route('all_event', ['dataArr_day' => $dataArr_day, 'uniqueType' => $uniqueType, 'dan' => $dan] ) }}" > @lang('basic.view_all')</a>
+        @if ($dataArr_day || count( $events_day) >0)
+            <a class="three_dots" rel="modal:open" href="{{ route('all_event', ['dataArr_day' => $dataArr_day, 'uniqueType' => $uniqueType, 'dan' => $dan] ) }}" > @lang('basic.view_all')</a>
+        @endif
+       
+
         @if(count($uniqueType)>0)
             @foreach ($uniqueType as $type)
                 @php
@@ -48,11 +52,13 @@
                                 }
                             @endphp
                             <span class="event_user">
-                                @if($image)
-                                    <img class="profile_img radius50 float_left" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image)) }}" alt="Profile image"  />
-                                @else
-                                    <img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
-                                @endif
+                                <span class="event_user_img">
+                                    @if($image)
+                                        <img class="profile_img radius50 float_left" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image)) }}" alt="Profile image"  />
+                                    @else
+                                        <img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+                                    @endif
+                                </span>
                                 {{ $data_day['employee'] }}
                             </span>
                             @php
@@ -83,5 +89,10 @@
         $('.calender_view').pignoseCalendar({
         });
     });
+    $('.button_nav').click(function(){
+		window.history.replaceState({}, document.title, location['origin']+'/dashboard');
+		$.getScript( '/../js/nav_active.js');
+	});
+	
 </script>
 @endif

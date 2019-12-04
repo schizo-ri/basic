@@ -141,7 +141,7 @@ class DocumentController extends Controller
           
           if (is_array($images)) {
             foreach ($images as $item) {
-        //      Storage::putFileAs($path, new File($item), 'photo.jpg');  // snimi u storage folder
+            //  Storage::putFileAs($path, new File($item), 'photo.jpg');  // snimi u storage folder
 
               $imageName = $item->getClientOriginalName();
               $imageSize =  $item->getClientSize();         //file size 
@@ -170,7 +170,7 @@ class DocumentController extends Controller
             $docName = $request->file('fileToUpload')->getClientOriginalName();  //file name
             $docSize =  $request->file('fileToUpload')->getClientSize();         //file size 
             $target_file = $path . $docName;
-            $docType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));    //file extension 
+            $docType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));    //file extension 
             
             if (file_exists($target_file)) {                                         // Check if file already exists
               return redirect()->back()->with('error', __('ctrl.file_exists'));
@@ -209,44 +209,10 @@ class DocumentController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+         * Remove the specified resource from storage.
+         *
+         * @param  int  $id
+         * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
@@ -352,7 +318,6 @@ class DocumentController extends Controller
 
     $type = DocumentController::imagetype($imagePath);
 
-
     list($width, $height) = getimagesize($imagePath);
 
     $outBool = in_array($outExt, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']);
@@ -379,12 +344,12 @@ class DocumentController extends Controller
               $image = imagecreatefromwebp($imagePath);
               if ($outBool === false) $outExt = 'webp';
       }
+    
       try {
-        $newImage = imagecreatetruecolor($newWidth, $newHeight);
+        $newImage = imagecreatetruecolor($newWidth, $newHeight);       
       } catch (\Throwable $th) {
         return null;
       }
-
 
       //TRANSPARENT BACKGROUND
       $color = imagecolorallocatealpha($newImage, 0, 0, 0, 127); //fill transparent back
@@ -393,7 +358,15 @@ class DocumentController extends Controller
 
       //ROUTINE
       imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-      
+
+      if ($height < $width ) {
+       // File and rotation      
+        $degrees = 270;
+        $source = imagecreatefromjpeg($imagePath);
+        // Rotate
+        $newImage = imagerotate($source, $degrees, 0);
+      }
+   
         switch (true)
         {
             case in_array($outExt, ['jpg', 'jpeg']) === true: $success = imagejpeg($newImage, $newPath);
@@ -411,7 +384,9 @@ class DocumentController extends Controller
       {
           return null;
       }
-   
+      if (file_exists($imagePath)) {
+        unlink($imagePath);
+      }
     return $newPath;
   }
 

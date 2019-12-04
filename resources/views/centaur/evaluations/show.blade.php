@@ -149,7 +149,7 @@
 						<td>{{ number_format($ukupnaOS / $a,2) . ' (' .  number_format($ukupnaOS / $a / $ratings->max('rating') *100,2) . '%)'}}</td>
 						<td>{{ number_format($ukupnaDI / $a,2) . ' (' . number_format($ukupnaDI/ $a/ $ratings->max('rating') *100,2) . '%)'}}</td>
 						<td>{{ number_format($ukupnaDJ / $a,2) . ' (' . number_format($ukupnaDJ/ $a/ $ratings->max('rating') *100,2) . '%)'}}</td>
-						<td><input name="_token" value="{{ csrf_token() }}" type="hidden">
+						<td>{{ csrf_field() }}
 							<!--<input class="btn btn-lg" type="submit" value="Upiši ciljeve" id="stil1"></td>-->
 					</tr>
 				</tfoot>

@@ -16,9 +16,9 @@ use DateTime;
 class PostController extends Controller
 {
     /**
-	*
-	* Set middleware to quard controller.
-	* @return void
+		*
+		* Set middleware to quard controller.
+		* @return void
 	*/
     public function __construct()
     {
@@ -31,23 +31,23 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
-		
+    {		
 		$empl = Sentinel::getUser()->employee;
 		$comments = Comment::orderBy('created_at','ASC')->get();
 	
 		if(isset($_GET['id'])) {
 			$post = Post::where('id',$_GET['id'])->first();
-			$comments_post = Comment::where('post_id',$post->id)->get();
+			if($post) {
+				$comments_post = Comment::where('post_id',$post->id)->get();
 
-			if($post->employee_id != $empl->id) {
-				$post->updatePost(['status' => '1']);
-			}
-
-			if(count($comments_post) > 0){
-				foreach($comments_post as $comment) {
-					if($comment->employee_id != $empl->id ) {
-						$comment->updateComment(['status' => '1']);
+				if($post->employee_id != $empl->id) {
+					$post->updatePost(['status' => '1']);
+				}
+				if(count($comments_post) > 0){
+					foreach($comments_post as $comment) {
+						if($comment->employee_id != $empl->id ) {
+							$comment->updateComment(['status' => '1']);
+						}
 					}
 				}
 			}
@@ -218,10 +218,10 @@ class PostController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+		 * Remove the specified resource from storage.
+		 *
+		 * @param  int  $id
+		 * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
@@ -329,16 +329,18 @@ class PostController extends Controller
 		$user_name = '';
 		
 		$comments = Comment::orderBy('created_at','DESC')->get();
-		$employee = Sentinel::getUser()->employee;
+		$post_comment = $comments->where('post_id',$post->id)->first(); //zadnji komentar na poruku
+		$employee = Sentinel::getUser()->employee;  // prijavljeni djelatnik
 
 		if($post->to_employee_id != null) {
-			if($post->employee_id == $employee->id ) {
-				$empl = Employee::where('id',$post->to_employee_id)->first();
+			if( Sentinel::getUser()->employee->id == $post->to_employee_id ) {
+				$empl = $post->employee;
+				$user_name = explode('.',strstr($empl->email,'@',true));
 			} else {
-				$empl = Employee::where('id',$post->employee_id)->first();
+				$empl = $post->to_employee;
+				$user_name = explode('.',strstr($empl->email,'@',true));
 			}
-			
-			$user_name = explode('.',strstr($empl->email,'@',true));
+		
 			if(count($user_name) == 2) {
 				$user_name = $user_name[1] . '_' . $user_name[0];
 			} else {
@@ -354,15 +356,13 @@ class PostController extends Controller
 			$user_name = Department::where('id', $post->to_department_id)->first()->name;
 		}
 		
-		$post_comment = $comments->where('post_id',$post->id)->first(); //zadnji komentar na poruku
-
 		$podaci = array(
 			'employee'  	=>  $empl,  
 			'post_comment'  =>  $post_comment,  
-			'docs'  		=>  $docs,  
+			'docs'  		=> end($docs),  
 			'user_name'  	=>  $user_name,  
 		);
-
+	
 		return $podaci;
 	}
 
@@ -384,7 +384,7 @@ class PostController extends Controller
 	{
 		$empl = Sentinel::getUser()->employee;
 		$post = Post::where('id', $id)->first();
-		$comments_post = Comment::where('post_id',$post->id)->get();
+		$comments_post = Comment::where('post_id', $post->id)->get();
 
 		if($post->employee_id != $empl->id) {
 			$post->updatePost(['status' => '1']);
@@ -397,5 +397,6 @@ class PostController extends Controller
 				}
 			}
 		}
+		return $comments_post;
 	}
 }

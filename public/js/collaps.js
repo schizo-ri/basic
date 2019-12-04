@@ -1,13 +1,17 @@
 
 $(function() {
     $('.collapsible').click(function(event){ 
-        $(this).next('.content').show();
-        
-    });
-    $('.collapsible.option_dots').click(function(){ 
+        console.log("collapsible1");
         $(this).siblings().toggle();
-    });	
 
+        
+  /*      if($(this).siblings().is(":visible")){ 
+            $(this).siblings().css('display','none');
+        } else {
+            $(this).siblings().css('display','inline-block');
+        }*/
+        //      $(this).next('.content').show();        
+    });
     $('.index_page table.dataTable .content').mouseleave(function(){
         $(this).hide();
     });

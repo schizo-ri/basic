@@ -55,7 +55,7 @@ class EmployeeController extends Controller
 		$works = Work::get();
 		$employees = Employee::get();
 
-		if(isset($request->user_id)) {
+		if(isset($request['user_id'])) {
 			$user1 = User::find($request->user_id);
 			return view('Centaur::employees.create', ['works' => $works,'employees' => $employees, 'user1' => $user1, 'users' => $users]);
 		} else {
@@ -69,7 +69,7 @@ class EmployeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(EmployeeRequest $request)
+    public function store(Request $request)
     {
         $input = $request->except(['_token']);
 		
@@ -152,14 +152,14 @@ class EmployeeController extends Controller
 			}
 		}
 
-		foreach($send_to as $send_to_mail) {
+		foreach(array_unique($send_to) as $send_to_mail) {
 			if( $send_to_mail != null & $send_to_mail != '' )
 			Mail::to($send_to_mail)->send(new EmployeeCreate($employee)); // mailovi upisani u mailing 
 		}
 		
 		session()->flash('success',  __('ctrl.data_save'));
-		
-        return redirect()->route('employees.index');
+		return redirect()->back();
+    //    return redirect()->route('employees.index');
     }
 
     /**
@@ -301,8 +301,8 @@ class EmployeeController extends Controller
 		}
 		*/
 		session()->flash('success', __('ctrl.data_edit'));
-		
-        return redirect()->route('employees.index');
+		return redirect()->back();
+       // return redirect()->route('employees.index');
 		
     }
 

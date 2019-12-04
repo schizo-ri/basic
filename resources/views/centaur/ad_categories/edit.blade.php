@@ -5,7 +5,7 @@
     <form accept-charset="UTF-8" role="form" method="post" action="{{ route('ad_categories.update', $category->id) }}">
         <div class="form-group {{ ($errors->has('name'))  ? 'has-error' : '' }}">
             <label>@lang('basic.name')</label>
-            <input name="name" type="text" class="form-control" value="{{ $category->name }}">
+            <input name="name" type="text" class="form-control" value="{{ $category->name }}" required>
             {!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         {{ csrf_field() }}

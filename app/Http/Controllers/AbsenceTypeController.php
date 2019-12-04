@@ -73,8 +73,8 @@ class AbsenceTypeController extends Controller
 		$absenceType->saveAbsenceType($data);
 		
 		session()->flash('success', __('ctrl.data_save'));
-		
-        return redirect()->route('absence_types.index');
+		return redirect()->back();
+     //   return redirect()->route('absence_types.index');
     }
 
     /**
@@ -125,8 +125,8 @@ class AbsenceTypeController extends Controller
 		$absenceType->updateAbsenceType($data);
 		
 		session()->flash('success', __('ctrl.data_edit'));
-		
-        return redirect()->route('absence_types.index');
+        return redirect()->back();	
+//        return redirect()->route('absence_types.index');
     }
 
     /**

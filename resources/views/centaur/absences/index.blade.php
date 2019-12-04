@@ -1,10 +1,7 @@
 @extends('Centaur::layout')
 
 @section('title', __('absence.absences'))
-<link rel="stylesheet" href="{{ URL::asset('css/dashboard.css') }}"/>
-<link rel="stylesheet" href="{{ URL::asset('css/index.css') }}"/>
 <link rel="stylesheet" href="{{ URL::asset('css/absence.css') }}"/>
-<link rel="stylesheet" href="{{ URL::asset('css/modal.css') }}"/>
 @php
 	use App\Http\Controllers\BasicAbsenceController;
 	$datum = new DateTime('now');    /* današnji dan */
@@ -161,10 +158,17 @@
 													<td class="options center">
 														@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep) || Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
 															<button class="collapsible option_dots float_r"></button>
-															<div class="content">
-																
-															</div>
+															@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep))
+																<a href="{{ route('absences.edit', $absence->id) }}" class="btn-edit" title="{{ __('absence.edit_absence')}}" style="display:none" rel="modal:open">
+																	<i class="far fa-edit"></i>
+																</a>
+															@endif
+
+															@if(Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
+																<a href="{{ route("absences.destroy", $absence->id) }}" class="action_confirm btn-delete danger" style="display:none" data-method="delete" data-token="{{ csrf_token() }}"  title="{{ __('absence.delete_absence')}}" ><i class="far fa-trash-alt"></i></a>
+															@endif
 														@endif
+													
 													</td>
 												</tr>
 										@endforeach
@@ -190,22 +194,19 @@
 </div>
 @if(isset($absence))
 	<script>
-	$( function () {
-		$.getScript( 'js/datatables.js');
-		$.getScript( 'js/filter_table.js');
-		$.getScript( 'js/absence.js');
+		$( function () {
+			$('#index_table_filter').show();
+			$('#index_table_filter').prepend('<a class="add_new" href="{{ route('absences.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('absence.new_request')</a>');
 		
-		$('#index_table_filter').show();
-		$('.table-responsive').prepend('<a class="add_new" href="{{ route('absences.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('absence.new_request')</a>');
-		$('.content').append('@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep) )
-				<a href="{{ route('absences.edit', $absence->id) }}" class="btn-edit" rel="modal:open"><i class="far fa-edit"></i></a>@endif
-			@if(Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
-				<a href="{{ route('absences.destroy', $absence->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>@endif');
-
-	});
-	$('.button_nav').click(function(e){
-		$.getScript( '/../js/nav_active.js');
-	});
+			$.getScript( 'js/datatables.js');
+			$.getScript( 'js/filter_table.js');
+			$.getScript( 'js/absence.js');
+		});
+		$('.button_nav').click(function(){
+			window.history.replaceState({}, document.title, location['origin']+'/dashboard');
+			$.getScript( '/../js/nav_active.js');
+			
+		});
 	</script>
 @endif
 @stop

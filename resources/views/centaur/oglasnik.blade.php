@@ -94,11 +94,13 @@ use App\Models\Ads;
 								</main>
 								<footer class="ad_footer">
 									<div class="ad_empl">
-										@if($profile_img)
-											<img class="radius50 profile_img" src="{{ URL::asset($path_profile . end($profile_img)) }}" alt="Profile image"  />
-										@else
-											<img class="radius50 profile_img" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
-										@endif
+										<span class="profile_img">
+											@if($profile_img)
+												<img class="radius50 " src="{{ URL::asset($path_profile . end($profile_img)) }}" alt="Profile image"  />
+											@else
+												<img class="radius50 profile_img" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+											@endif
+										</span>
 										<p class="employee">
 											{{ $ad->employee->user['first_name'] . ' ' . $ad->employee->user['last_name'] }} 
 											<span>{{  $ad->employee->work['name'] }}</span>

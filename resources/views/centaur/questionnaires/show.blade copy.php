@@ -110,7 +110,7 @@
 				@endforeach
 			</div>
 		</section>
-		<input name="_token" value="{{ csrf_token() }}" type="hidden">
+		{{ csrf_field() }}
 		<input class="btn-submit fill" type="submit" value="{{ __('basic.save')}}">
 	</div>
 </form>

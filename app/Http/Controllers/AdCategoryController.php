@@ -64,8 +64,8 @@ class AdCategoryController extends Controller
 		$adCategory->saveCategory($data);
 		
 		session()->flash('success', "Podaci su spremljeni");
-		
-        return redirect()->route('ad_categories.index');
+		return redirect()->back();
+     //   return redirect()->route('ad_categories.index');
     }
 
     /**
@@ -110,8 +110,8 @@ class AdCategoryController extends Controller
 		$category->updateCategory($data);
 		
 		session()->flash('success', __('ctrl.data_edit'));
-		
-        return redirect()->route('ad_categories.index');
+		return redirect()->back();
+       // return redirect()->route('ad_categories.index');
     }
 
     /**

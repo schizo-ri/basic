@@ -6,7 +6,7 @@ $( window ).resize(function() {
         var header_notice_height = $('.header_notice').height();
         var section_notice = all_notice_height - header_notice_height;
 
-        $('.section_notice').height(section_notice - 30);
+        $('.section_notice').height(section_notice);
     }
     var all_height = [];
     $('.noticeboard_notice_body .ad_main').each(function(){
@@ -24,7 +24,7 @@ $( document ).ready(function() {
         var header_notice_height = $('.header_notice').height();
         var section_notice = all_notice_height - header_notice_height;
 
-        $('.section_notice').height(section_notice - 30);
+        $('.section_notice').height(section_notice);
     }
 
     var all_height = [];

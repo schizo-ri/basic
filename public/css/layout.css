@@ -77,8 +77,8 @@ table.dataTable thead th, table.dataTable thead td{
 .nav_ul a.icon {
 	color: #A7BBEE;
     display: inline-block;
-    width: 19px;
-    height: 19px;
+	width: 100%;
+    height: 100%;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -108,13 +108,15 @@ a:hover, button:hover {
 }
 
 .header_nav .topnav .icon>svg {
-	margin-right: 5px;
+	margin: 0;
+	padding: 0;
+	margin-top: 50%;
+	margin-left: 50%;
+	transform: translate(-50%, -50%);
+	width: 19px;
+	height: 19px;
 	color: #A7BBEE;
-    width: 100%;
-    height: 100%;
-	
 }
-
 .header_nav img.img_button, .header_nav i, .header_nav svg {
 	max-width: 28px;
     margin-right: 25px;
@@ -197,7 +199,6 @@ ul.nav_ul.float_right li img {
 	.topnav ul.nav_ul.float_right li.icon {
 	  float: right;
 	  display: block;
-	  padding-bottom: 20px;
 	  position: relative;
 	}
 	.topnav.responsive {
@@ -250,12 +251,22 @@ ul.nav_ul.float_right li img {
 	width: calc(25% - 17px);
 }
 
-.user_header .info img {
+.image_prof {
 	width: 110px;
     height: 110px;
-	display: block;
+    border-radius: 50%;
+    display: inline-block;
+	overflow: hidden;
+}
+
+.user_header .image_prof>img {
+	width: 100%;
+    height: auto;
+    display: block;
     margin-left: auto;
-    margin-right: auto;
+	margin-right: auto;
+	margin-top: 50%;
+    transform: translatey(-50%);
 }
 
 .user_header .info div h2 {
@@ -443,7 +454,8 @@ ul.nav_ul.float_right li img {
 .container {
 	padding: 80px 30px 30px;
 	overflow: auto;
-	overscroll-behavior-y: contain;
+	scrollbar-width: thin;
+	
 }
 
 .side_navbar a {
@@ -647,7 +659,7 @@ span.line_btn {
     display: inline-block;
     position: absolute;
     bottom: -25px;
-    left: 0;
+	left: 0;
 	
 }
 
@@ -1051,13 +1063,16 @@ input#file {
 		height: auto;
 	}
 	span.button_nav_img {
-		position: initial;
+		position: relative;
 		transform: none;
+		left: 0;
+		top: auto;
+		bottom: auto;
 	}
 	.topnav a.active {
 		margin: auto;
 		height: auto;
-		margin-bottom: 30px;
+		margin-bottom: 15px;
 	}
 	.topnav a > p {
 		line-height: initial;
@@ -1147,10 +1162,10 @@ input#file {
 	.user_header .info, .user_header .info>div, .info .layout_button, .container .calendar>div {
 		height: auto;
 	}
-
 }
 
 @media (max-width: 450px) {
+	
 	.container {
 		height: auto;
 		padding: 0 10px;
@@ -1218,7 +1233,8 @@ input#file {
 	.info .salary p.agenda {
 		display: block;
 		overflow: auto;
-		overscroll-behavior-y: contain;
+		scrollbar-width: thin;
+		
 	}
 	.header_nav>section {
 		margin-top: -10px;
@@ -1228,7 +1244,7 @@ input#file {
 	}
 	.topnav .icon>svg {
 		margin-right: 5px;
-	}
+	}	
 	.topnav a.icon:hover {
 		background: inherit;
 	}
@@ -1254,7 +1270,7 @@ input#file {
 	}
 	.button_nav {
 		margin-bottom: 15px;
-		height: 60px;
+		height: auto;
 		line-height: 60px;
 	}
 	header.header_nav {
@@ -1334,4 +1350,5 @@ input#file {
 	.info .layout_button >button>a{
 		overflow-wrap: break-word;
 	}
+	
 }
