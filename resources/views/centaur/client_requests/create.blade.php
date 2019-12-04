@@ -13,23 +13,23 @@
 			   <form accept-charset="UTF-8" role="form" method="post" action="{{ route('client_requests.store') }}">
 					<fieldset>
 						<div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
-							<input class="form-control" placeholder="{{ __('basic.name')}}" name="name" type="text" value="{{ old('name') }}" />
+							<input class="form-control" placeholder="{{ __('basic.name')}}" name="name" type="text" value="{{ old('name') }}" required />
 							{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<div class="form-group {{ ($errors->has('address')) ? 'has-error' : '' }}">
-							<input class="form-control" placeholder="{{ __('clients.address')}}" name="address" type="text" value="{{ old('address') }}" />
+							<input class="form-control" placeholder="{{ __('clients.address')}}" name="address" type="text" value="{{ old('address') }}" required />
 							{!! ($errors->has('address') ? $errors->first('address', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<div class="form-group {{ ($errors->has('city')) ? 'has-error' : '' }}">
-							<input class="form-control" placeholder="{{ __('clients.city')}}" name="city" type="text" value="{{ old('city') }}" />
+							<input class="form-control" placeholder="{{ __('clients.city')}}" name="city" type="text" value="{{ old('city') }}" required />
 							{!! ($errors->has('city') ? $errors->first('city', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<div class="form-group {{ ($errors->has('oib')) ? 'has-error' : '' }}">
-							<input class="form-control" placeholder="{{ __('clients.oib')}}" name="oib" type="text" value="{{ old('oib') }}" />
+							<input class="form-control" placeholder="{{ __('clients.oib')}}" name="oib" type="text" value="{{ old('oib') }}" required />
 							{!! ($errors->has('oib') ? $errors->first('oib', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						 <div class="form-group {{ ($errors->has('first_name')) ? 'has-error' : '' }}">
-							<input class="form-control" placeholder="{{ __('clients.f_name')}}" name="first_name" type="text" value="{{ old('first_name') }}" />
+							<input class="form-control" placeholder="{{ __('clients.f_name')}}" name="first_name" type="text" value="{{ old('first_name') }}"  />
 							{!! ($errors->has('first_name') ? $errors->first('first_name', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<div class="form-group {{ ($errors->has('last_name')) ? 'has-error' : '' }}">
@@ -37,11 +37,11 @@
 							{!! ($errors->has('last_name') ? $errors->first('last_name', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
-							<input class="form-control" placeholder="E-mail" name="email" type="email" value="{{ old('email') }}">
+							<input class="form-control" placeholder="E-mail" name="email" type="email" value="{{ old('email') }}" required >
 							{!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<div class="form-group {{ ($errors->has('phone')) ? 'has-error' : '' }}">
-							<input class="form-control" placeholder="{{ __('clients.phone')}}" name="phone" type="text" value="{{ old('phone') }}">
+							<input class="form-control" placeholder="{{ __('clients.phone')}}" name="phone" type="text" value="{{ old('phone') }}" required>
 							{!! ($errors->has('phone') ? $errors->first('phone', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<label>Moduli</label>
@@ -52,7 +52,14 @@
 								</label><br>
 							@endforeach
 						</div>
-				  
+						<div class="form-group input_db {{ ($errors->has('db')) ? 'has-error' : '' }}">
+							<input class="form-control" placeholder="{{ __('clients.create_db')}}" name="db" type="text" value="{{ old('db') }}" >
+							{!! ($errors->has('db') ? $errors->first('db', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
+						<div class="form-group input_url {{ ($errors->has('url')) ? 'has-error' : '' }}">
+							<input class="form-control" placeholder="URL [http://icom-user.duplico.hr/]" name="url" type="url" value="{{ old('url') }}" >
+							{!! ($errors->has('url') ? $errors->first('url', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
 						<input name="_token" value="{{ csrf_token() }}" type="hidden">
 						<input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('welcome.signUp')}}">
 					</fieldset>
@@ -61,4 +68,20 @@
         </div>
     </div>
 </div>
+<script>
+	$('.input_db').change(function(){
+		if( $(this).val() != '') {
+			$('.input_url').attr('required','true');
+		} else {
+			$('.input_url').removeAttr('required');
+		}
+	});
+	$('.input_url').change(function(){
+		if( $(this).val() != '') {
+			$('.input_db').attr('required','true');
+		} else {
+			$('.input_db').removeAttr('required');
+		}
+	});
+</script>
 @stop

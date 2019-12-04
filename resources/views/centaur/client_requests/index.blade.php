@@ -5,14 +5,13 @@
 @section('content')
     <div class="page-header">
         <div class='btn-toolbar pull-right'>
-			<!-- 
+			
 			@if(Sentinel::getUser()->hasAccess(['client_requests.create']))
 				<a class="btn btn-primary btn-lg" href="{{ route('client_requests.create') }}">
 					<i class="fas fa-plus"></i>
-					@lang('basic.add_module')
 				</a>
 			@endif
-			-->
+			
         </div>
         <h1>@lang('clients.requests')</h1>
     </div>
@@ -25,6 +24,7 @@
 							<tr>
 								<th>@lang('clients.client')</th>
 								<th>@lang('basic.modules')</th>
+								<th>@lang('clients.create_db')</th>
 								<th>@lang('basic.options')</th>
 							</tr>
 						</thead>
@@ -34,6 +34,7 @@
 									<td><a href="{{ route('clients.show', $request->client_id) }}">{{ $request->client['name'] }}</a></td>
 									<?php $modules_req = explode(',', $request->modules); ?>
 									<td>@foreach($modules_req as $module_req ){{ $modules->where('id', $module_req)->first()->name }}<br>@endforeach</td>
+									<td>{{ $request->db }}</td>
 									<td class="center">
 										@if(Sentinel::getUser()->hasAccess(['client_requests.update']))
 											<a href="{{ route('client_requests.edit', $request->id) }}" class="btn-edit">

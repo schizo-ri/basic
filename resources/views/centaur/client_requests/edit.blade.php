@@ -52,6 +52,14 @@
 								</label><br>
 							@endforeach
 						</div>
+						<div class="form-group {{ ($errors->has('db')) ? 'has-error' : '' }}">
+							<input class="form-control input_db" placeholder="{{ __('clients.create_db')}}" name="db" type="text" value="{{ $client_request->db }}" >
+							{!! ($errors->has('db') ? $errors->first('db', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
+						<div class="form-group {{ ($errors->has('url')) ? 'has-error' : '' }}">
+							<input class="form-control input_url" placeholder="URL [http://icom-user.duplico.hr/]" name="url" type="url" value="{{ $client_request->url }}" >
+							{!! ($errors->has('url') ? $errors->first('url', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
 						{{ csrf_field() }}
 						{{ method_field('PUT') }}
 						<input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('welcome.signUp')}}">
@@ -61,4 +69,20 @@
         </div>
     </div>
 </div>
+<script>
+	$('.input_db').change(function(){
+		if( $(this).val() != '') {
+			$('.input_url').attr('required','true');
+		} else {
+			$('.input_url').removeAttr('required');
+		}
+	});
+	$('.input_url').change(function(){
+		if( $(this).val() != '') {
+			$('.input_db').attr('required','true');
+		} else {
+			$('.input_db').removeAttr('required');
+		}
+	});
+</script>
 @stop

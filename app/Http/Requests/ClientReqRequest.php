@@ -26,6 +26,8 @@ class ClientReqRequest extends FormRequest
         return [
             'client_id' => 'required|max:100',
             'modules' 	=> 'required|max:255',
+            'url' 	    => 'unique|max:255',
+            'db' 	    => 'unique|max:50',
         ];
     }
 }

@@ -13,6 +13,9 @@ return [
 	'f_name' 		=> 'First name',
 	'l_name' 		=> 'Last name',
 	'requests' 		=> 'Client requests',
+	'create_db'		=> 'Database name',
+
+	
 ];
 
 ?>

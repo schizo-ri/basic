@@ -6,14 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Requests\ClientReqRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DatabaseController;
 use App\Models\Client;
 use App\Models\ClientRequest;
 use App\Models\Module;
 
 class ClientRequestController extends Controller
 {
-	
-	
 	/**
      * Display a listing of the resource.
      *
@@ -47,7 +46,7 @@ class ClientRequestController extends Controller
      */
     public function store(Request $request)
     {
-		$data_client = array(
+        $data_client = array(
 			'name'  		=> $request['name'],
 			'address'  		=> $request['address'],
 			'city'  		=> $request['city'],
@@ -61,15 +60,21 @@ class ClientRequestController extends Controller
 		$client = new Client();
 		$client->saveClient($data_client);
 		
-		$modules = implode(",",$request->module);
+		$modules = implode(",", $request->module);
 		
 		$data_request = array(
 			'client_id'  	=> $client->id,
-			'modules'  		=> $modules
+			'modules'  		=> $modules,
+			'db'  	        =>  $request['db'],
+			'url'  	        =>  $request['url']
 		);
-		
+
 		$client_req = new ClientRequest();
-		$client_req->saveClientRequest($data_request);
+        $client_req->saveClientRequest($data_request);
+        
+        if($request['db'] && $request['url'] ) {
+            DatabaseController::create($request['db'], $request['url'], $client->id);
+        }
 		
         $message = session()->flash('success', 'Podaci su spremljeni.');
 		
@@ -125,17 +130,23 @@ class ClientRequestController extends Controller
 			'phone'  		=> $request['phone']
 		);
 		
-		$client->updateClient($data_client);
-		
+        $client->updateClient($data_client);
+
 		$modules = implode(",",$request->module);
 		
 		$data_request = array(
 			'client_id'  	=> $client->id,
-			'modules'  		=> $modules
+            'modules'  		=> $modules,
+            'db'        	=>  $request['db'],
+            'url'  	        =>  $request['url']
 		);
 		
 		$client_request->updateClientRequest($data_request);
 		
+        if($request['db'] && $request['url'] ) {
+            DatabaseController::create($request['db'], $request['url'], $client->id);
+        }
+
 		session()->flash('success', "Podaci su ispravljeni");
 		
         return redirect()->route('client_requests.index');
