@@ -8,10 +8,8 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-
         <!-- Styles -->
 		<link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}" type="text/css" >
-		
 		<!--Jquery -->
 		<script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
 		

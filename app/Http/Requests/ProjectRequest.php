@@ -26,7 +26,7 @@ class ProjectRequest extends FormRequest
         return [
             'name'  =>'required|max:191',
             'duration'  =>'required',
-            'project_no'  =>'required',
+            'project_no'  =>'required|max:10',
             'day_hours'  =>'required',
             'start_date'  =>'required',
         ];
@@ -42,6 +42,7 @@ class ProjectRequest extends FormRequest
 		return [
             'name.required' => 'Unos naziva projekta je obavezan',
             'name.max'      => 'Dozvoljen unos max :max znakova',
+            'project_no.max'      => 'Dozvoljen unos max :max znakova',
 			'duration.required'  => 'Unos trajanja je obavezan',
 			'project_no.required'  => 'Unos broja projekta je obavezan',
 			'project_no'     => 'Dozvoljen je unos samo brojeva',

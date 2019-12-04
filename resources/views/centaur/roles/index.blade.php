@@ -29,12 +29,12 @@
                                 <td>{{ $role->slug }}</td>
                                 <td>{{ implode(", ", array_keys($role->permissions)) }}</td>
                                 <td>
-                                    <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-default" rel="modal:open">
+                                    <a href="{{ route('roles.edit', $role->id) }}" class="btn" rel="modal:open">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                         Edit
                                     </a>
                                     @if (! $userRoleIds->contains($role->id))
-                                    <a href="{{ route('roles.destroy', $role->id) }}" class="btn btn-danger" data-method="delete" data-token="{{ csrf_token() }}">
+                                    <a href="{{ route('roles.destroy', $role->id) }}" class="btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}">
                                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         Delete
                                     </a>

@@ -7,19 +7,21 @@ use App\Http\Requests\ProjectRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\ProjectEmployee;
-
+use App\Models\Employee;
+use App\Models\CategoryEmployee;
+use App\Http\Controllers\ProjectEmployeeController;
+use DateTime;
+use DatePeriod;
+use DateInterval;
 
 class ProjectController extends Controller
 {
-    /**
-	*
-	* Set middleware to quard controller.
-	* @return void
-	*/
-	public function __construct()
-	{
-		$this->middleware('sentinel.auth');
-    }
+    public function __construct()
+    {
+        // Middleware
+        $this->middleware('sentinel.auth');
+       
+    }    
     
     /**
      * Display a listing of the resource.
@@ -29,8 +31,10 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::orderBy('project_no','ASC')->get();
+        $categoryEmp = CategoryEmployee::orderBy('mark','ASC')->get();
+        $projEmp = ProjectEmployee::get();
 
-        return view('Centaur::projects.index',['projects' => $projects]);
+        return view('Centaur::projects.index',['projects' => $projects, 'categoryEmp' => $categoryEmp, 'projEmp' => $projEmp]);
     }
 
     /**
@@ -40,7 +44,9 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('Centaur::projects.create');
+        $categories = CategoryEmployee::get();
+
+        return view('Centaur::projects.create',['categories' => $categories]);
     }
 
     /**
@@ -51,11 +57,17 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        
         if(Project::where('project_no',$request['project_no'])->first()) {
             session()->flash('error', "Projekt sa tim brojem već postoji");
 		
             return redirect()->back();
         } else {
+            $categories = '';
+            if($request['categories']) {
+                $categories = implode(',',$request['categories']);
+            }           
+
             $data = array(
                 'name' => $request['name'],
                 'project_no'  => $request['project_no'],
@@ -63,8 +75,15 @@ class ProjectController extends Controller
                 'duration'  => $request['duration'],
                 'day_hours'  => $request['day_hours'],
                 'saturday'  => $request['saturday'],
+                'categories'  =>  $categories,
             );
-    
+            
+            if ($request['end_date'] != null) {
+                $data += ['end_date'  => $request['end_date']];
+            } else {
+                $data += ['end_date'  => null];
+            }
+
             $project = new Project();
             $project->saveProject($data);
             
@@ -84,8 +103,9 @@ class ProjectController extends Controller
     {
         $project = Project::find($id);
         $projectEmployees = ProjectEmployee::where('project_id', $project->id)->get()->unique('employee_id');
-
-        return view('Centaur::projects.show',['project' => $project,'projectEmployees' => $projectEmployees]);
+        $employees = Employee::orderBy('first_name')->get();
+     
+        return view('Centaur::projects.show',['project' => $project,'employees' => $employees,'projectEmployees' => $projectEmployees]);
     }
 
     /**
@@ -97,8 +117,9 @@ class ProjectController extends Controller
     public function edit($id)
     {
         $project = Project::find($id);
+        $categories = CategoryEmployee::get();
 
-        return view('Centaur::projects.edit',['project' => $project]);
+        return view('Centaur::projects.edit',['project' => $project, 'categories' => $categories]);
     }
 
     /**
@@ -110,7 +131,12 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $project = Project::find($id);
+        $project = Project::find($id); 
+        $categories = null;
+
+        if($request['categories']) {
+            $categories = implode(',',$request['categories']);
+        }       
 
         $data = array(
 			'name' => $request['name'],
@@ -118,13 +144,20 @@ class ProjectController extends Controller
 			'start_date'  => $request['start_date'],
 			'duration'  => $request['duration'],
 			'day_hours'  => $request['day_hours'],
-			'saturday'  => $request['saturday'],
+            'saturday'  => $request['saturday'],
+            'categories'  => $categories
         );
 
+        if ($request['end_date'] != null) {
+            $data += ['end_date'  => $request['end_date']];
+        } else {
+            $data += ['end_date'  => null];
+        }
+
         $project->updateProject($data);
-        
-        session()->flash('success', "Podaci su spremljeni");
-		
+
+        ProjectEmployeeController::uskladi($project->id);
+   
         return redirect()->back();
     }
 
@@ -147,5 +180,19 @@ class ProjectController extends Controller
 		$message = session()->flash('success',  "Projekt je obrisan");
 		
 		return redirect()->back()->withFlashMessage($message);
+    }
+
+    public function url_project_update( $id, $date)
+    {
+        $project = Project::find($id);
+
+        $data = array(
+			'start_date'  => date("Y-m-d",strtotime($date))
+        );
+
+        $project->updateProject($data);
+
+		return $date;
+       // return redirect()->back();
     }
 }

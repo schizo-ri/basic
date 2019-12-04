@@ -47,10 +47,22 @@ Route::resource('employees', 'EmployeeController');
 // Project
 Route::resource('projects', 'ProjectController');
 
+// Project
+Route::resource('category_employees', 'CategoryEmployeeController');
+
+// Publish
+Route::resource('publishes', 'PublishController');
+
+// Publish
+Route::resource('preparations', 'PreparationController');
+
 // Project Employees
 Route::resource('project_employees', 'ProjectEmployeeController');
 Route::get('save/{employee?}/{date?}/{project?}/{all_days?}', ['as' => 'save', 'uses' => 'ProjectEmployeeController@save']);
 Route::get('brisi/{project?}', ['as' => 'brisi', 'uses' => 'ProjectEmployeeController@brisi']);
+Route::get('uskladi/{project?}', ['as' => 'uskladi', 'uses' => 'ProjectEmployeeController@uskladi']);
+Route::get('url_project_update/{project?}/{date?}', ['as' => 'url_project_update', 'uses' => 'ProjectController@url_project_update']);
+Route::post('saveImg', ['as' => 'saveImg', 'uses' => 'PublishController@saveImg']);
 
 // Dashboard
  /*
@@ -60,3 +72,5 @@ Route::get('dashboard', function () {
 
 // Dashboard 
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
+
+Route::get('live/{date?}', ['as' => 'live', 'uses' => 'DashboardController@live']);

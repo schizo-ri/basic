@@ -13,7 +13,7 @@
             {!! ($errors->has('last_name') ? $errors->first('last_name', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
-            <input class="form-control" placeholder="E-mail" name="email" type="text" value="{{ $user->email }}">
+            <input class="form-control" placeholder="E-mail" name="email" type="text" value="{{ $user->email }}" required>
             {!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <h5>Roles</h5>
@@ -27,11 +27,11 @@
         @endforeach
         <hr />
         <div class="form-group  {{ ($errors->has('password')) ? 'has-error' : '' }}">
-            <input class="form-control" placeholder="Password" name="password" type="password" value="">
+            <input class="form-control" placeholder="Password" name="password" type="password" value="" >
             {!! ($errors->has('password') ? $errors->first('password', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <div class="form-group {{ ($errors->has('password_confirmation')) ? 'has-error' : '' }}">
-            <input class="form-control" placeholder="Confirm Password" name="password_confirmation" type="password" />
+            <input class="form-control" placeholder="Confirm Password" name="password_confirmation" type="password"  />
             {!! ($errors->has('password_confirmation') ? $errors->first('password_confirmation', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         {{ csrf_field() }}

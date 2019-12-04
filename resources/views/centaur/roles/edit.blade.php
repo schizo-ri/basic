@@ -62,6 +62,54 @@
                 roles.delete
             </label>
         </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[employees.create]" value="1" {{ $role->hasAccess('employees.create') ? 'checked' : '' }}>
+                employees.create
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[employees.update]" value="1" {{ $role->hasAccess('employees.update') ? 'checked' : '' }}>
+                employees.update
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[employees.view]" value="1" {{ $role->hasAccess('employees.view') ? 'checked' : '' }}>
+                employees.view
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[employees.delete]" value="1" {{ $role->hasAccess('employees.delete') ? 'checked' : '' }}>
+                employees.delete
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[projects.create]" value="1" {{ $role->hasAccess('projects.create') ? 'checked' : '' }}>
+                projects.create
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[projects.update]" value="1" {{ $role->hasAccess('projects.update') ? 'checked' : '' }}>
+                projects.update
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[projects.view]" value="1" {{ $role->hasAccess('projects.view') ? 'checked' : '' }}>
+                projects.view
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[projects.delete]" value="1" {{ $role->hasAccess('projects.delete') ? 'checked' : '' }}>
+                projects.delete
+            </label>
+        </div>
         {{ csrf_field() }}
 		{{ method_field('PUT') }}
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Update">

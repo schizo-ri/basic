@@ -12,26 +12,26 @@
             <input class="form-control" placeholder="Last Name" name="last_name" type="text" value="{{ old('last_name') }}" />
             {!! ($errors->has('last_name') ? $errors->first('last_name', '<p class="text-danger">:message</p>') : '') !!}
         </div>
-        <div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
-            <input class="form-control" placeholder="E-mail" name="email" type="text" value="{{ old('email') }}">
+        <div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}" >
+            <input class="form-control" placeholder="E-mail" name="email" type="text" value="{{ old('email') }}" required>
             {!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <h5>Roles</h5>
         @foreach ($roles as $role)
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" name="roles[{{ $role->slug }}]" value="{{ $role->id }}">
+                    <input type="checkbox" name="roles[{{ $role->slug }}]" value="{{ $role->id }}" >
                     {{ $role->name }}
                 </label>
             </div>
         @endforeach
         <hr />
         <div class="form-group  {{ ($errors->has('password')) ? 'has-error' : '' }}">
-            <input class="form-control" placeholder="Password" name="password" type="password" value="">
+            <input class="form-control" placeholder="Password" name="password" type="password" value="" required>
             {!! ($errors->has('password') ? $errors->first('password', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <div class="form-group {{ ($errors->has('password_confirmation')) ? 'has-error' : '' }}">
-            <input class="form-control" placeholder="Confirm Password" name="password_confirmation" type="password" />
+            <input class="form-control" placeholder="Confirm Password" name="password_confirmation" type="password" required/>
             {!! ($errors->has('password_confirmation') ? $errors->first('password_confirmation', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <div class="checkbox">
@@ -39,7 +39,7 @@
                 <input name="activate" type="checkbox" value="true" {{ old('activate') == 'true' ? 'checked' : ''}}> Activate
             </label>
         </div>
-        <input name="_token" value="{{ csrf_token() }}" type="hidden">
+        {{ csrf_field() }}
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Create">
     </fieldset>
     </form>

@@ -155,8 +155,7 @@ class UserController extends Controller
     {
         // Validate the form data
         $result = $this->validate($request, [
-            'email' => 'required|email|max:255|unique:users,email,'.$id,
-            'password' => 'nullable|confirmed|min:6',
+            'email' => 'required|email|max:255|unique:users,email,'.$id,            
         ]);
 
         // Assemble the updated attributes
@@ -167,9 +166,13 @@ class UserController extends Controller
         ];
 
         // Do we need to update the password as well?
-        if ($request->has('password')) {
-            $attributes['password'] = $request->get('password');
+        if ($request->has('password')  && $request->get('password') != null) {
+            $result = $this->validate($request, [
+				'password' => 'nullable|confirmed|min:8',
+			]);
+			$attributes['password'] = $request->get('password');
         }
+
 
         // Fetch the user object
         $user = $this->userRepository->findById($id);

@@ -33,11 +33,11 @@
                             </li>
                         </ul>
                         <div class="panel-footer">
-                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-default" rel="modal:open">
+                            <a href="{{ route('users.edit', $user->id) }}" class="btn" rel="modal:open">
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                 Edit
                             </a>
-                            <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger" data-method="delete" data-token="{{ csrf_token() }}">
+                            <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}">
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                 Delete
                             </a>

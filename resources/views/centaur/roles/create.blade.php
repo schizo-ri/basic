@@ -62,7 +62,55 @@
                 roles.delete
             </label>
         </div>
-        <input name="_token" value="{{ csrf_token() }}" type="hidden">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[employees.create]" value="1">
+                employees.create
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[employees.update]" value="1">
+                employees.update
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[employees.view]" value="1">
+                employees.view
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="permissions[employees.delete]" value="1">
+                employees.delete
+            </label>
+        </div>
+        <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="permissions[projects.create]" value="1">
+                    projects.create
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="permissions[projects.update]" value="1">
+                    projects.update
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="permissions[projects.view]" value="1">
+                    projects.view
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="permissions[projects.delete]" value="1">
+                    projects.delete
+                </label>
+            </div>
+        {{ csrf_field() }}
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Create">
     </fieldset>
     </form>

@@ -27,6 +27,7 @@
         "@fullcalendar/daygrid": "^4.3.0",
         "@fullcalendar/interaction": "^4.3.0",
         "@fullcalendar/list": "^4.3.0",
+        "@fullcalendar/moment": "^4.3.0",
         "@fullcalendar/resource-common": "^4.3.1",
         "jquery-modal": "^0.9.2",
         "moment": "^2.24.0"
