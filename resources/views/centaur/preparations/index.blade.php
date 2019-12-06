@@ -32,16 +32,16 @@
                         @foreach ($preparations as $preparation)
                             <form class="form_preparation" accept-charset="UTF-8" role="form" method="post" action="{{ route('preparations.update', $preparation->id) }}" >
                                 <span class="input_preparation">
-                                    <input  name="project_no" type="text" value="{{ $preparation->project_no }}" required autofocus />
+                                    <input  name="project_no" type="text" value="{{ $preparation->project_no }}" maxlength="10" required autofocus />
                                 </span>
                                 <span class="input_preparation">
-                                    <input class="input_preparation"  name="name" type="text" value="{{ $preparation->name }}" />
+                                    <input class="input_preparation"  name="name" type="text" value="{{ $preparation->name }}" maxlength="100" />
                                 </span>
                                 <span class="input_preparation">
-                                    <input class="input_preparation"  name="preparation" type="text" value="{{ $preparation->preparation }}" />
+                                    <input class="input_preparation"  name="preparation" type="text" value="{{ $preparation->preparation }}" maxlength="255" />
                                 </span>
                                 <span class="input_preparation">
-                                    <input class="input_preparation"  name="mechanical_processing" type="text" value="{{$preparation->mechanical_processing  }}" />
+                                    <input class="input_preparation"  name="mechanical_processing" type="text" value="{{$preparation->mechanical_processing  }}" maxlength="255" />
                                 </span>
                                 {{ csrf_field() }}
                                 {{ method_field('PUT') }}

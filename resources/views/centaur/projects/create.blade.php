@@ -6,12 +6,12 @@
 		<fieldset>
 			<div class="form-group {{ ($errors->has('project_no')) ? 'has-error' : '' }}">
 				<label>Broj projekta</label>
-				<input class="form-control"  name="project_no" type="text" value="{{ old('project_no') }}" required />
+				<input class="form-control"  name="project_no" type="text" value="{{ old('project_no') }}" maxlength="20" required />
 				{!! ($errors->has('project_no') ? $errors->first('project_no', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
 				<label>Naziv</label>
-				<input class="form-control"  name="name" type="text" value="{{ old('name') }}" required />
+				<input class="form-control"  name="name" type="text" value="{{ old('name') }}" required maxlength="191"  />
 				{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('start_date')) ? 'has-error' : '' }}">

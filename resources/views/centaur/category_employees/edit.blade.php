@@ -11,7 +11,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('description')) ? 'has-error' : '' }}">
 				<label>Opis</label>
-				<input class="form-control"  name="description" type="text" value="{{ $category->description }}" required />
+				<input class="form-control"  name="description" type="text" value="{{ $category->description }}" maxlength="255" required />
 				{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			{{ csrf_field() }}
