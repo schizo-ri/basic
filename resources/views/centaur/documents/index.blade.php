@@ -112,10 +112,6 @@
 	</main>
 </div>
 <script>
-$.getScript( '/../js/documents.js');
-$('.button_nav').click(function(){
-	window.history.replaceState({}, document.title, location['origin']+'/dashboard');
-	$.getScript( '/../js/nav_active.js');
-});
+	$.getScript( '/../js/documents.js');	
 </script>
 @stop

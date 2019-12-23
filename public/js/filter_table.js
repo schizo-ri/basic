@@ -40,3 +40,15 @@ function mySearch_col1() {
 	}
   }
 }
+
+function mySearchElement() {
+  $("#mySearchElement").keyup( function() {
+		var value = $(this).val().toLowerCase();
+		$(".user_card").filter(function() {
+			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+		});
+	});
+}
+
+
+

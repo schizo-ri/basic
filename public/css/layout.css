@@ -25,7 +25,10 @@ table.dataTable thead th, table.dataTable thead td{
 	border: none;	
 }
 
-
+.disable {
+	pointer-events: none;
+   	cursor: default;
+}
 .header_nav {
 	background: #071E57;
 	background-size: 100% auto;

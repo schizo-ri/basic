@@ -20,7 +20,7 @@
         <div class="col-3 float_l"><p class="info_statistic">{{ number_format($statistic, 0) . '%' }}</p><span class="info_statistic">READ THIS NOTICE</span></div>
         <div class="col-3 float_l"><p class="info_statistic">{{ number_format($statistic, 0) . '%' }}</p><span class="info_statistic">READ WHOLE NOTICE</span></div>
         <div class="col-3 float_l"><p class="info_statistic">{{ number_format($statistic, 0) . '%' }}</p><span class="info_statistic">READ AT LEAST 50%</span></div>
-        <div class="col-3 float_l"><a href="{{ route('notice_statistics.index', ['notice_id' => $notice->id] ) }}" rel="modal:open" ><p class="info_statistic"><img src="{{ URL::asset('icons/horiz_dots.png') }}" /></p><span class="info_statistic">DETAILED STATS</span></a></div>
+        <div class="col-3 float_l"><a href="{{ route('notice_statistics.index', ['notice_id' => $notice->id] ) }}" class="open_statistic" rel="modal:open" ><p class="info_statistic"><img src="{{ URL::asset('icons/horiz_dots.png') }}" /></p><span class="info_statistic">DETAILED STATS</span></a></div>
     </section>
     <h3 class="panel-title">{{ $notice->title }}</h3>
     @php
@@ -67,10 +67,7 @@
     </div>
 </div>
 <script>
-    $(function() {
-        $('.modal').addClass('modal_notice');
-        $('.modal').addClass('notice_show');
-       
+    $(function() {     
         var height = 0;
         var modal_height = $('.modal.modal_notice').height();
         var header_height =  $('.modal-header').height();
@@ -105,5 +102,9 @@
         }
     });
     
+    $('.open_statistic').click(function(){
+        $.getScript('/../node_modules/chart.js/dist/Chart.js');
+    });
 
+    
 </script>

@@ -25,6 +25,8 @@ return [
     'single_choice'			=> 'Jedan izbor',
     'multiple_choices'		=> 'Više izbora',
     'text_field'		    => 'Tekstualno polje',
-
+    'write_title'		    => 'Upiši naslov ovdje',
+    'select_type'		    => 'Odaberi tip polja',
+    
 ];
 ?>

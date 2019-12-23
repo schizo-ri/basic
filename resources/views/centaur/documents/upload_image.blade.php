@@ -3,14 +3,14 @@
         @if (! $profileIMG)
             <div class="form-group ">
                 <label>Name your content</label>
-                <input type='text' name="title" class="form-control" />
+                <input type='text' name="title" class="form-control" required />
             </div>
             <input type='hidden' name="users_interest" value="true"/>
         @else
             <input type='hidden' name="profileIMG" value="true"/>
         @endif
         <div class="form-group box__input">
-            <input class="box__file  {!! $profileIMG ? 'upload_profile_photo' : '' !!} " type="file" name="fileToUpload[]" id="file" data-multiple-caption="{count} files selected" {!! ! $profileIMG ? 'multiple' : '' !!} />
+            <input class="box__file  {!! $profileIMG ? 'upload_profile_photo' : '' !!} " type="file" name="fileToUpload[]" id="file" data-multiple-caption="{count} files selected" {!! ! $profileIMG ? 'multiple' : '' !!}  required/>
             <label class="label_file" for="file"><span class="img_plus"></span><span class="text_upload box__dragndrop">
                 Choose a file </span>
             </label>
@@ -104,7 +104,6 @@
                     success: function(data) {
                         $form.addClass( data.success == true ? 'is-success' : 'is-error' );
                         if (!data.success) $errorMsg.text(data.error);
-                        console.log("success");
                     },
                     error: function(xhr,textStatus,thrownError)  {
                         console.log(xhr + "\n" + textStatus + "\n" + thrownError);

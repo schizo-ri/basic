@@ -63,8 +63,8 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-	//	$.getScript( '/../js/collaps.js');
-	$('.collapsible').click(function(event){        
+	
+		$('.collapsible').click(function(event){        
        		$(this).siblings().toggle();
 		});
 		

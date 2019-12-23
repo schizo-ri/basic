@@ -5,15 +5,15 @@
     <form accept-charset="UTF-8" role="form" method="post" action="{{ route('users.update', $user->id) }}">
     <fieldset>
         <div class="form-group {{ ($errors->has('first_name')) ? 'has-error' : '' }}">
-            <input class="form-control" placeholder="{{ __('basic.f_name')}}" name="first_name" type="text" value="{{ $user->first_name }}" required />
+            <input class="form-control" placeholder="{{ __('basic.f_name')}}" name="first_name" type="text" maxlength="191" value="{{ $user->first_name }}" required />
             {!! ($errors->has('first_name') ? $errors->first('first_name', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <div class="form-group {{ ($errors->has('last_name')) ? 'has-error' : '' }}">
-            <input class="form-control" placeholder="{{ __('basic.l_name')}}" name="last_name" type="text" value="{{ $user->last_name }}" required />
+            <input class="form-control" placeholder="{{ __('basic.l_name')}}" name="last_name" type="text" maxlength="191" value="{{ $user->last_name }}" required />
             {!! ($errors->has('last_name') ? $errors->first('last_name', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
-            <input class="form-control" placeholder="E-mail" name="email" type="text" value="{{ $user->email }}" required >
+            <input class="form-control" placeholder="E-mail" name="email" type="text" value="{{ $user->email }}" maxlength="191" required >
             {!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <h5>{{ __('basic.roles')}}</h5>
@@ -38,7 +38,7 @@
         @endif
         <hr />
         <div class="form-group  {{ ($errors->has('password')) ? 'has-error' : '' }}">
-            <input class="form-control" placeholder="{{ __('basic.password')}}" name="password" type="password" value="" >
+            <input class="form-control" placeholder="{{ __('basic.password')}}" name="password" type="password" maxlength="191" >
             {!! ($errors->has('password') ? $errors->first('password', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <div class="form-group {{ ($errors->has('password_confirmation')) ? 'has-error' : '' }}">

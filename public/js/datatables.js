@@ -1,4 +1,11 @@
 $( function () {
+	var kolona = 0;
+	var sort = 'asc';
+
+	if ($('#table_id').hasClass('sort_1_asc')) {
+		kolona = 1;
+		sort = 'asc';
+	}	
 
 	$('table.display').DataTable( {
 		"language": {
@@ -6,7 +13,7 @@ $( function () {
 			"searchPlaceholder": "Search"
         },
 		"lengthMenu": [ 10, 25, 50, 75, 100 ],
-		"order": [[ 0, "asc" ]],
+		"order": [[ kolona, sort ]],
 		"pageLength": 50,
 		"paging": false,
 		"searching": true,

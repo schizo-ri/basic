@@ -73,30 +73,35 @@ class NoticeController extends Controller
             $employee_id = Sentinel::getUser()->employee->id;
             $to_department_id = implode(',', $request['to_department']);
 
-            $notice = $request['notice'];
-            $dom = new \DomDocument();
-            libxml_use_internal_errors(true);
-            $dom->loadHtml(mb_convert_encoding($notice, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-            $images = $dom->getElementsByTagName('img');
-            
-            foreach($images as $k => $img){
-                $data = $img->getAttribute('src');
-                $dataFilename = $img->getAttribute('data-filename');
-                list($type, $data) = explode(';', $data);
-                list(, $data)      = explode(',', $data);
-                $data = base64_decode($data);
-                if(!file_exists(public_path() . "/img/notices")){
-                    mkdir(public_path()."/img/notices");
-                }
-                $image_name= "/img/notices/" . $dataFilename;
-                $path = public_path() .  $image_name;
-               
-                file_put_contents($path, $data);
-                $img->removeAttribute('src');
-                $img->setAttribute('src', $image_name);
-            }
+            if($request['notice']) {
+                $notice = $request['notice'];
+                $dom = new \DomDocument();
+                libxml_use_internal_errors(true);
+                $dom->loadHtml(mb_convert_encoding($notice, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+                $images = $dom->getElementsByTagName('img');
                 
-            $notice = $dom->saveHTML();
+                foreach($images as $k => $img){
+                    $data = $img->getAttribute('src');
+                    $dataFilename = $img->getAttribute('data-filename');
+                    list($type, $data) = explode(';', $data);
+                    list(, $data)      = explode(',', $data);
+                    $data = base64_decode($data);
+                    if(!file_exists(public_path() . "/img/notices")){
+                        mkdir(public_path()."/img/notices");
+                    }
+                    $image_name= "/img/notices/" . $dataFilename;
+                    $path = public_path() .  $image_name;
+                   
+                    file_put_contents($path, $data);
+                    $img->removeAttribute('src');
+                    $img->setAttribute('src', $image_name);
+                }
+                    
+                $notice = $dom->saveHTML();
+            } else {
+                $notice = '';
+            }
+           
 
             if($request['schedule_time'] != null) {
                 $shedule = $request['schedule_date'] . ' ' . $request['schedule_time'];

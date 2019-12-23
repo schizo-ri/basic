@@ -3,7 +3,9 @@ $( function () {
     var div_width = $( '.preview_doc').width();
     var all_width = 115;
     
-
+    $('.notice_show').click(function(){
+        $.getScript( '/../js/open_modal.js');
+	});
     $( ".preview_doc > .thumbnail" ).each( (index, element) => {
         all_width += 115;
     });
@@ -82,7 +84,6 @@ $( function () {
     });
     
     $(function() {
-
 		 $('#index_table').css('height','fit-content');
     });
 });

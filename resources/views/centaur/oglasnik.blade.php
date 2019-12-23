@@ -12,45 +12,43 @@ use App\Models\Ads;
 	</aside>
 	<main class="col-lg-12 col-xl-8 index_main float_right">
 		<section>
-
-				<header class="header_ads">
-					<div class="filter">
-						<div class="float_left col-6 height100 position_rel padd_0">
-							<img class="img_search" src="{{ URL::asset('icons/search.png')  }}" alt="Search"/>
-							<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="{{ __('basic.search')}}" class="input_search" >
-						</div>
-						<div class="float_right col-6 height100  position_rel padd_tb_5">
-							<div class='add_ads float_right '>
-								@if(Sentinel::getUser()->employee)
-									<a class="btn btn-primary btn-new" href="{{ route('ads.create') }}"  title="{{ __('basic.add_ad')}}" rel="modal:open">
-										<i class="fas fa-plus"></i>
-									</a>
-								@endif
-							</div>
-							<span class="arrow_left1"></span>
-							<select id="filter" class="select_filter" >
-								<option>all</option>
-								@foreach($ads->unique('category_id') as $ad)
-									<option value="{{  $ad->category['name'] }}">{{ $ad->category['name'] }}</option>
-								@endforeach
-							</select>
-							@if (count($ads) >0)
-								<span class="arrow_left1"></span>
-								<select id="filter1" class="select_filter sort" >
-									<option class="sort_desc" value="{{ route('oglasnik', ['sort' => 'DESC'])}}">
-										@lang('basic.new_first')
-									</option>
-									<option class="sort_asc" value="{{ route('oglasnik', ['sort' => 'ASC']) }} ">
-										@lang('basic.old_first')
-									</option>
-								</select>
+			<header class="header_ads">
+				<div class="filter">
+					<div class="float_left col-6 height100 position_rel padd_0">
+						<img class="img_search" src="{{ URL::asset('icons/search.png')  }}" alt="Search"/>
+						<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="{{ __('basic.search')}}" class="input_search" >
+					</div>
+					<div class="float_right col-6 height100  position_rel padd_tb_5">
+						<div class='add_ads float_right '>
+							@if(Sentinel::getUser()->employee)
+								<a class="btn btn-primary btn-new" href="{{ route('ads.create') }}"  title="{{ __('basic.add_ad')}}" rel="modal:open">
+									<i class="fas fa-plus"></i>
+								</a>
 							@endif
 						</div>
+						<span class="arrow_left1"></span>
+						<select id="filter" class="select_filter" >
+							<option>all</option>
+							@foreach($ads->unique('category_id') as $ad)
+								<option value="{{  $ad->category['name'] }}">{{ $ad->category['name'] }}</option>
+							@endforeach
+						</select>
+						@if (count($ads) >0)
+							<span class="arrow_left1"></span>
+							<select id="filter1" class="select_filter sort" >
+								<option class="sort_desc" value="{{ route('oglasnik', ['sort' => 'DESC'])}}">
+									@lang('basic.new_first')
+								</option>
+								<option class="sort_asc" value="{{ route('oglasnik', ['sort' => 'ASC']) }} ">
+									@lang('basic.old_first')
+								</option>
+							</select>
+						@endif
 					</div>
-				</header>
-				<main class="main_ads">
+				</div>
+			</header>
+			<main class="main_ads">
 				@if(isset($ads) && count($ads) >0)
-					
 					@foreach($ads as $ad)
 						<?php
 							$path = 'storage/ads/' . $ad->id . '/';
@@ -127,7 +125,7 @@ use App\Models\Ads;
 						</p>
 					</div>
 				@endif
-				</main>
+			</main>
 			
 		</section>
 	</main>
@@ -152,7 +150,7 @@ use App\Models\Ads;
 
 		$.getScript( 'js/filter.js');
 		$.getScript( 'js/filter_dropdown.js');
-		$.getScript( 'js/ad.js');
+		$.getScript( 'js/ads.js');
 	});
 </script>
 @stop

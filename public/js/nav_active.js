@@ -1,9 +1,29 @@
 $('.button_nav').click(function(e){
+    window.history.replaceState({}, document.title, location['origin']+'/dashboard');
+    
+    $.ajaxSetup({
+        cache: true
+    });
+    
+    jQuery.cachedScript = function( url, options ) {
+        // Allow user to set any option except for dataType, cache, and url
+        options = $.extend( options || {}, {
+            dataType: "script",
+            cache: true,
+            url: url
+        });
+
+        // Return the jqXHR object so we can chain callbacks
+        return jQuery.ajax( options );
+    };
+
     if($( this).hasClass('not_employee')){
         e.preventDefault();
     } else {
-        var body_width = $('body').width();
-    
+
+        $.cachedScript( "js/nav_button_color.js" );
+        $.cachedScript("js/open_modal.js");
+        
         if($( this).hasClass('load_button')) {
             e.preventDefault();
             var page = $(this).attr('href');  
@@ -15,8 +35,7 @@ $('.button_nav').click(function(e){
             $('.button_nav').removeClass('active');
             $( this ).addClass('active');
 
-            $('.container').load( page + ' .container > div', function() {
-                
+            $('.container').load( page + ' .container > div', function() {                
                 if( $( '.button_nav.active' ).hasClass('event_button')) {
                     $.getScript( '/../js/event.js');
                     $.getScript( '/../js/load_calendar2.js');
@@ -25,17 +44,17 @@ $('.button_nav').click(function(e){
                     $('.placeholder').show();
                     $.getScript( '/../js/datatables.js');
                     $.getScript( '/../js/documents.js');
-                    $.getScript( '/../js/collaps.js');
                     $.getScript( '/../js/filter_table.js');
                     $.getScript( '/../restfulizer.js');
+                    $.cachedScript("js/collaps.js");
                 }
                 if( $( '.button_nav.active' ).hasClass('quest_button')) {
                     $('.placeholder').show();
                     $.getScript( '/../js/datatables.js');
                     $.getScript( '/../js/questionnaire.js');
-                    $.getScript( '/../js/collaps.js');
                     $.getScript( '/../js/filter_table.js');
                     $.getScript( '/../restfulizer.js');
+                    $.cachedScript("js/collaps.js");
                 }
                 if( $( '.button_nav.active' ).hasClass('post_button')) {
                     $.getScript( '/../js/posts.js');
@@ -54,8 +73,8 @@ $('.button_nav').click(function(e){
                 }
             });
         }
-        $( this).addClass('active');
-        $.getScript( "/../js/nav_button_color.js" );
+        
+        $( this).addClass('active');        
     }
 
     if(body_width < 800) {

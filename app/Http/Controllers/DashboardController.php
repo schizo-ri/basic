@@ -28,7 +28,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-
     //  $company = Company::where('url', CompanyController::getCompanyURL()['host'])->first()->db;
     //  dd($company);
 

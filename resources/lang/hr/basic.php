@@ -203,6 +203,11 @@ return [
 	'no_absence1'		=> 'Trenutno nema zahtjeva, klikni na gumb ',
 	'no_absence2'		=> ' da bi kreirao zahtjev.',
 	'no_image'			=> 'Podijelite svoje avanture sa svojim prijateljima i kolegama klikom na gumb ',
-	'more'	=>	'još',
+	'more'				=>	'još',
+	'schedule_notice'	=> 'Da biste odgodili objavu obavijesti potrebno je unijeti željeni datum.',	
+	'notice_required'	=> 'Obavijest je prazna, obavezan upis!',	
+	
+	
+	
 ];
 ?>

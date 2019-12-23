@@ -73,7 +73,10 @@
 	</div>
 </form>
 <script >
+	
+  
 	$(function(){
 		$.getScript( 'js/questionnaire_show.js');
 	});
+	
 </script>

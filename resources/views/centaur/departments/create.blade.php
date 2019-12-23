@@ -11,12 +11,12 @@
 			</select>
 		</div>
 		<div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
-			<input class="form-control" placeholder="{{ __('basic.name')}}" name="name" type="text" value="{{ old('name') }}" required />
+			<input class="form-control" placeholder="{{ __('basic.name')}}" name="name" type="text" maxlength="50" value="{{ old('name') }}" required />
 			{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
 			<label>E-mail</label>
-			<input name="email" type="email" class="form-control" value="{{ old('email') }}" >
+			<input name="email" type="email" class="form-control" value="{{ old('email') }}" maxlength="50" >
 			{!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group" id="razina" >
@@ -44,11 +44,8 @@
 </div>
 <script>
 $(document).ready(function(){
-
     $('#level').change(function(){
-
 		var level = $(this).val();
-		console.log("create " + level);
 		if(level == 1 || level == 2){
 			$('#level1').show();
 			$('#select_level').prop('required',true);

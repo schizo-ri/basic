@@ -59,7 +59,4 @@
                 </div>
             </main>
     @endif
-    <script>
-        $.getScript( '/../js/open_admin.js');
-    </script>
 @stop

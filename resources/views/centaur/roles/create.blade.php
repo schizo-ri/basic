@@ -4,11 +4,11 @@
 <div class="modal-body">
     <form accept-charset="UTF-8" role="form" method="post" action="{{ route('roles.store') }}">
         <div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
-        <input class="form-control" placeholder="{{ __('basic.name')}}" name="name" type="text" value="{{ old('name') }}" required />
+        <input class="form-control" placeholder="{{ __('basic.name')}}" name="name" maxlength="191" type="text" value="{{ old('name') }}" required />
             {!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <div class="form-group {{ ($errors->has('slug')) ? 'has-error' : '' }}">
-        <input class="form-control" placeholder="{{ __('absence.mark') }}" name="slug" type="text" value="{{ old('slug') }}" required />
+        <input class="form-control" placeholder="{{ __('absence.mark') }}" name="slug" maxlength="191" type="text" value="{{ old('slug') }}" required />
             {!! ($errors->has('slug') ? $errors->first('slug', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <h5>@lang('basic.permissions'):</h5>

@@ -30,10 +30,10 @@ $('nav.navbar a').on("click",function(e){
 });
 
 $('.side_navbar a.link3').on("click",function(e){ 
-    console.log('event');
+
 //	e.preventDefault(); // cancel click
 	var page = $(this).attr('href'); 
-	console.log(page);
+
 //	$('.container').load(page + ' .container .row .calender_view', function()
 //	{ $.getScript("node_modules/moment/moment.js");
 //	$.getScript("node_modules/pg-calendar/dist/js/pignose.calendar.min.js");

@@ -10,14 +10,14 @@
     $notices = NoticeController::getNotice('DESC');
 
     $notices_user = collect();
-    foreach ($notices->take(5) as $notice) {
+  
+    foreach ($notices as $notice) {
         $notice_dep = explode(',', $notice->to_department);
 
         if(array_intersect($user_department, $notice_dep) ) {
             $notices_user->prepend( $notice );
         }
     }
-
 @endphp
 <section class="col-xs-12 col-sm-4 float_left noticeboard">
     <div>
@@ -33,7 +33,7 @@
     </h2>
     @if(count($notices_user)>0)
         @foreach ($notices_user->take(5) as $notice)
-            <a href="{{ route('notices.show', $notice->id) }}" rel="modal:open">    
+            <a class="notice_show"  href="{{ route('notices.show', $notice->id) }}" rel="modal:open">
                 <article class="notice">
                     <div class="col-2 float_left">
                         <span class="notice_time">{{ date('H:i',strtotime($notice->created_at))}}<span>{{ date('l',strtotime($notice->created_at))}}</span></span>
@@ -68,10 +68,16 @@
     @endif
     </div>
 </section>
-<script> 
+<script>   
+    $.getScript( '/../js/questionnaire_show.js');
+  
+    $('.notice_show').click(function(){
+        $.getScript( '/../js/open_modal.js');
+        console.log('notice_show click');
+	});
     $(function(){
         var aside_height = $('.index_page.index_documents aside').height();
         $('section.noticeboard').height(aside_height);
-        $('.placeholder').show();
+        $('.placeholder').show();        
     });
 </script>

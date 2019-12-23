@@ -44,7 +44,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->userRepository->createModel()->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->get();
+        $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->get();
 		$employees = Employee::get();
 		$departmentRoles = DepartmentRole::get();
 		$works = Work::get();
@@ -128,7 +128,11 @@ class UserController extends Controller
     {
         // The user detail page has not been included for the sake of brevity.
         // Change this to point to the appropriate view for your project.
-        return redirect()->route('users.index');
+        // return redirect()->route('users.index');
+
+        $user = $this->userRepository->createModel()->with('roles')->get();
+        
+        return view('Centaur::users.show', ['user' => $user]);
     }
 
     /**
@@ -377,4 +381,5 @@ class UserController extends Controller
             return redirect()->back();
         }
     }
+
 }

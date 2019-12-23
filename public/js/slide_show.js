@@ -9,7 +9,6 @@ $(function(){
     showSlides(slideIndex);
 
     function showSlides(n) {
-        console.log("showSlides: " + n);
         var slides = $(".mySlides");
         var slides_info = $(".mySlides_info");
 
@@ -55,7 +54,6 @@ $(function(){
             }
         });
         
-        console.log("currentSlide " + currentSlide);
         showSlides(currentSlide += n);
     }
 

@@ -1,5 +1,5 @@
 	$(function() {
-		$('.modal').addClass('modal_questionnaire');
+
 		var modal_height = $('.modal.modal_questionnaire').height();
 		var header_height =  $('.modal-header').height();
 		var body_width = $('body').width();
@@ -55,7 +55,7 @@
 		var body_height =  modal_height - header_height - 80;
 		$('.modal-body').height(body_height);
 	});
-	$.getScript( '/../js/collaps.js');
+
 	/*
 
 	$("#ev_employee_id1").change(function(){

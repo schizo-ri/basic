@@ -1,4 +1,3 @@
-
 $('.select_filter.sort').change(function () {
     $('main.main_ads').load($(this).val() + ' main.main_ads article');
 });
@@ -17,3 +16,7 @@ if(body_width > 450) {
 
     $('.ad.panel .ad_content').height(max_height);
 }
+
+$('.notice_show').click(function(){
+    $.getScript( '/../js/open_modal.js');
+});

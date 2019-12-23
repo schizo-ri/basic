@@ -23,17 +23,17 @@
 			</div>
 			<div class="form-group {{ ($errors->has('b_place')) ? 'has-error' : '' }}">
 				<label>@lang('basic.b_place')</label>
-				<input class="form-control"  name="b_place" type="text" value="{{ old('b_place') }}" required />
+				<input class="form-control"  name="b_place" type="text" value="{{ old('b_place') }}" required maxlength="50" />
 				{!! ($errors->has('b_place') ? $errors->first('b_place', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('father_name')) ? 'has-error' : '' }}">
 				<label>@lang('basic.father_name')</label>
-				<input class="form-control" name="father_name" type="text" value="{{ old('father_name') }}"  />
+				<input class="form-control" name="father_name" type="text" value="{{ old('father_name') }}" maxlength="20" />
 				{!! ($errors->has('father_name') ? $errors->first('father_name', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('mather_name')) ? 'has-error' : '' }}">
 				<label>@lang('basic.mather_name')</label>
-				<input class="form-control" name="mather_name" type="text" value="{{ old('mather_name') }}"  />
+				<input class="form-control" name="mather_name" type="text" value="{{ old('mather_name') }}" maxlength="20" />
 				{!! ($errors->has('mather_name') ? $errors->first('mather_name', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('oib')) ? 'has-error' : '' }}">
@@ -53,12 +53,12 @@
 			</div>
 			<div class="form-group {{ ($errors->has('mobile')) ? 'has-error' : '' }}">
 				<label>@lang('basic.mobile')</label>
-				<input class="form-control" name="mobile" type="text" value="{{ old('mobile') }}"  />
+				<input class="form-control" name="mobile" type="text" maxlength="50" value="{{ old('mobile') }}"  />
 				{!! ($errors->has('mobile') ? $errors->first('mobile', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('priv_mobile')) ? 'has-error' : '' }}">
 				<label>@lang('basic.priv_mobile')</label>
-				<input class="form-control" name="priv_mobile" type="text" value="{{ old('priv_mobile') }}" />
+				<input class="form-control" name="priv_mobile" type="text" maxlength="50" value="{{ old('priv_mobile') }}" />
 				{!! ($errors->has('priv_mobile') ? $errors->first('priv_mobile', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
@@ -68,32 +68,32 @@
 			</div>
 			<div class="form-group {{ ($errors->has('priv_email')) ? 'has-error' : '' }}">
 				<label>@lang('basic.priv_email')</label>
-				<input class="form-control" name="priv_email" type="email" value="{{ old('priv_email') }}"  />
+				<input class="form-control" name="priv_email" type="email" maxlength="50" value="{{ old('priv_email') }}"  />
 				{!! ($errors->has('priv_email') ? $errors->first('priv_email', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('prebiv_adresa')) ? 'has-error' : '' }}">
 				<label>Adresa prebivališta</label>
-				<input class="form-control"name="prebiv_adresa" type="text" value="{{ old('prebiv_adresa') }}"  />
+				<input class="form-control"name="prebiv_adresa" type="text" maxlength="50" value="{{ old('prebiv_adresa') }}"  />
 				{!! ($errors->has('prebiv_adresa') ? $errors->first('prebiv_adresa', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('prebiv_grad')) ? 'has-error' : '' }}">
 				<label>Grad prebivališta</label>
-				<input class="form-control" name="prebiv_grad" type="text" value="{{ old('prebiv_grad') }}"  />
+				<input class="form-control" name="prebiv_grad" type="text "maxlength="50" value="{{ old('prebiv_grad') }}"  />
 				{!! ($errors->has('prebiv_grad') ? $errors->first('prebiv_grad', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('borav_adresa')) ? 'has-error' : '' }}">
 				<label>Adresa boravišta</label>
-				<input class="form-control" name="borav_adresa" type="text" value="{{ old('borav_adresa') }}"  />
+				<input class="form-control" name="borav_adresa" type="text" maxlength="50" value="{{ old('borav_adresa') }}"  />
 				{!! ($errors->has('borav_adresa') ? $errors->first('borav_adresa', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('borav_grad')) ? 'has-error' : '' }}">
 				<label>Grad boravišta</label>
-				<input class="form-control" name="borav_grad" type="text" value="{{ old('borav_grad') }}"  />
+				<input class="form-control" name="borav_grad" type="text" maxlength="50" value="{{ old('borav_grad') }}"  />
 				{!! ($errors->has('borav_grad') ? $errors->first('borav_grad', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}">
 				<label>@lang('basic.metier')</label>
-				<input name="title" type="text" class="form-control" maxlength="150" value="{{ old('title') }}"  required >
+				<input name="title" type="text" class="form-control" maxlength="50" value="{{ old('title') }}"  required >
 				{!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('qualifications')) ? 'has-error' : '' }}">
@@ -167,7 +167,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('comment'))  ? 'has-error' : '' }}" style="padding-top: 10px">
 				<label>@lang('basic.comment') </label>
-				<textarea class="form-control" name="comment"></textarea>
+				<textarea class="form-control" maxlength="65535" name="comment"></textarea>
 				{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			{{ csrf_field() }}

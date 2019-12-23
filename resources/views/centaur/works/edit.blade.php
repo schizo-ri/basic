@@ -17,12 +17,12 @@
 			</div>
 			<div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
 				<label>@lang('basic.name')</label>
-				<input class="form-control" placeholder="{{ __('basic.name')}}" name="name" type="text" value="{{ $work->name }}" required />
+				<input class="form-control" placeholder="{{ __('basic.name')}}" name="name" maxlength="255" type="text" value="{{ $work->name }}" required />
 				{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('job_description')) ? 'has-error' : '' }}">
 				<label>@lang('basic.job_description')</label>
-				<textarea name="job_description" type="text" class="form-control" rows="5" >{{ $work->job_description }}</textarea>
+				<textarea name="job_description" type="text" class="form-control" rows="5" maxlength="255" >{{ $work->job_description }}</textarea>
 				{!! ($errors->has('job_description') ? $errors->first('job_description', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">

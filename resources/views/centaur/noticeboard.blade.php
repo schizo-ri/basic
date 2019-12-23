@@ -24,7 +24,7 @@
 						<div class="float_right col-6 height100  position_rel padd_tb_17">
 							<div class='add_notice float_right'>
 								@if(Sentinel::getUser()->employee && Sentinel::getUser()->hasAccess(['notices.create']) || in_array('notices.create', $permission_dep) )
-									<a class="add_new" href="{{ route('notices.create') }}" rel="modal:open" >
+									<a class="add_new create_notice" href="{{ route('notices.create') }}" rel="modal:open" >
 										<i style="font-size:11px" class="fa">&#xf067;</i>@lang('basic.add_notice')
 									</a>
 								@endif
@@ -34,13 +34,8 @@
 					</div>
 				</header>
 				<section class="section_notice bg_white">
-					<div class="notice_filter">
-					<!--	<img class="img_filter" src="{{ URL::asset('icons/filter.png') }}" alt="Filter"/></a>
-						<select id="filter" class="select_filter" >
-							<option value="ASC">Oldest first</option>
-							<option  value="DESC">Latest first</option>
-						</select>-->
-
+					<img class="img_search" src="{{ URL::asset('icons/filter.png')  }}" alt="Filter"/>
+					<div class="notice_filter">						
 						<span class="arrow_left1"></span>
 						<select id="filter1" class="select_filter sort" >
 							<option class="sort_desc" value="{{ route('noticeboard', ['sort' => 'DESC'])}}">
@@ -50,7 +45,6 @@
 								@lang('basic.old_first')
 							</option>
 						</select>
-
 					</div>
 					<div class="notices">
 						@if(count($notices)>0)
@@ -81,7 +75,7 @@
 												<i class="far fa-trash-alt"></i>
 											</a>
 										@endif
-										<a href="{{ route('notices.show', $notice->id) }}" class="notice_link panel" rel="modal:open">    
+										<a href="{{ route('notices.show', $notice->id) }}" class="notice_link panel notice_show" rel="modal:open">    
 											<header class="ad_header">
 												@if($notice_img)
 													<img class="" src="{{ URL::asset('storage/notice/' . $notice->id . '/' . end($notice_img)) }}" alt="Profile image" title="Notice image" />
@@ -119,7 +113,7 @@
 												<i class="far fa-trash-alt"></i>
 											</a>
 										@endif
-										<a href="{{ route('notices.show', $notice->id) }}" class="col-3 notice_link panel" rel="modal:open"> 
+										<a href="{{ route('notices.show', $notice->id) }}" class="col-3 notice_link panel notice_show" rel="modal:open"> 
 											<header class="ad_header">
 												@if($notice_img)
 													<img class="" src="{{ URL::asset('storage/notice/' . $notice->id . '/' . end($notice_img)) }}" alt="Profile image" title="Notice image"  />
@@ -168,12 +162,6 @@
 		$.getScript( '/../js/filter.js');
 		$.getScript( '/../js/filter_dropdown.js');
 		$.getScript( '/../js/set_height_notice.js');
-		$.getScript( '/../js/load_calendar2.js');
-		$.getScript( '/../js/event.js');
-		$('.button_nav').click(function(){
-			window.history.replaceState({}, document.title, location['origin']+'/dashboard');
-			$.getScript( '/../js/nav_active.js');
-		});
 		$('.select_filter.sort').change(function () {
 			$('.section_notice .notices').load($(this).val() + ' .section_notice .notices .notice_link ');
 		});

@@ -1,7 +1,7 @@
 
     var ctx = $('#myChart');
 
-    var dataArr = JSON.parse($('.dataArr').text());
+    var dataArr = $('.dataArr').text();   
    
     var myChart = new Chart(ctx, {
         type: 'doughnut',

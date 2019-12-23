@@ -1,3 +1,9 @@
+<!-- Jquery validation -->
+<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/jquery.validate.js') }}"></script>
+<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/additional-methods.js') }}"></script>
+@if (App::isLocale('hr'))
+	<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/localization/messages_hr.js') }}"></script>
+@endif
 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('notices.update', $notice->id ) }}" enctype="multipart/form-data"  >
     <div class="modal-header">
         <a class="link_back" rel="modal:close">
@@ -73,9 +79,22 @@
     </div>
 </form>
 <script>
+     $( "form" ).validate({
+		rules: {
+			to_department: {
+				required: true
+			},
+			title: {
+				required: true,
+				maxlength: 100
+            },
+            notice: {
+				required: true,
+				maxlength: 16777215
+			}
+		}
+    });
     $(function() {
-        $('.modal').addClass('modal_notice');
-        
         var height = 0;
         var body_height = 0;
         var modal_height = $('.modal.modal_notice').height();

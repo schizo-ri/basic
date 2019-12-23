@@ -173,13 +173,10 @@ $i = 0;
 	</main>
 </div>
 <script>
+	   
 	$( function () {
 		$.getScript( '/../js/user_profile.js');
 		$('.profile_img a.danger').removeAttr('hidden');
-	});
-	$('.button_nav').click(function(){
-		window.history.replaceState({}, document.title, location['origin']+'/dashboard');
-		$.getScript( '/../js/nav_active.js');
 	});
 	$('.chat').click(function(){
 		$.getScript( '/../js/open_modal.js');

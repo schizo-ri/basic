@@ -97,13 +97,11 @@
     </div>
     </div>
 </div>
-<span hidden class="dataArr">{{ $dataArr }}</span>
+<span hidden class="dataArr">{{ json_encode($dataArr) }}</span>
 <script>
     $(function() {
         $.getScript( '/../js/chart.js');
-        $('.modal').addClass('modal_notice');
-        $('.modal').addClass('notice_show');
-        $('.modal').addClass('statistic_index');
+        $.getScript( '/../js/set_height_notice.js');
        
     });
 </script>

@@ -89,10 +89,5 @@
         $('.calender_view').pignoseCalendar({
         });
     });
-    $('.button_nav').click(function(){
-		window.history.replaceState({}, document.title, location['origin']+'/dashboard');
-		$.getScript( '/../js/nav_active.js');
-	});
-	
 </script>
 @endif

@@ -14,16 +14,15 @@
 	text-align: center;
 	padding: 20px 0;
 }
-.modal.modal_notice, .modal.modal_questionnaire  {
+.modal.modal_notice, .modal.modal_questionnaire, .modal_user  {
 	position: fixed;
     float: right;
 	left:auto;
 	width: 54.79%;
 	max-width: 54.79%;
-	padding: 0 !important;
+	padding: 0;
 	overflow: auto;
-	scrollbar-width: thin;
-	
+	scrollbar-width: thin;	
 }
 .modal.slide {
 	width: 1060px;
@@ -35,6 +34,19 @@
 	padding: 0  !important;
 	overflow: hidden;
 }
+
+.modal.modal_user {
+	padding: 0;
+
+}
+
+.modal.modal_user>header  {
+    background: #051847;
+    border-radius: 3px 3px 0px 0px;
+    padding: 32px;
+    padding-left: 45px;
+}
+
 .modal {
 	right: 0;
 	bottom: 0;
@@ -42,7 +54,7 @@
 	-webkit-overflow-scrolling:touch;
 	color: #898989; 
 	text-transform: initial;
-	padding:20px 35px 25px 35px !important; 
+	padding:20px 35px 25px 35px; 
 	height: auto; 
 	max-height: 100%; 
 	overflow: auto;
@@ -719,8 +731,6 @@ option::selection {
 	color: #2B2B2B;
 }
 
-
-
 .modal.modal_questionnaire .ev_employee_id  {
 	border: 1px solid #dee2e6;
 }
@@ -980,7 +990,7 @@ option::selection {
 }
 
 .modal.modal_notice .close-modal, .modal.modal_questionnaire .close-modal  {
-	display: none;
+	/*display: none;*/
 }
 
 .modal.modal_notice .modal-header {
@@ -1107,8 +1117,7 @@ option::selection {
 .modal.modal_notice.notice_show .modal-body {
 	overflow: auto;
 	scrollbar-width: thin;
-	padding: 0;
-	
+	padding: 25px 50px 40px 40px;	
 }
 
 .modal.modal_notice.notice_show .modal-body.statistic_body {

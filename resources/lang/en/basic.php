@@ -204,6 +204,7 @@ return [
 	'no_absence2'		=> ' to create new request.',
 	'no_image'			=> 'Share your adventures with your friends and coleagues by clicking on button ',
 	'more'	=>	'more',
-	
+	'schedule_notice'   => 'To schedule the posting of the notification, the date must be entered.',
+	'notice_required'	=> 'The notice is blank, field is required!',	
 ];	
 ?>

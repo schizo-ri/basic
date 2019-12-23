@@ -25,6 +25,7 @@ return [
     'single_choice'			=> 'Single choice',
     'multiple_choices'		=> 'Multiple choices',
     'text_field'		    => 'Text field',
-    
+    'write_title'		    => 'Write your title here',
+    'select_type'		    => 'Select field type',
 ];
 ?>

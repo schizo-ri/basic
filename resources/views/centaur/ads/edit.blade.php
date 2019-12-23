@@ -23,17 +23,17 @@
 					</div>
 					<div class="form-group {{ ($errors->has('subject'))  ? 'has-error' : '' }}">
 						<label>@lang('basic.subject')</label>
-						<input name="subject" type="text" class="form-control" value="{{ $ad->subject }}">
+						<input name="subject" type="text" class="form-control" maxlength="150" value="{{ $ad->subject }}">
 						{!! ($errors->has('subject') ? $errors->first('subject', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group {{ ($errors->has('description'))  ? 'has-error' : '' }}">
 						<label>@lang('basic.description'):</label>
-						<textarea id="summernote" name="description" >{!! $ad->description !!}</textarea>
+						<textarea id="summernote" name="description" maxlength="65535" >{!! $ad->description !!}</textarea>
 						{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					<div class="form-group {{ ($errors->has('price'))  ? 'has-error' : '' }}">
 						<label>@lang('basic.price')</label>
-						<input name="price" type="text" class="form-control" value="{{ $ad->price }}">
+						<input name="price" type="text" class="form-control" maxlength="100"  value="{{ $ad->price }}">
 						{!! ($errors->has('price') ? $errors->first('price', '<p class="text-danger">:message</p>') : '') !!}
 					</div>
 					{{ csrf_field() }}

@@ -59,7 +59,7 @@
 						<span class="change_view"></span>
 						<span class="change_view2"></span>
 						@if(Sentinel::getUser()->hasAccess(["questionnaires.create"]) || in_array("questionnaires.create", $permission_dep) )
-							<a class="add_new" href="{{ route('questionnaires.create') }}" rel="modal:open"  title="{{ __('questionnaire.add_questionnaire')}}"><i style="font-size:11px" class="fa">&#xf067;</i></a>
+							<a class="add_new new_questionnaire" href="{{ route('questionnaires.create') }}" rel="modal:open"  title="{{ __('questionnaire.add_questionnaire')}}"><i style="font-size:11px" class="fa">&#xf067;</i></a>
 						@endif
 					</div>
 					</header>
@@ -106,10 +106,10 @@
 											@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.update']) || in_array('questionnaires.update', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.delete']) || in_array('questionnaires.delete', $permission_dep))
 												<button class="collapsible option_dots float_r"></button>
 												@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep))
-												<a href="{{ action('QuestionnaireController@sendEmail', ['id' => $questionnaire->id ] ) }}" class="btn-edit sendEmail" title="{{ __('basic.sendEmail')}}"><i class="far fa-envelope"></i></a>
+													<a href="{{ action('QuestionnaireController@sendEmail', ['id' => $questionnaire->id ] ) }}" class="btn-edit sendEmail" title="{{ __('basic.sendEmail')}}"><i class="far fa-envelope"></i></a>
 												@endif 
 												@if(Sentinel::getUser()->hasAccess(['questionnaires.update']) || in_array('questionnaires.update', $permission_dep))
-													<a href="{{ route('questionnaires.edit', $questionnaire->id) }}" class="btn-edit" rel="modal:open" title="{{ __('basic.edit')}}" ><i class="far fa-edit"></i></a>
+													<a href="{{ route('questionnaires.edit', $questionnaire->id) }}" class="btn-edit new_questionnaire" rel="modal:open" title="{{ __('basic.edit')}}" ><i class="far fa-edit"></i></a>
 												@endif 
 												@if(Sentinel::getUser()->hasAccess(['questionnaires.delete']) || in_array('questionnaires.delete', $permission_dep))
 													<a href="{{ route('questionnaires.destroy', $questionnaire->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
@@ -160,6 +160,6 @@
 	</main>
 </div>
 <script>
-//	$.getScript( '/../js/questionnaire.js');
+$.getScript( "/../js/questionnaire.js" );
 </script>
 @stop

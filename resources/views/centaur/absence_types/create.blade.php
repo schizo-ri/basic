@@ -5,7 +5,7 @@
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('absence_types.store') }}">
 		<div class="form-group {{ ($errors->has('name'))  ? 'has-error' : '' }}">
 			<label>@lang('basic.name')</label>
-			<input name="name" type="text" class="form-control" value="{{ old('name') }}" required >
+			<input name="name" type="text" class="form-control" value="{{ old('name') }}" maxlength="50" required >
 			{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group {{ ($errors->has('mark'))  ? 'has-error' : '' }}">

@@ -1,15 +1,12 @@
-
 $(function() {
     $('.collapsible').click(function(event){ 
-        console.log("collapsible1");
-        $(this).siblings().toggle();
-
+      //  $(this).siblings().toggle();
         
-  /*      if($(this).siblings().is(":visible")){ 
+       if($(this).siblings().is(":visible")){ 
             $(this).siblings().css('display','none');
         } else {
             $(this).siblings().css('display','inline-block');
-        }*/
+        }
         //      $(this).next('.content').show();        
     });
     $('.index_page table.dataTable .content').mouseleave(function(){

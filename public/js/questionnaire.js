@@ -1,4 +1,5 @@
 $(function() {
+    
     var body_width = $('body').width();
     if(body_width > 450) {
         var index_height = $('.index_main.main_documents').height();
@@ -82,8 +83,7 @@ $(function() {
         $( ".change_view" ).toggle();
         $( ".change_view2" ).toggle();
         $('.table-responsive.first_view').toggle();
-        $('.table-responsive.second_view').toggle();
-        console.log( ".change_view");
+        $('.table-responsive.second_view').toggle();        
     });
     $( ".change_view2" ).click(function() {
         $( ".change_view" ).toggle();

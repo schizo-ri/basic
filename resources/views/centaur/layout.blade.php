@@ -24,6 +24,7 @@
 		<link rel="stylesheet" href="{{ URL::asset('/../dataTables/datatables.css') }}"/>
 		<!-- JS modal -->
 		<link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
+
 		<!-- CSS -->
 		<link rel="stylesheet" href="{{ URL::asset('/../css/layout.css') }}"/>
 		<link rel="stylesheet" href="{{ URL::asset('/../css/welcome.css') }}"/>
@@ -36,6 +37,7 @@
 		<!--Jquery -->
 		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
 		<script src="{{ URL::asset('/../node_modules/chart.js/dist/Chart.js') }}"></script>
+		
 		@stack('stylesheet')
 		<?php 
 			use App\Http\Controllers\PostController;
@@ -179,13 +181,15 @@
 		<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
 		
 		<!-- Scripts -->
+		
 	    <script src="{{URL::asset('/../js/nav_active.js') }}"></script>
 		<script src="{{URL::asset('/../js/open_admin.js') }}"></script>
 		<script src="{{URL::asset('/../js/efc_toggle.js') }}"></script>
 		<script src="{{URL::asset('/../js/set_height.js') }}"></script>
 		<script src="{{ URL::asset('/../js/collaps.js') }}"></script>
 		<script src="{{URL::asset('/../js/calendar.js') }}"></script>
-
+		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
+		
 		<!-- Pignoise calendar -->
 		<script src="{{ URL::asset('/../node_modules/moment/moment.js') }}"></script>
 		<script src="{{ URL::asset('/../node_modules/pg-calendar/dist/js/pignose.calendar.min.js') }}"></script>
@@ -197,8 +201,7 @@
 		<!-- Summernote js -->
 		<link href="{{ URL::asset('/../node_modules/summernote/summernote-lite.css') }}" rel="stylesheet"/>
 		<script src="{{ URL::asset('/../node_modules/summernote/summernote-lite.min.js') }}" ></script>
-		<!-- Modal js -->
-		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
+	
 		
 		@if(session()->has('modal'))
 			<script>

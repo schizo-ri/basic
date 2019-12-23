@@ -1,3 +1,6 @@
+$(function(){
+    $('.admin_pages>li>a').first().click();
+});
 
 $('.admin_pages>li>a').click(function(e) {
     var url = $(this).attr('href');
@@ -8,14 +11,11 @@ $('.admin_pages>li>a').click(function(e) {
             var msg = "Sorry but there was an error: ";
             $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
         }
-       // $('#admin_page').show();
-       
         $.getScript( 'js/datatables.js');
-    });
-  
+        $.getScript( 'js/filter_table.js');
+    });  
     return false
 });
-$('.admin_pages>li>a').first().click();
 
 var body_width = $('body').width();
 if(body_width < 450) {
@@ -29,8 +29,3 @@ if(body_width < 450) {
         $('main.admin_main').hide();
     });
 } 
-
-$('.button_nav').click(function(){
-	window.history.replaceState({}, document.title, location['origin']+'/dashboard');
-	$.getScript( '/../js/nav_active.js');
-});
