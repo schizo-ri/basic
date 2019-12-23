@@ -21,7 +21,10 @@
 		<!--Jquery -->
         <script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
         <script src="{{ URL::asset('/../node_modules/moment/moment.js') }}"></script>
-        
+
+        <!-- Font Awesome -->
+        <script src="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/js/all.js') }}"></script>
+        <link rel="stylesheet" href="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/css/all.css') }}" type="text/css" />
        <!-- CSS modal -->
         <link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.css') }}" type="text/css" />
         <link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}" type="text/css" />
@@ -93,8 +96,7 @@
         <!-- Jquery modal -->
         <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.js') }}"></script>
         <!-- Modal js -->
-        <script src="{{URL::asset('/../js/open_modal.js') }}"></script>
-        
+        <script src="{{URL::asset('/../js/open_modal.js') }}"></script>        
         
 		@stack('script')
     </body>

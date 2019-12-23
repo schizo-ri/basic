@@ -7,7 +7,36 @@ use Illuminate\Database\Eloquent\Model;
 class Preparation extends Model
 {
     protected $fillable = [
-        'project_no','name','preparation','mechanical_processing'];
+        'project_no','name','project_manager','delivery','designed_by','preparation','mechanical_processing'];
+
+	/*
+	* The Eloquent preparation model name
+	* 
+	* @var string
+	*/
+	protected static $userModel = 'App\User'; 
+	
+	/*
+	* Returns the user relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function manager()
+	{
+		return $this->belongsTo(static::$userModel,'project_manager');
+	}
+
+	/*
+	* Returns the user relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function designed()
+	{
+		return $this->belongsTo(static::$userModel,'designed_by');
+	}
 
     /*
 	* Save Preparation

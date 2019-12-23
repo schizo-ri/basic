@@ -18,4 +18,9 @@ $( document ).ready(function() {
     fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
     };
    
+    $('.equipment_lists_open').click(function(){
+        $.modal.defaults = {
+            modalClass: "modal equipment_lists"
+        }
+    });
 });

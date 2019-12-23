@@ -191,13 +191,16 @@ class DashboardController extends Controller
                         $title = $project->project_no . ' | ' . $project->name . ' | ' . $count .  $lj  . ' | ' . 'kat: ' .   $category_list;
                         $description = $project->name;
                         $classNames = $project->project_no; 
-                        if( date('Y-m-d',strtotime("-1 day", strtotime($end_date))) > $project->end_date) {
-                            $classNames .= " red_border";
-                        }
+                        
+
                         
                         $resourceIds = '"' . 'Rok: ' . date('d.m.Y',strtotime($project->end_date )) .'",';
                         if($projEmpls->first()) {
                             $resourceIds .= '"' . 'Završetak izvođenja: ' . date('d.m.Y', strtotime($projEmpls->first()->date)) . ' ",';
+
+                            if( $projEmpls->first()->date > $project->end_date ) {
+                                $classNames .= " red_border";
+                            }
                         }
                         $resourceIds .= '"' . '~~~~~~~~~~~~~~~~~~~~~~~~~' .'",';
                         foreach ($projEmpls->unique('employee_id') as $projEmpl) {

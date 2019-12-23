@@ -53,8 +53,14 @@ Route::resource('category_employees', 'CategoryEmployeeController');
 // Publish
 Route::resource('publishes', 'PublishController');
 
-// Publish
+// Preparations
 Route::resource('preparations', 'PreparationController');
+
+// PreparationRecord
+Route::resource('preparation_records', 'PreparationRecordController');
+
+// EquipmentList
+Route::resource('equipment_lists', 'EquipmentListController');
 
 // Project Employees
 Route::resource('project_employees', 'ProjectEmployeeController');
@@ -74,3 +80,5 @@ Route::get('dashboard', function () {
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
 Route::get('live/{date?}', ['as' => 'live', 'uses' => 'DashboardController@live']);
+
+Route::post('import', 'EquipmentListController@import')->name('import'); 

@@ -67,7 +67,7 @@ class UserController extends Controller
         // Validate the form data
         $result = $this->validate($request, [
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|confirmed|min:4',
         ]);
 
         // Assemble registration credentials and attributes
@@ -157,7 +157,7 @@ class UserController extends Controller
         $result = $this->validate($request, [
             'email' => 'required|email|max:255|unique:users,email,'.$id,            
         ]);
-
+       
         // Assemble the updated attributes
         $attributes = [
             'email' => trim($request->get('email')),
@@ -168,14 +168,14 @@ class UserController extends Controller
         // Do we need to update the password as well?
         if ($request->has('password')  && $request->get('password') != null) {
             $result = $this->validate($request, [
-				'password' => 'nullable|confirmed|min:8',
+				'password' => 'nullable|confirmed|min:4',
 			]);
 			$attributes['password'] = $request->get('password');
         }
 
-
         // Fetch the user object
         $user = $this->userRepository->findById($id);
+      
         if (!$user) {
             if ($request->expectsJson()) {
                 return response()->json("Invalid user.", 422);
@@ -183,7 +183,7 @@ class UserController extends Controller
             session()->flash('error', 'Invalid user.');
             return redirect()->back()->withInput();
         }
-
+        
         // Update the user
         $user = $this->userRepository->update($user, $attributes);
 
@@ -195,7 +195,7 @@ class UserController extends Controller
         if ($request->expectsJson()) {
             return response()->json(['user' => $user], 200);
         }
-
+       
         session()->flash('success', "{$user->email} has been updated.");
         return redirect()->route('users.index');
     }

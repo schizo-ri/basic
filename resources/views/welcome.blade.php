@@ -27,19 +27,10 @@
 					@endif
                 @endauth
 			</div>
-			<div class="content">
+			<div class="row">
 			<div class="title m-b-md">
-				RASPORED
+					RASPORED
 			</div>
-		<!--	<div class="links">
-				<a href="#">Link1</a>
-				<a href="#">Link2</a>
-				<a href="#">Link3</a>
-				<a href="#">Link4</a>
-				<a href="#">Link5</a>
-			</div>-->
-		</div>
-        </div>
 		
 		@stack('script')
     </body>

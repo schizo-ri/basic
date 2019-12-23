@@ -15,7 +15,7 @@
 
 <div class="row calendar_main">   
     @if (Sentinel::check())    
-        <main class="col-6" >
+        <main class="col-lg-6 col-md-12" >
             <div id='calendar'></div>
             <div>
                 <h2 class="toCanvas" style="display: none">To Canvas</h2>
@@ -26,7 +26,7 @@
             <div hidden class="dataArr">{!! json_encode($dataArr) !!}</div>
             <div hidden class="dataArrResource">{!! json_encode($dataArrResource) !!}</div>
         </main>    
-        <aside class="col-6">
+        <aside class="col-lg-6 col-md-12">
             <span class="publish_btn pull_right" >Publish</span>
             <form id="fupForm" enctype="multipart/form-data">
 
@@ -94,8 +94,7 @@
                 <a href="{{ route('projects.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" title="Dodaj novi projekt" /></a>
             </div>
             <div class="list">
-                <div class="projects_list first"> 
-                    
+                <div class="projects_list first">
                     <h3>Raspored za dan {{ date('d.m.Y', strtotime($date)) }}</h3>
                     <div>
                         @foreach ($projects as $project)
@@ -141,8 +140,7 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="projects_list second"> 
-                    
+                <div class="projects_list second">
                     <h3>Raspored za dan {{ date('d.m.Y', strtotime($tommorow)) }}</h3>
                     <div>
                         @foreach ($projects as $project)
