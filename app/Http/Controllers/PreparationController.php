@@ -53,23 +53,25 @@ class PreparationController extends Controller
     public function store(Request $request)
     {
         $data = array(
-            'name' => $request['name'],
-            'project_no'  => $request['project_no'],
-            'project_manager'  => $request['project_manager'],
-            'designed_by'  => $request['designed_by'],
-            'preparation'  => $request['preparation'],
-            'mechanical_processing'  => $request['mechanical_processing'],
-            'delivery'  => $request['delivery'],
+            'name'                  => $request['name'],
+            'project_no'            => $request['project_no'],
+            'project_manager'       => $request['project_manager'],
+            'designed_by'           => $request['designed_by'],
+            'preparation'           => $request['preparation'],
+            'mechanical_processing' => $request['mechanical_processing'],
+            'marks_documentation'   => $request['marks_documentation'],
+            'delivery'              => $request['delivery'],
         );
       
         $preparation = new Preparation();
         $preparation->savePreparation($data);
         
-        if( $request['preparation'] || $request['mechanical_processing']) {
+        if( $request['preparation'] || $request['mechanical_processing'] || $request['marks_documentation']) {
             $data = array(
                 'preparation_id'  => $preparation->id,
                 'preparation'  => $request['preparation'],
                 'mechanical_processing'  => $request['mechanical_processing'],
+                'marks_documentation'   => $request['marks_documentation'],
                 'date'  => date('Y-m-d'),
             );
           
@@ -125,7 +127,7 @@ class PreparationController extends Controller
     public function update(Request $request, $id)
     {
         $preparation = Preparation::find($id);
-        
+      
         $data = array(
             'name' => $request['name'],
             'project_no'  => $request['project_no'],
@@ -133,17 +135,19 @@ class PreparationController extends Controller
             'designed_by'  => $request['designed_by'],
             'preparation'  => $request['preparation'],
             'mechanical_processing'  => $request['mechanical_processing'],
+            'marks_documentation'   => $request['marks_documentation'],
             'delivery'  => $request['delivery'],
         );
         $preparation->updatePreparation($data);
 
         $today = date('Y-m-d');
 
-        if( $request['preparation'] || $request['mechanical_processing']) {            
+        if( $request['preparation'] || $request['mechanical_processing'] || $request['marks_documentation']) {            
             $data = array(
                 'preparation_id'  => $preparation->id,
                 'preparation'  => $request['preparation'],
                 'mechanical_processing'  => $request['mechanical_processing'],
+                'marks_documentation'   => $request['marks_documentation'],
                 'date'  => date('Y-m-d'),
             );
             
@@ -183,6 +187,31 @@ class PreparationController extends Controller
         }
 
         session()->flash('success', "Podaci su obrisani");
+        
+        return redirect()->back();
+    }
+
+    public function close_preparation ($id) 
+    {
+        $preparation = Preparation::find($id);
+
+        if ($preparation->active == 1) {
+            $active = 0;
+        } else {
+            $active = 1;
+        }
+
+        $data = array(
+			'active' => $active		
+        );
+
+        $preparation->updatePreparation($data);
+
+        if ($preparation->active == 0) {
+            session()->flash('success', "Podaci su spremljeni, projekt je neaktivan.");
+        } else {
+            session()->flash('success', "Podaci su spremljeni, projekt je aktivan.");
+        }
         
         return redirect()->back();
     }

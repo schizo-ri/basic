@@ -26,10 +26,12 @@ class EquipmentMail extends Mailable
      *
      * @return void
      */
-    public function __construct(Preparation $preparation)
+    public function __construct(Preparation $preparation, $before_all, $after_all)
     {
         $this->preparation = $preparation;
-    }
+        $this->after_all = $after_all;
+        $this->before_all = $before_all;
+    } 
 
     /**
      * Build the message.
@@ -46,6 +48,8 @@ class EquipmentMail extends Mailable
                     ->subject( 'Obnovljen popis opreme - ' . $this->preparation->project_no )
                     ->with([
 						'preparation' => $this->preparation,
+						'before_all' => $this->before_all,
+						'after_all' => $this->after_all,
                         'link' => $link
 					]);
     }

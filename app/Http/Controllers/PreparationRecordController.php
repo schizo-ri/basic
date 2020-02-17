@@ -40,6 +40,7 @@ class PreparationRecordController extends Controller
             'preparation_id'    => $request['preparation_id'],
             'preparation'       => $request['preparation'],
             'mechanical_processing'  => $request['mechanical_processing'],
+            'marks_documentation'   => $request['marks_documentation'],
             'date'              => date('Y-m-d'),
         );
       
@@ -86,7 +87,8 @@ class PreparationRecordController extends Controller
 
         $data = array(
             'preparation'       => $request['preparation'],
-            'mechanical_processing'  => $request['mechanical_processing']
+            'mechanical_processing'  => $request['mechanical_processing'],
+            'marks_documentation'   => $request['marks_documentation'],
         );
 
         $preparationRecord->updatePreparationRecord($data);

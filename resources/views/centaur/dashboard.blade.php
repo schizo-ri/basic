@@ -13,7 +13,7 @@
 
 @section('content')
 
-<div class="row calendar_main">   
+<div class="row calendar_main">
     @if (Sentinel::check())    
         <main class="col-lg-6 col-md-12" >
             <div id='calendar'></div>
@@ -55,11 +55,20 @@
                             url: 'saveImg',
                             data: {'imgCanvas':imgdata,
                                     '_token':  $('meta[name="csrf-token"]').attr('content') },
+                            beforeSend: function(){
+                                // Show image container
+                                $("#loader").show();
+                            },
                             success: function(data){
                                 
                               alert('Podaci su objavljeni!');
                             },
+                            complete:function(data){
+                                // Hide image container
+                                $("#loader").hide();
+                            }
                         });
+                       
                     });
                 });
             </script>
@@ -188,9 +197,15 @@
                 </div>
             </div>
         </aside>
+        
+      
     @else
         Nisi prijavljen
     @endif
+</div>
+<!-- Image loader -->
+<div id='loader' style='display: none;'>
+    <img src='{{ URL::asset('icons/ajax-loader1.gif') }}' width='100px' height='100px'>
 </div>
  <!-- Fullcalendar js -->
  <script src="{{ URL::asset('/../js/fullCalendar.js') }}"></script>

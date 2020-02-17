@@ -195,4 +195,26 @@ class ProjectController extends Controller
 		return $date;
        // return redirect()->back();
     }
+
+    public function close_project ($id) 
+    {
+        $project = Project::find($id);
+        if ($project->active == 1) {
+            $active = 0;
+        } else {
+            $active = 1;
+        }
+
+        $data = array(
+			'active' => $active		
+        );
+
+        $project->updateProject($data);
+        if ($project->active == 0) {
+            session()->flash('success', "Podaci su spremljeni, projekt je neaktivan.");
+        } else {
+            session()->flash('success', "Podaci su spremljeni, projekt je aktivan.");
+        }
+        return redirect()->back();
+    }
 }

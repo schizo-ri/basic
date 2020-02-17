@@ -48,3 +48,17 @@ function mySearch_preparation() {
     });
 }
 
+function mySearchList () {
+    $('#mySearchList').keyup(function() {
+        var trazi = $( this ).val().toLowerCase();
+
+        $('.row_preparation_text').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(trazi) > -1)
+        });
+    });
+    $('.clearable__clear').click(function(){
+        $('#mySearchList').val('');
+        $('.row_preparation_text').show();
+    });
+    
+}

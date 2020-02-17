@@ -5,6 +5,7 @@
 @section('content')
     <div class="page-header">
         <div class='btn-toolbar pull-right'>
+            <span class="show_inactive">Prikaži neaktivne</span>
             <label class="filter_empl">
                 <input type="search" placeholder="Traži..." onkeyup="mySearchTable()" id="mySearchTbl">
                 <i class="clearable__clear">&times;</i>
@@ -16,7 +17,7 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="table-responsive">
-                <table class="table table-hover" id="index_table">
+                <table class="table table-hover table_projects" id="index_table">
                     <thead>
                         <tr>
                             <th>Broj</th>
@@ -35,7 +36,7 @@
                         @php
                             $categories = explode(',', $project->categories);
                         @endphp
-                            <tr>
+                            <tr class="{!! $project->active == 1 ? 'active' : 'inactive' !!}">
                                 <td>{{ $project->project_no }}</td>
                                 <td>{{ $project->name }}</td>
                                 <td>{{ $project->start_date  }}</td>
@@ -55,6 +56,14 @@
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                         Edit
                                     </a>
+                                    <a href="{{ action('ProjectController@close_project', $project->id) }}" class="btn" class="action_confirm">
+                                        <i class="fas fa-check"></i>
+                                        @if ($project->active == 1)
+                                            Završi
+                                        @else
+                                            Vrati
+                                        @endif                                       
+                                    </a>
                                     <a href="{{ route('projects.destroy', $project->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}">
                                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         Delete
@@ -69,5 +78,18 @@
     </div>
 <script>	
     $.getScript('/../js/filter.js');
+
+    $('.table_projects .inactive').hide();
+
+    $('.show_inactive').click(function(){
+        $('.table_projects .inactive').toggle();
+        $('.table_projects .active').toggle();
+        if($(this).text() == 'Prikaži neaktivne') {
+            $(this).text('Prikaži aktivne');
+        } else {
+            $(this).text('Prikaži neaktivne');
+        }
+    });
+
 </script>
 @stop

@@ -38,6 +38,9 @@
         <span class="input_preparation mechanical_input">
             <input class=""  name="mechanical_processing" type="text" value="{{ old('mechanical_processing') }}"  placeholder="Zapis mehaničke obrade"  />
         </span>
+        <span class="input_preparation mechanical_input">
+            <input class=""  name="marks_documentation" type="text" value="{{ old('marks_documentation') }}"  placeholder="Zapis oznaka i dokumentacije"  />
+        </span>
     @endif
     @if (Sentinel::inRole('moderator') || Sentinel::inRole('administrator'))
         <span class="input_preparation for_file">

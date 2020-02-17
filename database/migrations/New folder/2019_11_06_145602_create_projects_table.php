@@ -23,6 +23,7 @@ class CreateProjectsTable extends Migration
             $table->date('start_date')->comment('planirani početak radova');
             $table->date('end_date')->comment('planirani početak radova');
             $table->string('categories',50)->nullable();
+            $table->integer('active')->value(1);
             $table->timestamps();
         });
     }

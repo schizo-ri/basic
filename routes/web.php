@@ -59,15 +59,23 @@ Route::resource('preparations', 'PreparationController');
 // PreparationRecord
 Route::resource('preparation_records', 'PreparationRecordController');
 
+// ListUpdate
+Route::resource('list_updates', 'ListUpdateController');
+
 // EquipmentList
 Route::resource('equipment_lists', 'EquipmentListController');
+Route::post('addItem', 'EquipmentListController@addItem');
 
 // Project Employees
 Route::resource('project_employees', 'ProjectEmployeeController');
 Route::get('save/{employee?}/{date?}/{project?}/{all_days?}', ['as' => 'save', 'uses' => 'ProjectEmployeeController@save']);
 Route::get('brisi/{project?}', ['as' => 'brisi', 'uses' => 'ProjectEmployeeController@brisi']);
 Route::get('uskladi/{project?}', ['as' => 'uskladi', 'uses' => 'ProjectEmployeeController@uskladi']);
+
 Route::get('url_project_update/{project?}/{date?}', ['as' => 'url_project_update', 'uses' => 'ProjectController@url_project_update']);
+Route::get('close_project/{project?}', ['as' => 'close_project', 'uses' => 'ProjectController@close_project']);
+Route::get('close_preparation/{preparation?}', ['as' => 'close_preparation', 'uses' => 'PreparationController@close_preparation']);
+
 Route::post('saveImg', ['as' => 'saveImg', 'uses' => 'PublishController@saveImg']);
 
 // Dashboard
@@ -82,3 +90,11 @@ Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@ind
 Route::get('live/{date?}', ['as' => 'live', 'uses' => 'DashboardController@live']);
 
 Route::post('import', 'EquipmentListController@import')->name('import'); 
+Route::post('import_with_replace', 'EquipmentListController@import_with_replace')->name('import_with_replace'); 
+Route::post('importSiemens', 'EquipmentListController@importSiemens')->name('importSiemens'); 
+
+Route::get('export/', 'EquipmentListController@export')->name('export');
+Route::get('exportList/', 'EquipmentListController@exportList')->name('export');
+Route::post('replaceItem', ['as' => 'replaceItem', 'uses' => 'EquipmentListController@replaceItem']);
+Route::get('multiReplaceItem', ['as' => 'multiReplaceItem', 'uses' => 'EquipmentListController@multiReplaceItem']);
+Route::post('multiReplaceStore', ['as' => 'multiReplaceStore', 'uses' => 'EquipmentListController@multiReplaceStore']);

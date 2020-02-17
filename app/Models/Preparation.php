@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Preparation extends Model
 {
     protected $fillable = [
-        'project_no','name','project_manager','delivery','designed_by','preparation','mechanical_processing'];
+        'project_no','name','project_manager','delivery','designed_by','preparation','mechanical_processing','marks_documentation','active'];
 
 	/*
 	* The Eloquent preparation model name

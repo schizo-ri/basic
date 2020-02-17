@@ -8,25 +8,20 @@
         <input class=""  name="name" type="text" value="{{ $preparation->name }}" maxlength="100"  {!! Sentinel::inRole('subscriber') ? 'readonly style="border:none"' : '' !!}  />
     </span>
     <span class="input_preparation delivery_input">
-        @if (!Sentinel::inRole('subscriber'))
-            <input class="" name="delivery" type="date" value="{{ $preparation->delivery }}" />
-        @endif
+        <input class="" name="delivery" type="date" {!! Sentinel::inRole('subscriber') ? 'readonly ' : '' !!} value="{{ $preparation->delivery }}" />
     </span>
     <span class="input_preparation manager_input">
-        @if (!Sentinel::inRole('subscriber'))
-        <select name="project_manager" class="project_manager" required>
+        <select name="project_manager" class="project_manager" required {!! Sentinel::inRole('subscriber') ? 'readonly ' : ''  !!}>
             <option disabled selected >Voditelj projekta</option>
             @foreach ($users as $user)
                 @if ($user->first_name && $user->last_name)
-                    <option value="{{ $user->id }}"  {!! $user->id  == $preparation->project_manager ? 'selected' : '' !!}>{{ $user->first_name . ' ' .  $user->last_name}}</option>
-                @endif                    
+                    <option value="{{ $user->id }}" {!! $user->id  == $preparation->project_manager ? 'selected' : '' !!}>{{ $user->first_name . ' ' .  $user->last_name}}</option>
+                @endif  
             @endforeach
         </select>
-        @endif
     </span>
     <span class="input_preparation designed_input">
-        @if (!Sentinel::inRole('subscriber'))
-        <select name="designed_by" class="designed_by" required>
+        <select name="designed_by" class="designed_by" required {!! Sentinel::inRole('subscriber') ? 'readonly ' : '' !!}>
             <option disabled selected >Projektant</option>
             @foreach ($users as $user)
             @if ($user->first_name && $user->last_name)
@@ -34,20 +29,21 @@
                 @endif                    
             @endforeach
         </select>
-        @endif
     </span>
+    <span class="input_preparation date_input"></span>
     <span class="input_preparation preparation_input">
-        @if (! Sentinel::inRole('moderator'))
-            <input class=""  name="preparation" type="text" value="{!! $preparationRecord_today ? $preparationRecord_today->preparation : '' !!}" maxlength="255" placeholder="Priprema..."  {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!}  />
-        @endif
+        <textarea name="preparation" cols="30" rows="3" placeholder="Priprema..." {!! Sentinel::inRole('moderator') ? 'readonly ' : '' !!} >{!! $preparationRecord_today ? $preparationRecord_today->preparation : '' !!}</textarea>
     </span>
     <span class="input_preparation mechanical_input">
-        @if (! Sentinel::inRole('moderator'))
-            <input class=""  name="mechanical_processing" type="text" value="{!! $preparationRecord_today ? $preparationRecord_today->mechanical_processing : '' !!}" placeholder="Mehanička obrada..."  maxlength="255" {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!} />
-        @endif    
+        <textarea name="mechanical_processing" cols="30" rows="3" placeholder="Mehanička obrada ..." {!! Sentinel::inRole('moderator') ? 'readonly' : '' !!}  >{!!  $preparationRecord_today ? $preparationRecord_today->mechanical_processing : '' !!}</textarea>
+    </span>
+    <span class="input_preparation marks_input">
+        <textarea name="marks_documentation" cols="30" rows="3" placeholder="Oznake i dokumentacija ..." {!! Sentinel::inRole('moderator') ? 'readonly' : '' !!} >{!! $preparationRecord_today ? $preparationRecord_today->marks_documentation : '' !!}</textarea>
     </span>
     {{ csrf_field() }}
     {{ method_field('PUT') }}
+    <span class="input_preparation equipment_input"></span>
+    <span class="input_preparation history_input"></span>
     <span class="input_preparation option_input">
         <input class="btn btn_spremi btn-preparation" type="submit" value="&#10004;" title="Ispravi">
         <a class="btn btn-cancel" >

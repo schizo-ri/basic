@@ -18,7 +18,7 @@ class EquipmentImport implements ToModel, WithHeadingRow
     {
         ini_set('memory_limit','-1');
       
-        $count = 0;
+        $count = null;
 
         if(request()->preparation_id ) {
             $id = request()->preparation_id;           
@@ -31,9 +31,10 @@ class EquipmentImport implements ToModel, WithHeadingRow
            'list_count'  => $count,
            'preparation_id'  => $id,
            'product_number' => $row['product_number'], 
+           'mark' => $row['mark'], 
            'name'    => $row['name'], 
            'unit' => $row['unit'], 
-           'quantity' => $row['quantity']
+           'quantity' => $row['quantity']          
         ]);
     }
 }
