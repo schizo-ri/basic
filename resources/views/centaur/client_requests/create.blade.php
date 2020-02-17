@@ -57,7 +57,7 @@
 							{!! ($errors->has('db') ? $errors->first('db', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<div class="form-group input_url {{ ($errors->has('url')) ? 'has-error' : '' }}">
-							<input class="form-control" placeholder="URL [http://icom-user.duplico.hr/]" name="url" type="url" value="{{ old('url') }}" >
+							<input class="form-control" placeholder="URL [icom-user.duplico.hr]" name="url" type="text" value="{{ old('url') }}" >
 							{!! ($errors->has('url') ? $errors->first('url', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<input name="_token" value="{{ csrf_token() }}" type="hidden">

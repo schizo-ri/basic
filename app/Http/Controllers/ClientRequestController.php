@@ -143,10 +143,10 @@ class ClientRequestController extends Controller
 		
 		$client_request->updateClientRequest($data_request);
 		
-        if($request['db'] && $request['url'] ) {
+    /*     if($request['db'] && $request['url'] ) {
             DatabaseController::create($request['db'], $request['url'], $client->id);
         }
-
+ */
 		session()->flash('success', "Podaci su ispravljeni");
 		
         return redirect()->route('client_requests.index');
