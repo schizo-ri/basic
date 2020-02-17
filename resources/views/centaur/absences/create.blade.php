@@ -2,11 +2,11 @@
 	<h3 class="panel-title">@lang('absence.add_absence')</h3>
 </div>
 <div class="modal-body">
-	<form class="absence" role="form" method="post" name="myForm" accept-charset="UTF-8" action="{{ route('absences.store') }}" onsubmit="return validateForm()">
+	<form class="absence" role="form" method="post" name="myForm" accept-charset="UTF-8" action="{{ route('absences.store') }}" >
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.employee')</label>
-				<select class="form-control" name="employee_id[]" value="{{ old('employee_id') }}" id="sel1" size="10" autofocus multiple required >
+				<select class="form-control" name="employee_id[]" value="{{ old('employee_id') }}" size="10" autofocus multiple required >
 					<option value="" disabled></option>
 					@foreach ($employees as $employee)
 						<option name="employee_id" value="{{ $employee->id }}">{{ $employee->user['last_name']  . ' ' . $employee->user['first_name'] }}</option>
@@ -22,7 +22,7 @@
 		@endif
 		<div class="form-group {{ ($errors->has('type')) ? 'has-error' : '' }}">
 			<label>@lang('absence.abs_type')</label>
-			<select class="form-control"  name="type" value="{{ old('type') }}" id="request_type" required>
+			<select class="form-control"  name="type" value="{{ old('type') }}" id="request_type" required >
 				<option disabled selected value></option>
 				@foreach($absenceTypes as $absenceType)
 					<option value="{{ $absenceType->mark }}" {!! $type ==  $absenceType->mark ? 'selected' : '' !!}>{{ $absenceType->name}}</option>
@@ -30,7 +30,6 @@
 			</select> 
 			{!! ($errors->has('type') ? $errors->first('type', '<p class="text-danger">:message</p>') : '') !!}	
 		</div>
-
 		<div class="form-group datum date1 float_l  {{ ($errors->has('start_date')) ? 'has-error' : '' }}" >
 			<label>@lang('absence.start_date')</label>
 			<input name="start_date" id="start_date" class="form-control" type="date" value="{!!  old('start_date') ? old('start_date') : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
@@ -73,7 +72,8 @@
 		<a href="#" rel="modal:close" class="btn-close">@lang('basic.cancel')</a>
 	</form>
 </div>
-<script  >
+<span hidden class="locale" >{{ App::getLocale() }}</span>
+<script>
 	$( document ).ready(function() {
 		$( "#request_type" ).change(function() {
 			if($(this).val() == 'IZL') {
@@ -94,4 +94,5 @@
 		
 		});
 	});
+	$.getScript( '/../js/validate.js');
 </script>

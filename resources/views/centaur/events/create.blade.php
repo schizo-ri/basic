@@ -21,7 +21,7 @@
 		</div>
 		<label class="time_label">@lang('basic.time')</label>
 		<div class="form-group time {{ ($errors->has('time1')) ? 'has-error' : '' }}">
-			<input name="time1" class="form-control" type="time" value="{!! isset($time1 ) ? $time1 : '08:00' !!}" required />
+			<input name="time1" class="form-control" type="time" value="{!! isset($time ) ? $time : '08:00' !!}" required />
 			{!! ($errors->has('time1') ? $errors->first('time1', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group span">

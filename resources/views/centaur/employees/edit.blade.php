@@ -1,4 +1,3 @@
-
 <?php
 	$stazY = 0;
 	$stazM = 0;
@@ -10,9 +9,7 @@
 		$stazM = $staz[1];
 		$stazD = $staz[2];
 	}
-?>
-
-			
+?>	
 <div class="modal-header">
 	<h3 class="panel-title">@lang('basic.edit_employee')</h3>
 </div>
@@ -22,10 +19,7 @@
 			<div class="form-group {{ ($errors->has('user_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.user')</label>
 				<select class="form-control" name="user_id" required>
-					<option value="" disabled selected ></option>
-					@foreach($users as $user)
-						<option value="{{ $user->id}}" {!! $user->id == $employee->user_id ? 'selected' : '' !!} >{{ $user->first_name . ' ' . $user->last_name }}</option>
-					@endforeach
+					<option value="{{ $employee->user_id }}" >{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}</option>
 				</select>
 				{!! ($errors->has('user_id') ? $errors->first('user_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
@@ -125,7 +119,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('work_id'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.work')</label>
-				<select class="form-control" name="work_id" id="sel1" value="{{ $employee->work_id }}" required >
+				<select class="form-control" name="work_id" value="{{ $employee->work_id }}" required >
 					<option selected="selected" value=""></option>
 					@foreach($works as $work)
 						<option name="work_id" value="{{ $work->id }}" {!! $employee->work_id == $work->id ? 'selected' : '' !!} >{{ $work->department['name'] . ' - '. $work->name }}</option>
@@ -135,7 +129,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('superior_id'))  ? 'has-error' : '' }}">
 				<span><b>Nadređeni djelatnik:</b></span>
-				<select class="form-control" name="superior_id" id="sel1" >
+				<select class="form-control" name="superior_id"  >
 					<option selected value="0"></option>
 					@foreach($employees as $djelatnik)
 						<option name="superior_id" value="{{ $djelatnik->id }}" {!! $employee->superior_id == $djelatnik->id ? 'selected' : '' !!} >{{ $djelatnik->user['last_name'] . ' '. $djelatnik->user['first_name'] }}</option>
@@ -186,8 +180,11 @@
 			</div>
 			{{ csrf_field() }}
 			{{ method_field('PUT') }}
-			<input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('basic.edit')}}">
+			<input class="btn-submit" type="submit" value="{{ __('basic.edit')}}">
 		</fieldset>
 	</form>
 </div>
-        
+<span hidden class="locale" >{{ App::getLocale() }}</span>
+<script>
+    $.getScript( '/../js/validate.js');
+</script>

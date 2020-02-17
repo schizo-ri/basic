@@ -27,18 +27,17 @@ return [
     'status_requests' => 'To see you request status and see all request visit',
     'all_requests_page' => 'all requests page',
     'q_thanks' => 'Thank you for participating in this survey, considered finishing another one if available.',
-    'survey_without_rating'        => 'You cannot save a survey without a rating',
-    'survey_not_complete'        => 'The survey is not complete, all questions are required. Repeat the survey and answer any questions',
+    'survey_without_rating'    => 'You cannot save a survey without a rating',
+    'survey_not_complete'     => 'The survey is not complete, all questions are required. Repeat the survey and answer any questions',
     'reg_complete'     => 'Registration complete. Please check your email for activation instructions.',
     'acc_created'     => 'Your account has been created!',
     'reg_complete_login'     => 'Registration complete.  You may now log in!',
     'activation_instructions'     => 'Account Activation Instructions',
     'instructions'     => 'New instructions will be sent to that email address if it is associated with a inactive account.',
     'method_exist'     => 'A emailing with that model and method already exists.',
-    
-    
-    
-   
+    'no_valid_email'     => 'E-mail address is not valid.',
+    'not_allowed'     => 'Exe, bin document entry is not allowed',
+	'malfunction'     => 'You must enter a comment to report a vehicle malfunction',
     
     
     ];

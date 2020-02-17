@@ -23,7 +23,7 @@
 		<!-- Datatables -->
 		<link rel="stylesheet" href="{{ URL::asset('/../dataTables/datatables.css') }}"/>
 		<!-- JS modal -->
-		<link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
+		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
 
 		<!-- CSS -->
 		<link rel="stylesheet" href="{{ URL::asset('/../css/layout.css') }}"/>
@@ -34,6 +34,7 @@
 		<link rel="stylesheet" href="{{ URL::asset('/../css/index.css') }}"/>
 		<link rel="stylesheet" href="{{ URL::asset('/../css/calendar.css') }}"/>
 		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/>
+		
 		<!--Jquery -->
 		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
 		<script src="{{ URL::asset('/../node_modules/chart.js/dist/Chart.js') }}"></script>
@@ -45,6 +46,7 @@
 			use App\Http\Controllers\CompanyController;
 			$permission_dep = DashboardController::getDepartmentPermission();
 			$moduli = CompanyController::getModules();
+		
 		?>
     </head>
     <body>
@@ -53,35 +55,33 @@
 				<header class="header_nav">
 					<nav class="nav_top col-md-12 topnav">
 						<a class="" href="{{ route('dashboard') }}">
-
 							@if(file_exists('../public/storage/company_img/logo.png'))
 								<img src="{{ URL::asset('storage/company_img/logo.png')}}" alt="company_logo"/>
 							@else 
 								<img src="{{ URL::asset('icons/intranet_logo.png')}}" alt="company_logo"/>
 							@endif
 						</a>
-							<ul class="nav_ul float_right">
-								@if (Sentinel::check())
-									@if(Sentinel::inRole('administrator'))
+						<ul class="nav_ul float_right">
+							@if (Sentinel::check())
+								@if(Sentinel::inRole('administrator'))
 									<li><a id="open-admin" href="{{ route('admin_panel') }}" title="{{ __('basic.open_admin')}}"  >
 										<img class="img_button" src="{{ URL::asset('icons/flash.png') }}" alt="messages" title="{{ __('basic.open_admin')}}" /></a>
 									</li>
-									@endif
-									<li><a href="{{ action('UserController@edit_user', Sentinel::getUser('id')) }}" class="{!! !Sentinel::getUser()->employee ? 'isDisabled' : '' !!}" title="{{ __('basic.user_data')}}" >
-										<img class="img_button" src="{{ URL::asset('icons/settings.png') }}" alt="messages"/></a>
-									</li>
-									<li><a href="{{ route('auth.logout') }}" title="{{ __('welcome.logout')}}" >
-										<img class="img_button" src="{{ URL::asset('icons/logout.png') }}" alt="messages"/>
-									</a></li>
-									<li class="icon"><a href="javascript:void(0);" class="icon" onclick="myTopNav()">
-										<i class="fa fa-bars" style="color: #A7BBEE"></i>
-									</a></li>
-								@else
-									<li><a href="{{ route('auth.login.form') }}">@lang('welcome.login')</a></li>
-									<li><a href="{{ route('auth.register.form') }}">@lang('welcome.register')</a></li>
 								@endif
-								
-							</ul>
+								<li><a href="{{ action('UserController@edit_user', Sentinel::getUser('id')) }}" class="{!! !Sentinel::getUser()->employee ? 'isDisabled' : '' !!}" title="{{ __('basic.user_data')}}" >
+									<img class="img_button" src="{{ URL::asset('icons/settings.png') }}" alt="messages"/></a>
+								</li>
+								<li><a href="{{ route('auth.logout') }}" title="{{ __('welcome.logout')}}" >
+									<img class="img_button" src="{{ URL::asset('icons/logout.png') }}" alt="messages"/>
+								</a></li>
+								<li class="icon"><a href="javascript:void(0);" class="icon" onclick="myTopNav()">
+									<i class="fa fa-bars" style="color: #A7BBEE"></i>
+								</a></li>
+							@else
+								<li><a href="{{ route('auth.login.form') }}">@lang('welcome.login')</a></li>
+								<li><a href="{{ route('auth.register.form') }}">@lang('welcome.register')</a></li>
+							@endif
+						</ul>
 					</nav>
 					<section class="padd_0">
 						<div class="topnav col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 padd_0 float_left" id="myTopnav">
@@ -132,13 +132,28 @@
 							@endif
 							@if(Sentinel::getUser()->hasAccess(['ads.view']) || in_array('ads.view', $permission_dep) )
 								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
-									<a class="button_nav load_button ads_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('oglasnik') }}">
+									<a class="button_nav load_button ads_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('oglasnik') }}">
 										<span class="button_nav_img ads"></span>
 										<p>Njuškalo</p>	
 									</a>	
 								</div>
 							@endif
-							
+						{{-- 	@if(Sentinel::getUser()->hasAccess(['campaigns.view']) || in_array('campaigns.view', $permission_dep) )
+								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
+									<a class="button_nav load_button ads_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('campaigns.show',1) }}">
+										<span class="button_nav_img ads"></span>
+										<p>@lang('basic.campaigns')</p>	
+									</a>	
+								</div>
+							@endif
+							@if(Sentinel::getUser()->hasAccess(['campaigns.view']) || in_array('campaigns.view', $permission_dep) )
+								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
+									<a class="button_nav load_button ads_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('benefits.show', 1) }}">
+										<span class="button_nav_img ads"></span>
+										<p>@lang('basic.benefits')</p>
+									</a>	
+								</div>
+							@endif --}}
 						</div>
 					</section>
 				</header>
@@ -166,6 +181,8 @@
 					x.addClass("responsive");
 				} 
 			}
+
+			
 		</script>
         <!-- Latest compiled and minified Bootstrap JavaScript -->
         <!-- Bootstrap js -->
@@ -179,17 +196,15 @@
 	
 		<!-- Jquery modal -->
 		<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
-		
+
 		<!-- Scripts -->
-		
 	    <script src="{{URL::asset('/../js/nav_active.js') }}"></script>
 		<script src="{{URL::asset('/../js/open_admin.js') }}"></script>
 		<script src="{{URL::asset('/../js/efc_toggle.js') }}"></script>
 		<script src="{{URL::asset('/../js/set_height.js') }}"></script>
-		<script src="{{ URL::asset('/../js/collaps.js') }}"></script>
 		<script src="{{URL::asset('/../js/calendar.js') }}"></script>
 		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
-		
+
 		<!-- Pignoise calendar -->
 		<script src="{{ URL::asset('/../node_modules/moment/moment.js') }}"></script>
 		<script src="{{ URL::asset('/../node_modules/pg-calendar/dist/js/pignose.calendar.min.js') }}"></script>
@@ -198,10 +213,8 @@
 		<script type="text/javascript" src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
 		<script type="text/javascript" src="{{ URL::asset('/../dataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
 
-		<!-- Summernote js -->
-		<link href="{{ URL::asset('/../node_modules/summernote/summernote-lite.css') }}" rel="stylesheet"/>
-		<script src="{{ URL::asset('/../node_modules/summernote/summernote-lite.min.js') }}" ></script>
-	
+		<!-- tinymce js -->
+		<script src="{{ URL::asset('/node_modules/tinymce/tinymce.min.js') }}" ></script>
 		
 		@if(session()->has('modal'))
 			<script>
@@ -211,5 +224,6 @@
 			</script>
 		@endif
 		@stack('script')
+		
     </body>
 </html>

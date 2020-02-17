@@ -26,7 +26,9 @@
 									<?php  
 										$open = $doc->path . $doc->title;
 									?>
-									@if(file_exists('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png'))<img class="doc_icons" src="{{ URL::asset('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png' )  }}" /> @endif
+									@if(file_exists('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png'))
+										<a href="{{ asset($open) }}" target="_blank"><img class="doc_icons" src="{{ URL::asset('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png' )  }}" /></a>
+									@endif
 								</div>
 							</span>
 							<span class="thumb_name" title="{{ $doc->title }}">{{ $doc->title }}</span>
@@ -37,21 +39,23 @@
 				</div>
 			</div>
 			<main class="all_documents">
-					<div class="table-responsive">
-						<header class="page-header">
-							<div class="index_table_filter">
-								<label>
-									<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
-								</label>
-							<!--	<span class="change_view"></span>-->
-								@if(Sentinel::getUser()->hasAccess(["documents.create"]) || in_array("documents.create", $permission_dep) )
-									<a class="add_new" href="{{ route('documents.create') }}" class="" rel="modal:open">
-										<i style="font-size:11px" class="fa">&#xf067;</i>
-										<!-- @lang("basic.add_document")-->
-									</a>
-								@endif
-							</div>
-						</header>
+				<div class="table-responsive">
+					<header class="page-header">
+						<div class="index_table_filter">
+							<label>
+								<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
+							</label>
+						<!--	<span class="change_view"></span>-->
+							@if(Sentinel::getUser()->hasAccess(["documents.create"]) || in_array("documents.create", $permission_dep) )
+								<a class="add_new" href="{{ route('documents.create') }}" class="" rel="modal:open">
+									<i style="font-size:11px" class="fa">&#xf067;</i>
+									<!-- @lang("basic.add_document")-->
+								</a>
+							@endif
+							
+						</div>
+					</header>
+					<section class="page-main">
 						@if(count($documents)>0)
 							<table id="index_table" class="display table table-hover">
 								<thead>
@@ -72,8 +76,11 @@
 										?>
 										<tr>
 											<th style="text-align: center;">
-												@if(file_exists('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png'))<img class="doc_icons" src="{{ URL::asset('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png' )  }}" /> @endif
-											
+												<span class="{{ pathinfo($open, PATHINFO_EXTENSION) }}"></span>
+												<!--
+												@if(file_exists('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png'))
+													<img class="doc_icons" src="{{ URL::asset('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png' )  }}" /> 
+												@endif -->						
 											</th><!--type -->
 											<td><a href="{{ asset($open) }}" target="_blank">{{ $document->title }}</a></td>
 									<!--	<td>{{ $document->employee->user['first_name'] . ' ' .  $document->employee->user['last_name'] }}</td>-->
@@ -85,7 +92,7 @@
 													<button class="collapsible option_dots float_r"></button>
 													
 													@if(Sentinel::getUser()->hasAccess(["documents.delete"]) || in_array("documents.delete", $permission_dep))
-														<a href="{{ route("documents.destroy", $document->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>
+														<a href="{{ route("documents.destroy", $document->id) }}" class="action_confirm btn-delete danger " data-method="delete" data-token="{{ csrf_token() }}" style="display:none"><i class="far fa-trash-alt"></i></a>
 													@endif
 													
 												@endif
@@ -104,14 +111,14 @@
 								@lang('basic.no_file2')
 								</p>
 							</div>
-						@endif
-					</div>
-				
+					@endif
+					</section>
+				</div>
 			</main>
 		</section>
 	</main>
 </div>
 <script>
-	$.getScript( '/../js/documents.js');	
+	 $.getScript( '/../js/documents.js');
 </script>
 @stop

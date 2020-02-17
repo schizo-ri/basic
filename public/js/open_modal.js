@@ -2,13 +2,11 @@ $("a[rel='modal:open']").addClass('disable');
 
 $( document ).ready(function() {
     $("a[rel='modal:open']").removeClass('disable');
-
-    $("a[rel='modal:open']").show();
-
+    
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
         escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-        clickClose: true,       // Allows the user to close the modal by clicking the overlay
+        clickClose: false,       // Allows the user to close the modal by clicking the overlay
         closeText: 'Close',     // Text content for the close <a> tag.
         closeClass: '',         // Add additional class(es) to the close <a> tag.
         showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -31,7 +29,6 @@ $( document ).ready(function() {
             modalClass: "modal modal_notice notice_show"
         };
     });
-
     $('a.open_statistic[rel="modal:open"]').click(function(){
         $.modal.defaults = {
             modalClass: "modal modal_notice notice_show statistic_index"
@@ -46,6 +43,5 @@ $( document ).ready(function() {
         $.modal.defaults = {
             modalClass: "modal modal_user"
         };
-    });
+    });    
 });
-

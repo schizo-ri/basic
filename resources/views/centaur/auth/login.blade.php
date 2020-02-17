@@ -26,7 +26,7 @@
                         </label>
                     </div>
                     {{ csrf_field() }}
-                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('welcome.login') }}">
+                    <input class="btn-submit" type="submit" value="{{ __('welcome.login') }}">
                     <p style="margin-top:5px; margin-bottom:0"><a href="{{ route('auth.password.request.form') }}" type="submit">@lang('welcome.forgot')</a></p>
                 </fieldset>
                 </form>

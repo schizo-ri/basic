@@ -18,7 +18,10 @@ return [
 	'new_notice_on_app'		=> 'A new announcement has been posted on the portal',
 	'click_to_see'				=> 'Click to see the notification',
 	'day_absence'				=> 'Employee absences for date ',
+	'not_send'					=> 'E-mail not sent, something went wrong!',
+	'no_mail'					=> 'E-mail not sent, no department email!',
+	'campaign_start'			=> 'Campaign is launched',
+	'campaign_error'			=> 'Unable to start campaign, no sequences entered',
 	
-
 ];
 ?>

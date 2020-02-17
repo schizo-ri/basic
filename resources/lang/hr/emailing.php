@@ -18,5 +18,10 @@ return [
 	'new_notice_on_app'			=> 'Na portalu je objavljena nova obavijest',
 	'click_to_see'				=> 'Klikni da vidiš obavijest',
 	'day_absence'				=> 'Izostanci djelatnika na dan ',	
+	'not_send'					=> 'E-mail nije poslan, nešto je pošlo krivo!',
+	'no_mail'					=> 'E-mail nije poslan, nije upisan e-mail odjela!',
+	'campaign_start'			=> 'Kampanja je pokrenuta',
+	'campaign_error'			=> 'Nije moguće pokrenuti kampanju, nema upisanih sekvenci',
+	
 ];
 ?>

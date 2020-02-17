@@ -53,6 +53,9 @@ return [
 	'no' 			=> 'NE',
 	'email_send' 	=> 'Send e-mail',
 	'send_email' 	=> 'Send mail',
-	'dont_send_email' => 'Don\'t send mail',
+	'dont_send_email' => 'Don\'t send mail',	
+	'other_requests' => 'Other requests',	
+	'total_used'	 => 'Total used',
+	'this_month' => 'This month',
 ];
 ?>

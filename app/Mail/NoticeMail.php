@@ -36,7 +36,6 @@ class NoticeMail extends Mailable
      */
     public function build()
     {
-
         return $this->markdown('Centaur::email.notice_send')
                     ->from('info@duplico.hr', 'Duplico')
                     ->subject( __('emailing.new_notice') . ' - ' . $this->notice->title )

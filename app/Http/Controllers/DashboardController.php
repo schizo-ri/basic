@@ -18,6 +18,7 @@ use Sentinel;
 use DateTime;
 use PDO;
 use DB;
+use App\Http\Controllers\NoticeController;
 
 class DashboardController extends Controller
 {
@@ -41,21 +42,22 @@ class DashboardController extends Controller
 
             $docs = '';
             if($employee) {
-                $data_absence = array(
-                    'zahtjevi' => BasicAbsenceController::zahtjevi( $employee )
-                );
+                $data_absence = BasicAbsenceController::zahtjevi( $employee );
 
                 //dohvaća dopuštenja odjela za korisnika
-                if($employee->work->department->departmentRole->isNotEmpty()) {
+                if(isset($employee->work) && $employee->work->department->departmentRole->isNotEmpty()) {
                     $permission_dep = explode(',', $employee->work->department->departmentRole->toArray()[0]['permissions']);
                 } else {
                     $permission_dep = array();
                 }
 
-                $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id',$employee->id)->orderBy('updated_at','DESC')->take(5)->get();
+                $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id',$employee->id)->orderBy('updated_at','DESC')->get()->take(5);
                 $comments = Comment::orderBy('created_at','DESC')->get();
-                $user_department = $employee->work->department->id;
-
+                $user_department = '';
+                if(isset($employee->work)) {
+                    $user_department = $employee->work->department->id;
+                }
+               
                 $date = new DateTime();
                 $date->modify('-30 day');
 
@@ -75,7 +77,7 @@ class DashboardController extends Controller
     {
         $image = '';
 		$user_name = DashboardController::user_name( $employee_id );
-        
+       
         $path = 'storage/' . $user_name . "/profile_img/";
         
         if(file_exists($path)){
@@ -108,8 +110,8 @@ class DashboardController extends Controller
             $employee = Sentinel::getUser()->employee;
             $permission_dep = array();
 
-            if($employee) {
-                    $permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
+            if($employee && isset($employee->work) && $employee->work->department->departmentRole->isNotEmpty()) {
+                $permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
             }
             
             return $permission_dep;	
@@ -121,8 +123,8 @@ class DashboardController extends Controller
             $employee = Sentinel::getUser()->employee;
             $departments = Department::get();
             $user_department = array();
-    
-            if($employee) {
+            
+            if($employee && isset($employee->work) && $employee->work->department) {
                 array_push($user_department, $employee->work->department->id);
                 array_push($user_department, $departments->where('level1', 0)->first()->id);
             }
@@ -132,20 +134,22 @@ class DashboardController extends Controller
 
     public static function getDBName ()
     {
-       
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-     /*
-            $servername = "icom-superadmin.duplico.hr";
-            $username = "duplicoh_jelena";
-            $password = "Sifra123jj";*/
+    
+         $servername = "localhost";
+        $username = "root";
+        $password = "";
 
-        try {
-           
-                $conn = new PDO("mysql:host=$servername;dbname=novi_portal", $username, $password);
-          
-              //  $conn = new PDO("mysql:host=$servername;dbname=duplicoh_icom-superadmin", $username, $password);
+        $dbname = "novi_portal"; 
+       
+      /*   $servername = "icom-superadmin.duplico.hr";
+        $username = "duplicoh_jelena";
+        $password = "Sifra123jj";
+        
+        $dbname = "duplicoh_icom-superadmin"; */
+        
+
+        try {           
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
           
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             if (isset($_SERVER['HTTP_HOST'])) {
@@ -169,5 +173,4 @@ class DashboardController extends Controller
         return view('Centaur::admin_panel');
     }
     
-   
 }

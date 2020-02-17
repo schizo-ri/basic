@@ -26,15 +26,15 @@ use App\Models\Ads;
 								</a>
 							@endif
 						</div>
-						<span class="arrow_left1"></span>
+						{{-- <span class="arrow_left1"></span> --}}
 						<select id="filter" class="select_filter" >
-							<option>all</option>
+							<option>@lang('basic.view_all')</option>
 							@foreach($ads->unique('category_id') as $ad)
 								<option value="{{  $ad->category['name'] }}">{{ $ad->category['name'] }}</option>
 							@endforeach
 						</select>
 						@if (count($ads) >0)
-							<span class="arrow_left1"></span>
+							{{-- <span class="arrow_left1"></span> --}}
 							<select id="filter1" class="select_filter sort" >
 								<option class="sort_desc" value="{{ route('oglasnik', ['sort' => 'DESC'])}}">
 									@lang('basic.new_first')
@@ -74,17 +74,17 @@ use App\Models\Ads;
 						<article class="ad panel col-sm-12 col-md-6 col-lg-4 col-xl-3 float_left">
 							<div>
 								<header class="ad_header">
-									@if(isset($docs))
-										@foreach($docs as $doc)
-											@if(file_exists($path . $doc))
-												<a href="{{ route('ads.show', $ad->id) }}" rel="modal:open"><img src="{{ asset($path . $doc) }}" alt="Ad image"/></a>
+									<a href="{{ route('ads.show', $ad->id) }}" rel="modal:open">
+										@if(isset($docs))
+											@if(file_exists($path . end($docs)) && end($docs) != ""  )
+												<img src="{{ asset($path .  end($docs)) }}" alt="Ad image"/>
 											@else 
 												<img class="placeholder_image" src="{{ URL::asset('icons/placeholderAd.png') }}" alt="Ad image"/>
-											@endif
-										@endforeach
-									@else 
-										<img class="placeholder_image" src="{{ URL::asset('icons/placeholderAd.png') }}" alt="Ad image"/>
-									@endif
+											@endif										
+										@else 
+											<img class="placeholder_image" src="{{ URL::asset('icons/placeholderAd.png') }}" alt="Ad image"/>
+										@endif
+									</a>
 								</header>
 								<main class="ad_main">
 									<a href="{{ route('ads.show', $ad->id) }}" rel="modal:open"><span class="ad_category">{{ $ad->category['name'] }}</span>
@@ -108,7 +108,7 @@ use App\Models\Ads;
 										<span class="contact"><a class="btn-send" href="{{ route('posts.create', ['employee_publish' => $ad->employee ] ) }}" rel="modal:open"><img class="img_send" src="{{ URL::asset('icons/envelope.png') }}" alt="messages"/></a></span>
 									</div>
 									<div class="price">
-										<p>{{ $ad->price  }} {!! is_numeric($ad->price) ? ' Kn' : '' !!} </p>
+										<p>@lang('basic.price'): {!! $ad->price ?  $ad->price : ' - ' !!} {!! is_numeric($ad->price) ? ' Kn' : '' !!} </p>
 									</div>
 								</footer>
 							</div>

@@ -22,10 +22,3 @@
         <input class="btn-submit" type="submit" value="{{ __('basic.upload_file') }}" name="submit">
     </form>
 </div>
-<script>
-    $(function(){ 
-        $.getScript( 'js/documents.js');
-    });
-</script>
-    
-

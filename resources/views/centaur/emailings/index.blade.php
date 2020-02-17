@@ -8,7 +8,6 @@
 				<i class="fas fa-plus"></i>
 			</a>
 		@endif
-		<span class="change_view"></span>
 	</div>
 </header>
 <main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -27,8 +26,8 @@
 				<tbody>
 					@foreach ($emailings as $emailing)
 						<tr>
-							<td>{{ $emailing->table['name'] }}</td>
-							<td>{{ $emailing->method }}</td>
+							<td>{{ $models[ $emailing->table['name']] }}</td>
+							<td>{{ $methods[ $emailing->method ] }}</td>
 							<td>
 								@if($emailing->sent_to_dep)
 									@foreach(explode(",", $emailing->sent_to_dep) as $prima_dep)
@@ -46,12 +45,12 @@
 							<td class="center">
 								<button class="collapsible option_dots float_r"></button>
 								@if(Sentinel::getUser()->hasAccess(['emailings.update']) || in_array('emailings.update', $permission_dep))
-									<a href="{{ route('emailings.edit', $emailing->id) }}" style="display:none" class="btn-edit" rel="modal:open">
+									<a href="{{ route('emailings.edit', $emailing->id) }}" style="display:none"  title="{{ __('basic.edit')}}" class="btn-edit" rel="modal:open">
 											<i class="far fa-edit"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['works.delete']) || in_array('works.delete', $permission_dep) && !$employees->where('work_id',$work->id)->first())
-									<a href="{{ route('emailings.destroy', $emailing->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+									<a href="{{ route('emailings.destroy', $emailing->id) }}" style="display:none" title="{{ __('basic.delete')}}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -61,16 +60,17 @@
 				</tbody>
 			</table>
 		@else
-			@lang('basic.no_data')
+			<p class="no_data">@lang('basic.no_data')</p>
 		@endif
 	</div>
 </main>
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-	//	$.getScript( '/../js/collaps.js');
 	$('.collapsible').click(function(event){        
        		$(this).siblings().toggle();
 		});
 	});
+	$.getScript( '/../restfulizer.js');
+	$.getScript( '/../js/validate.js');
 </script>

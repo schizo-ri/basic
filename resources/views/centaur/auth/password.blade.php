@@ -21,7 +21,7 @@
                         {!! ($errors->has('password_confirmation') ? $errors->first('password_confirmation', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
                     {{ csrf_field() }}
-                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Save">
+                    <input class="btn-submit" type="submit" value="Save">
                 </fieldset>
                 </form>
             </div>

@@ -51,8 +51,11 @@ class UserController extends Controller
 		$empl = Sentinel::getUser()->employee;
         $permission_dep = array();
 		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+            if($empl->work && $empl->work->department) {
+                $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+            }			
         } 
+        $roles = app()->make('sentinel.roles')->createModel()->all();
 
         return view('Centaur::users.index', ['users' => $users, 'employees' => $employees, 'works' => $works, 'departmentRoles' => $departmentRoles,'permission_dep' => $permission_dep]);
     }
@@ -100,10 +103,14 @@ class UserController extends Controller
         }
 
         // Do we need to send an activation email?
-        if (!$activate) {
+        if (! $activate) {
             $code = $result->activation->getCode();
             $email = $result->user->email;
-            Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code));
+            try {
+                Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code));
+            } catch (\Throwable $th) {
+                return redirect()->back()->with('error',  __('ctrl.no_valid_email')); 
+            }            
         }
 
         // Assign User Roles
@@ -114,8 +121,38 @@ class UserController extends Controller
             }
         }
 
-        $result->setMessage("User {$request->get('email')} has been created.");
-        return $result->dispatch(route('users.index'));
+        if ($request->hasFile('fileToUpload')) {
+            $image = $request->file('fileToUpload');
+            $user_name = $request['last_name'] . '_' . $request['first_name'];
+            if(isset($request['email'])) {
+                $user_name = explode('.',strstr($request['email'],'@',true));
+                $user_name = $user_name[1] . '_' . $user_name[0];
+            }
+            
+            $path = 'storage/' . $user_name . '/profile_img/';
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $docName = $request->file('fileToUpload')->getClientOriginalName();  //file name
+            
+            try {
+                $request->file('fileToUpload')->move($path, $docName);
+                DocumentController::createResizedImage($path . $docName, $path . pathinfo($docName)['filename'] . '_small.' . pathinfo($docName)['extension'], 200, 250);
+
+                return redirect()->back()->with('success', __('ctrl.uploaded'));
+  
+              } catch (\Throwable $th) {
+                return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
+              }
+
+        }
+
+       
+        session()->flash('error',"User {$request->get('email')} has been created.");
+        return redirect()->back();
+     //   $result->setMessage("User {$request->get('email')} has been created.");
+
+      //  return $result->dispatch(route('users.index'));
     }
 
     /**
@@ -125,14 +162,18 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        // The user detail page has not been included for the sake of brevity.
-        // Change this to point to the appropriate view for your project.
-        // return redirect()->route('users.index');
-
-        $user = $this->userRepository->createModel()->with('roles')->get();
+    {       
+        $user = $this->userRepository->createModel()->with('roles')->find($id);
+        $departmentRoles = DepartmentRole::get();
+       
+		$empl = Sentinel::getUser()->employee;
+		$permission_dep = array();
         
-        return view('Centaur::users.show', ['user' => $user]);
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
+
+        return view('Centaur::users.show', ['user' => $user, 'departmentRoles' => $departmentRoles, 'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -149,7 +190,7 @@ class UserController extends Controller
 
         // Fetch the available roles
         $roles = app()->make('sentinel.roles')->createModel()->all();
-
+        
         if ($user) {
             return view('Centaur::users.edit', [
                 'user' => $user,
@@ -214,7 +255,7 @@ class UserController extends Controller
 
         session()->flash('success', $user->email . ' ' . __('auth.auth_update'));
         return redirect()->back();
-    //    return redirect()->route('users.index');
+        //    return redirect()->route('users.index');
     }
 
     /**
@@ -311,9 +352,25 @@ class UserController extends Controller
                 $path2 = '';
                 if($employee->email) {
                     $user_name = explode('.',strstr($employee->email,'@',true));
-
+                    if(isset($user_name[1])) {
+                        $user_name = $user_name[1] . '_' . $user_name[0];
+                    } else {
+                        $user_name = $user_name[0];
+                    }
+                   
+                    $path = 'storage/' . $user_name . '/interest/';
+                    $path2 = 'storage/' . $user_name . '/interesting_fact/';
+                    
+                    if(file_exists($path)){
+                      $images_interest = array_diff(scandir($path), array('..', '.', '.gitignore'));
+                    }
+    
+                    if(file_exists($path2)){
+                      $images_interesting_fact = array_diff(scandir($path2), array('..', '.', '.gitignore'));
+                    }
+                } else {
+                    $user_name = explode('.',strstr(Sentinel::getUser()->email,'@',true));
                     $user_name = $user_name[1] . '_' . $user_name[0];
-     
                     $path = 'storage/' . $user_name . '/interest/';
                     $path2 = 'storage/' . $user_name . '/interesting_fact/';
                     
@@ -326,7 +383,6 @@ class UserController extends Controller
                     }
                 }
                
-              
                 return view('Centaur::users.edit_user', [
                     'user' => $user,
                     'employee' => $employee,

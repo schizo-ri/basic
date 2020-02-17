@@ -1,7 +1,6 @@
 div#calendar{
     padding: 0 30px;
     width: 100%;
-    font-family: Helvetica, "Times New Roman", Times, serif;
 }
  
 div#calendar div.box{
@@ -17,7 +16,7 @@ div#calendar div.header{
     vertical-align:middle;
     width:100%;
     height:auto;   
-    padding-top: 30px;
+    padding-top: 10px;
 }
  
 div#calendar div.header a.prev,div#calendar div.header a.next{ 

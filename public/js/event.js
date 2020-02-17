@@ -1,6 +1,8 @@
 $(function() {
     var url_basic = location.origin + '/events';
 
+    //console.log($('.dataArr').text());
+
     var data1 = JSON.parse( $('.dataArr').text());
     /*
     var data1 = [];
@@ -40,11 +42,14 @@ $(function() {
                         $('.index_aside .day_events').load(url + ' .index_aside .day_events >div');
                         $('.index_main .header_calendar').load( url + ' .index_main .header_calendar > div');
                         $('.index_main .main_calendar').load(url + ' .index_main .main_calendar .all_events');
-                        $('.index_main .main_calendar .all_events').load(url + ' .index_main .main_calendar .all_events .show_event');
-                        
+
+                        $('.index_main .main_calendar .all_events').load( url + ' .index_main .main_calendar .all_events .show_event', function() {
+                            $.getScript( '/../restfulizer.js');
+                          });
                     }
                 }
             }
     });
     $('.index_aside .day_events ').show();
+     
 });

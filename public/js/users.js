@@ -20,12 +20,8 @@ $('.change_view').click(function(){
 
     $( ".change_view" ).toggle();
     $( ".change_view2" ).toggle();
-    if($('.second_view').is(':visible')) {
-        $('.second_view').css('display:none');
-    } else {
-        $('.second_view').css('display:flex');
-    }
-//	$('.second_view').toggle();		
+   
+    $('main.users_main .second_view').css('display','flex');
     $('.table-responsive').toggle();		
 });
 $( ".change_view2" ).click(function() {
@@ -33,10 +29,60 @@ $( ".change_view2" ).click(function() {
     $('.index_table_filter label #mySearchTbl').attr('onkeyup','mySearchTable()');
     $( ".change_view" ).toggle();
     $( ".change_view2" ).toggle();
-    if($('.second_view').is(':hidden')) {
-        $('.second_view').css('display:flex');
-    } else {
-        $('.second_view').css('display:none');
-    }
+    
+    $('.second_view').css('display','none');
+   
     $('.table-responsive').toggle();
+});
+$('a.show_user[rel="modal:open"]').click(function(){
+    $.modal.defaults = {
+        closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+        escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+        clickClose: false,       // Allows the user to close the modal by clicking the overlay
+        closeText: 'Close',     // Text content for the close <a> tag.
+        closeClass: '',         // Add additional class(es) to the close <a> tag.
+        showClose: true,        // Shows a (X) icon/link in the top-right corner
+        modalClass: "modal modal_user",    // CSS class added to the element being displayed in the modal.
+        // HTML appended to the default spinner during AJAX requests.
+        spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+
+        showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+        fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+        fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+    };
+});
+
+$('a.edit_user[rel="modal:open"]').click(function(){
+    $.modal.defaults = {
+        closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+        escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+        clickClose: false,       // Allows the user to close the modal by clicking the overlay
+        closeText: 'Close',     // Text content for the close <a> tag.
+        closeClass: '',         // Add additional class(es) to the close <a> tag.
+        showClose: true,        // Shows a (X) icon/link in the top-right corner
+        modalClass: "modal modal_user",    // CSS class added to the element being displayed in the modal.
+        // HTML appended to the default spinner during AJAX requests.
+        spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+
+        showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+        fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+        fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+    };
+});
+$('a.create_user[rel="modal:open"]').click(function(event) {
+    $.modal.defaults = {
+        closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+        escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+        clickClose: false,       // Allows the user to close the modal by clicking the overlay
+        closeText: 'Close',     // Text content for the close <a> tag.
+        closeClass: '',         // Add additional class(es) to the close <a> tag.
+        showClose: true,        // Shows a (X) icon/link in the top-right corner
+        modalClass: "modal",    // CSS class added to the element being displayed in the modal.
+        // HTML appended to the default spinner during AJAX requests.
+        spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+
+        showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+        fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+        fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+    };
 });

@@ -24,18 +24,20 @@ $i = 0;
 					@php
 						$profile_image = DashboardController::profile_image(Sentinel::getUser()->employee['id']);
 						$user_name =  DashboardController::user_name(Sentinel::getUser()->employee['id']);
-
-					@endphp
-					
+					@endphp					
 					<span class="profile_photo">
-						<span>
-						@if($profile_image)
-							<img class="" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image" />
-						@else
-							<img class="radius50 " src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
-						@endif
-						</span>
-						<a  href="{{ route('upload',['profileIMG' => true]) }}" class="photo_icon" rel="modal:open" title="{{ __('basic.upload_photo_profile') }}"></a>
+						<a  href="{{ route('upload',['profileIMG' => true]) }}" rel="modal:open" title="{{ __('basic.upload_photo_profile') }}">
+							<span>
+							@if( ! empty($profile_image) && $profile_image != ''  )
+								<img class="radius50 profile_user" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image" />
+							@else
+								<img class="radius50 profile_user" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+							@endif
+								<span class="photo_icon "></span>
+							
+							</span>
+						
+						</a>						
 					</span>
 					<h2>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</h2>
 					<p>@if($employee){{ $employee->work['name'] }}@endif</p>

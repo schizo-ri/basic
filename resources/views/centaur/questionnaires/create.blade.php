@@ -76,7 +76,7 @@
 								<input name="question[]"  type="text" maxlength="255" class="question_name" value="">
 							</div>
 						</div>
-						<button type="button" onclick="addAnswer(this)" class="add_answer">+ ADD ANSWER</button>
+						<button type="button" onclick="addAnswer(this)" class="add_answer">+ @lang('basic.add_answer')</button>
 						<span>
 							<button type="button" class="collapsible option_dots"></button>
 							<button type="button" class="content delete"  onclick="brisi_element(this)">
@@ -86,15 +86,14 @@
 						<input name="category[]" type="text" maxlength="255" class="category_name" value="">
 					</div>
 				</div>
-				<button type="button" onclick="addQuestion(this)" class="add_question">+ ADD QUESTION</button>
+				<button type="button" onclick="addQuestion(this)" class="add_question">+ @lang('basic.add_question')</button>
 			</div>
 		</div>
-		<span class="add_category" onclick="addCategory(this)" >+ ADD CATEGORY</span>
+		<span class="add_category" onclick="addCategory(this)" >+ @lang('basic.add_category')</span>
 		{{ csrf_field() }}
 	</div>
 </form>
 <script>
-	
 	jQuery.cachedScript = function( url, options ) {
 		// Allow user to set any option except for dataType, cache, and url
 		options = $.extend( options || {}, {
@@ -111,19 +110,14 @@
 	$.cachedScript( "/../js/questionnaire_show.js" ).done(function( script, textStatus ) {
 	
 	});
-	$.cachedScript( "/../js/collaps.js" ).done(function( script, textStatus ) {
-
-	});
-
+	
 	function addCategory (btn) {
 		var rbr =  $( btn ).prev('.group_category').find('.category').last().find('.red_br .rbr').first().text();
 		rbr ++;
 
 		$(btn).parent().find('.group_category').append('<div class="category"><div class="form-group red_br col-1 float_l padd_0 padd_r_20"><span class="rbr" >' + rbr + '</span></div><div class="form-group categories {{ ($errors->has('name_category')) ? 'has-error' : '' }} col-9 float_l padd_0"><input name="name_category[]" onchange="inputChange(this, this.value)" class="category_input" type="text" maxlength="255" value="{{ old('name_category') }}" placeholder="{{ __('questionnaire.add_category')}}" required >{!! ($errors->has('name_category') ? $errors->first('name_category', '<p class="text-danger">:message</p>') : '') !!}</div><div class="form-group {{ ($errors->has('coefficient')) ? 'has-error' : '' }}  col-2 float_l padd_0 padd_l_20"><input name="coefficient[]" type="number" pattern="[0-9]+([.\,][0-9]+)?" value="{{ old('coefficient') }}" placeholder="{{ __('questionnaire.coef') }}" >{!! ($errors->has('coefficient') ? $errors->first('coefficient', '<p class="text-danger">:message</p>') : '') !!}</div><span><button type="button" class="collapsible option_dots"></button><button type="button" class="content delete"  onclick="brisi_element(this)"><i class="far fa-trash-alt"></i></button></span><div class="group_question"><div class="question"><div class="form-group red_br col-1 float_l padd_0 padd_r_20"><span class="rbr" >1</span></div><div class="form-group col-9 {{ ($errors->has('name_question'))  ? 'has-error' : '' }}"><input name="name_question[]" onchange="inputChange2( this, this.value )" class="question_input" type="text" maxlength="255" value="{{ old('name_question') }}"  placeholder="{{ __('questionnaire.question')}}" required >{!! ($errors->has('name_question') ? $errors->first('name_question', '<p class="text-danger">:message</p>') : '') !!}</div><div class="form-group col-9"><select class="form-control select_type" onchange="changeType(this, this.value )" name="type[]" required><option value="" selected disabled></option><option value="IN" >{{ __('questionnaire.text_field') }}</option><option value="CB" >{{ __('questionnaire.multiple_choices') }}</option><option value="RB" >{{ __('questionnaire.single_choice')}}</option></select></div><div class="group_answer"><div class="answer 1"><div class="form-group red_br offset-md-1 col-md-1 float_l padd_0 padd_r_20 padd_l_15"><span class="rbr" >1</span></div><div class="form-group offset-md-2 col-md-10"><input name="answer[]" placeholder="odgovor" type="text" maxlength="100" class="input_answer" /></div><input name="question[]"  type="text" maxlength="255" class="question_name" value=""></div></div><button type="button" onclick="addAnswer(this)" class="add_answer">+ ADD ANSWER</button><span><button type="button" class="collapsible option_dots"></button><button type="button" class="content delete" onclick="brisi_element(this)"><i class="far fa-trash-alt"></i></button><span><input name="category[]" type="text" maxlength="255" class="category_name" value=""></div></div><button type="button" onclick="addQuestion(this)" class="add_question">+ ADD QUESTION</button></div></div>');
+			$.getScript( "/../js/collaps.js" );
 
-			$.cachedScript( "/../js/collaps.js" ).done(function( script, textStatus ) {
-				
-			});
 	}
 	
 	function addQuestion(btn) {
@@ -141,9 +135,7 @@
 		var catInput = $( parent ).find('.category_input').val();
 
 		$(category).val(catInput);
-		$.cachedScript( "/../js/collaps.js" ).done(function( script, textStatus ) {
-		
-		});
+		$.getScript( "/../js/collaps.js" );
 	}
 
 	function addAnswer(btn) {
@@ -157,11 +149,8 @@
 		var parent = $( btn ).parent();
 		var catInput = $( parent ).find('.question_input').val();
 		
-		$(question).val(catInput);
-		
-		$.cachedScript( "/../js/collaps.js" ).done(function( script, textStatus ) {
-
-		});
+		$(question).val(catInput);	
+		$.getScript( "/../js/collaps.js" );
 	}
 
 	function brisi_element ( element ) {

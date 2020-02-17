@@ -41,7 +41,7 @@
 					</tbody>
 				</table>
 			@else
-				@lang('basic.no_data')
+				<p class="no_data">@lang('basic.no_data')</p>
 			@endif
 		</div>
 	</div>

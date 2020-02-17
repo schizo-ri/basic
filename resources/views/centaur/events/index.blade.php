@@ -48,45 +48,59 @@
 			</header>
 			<main class="main_calendar" >
 				<div class="all_events">
-					@foreach($hours_array as $hour)
-						<div class="hour_in_day">
-							<a href="{{ route('events.create', ['time1' => $hour, 'date' => $selected['god_select'] . '-' .  $selected['mj_select'] . '-' . $selected['dan_select'] ]) }}" title="{{ __('calendar.add_event')}}" rel="modal:open" ><span class="hour_val">{{ $hour}}</span></a>
-							@if(isset($dan))
-								@if( isset($events_day))
-									@foreach($events_day->where('time1',  $hour . ":00")  as $event)
-									<div class="show_event blue" >
-										<div class="event">
-											<p>{{ date('H:i',strtotime($event->time1)) . ' - ' . date('G:i',strtotime($event->time2)) }} {{ $event->title }}, {{ $event->description }}</p>
-										</div>
-									</div>
+					@if(count($hours_array) > 0)
+						@foreach($hours_array as $hour)
+							<div class="hour_in_day">
+								<a href="{{ route('events.create', ['time1' => $hour, 'date' => $selected['god_select'] . '-' .  $selected['mj_select'] . '-' . $selected['dan_select'] ]) }}" title="{{ __('calendar.add_event')}}" rel="modal:open" ><span class="hour_val">{{ $hour}}</span></a>
+								@if(isset($dan))
+									@if( isset($events_day))
+										@foreach($events_day as $event)
+											@if (strstr($event->time1,':',true) == strstr($hour,':',true) || 
+												(intval(strstr($event->time1,':',true)) < intval(strstr($hour,':',true) ) && intval(strstr($event->time2,':',true)) > intval(strstr($hour,':',true)) ))
+												<div class="show_event blue" >
+													<div class="event">
+														<p>{{ date('H:i',strtotime($event->time1)) . ' - ' . date('G:i',strtotime($event->time2)) }} {{ $event->title }}, {{ $event->description }}
+															<a href="{{ route('events.edit', $event->id) }}" class="btn-edit" rel="modal:open" >
+																<i class="far fa-edit"></i>
+															</a>
+															<a href="{{ route('events.destroy', $event->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+																<i class="far fa-trash-alt"></i>
+															</a>
+														</p>
+														
+													</div>
+												</div>
+											@endif
+										@endforeach
+									@endif
+									@foreach($dataArr as $key => $data)
+										@if($data['name'] != 'birthday' && $data['name'] != 'event')	
+											@if( $data['date'] == $dan && date('H', strtotime($hour)) == date('H', strtotime($data['start_time'])) )
+												<div class="show_event green" >
+													<div class="event">
+														{{ isset($data['employee']) ? $data['type'] . ' - ' . $data['employee'] : ''  }}
+														{!! $data['name'] == 'IZL' ? '('. date('H:i', strtotime($data['start_time'])) . '-' . date('H:i', strtotime($data['end_time'] )) . ')' : '' !!}
+													</div>
+												</div>
+											@endif
+										@endif
+										@if($data['name'] == 'birthday')
+											@if(date("m-d",strtotime($data['date'])) == date("m-d",strtotime($dan)) && $hour == "08:00" )
+												<div class="show_event orange" >
+													<div class="event">
+														{{ $data['type'] . ' - ' . $data['employee'] }}
+													</div>
+												</div>
+											@endif
+										@endif
 									@endforeach
 								@endif
-								@foreach($dataArr as $key => $data)
-									@if($data['name'] != 'birthday' && $data['name'] != 'event')	
-										@if( $data['date'] == $dan && date('H', strtotime($hour)) == date('H', strtotime($data['start_time'])) )
-											<div class="show_event green" >
-												<div class="event">
-													{{ isset($data['employee']) ? $data['type'] . ' - ' . $data['employee'] : ''  }}
-													{!! $data['name'] == 'IZL' ? '('. date('H:i', strtotime($data['start_time'])) . '-' . date('H:i', strtotime($data['end_time'] )) . ')' : '' !!}
-												</div>
-											</div>
-										@endif
-									@endif
-									@if($data['name'] == 'birthday')
-										@if(date("m-d",strtotime($data['date'])) == date("m-d",strtotime($dan)) && $hour == "08:00" )
-											<div class="show_event orange" >
-												<div class="event">
-													{{ $data['type'] . ' - ' . $data['employee'] }}
-												</div>
-											</div>
-										@endif
-									@endif
-								@endforeach
-							@endif
-						</div>
-					@endforeach
+							</div>
+						@endforeach
+					@endif
+					
 				</div>
-				<div hidden class="dataArr">{!! json_encode($dataArr) !!}</div>
+				<div hidden class="dataArr">{!! ! empty($dataArr) ? json_encode($dataArr) : '' !!}</div>
 			</main>
 		</section>
 	</main>

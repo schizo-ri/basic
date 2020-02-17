@@ -42,7 +42,7 @@ class AbsenceMail extends Mailable
         $zahtjev = array('start_date' => $this->absence['start_date'], 'end_date' => $this->absence['end_date']);
         $dani_zahtjev = BasicAbsenceController::daniGO($zahtjev);
         $zahtjevi = BasicAbsenceController::zahtjevi($employee);
-        $neiskoristeno_GO = $zahtjevi['preostalo_PG'] + $zahtjevi['preostalo_OG']; //vraća neiskorištene dane 
+        $neiskoristeno_GO = $zahtjevi['ukupnoPreostalo']; //vraća neiskorištene dane 
         
         return $this->from('info@duplico.hr', 'Duplico')
                     ->view('Centaur::email.absence')

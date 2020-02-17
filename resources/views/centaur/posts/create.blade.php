@@ -1,9 +1,3 @@
-<!-- Jquery validation -->
-<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/jquery.validate.js') }}"></script>
-<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/additional-methods.js') }}"></script>
-
-	<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/localization/messages_hr.js') }}"></script>
-
 <div class="modal-body body_post">
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('posts.store') }}" >
 		@if(! isset($employee_publish))
@@ -34,7 +28,7 @@
 		</div>
 		<div class="form-group {{ ($errors->has('content')) ? 'has-error' : '' }}">
 			<label>@lang('basic.message')</label>
-			<textarea name="content" type="text" class="form-control post_content" rows="7" required >{{ old('content') }}</textarea>
+			<textarea name="content" type="text" class="form-control post_content" maxlength="65535" rows="7" required >{{ old('content') }}</textarea>
 			{!! ($errors->has('content') ? $errors->first('content', '<p class="text-danger">:message</p>') : '') !!}
 		</div>		
 		{{ csrf_field() }}
@@ -43,18 +37,7 @@
 	</form>
 </div>
 <script>
-	$( "form" ).validate({
-		rules: {
-			to_employee_id: {
-				required: true,
-				maxlength: 150
-			},
-			content: {
-				required: true,
-				maxlength: 65535
-			}
-		}
-	});
+	
 	$('.form-control.department_id').hide();
 	$('.message_to_dep').click(function(){
 		$('.form-control.department_id').toggle();

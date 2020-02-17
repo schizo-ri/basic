@@ -68,6 +68,7 @@ class NoticeController extends Controller
      */
     public function store(Request $request)
     {
+       
         if(Sentinel::getUser()->employee) {
            
             $employee_id = Sentinel::getUser()->employee->id;
@@ -102,7 +103,6 @@ class NoticeController extends Controller
                 $notice = '';
             }
            
-
             if($request['schedule_time'] != null) {
                 $shedule = $request['schedule_date'] . ' ' . $request['schedule_time'];
             } else {
@@ -116,7 +116,7 @@ class NoticeController extends Controller
                 'title'  			=> $request['title'],
                 'notice'  			=> $notice
             );
-            
+           
             $notice1 = new Notice();
             $notice1->saveNotice($data1);
             
@@ -176,39 +176,72 @@ class NoticeController extends Controller
                 } else {
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 
-                        if($now >= $notice1->schedule_date ) {
-                            foreach($request['to_department'] as $department) {
-                                $department = Department::where('id', $department)->first();
-                                $prima = $department->email;
+                        if($request['schedule_set'] == 0 || $now >= $notice1->schedule_date ) {
+                            $prima = array();
+                            $employees = Employee::where('checkout', null)->get();
+                            foreach($request['to_department'] as $department_id) {
+                                $department = Department::where('id', $department_id)->first();
                                
-                                Mail::to($prima)->send(new NoticeMail($notice1));
+                                foreach ($employees as $employee) {
+                                    if( $employee->email ) {
+                                        if( $department->level1 == 0 ) {
+                                            array_push($prima, $employee->email );                                                                                
+                                        } else if( $department->level1 == 1 ) {                                        
+                                            $department_level2 = Department::where('id', $department->level2)->get();
+                                            foreach ($department_level2 as $department2) {
+                                                if ( $employee->work && $employee->work->department_id == $department2->id) {
+                                                   array_push($prima, $employee->email );
+                                                } 
+                                            }                                        
+                                        } else if( $department->level1 == 2 ) {
+                                            if ( $employee->work && $employee->work->department_id == $department->id) {
+                                                array_push($prima, $employee->email );
+                                            } 
+                                        }
+                                    }                                   
+                                }           
                             }
-
-                            $message = session()->flash('success',  __('ctrl.notice_saved'));
-                            return redirect()->back()->withFlashMessage($message);
+                            try {
+                                foreach (array_unique($prima) as $mail) {
+                                    Mail::to($mail)->send(new NoticeMail($notice1));
+                                }                    
+                            } catch (\Throwable $th) {
+                                $message = session()->flash('success',  __('emailing.not_send'));
+                                return redirect()->back()->withFlashMessage($message);
+                            }
                         }
-
+                     
                         return redirect()->back()->with('success', __('ctrl.notice_saved'));
                       //  return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
                     } else {
                         return redirect()->route('notices.index')->with('error', __('ctrl.notice_error')); 
                     }
                 }
+            } else {
+
             }
 
-           /* ********************************************************************* */
-          /*  if($request['schedule'] == true ) {
-                $message = session()->flash('data', $notice1->id);
-                //return redirect()->route('notices.index')->withFlashMessage($message);
-                return redirect()->back()->with('modal', 'true')->with('schedule', 'true')->withFlashMessage($message);
-            } */
-            if($now >= $notice1->schedule_date ) {
-
-                foreach($request['to_department'] as $department) {
-                    $department = Department::where('id', $department)->first();
-                    $prima = $department->email;
-                    
-                    Mail::to($prima)->send(new NoticeMail($notice1));
+           /* ************************* SEND MAIL *********************************** */
+     
+            if($request['schedule_set'] == 0 || $now >= $notice1->schedule_date ) {
+                $prima = array();
+                $employees = Employee::where('checkout', null)->get();
+                foreach($request['to_department'] as $department_id) {
+                    $department = Department::where('id', $department_id)->first();
+                   
+                    foreach ($employees as $employee) {
+                        if ( $employee->work->department_id == $department->id) {
+                            array_push($prima, $employee->email );
+                        } 
+                    }           
+                }
+                try {
+                    foreach ($prima as $mail) {
+                        Mail::to($mail)->send(new NoticeMail($notice1));
+                    }                    
+                } catch (\Throwable $th) {
+                    $message = session()->flash('success',  __('emailing.not_send'));
+                    return redirect()->back()->withFlashMessage($message);
                 }
             }
             $message = session()->flash('success', __('ctrl.notice_saved'));
@@ -282,7 +315,7 @@ class NoticeController extends Controller
     public function update(Request $request, $id)
     {
         $notice1 = Notice::find($id);
- 
+      //  dd($request);
         if(Sentinel::getUser()->employee) {
             $employee_id = Sentinel::getUser()->employee->id;
 
@@ -314,19 +347,19 @@ class NoticeController extends Controller
             
             $now = date('Y-m-d H:i');
 
+           
+            $to_department_id = implode(',', $request['to_department']);
+            $data1 = array(
+                'employee_id'   	=> $employee_id,
+                'to_department'     => $to_department_id,
+                'title'  			=> $request['title'],
+                'notice'  			=> $notice,
+                
+            );
             if($request['schedule'] == true) {
-                $data1 = array('schedule_date'  => date("Y-m-d h:i", strtotime($request['date'])));
-            } else {
-                $to_department_id = implode(',', $request['to_department']);
-                $data1 = array(
-                    'employee_id'   	=> $employee_id,
-                    'to_department'     => $to_department_id,
-                    'title'  			=> $request['title'],
-                    'notice'  			=> $notice,
-                   
-                );
-            }
-            
+                $data1 += array('schedule_date'  => date("Y-m-d h:i", strtotime($request['date'])));
+            } 
+           
             $notice1->updateNotice($data1);
 
             /* ***************************  posebna slika  ******************************** */
@@ -394,7 +427,18 @@ class NoticeController extends Controller
                     $department = Department::where('id', $department)->first();
                     $prima = $department->email;
                     
-                    Mail::to($prima)->send(new NoticeMail($notice1));
+                    if(! $prima) {
+                        $message = session()->flash('error',  __('emailing.no_mail'));
+                        return redirect()->back()->withFlashMessage($message);
+                    
+                    } else {
+                        try {
+                            Mail::to($prima)->send(new NoticeMail($notice1));
+                        } catch (\Throwable $th) {
+                            $message = session()->flash('error',  __('emailing.not_send'));
+                            return redirect()->back()->withFlashMessage($message);
+                        }
+                    }      
                 }
             }
  

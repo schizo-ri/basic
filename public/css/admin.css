@@ -1,6 +1,11 @@
 
 .index_page.index_admin h1 {
-    margin: 40px 0 35px;
+    margin: 40px 0 0;
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    z-index: 1;
+    padding-bottom: 35px;
 }
 ul.admin_pages {
     list-style: none;  
@@ -103,6 +108,7 @@ ul.admin_pages li >span.space {
     font-weight: normal;
     font-size: 0.625rem;
     line-height: 12px;
+    overflow-wrap: break-word;
 }
 @media (max-width: 450px) {
     section.admin_panel {
@@ -111,6 +117,7 @@ ul.admin_pages li >span.space {
 
     .index_page.index_admin h1 {
         margin: 10px 0;
+        padding: 0;
     }
     ul.admin_pages li >span {
         width: 52px;

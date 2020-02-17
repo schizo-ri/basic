@@ -15,20 +15,27 @@
     <div class="modal-body">
         <div class="form-group {{ ($errors->has('to_department'))  ? 'has-error' : '' }}">
             <label>@lang('basic.to_department')</label>
-            <select  class="form-control" name="to_department[]" value="{{ old('to_department') }}" multiple required >
-                <option value="" disabled ></option>
-                @foreach($departments0 as $department0)
-                    <option value="{{ $department0->id }}" {!! in_array($department0->id, $departments ) ? 'selected' : '' !!} >{{ $department0->name }}</option>
-                @endforeach
-                @foreach($departments1 as $department1)
-                    <option value="{{ $department1->id }}" {!! in_array($department1->id, $departments ) ? 'selected' : '' !!} >{{ $department1->name }}</option>
+            @foreach($departments0 as $department0)
+                <div class="col-12">
+                    <span class="float_l col-sm-6 col-lg-4  col-xl-3" ><input class="float_l" type="checkbox" name="to_department[]" id="{{ $department0->id }}" value="{{ $department0->id }}" {!! in_array($department0->id, $departments ) ? 'checked' : '' !!} /><label for="{{ $department0->id }}">{{ $department0->name }}</label></span>
                     @foreach($departments2 as $department2)
-                        @if($department2->level2 == $department1->id)
-                        <option value="{{ $department2->id }}" {!! in_array($department2->id, $departments ) ? 'selected' : '' !!} >-  {{ $department2->name }}</option>
+                        @if ($department2->level2 == $department0->id )
+                            <span class="float_l col-sm-6 col-lg-4  col-xl-3" ><input type="checkbox" name="to_department[]" id="{{ $department2->id }}" value="{{ $department2->id }}" {!! in_array($department2->id, $departments ) ? 'checked' : '' !!} /><label for="{{ $department2->id }}">{{ $department2->name }}</label></span>
                         @endif
                     @endforeach
-                @endforeach
-            </select>
+                    @foreach($departments1 as $department1)
+                            @if ($department1->level2 == $department0->id )
+                                <span class="float_l col-sm-6 col-lg-4  col-xl-3" ><input type="checkbox" name="to_department[]" id="{{ $department1->id }}" value="{{ $department1->id }}" {!! in_array($department1->id, $departments ) ? 'checked' : '' !!} /><label for="{{ $department1->id }}">{{ $department1->name }}</label></span>
+                            @endif
+                            @foreach($departments2 as $department2)
+                            
+                                @if ($department2->level2 == $department1->id )
+                                    <span class="float_l col-sm-6 col-lg-4  col-xl-3" ><input type="checkbox" name="to_department[]" id="{{ $department2->id }}" value="{{ $department2->id }}" {!! in_array($department2->id, $departments ) ? 'checked' : '' !!} /><label for="{{ $department2->id }}">{{ $department2->name }}</label></span>
+                                @endif
+                            @endforeach
+                    @endforeach
+                </div>
+            @endforeach       
             {!! ($errors->has('to_department') ? $errors->first('to_department', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <div class="form-group  {{ ($errors->has('title'))  ? 'has-error' : '' }}">
@@ -37,8 +44,20 @@
             {!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <div class="form-group">
+            <?php
+                $path = 'storage/notice/' . $notice->id . '/';
+                if(file_exists($path)) {
+                    $docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
+                }		
+            ?>
             <label class="label_file" for="file">Top notice image<span><img src="{{ URL::asset('icons/download.png') }}" />Upload image</span></label>
             <input type='file' id="file" name="fileToUpload" >
+            <span id="file_name"></span>
+			@if(isset($docs))
+				@if(file_exists($path . end($docs)) && end($docs)!= '' )
+					<span class="ad_image">{{ end($docs) }} <a class="action_confirm danger" href="{{ action('DocumentController@imageDelete', ['image' => $path . end($docs)]  ) }}" data-method="delete" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a> </span>
+				@endif
+			@endif
         </div>
 
         <div class="form-group  {{ ($errors->has('schedule_date'))  ? 'has-error' : '' }}" >
@@ -69,43 +88,35 @@
             <p class="pop-up">Da biste odgodili objavu obavijesti potrebno je unijeti željeni datum.</p>
             {!! ($errors->has('schedule_date') ? $errors->first('schedule_date', '<p class="text-danger">:message</p>') : '') !!}
         </div>
-
-        <div class="form-group last summernote">
+        <div class="form-group last {{ ($errors->has('notice')) ? 'has-error' : '' }}">
             <label>@lang('basic.notice'):</label>
-            <textarea id="summernote" name="notice" required>{!!  $notice->notice  !!}</textarea>
+            <textarea name="notice" id="mytextarea" maxlength="16777215">{!!  $notice->notice  !!}</textarea>
+            {!! ($errors->has('notice') ? $errors->first('notice', '<p class="text-danger">:message</p>') : '') !!}
         </div>
+        
         {{ csrf_field() }}
         {{ method_field('PUT') }}
     </div>
 </form>
+<span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-     $( "form" ).validate({
-		rules: {
-			to_department: {
-				required: true
-			},
-			title: {
-				required: true,
-				maxlength: 100
-            },
-            notice: {
-				required: true,
-				maxlength: 16777215
-			}
-		}
-    });
+	$.getScript( '/../js/tinymce.js');
+
+	$('body').on($.modal.CLOSE, function(event, modal) {
+		$.getScript('/../node_modules/tinymce/tinymce.min.js');
+	});	
+   
     $(function() {
         var height = 0;
         var body_height = 0;
         var modal_height = $('.modal.modal_notice').height();
         var modal_width =  $('.modal.modal_notice').width();
         var header_height =  $('.modal-header').height();
-        if(modal_width> 450) {
-            body_height =  modal_height - header_height - 65;
+        if(modal_width > 450) {
+            body_height =  modal_height - header_height -65;
         }  else {
             body_height =  modal_height - header_height - 30;
         }
-
         
         $('.modal-body').height(body_height);
        
@@ -119,16 +130,6 @@
             $('.form-group.last').height(last_height - 60);
             $('.note-editable').height(last_height - 160 );
         }
-
-        $("#summernote").summernote({
-       
-        });
-       
-        $('.btn-submit').click(function(e){
-            if(! $('#summernote').val() == true) {
-                $('.form-group.summernote').append('<p class="text-danger">Obavijest je prazna, obavezan upis za polje "Obavijest"!</p>');
-            }
-        });
 
         if( $('.select_save#schedule').is(':checked')) {
             $('.schedule_date').show();
@@ -181,5 +182,9 @@
             $('.note-editable').height(last_height - 160 );
         }
     });
-    
+   // $.getScript( '/../js/validate.js');
+
+   $('#file').change(function(){
+        $('#file_name').text( $('input[type=file]').val());
+	});
 </script>

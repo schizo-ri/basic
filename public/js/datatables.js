@@ -7,7 +7,7 @@ $( function () {
 		sort = 'asc';
 	}	
 
-	$('table.display').DataTable( {
+	var table = $('table.display').DataTable( {
 		"language": {
 			"search": "",
 			"searchPlaceholder": "Search"
@@ -65,4 +65,8 @@ $( function () {
 		]
 	});
 	
+	$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+	$('.show_button').click(function () {
+		$('.index_page .dt-buttons').toggle();		
+	})	
 });

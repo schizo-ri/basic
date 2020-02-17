@@ -54,12 +54,7 @@ class AbsenceCronMail extends Mailable
             
             $zahtjevi = BasicAbsenceController::zahtjevi($absence->employee); 
 
-            $razmjeranGO =  $zahtjevi['preostalo_OG'];
-            $razmjeranGO_PG =  $zahtjevi['preostalo_PG'];
-            $daniZahtjevi =  $zahtjevi['zahtjevi_Dani_OG'];
-            $daniZahtjevi_PG =  $zahtjevi['zahtjevi_Dani_PG'];
-            
-            $dani_GO = $razmjeranGO + $razmjeranGO_PG - $daniZahtjevi - $daniZahtjevi_PG;
+            $dani_GO = $zahtjevi['ukupnoPreostalo'];
 
             foreach ($period as $dan) {  //ako je dan  GO !!!
                 $period_day = date_format($dan,'d');

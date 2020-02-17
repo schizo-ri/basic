@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\Employee_absence::class,
+        \App\Console\Commands\CampaignEmails::class,
+        \App\Console\Commands\NoticeSchedule::class,
     ];
 
     /**
@@ -28,6 +30,13 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         $schedule->command('email:absence_day')
 				  ->dailyAt('8:00')
+                  ->evenInMaintenanceMode();
+        $schedule->command('email:campaign')
+                  ->dailyAt('8:00')
+                  ->evenInMaintenanceMode();
+        $schedule->command('email:notice')
+                //  ->dailyAt('8:00')
+                  ->everyMinute()
 				  ->evenInMaintenanceMode();
     }
 

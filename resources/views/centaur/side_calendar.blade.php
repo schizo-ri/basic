@@ -3,7 +3,7 @@
     use App\Models\Event;
     use App\Http\Controllers\EventController;
     use App\Http\Controllers\DashboardController;
-    $events_day = '';
+    $events_day = array();
 	if(isset($_GET['dan'])) {
 		$dan = $_GET['dan'];
 	} else {
@@ -29,7 +29,7 @@
 </div>
 <div class="col-12 day_events">
     <div class="col-12">
-        @if ($dataArr_day || count( $events_day) >0)
+        @if ($dataArr_day || $events_day )
             <a class="three_dots" rel="modal:open" href="{{ route('all_event', ['dataArr_day' => $dataArr_day, 'uniqueType' => $uniqueType, 'dan' => $dan] ) }}" > @lang('basic.view_all')</a>
         @endif
        
@@ -41,6 +41,9 @@
                 @endphp
                 <p class="day_events_data">
                     <span class="event_type" >{{ ucfirst($type)  }}</span>
+                    @if (count($dataArr_day) )
+                        
+                    @endif
                     @foreach ($dataArr_day as $data_day)
                         @if ($data_day['type'] == $type && $x < 3 )
                             @php
@@ -71,14 +74,16 @@
             @endforeach
             
         @endif
-    @if(isset($events_day) && count($events_day) > 0)
+    @if(isset($events_day))
         <p class="day_events_data">
-            @foreach ($events_day as $event)
-                <span class="event_type" >{!! $event->type ? ucfirst($event->type) : __('calendar.event') !!}</span>
-                <span class="event_user">
-                    {{ date("H:i", strtotime($event->time1)) . '-' . date("H:i", strtotime($event->time2))  . '-' . $event->title . ', ' . $event->description }}
-                </span>   
-            @endforeach
+            @if(count($events_day))
+                @foreach ($events_day as $event)
+                    <span class="event_type" >{!! $event->type ? ucfirst($event->type) : __('calendar.event') !!}</span>
+                    <span class="event_user">
+                        {{ date("H:i", strtotime($event->time1)) . '-' . date("H:i", strtotime($event->time2))  . '-' . $event->title . ', ' . $event->description }}
+                    </span>  
+                @endforeach
+            @endif
         </p>     			
     @endif
    

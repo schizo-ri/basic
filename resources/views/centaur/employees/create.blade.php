@@ -1,3 +1,4 @@
+<span hidden class="locale" >{{ App::getLocale() }}</span>
 <div class="modal-header">
 	<h3 class="panel-title">@lang('basic.add_employee')</h3>
 </div>
@@ -112,7 +113,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('work_id'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.work')</label>
-				<select class="form-control" name="work_id" id="sel1" value="{{ old('work_id') }}" required >
+				<select class="form-control" name="work_id" value="{{ old('work_id') }}" required >
 					<option selected="selected" value=""></option>
 					@foreach($works as $work)
 						<option name="work_id" value="{{ $work->id }}">{{ $work->department['name'] . ' - '. $work->name }}</option>
@@ -122,7 +123,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('superior_id'))  ? 'has-error' : '' }}">
 				<span><b>Nadređeni djelatnik:</b></span>
-				<select class="form-control" name="superior_id" id="sel1" >
+				<select class="form-control" name="superior_id" >
 					<option selected value="0"></option>
 					@foreach($employees as $employee)
 						<option name="superior_id" value="{{ $employee->id }}">{{ $employee->user['last_name'] . ' '. $employee->user['first_name'] }}</option>
@@ -171,7 +172,10 @@
 				{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			{{ csrf_field() }}
-			<input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('basic.save')}}">
+			<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">
 		</fieldset>
 	</form>
 </div>
+<script>
+    $.getScript( '/../js/validate.js');
+</script>

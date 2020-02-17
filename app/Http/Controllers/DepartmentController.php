@@ -30,7 +30,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::get();
+        $departments = Department::orderBy('name')->get();
         $department_roles = DepartmentRole::get();
 		$works = Work::get();
         $empl = Sentinel::getUser()->employee;
@@ -101,7 +101,7 @@ class DepartmentController extends Controller
     {
         $department = Department::find($id);
 		$companies = Company::get();
-		$departments = Department::where('level1', 1)->orWhere('level1', 0)->orderBy('name','ASC')->get();
+		$departments = Department::where('level2','<>', $department->id )->where('level1', 1)->orWhere('level1', 0)->orderBy('name','ASC')->get();
 		
 		return view('Centaur::departments.edit', ['department' => $department,'companies' => $companies,'departments' => $departments]);
     }

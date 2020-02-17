@@ -1,5 +1,5 @@
 @component('mail::message')
-# Introduction
+# @lang('basic.notice') 
 @lang('emailing.new_notice_on_app')
 
 @component('mail::button', ['url' => $url])

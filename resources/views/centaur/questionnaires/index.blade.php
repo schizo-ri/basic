@@ -38,6 +38,7 @@
 									<span class="progress_val">{{ $progress_count  }}/{{count($employees)}}</span>
 									<p>{{ $questionnaire->name }}</p>
 									<span class="status_q">@if( $questionnaire->status == 1 && !count(QuestionnaireController::collectResults( $questionnaire->id)->where('employee_id', Sentinel::getUser()->employee->id)) >0) <a href="{{ route('questionnaires.show', $questionnaire->id) }}" rel="modal:open">Complete survey</a>@endif</span>
+
 								</div>
 							</span>
 							<span class="thumb_name">{{ $questionnaire->name }}</span>
@@ -126,7 +127,6 @@
 					<div class="table-responsive second_view">
 						<div class="questionnaires">
 							@foreach ($questionnaires as $questionnaire)
-								<button class="collapsible option_dots float_r"></button>
 								<div class="thumb_container panel">
 									<span class="thumbnail thumbnail_q" >
 										<div class="thumb_content">
@@ -160,6 +160,7 @@
 	</main>
 </div>
 <script>
-$.getScript( "/../js/questionnaire.js" );
+	//$.getScript( "/../js/collaps.js" );
+	$.getScript( '/../js/questionnaire.js');
 </script>
 @stop

@@ -1,3 +1,6 @@
+@php
+	use App\Models\Absence;
+@endphp
 <header class="page-header">
 	<div class="index_table_filter">
 		<label>
@@ -8,7 +11,6 @@
 				<i class="fas fa-plus"></i>
 			</a>
 		@endif
-		<span class="change_view"></span>
 	</div>
 </header>
 <main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -31,10 +33,10 @@
 								<button class="collapsible option_dots float_r"></button>
 								@if(Sentinel::getUser()->hasAccess(['absence_types.update']) || in_array('absence_types.update', $permission_dep))
 									<a href="{{ route('absence_types.edit', $absenceType->id) }}" style="display:none" class="btn-edit" rel="modal:open">
-											<i class="far fa-edit"></i>
+										<i class="far fa-edit"></i>
 									</a>
 								@endif
-								@if(Sentinel::getUser()->hasAccess(['absence_types.delete']) || in_array('absence_types.delete', $permission_dep))
+								@if( ! Absence::where('type', $absenceType->id)->first() && Sentinel::getUser()->hasAccess(['absence_types.delete']) || in_array('absence_types.delete', $permission_dep) )
 									<a href="{{ route('absence_types.destroy', $absenceType->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
@@ -45,17 +47,17 @@
 				</tbody>
 			</table>
 		@else
-			@lang('basic.no_data')
+			<p class="no_data">@lang('basic.no_data')</p>
 		@endif
 	</div>
 </main>
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-	//	$.getScript( '/../js/collaps.js');
 	$('.collapsible').click(function(event){        
        		$(this).siblings().toggle();
 		});
 	});
+	$.getScript( '/../restfulizer.js');
 </script>
 	

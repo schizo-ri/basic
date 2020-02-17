@@ -17,7 +17,7 @@
                         {!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
                     {{ csrf_field() }}
-                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Send">
+                    <input class="btn-submit" type="submit" value="Send">
                 </fieldset>
                 </form>
             </div>

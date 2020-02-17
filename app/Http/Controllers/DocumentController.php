@@ -92,19 +92,29 @@ class DocumentController extends Controller
      */
     public function store(Request $request)                      // ne radi sa drag and drop slikama (nema slika u requestu)
     {
-      $user = Employee::where('user_id', Sentinel::getUser()->id)->first();
+      $user = Employee::where('user_id', Sentinel::getUser()->id)->first();        
         
         if(isset($request['employee_id'])) {
           if($request['employee_id'] != 'svi') {
-            $employee = Employee::where('id',$request->employee_id)->first();
+            $employee = Employee::where('id', $request->employee_id)->first();
           }
         } else {
-          $employee = Employee::where('user_id', Sentinel::getUser()->id)->first();
+          $employee = $user;
         }
 
         if(isset($employee)) {
-          $user_name = explode('.',strstr($employee->email,'@',true));
-          $user_name = $user_name[1] . '_' . $user_name[0];
+          if($employee->email) {
+            $user_name = explode('.',strstr($employee->email,'@',true));
+
+            if(isset($user_name[1])) {
+              $user_name = $user_name[1] . '_' . $user_name[0];
+            } else {
+                $user_name = $user_name[0];
+            }
+          } else {
+            $user_name = explode('.',strstr(Sentinel::getUser()->email,'@',true));
+            $user_name = $user_name[1] . '_' . $user_name[0];            
+          }          
         } else {
           $user_name = 'svi';
         }
@@ -113,7 +123,6 @@ class DocumentController extends Controller
         if (!file_exists($path)) {
           mkdir($path);
         }
-
           
         if(isset($request['users_interest']) && $request['users_interest'] == true) {
             $path .= 'interest/';
@@ -151,10 +160,11 @@ class DocumentController extends Controller
               if($imageType == "exe" || $imageType == "bin") {                             // Allow certain file formats
                 return redirect()->back()->with('error', __('ctrl.not_allow'));  
               } 
-             
+              $docType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));    //file extension 
               $item->move($path, $imageName);
-              DocumentController::createResizedImage($path . $imageName, $path . pathinfo($imageName)['filename'] . '_small.' . pathinfo($imageName)['extension'], 200, 250 );
-
+              if( $docType  == 'jpg' ||  $docType  ==  'png' ||  $docType  ==  'gif' ||  $docType  ==  'jpeg') {
+                DocumentController::createResizedImage($path . $imageName, $path . pathinfo($imageName)['filename'] . '_small.' . pathinfo($imageName)['extension'], 200, 250 );
+              }
               $data = array(
                 'employee_id'  	=> $user->id,
                 'title'  		    => $imageName,
@@ -165,17 +175,16 @@ class DocumentController extends Controller
               $document = new Document();
               $document->saveDocument($data);
             }
-          } else {
-            
+          } else {           
             $docName = $request->file('fileToUpload')->getClientOriginalName();  //file name
             $docSize =  $request->file('fileToUpload')->getClientSize();         //file size 
             $target_file = $path . $docName;
             $docType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));    //file extension 
-            
+           
             if (file_exists($target_file)) {                                         // Check if file already exists
               return redirect()->back()->with('error', __('ctrl.file_exists'));
             }
-            
+           
             if ($docSize > 5000000) {                                               // Check file size
               return redirect()->back()->with('error',  __('ctrl.file_toolarge'));  
             }
@@ -186,8 +195,11 @@ class DocumentController extends Controller
             
             try {
               $request->file('fileToUpload')->move($path, $docName);
-              DocumentController::createResizedImage($path . $docName, $path . pathinfo($docName)['filename'] . '_small.' . pathinfo($docName)['extension'], 200, 250);
-
+              
+              if( $docType  == 'jpg' ||  $docType  ==  'png' ||  $docType  ==  'gif' ||  $docType  ==  'jpeg') {
+                DocumentController::createResizedImage($path . $docName, $path . pathinfo($docName)['filename'] . '_small.' . pathinfo($docName)['extension'], 200, 250);
+              }
+          
               $data = array(
                 'employee_id'  	=> $user->id,
                 'title'  		    => $docName,
@@ -215,15 +227,20 @@ class DocumentController extends Controller
          * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        
+    {        
         $document = Document::find($id);
-        $link = $document->path . $document->title;
-        $link_small = $document->path . pathinfo($link)['filename'] . '_small' . '.' . pathinfo($link)['extension'];
-      
-        unlink($link);
-        unlink($link_small);
 
+        $link = $document->path . $document->title;
+
+        $link_small = $document->path . pathinfo($link)['filename'] . '_small' . '.' . pathinfo($link)['extension'];
+        if (file_exists($link)) {
+          unlink($link);
+        }
+      
+        if (file_exists($link_small)) {
+          unlink($link_small);
+        }
+   
         $document->delete();
 
         $message = session()->flash('success',  __('ctrl.data_delete'));
@@ -289,29 +306,33 @@ class DocumentController extends Controller
     }
   }
 
-  // promjena veličina slika, snika kao thumbnail - vraća putanju)
+  // promjena veličina slika, slika kao thumbnail - vraća putanju)
   public static function createResizedImage(string $imagePath = '', string $newPath = '', int $newWidth = 0, int $newHeight = 0, string $outExt = 'DEFAULT') 
     {    
+
       $image_size = getimagesize($imagePath);
       $width = $image_size[0];
       $height = $image_size[1];
+      $newWidth = $width;
+      $newHeight = $height;
+
 
       if ($width <  $newWidth &&  $height < $newHeight ) {
-        $newWidth = $width;
-        $newHeight = $height;
-      } else {
-        $omjer_w = $width  / $height * 100;
-        $omjer_h = $height / $width  * 100;
-
-        if($width < $height) {
-          $newWidth = $newHeight * $omjer_w / 100;
-        } elseif ($height < $width ) {
-          $newHeight = $newWidth *  $omjer_h / 100;
+          $newWidth = $width;
+          $newHeight = $height;
         } else {
-          $newHeight = $newWidth;
+          $omjer_w = $width  / $height * 100;
+          $omjer_h = $height / $width  * 100;
+          
+          if($width < $height) {
+            $newWidth = $newHeight * $omjer_w / 100;
+          } elseif ($height < $width ) {
+            $newHeight = $newWidth *  $omjer_h / 100;
+          } else {
+            $newHeight = $newWidth;
+          }
         }
-      }
-    
+      
     if (  $newPath === '' or  file_exists($imagePath) === false) {
         return null;
     }
@@ -321,28 +342,59 @@ class DocumentController extends Controller
     list($width, $height) = getimagesize($imagePath);
 
     $outBool = in_array($outExt, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']);
-    
+    $degrees = 270;
+
       switch (true)
       {
           case  $type === IMAGETYPE_JPEG:
               $image = imagecreatefromjpeg($imagePath);
               if ($outBool === false) $outExt = 'jpg';
+              if ( strpos($newPath, 'profile_img') && $height < $width ) {
+                // File and rotation
+                 $source = imagecreatefromjpeg($imagePath);
+                 // Rotate
+                 $newImage = imagerotate($source, $degrees, 0);
+               }
               break;
           case $type === IMAGETYPE_PNG:
               $image = imagecreatefrompng($imagePath);
               if ($outBool === false) $outExt = 'png';
+              if ( strpos($newPath, 'profile_img') && $height < $width ) {
+                // File and rotation
+                 $source = imagecreatefrompng($imagePath);
+                 // Rotate
+                 $newImage = imagerotate($source, $degrees, 0);
+               }
               break;
           case $type === IMAGETYPE_GIF:
               $image = imagecreatefromgif($imagePath);
               if ($outBool === false) $outExt = 'gif';
+              if ( strpos($newPath, 'profile_img') && $height < $width ) {
+                // File and rotation
+                 $source = imagecreatefromgif($imagePath);
+                 // Rotate
+                 $newImage = imagerotate($source, $degrees, 0);
+               }
               break;
           case $type === IMAGETYPE_BMP:
               $image = imagecreatefrombmp($imagePath);
               if ($outBool === false) $outExt = 'bmp';
+              if ( strpos($newPath, 'profile_img') && $height < $width ) {
+                // File and rotation
+                 $source = imagecreatefrombmp($imagePath);
+                 // Rotate
+                 $newImage = imagerotate($source, $degrees, 0);
+               }
               break;
           case $type === IMAGETYPE_WEBP:
               $image = imagecreatefromwebp($imagePath);
               if ($outBool === false) $outExt = 'webp';
+              if ( strpos($newPath, 'profile_img') && $height < $width ) {
+                // File and rotation
+                 $source = imagecreatefromwebp($imagePath);
+                 // Rotate
+                 $newImage = imagerotate($source, $degrees, 0);
+               }
       }
     
       try {
@@ -358,14 +410,8 @@ class DocumentController extends Controller
 
       //ROUTINE
       imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-
-      if ($height < $width ) {
-       // File and rotation      
-        $degrees = 270;
-        $source = imagecreatefromjpeg($imagePath);
-        // Rotate
-        $newImage = imagerotate($source, $degrees, 0);
-      }
+    
+      
    
         switch (true)
         {
@@ -385,7 +431,7 @@ class DocumentController extends Controller
           return null;
       }
       if (file_exists($imagePath)) {
-        unlink($imagePath);
+     //   unlink($imagePath);
       }
     return $newPath;
   }
@@ -397,6 +443,17 @@ class DocumentController extends Controller
 
     $r = getimagesize( $image );
     return $r[2];
+  }
+
+  public static function imageDelete ( Request $request) 
+  {
+   $path = $request['image'];
+
+    if (file_exists($path)) {
+      unlink($path);
+    }
+  
+    return redirect()->back();
   }
 
 }

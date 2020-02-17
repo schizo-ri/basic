@@ -8,7 +8,6 @@
 				<i class="fas fa-plus"></i>
 			</a>
 		@endif
-		<span class="change_view"></span>
 	</div>
 </header>
 <main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -32,7 +31,7 @@
 											<i class="far fa-edit"></i>
 									</a>
 								@endif
-								@if(Sentinel::getUser()->hasAccess(['ad_categories.delete']) || in_array('ad_categories.delete', $permission_dep))
+								@if( ! $ads->where('category_id',  $category->id)->first() && Sentinel::getUser()->hasAccess(['ad_categories.delete']) || in_array('ad_categories.delete', $permission_dep))
 									<a href="{{ route('ad_categories.destroy', $category->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
@@ -43,16 +42,16 @@
 				</tbody>
 			</table>
 		@else
-			@lang('basic.no_data')
+			<p class="no_data">@lang('basic.no_data')</p>
 		@endif
 	</div>
 </main>
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-	//	$.getScript( '/../js/collaps.js');
 	$('.collapsible').click(function(event){        
        		$(this).siblings().toggle();
 		});
 	});
+	$.getScript( '/../restfulizer.js');
 </script>

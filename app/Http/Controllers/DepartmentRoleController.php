@@ -46,14 +46,22 @@ class DepartmentRoleController extends Controller
      */
     public function create(Request $request)
     {
-		$tables1 = Table::get();
+        $tables1 = Table::get();
 		$tables = array();
 		
 		foreach($tables1 as $table) {
-			array_push($tables,$table->name);
-		}
+            //array_push($tables, $table->name);
+            $tables[$table->name] = $table->description;
+        }
+      
+        asort($tables);
 		
-		$methodes = array('create','update','view','delete');
+        $methodes = array();
+
+        $methodes['create'] = __('basic.create');
+        $methodes['update'] = __('basic.update');
+        $methodes['view'] = __('basic.view');
+        $methodes['delete'] = __('basic.delete');
 		
 		if(isset($request->department_id)) {
 			$department = Department::find($request->department_id);
@@ -115,13 +123,22 @@ class DepartmentRoleController extends Controller
 
 		$permissions = explode(',', $departmentRole->permissions);
 
-		$tables1 = Table::get();
+        $tables1 = Table::get();
 		$tables = array();
 		
 		foreach($tables1 as $table) {
-			array_push($tables,$table->name);
-		}
-		$methodes = array('create','update','view','delete');
+            //array_push($tables, $table->name);
+            $tables[$table->name] = $table->description;
+        }
+      
+        asort($tables);
+		
+        $methodes = array();
+
+        $methodes['create'] = __('basic.create');
+        $methodes['update'] = __('basic.update');
+        $methodes['view'] = __('basic.view');
+        $methodes['delete'] = __('basic.delete');
 		
 		return view('Centaur::department_roles.edit',['departmentRole' => $departmentRole,'tables' => $tables, 'methodes' => $methodes, 'permissions' => $permissions]);
     }

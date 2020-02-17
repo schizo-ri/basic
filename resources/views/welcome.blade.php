@@ -25,12 +25,16 @@
 		<link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
 
 		<!--Jquery -->
-		<script src="{{ URL::asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
+		<script src="{{ URL::asset('/node_modules/jquery/dist/jquery.min.js') }}"></script>
 
 		@stack('stylesheet')
 		
     </head>
     <body>
+		@php
+			use App\User;
+		@endphp
+
 		<section class="welcome_page">
 			<section class="col-sm-7 col-md-7 col-lg-7 col-xl-7 float_left welcome">
 				<div class="">
@@ -56,7 +60,9 @@
 						<input class="btn-login" type="submit" value="{{ __('welcome.login') }}">
 					</form>
 					<p class="terms">By log in you agree to Intranets <span>terms and conditions</span></p>
-				<!--	<li><a href="{{ route('auth.register.form') }}" rel="modal:open" >@lang('welcome.register')</a></li>-->
+					@if (count(User::get()) == 0 )
+						<a href="{{ route('auth.register.form') }}" rel="modal:open" >@lang('welcome.register')</a></li>
+					@endif
 				</div>
 			</section>
 			<section class="col-sm-5 col-md-5 col-lg-5 col-xl-5 float_left welcome_right">

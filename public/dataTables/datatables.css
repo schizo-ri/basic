@@ -4,23 +4,23 @@
  *
  * To rebuild or modify this file with the latest versions of the included
  * software please visit:
- *   https://datatables.net/download/#dt/jszip-2.5.0/pdfmake-0.1.36/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/b-html5-1.5.6/b-print-1.5.6
+ *   https://datatables.net/download/#dt/pdfmake-0.1.36/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/b-html5-1.5.6/b-print-1.5.6
  *
  * Included libraries:
- *   JSZip 2.5.0, pdfmake 0.1.36, DataTables 1.10.18, Buttons 1.5.6, Column visibility 1.5.6, Flash export 1.5.6, HTML5 export 1.5.6, Print view 1.5.6
+ *   pdfmake 0.1.36, DataTables 1.10.18, Buttons 1.5.6, Column visibility 1.5.6, Flash export 1.5.6, HTML5 export 1.5.6, Print view 1.5.6
  */
 
 /*
  * Table styles
  */
 table.dataTable {
+  min-width: 100%;
   width: 100%;
+  display: inline-table;
   margin: 0 auto;
   clear: both;
   border-collapse: separate;
   border-spacing: 0;
-  display: table;
-  margin-bottom: 20px;
   /*
    * Header and footer styles
    */
@@ -55,7 +55,6 @@ table.dataTable thead .sorting_desc_disabled {
   *cursor: hand;
   background-repeat: no-repeat;
   background-position: center right;
-  border: none;
 }
 table.dataTable thead .sorting {
   background-image: url("DataTables-1.10.18/images/sort_both.png");
@@ -74,31 +73,19 @@ table.dataTable thead .sorting_desc_disabled {
 }
 table.dataTable tbody tr {
   background-color: #ffffff;
-  height: fit-content;
 }
 table.dataTable tbody tr.selected {
   background-color: #B0BED9;
 }
 table.dataTable tbody th,
 table.dataTable tbody td {
-  /*padding: 8px 10px;*/
-  padding: 25px 10px;
-  border: none;
-  position: relative;
+  padding: 25px;
+	border: none;
+	position: relative;
 }
-table.dataTable tbody td:last-child {
-  padding-right: 15px;
-}
-table.dataTable tbody td:last-child > a {
-  display: none;
-  margin-right: 5px;
-}
-table.dataTable tbody td:last-child > a >svg {
-  height: 15px;
-}
+
 table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
   border-top: 1px solid #ddd;
-  
 }
 table.dataTable.row-border tbody tr:first-child th,
 table.dataTable.row-border tbody tr:first-child td, table.dataTable.display tbody tr:first-child th,
@@ -119,7 +106,6 @@ table.dataTable.cell-border tbody tr:first-child td {
 }
 table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd {
   background-color: #f9f9f9;
-  background-color: inherit;
 }
 table.dataTable.stripe tbody tr.odd.selected, table.dataTable.display tbody tr.odd.selected {
   background-color: #acbad4;
@@ -200,8 +186,6 @@ table.dataTable.display tbody tr:hover.selected > .sorting_3, table.dataTable.or
 }
 table.dataTable.no-footer {
   border-bottom: 1px solid #111;
-  border-bottom: none;
-
 }
 table.dataTable.nowrap th, table.dataTable.nowrap td {
   white-space: nowrap;
@@ -686,8 +670,7 @@ a.dt-button:focus:not(.disabled) {
 
 div.dt-buttons {
   position: relative;
-  float: right;
-  margin-top: 5px;
+  float: left;
 }
 div.dt-buttons.buttons-right {
   float: right;

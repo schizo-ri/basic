@@ -9,7 +9,6 @@
 			
 			</a>
 		@endif
-		<span class="change_view"></span>
 	</div>
 </header>
 <main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -39,7 +38,7 @@
 											<i class="far fa-edit"></i>
 									</a>
 								@endif
-								@if(Sentinel::getUser()->hasAccess(['works.delete']) || in_array('works.delete', $permission_dep) && !$employees->where('work_id',$work->id)->first())
+								@if( !$employees->where('work_id',$work->id)->first() && Sentinel::getUser()->hasAccess(['works.delete']) || in_array('works.delete', $permission_dep))
 									<a href="{{ route('works.destroy', $work->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" style="display:none">
 										<i class="far fa-trash-alt"></i>
 									</a>
@@ -50,7 +49,7 @@
 				</tbody>
 			</table>
 		@else
-			@lang('basic.no_data')
+			<p class="no_data">@lang('basic.no_data')</p>
 		@endif
 	</div>
 </main>
@@ -61,4 +60,5 @@
        		$(this).siblings().toggle();
 		});
 	});
+	$.getScript( '/../restfulizer.js');
 </script>		

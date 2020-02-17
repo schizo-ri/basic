@@ -296,4 +296,5 @@ class CompanyController extends Controller
 		
 		return $url;
 	}
+
 }

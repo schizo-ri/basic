@@ -59,7 +59,7 @@ class SessionController extends Controller
         // Return the appropriate response
         if(Sentinel::check()) {
             $path = session()->pull('url.intended', route('dashboard'));
-            Session::flash('success', "Prijavljen si");
+           // Session::flash('success', "Prijavljen si");
             return $result->dispatch($path);
         }
        

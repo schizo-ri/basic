@@ -2,11 +2,11 @@
 	<h3 class="panel-title">@lang('absence.edit_absence')</h3>
 </div>
 <div class="modal-body">
-	<form role="form" method="post" name="myForm" accept-charset="UTF-8" action="{{ route('absences.update', $absence->id ) }}" onsubmit="return validateForm()">
+	<form role="form" method="post" name="myForm" accept-charset="UTF-8" action="{{ route('absences.update', $absence->id ) }}">
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.employee')</label>
-				<select class="form-control" name="employee_id" value="{{ old('employee_id') }}" id="sel1" size="10" autofocus required >
+				<select class="form-control" name="employee_id" value="{{ old('employee_id') }}" size="10" autofocus required >
 					<option value="" disabled></option>
 					@foreach ($employees as $employee)
 						<option name="employee_id" value="{{ $employee->id }}" {!! $absence->employee_id ==  $employee->id ? 'selected' : '' !!}>{{ $employee->user['last_name']  . ' ' . $employee->user['first_name'] }}</option>
@@ -73,7 +73,8 @@
 		<a href="#" rel="modal:close" class="btn-close">@lang('basic.cancel')</a>
 	</form>
 </div>
-<script  >
+<span hidden class="locale" >{{ App::getLocale() }}</span>
+<script>
 	$( document ).ready(function() {
 		$( "#request_type" ).change(function() {
 			if($(this).val() == 'IZL') {
@@ -94,4 +95,5 @@
 		
 		});
 	});
+	$.getScript( '/../js/vacation_req.js');
 </script>

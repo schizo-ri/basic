@@ -19,7 +19,7 @@
 			<span class="search_post"></span>
 		</h1>
 		<div class="input_search search_input">
-			<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="Type ... "  autofocus>
+			<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="Type ... " >
 		</div>
 		<section class="col-md-12 posts">
 			<div class="all_post">
@@ -30,14 +30,15 @@
 							$employee = PostController::profile($post)['employee'];
 							$user_name = PostController::profile($post)['user_name']; // ime djelatnika kojem je poslana poruka a nije user 
 							$image_to_employee =  PostController::profile($post)['docs']; // profilna slika
+						
 						?>
 						<article class="main_post panel">
 							<button class="tablink" id="{{ $post->id }}" type="button"> 
 								@if($post->to_employee_id != null)
 									<span class="profile_img">
-										@if(isset($image_to_employee))								
-											<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . $image_to_employee) }}" alt="Profile image"  />
-										@else									
+										@if( is_array($image_to_employee) && ! empty($image_to_employee) )
+											<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_to_employee)) }}" alt="Profile image"  />
+										@else
 											<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
 										@endif
 									</span>
@@ -89,22 +90,15 @@
 					$post_comment = PostController::profile($post)['post_comment'];
 					$employee = PostController::profile($post)['employee'];
 					$user_name = PostController::profile($post)['user_name'];
-					
-					if($post->to_employee_id != null) {
-						if( Sentinel::getUser()->employee['id'] == $post->to_employee_id ) {
-							$image_employee = DashboardController::profile_image($post->employee_id);
-						} else {
-							$image_employee = DashboardController::profile_image($post->to_employee_id);
-						}
-					}
+					$image_employee = PostController::profile($post)['docs']; // profilna slika
 				@endphp
 				<section id="{{ '_' . $post->id }}" class="tabcontent" >
 					<header class="post_sent">
 						<span class="link_back"><span class="curve_arrow_left"></span></span>
 						@if($post->to_employee_id != null)
 							<span class="post_img_prof">
-								@if(isset($image_employee))
-									<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_employee)) }}" alt="Profile image"  />
+								@if( is_array($image_employee) && ! empty($image_employee) )
+									<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_employee)) }}" alt="Profile image" />
 								@else
 									<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
 								@endif
@@ -113,14 +107,13 @@
 								{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}
 								<span class="" >{{ $post->employee->work['name'] }}</span>
 							</span>
-							<span class="vacation">Vacation<br><span class="" >...</span></span>
-							<span class="phone" >Phone<br><span>{{ $employee->mobile }}</span></span>
+							<span class="vacation">@lang('basic.vacation')<br><span class="" >...</span></span>
+							<span class="phone" >@lang('basic.phone')<br><span>{{ $employee->mobile }}</span></span>
 							<span class="e-mail" >E-mail<br><span>{{ $employee->email }}</span></span>
 						@endif
 						@if($post->to_department_id != null)
 							<span class="fl_name">
 								{{ $post->to_department['name'] }}
-								
 							</span>
 						@endif
 					</header>
@@ -131,7 +124,14 @@
 									@foreach ($comments->where('post_id', $post->id) as $comment)
 										<div class="message">
 											<div class="{!! $comment->employee_id != Sentinel::getUser()->employee->id ? 'left' : 'right' !!}">
-												@if( $comment->employee_id != Sentinel::getUser()->employee->id)  <p class="comment_empl">{{ $comment->employee->user['first_name'] }}</p>@endif
+												<p class="comment_empl">
+													@php
+														$next_comment = PostController::previous($comment->id, $post->id);
+														$next_empl = $next_comment['employee_id'];
+													@endphp
+													@if( $next_empl != $comment->employee_id && $comment->employee_id != Sentinel::getUser()->employee->id){{ $comment->employee->user['first_name'] }} | @endif 
+													<small>{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans()  }}</small>
+												</p>
 												<div class="content">
 													@if($comment->employee_id != Sentinel::getUser()->employee->id)
 														@php
@@ -146,7 +146,7 @@
 														@endif
 														</span>
 													@endif
-													<p class="comment_content" id="{{ $comment->id }}">{{ $comment['content'] }}
+													<p class="comment_content" id="{{ $comment->id }}">{{ $comment['content'] }}</p>
 												</div>
 											</div>
 										</div>
@@ -155,11 +155,11 @@
 							</div>
 						</div>
 					</main>
-					<form accept-charset="UTF-8" role="form" method="post" class="form_post {{ ($errors->has('content')) ? 'has-error' : '' }}" id="post-content_{{ $post->id }}" action="{{ route('comment.store') }}"  >
+					<form accept-charset="UTF-8" role="form" method="post" class="form_post {{ ($errors->has('content')) ? 'has-error' : '' }}" id="form_{{ $post->id }}" action="{{ route('comment.store') }}"  >
 						<input name="content" type="text" class="form-control type_message post-content" id="post-content_{{ $post->id }}" placeholder="Type message..." autocomplete="off" value="{{ old('content')  }}"  />
 						<img class="smile" src="{{ URL::asset('icons/smile.png') }}" alt="Profile image"  />
-						<input type="hidden" name="post_id" id="post_id" value="{{ $post->id }}"  >
-						<input type="hidden" name="user_id" id="user_id" value="{{ Sentinel::getUser()->employee->id }}"  >
+						<input type="hidden" name="post_id" value="{{ $post->id }}"  >
+						<input type="hidden" name="user_id"  value="{{ Sentinel::getUser()->employee->id }}"  >
 						{{ csrf_field() }}
 						<input class="" type="submit" value="" title="{{ __('basic.send')}}" >
 					</form>

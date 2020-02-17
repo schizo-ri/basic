@@ -35,5 +35,9 @@ return [
 	'activation_instructions'     => 'Upute za aktivaciju računa',
 	'instructions'     => 'Na tu će se adresu slati nove upute ako je povezana s neaktivnim računom.',
 	'method_exist'     => 'E-pošta s tim modelom i metodom već postoji.',
+	'no_valid_email'     => 'E-mail adresa nije valjana.',
+	'not_allowed'     => 'Nije dozvoljeno unos exe, bin dokumenta',
+	'malfunction'     => 'Za prijavu kvara obavezan je unos napomene',
+	
 ];
 ?>

@@ -1,6 +1,5 @@
 // on load
-$( document ).ready(function() {
-   
+$( document ).ready(function() {   
     // placeholder text
     $('.placeholder').show();
     $( '.type_message' ).attr('Placeholder','Type message...');
@@ -65,10 +64,10 @@ $( document ).ready(function() {
     });
 });
 
-    $('.post_sent .link_back').click(function () {
-        $('.latest_messages').show();
-        $('.posts_index .index_main').hide();
-    });
+$('.post_sent .link_back').click(function () {
+    $('.latest_messages').show();
+    $('.posts_index .index_main').hide();
+});
 
 $( '.tablink' ).on( "click", function () {
     var post_id = $( this ).attr('id');
@@ -76,7 +75,7 @@ $( '.tablink' ).on( "click", function () {
     var body_width = $('body').width();
     setPostAsRead(post_id);
     $('.refresh.'+tab_id).find('.message').last().addClass('last');
-  //  $('.refresh.'+tab_id + ' .last').focus();  NE RADI
+    
     if(body_width < 450) {
         $('.latest_messages').hide();
         $('.posts_index .index_main').show();
@@ -89,14 +88,20 @@ $( '.tablink' ).on( "click", function () {
             
             var refresh_height = $(this).find('.refresh').height();
             var comment_height = $(this).find('.comments').height();
-            $(this).find('.mess_comm').height(comment_height);
-            if(refresh_height < comment_height ) {
-                $(this).find('.refresh').css({"position": "absolute", "bottom": "0", "width": "100%"});
+        /*     if(body_width < 450) { 
+            //    $(this).find('.mess_comm').height(refresh_height);                
             } else {
-                $(this).find('.mess_comm').scrollTop($('.refresh.' + tab_id ).height());
+               // $(this).find('.mess_comm').height(comment_height);
+            } */
+           
+            if(refresh_height > comment_height ) {
+                $(this).find('.refresh').css({"position": "static", "bottom": "0", "height": "100%"});
+                $(this).find('.refresh').scrollTop(refresh_height);
+            } else {
+                $(this).find('.mess_comm').scrollTop(refresh_height);
             }
         }
-       // $(this).find('input.post-content').focus();
+        //$(this).find('last.post-content').focus();
     });
 
     (function poll(){
@@ -111,7 +116,9 @@ $( '.tablink' ).on( "click", function () {
                 
                 var mess_comm_height = $("#" + tab_id ).find('.mess_comm').height();
                 var refresh_height = $("#" + tab_id ).find('.refresh').height();
-                $('.refresh').height(mess_comm_height);
+               
+                 //   $('.refresh').height(mess_comm_height);
+              
                 if(refresh_height < mess_comm_height ) {
                     $("#" + tab_id ).find('.refresh').css({"position": "absolute", "bottom": "0", "width": "100%"});
                 }

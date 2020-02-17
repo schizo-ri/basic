@@ -4,11 +4,13 @@
     font-family: Montserrat, sans-serif;
 }
 
+
 .index_page h1 {
     font-weight: 600;
     font-size: 1.375rem;
     color: #071E57;
     margin: 50px 0;
+    padding-left: 15px;
 }
 
 .posts_index .posts  {
@@ -18,6 +20,7 @@
     overflow: hidden;
     max-height: initial;
     height: calc(100% - 126px);
+    padding-left: 15px;
 }
 .clickable-row {
     cursor: pointer;
@@ -29,6 +32,7 @@
     float: none;
     margin: 0;
     height: 100%;
+   overflow: auto;
 }
 
 .index_page aside {
@@ -39,6 +43,7 @@
     overscroll-behavior-y: contain;
     scrollbar-width: thin;
     padding-right: 18px;
+    width: calc( 33.333% );
 }
 
 .index_page .posts .all_post article.main_post {
@@ -73,6 +78,7 @@
 }
 
 .tablink > .profile_img > img  {
+    max-height: inherit;
     width: 100%;
     height: auto;
     margin-top:50%;
@@ -201,6 +207,7 @@ main.index_main>section {
 }
 
 .user_filter .select_filter {
+    background-image: ;
     float: right;
     padding: 6px 15px 10px 0;
     margin-top: 0;
@@ -303,7 +310,7 @@ img.doc_icons {
 
 .index_main .post_sent .post_img_prof > img {
     width: 100%;
-    height: auto;
+    height: 100%;
     margin-top: 50%;
     transform: translateY(-50%);
 }
@@ -329,7 +336,7 @@ img.doc_icons {
 
 .post_sent span.vacation, .post_sent span.phone, .post_sent span.e-mail  {
     font-weight: 500;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     color: #071E57;
     width: 20%;
     padding: 8px 0;
@@ -353,9 +360,10 @@ img.doc_icons {
 
 .tabcontent .comments {
     padding: 30px;
-    overflow: auto;
+    overflow: hidden;
     scrollbar-width: thin;
     overscroll-behavior-y: contain;
+    padding-right: 15px;
 }
 
 .tabcontent .comments .message {
@@ -391,12 +399,14 @@ img.doc_icons {
 .tabcontent .comments .message >div.right .comment_content {
     background: #1594F0;
     color: #ffffff;
+    text-align: left;
 }
 
 .tabcontent .comments .message >div.left .comment_content {
     background: #EDEFF3;
     color: #606060;
     float: left;
+    text-align: left;
 }
 .tabcontent .comments .message .profile_img{
     width: 32px;
@@ -409,7 +419,7 @@ img.doc_icons {
 }
 .tabcontent .comments .message .profile_img>img {
     width: 100%;
-    height: auto;
+    height: 100%;
     margin-top: 50%;
     transform: translateY(-50%);
 }
@@ -423,6 +433,13 @@ img.doc_icons {
     padding-bottom: 10px;
 }
 
+class="select-css"
+.tabcontent .comments .message .right .comment_empl {
+    text-align: right;
+}
+.sequence_table p {
+    margin: 0;
+}
 .mess_comm {
     position: relative;
     height: 100%;
@@ -432,12 +449,15 @@ img.doc_icons {
     
 }
 .index_main .comments .refresh  {
-    overflow: auto;
+    overflow: scroll;
     scrollbar-width: thin;
     overscroll-behavior-y: contain;
-    height: 100%;
-    position: relative;
-  
+    height: auto;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    padding-right: 15px;
 }
 
 .index_aside>div.calendar_main {
@@ -466,6 +486,7 @@ img.doc_icons {
     border: none;
     display: flex;
     padding: 30px 0;
+    padding-left: 20px;
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-unit a {
@@ -566,13 +587,14 @@ img.doc_icons {
     display: block;
     float: left;
     width: 33.3%;
-    height: 41px;
+    height: fit-content;
     border-radius: 5px;
     padding: 0 20px;
     line-height: 41px;
     margin-right: 12px;
     color: #ffffff;
     margin-bottom: 5px;
+    position: relative;
 }
 
 .show_event.blue {
@@ -591,9 +613,32 @@ img.doc_icons {
     font-weight: 600;
     font-size: 0.75rem;
     color: #FFFFFF;
-
+    line-height: 41px;
+    margin: 0;
 }
-
+.show_event .btn-delete {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    background: white;
+    border-radius: 50%;
+    padding: 5px;
+    border: 1px solid;    
+    line-height: 14px;
+}
+.show_event .btn-edit {
+    position: absolute;
+    right: -12px;
+    /* left: 5px; */
+    bottom: -10px;
+    /* transform: translateY(-50%); */
+    padding: 5px;
+    background: white;
+    border-radius: 50%;
+    border: 1px solid;
+    color: #ccc;    
+    line-height: 14px;
+}
 
 .header_calendar .event_day {
     width: 50px;
@@ -610,7 +655,7 @@ img.doc_icons {
 
 .header_calendar .event_day .week_day {
     font-weight: 700;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     display: block;
     height: 20px;
     line-height: 20px;
@@ -645,9 +690,7 @@ img.doc_icons {
 .header_calendar>div>span.month_year {
     line-height: 50px;
 }
-.header_calendar>div {
 
-}
 
 .month_year {
     font-weight: 600;
@@ -695,12 +738,36 @@ img.doc_icons {
     padding: 10px 0;
     clear: left;
     overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
 }
 
 .index_main main {
     height: calc(100% - 90px);
     width: 100%;
-    background-color: white;
+    background-color: inherit;
+}
+
+.index_main main.main_campaign {
+    padding: 30px;
+    overflow: auto;
+}
+
+.index_main header.campaign_head {
+    height: auto;
+}
+
+.main_campaign .campaign >div {
+    border-radius: 3px 3px 0 0;
+    border: 1px solid #e9ecf3;
+    height: auto;
+}
+.main_campaign .campaign {
+    margin-bottom: 20px;
+}
+
+main.campaign_main {
+    padding: 20px 25px;
 }
 
 .index_main main.main_calendar {
@@ -765,7 +832,7 @@ img.doc_icons {
     cursor: pointer;
     float: right;
     font-weight: normal;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     color: #071E57;
     text-transform: uppercase;
     position: absolute;
@@ -870,20 +937,22 @@ main.main_ads {
 }
 
 .index_main header.ad_header > a {
-    display: inline-block;
     width: 100%;
     height: 100%;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .index_main header.ad_header > a >img {
-    max-height: 100%;
+  /*  max-height: 100%;
     max-width: 100%;
     top: 50%;
     display: inline-block;
     transform: translate(-50%,-50%);
     margin-left: 50%;
-    margin-top: 50%;
+    margin-top: 50%;*/
    
 }
 .index_main header.ad_header > img  {
@@ -894,15 +963,14 @@ main.main_ads {
     position: absolute;
 }
 
-.index_main header.ad_header > img:not(.placeholder_image), .index_main header.ad_header > a >img {
-    width: 100%;
-    height: auto;
-    max-height: 100%;
-    max-width: 100%;
+.ad_header img:not(.placeholder_image) {
+    width: auto;
+    height: 100%;
+    max-width: fit-content; 
 }
 .index_page .index_main .btn-new:not(.user_interest .btn-new) {
     width: auto;
-    font-size: 0.5625rem;
+    font-size: 0.6875rem;
     color: #FFFFFF;
 }
 
@@ -912,7 +980,7 @@ main.main_ads {
 
 .index_page.ads_index .index_main .btn-new{
     width: auto;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     color: #F8FAFF;
     padding: 0 20px;
     height: 38px;
@@ -938,7 +1006,7 @@ footer.ad_footer {
     width: auto;
     background: #071E57;
     font-weight: 700;
-    font-size: 0.5rem;
+    font-size: 0.625rem;
     color: #FFFFFF;
     padding: 5px;
     display: inline-block;
@@ -972,14 +1040,14 @@ footer.ad_footer {
 .ad_footer .ad_empl .employee {
     line-height: 24px;
     font-weight: 600;
-    font-size: 0.5625rem;
+    font-size: 0.6875rem;
     color: #071E57;
 
 }
 
 .ad_footer .ad_empl .employee> span {
     font-weight: normal;
-    font-size: 0.5rem;
+    font-size: 0.625rem;
     color: #071E57;
     display: block;
 }
@@ -1013,7 +1081,7 @@ footer.ad_footer {
     padding: 13px 0;
 }
 
-.header_ads .filter .img_search {
+.header_ads .filter .img_search, .header_campaign .filter .img_search  {
     left: 13px;
     top: 50%;
     bottom: 50%;
@@ -1024,7 +1092,7 @@ footer.ad_footer {
     z-index: 1;
 }
 
-.header_ads .filter .input_search {
+.header_ads .filter .input_search, .header_campaign .filter .input_search {
     width: 100%;
     height: 38px;
     top: 50%;
@@ -1042,19 +1110,20 @@ footer.ad_footer {
 
 .header_ads .filter .select_filter, .notice_filter .select_filter {
     width: auto;
-    height: 38px;
-
+    height: 38px;   
     float: right;
     background: inherit;
     border: none;
     right: 120px;
     font-weight: 500;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     display: flex;
     color: #071E57;
     outline: none;
     -moz-appearance:none; /* Firefox */
     -webkit-appearance:none; /* Safari and Chrome */
+    background: url(../icons/arrow_down1.png) no-repeat;
+    background-position: 98%;
     appearance:none;
     padding-right: 30px;
     margin-right: -5px;
@@ -1085,7 +1154,6 @@ footer.ad_footer {
 
 .index_page table.dataTable tbody tr {
     height: fit-content;
-    cursor: pointer;
 }
 
 .index_page table.dataTable.stripe tbody tr.odd, .index_page table.dataTable.display tbody tr.odd, .index_page table.dataTable.stripe tbody tr.even, .index_page table.dataTable.display tbody tr.even,.index_page table.dataTable.display tbody tr.odd>.sorting_1, .index_page table.dataTable.order-column.stripe tbody tr.odd>.sorting_1, .index_page table.dataTable.display tbody tr.even>.sorting_1, .index_page table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
@@ -1097,7 +1165,16 @@ footer.ad_footer {
 }
 
 .index_page .dt-buttons { 
-    display: none;
+   display: none;
+   float: right;
+   margin-top: 5px;
+}
+
+.index_page .dt-buttons .dt-button {
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    border-color: #ccc;
 }
 
 .index_page .dataTables_filter {
@@ -1134,6 +1211,33 @@ footer.ad_footer {
     padding: 0 20px
 }
 
+.dataTables_filter span.show_button {   
+    top: 50%;
+    right: 180px;
+    transform: translateY(-50%);
+    cursor: pointer; 
+    width: auto;
+    height: auto;
+    line-height: 35px;
+    border-radius: 5px;
+    padding: 0;
+    position: absolute;
+    z-index: 1;
+    color: #2B2B2B;
+    font-size: 1rem;
+}
+
+.index_table_filter span.show_button {
+    position: absolute;
+    width: auto;
+    height: auto;
+    top: 50%;
+    right: 100px;
+    z-index: 2;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
 .index_page a.add_new {
     width: auto;
     height: 35px;
@@ -1147,7 +1251,7 @@ footer.ad_footer {
     z-index: 1;
     color:#ffffff;
     font-weight: 600;
-    font-size: 0.5625rem;
+    font-size: 0.6875rem;
     color: #FFFFFF;
 
 }
@@ -1165,7 +1269,8 @@ footer.ad_footer {
 }
 
 .index_page table.dataTable thead {
-    font-size: 0.5625rem;   
+    font-size: 0.6875rem;   
+  
 }
 
 .img_approve {
@@ -1192,7 +1297,7 @@ footer.ad_footer {
 
 .approve {
     font-weight: 600;
-    font-size: 0.5rem;
+    font-size: 0.625rem;
     line-height: 16px;
 }
 
@@ -1204,11 +1309,16 @@ footer.ad_footer {
     display: block;
     border:none;
     background-color: inherit;
-    position: absolute;
-    right: 5px;
+    position: static;
+    margin-right: 5px;
+  /*  margin-top: 25px;*/
     z-index: 1;
+    padding: 0;
 }
 
+.all_documents .option_dots {
+    margin-top: 0;
+}
 .option_dots:active, .option_dots:focus,.option_dots:hover {
     outline: none;
 }
@@ -1235,62 +1345,66 @@ footer.ad_footer {
 }
 
 .index_page .index_table_wrapper {
-      height: 100%;
-  }
+    height: 100%;
+}
 
-  .prosla_godina {
-      display: none;
-  }
+.prosla_godina {
+    display: none;
+}
 
-  .all_notices {
+.all_notices {
     border-radius: 5px;
     box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
-  }
+}
 
-  .notice_filter {
+.notice_filter {
     line-height: 55px;
     float: right;
     padding: 15px 35px 10px 0;
-  }
+}
 
-  .notices {
+.notices {
     clear: right;
     display: flex;
     flex-wrap: wrap;
     padding: 0 15px;
     justify-content: start;
-  }
+}
 
-  .notices a.delete {
+.notices a.delete {
     position: absolute;
     top: 5px;
     right: 5px;
     z-index: 1;
     color: #ccc;
-  }
+}
 
-  .noticeboard_notice_body {
-        overflow: hidden;
-        background: #FFFFFF;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        /* box-sizing: border-box; */
-        border-radius: 3px;
-        /* padding: 15px; */
-        margin-bottom: 15px;
-        padding: 0;
-        margin-right: 1%;
-        flex: 0 0 24%;
-        max-width: 24%;
-        position: relative;
-  }
+.noticeboard_notice_body {
+    overflow: hidden;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    /* box-sizing: border-box; */
+    border-radius: 3px;
+    /* padding: 15px; */
+    margin-bottom: 15px;
+    padding: 0;
+    margin-right: 1%;
+    flex: 0 0 24%;
+    max-width: 24%;
+    position: relative;
+}
 
-  .noticeboard_notice_body:hover {
+.noticeboard_notice_body:hover, .main_ads .ad > div:hover {
+    background-color: #fafafa !important;
+}
+
+.noticeboard_notice_body:hover {
     border: 1px solid #1594F0;
-  }
+}
 
-  .noticeboard_notice_body .ad_main {
+.noticeboard_notice_body .ad_main {
        padding: 15px;
-  }
+}
   .notices .notice_title {
     font-weight: 600;
     font-size: 1rem;
@@ -1306,7 +1420,7 @@ footer.ad_footer {
     padding: 6px 10px;
     color: #ffffff;
     font-weight: 600;
-    font-size: 0.5625rem;
+    font-size: 0.6875rem;
     color: #FFFFFF;
     white-space: nowrap;
 }
@@ -1318,7 +1432,7 @@ footer.ad_footer {
     padding: 5px 10px;
     color: #ffffff;
     font-weight: 600;
-    font-size: 0.5625rem;
+    font-size: 0.6875rem;
     color: #FFFFFF;
     white-space: nowrap;
     margin-bottom: 5px;
@@ -1385,12 +1499,15 @@ footer.ad_footer {
     scrollbar-width: thin;
     height: auto;
 }
+.second_view {
+    display: none;
+}
 
-main.users_main > .second_view {
+main.users_main .second_view {
     position: relative;
     padding: 0 10px 35px 10px;
     padding-right: 0;
-    display: flex;
+    display: none;
     flex-wrap: wrap;
     overflow: hidden;
     justify-content: start;   
@@ -1426,15 +1543,16 @@ main.users_main > .second_view {
     padding-bottom: 12px;
 }
 .user_card .option_dots {
-    top: 10px;
+    margin-top: 3px;
+    margin-bottom: auto;
 }
 
 .second_view .user_card >div>span {
-    padding-right: 20px;
-    padding-top: 5px;
-    position: absolute;
-    right: 5px;
-    z-index: 10;
+        padding-right: 0; 
+        padding-top: 5px;
+        position: absolute;
+        right: 5px;
+        z-index: 10;
 }
 
 .second_view .user_card >div>span >a {
@@ -1477,7 +1595,7 @@ main.users_main > .second_view {
 }
 .second_view .user_card main p.user_mail {
     font-weight: 400;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     text-align: center;
     color: #2B2B2B;
     margin-bottom: 23px;
@@ -1492,7 +1610,7 @@ main.users_main > .second_view {
 
 span.show, span.hide {
     font-weight: 700;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     color: #FFFFFF;
     text-transform: capitalize;
     line-height: initial;
@@ -1661,6 +1779,9 @@ button.scroll_left {
     top: auto;
 }
 
+.page-main {
+    padding: 0 15px;
+}
 .index_page .index_main.main_absence, .index_page.index_documents .index_main.main_documents {
     background: none;
   /*  box-shadow: none;*/
@@ -1681,6 +1802,13 @@ main.index_main.main_absence >section {
     border: none;
 }
 
+.arrow_left_wh {
+    background: url('../icons/arrow_wh_left.png') no-repeat;
+    width: 13px;
+    height: 21px;
+    display: inline-block;
+    margin-left: 5px;
+}
 .curve_arrow_left {
     background: url('../icons/curve_arrow_left.png') no-repeat;
     width: 22px;
@@ -1701,6 +1829,54 @@ main.index_main.main_absence >section {
     margin-left: -20px;
 }
 
+.xlsx, .xls, .xlsm {
+    background: url('../icons/xlsx.png') no-repeat;
+    background-size: 20px auto;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-left: 5px;
+}
+.ppt, .pptx {
+    background: url('../icons/ppt.png') no-repeat;
+    background-size: 20px auto;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-left: 5px;
+}
+.doc, .docx {
+    background: url('../icons/doc.png') no-repeat;
+    background-size: 20px auto;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-left: 5px;
+}
+.jpg, .gif, .png {
+    background: url('../icons/jpg.png') no-repeat;
+    background-size: 20px auto;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-left: 5px;
+}
+.pdf {
+    background: url('../icons/pdf.png') no-repeat;
+    background-size: auto 20px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-left: 5px;
+}
+.txt {
+    background: url('../icons/txt.png') no-repeat;
+    background-size: 20px auto;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-left: 5px;
+}
 /* absence */ 
 .main_absence main >header {
     background: #051847;
@@ -1751,19 +1927,24 @@ main.all_absences >section {
 .info_abs .title {
     text-transform: uppercase;
     font-weight: 500;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     color: #FFFFFF;
     display: block;
     margin-bottom: 25px;
 }
 
-.info_abs>p, .info_abs>p>.go_og, .info_abs>p>.go_pg, .info_abs>p>.bol_og, .info_abs>p>.bol_pg, .info_abs>p>.bol_om {
+.info_abs>p, .info_abs>p>.go, .info_abs>p>.go_pg, .info_abs>p>.bol, .info_abs>p>.bol_pg, .info_abs>p>.bol_om {
     font-weight: 600;
     font-size: 1.25rem;
     color: #FFFFFF;
     text-align: center;
     margin: 0;
     padding: 0;
+
+}
+
+.info_abs>p>.go, .info_abs>p>.bol {
+    display: none;
 }
 
 .info_abs>p>span {
@@ -1778,7 +1959,7 @@ main.all_absences >section {
 .info_abs .title .year_select {
     float: right;
     font-weight: 400;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     text-align: center;
     color: #53689B;
     background: inherit;
@@ -1806,6 +1987,9 @@ main.all_absences >section {
     background: inherit;
 }
 
+.index_main main.all_absences tbody tr {
+    display: none;
+}
 .index_main main.all_documents {
     overflow: hidden;
     position: relative;
@@ -1897,7 +2081,7 @@ main.all_absences >section {
 .thumbnail.thumbnail_q .thumb_content .progress_val {
     width: 25%;
     font-weight: 600;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     color: #2B2B2B;
     line-height: 10px;
     text-align: right;
@@ -1914,7 +2098,7 @@ main.all_absences >section {
 }
 .thumbnail.thumbnail_q .thumb_content .status_q {
     font-weight: 600;
-    font-size: 0.5625rem;
+    font-size: 0.6875rem;
     text-align: center;
     color: #1594F0;    
     position: absolute;
@@ -1961,7 +2145,7 @@ main.all_absences >section {
 
 .thumb_name {
     font-weight: 600;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     color: #F8FAFF;
     margin-top: 15px;
     text-overflow: ellipsis;
@@ -1970,7 +2154,7 @@ main.all_absences >section {
 
 .thumb_time {
     font-weight: 400;
-    font-size: 0.5rem;
+    font-size: 0.625rem;
     color: #F8FAFF;
     margin-bottom: 15px;
     padding-top: 5px;
@@ -1994,7 +2178,7 @@ main.all_absences >section {
 
 .all_documents.main_questionnaire .table-responsive {
     border-radius: 0 0 3px 3px;
-    padding: 0 30px;
+    padding: 0;
 }
 
 .table tbody td {
@@ -2004,7 +2188,30 @@ main.all_absences >section {
     line-height: 15px;
     color: #2B2B2B;
 }
+.table tbody td a {
+    font-size: 0.875rem;
+}
+table.dataTable#index_table tbody tr {
+    height: 80px;
+}
+table.dataTable#index_table tbody td:last-child {
+    padding: 0;
+    padding-top: 25px;
+    min-width: 100px;
+    text-align: left;
+}
 
+table.dataTable#index_table tbody td:last-child > a {
+      /* margin-top: 25px; */
+    clear: both;
+    /* float: left; */
+    display: none;
+    /* margin-bottom: 10px; */
+  
+    /* width: calc(100% - 25px); */
+    /* float: left; */
+    text-align: left;
+}
 .main_questionnaire table.dataTable td a.qname, .main_questionnaire table.dataTable td span.qname  {
     font-weight: 600;
     font-size: 0.8125rem;
@@ -2016,20 +2223,21 @@ main.all_absences >section {
     width: 11px;
     height: 11px;
     top: 50%;
-    right: 100px;
+    right: 150px;
     z-index: 2;
     transform: translateY(-50%);
+    cursor: pointer;
 }
 
 .change_view {
-    background: url(../icons/view.png) no-repeat;
+    background: url(../icons/view.png) no-repeat center;
     display: inline-block;
     cursor: pointer;
 }
 
 .change_view2 {
     display: none;
-    background: url(../icons/view2.png) no-repeat;
+    background: url(../icons/view2.png) no-repeat center;
 }
 
 .q_progress {
@@ -2070,8 +2278,15 @@ main.all_absences >section {
     margin: 0;
     padding: 0 20px;
 }
-.second_view {
-    display: none;
+
+.modal_filter input {
+    text-align: left;
+    width: auto;
+    height: auto;
+    background: inherit;
+    border-radius: 3px 3px 0px 0px;
+    margin-left: 20px;
+    padding: 5px;
 }
 
 .table-responsive.second_view .questionnaires {
@@ -2092,15 +2307,14 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .table-responsive .table thead th {
     border: none;
-    text-align: center;
+    text-align: left;
+    padding-left: 12px;
     border-bottom: 1px solid rgba(154, 154, 154, 0.3);
 }
-
-.button_nav.load_button.isDisabled {
-  /*  color: currentColor;
-    cursor: not-allowed;
-    opacity: 0.5;
-    text-decoration: none;*/
+.table-responsive .table thead th:last-child {
+    min-width: 50px;
+    max-width: 100px;
+    width: auto;
 }
 
 .index_main.profile_main {
@@ -2179,7 +2393,7 @@ input[type="search"]::-webkit-search-cancel-button {
     display: flex-root;
     justify-content: start;
     align-items: center;
-    /* position: relative; */
+    position: relative; 
     margin-right: 5px;
 }
 .index_page.index_profile .user_interest span.count_images {
@@ -2223,7 +2437,7 @@ input[type="search"]::-webkit-search-cancel-button {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 3px;
     font-weight: 500;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     text-align: center;
     color: #051847;
     padding: 0 10px;
@@ -2294,7 +2508,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .interesing_facts>div span.third {
     font-weight: 400;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     color: #606060;
 }
 
@@ -2370,7 +2584,7 @@ a.chat{
 a.modal_close {
     line-height: 35px;
     font-weight: 500;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     text-decoration-line: underline;
     color: #2B2B2B;
     padding: 0 35px;
@@ -2383,7 +2597,8 @@ a.modal_close {
     margin-left: 50%;
     transform: translateX(-50%);
 }
-.profile_photo>span {
+
+.profile_photo>a {
     display: inline-block;
     position: relative;
     margin: auto;
@@ -2392,12 +2607,11 @@ a.modal_close {
     transform: translatex(-50%);
     height: 116px;
     width: 116px;
-    overflow: hidden;
     border-radius: 50%;
 }
-.profile_photo>span>img {
+.profile_photo>a img.profile_user {
     width: 100%;
-    height: auto;
+    height: 100%;
     margin-top: 50%;
     transform: translateY(-50%);
 }
@@ -2406,8 +2620,9 @@ a.modal_close {
     width: 30px;
     height: 30px;
     position: absolute;
-    bottom: -15px;
-    right: -15px;
+    bottom: -10px;
+    right: -10px;
+    cursor: pointer;
 }
 
 .img_button  {
@@ -2540,6 +2755,19 @@ a.modal_close {
     }
     
 }
+
+@media (max-width: 1100px) {
+    .second_view .user_card {
+		width: 33.33%;
+		float: none;
+	}
+}
+@media (max-width: 850px) {
+    .second_view .user_card {
+		width: 50%;
+		float: none;
+	}
+}
 @media (max-height: 1024px) {
 
     .placeholder_cal {
@@ -2596,6 +2824,10 @@ a.modal_close {
         overflow: hidden;
         padding: 0;
         margin-bottom: 20px;
+    }
+    .index_page aside >section{
+        flex: 0 0 100%;
+        max-width: 100%;
     }
     .index_page aside:not(.latest_messages, .calendar_aside), .index_page.index_documents {
         display: none;
@@ -2719,6 +2951,10 @@ a.modal_close {
         scrollbar-width: thin;
    
     }
+    .second_view .user_card {
+		width: 100%;
+		float: none;
+	}
 
     .latest_messages .all_post {
         padding: 0;
@@ -2734,8 +2970,8 @@ a.modal_close {
         position: relative;
         overflow: auto;
         scrollbar-width: thin;
-   
-    }
+        height: calc(100% - 82px);
+    }    
     .container .noticeboard {
         height: auto;
         padding: 20px;
@@ -2754,10 +2990,26 @@ a.modal_close {
     .all_documents.main_questionnaire .table-responsive{
         padding: 0;
     }
+    .table-responsive.second_view .questionnaires {
+        margin: auto;
+    }
+    .table-responsive.second_view .thumb_container {
+        float: none;
+    }
+    .thumbnail.thumbnail_q {
+        margin-left: 50%;
+        margin-right: 50%;
+        transform: translateX(-50%);
+        margin-top: 20px;
+    }
+    .table-responsive.second_view .questionnaires .thumb_name, .table-responsive.second_view .questionnaires .thumb_time {
+        padding: 0 20px;
+        text-align: center;
+    }
+
     .index_page {
         overflow: auto;
-        scrollbar-width: thin;
-   
+        scrollbar-width: thin;   
     }
     .header_nav>section {
         height: auto;
@@ -2798,8 +3050,7 @@ a.modal_close {
         padding: 0 10px;
         max-height: 100vh;
         overflow: auto;
-        scrollbar-width: thin;
-   
+        scrollbar-width: thin;   
     }
     .latest_messages .search_input {
         margin: 10px 0;
@@ -2837,9 +3088,13 @@ a.modal_close {
     .index_page.posts_index .index_main >div {
         overflow: hidden;
         height: 100%;
+        position: relative;
+        max-height: -webkit-fill-available;
     }
     .index_main .tabcontent {
         height: 100%;
+        padding: 0;
+        overflow: hidden;
     }
     .index_page.posts_index .index_main  {
         margin: 0;
@@ -2848,6 +3103,7 @@ a.modal_close {
         overflow: hidden;
         width: 100%;
         padding: 0;
+        padding-bottom: 10px;
     }
     
     .index_aside>div.calendar_main {
@@ -2881,6 +3137,7 @@ a.modal_close {
     }
     .header_document {
         color: #606060;
+        padding: 10px;
     }
     .curve_arrow_left {
         background: url(../icons/curve_arrow_left_grey.png) no-repeat center right;
@@ -2909,7 +3166,9 @@ a.modal_close {
     
     .tabcontent .comments {
         padding: 10px;
-        height: calc(100% - 112px);
+        overflow: auto;
+        max-height: -webkit-fill-available;
+        height: calc(100% - 125px);
     }
     .index_main.profile_main .page-header.header_profile {
         color: #071E57;
@@ -2926,9 +3185,10 @@ a.modal_close {
         overflow: hidden;
     }
     .index_main header, .filter {
-        height: 70px;
+        height: auto;
         overflow: hidden;
         padding: 0;
+        clear: both;
     }
     .group_question .question .option_dots, .group_category .category .option_dots {
         right:0;
@@ -2939,10 +3199,47 @@ a.modal_close {
     .index_main header {
         padding: 10px 0;
     }
+    .index_table_filter >label, .index_table_filter > a.add_new {
+        position: relative;
+        transform: none;
+        display: inline-block;
+    }
+    .index_table_filter >label {
+        float: left;
+    }
+    .index_table_filter > a.add_new  {
+        float: right;
+        top: auto;
+        margin-right: 20px;
+    }
     .index_main header.ad_header {
         height: auto;
     }
-   
+    table.dataTable#index_table tbody td:last-child {
+        padding: 10px;
+    }
+    table.dataTable#index_table tbody td:last-child > a {
+        width: 100%;
+        float: none;
+        left: 0;
+        text-align: left;
+        padding-left: 10px;
+     }
+     .index_table_filter span.show_button {
+        right: 70px;
+     }
+     .show_button svg {
+        font-size: 1.2rem;
+     }
+     .change_view, .change_view2 {
+        float: left;
+        position: static;
+        transform: none;
+        top: auto;
+        right: auto;
+        margin-left: 20px;
+        height: 35px;
+     }
     .index_main header.ad_header > a >img {
         max-width: 100%;
         display: block;
@@ -3127,6 +3424,36 @@ a.modal_close {
     }
 }
 
+
+@media (max-height: 900px)  {
+    .user_header {
+        height: auto;
+    }
+    .user_header .info>div:first-child {
+        padding: 10px;
+    }
+    .layout_button span.img {
+        width: 55px;
+        height: 55px;
+        background-size: 55px 55px;
+    }
+    .user_header .info .header_user_go p:first-child {
+        padding:0;
+        margin: 0;
+    }
+    .user_header .info>div:first-child p {
+        padding:0;
+        margin: 0;
+    }
+  
+    .user_header .info>div:first-child {
+        padding-bottom: 10px;
+    }
+    .user_header .info>div {
+        padding: 25px 40px 25px;
+    }
+    
+}
 @media (max-height: 450px)  {
 
 	.container .posts .all_post {
@@ -3186,4 +3513,9 @@ a.modal_close {
     font-size: 0.75rem;
     padding-top: 5px;
     padding-left: 10px
+}
+@media (max-width: 650px) {
+    .container .posts, .container .calendar {
+        padding-top: 30px;
+    }
 }

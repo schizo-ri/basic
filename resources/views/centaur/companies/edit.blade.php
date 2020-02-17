@@ -38,7 +38,11 @@
         </div>
         {{ csrf_field() }}
         {{ method_field('PUT') }}
-        <input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('basic.edit')}}">
+        <input class="btn-submit" type="submit" value="{{ __('basic.edit')}}">
     </fieldset>
     </form>
 </div>
+<span hidden class="locale" >{{ App::getLocale() }}</span>
+<script>
+//$.getScript( '/../js/validate.js');
+</script>

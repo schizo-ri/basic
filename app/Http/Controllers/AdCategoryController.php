@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AdCategoryRequest;
 use App\Http\Controllers\Controller;
 use App\Models\AdCategory;
+use App\Models\Ad;
 use Sentinel;
 
 class AdCategoryController extends Controller
@@ -28,6 +29,7 @@ class AdCategoryController extends Controller
     public function index()
     {
         $categories = AdCategory::get();
+        $ads = Ad::get();
 		$empl = Sentinel::getUser()->employee;
         $permission_dep = array();
         
@@ -35,7 +37,7 @@ class AdCategoryController extends Controller
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
         } 
         
-		return view('Centaur::ad_categories.index', ['categories' => $categories,'permission_dep' => $permission_dep]);
+		return view('Centaur::ad_categories.index', ['categories' => $categories,'permission_dep' => $permission_dep,'ads' => $ads]);
     }
 
     /**

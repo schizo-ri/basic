@@ -123,6 +123,27 @@ Route::resource('notice_statistics', 'NoticeStatisticController');
 // UserInteres
 Route::resource('user_interes', 'UserInteresController');
 
+// Campaign
+Route::resource('campaigns', 'CampaignController');
+
+// CampaignSequence
+Route::resource('campaign_sequences', 'CampaignSequenceController');
+
+// CampaignRecipient
+Route::resource('campaign_recipients', 'CampaignRecipientController');
+
+// Benefit
+Route::resource('benefits', 'BenefitController');
+
+// Car
+Route::resource('cars', 'CarController');
+
+// Fuel
+Route::resource('fuels', 'FuelController');
+
+// Locco
+Route::resource('loccos', 'LoccoController');
+
 // Dashboard 
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
@@ -175,3 +196,7 @@ Route::get('/event', function () {
 Route::get('admin_panel', ['as' => 'admin_panel', 'uses' => 'DashboardController@openAdmin']);
 
 Route::get('all_event', ['as' => 'all_event', 'uses' => 'EventController@modal_event']);
+
+// Start Campaign
+Route::get('startCampaign', ['as' => 'sendEmail', 'uses' => 'CampaignController@startCampaign']);
+Route::get('imageDelete', ['as' => 'imageDelete', 'uses' => 'DocumentController@imageDelete']);

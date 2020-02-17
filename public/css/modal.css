@@ -18,6 +18,7 @@
 	position: fixed;
     float: right;
 	left:auto;
+	right: 0;
 	width: 54.79%;
 	max-width: 54.79%;
 	padding: 0;
@@ -37,14 +38,214 @@
 
 .modal.modal_user {
 	padding: 0;
+}
 
+#interval {
+	display: none;
+}
+
+#interval > .input_interval {
+	width: 100px;
+	float: left;
+	margin-right: 20px;
+}
+
+ #interval > .select_period {
+	width: auto;
+    float: left;
+}
+
+label.label_custom_interal {
+    display: block;
+    width: 100%;
+}
+
+.form_create_user .second_tab, .form_edit_user .second_tab {
+	display: none;
+}
+
+.modal .form-group.email {
+	clear: left;
 }
 
 .modal.modal_user>header  {
     background: #051847;
     border-radius: 3px 3px 0px 0px;
-    padding: 32px;
-    padding-left: 45px;
+	padding: 30px 50px 50px 45px;
+	color: #FFFFFF;	
+}
+
+.modal.modal_user>main {
+    padding: 45px 50px;
+}
+
+.modal.modal_user>header .user_data {
+	padding-top: 45px;
+	overflow: hidden;
+	clear: both;
+}
+
+.modal_user .user_data .user_img {
+	display: block;
+	float: left;
+}
+
+.modal.modal_user>header .user_data >div {
+	width: calc(100% - 108px);
+    float: left;
+}
+
+.modal_user .user_data .user_name {
+	float: left;
+    padding-left: 40px;
+    height: 108px;
+	display: flex;
+	margin: auto;
+}
+
+.modal_user a.back {
+	float: left;
+	line-height: 21px;
+    height: 21px;
+}
+
+.modal_user a.edit_user {
+	float: right;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	line-height: 16px;
+	line-height: 21px;
+    height: 21px;
+}
+
+.modal_user .basic_info a.edit_user, .modal_user .permissions a.edit_user  {
+	font-weight: 600;
+	font-size: 0.5625rem;
+	line-height: 28px;
+	color: #071E57;	
+}
+.modal_user .basic_info a.edit_user >svg, .modal_user .permissions a.edit_user >svg {
+	margin-right: 10px;
+	width: auto;
+    height: 13px;
+}
+
+.modal_user a.edit_user >svg {
+	margin-right: 18px;
+    width: 16px;
+    height: auto;
+}
+
+.modal_user .user_data .user_name >span.name {
+	margin: auto;
+    font-weight: 500;
+    font-size: 1.75rem;
+    width: 100%;
+    display: block;
+    line-height: normal;
+}
+
+span.work {
+	width: 100%;
+    display: block;
+    font-size: 1.125rem;
+    font-weight: 300;
+}
+
+.modal_user .user_data .days_left , .modal_user .user_data .days_used {
+	float: right;
+	padding: 0 15px;
+	height: 108px;
+}
+.modal_user .user_data .days_left {
+	border-right: 1px solid white;
+}
+
+.modal_user .user_data .days_left >span, .modal_user .user_data .days_used  >span {
+    width: 100%;
+    display: block;
+	text-align: center;
+	font-weight: 500;
+	text-align: center;	
+	padding-top: 10px;
+}
+.modal_user .user_data  .days_left >span:first-child, .modal_user .user_data .days_used >span:first-child {
+	font-size: 1.875rem;    
+	font-weight: 400;
+}
+
+.modal_user .user_data  .days_left >span:last-child, .modal_user .user_data .days_used >span:last-child {
+	font-size: 0.625rem;
+	font-weight: 300;
+}
+
+.modal_user .user_img >img {
+	width: auto;
+    height: 108px;
+}
+
+.modal_user main .basic_info, .modal_user main .permissions {
+	float: left;
+    width: 50%;
+}
+
+.modal_user main >div {
+	padding: 20px;
+}
+
+.modal_user main .basic_info {
+	background: #F8FAFF;
+	border-radius: 3px;
+	width: 35%;
+	padding-bottom: 10px;
+}
+
+.modal_user main .basic_info >div>label {
+	font-weight: 500;
+    font-size: 0.75rem;
+    color: #071E57;
+    display: block;
+    margin: 0;
+    line-height: 26px;
+}
+
+.modal_user main .basic_info >div>span {
+	font-weight: 500;
+    font-size: 15px;
+    color: #1390E9;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.modal_user main .basic_info >div, .modal_user main .permissions >div  {
+	clear: left;
+}
+
+.modal_user main .permissions {
+	padding-left: 50px;
+	width: 65%;
+}
+.modal_user main .permissions .role {
+	background: #E4EBFF;
+    border-radius: 3px;
+    font-weight: 500;
+    font-size: 0.6875rem;
+    line-height: 30px;
+    text-align: center;
+    color: #0A2A79;
+    display: inline-block;
+	padding: 0 30px;
+	margin-right: 2px;
+}
+
+.modal_user main >div h4 {
+	font-weight: 600;
+    font-size: 1rem;
+    color: #071E57;
+    line-height: 26px;
+	margin-bottom: 20px;
 }
 
 .modal {
@@ -89,7 +290,7 @@
 .modal-header{padding: 0;border: none;}
 .modal-header .close{margin-top:-2px}
 .modal-header>h3 {    
-	font-weight: 600;
+	font-weight: 500;
     font-size: 1.125rem;
     line-height: 55px;
     text-align: center;
@@ -247,7 +448,7 @@
 
 .modal-title{margin:0;line-height:1.42857143; font-size: 1.375rem !important;color: #313131;font-weight: 700;text-align:center}
 
-.modal-body{text-align:left;font-size: 0.6875rem !important;color: inherit;font-weight: 500 !important; overflow: auto; scrollbar-width: thin;padding: 0px;}
+.modal-body{text-align:left;font-size: 0.6875rem !important;color: inherit;font-weight: 500 !important; overflow: auto; scrollbar-width: thin;padding: 0px; overflow-x: hidden;}
 .modal-body p {font-size: 0.75rem;color: inherit; font-weight: 500;}
 .modal-body h4 {font-size: 0.8125rem;color: inherit;font-weight: 600; padding-bottom: 10px;}
 .modal-body h5 {font-size: 0.8125rem;color: inherit; padding-bottom: 10px;}
@@ -261,6 +462,13 @@
 	display: block;
 	margin-bottom: 20px;
 }
+.modal-body .form_sequence .form-group.datum {
+	width: 100%;
+}
+
+.modal .form_sequence input[type="date"] {
+	width: 45%;
+}
 
 .modal.slide .modal-body {
 	width: 75%;
@@ -272,6 +480,11 @@
 .modal.slide .modal-body .mySlides {
 	width: 100%;
     
+}
+
+.modal input[type=radio] {
+	margin-left: 10px;
+    margin-right: 5px;
 }
 
 .modal.slide .modal-body .mySlides > video {
@@ -289,8 +502,10 @@
 	box-shadow: none;
 	border: 1px solid #1594F0;
 }
-
-input.btn-submit {
+p.validate {
+	color: red;
+}
+input.btn-submit, .btn-next {
 	width: auto;
 	height: 35px;
 	line-height: 35px;
@@ -303,6 +518,20 @@ input.btn-submit {
 	padding: 0 35px;
 	color: #FFFFFF;
 	border: none;
+}
+
+.modal a.btn-cancel, .modal a.btn-back {
+	width: auto;
+	height: 35px;
+	line-height: 35px;
+	font-weight: 500;
+	font-size: 9px;	
+	text-align: center;
+	text-decoration-line: underline;
+	color: #2B2B2B;
+	float: right;
+	padding: 0 35px;
+	margin-right: 25px;
 }
 
 .modal-body .do {
@@ -335,9 +564,16 @@ modal-footer:after,.modal-footer:before,.nav:after,.nav:before,.navbar-collapse:
 	color: inherit !important;
 }
 
-.modal img {
+.modal img{
 	max-width: 100%!important;
 	position: static;
+}
+
+.modal div.ad  img {
+	position: static;
+    margin-left: 50%;
+    margin-right: 50%;
+    transform: translateX(-50%);
 }
 .notice_main p img, .notice_main table {
 	display:block !important;
@@ -527,15 +763,30 @@ input[type="time"]::-webkit-inner-spin-button {
 	font-weight: 400;
 }
 
+.modal input[type="checkbox"] {
+	margin-right: 7px;
+}
 #myModal_role input[type="checkbox"], .myModal_role input[type="checkbox"]  {
 	width: 10px;
 	height: 10px;
 	margin: 0;
 }
 
+.checkbox > label {
+	display: block;
+}
 #myModal_role input[type="text"], .myModal_role input[type="text"] {
 	width: 100%;
 	margin:0;
+}
+.first_tab {
+	overflow: hidden;
+}
+
+.submit_element {
+	position: absolute;
+    bottom: 0;
+    right: 0;
 }
 
 #myModal_role h3, .myModal_role h3{
@@ -560,6 +811,11 @@ input[type="time"]::-webkit-inner-spin-button {
 p.text-danger {
     position: absolute;
     bottom: 10px;
+}
+
+p.modal_form_group_danger {
+	margin: 5px;
+    color: #e3342f!important;
 }
 
 .active {
@@ -990,7 +1246,7 @@ option::selection {
 }
 
 .modal.modal_notice .close-modal, .modal.modal_questionnaire .close-modal  {
-	/*display: none;*/
+	display: none;
 }
 
 .modal.modal_notice .modal-header {
@@ -1057,7 +1313,7 @@ option::selection {
     margin-top:30px;
 	margin-right: 50px;
 	font-weight: 600;
-	font-size: 12px;
+	font-size: 14px;
 	line-height: 18px;
 	color: #1594F0;
 	text-transform: uppercase;
@@ -1635,7 +1891,7 @@ input.form-control.date {
 }
 
 @media (max-width:1200px) {
-	.modal.modal_notice, .modal.modal_questionnaire {
+	.modal.modal_notice, .modal.modal_questionnaire, .modal.modal_user {
 		display: inline-block;
 		position: relative;
 		float: none;
@@ -1758,7 +2014,7 @@ input.form-control.date {
 	.notice_read:not(:last-child) {
 		padding: 0;
 	}
-	.modal.modal_notice, .modal.modal_questionnaire {
+	.modal.modal_notice, .modal.modal_questionnaire, .modal.modal_user  {
 		width: 100%;
 		max-width: 100%;
 		height: 100%;
@@ -1767,6 +2023,7 @@ input.form-control.date {
 		scrollbar-width: thin;
 		
 	}
+	
 	.modal.modal_notice.notice_show .modal-header>h3.statistic_title {
 		margin: 0;
 		text-align: center;
@@ -1877,6 +2134,9 @@ input.form-control.date {
 }
 
 @media (max-width:450px) {
+	.modal.modal_notice.notice_show .modal-body {
+		padding: 10px;
+	}
 	.modal .link_back, .modal.modal_notice.notice_show .modal-header .btn-edit, .modal.modal_notice.notice_show .modal-header .btn-statistic, .modal.modal_notice.notice_show .modal-header .view_all, .modal.modal_questionnaire .modal-header .btn-edit, .modal.modal_questionnaire .modal-header .btn-statistic, .modal.modal_notice .btn-submit, .modal.modal_questionnaire .btn-submit {
 		margin: 10px;
 	}
@@ -1965,4 +2225,55 @@ input.form-control.date {
 	.modal-body .next {
 		right: 20px;
 	}
+}
+
+span.file_name {
+	margin-left: 15px;
+}
+
+.modal .upload_user_photo .label_file >span {
+	margin-top: 0.5rem;
+}
+.form-group.user_name {
+	width: 50%;
+	float: left;
+} 
+
+.form-group.user_name:nth-child(2) {
+	padding-right: 5px;
+}
+.form-group.user_name:nth-child(3) {
+	padding-left: 5px;
+}
+
+.mark_lines {
+	display: block;
+    position: absolute;
+    top: -2px;
+    width: 172.2px;
+    left: 50%;
+    right: 50%;
+    transform: translateX(-50%);
+    line-height: 6px;
+}
+
+.mark1, .mark2 {
+	width: 84px;
+    height: 6px;
+    display: inline-block;
+    line-height: 6px;
+}
+.mark1 {
+	background: #1594F0;
+}
+.mark2 {
+	background: rgba(43, 43, 43, 0.2);
+}
+
+.modal-header .btn_edit_ad {
+	float: right;
+}
+
+.ad_image {
+	padding-left: 20px;
 }

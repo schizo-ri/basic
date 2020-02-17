@@ -15,7 +15,11 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            return route('welcome');
+            if(Sentinel::check()) {
+                return route('Centaur::dashboard');
+            } else {
+                return route('welcome');
+            }            
         }
     }
 }

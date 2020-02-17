@@ -8,6 +8,18 @@ function mySearchTable() {
   });
 }
 
+function mySearchTableAbsence() {
+  $("#mySearchTbl").keyup(function() {
+    var value = $(this).val().toLowerCase();
+    var godina = $('#year_vacation').val();
+    $("#index_table tbody tr").filter(function() {
+      if($(this).hasClass('tr_' + godina )) {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      }
+    });
+  });
+}
+
 function mySearchDoc() {
   $("#mySearch").keyup(function() {
     var value = $(this).val().toLowerCase();

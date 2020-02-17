@@ -32,6 +32,7 @@
 		<div class="form-group">
 			<label class="label_file" for="file">Dodaj sliku<span><img src="{{ URL::asset('icons/download.png') }}" />Upload image</span></label>
 			<input type='file' id="file" name="fileToUpload" >
+			<span id="file_name"></span>
 		</div>
 
 		<div class="form-group {{ ($errors->has('price'))  ? 'has-error' : '' }}">
@@ -45,6 +46,10 @@
 	</form>
 </div>
 <script>
+	$('#file').change(function(){
+        $('#file_name').text( $('input[type=file]').val());
+	});
+	
 	$( "form" ).validate({
 		rules: {
 			subject: {

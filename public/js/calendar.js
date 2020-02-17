@@ -49,9 +49,10 @@ $( function () {
     }
 
     if(! $('.comming_agenda .agenda.show_agenda').length) {
+        var calendar_height = $('section.calendar>div').height() - $('section.calendar #calendar').height() -40;
         $('.comming_agenda .placeholder').show();
         var placeholder_height =  $('.placeholder img').height();
-        $('.calendar .comming_agenda').height(placeholder_height + 30);
+        $('.calendar .comming_agenda').height(calendar_height );
  //       $('.placeholder_cal >p').css('line-height',placeholder_height + 'px' );
     } else {
         $('.comming_agenda .placeholder').hide();

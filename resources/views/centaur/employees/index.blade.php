@@ -28,37 +28,42 @@
 					@foreach ($employees as $employee)
 						<tr>
 							<td>{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}</td>
-							<td>{{ date("d.m.Y",strtotime($employee->b_day)) }}</td>
+							<td>{!! $employee->b_day ? date("d.m.Y",strtotime($employee->b_day)) : '' !!}</td>
 							<td>{{ $employee->work['name'] }}</td>
-							<td>{{ date("d.m.Y",strtotime($employee->reg_date)) }}</td>
+							<td>{!! $employee->reg_date ? date("d.m.Y",strtotime($employee->reg_date)) : '' !!}</td>
 							<td class="center">
 								<button class="collapsible option_dots float_r"></button>
 								@if(Sentinel::getUser()->hasAccess(['employees.update']) || in_array('employees.update', $permission_dep))
-									<a href="{{ route('employees.edit', $employee->id) }}" style="display:none" rel="modal:open">
+									<a href="{{ route('employees.edit', $employee->id) }}" title="{{ __('basic.edit_employee') }}"  style="display:none" rel="modal:open">
+										<i class="fas fa-user-cog"></i>
+									</a>
+								@endif
+								@if(Sentinel::getUser()->hasAccess(['users.update']))
+									<a href="{{ route('users.edit', $employee->user_id) }}" class="" title="{{ __('basic.edit_user') }}" style="display:none" rel="modal:open">
 										<i class="far fa-edit"></i>
 									</a>
 								@endif
-								@if(Sentinel::getUser()->hasAccess(['employees.delete']) || in_array('employees.delete', $permission_dep))
+								<!--@if(Sentinel::getUser()->hasAccess(['employees.delete']) || in_array('employees.delete', $permission_dep))
 									<a href="{{ route('employees.destroy', $employee->id ) }}" style="display:none" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
-								@endif
+								@endif-->
 							</td>
 						</tr>
 					@endforeach
 				</tbody>
 			</table>
 		@else
-			@lang('basic.no_data')
+			<p class="no_data">@lang('basic.no_data')</p>
 		@endif
 	</div>
 </main>
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-	//	$.getScript( '/../js/collaps.js');
 	$('.collapsible').click(function(event){        
        		$(this).siblings().toggle();
 		});
 	});
+	$.getScript( '/../restfulizer.js');
 </script>

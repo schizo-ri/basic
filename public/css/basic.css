@@ -190,3 +190,7 @@
   .line_height_45 {
     line-height: 45px;
    }
+
+   .color_grey {
+        color: rgb(137, 137, 137);
+   }

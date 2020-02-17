@@ -36,7 +36,7 @@
 				<section class="section_notice bg_white">
 					<img class="img_search" src="{{ URL::asset('icons/filter.png')  }}" alt="Filter"/>
 					<div class="notice_filter">						
-						<span class="arrow_left1"></span>
+						{{-- <span class="arrow_left1"></span> --}}
 						<select id="filter1" class="select_filter sort" >
 							<option class="sort_desc" value="{{ route('noticeboard', ['sort' => 'DESC'])}}">
 								@lang('basic.new_first')

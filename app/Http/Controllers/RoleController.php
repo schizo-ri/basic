@@ -56,12 +56,19 @@ class RoleController extends Controller
 		$tables = array();
 		
 		foreach($tables1 as $table) {
-			array_push($tables,$table->name);
+            //array_push($tables, $table->name);
+            $tables[$table->name] = $table->description;
         }
+      
         asort($tables);
 		
-		$methodes = array('create','update','view','delete');
-		
+        $methodes = array();
+
+        $methodes['create'] = __('basic.create');
+        $methodes['update'] = __('basic.update');
+        $methodes['view'] = __('basic.view');
+        $methodes['delete'] = __('basic.delete');
+    
 		return view('Centaur::roles.create',['tables' => $tables, 'methodes' => $methodes]);
     }
 
@@ -101,7 +108,7 @@ class RoleController extends Controller
         }
 
         session()->flash('success', "Role '{$role->name}' has been created.");
-        return redirect()->route('roles.index');
+        return redirect()->back();
     }
 
     /**
@@ -129,14 +136,22 @@ class RoleController extends Controller
         // $id = $this->decode($hash);
         $role = $this->roleRepository->findById($id);
 		
-		$tables1 = Table::get();
+        $tables1 = Table::get();
 		$tables = array();
 		
 		foreach($tables1 as $table) {
-			array_push($tables,$table->name);
+            //array_push($tables, $table->name);
+            $tables[$table->name] = $table->description;
         }
+      
         asort($tables);
-		$methodes = array('create','update','view','delete');
+		
+        $methodes = array();
+
+        $methodes['create'] = __('basic.create');
+        $methodes['update'] = __('basic.update');
+        $methodes['view'] = __('basic.view');
+        $methodes['delete'] = __('basic.delete');
 		
         if ($role) {
             return view('Centaur::roles.edit',['role' => $role,'tables' => $tables, 'methodes' => $methodes]);
@@ -194,7 +209,7 @@ class RoleController extends Controller
         }
 
         session()->flash('success', "Role '{$role->name}' has been updated.");
-        return redirect()->route('roles.index');
+        return redirect('admin_panel');
     }
 
     /**

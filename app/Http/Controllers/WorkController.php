@@ -36,9 +36,9 @@ class WorkController extends Controller
         } 
 		
 		if(isset($request->department_id)) {
-			$works = Work::where('department_id',$request->department_id)->get();
+			$works = Work::where('department_id',$request->department_id)->orderBy('name')->get();
 		} else {
-			$works = Work::get();
+			$works = Work::orderBy('name')->get();
 		}
 		$employees = Employee::get();
 
@@ -52,15 +52,15 @@ class WorkController extends Controller
      */
     public function create(Request $request)
     {
-		$departments = Department::orderBy('name', 'ASC')->get();
-		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name', 'ASC')->get();
-		
-		if(isset($request->department_id)) {
-			$department1 = Department::find($request->department_id);
-			return view('Centaur::works.create', ['departments' => $departments,'department1' => $department1,'employees' => $employees]);
-		} else {
-			return view('Centaur::works.create', ['departments' => $departments,'employees' => $employees]);
-		}
+      $departments = Department::orderBy('name', 'ASC')->get();
+      $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name', 'ASC')->get();
+      
+      if(isset($request->department_id)) {
+        $department1 = Department::find($request->department_id);
+        return view('Centaur::works.create', ['departments' => $departments,'department1' => $department1,'employees' => $employees]);
+      } else {
+        return view('Centaur::works.create', ['departments' => $departments,'employees' => $employees]);
+      }
     }
 
     /**
@@ -106,10 +106,10 @@ class WorkController extends Controller
     public function edit($id)
     {
         $work = Work::find($id);
-		$departments = Department::get();
-		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name', 'ASC')->get();
-		
-		return view('Centaur::works.edit', ['work' => $work,'departments' => $departments,'employees' => $employees]);
+        $departments = Department::orderBy('name', 'ASC')->get();
+        $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name', 'ASC')->get();
+        
+        return view('Centaur::works.edit', ['work' => $work,'departments' => $departments,'employees' => $employees]);
     }
 
     /**

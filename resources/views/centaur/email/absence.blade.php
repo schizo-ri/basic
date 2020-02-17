@@ -40,7 +40,7 @@
 				@lang('absence.please_approve')  {{ $absence->absence['name'] }} za
 				{{ date("d.m.Y", strtotime($absence->start_date)) . ' do ' . date("d.m.Y", strtotime( $absence->end_date)) . ' - ' . $dani_zahtjev . ' ' . __ ('absence.days') }}
 			@elseif($absence->absence['mark'] == "BOL")
-				@lang ('absence.sickness')
+				@lang ('absence.sicknes')
 				{{ date("d.m.Y", strtotime($absence->start_date)) . ' do ' . date("d.m.Y", strtotime( $absence->end_date)) . ' - ' . $dani_zahtjev . ' dana' }}
 			@endif
 			@if( $absence->absence['mark'] == "IZL")

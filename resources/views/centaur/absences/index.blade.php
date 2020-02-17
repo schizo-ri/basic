@@ -1,3 +1,5 @@
+
+<!DOCTYPE html>
 @extends('Centaur::layout')
 
 @section('title', __('absence.absences'))
@@ -27,14 +29,17 @@
 		}
 		
 		$data_absence = array(
-			'years_service'  => BasicAbsenceController::yearsServiceCompany( $employee ), 
+			'years_service'  => BasicAbsenceController::yearsServiceCompany( $employee ),  
 			'all_servise'  	=> BasicAbsenceController::yearsServiceAll( $employee ), 
 			'days_OG'  		=> BasicAbsenceController::daysThisYear( $employee ), 
-			'razmjeranGO'  	=> BasicAbsenceController::razmjeranGO( $employee ), 
-			'razmjeranGO_PG' => BasicAbsenceController::razmjeranGO_PG( $employee ), 
-			'zahtjevi' => BasicAbsenceController::zahtjevi( $employee ), 
+			'razmjeranGO'  	=> BasicAbsenceController::razmjeranGO( $employee ),  //razmjeran go ova godina
+		//	'razmjeranGO_PG' => BasicAbsenceController::razmjeranGO_PG( $employee ), 
+			'zahtjevi' 		 => BasicAbsenceController::requestAllYear( $employee ), 
 		);
 		$bolovanje = BasicAbsenceController::bolovanje( $employee );
+		$prijenos_zahtjeva = 0;
+		$ukupno_GO = 0;
+		$ukupnoDani = 0;
 	} 
 @endphp
 @section('content')
@@ -72,8 +77,9 @@
 					<div class="col-3 info_abs">
 						<span class="title">@lang('absence.vacat_days')
 							<select id="year_vacation" class="year_select">
-								<option>{{ $ova_godina }}</option>
-								<option>{{ $prosla_godina }}</option>
+								@foreach ($years as $year)
+									<option >{{ $year }}</option>
+								@endforeach								
 							</select>
 						</span>
 						<p class="col-6 float_l">
@@ -82,36 +88,63 @@
 							<span>Total days</span>
 						</p>
 						<p class="col-6 float_l">
-							<span class="go_og go_{{ $ova_godina }}">{{ $data_absence['zahtjevi']['zahtjevi_Dani_OG'] }} - {{ $data_absence['zahtjevi']['preostalo_OG'] }}</span>
-							<span class="go_pg go_{{ $prosla_godina }}">{{ $data_absence['zahtjevi']['zahtjevi_Dani_PG'] }} - {{ $data_absence['zahtjevi']['preostalo_PG'] }}</span>
+							@foreach ($years as $year)
+								@php
+									$razmjeranGO_PG = BasicAbsenceController::razmjeranGO_Godina($employee, $year); // razmjerni dani prošla godina
+								
+									if ($year == $prosla_godina && date('n') < 7) {   //  ako je danas mjesec manji od 7
+										$ukupno_GO += $razmjeranGO_PG;
+									} elseif ( $year == $ova_godina ){
+										$ukupno_GO += $razmjeranGO_PG;
+									}
+								
+									$daniZahtjeviGodina = BasicAbsenceController::daniZahtjeviGodina($employee, $year); // zahtjevi - svi dani za godinu
+									
+									$daniZahtjeviGodina = $daniZahtjeviGodina + $prijenos_zahtjeva;
+									$prijenos_zahtjeva = 0;
+									if($daniZahtjeviGodina > $razmjeranGO_PG ) {
+										$prijenos_zahtjeva = $daniZahtjeviGodina - $razmjeranGO_PG;
+									} else {
+										$prijenos_zahtjeva = 0;
+									} 
+									if ( $year == $ova_godina ||$year == $prosla_godina  ){
+										$ukupnoDani += count ($data_absence['zahtjevi'][ $year]);
+									}
+									
+								@endphp
+								<span class="go go_{{ $year }}">
+									{{ intval(count ($data_absence['zahtjevi'][ $year]))}} - {{ intval($razmjeranGO_PG) -  intval(count ($data_absence['zahtjevi'][ $year])) }}
+								</span>
+							@endforeach
 							<span>Used - Unused</span>
 						</p>
 					</div>
 					<div class="col-3 info_abs">
 						<span class="title">@lang('absence.sick_leave')
 							<select id="year_sick" class="year_select">
-								<option>{{ $ova_godina }}</option>
-								<option>{{ $prosla_godina }}</option>
+								@foreach ($years as $year)
+									<option>{{ $year }}</option>
+								@endforeach
 							</select>
 						</span>
-
 						<p class="col-6 float_l">
-							<span class="bol_og bol_{{ $ova_godina }}">{{  $bolovanje['bolovanje_OG'] }}</span>
-							<span class="bol_pg bol_{{ $ova_godina }}">{{  $bolovanje['bolovanje_PG'] }}</span>
+							@foreach ($years as $year)
+								<span class="bol bol_{{ $year }}">{{  $bolovanje[ $year] }}</span>
+							@endforeach
 							<span>Total used</span>
 						</p>
 						<p class="col-6 float_l">
-							<span class="bol_om">{{  $bolovanje['bolovanje_OM'] }}</span>
+							<span class="bol_om">{{ $bolovanje['bolovanje_OM'] }}</span>
 							<span>This month</span>
 						</p>
 					</div>
 				</header>
 				<section class="overflow_auto bg_white">
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padd_0 position_rel">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padd_0 position_rel height100">
 						<div class="table-responsive" >
 							<div id="index_table_filter" class="dataTables_filter">
 								<label>
-									<input type="search" placeholder="Search" onkeyup="mySearchTable()" id="mySearchTbl">
+									<input type="search" placeholder="Search" onkeyup="mySearchTableAbsence()" id="mySearchTbl">
 								</label>
 							</div>
 							@if(count($absences)>0)
@@ -133,18 +166,29 @@
 									</thead>
 									<tbody class="overflow_auto">
 										@foreach ($absences as $absence)
-											@if(date("Y",strtotime($absence->start_date)) == $ova_godina || date("Y",strtotime($absence->end_date)) == $ova_godina)
-												<tr class="ova_godina">
-											@elseif(date("Y",strtotime($absence->start_date)) == $prosla_godina || date("Y",strtotime($absence->end_date)) == $prosla_godina)
-											<tr class="prosla_godina">
-											@endif
+										@php
+											$start_date = new DateTime($absence->start_date . $absence->start_time);
+											$end_date = new DateTime($absence->end_date . $absence->end_time );
+											$interval = $start_date->diff($end_date);
+											
+											$hours   = $interval->format('%h'); 
+											$minutes = $interval->format('%i');
+										@endphp
+											<tr class="tr_{!! date('Y', strtotime($absence->start_date) )!!} {!!  $absence->absence->mark == 'BOL' ? 'bol' : '' !!}">
 												@if( Sentinel::inRole('administrator') )<td>{{ $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name'] }}</td>@endif
 													<td>{{ '[' . $absence->absence['mark'] . '] ' . $absence->absence['name'] }}</td>
 													<td>{{ $absence->start_date }}</td>
 													<td>{{ $absence->end_date }}</td>
 													<!--<td>xx dana</td>
 													<td>{{ $absence->start_time . '-' .  $absence->end_time }}</td>-->
-													<td>{{ $absence->comment }}</td>
+													<td>
+														@if( $absence->absence['mark'] != 'IZL' )
+															[{{ BasicAbsenceController::daniGO($absence) }} @lang('absence.days') ] 
+														@else
+															[{{ $hours . ' h, ' . $minutes . ' m'}}]
+														@endif
+														{{ $absence->comment }}
+													</td>
 													<td class="approve">
 														@if($absence->approve == 1) 
 															<span class="img_approve"><span>@lang('absence.approved')</span></span>
@@ -159,7 +203,7 @@
 														@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep) || Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
 															<button class="collapsible option_dots float_r"></button>
 															@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep))
-																<a href="{{ route('absences.edit', $absence->id) }}" class="btn-edit" title="{{ __('absence.edit_absence')}}" style="display:none" rel="modal:open">
+																<a href="{{ route('absences.edit', $absence->id) }}" class="btn-edit" title="{{ __('absence.edit_absence')}}" style="display:none" rel="modal:open" >
 																	<i class="far fa-edit"></i>
 																</a>
 															@endif
@@ -197,12 +241,12 @@
 		$( function () {
 			$('#index_table_filter').show();
 			$('#index_table_filter').prepend('<a class="add_new" href="{{ route('absences.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('absence.new_request')</a>');
-		
+			$('#index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 			$.getScript( 'js/datatables.js');
 			$.getScript( 'js/filter_table.js');
 			$.getScript( 'js/absence.js');
+			$.getScript("js/collaps.js");
 		});
-
 	</script>
 @endif
 @stop

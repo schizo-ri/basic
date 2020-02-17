@@ -1,5 +1,5 @@
 <div class="modal-header">
-	<h3 class="panel-title">@lang('calendar.add_event')</h3>
+	<h3 class="panel-title">@lang('basic.create_user')</h3>
 </div>
 <div class="modal-body">
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('auth.register.attempt') }}">
@@ -17,7 +17,7 @@
 				{!! ($errors->has('password_confirmation') ? $errors->first('password_confirmation', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			{{ csrf_field() }}
-			<input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('welcome.signUp') }}">
+			<input class="btn-submit" type="submit" value="{{ __('welcome.signUp') }}">
 		</fieldset>
 	</form>
 </div>

@@ -108,13 +108,13 @@ class AdController extends Controller
 			
 			// Check if file already exists
 			if (file_exists($target_file)) {
-				return redirect()->back()->with('error', 'Sorry, file already exists.');  
+				return redirect()->back()->with('error', __('basic.file_exists'));  
 				$uploadOk = 0;
 			}
 			
 			/* Check file size*/
 			if ($_FILES["fileToUpload"]["size"] > 5000000) {
-				return redirect()->back()->with('error', 'Sorry, your file is too large.');  
+				return redirect()->back()->with('error', __('basic.file_toolarge'));  
 				$uploadOk = 0;
 			}
 			/* Allow certain file formats
@@ -124,19 +124,19 @@ class AdController extends Controller
 				$uploadOk = 0;
 			}*/
 			if($imageFileType == "exe" || $imageFileType == "bin") {
-				return redirect()->back()->with('error', 'Nije dozvoljen unos exe, bin dokumenta');  
+				return redirect()->back()->with('error',  __('basic.not_allowed'));  
 				$uploadOk = 0;
 			}
 			// Check if $uploadOk is set to 0 by an error
 			if ($uploadOk == 0) {
-				return redirect()->back()->with('error', 'Sorry, your file was not uploaded.'); 
+				return redirect()->back()->with('error', __('basic.not_uploaded')); 
 			// if everything is ok, try to upload file
 			} else {
 				if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                    return redirect()->route('oglasnik')->with('success',"The ad has been uploaded.");
+                    return redirect()->route('oglasnik')->with('success', __('basic.ad') . ' ' .  __('ctrl.has_uploaded'));
 
 				} else {
-					return redirect()->route('oglasnik')->with('error', 'Sorry, there was an error uploading your file.'); 
+					return redirect()->route('oglasnik')->with('error', __('basic.file_error')); 
 				}
 			}
         }
@@ -169,7 +169,7 @@ class AdController extends Controller
     {
         $ad = Ad::find($id);
 		$categories = AdCategory::get();
-		
+	
 		return view('Centaur::ads.edit',['ad' => $ad,'categories' => $categories ]);
     }
 
@@ -196,10 +196,62 @@ class AdController extends Controller
 		);
 		
 		$ad->updateAd($data);
+		if(isset($request['fileToUpload'])) {
+			$target_dir = 'storage/ads/' . $ad->id . '/';  //specifies the directory where the file is going to be placed	
+
+			// Create directory
+			if(!file_exists($target_dir)){
+				mkdir($target_dir);
+            }
+
+			$target_file = $target_dir . '/' . basename($_FILES["fileToUpload"]["name"]); //$target_file specifies the path of the file to be uploaded
+			if(isset($request['fileToUpload']) && file_exists($target_file)){
+				array_map('unlink', glob($target_file)); // ako postoji file - briše ga
+				$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]); 
+			} 
+
+			$uploadOk = 1;
+			$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));  //holds the file extension of the file (in lower case)
+			// Check if image file is a actual image or fake image
+			
+			// Check if file already exists
+			if (file_exists($target_file)) {
+				return redirect()->back()->with('error', __('basic.file_exists'));  
+				$uploadOk = 0;
+			}
+			
+			/* Check file size*/
+			if ($_FILES["fileToUpload"]["size"] > 5000000) {
+				return redirect()->back()->with('error', __('basic.file_toolarge'));  
+				$uploadOk = 0;
+			}
+			/* Allow certain file formats
+			if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+			&& $imageFileType != "gif" && $imageFileType != "pdf") {
+				return redirect()->back()->with('error', 'Dozvoljen unos samo jpg, png, pdf, gif');  
+				$uploadOk = 0;
+			}*/
+			if($imageFileType == "exe" || $imageFileType == "bin") {
+				return redirect()->back()->with('error',  __('basic.not_allowed'));  
+				$uploadOk = 0;
+			}
+			// Check if $uploadOk is set to 0 by an error
+			if ($uploadOk == 0) {
+				return redirect()->back()->with('error', __('basic.not_uploaded')); 
+			// if everything is ok, try to upload file
+			} else {
+				if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                    return redirect()->route('oglasnik')->with('success', __('basic.ad') . ' ' .  __('ctrl.has_uploaded'));
+
+				} else {
+					return redirect()->route('oglasnik')->with('error', __('basic.file_error')); 
+				}
+			}
+        }
 		
 		session()->flash('success',__('ctrl.data_edit'));
 		
-        return redirect()->route('ads.index', ['category_id' => $request['category_id']]);	
+        return redirect()->route('oglasnik');
     }
 
     /**

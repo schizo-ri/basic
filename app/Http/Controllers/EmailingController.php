@@ -40,8 +40,28 @@ class EmailingController extends Controller
 		$emailings = Emailing::join('tables','emailings.model','tables.id')->select('emailings.*','tables.name')->orderBy('tables.name','ASC')->get();
 		$departments = Department::orderBy('name', 'ASC')->get();
 		$employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->get();
-		 
-		return view('Centaur::emailings.index', ['emailings' => $emailings, 'departments' => $departments, 'employees' => $employees, 'permission_dep' => $permission_dep]);
+         
+        $tables1 = Table::get();
+		$models = array();
+		
+		foreach($tables1 as $table) {
+            //array_push($tables, $table->name);
+            $models[$table->name] = $table->description;
+        }
+      
+        asort($models);
+		
+        $methods = array();
+
+        $methods['create'] = __('basic.create');
+        $methods['update'] = __('basic.update');
+        $methods['view'] = __('basic.view');
+        $methods['delete'] = __('basic.delete');
+        $methods['cron'] = __('basic.cron');
+        $methods['activate'] = __('basic.activate');
+        $methods['confirm'] = __('basic.confirm');
+
+		return view('Centaur::emailings.index', ['emailings' => $emailings,'methods' => $methods,'models' => $models, 'departments' => $departments, 'employees' => $employees, 'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -51,11 +71,30 @@ class EmailingController extends Controller
      */
     public function create()
     {
-        $models = Table::where('emailing',1)->orderBy('name', 'ASC')->get();
+        $tables1 = Table::get();
+		$models = array();
+		
+		foreach($tables1 as $table) {
+            //array_push($tables, $table->name);
+            $models[$table->id] = $table->description;
+        }
+      
+        asort($models);
+		
+        $methods = array();
+
+        $methods['create'] = __('basic.create');
+        $methods['update'] = __('basic.update');
+        $methods['view'] = __('basic.view');
+        $methods['delete'] = __('basic.delete');
+        $methods['cron'] = __('basic.cron');
+        $methods['activate'] = __('basic.activate');
+        $methods['confirm'] = __('basic.confirm');
+
+
         $departments = Department::where('email','<>', null)->orderBy('name', 'ASC')->get();
         $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->get();
-		$methods = array('activate','create', 'update', 'confirm', 'cron');
-
+        
 		return view('Centaur::emailings.create', ['models' => $models, 'departments' => $departments, 'employees' => $employees, 'methods' => $methods]);
 		
     }
@@ -119,13 +158,29 @@ class EmailingController extends Controller
     public function edit($id)
     {
         $emailing = Emailing::find($id);
-		
-		$models = Table::where('emailing',1)->orderBy('name', 'ASC')->get();
         $departments = Department::where('email','<>', null)->orderBy('name', 'ASC')->get();
         $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->get();
-		$methods = array('activate','create', 'update', 'confirm', 'cron');
+        $tables1 = Table::get();
+		$models = array();
+		
+		foreach($tables1 as $table) {
+            //array_push($tables, $table->name);
+            $models[$table->id] = $table->description;
+        }
+      
+        asort($models);
+		
+        $methods = array();
 
-		return view('Centaur::emailings.edit', ['emailing'=>$emailing, 'models' => $models, 'departments' => $departments, 'employees' => $employees, 'methods' => $methods]);
+        $methods['create'] = __('basic.create');
+        $methods['update'] = __('basic.update');
+        $methods['view'] = __('basic.view');
+        $methods['delete'] = __('basic.delete');
+        $methods['cron'] = __('basic.cron');
+        $methods['activate'] = __('basic.activate');
+        $methods['confirm'] = __('basic.confirm');
+
+		return view('Centaur::emailings.edit', ['emailing'=>$emailing, 'models' => $models, 'tables1' => $tables1, 'departments' => $departments, 'employees' => $employees, 'methods' => $methods]);
 
     }
 
@@ -143,13 +198,12 @@ class EmailingController extends Controller
 		$sent_to_empl = '';
 	    $sent_to_dep = '';
 		
-		if($request->sent_to_empl){
-			$sent_to_empl = implode(",",$request->sent_to_empl);
+		if($request['sent_to_empl']){
+			$sent_to_empl = implode(",", $request['sent_to_empl']);
 		}
-		if($request->sent_to_dep){
-			$sent_to_dep = implode(",",$request->sent_to_dep);
+		if($request['sent_to_dep']){
+			$sent_to_dep = implode(",", $request['sent_to_dep']);
 		}
-	   
 		$data = array(
 			'model'  		=> $request['model'],
 			'method'  		=> $request['method'],

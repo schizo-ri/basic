@@ -23,7 +23,33 @@
     <div class="modal-body">
         <div class="form-group {{ ($errors->has('to_department'))  ? 'has-error' : '' }}">
             <label>@lang('basic.to_department')</label>
-            <select  class="form-control" name="to_department[]" value="{{ old('to_department') }}" multiple required >
+            @foreach($departments0 as $department0)
+                <div class="col-12">
+                    <span class="float_l col-xs-6 col-sm-6 col-lg-4  col-xl-3" ><input class="float_l" type="checkbox" name="to_department[]" id="{{ $department0->id }}" value="{{ $department0->id }}"/><label for="{{ $department0->id }}">{{ $department0->name }}</label></span>
+                    @foreach($departments2 as $department2)
+                        @if ($department2->level2 == $department0->id )
+                            <span class="float_l col-xs-6 col-sm-6 col-lg-4  col-xl-3" ><input type="checkbox" name="to_department[]" id="{{ $department2->id }}" value="{{ $department2->id }}"/><label for="{{ $department2->id }}">{{ $department2->name }}</label></span>
+                        @endif
+                    @endforeach
+                    @foreach($departments1 as $department1)
+                            @if ($department1->level2 == $department0->id )
+                                <span class="float_l col-xs-6 col-sm-6 col-lg-4  col-xl-3" ><input type="checkbox" name="to_department[]" id="{{ $department1->id }}" value="{{ $department1->id }}"/><label for="{{ $department1->id }}">{{ $department1->name }}</label></span>
+                            @endif
+                            @foreach($departments2 as $department2)
+                              
+                                @if ($department2->level2 == $department1->id )
+                                    <span class="float_l col-xs-6 col-sm-6 col-lg-4  col-xl-3" ><input type="checkbox" name="to_department[]" id="{{ $department2->id }}" value="{{ $department2->id }}"/><label for="{{ $department2->id }}">{{ $department2->name }}</label></span>
+                                @endif
+                            @endforeach
+                    @endforeach
+                </div>
+            @endforeach
+            {!! ($errors->has('to_department') ? $errors->first('to_department', '<p class="text-danger">:message</p>') : '') !!}
+        </div>
+        <!--
+        <div class="form-group {{ ($errors->has('to_department'))  ? 'has-error' : '' }}">
+            <label>@lang('basic.to_department')</label>
+            <select  class="form-control" name="to_department[]" value="{{ old('to_department') }}" required multiple  >
                 <option value="" disabled ></option>
                 @foreach($departments0 as $department0)
                     <option value="{{ $department0->id }}">{{ $department0->name }}</option>
@@ -38,7 +64,7 @@
                 @endforeach
             </select>
             {!! ($errors->has('to_department') ? $errors->first('to_department', '<p class="text-danger">:message</p>') : '') !!}
-        </div>
+        </div>-->
         <div class="form-group {{ ($errors->has('title'))  ? 'has-error' : '' }}">
             <label>@lang('basic.title')</label>
             <input name="title" type="text" class="form-control" value="{{ old('title') }}" required>
@@ -62,31 +88,23 @@
             <input name="schedule_time" class="schedule_date" type="time" class="form-control" value="" />
             {!! ($errors->has('schedule_date') ? $errors->first('schedule_date', '<p class="text-danger">:message</p>') : '') !!}
         </div>
-        <div class="form-group last summernote  {{ ($errors->has('notice'))  ? 'has-error' : '' }}"">
+        <div class="form-group last {{ ($errors->has('notice')) ? 'has-error' : '' }}">
             <label>@lang('basic.notice'):</label>
-            <textarea id="summernote" name="notice" required ></textarea>
+            <textarea name="notice" id="mytextarea" maxlength="16777215">{{ old('notice') }}</textarea>
             {!! ($errors->has('notice') ? $errors->first('notice', '<p class="text-danger">:message</p>') : '') !!}
-        </div>
+        </div>       
         {{ csrf_field() }}
     </div>
 </form>
+
+<span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-    $( "form" ).validate({
-		rules: {
-			to_department: {
-				required: true
-			},
-			title: {
-				required: true,
-				maxlength: 100
-            },
-            notice: {
-				required: true,
-				maxlength: 16777215
-			}
-		}
-    });
-    
+	$.getScript( '/../js/tinymce.js');
+
+	$('body').on($.modal.CLOSE, function(event, modal) {
+		$.getScript('/../node_modules/tinymce/tinymce.min.js');
+	});	
+   
     $(function() {        
         var height = 0;
         var body_height = 0;
@@ -111,16 +129,6 @@
             $('.form-group.last').height(last_height - 60);
             $('.note-editable').height(last_height - 160 );
         }
-
-        $("#summernote").summernote({
-       
-        });
-        $('.btn-submit').click(function(e){
-            if(! $('#summernote').val() == true) {
-                e.preventDefault();
-                $('.form-group.summernote').append('<p class="text-danger">@lang('basic.notice_required')</p>');
-            } 
-        });
 
         $('.select_save').click(function(){
             if($(this).val() == 1 ) {
@@ -168,5 +176,5 @@
             $('.note-editable').height(last_height - 160 );
         }
     });
-    
+    $.getScript( '/../js/validate2.js');
 </script>

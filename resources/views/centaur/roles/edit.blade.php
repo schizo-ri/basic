@@ -1,3 +1,4 @@
+<span hidden class="locale" >{{ App::getLocale() }}</span>
 <div class="modal-header">
     <h3 class="panel-title">@lang('basic.edit_role')</h3>
 </div>
@@ -12,20 +13,23 @@
             {!! ($errors->has('slug') ? $errors->first('slug', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         
-        <h5>@lang('basic.permissions'):</h5>
-        @foreach($tables as $table)
-            @foreach($methodes as $methode)
-                <div class="checkbox col-6 float_l">
+        <h5>@lang('basic.permissions'): {{-- <span class="modal_filter"><input type="search" placeholder="{{ __('basic.search')}}" id="mySearch"></span> --}}</h5>
+        @foreach($tables as $table_name => $table_description)
+            @foreach($methodes as  $methode_name => $methode_description)
+                <div class="checkbox col-6 float_l panel">
                     <label>
-                        <input type="checkbox" name="permissions[{{$table}}.{{$methode}}]" value="1" 
-                        {!! $role->hasAccess($table . '.' . $methode) ? 'checked' : '' !!} />
-                        {{$table}}.{{$methode}}
+                        <input type="checkbox" name="permissions[{{$table_name}}.{{$methode_name}}]" value="1" {!! $role->hasAccess($table_name . '.' . $methode_name) ? 'checked' : '' !!}>
+                        {{$table_description}}  - {{$methode_description}}
                     </label>
                 </div>
             @endforeach
         @endforeach
         {{ csrf_field() }}
         {{ method_field('PUT') }}
-        <input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('basic.edit')}}">
+        <input class="btn-submit" type="submit" value="{{ __('basic.edit')}}">
     </form>
 </div>
+<script>
+    $.getScript( '/../js/filter.js');
+    $.getScript( '/../js/validate.js');
+</script>

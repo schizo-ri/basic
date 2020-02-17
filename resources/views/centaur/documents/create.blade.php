@@ -5,7 +5,7 @@
     <form action="{{ route('documents.store') }}" method="post" enctype="multipart/form-data" style="text-align:left;">
         <div class="form-group ">
             <label class="padd_10">@lang('basic.to_employee') </label>
-            <select class="djelatnik" name="employee_id" value="{{ old('employee_id') }}" required>
+            <select class="djelatnik" name="employee_id" value="{{ old('employee_id') }}" required > 
                 <option selected="selected" value=""></option>
                 <option name="svi" value="svi">@lang('basic.all_employees')</option>
                 @foreach($employees as $employee)
@@ -15,17 +15,18 @@
         </div>
         <div class="form-group">
             <label class="label_file" for="file">@lang('basic.file')<span><img src="{{ URL::asset('icons/download.png') }}" />@lang('basic.read_file')</span></label>
-            <input type='file' id="file" name="fileToUpload" required  />
+            <input type='file' id="file" name="fileToUpload" required />
             <span id="file_name"></span>
         </div>
         {{ csrf_field() }}
-        <input class="btn-submit" type="submit" value="{{ __('basic.upload_file') }}" name="submit">
+        <input class="btn-submit" type="submit" value="{{ __('basic.upload_file') }}"  name="submit">
     </form>
 </div>
+<span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-    $(function(){ 
-        $.getScript( 'js/documents.js');
+    $('#file').change(function(){
+        $('#file_name').text( $('input[type=file]').val());
     });
-</script>
-    
 
+    $.getScript( '/../js/validate_doc.js');
+</script>

@@ -11,6 +11,8 @@ use Centaur\AuthManager;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Centaur\Mail\CentaurWelcomeEmail;
+use App\Models\Employee;
+use App\User;
 
 class RegistrationController extends Controller
 {
@@ -67,6 +69,7 @@ class RegistrationController extends Controller
         // Send the activation email
         $code = $result->activation->getCode();
         $email = $result->user->email;
+
         Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code, __('ctrl.acc_created')));
         
         // Ask the user to check their email for the activation link
@@ -74,7 +77,23 @@ class RegistrationController extends Controller
 
         // There is no need to send the payload data to the end user
         $result->clearPayload();
+        
+        $data_employee = [
+            'user_id'   => User::orderBy('id','DESC')->first()->id,
+            'work_id'   => 1
+        ];
 
+        if( User::orderBy('id','DESC')->first()->id == 1 ) {
+            $user = Sentinel::findById( User::orderBy('id','DESC')->first()->id );
+
+            $role = Sentinel::findRoleByName('Administrator');
+    
+            $role->users()->attach($user);
+        }
+       
+        $employee = new Employee();
+        $employee->saveEmployee( $data_employee);
+       
         // Return the appropriate response
         return $result->dispatch(route('dashboard'));
     }

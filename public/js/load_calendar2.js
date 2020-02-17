@@ -28,6 +28,4 @@ $(function() {
         $('.month_year').text(monthNames[date_before.getMonth()] + ' ' +  date_before.getFullYear());
         $('.pignose-calendar-body').find('[data-date="' + searchDate_bef + '"] > a' ).click();
     });
-
-
 });

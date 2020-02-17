@@ -66,7 +66,7 @@ class TableController extends Controller
 		
 		session()->flash('success',  __('ctrl.data_save'));
 		
-        return redirect()->route('tables.index');
+        return redirect()->back();
     }
 
     /**
@@ -114,7 +114,7 @@ class TableController extends Controller
 		
 		session()->flash('success', __('ctrl.data_edit'));
 		
-        return redirect()->route('tables.index');
+        return redirect()->back();
 		
     }
 

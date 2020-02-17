@@ -348,13 +348,13 @@ class QuestionnaireController extends Controller
 	public function sendEmail(Request $request) 
 	{
 		/* mail obavijest o novoj poruci */
-		$emailings = Emailing::get();
+		//$emailings = Emailing::get();
 		$send_to = array();
-		$departments = Department::get();
-		$employees = Employee::get();
+		//$departments = Department::get();
+		$employees = Employee::where('checkout', null)->get();
 		$questionnaire = Questionnaire::find($request['id']);
 		
-		if(isset($emailings)) {
+		/* if(isset($emailings)) {
 			foreach($emailings as $emailing) {
 				if($emailing->table['name'] == 'questionnaires' && $emailing->method == 'create') {
 					
@@ -370,10 +370,16 @@ class QuestionnaireController extends Controller
 					}
 				}
 			}
-		}
+		} */
 		
+		foreach ($employees as $employee) {
+			if( $employee->email ) {
+				array_push($send_to, $employee->email );
+			}                                   
+		}           
+
 		if($send_to) {
-			foreach($send_to as $send_to_mail) {
+			foreach(array_unique($send_to) as $send_to_mail) {
 				if( $send_to_mail != null & $send_to_mail != '' ) {
 					Mail::to($send_to_mail)->send(new QuestionnaireSend($questionnaire)); // mailovi upisani u mailing 
 				}

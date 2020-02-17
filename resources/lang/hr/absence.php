@@ -54,6 +54,9 @@ return [
 	'email_send' 	=> 'Slanje e-maila:',
 	'send_email' 	=> 'Poslati e-mail',
 	'dont_send_email' => 'Ne slati mail',
+	'other_requests' => 'Ostali zahtjevi',
+	'total_used'	 => 'Ukupno korišteno',
+	'this_month' => 'Ovaj mjesec',
 	 
 	
 ];

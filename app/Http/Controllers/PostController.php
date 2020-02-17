@@ -55,12 +55,9 @@ class PostController extends Controller
 		$permission_dep = array();
 
 		if($empl) {
-			if(Sentinel::inRole('administrator')) {
-				$posts = Post::orderBy('to_department_id','DESC')->get();
-			} else {
-				$posts = Post::where('employee_id', $empl->id)->orWhere('to_employee_id', $empl->id)->get();
-				
-			}
+			
+			$posts = Post::where('employee_id', $empl->id)->orWhere('to_employee_id', $empl->id)->orderBy('updated_at','DESC')->get();
+
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 			
 		} else {
@@ -356,10 +353,14 @@ class PostController extends Controller
 			$user_name = Department::where('id', $post->to_department_id)->first()->name;
 		}
 		
+		if($docs) {
+			$docs = end($docs);
+		}
+		
 		$podaci = array(
 			'employee'  	=>  $empl,  
 			'post_comment'  =>  $post_comment,  
-			'docs'  		=> end($docs),  
+			'docs'  		=>  $docs,
 			'user_name'  	=>  $user_name,  
 		);
 	
@@ -398,5 +399,9 @@ class PostController extends Controller
 			}
 		}
 		return $comments_post;
+	}
+
+	public static function previous($id, $post_id) {
+		return Comment::where('id', '<', $id)->where('post_id', $post_id)->orderBy('id','desc')->first();
 	}
 }

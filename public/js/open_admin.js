@@ -1,23 +1,35 @@
+$(".admin_pages a.admin_link").addClass('disable');
+var body_width = $('body').width();
+
 $(function(){
-    $('.admin_pages>li>a').first().click();
+    if(body_width > 450) {
+        $('.admin_pages>li>a').first().click();
+    }
+    $(".admin_pages a.admin_link").removeClass('disable');
 });
 
-$('.admin_pages>li>a').click(function(e) {
+var click_element;
+
+$('.admin_pages>li>a').click(function(e) {    
+    click_element = $(this);
+   
     var url = $(this).attr('href');
+   // console.log(url);
     $('.admin_pages>li>a').removeClass('active_admin');
     $(this).addClass('active_admin');
     $( '#admin_page' ).load( url, function( response, status, xhr ) {
+      //window.history.replaceState({}, document.title, url);
         if ( status == "error" ) {
             var msg = "Sorry but there was an error: ";
             $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
         }
         $.getScript( 'js/datatables.js');
         $.getScript( 'js/filter_table.js');
-    });  
-    return false
+    });
+   
+    return false;
 });
 
-var body_width = $('body').width();
 if(body_width < 450) {
     $('.admin_pages>li>a').click(function(e) { 
         $('aside.admin_aside').hide();
@@ -28,4 +40,4 @@ if(body_width < 450) {
         $('aside.admin_aside').show();
         $('main.admin_main').hide();
     });
-} 
+}

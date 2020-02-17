@@ -35,15 +35,18 @@ class EventController extends Controller
     {
         $empl = Sentinel::getUser()->employee;
         $permission_dep = array();
+        $dataArr = array();
 
         if($empl) {
             $events = Event::where('employee_id', $empl->id)->get();
-            $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+            if( $empl->work && $empl->work->department && $empl->work->department->departmentRole ) {
+                $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+            }
             
-            $dataArr = array();
-            
-            foreach($events as $event1) {
-                array_push($dataArr, ['name' => "event", 'type' => __('calendar.event'), 'date' => $event1->date, 'title' => $event1->title]);
+            if(count($events) > 0) {
+                foreach($events as $event1) {
+                    array_push($dataArr, ['name' => "event", 'type' => __('calendar.event'), 'date' => $event1->date, 'title' => $event1->title]);
+                }
             }
             
             $absences = Absence::where('approve',1)->get();
@@ -53,24 +56,27 @@ class EventController extends Controller
             $mj_select = $select_day[1];
             $god_select = $select_day[0];
 
-            foreach($absences as $absence) {
-                $begin = new DateTime($absence->start_date);
-                $end = new DateTime($absence->end_date);
-                $end->setTime(0,0,1);
-                $interval = DateInterval::createFromDateString('1 day');
-                $period = new DatePeriod($begin, $interval, $end);
-                foreach ($period as $dan) {
-                    if(date_format($dan,'Y') == $god_select) {  // ako je trenutna godina
-                        array_push($dataArr, ['name' => $absence->absence['mark'],'type' => $absence->absence['name'], 'date' => date_format($dan,'Y-m-d'), 'start_time' =>  $absence->start_time, 'end_time' =>  $absence->end_time, 'employee' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name']]);
+            if (count($absences)>0) {
+                foreach($absences as $absence) {
+                    $begin = new DateTime($absence->start_date);
+                    $end = new DateTime($absence->end_date);
+                    $end->setTime(0,0,1);
+                    $interval = DateInterval::createFromDateString('1 day');
+                    $period = new DatePeriod($begin, $interval, $end);
+                    foreach ($period as $dan) {
+                        if(date_format($dan,'Y') == $god_select) {  // ako je trenutna godina
+                            array_push($dataArr, ['name' => $absence->absence['mark'],'type' => $absence->absence['name'], 'date' => date_format($dan,'Y-m-d'), 'start_time' =>  $absence->start_time, 'end_time' =>  $absence->end_time, 'employee' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name']]);
+                        }
                     }
                 }
             }
-
+          
             $employees = Employee::get();
-
-            foreach($employees as $employee) {
-                $dan = $god_select . '-' . date('m-d', strtotime($employee->b_day));
-                array_push($dataArr, ['name' => 'birthday','type' => __('basic.birthday'), 'date' => $dan, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'] ]);
+            if(count($employees)>0) {
+                foreach($employees as $employee) {
+                    $dan = $god_select . '-' . date('m-d', strtotime($employee->b_day));
+                    array_push($dataArr, ['name' => 'birthday','type' => __('basic.birthday'), 'date' => $dan, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'] ]);
+                }
             }
             
             $start = new DateTime('00:00');
@@ -95,15 +101,28 @@ class EventController extends Controller
     public function create(Request $request)
     {
         $type = 'event';
-
+        
+        if ($request['time1']) {
+            $time = $request['time1'];
+            $time2 = strtotime( $time ) + 3600;
+            $time2 = date('H:i',$time2 );
+        } else {
+            $time = '08:00';
+            $time2 = '09:00';
+        }
+        if ($request['date']) {
+            $date = $request['date'];
+        } else {
+            $date = date('Y-m-d');
+        }
+       
         if(isset($request['type'])) {
             if($request['type'] == 'task') {
                 $type = 'task';
             }
         }
 
-        return view('Centaur::events.create', ['type' => $type]);
-       
+        return view('Centaur::events.create', ['type' => $type, 'time' => $time,'time2' => $time2, 'date' => $date ]);       
     }
 
     /**
@@ -173,7 +192,15 @@ class EventController extends Controller
      */
     public function edit($id)
     {
-        //
+        $event = Event::find($id);
+        $type = 'event';
+
+        if(isset($request['type'])) {
+            if($request['type'] == 'task') {
+                $type = 'task';
+            }
+        }
+        return view('Centaur::events.edit', ['event' => $event, 'type' => $type]);
     }
 
     /**
@@ -185,7 +212,21 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $event = Event::find($id);
+
+        $data = array(
+			'title'  		=> $request['title'],
+			'date'  		=> $request['date'],
+			'time1' 		=> $request['time1'],
+			'time2' 		=> $request['time2'],
+			'description'   => $request['description']
+        );
+
+        $event->updateEvent($data);
+        
+        session()->flash('success',  __('ctrl.data_edit'));
+	
+        return redirect()->back();
     }
 
     /**
@@ -196,7 +237,12 @@ class EventController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $event = Event::find($id);
+        $event->delete();
+
+        session()->flash('success',__('ctrl.data_delete'));
+		
+        return redirect()->back();
     }
 
     public static function countDays ($dataArr, $dan) {

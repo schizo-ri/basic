@@ -32,12 +32,12 @@
 							<td class="center">
 								<button class="collapsible option_dots float_r"></button>
 								@if(Sentinel::getUser()->hasAccess(['tables.update']))
-									<a href="{{ route('tables.edit', $table->id) }}" style="display:none" class="btn-edit" rel="modal:open">
+									<a href="{{ route('tables.edit', $table->id) }}" style="display:none" class="btn-edit" title="{{ __('basic.edit')}}" rel="modal:open">
 										<i class="far fa-edit"></i>
 									</a>
-								@endif
+								@endif								
 								@if(Sentinel::getUser()->hasAccess(['tables.delete']))
-									<a href="{{ route('tables.destroy', $table->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+									<a href="{{ route('tables.destroy', $table->id) }}" style="display:none" class="action_confirm btn-delete danger" title="{{ __('basic.delete')}}" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -47,7 +47,7 @@
 				</tbody>
 			</table>
 		@else
-			@lang('basic.no_data')
+			<p class="no_data">@lang('basic.no_data')</p>
 		@endif
 	</div>
 </main>
