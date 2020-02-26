@@ -14,7 +14,6 @@ return [
     'path_not_allow' => 'Putanja nije dozvoljena',
 	'notice_only_employee' => 'obavijest može generirat samo zaposlenik.',
     'file_exists' => 'Nažalost, datoteka već postoji.',
-    'file_toolarge' => 'Sorry, your file is too large.',
     'file_toolarge' => 'Nažalost, datoteka je prevelika.',
     'not_uploaded' => 'Nažalost, datoteka nije prenesena.',
 	'not_allow' => 'Nije dozvoljen unos exe, bin dokumenta',
@@ -38,6 +37,10 @@ return [
 	'no_valid_email'     => 'E-mail adresa nije valjana.',
 	'not_allowed'     => 'Nije dozvoljeno unos exe, bin dokumenta',
 	'malfunction'     => 'Za prijavu kvara obavezan je unos napomene',
-	
+	'no_company'     => 'Nema unesene tvrtke!',
+	'no_oib'     	 => 'Tvrtka nema unesen OIB broj ili broj nije nađen!',
+	'retrieving_error' => 'Nažalost, došlo je do pogreške prilikom dohvačanja podataka.',
+	'max_user' => 'Iskorišten je maximalan broj korisnika.',
+    'call_duplico' => 'Za više korisnika kontaktirajte Duplico d.o.o.',
 ];
 ?>

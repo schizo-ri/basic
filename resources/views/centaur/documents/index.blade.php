@@ -119,6 +119,8 @@
 	</main>
 </div>
 <script>
-	 $.getScript( '/../js/documents.js');
+	$.getScript( '/../js/datatables.js');
+	$.getScript( '/../js/documents.js');
+	$.getScript( '/../js/filter_table.js');
 </script>
 @stop

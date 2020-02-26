@@ -45,7 +45,7 @@ class Employee_absence extends Command
         $emailings = Emailing::get();
 		$send_to = array();
 		$departments = Department::get();
-		$employees = Employee::get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
 		if(isset($emailings)) {
 			foreach($emailings as $emailing) {

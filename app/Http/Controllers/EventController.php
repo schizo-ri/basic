@@ -71,7 +71,7 @@ class EventController extends Controller
                 }
             }
           
-            $employees = Employee::get();
+            $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
             if(count($employees)>0) {
                 foreach($employees as $employee) {
                     $dan = $god_select . '-' . date('m-d', strtotime($employee->b_day));
@@ -141,11 +141,11 @@ class EventController extends Controller
 		
 		$data = array(
 			'employee_id'  	=> $employee->id,
-			'title'  		=> $request['title'],
+            'title'  		=> $request['title'],
+            'description'   => $request['description'],
 			'date'  		=> $request['date'],
 			'time1' 		=> $request['time1'],
-			'time2' 		=> $request['time2'],
-			'description'   => $request['description']
+			'time2' 		=> $request['time2'],			
         );
 
         $event = new Event();
@@ -317,7 +317,7 @@ class EventController extends Controller
                 }
             }
 
-            $employees = Employee::get();
+            $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
             
             $select_day = explode('-', $date);  //get from URL
             $dan_select = $select_day[2];
@@ -373,7 +373,7 @@ class EventController extends Controller
             }
         }
 
-        $employees = Employee::get();
+        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
         foreach($employees as $employee) {
             $dan = $god_select . '-' . date('m-d', strtotime($employee->b_day));

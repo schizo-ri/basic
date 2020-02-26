@@ -178,7 +178,8 @@ class NoticeController extends Controller
 
                         if($request['schedule_set'] == 0 || $now >= $notice1->schedule_date ) {
                             $prima = array();
-                            $employees = Employee::where('checkout', null)->get();
+                            $employees = Employee::where('id','<>',1)->where('checkout', null)->get();
+                           
                             foreach($request['to_department'] as $department_id) {
                                 $department = Department::where('id', $department_id)->first();
                                
@@ -225,7 +226,7 @@ class NoticeController extends Controller
      
             if($request['schedule_set'] == 0 || $now >= $notice1->schedule_date ) {
                 $prima = array();
-                $employees = Employee::where('checkout', null)->get();
+                $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
                 foreach($request['to_department'] as $department_id) {
                     $department = Department::where('id', $department_id)->first();
                    
@@ -279,7 +280,7 @@ class NoticeController extends Controller
         }
         
         $notice_statistic = NoticeStatistic::where('notice_id', $notice->id)->get();
-        $employees = Employee::where('checkout',null)->get();
+        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
         $count_statistic = count( $notice_statistic);
         $count_employees = count($employees);
         $statistic = $count_statistic /  $count_employees *100 ;

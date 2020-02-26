@@ -21,6 +21,8 @@ $( function () {
 		"info":     true,
 		"bDestroy": true,
 		"lengthChange": true,
+		"fixedHeader": true,
+		"colReorder": true,
 		"columnDefs": [ {
 			"targets"  : 'no-sort',
 			"orderable": false,

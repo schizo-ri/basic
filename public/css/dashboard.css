@@ -48,7 +48,7 @@
     padding: 20px 10px 8px 10px;
     /* margin-top: -90px; */
     overflow: hidden;
-    padding-top: 90px;
+    /* padding-top: 90px; */
 }
 
 .container .noticeboard h2 {
@@ -439,6 +439,7 @@
     display: none;
     clear: left;
     overflow: hidden;
+    background: inherit;
    /*  top: 50%;
     bottom: 50%;
     left: 0;

@@ -14,7 +14,7 @@ class NoticeSchedule extends Command
      *
      * @var string
      */
-    protected $signature = 'command:notice';
+    protected $signature = 'notice';
 
     /**
      * The console command description.
@@ -38,16 +38,19 @@ class NoticeSchedule extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(NoticeMail $noticeMail)
     {
-        $notices = Notice::get();
-        foreach ($notices as $notice) {
-            Mail::to('jelena.juras@duplico.hr')->send(new NoticeMail($notice));
-        }
-        if(count($notices) > 0) {
-       
+        $send_to_mail = 'jelena.juras@duplico.hr';
+        $notice = Notice::first();
+        Mail::to($send_to_mail)->send(new NoticeMail($notice));
+        
+       /*  foreach ($notices as $notice) {
+            Mail::to($send_to_mail)->send(new NoticeMail($notice));
+        } */
+        
+       /*  if(count($notices) > 0) {       
             $prima = array();
-            $employees = Employee::where('checkout', null)->get();
+            $employees = Employee::where('id','<>',1)->where('checkout', null)->get();
     
             foreach ($notices as $notice) {
                 if( date('Y-m-d', strtotime($notice->schedule_date)) == date('Y-m-d') ) {
@@ -71,8 +74,7 @@ class NoticeSchedule extends Command
                     return redirect()->back()->withFlashMessage($message);
                 }
             }
-            
-        }        
+        } */
     }
 
 }

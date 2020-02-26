@@ -38,7 +38,7 @@
 							<td>
 								@if($emailing->sent_to_empl)
 									@foreach(explode(",", $emailing->sent_to_empl) as $prima)
-										{{  $employees->where('id', $prima)->first()->email  }}<br>
+										{!! $employees->where('id', $prima)->first() ? $employees->where('id', $prima)->first()->email : '' !!}<br>
 									@endforeach
 								@endif
 							</td>

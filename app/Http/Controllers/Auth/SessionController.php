@@ -31,7 +31,11 @@ class SessionController extends Controller
      */
     public function getLogin()
     {
-        return view('welcome');
+        if(Sentinel::check()) {
+            return view('Centaur::dashboard');
+        } else {
+            return view('welcome');
+        }
     }
 
     /**

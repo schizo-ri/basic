@@ -33,7 +33,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		$empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
         
@@ -53,7 +53,7 @@ class EmployeeController extends Controller
     {
 		$users = User::get();
 		$works = Work::get();
-		$employees = Employee::get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
 		if(isset($request['user_id'])) {
 			$user1 = User::find($request->user_id);
@@ -132,7 +132,7 @@ class EmployeeController extends Controller
 		$emailings = Emailing::get();
 		$send_to = array();
 		$departments = Department::get();
-		$employees = Employee::get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
 		if(isset($emailings)) {
 			foreach($emailings as $emailing) {
@@ -170,8 +170,7 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        $employee = Employee::find($id);
-		
+        $employee = Employee::find($id);		
 		
 		$user_name = explode('.',strstr($employee->email,'@',true));
 		if(count($user_name) == 2) {
@@ -201,7 +200,7 @@ class EmployeeController extends Controller
 		$employee = Employee::find($id);
 		$users = User::get();
 		$works = Work:: get();
-		$employees = Employee::get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		
 		return view('Centaur::employees.edit', ['works' => $works, 'users' => $users, 'employee' => $employee, 'employees' => $employees]);
 		
@@ -275,7 +274,7 @@ class EmployeeController extends Controller
 		$emailings = Emailing::get();
 		$send_to = array();
 		$departments = Department::get();
-		$employees = Employee::get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
 		if(isset($emailings)) {
 			foreach($emailings as $emailing) {

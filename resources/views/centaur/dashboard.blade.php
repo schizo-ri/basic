@@ -1,6 +1,6 @@
 @extends('Centaur::layout')
 
-@section('title', __('welcome.dashboard'))
+@section('title',config('app.name'))
 @php
 	use App\Models\Employee;
 	use App\Http\Controllers\PostController;
@@ -9,9 +9,9 @@
 @endphp
 @section('content')
 	@if (Sentinel::check())
-		<div class="user_header col-xs-8 col-sm-8 float_left " >
-			<div class="info">
-				<div class="col-md-3 float_left ">
+		<div class="user_header col-xs-8 col-sm-8  " >
+			<div class="info ">
+				<div class="col-md-3 float_left user_header_info">
 					@php
 						$profile_image = DashboardController::profile_image(Sentinel::getUser()->employee['id']);
 						$user_name =  DashboardController::user_name(Sentinel::getUser()->employee['id']);
@@ -79,10 +79,10 @@
 				@endif
 			</div>
 		</div>
-		<section class="col-xs-12 col-sm-4 float_left">
+		<section class="col-xs-12 col-sm-12 col-md-12 col-lg-4 float_left">
 			@include('Centaur::side_noticeboard')
 		</section>		
-		<section class="col-xs-12 col-sm-5 float_left calendar">
+		<section class="col-xs-12 col-sm-12 col-md-12 col-lg-5 float_left calendar">
 			<div>
 				<div id="calendar">
 					<div class="box">
@@ -125,7 +125,7 @@
 				</div>
 			</div>
 		</section>
-		<section class="col-xs-12 col-sm-3 float_left posts">
+		<section class="col-xs-12 col-sm-12 col-md-12 col-lg-3 float_left posts">
 			<div class="all_post">
 				<div>
 					<h2>@lang('basic.latest_messages') <a class="view_all" href="{{ route('posts.index') }}" >@lang('basic.view_all')</a></h2>

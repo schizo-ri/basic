@@ -68,7 +68,6 @@ class DashboardController extends Controller
                 return view('Centaur::dashboard',['questionnaires' => $questionnaires, 'departments' => $departments,'moduli' => $moduli,'docs' => $docs]);
             }
         } else {
-
             return view('welcome');
         }
     }
@@ -135,13 +134,14 @@ class DashboardController extends Controller
     public static function getDBName ()
     {
     
-         $servername = "localhost";
+        $servername = "localhost";
         $username = "root";
         $password = "";
 
         $dbname = "novi_portal"; 
+        
        
-      /*   $servername = "icom-superadmin.duplico.hr";
+     /*    $servername = "icom-superadmin.duplico.hr";
         $username = "duplicoh_jelena";
         $password = "Sifra123jj";
         
@@ -172,5 +172,4 @@ class DashboardController extends Controller
     public function openAdmin() {
         return view('Centaur::admin_panel');
     }
-    
 }

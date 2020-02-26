@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h3 class="panel-title">@lang('basic.add_category')</h3>
+    <h3 class="panel-title">@lang('basic.new_category')</h3>
 </div>
 <div class="modal-body">
     <form accept-charset="UTF-8" role="form" method="post" action="{{ route('ad_categories.store') }}">

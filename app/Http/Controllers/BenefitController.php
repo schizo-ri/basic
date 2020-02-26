@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DocumentController;
 use App\Models\Benefit;
 use Sentinel;
 
@@ -57,17 +58,72 @@ class BenefitController extends Controller
     public function store(Request $request)
     {
         $data = array(
-        'name'  		=> $request['name'],
-        'description'   => $request['description'],
-        'comment'  		=> $request['comment'],
-        'url'  			=> $request['url'],
-        'url2'  		=> $request['url2'],
-        'status' 		=> $request['status']
+            'title'  		=> $request['title'],
+            'description'   => $request['description'],
+            'contact'  		=> $request['contact'],
+            'email'  		=> $request['email'],
+            'phone'  		=> $request['phone'],
+            'status' 		=> $request['status']
         );
 
         $benefit = new Benefit();
         $benefit->saveBenefit($data);
 
+        /* upload file */
+        if($_FILES["fileToUpload"]) {
+            $target_dir = "img/benefits/";
+            // Create directory
+            if(!file_exists($target_dir)){
+                mkdir($target_dir);
+            }
+            $target_dir.= $benefit->id ."/";
+            if(!file_exists($target_dir)){
+                mkdir($target_dir);
+            }
+            $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+            // Check if image file is a actual image or fake image
+            if(isset($_POST["submit"])) {
+                $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+                if($check !== false) {
+                    echo "File is an image - " . $check["mime"] . ".";
+                    $uploadOk = 1;
+                } else {
+                    echo "File is not an image.";
+                    $uploadOk = 0;
+                }
+            }
+            // Check if file already exists
+            if (file_exists($target_file)) {
+                return redirect()->back()->with('error', __('ctrl.file_exists'));  
+                $uploadOk = 0;
+            }
+            // Check file size
+            if ($_FILES["fileToUpload"]["size"] > 5000000) {
+                return redirect()->back()->with('error',  __('ctrl.file_toolarge'));
+                $uploadOk = 0;
+            }
+            // Allow certain file formats
+            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+            && $imageFileType != "gif" && $imageFileType != "svg" ) {
+                return redirect()->back()->with('error', __('ctrl.not_allow'));  
+                $uploadOk = 0;
+            }
+            // Check if $uploadOk is set to 0 by an error
+            if ($uploadOk == 0) {
+                return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
+            // if everything is ok, try to upload file
+            } else {
+                if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                    return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]).  __('ctrl.has_uploaded'));
+                } else {
+                    return redirect()->back()->with('error',  __('ctrl.file_error')); 
+                }
+            }
+            
+        }
+        
         session()->flash('success',  __('ctrl.data_save'));
 
 		return redirect()->back();
@@ -82,9 +138,16 @@ class BenefitController extends Controller
     public function show($id)
     {
        // $benefits = Benefit::where('status',1)->get();
-        $benefits = Benefit::where('status', 1)->get();
-		
-		return view('Centaur::benefits.show', ['benefits' => $benefits ]);
+        $benefits = Benefit::get();
+
+        $empl = Sentinel::getUser()->employee;
+		$permission_dep = array();
+        
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
+        
+		return view('Centaur::benefits.show', ['benefits' => $benefits, 'permission_dep' => $permission_dep ]);
     }
 
     /**
@@ -109,22 +172,78 @@ class BenefitController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $benefit = Benefit::find($id);
         
         $data = array(
-            'name'  		=> $request['name'],
+            'title'  		=> $request['title'],
             'description'   => $request['description'],
-            'comment'  		=> $request['comment'],
-            'url'  			=> $request['url'],
-            'url2'  		=> $request['url2'],
+            'contact'  		=> $request['contact'],
+            'email'  		=> $request['email'],
+            'phone'  		=> $request['phone'],
             'status' 		=> $request['status']
-            );
+        );
 
-            $benefit->updateBenefit($data);
-    
-            session()->flash('success',  __('ctrl.data_edit'));
-    
-            return redirect()->back();
+        $benefit->updateBenefit($data);
+
+        /* upload file */
+        if($_FILES["fileToUpload"]['name'] ) {
+            $target_dir = "img/benefits/";
+            // Create directory
+            if(!file_exists($target_dir)){
+                mkdir($target_dir);
+            }
+            $target_dir.= $benefit->id ."/";
+            if(!file_exists($target_dir)){
+                mkdir($target_dir);
+            }
+            $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+            // Check if image file is a actual image or fake image
+            if(isset($_POST["submit"])) {
+                $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+                if($check !== false) {
+                    echo "File is an image - " . $check["mime"] . ".";
+                    $uploadOk = 1;
+                } else {
+                    echo "File is not an image.";
+                    $uploadOk = 0;
+                }
+            }
+            // Check if file already exists
+            if (file_exists($target_file)) {
+                return redirect()->back()->with('error', __('ctrl.file_exists'));  
+                $uploadOk = 0;
+            }
+            // Check file size
+            if ($_FILES["fileToUpload"]["size"] > 5000000) {
+                return redirect()->back()->with('error',  __('ctrl.file_toolarge'));
+                $uploadOk = 0;
+            }
+            // Allow certain file formats
+            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+            && $imageFileType != "gif" && $imageFileType != "svg" ) {
+                return redirect()->back()->with('error', __('ctrl.not_allow'));  
+                $uploadOk = 0;
+            }
+            // Check if $uploadOk is set to 0 by an error
+            if ($uploadOk == 0) {
+                return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
+            // if everything is ok, try to upload file
+            } else {
+                if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+                    return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]).  __('ctrl.has_uploaded'));
+                } else {
+                    return redirect()->back()->with('error',  __('ctrl.file_error')); 
+                }
+            }
+            
+        }
+         
+        session()->flash('success',  __('ctrl.data_edit'));
+
+        return redirect()->back();
     }
 
     /**

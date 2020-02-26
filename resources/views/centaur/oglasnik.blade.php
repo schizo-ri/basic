@@ -18,7 +18,7 @@ use App\Models\Ads;
 						<img class="img_search" src="{{ URL::asset('icons/search.png')  }}" alt="Search"/>
 						<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="{{ __('basic.search')}}" class="input_search" >
 					</div>
-					<div class="float_right col-6 height100  position_rel padd_tb_5">
+					<div class="float_right col-6 height100 padd_0 position_rel">
 						<div class='add_ads float_right '>
 							@if(Sentinel::getUser()->employee)
 								<a class="btn btn-primary btn-new" href="{{ route('ads.create') }}"  title="{{ __('basic.add_ad')}}" rel="modal:open">

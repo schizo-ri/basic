@@ -75,8 +75,7 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-		
-		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name','ASC')->get();
+		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
 		$departments = Department::orderBy('name','ASC')->get();
 		if(isset($request['employee_publish'])) {
 			$employee_publish = Employee::find($request['employee_publish']);
@@ -180,8 +179,8 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 		
-		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name',	'users.last_name')->orderBy('users.last_name','ASC')->get();
-		
+		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name', 'users.last_name')->orderBy('users.last_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+	
 		return view('Centaur::posts.edit',['post' => $post, 'employees' => $employees]);
     }
 

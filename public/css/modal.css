@@ -35,7 +35,13 @@
 	padding: 0  !important;
 	overflow: hidden;
 }
-
+.users_modal_error {
+	display: none;
+}
+.users_modal_error p {
+	margin-top: 15px;
+    text-align: center;
+}
 .modal.modal_user {
 	padding: 0;
 }
@@ -2276,4 +2282,28 @@ span.file_name {
 
 .ad_image {
 	padding-left: 20px;
+}
+
+.modal .tox-tinymce {
+	border: 1px solid #F0F4FF;
+}
+
+.modal .tox .tox-statusbar {
+	border-top: 1px solid #F0F4FF;
+}
+.modal .tox .tox-menubar {
+	background: none;
+	border-bottom: 1px solid #F0F4FF;
+}
+.modal .tox .tox-toolbar__primary {
+	background: none;
+	border-bottom: 1px solid #F0F4FF;
+}
+
+.modal .tox:not([dir=rtl]) .tox-toolbar__group:not(:last-of-type) {
+    border-right: 1px solid #F0F4FF;
+}
+
+.modal .tox .tox-mbtn, .modal .tox .tox-tbtn {
+	height: 25px;
 }

@@ -132,6 +132,11 @@
     padding: 0;
 }
 
+.index_page .index_main.benefit_main {
+    background: inherit;
+    box-shadow: none;
+}
+
 .index_main.index_event, .index_page.ads_index .index_main  {
     height: calc(100% - 120px);
 }
@@ -141,6 +146,11 @@
     scrollbar-width: thin;
     overscroll-behavior-y: contain;
 }
+
+.index_page.ads_index .index_main.benefit_main  {
+    box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
+}
+
 main.index_main>section {
     height: 100%;
     margin: 0;
@@ -150,13 +160,17 @@ main.index_main>section {
 
 .index_main header {
     width: 100%;
-    height: 90px;
+    height: 78px;
     padding: 20px 25px;
     margin: 0;
     background: #F8FAFF;
     border-radius: 3px 3px 0 0 ; 
     border-bottom: 1px solid #e9ecf3;
     position: inherit;
+}
+
+.index_event.index_main header {
+    height: 95px;
 }
 
 .index_main.admin_main header  {
@@ -342,7 +356,7 @@ img.doc_icons {
     padding: 8px 0;
     overflow-wrap: break-word;
     overflow: hidden;
-
+    
 }
 
 .post_sent span.vacation:hover, .post_sent span.phone:hover, .post_sent span.e-mail:hover {
@@ -471,6 +485,7 @@ class="select-css"
     position: absolute;
     top: 35px;
     right: 10px;
+    height: 35px;
 }
 
 .index_page .calender_view .pignose-calendar {
@@ -748,6 +763,185 @@ class="select-css"
     background-color: inherit;
 }
 
+.index_main main.main_benefits {
+    height: calc(100% - 78px);
+}
+
+.main_benefits_head .benefit_title {
+    display: inline-block;
+    margin-right: 30px;
+    width: 20%;
+    min-width: 173px;
+    cursor: pointer;
+}
+
+.main_benefits_head .benefit_title:hover {
+    background-color: #fafafa;
+}
+.main_benefits_head .benefit_title.active {
+    background-color: #ffffff;
+}
+
+.benefit_title .bnf_img {
+    padding: 10px 15px;
+    height: 90px;
+    display: block;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.benefit_body {
+    display: none;
+    overflow: visible;
+    height: 100%;
+}
+.benefit_body>div {
+    height: 100%;
+   
+    overflow: auto;
+}
+.benefit_body>div.bnf_main {
+    padding-right: 40px;
+    height: calc(100% - 100px);
+}
+
+.benefit_body>div.contact_info {
+    padding-left: 40px;
+    padding-right: 0;
+    overflow: visible;
+    height: calc(100% - 100px);
+}
+
+.contact_info>p {
+    font-weight: 500;
+    font-size: 0.8125rem;
+    line-height: 26px;
+    color: #071E57;
+    margin: 0;
+    padding-bottom: 8px;   
+}
+
+.contact_info>label {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    line-height: 30px;
+    color: #313131;
+    padding-bottom: 10px;
+    margin: 0;
+    display: block;
+}
+.contact_info>p.last {
+    margin-top: 35px;
+}
+
+.contact_info i, .contact_info svg {
+    margin-right: 10px;
+}
+.main_benefits_body .btn-edit {
+    float: right;    
+    margin-top: -5px;
+    margin-right: -10px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 18px;
+    color: #1594F0;
+    text-transform: uppercase;
+}
+
+.benefit_body .bnf_img {
+    display: block;
+    overflow: hidden;
+    background: #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 3px;
+    max-height: 100px;
+    max-width: 25%;
+    padding: 0;
+}
+.bnf_main {
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
+}
+.benefit_body h4 {
+    font-weight: 600;
+    font-size: 1.5625rem;
+    line-height: 30px;
+    display: flex;
+    align-items: center;
+    color: #313131;
+    margin: 35px 0;
+}
+
+.benefit_title .bnf_img img {
+    display: inline-block;   
+    width: auto;
+    height: auto;
+    text-align: center;
+    margin: auto;
+    max-height: 100%;
+}
+
+.benefit_body img {
+    display: inline-block;   
+    width: auto;
+    height: auto;
+    text-align: center;
+    margin: auto;
+    max-height: 100%;
+}
+p.bnf_title {
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: #313131;
+    margin-top: 10px;
+    margin-bottom: 0;
+    min-height: 30px;
+    width: 100%;
+    padding: 6px 0;
+    white-space: initial;
+}
+.main_benefits>div {
+    position: relative;
+}
+.main_benefits .main_benefits_head {
+    background: #ffffff;
+    padding: 20px;
+    height: auto;
+    overflow: hidden;
+    width: auto;
+    overflow-x: scroll;
+    white-space: nowrap;
+    border-radius: 0 0 3px 3px;
+    border: 1px solid #ffffff;
+    display: flex;
+}
+
+.main_benefits .active {
+    background-color: #ffffff;
+}
+
+.benefit_title.active .bnf_img {
+    
+    border: 2px solid #09256C;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+
+
+.main_benefits_body {
+    margin-top: 25px;
+    background: #ffffff;
+    border-radius: 3px;
+    padding: 35px 40px;
+    overflow: auto;
+    height: 100%;
+}
+
+
 .index_main main.main_campaign {
     padding: 30px;
     overflow: auto;
@@ -966,7 +1160,7 @@ main.main_ads {
 .ad_header img:not(.placeholder_image) {
     width: auto;
     height: 100%;
-    max-width: fit-content; 
+    max-width: unset;
 }
 .index_page .index_main .btn-new:not(.user_interest .btn-new) {
     width: auto;
@@ -982,8 +1176,8 @@ main.main_ads {
     width: auto;
     font-size: 0.6875rem;
     color: #F8FAFF;
-    padding: 0 20px;
-    height: 38px;
+    width: 41px;
+    height: 35px;
     text-transform: uppercase;
 }
 
@@ -1081,7 +1275,7 @@ footer.ad_footer {
     padding: 13px 0;
 }
 
-.header_ads .filter .img_search, .header_campaign .filter .img_search  {
+.header_ads .filter .img_search, .header_campaign .filter .img_search, .header_benefits  .filter .img_search{
     left: 13px;
     top: 50%;
     bottom: 50%;
@@ -1092,7 +1286,7 @@ footer.ad_footer {
     z-index: 1;
 }
 
-.header_ads .filter .input_search, .header_campaign .filter .input_search {
+.header_ads .filter .input_search, .header_campaign .filter .input_search, .header_benefits  .filter .input_search {
     width: 100%;
     height: 38px;
     top: 50%;
@@ -1144,7 +1338,7 @@ footer.ad_footer {
     position: absolute;
     transform: translateY(-50%);*/
     right: 0;
-    height: 38px;
+    height: 35px;
     padding-left: 40px;
 }
 
@@ -1228,14 +1422,13 @@ footer.ad_footer {
 }
 
 .index_table_filter span.show_button {
-    position: absolute;
     width: auto;
     height: auto;
-    top: 50%;
-    right: 100px;
     z-index: 2;
-    transform: translateY(-50%);
     cursor: pointer;
+    float: right;
+    line-height: 38px;
+    
 }
 
 .index_page a.add_new {
@@ -1245,15 +1438,15 @@ footer.ad_footer {
     background: #1594F0;
     border-radius: 5px;
     padding: 0 20px;
-    position: absolute;
-    right: 20px;
-    top: 20px;
+    position: relative;
+    right: auto;
+    top: auto;
     z-index: 1;
     color:#ffffff;
     font-weight: 600;
     font-size: 0.6875rem;
     color: #FFFFFF;
-
+    margin-left: 20px;
 }
 
 .index_page a.add_new i, .index_page a.add_new svg {
@@ -1488,10 +1681,10 @@ footer.ad_footer {
     position: relative;
     background: #FFFFFF;
     border-radius: 3px;
-    height: 100%;
-    overflow-y: auto;
-    scrollbar-width: thin;
+    height: 100%;    
     padding-bottom: 20px;
+    overflow: hidden;
+    padding: 0 10px;
 }
 
 .table-responsive .dataTables_wrapper {
@@ -1697,6 +1890,16 @@ button.scroll_right {
     transform: translate(-99%, -63%);
 }
 
+.main_benefits button.scroll_right {
+    left: 99%;
+    /* transform: translate(-1%, -12%); */
+    top: 40%;
+}
+
+.main_benefits button.scroll_left {
+    left: 1%;
+    top: 40%;  
+}
 
 button.scroll_left {
     left: 1%;
@@ -1780,13 +1983,18 @@ button.scroll_left {
 }
 
 .page-main {
+    overflow: auto;
+    scrollbar-width: thin;
+    overscroll-behavior-y: contain;
+    height: calc(100% - 78px);
     padding: 0 15px;
 }
 .index_page .index_main.main_absence, .index_page.index_documents .index_main.main_documents {
     background: none;
+    background: #ffffff;
   /*  box-shadow: none;*/
     border: none;
-    color: white;
+    color: inherit;
     height: calc(100% - 120px);
 }
 .index_page .index_main.main_absence {
@@ -2161,11 +2369,14 @@ main.all_absences >section {
 }
 
 .index_table_filter > a.add_new {
-    top: 7px;
+    top: auto;
     padding: 0;
     line-height: initial;
     height: 35px;
     width: 40px;
+    float: right;
+    right: auto;
+
 }
 
 .index_table_filter > a.add_new svg, .index_table_filter > a.add_new i {
@@ -2178,7 +2389,6 @@ main.all_absences >section {
 
 .all_documents.main_questionnaire .table-responsive {
     border-radius: 0 0 3px 3px;
-    padding: 0;
 }
 
 .table tbody td {
@@ -2219,14 +2429,13 @@ table.dataTable#index_table tbody td:last-child > a {
 }
 
 .change_view, .change_view2 {
-    position: absolute;
     width: 11px;
-    height: 11px;
-    top: 50%;
-    right: 150px;
+    height: 38px;
     z-index: 2;
-    transform: translateY(-50%);
     cursor: pointer;
+    line-height: 38px;
+    float: right;
+    margin-left: 15px;
 }
 
 .change_view {
@@ -2629,6 +2838,14 @@ a.modal_close {
     cursor: pointer;
 }
 
+.table_campaign tr td:first-child {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    line-height: 16px;
+
+    color: #071E57;
+}
+
 @media (max-width: 1200px) {
     .index_main.profile_main .main_profile .user_profile {
         padding: 10px;
@@ -2707,8 +2924,7 @@ a.modal_close {
         padding-bottom: 15px;
     }
     .container .noticeboard {
-        padding-right: 15px;
-        padding-top: 20px;
+        padding: 0;
     }
     .index_page .index_main {
         right: 15px;
@@ -3199,6 +3415,10 @@ a.modal_close {
     .index_main header {
         padding: 10px 0;
     }
+    .index_main header.header_benefits {
+        padding: 0;
+        padding-right: 10px;
+    }
     .index_table_filter >label, .index_table_filter > a.add_new {
         position: relative;
         transform: none;
@@ -3255,8 +3475,8 @@ a.modal_close {
         overflow: hidden;
         width: 100%;
         display: block;
-    }
-    .index_main header .filter > div {
+    }    
+    .index_main header .filter > div:not( header.header_benefits .filter > div ) {
         width: 100%;
         max-width: 94%;
         height: auto;
@@ -3266,6 +3486,25 @@ a.modal_close {
         margin: 0;
         margin-bottom: 20px;
     
+    }
+    .header_benefits .filter .input_search {
+        width: 100%;
+        height: 38px;
+        top: auto;
+        bottom: auto;
+        position: relative;
+        transform: none;
+        /* orphans: 2; */
+        border: none;
+        padding-left: 40px;
+        background: #FFFFFF;
+        /* box-shadow: none; */
+        border-radius: 5px;
+        outline: none;
+        margin: 10px;
+    }
+    .add_benefit {
+        margin: 10px 0;
     }
     .header_ads>.filter>div:first-child {
         width: 100%;
@@ -3301,7 +3540,6 @@ a.modal_close {
         top: auto;
         left: auto;
         transform: inherit;
-
     }
     .index_page h1 {
         line-height: 35px;
@@ -3318,8 +3556,7 @@ a.modal_close {
     .post_sent span.vacation {
         width: 100%;
         display: none;
-    }
-    
+    }    
     .post_sent span.phone, .post_sent span.e-mail {
         width: 50%;
         display: none;
@@ -3422,6 +3659,40 @@ a.modal_close {
     .section_notice {
         overflow: hidden;
     }
+    .main_benefits_body {
+        margin-top: 0;
+        padding: 10px;
+    }
+    .benefit_body>div.bnf_main, .benefit_body>div.contact_info {
+        width: 100%;
+        height: auto;
+        padding: 0;
+        border: none;
+    }
+    .contact_info>p.last {
+        margin-top: 10px;
+    }
+    .benefit_title .bnf_img {
+        height: 60px;
+        padding: 5px;
+    }
+    .main_benefits_head .benefit_title {
+        margin-right: 10px;
+        width: 30%;
+        min-width: 100px;
+    }
+    button.scroll_right, button.scroll_left {
+        width: 25px;
+        height: 25px;
+    }
+    .main_benefits button.scroll_right {        
+        top: 35%;
+    }
+    
+    .main_benefits button.scroll_left {
+        top: 35%;  
+    }
+
 }
 
 
@@ -3430,7 +3701,7 @@ a.modal_close {
         height: auto;
     }
     .user_header .info>div:first-child {
-        padding: 10px;
+        padding: 20px;
     }
     .layout_button span.img {
         width: 55px;
@@ -3446,9 +3717,6 @@ a.modal_close {
         margin: 0;
     }
   
-    .user_header .info>div:first-child {
-        padding-bottom: 10px;
-    }
     .user_header .info>div {
         padding: 25px 40px 25px;
     }

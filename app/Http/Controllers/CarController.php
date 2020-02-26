@@ -49,7 +49,7 @@ class CarController extends Controller
     public function create()
     {
         $departments = Department::orderBy('name','ASC')->get();
-        $employees = Employee::where('checkout',null)->get();
+        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
         return view('Centaur::cars.create',['departments' => $departments, 'employees' => $employees  ]);
     }
@@ -104,7 +104,7 @@ class CarController extends Controller
     {
         $car = Car::find($id);
         $departments = Department::orderBy('name','ASC')->get();
-        $employees = Employee::where('checkout',null)->get();
+        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
         return view('Centaur::cars.edit', ['car' => $car, 'departments' => $departments, 'employees' => $employees  ]);
     }
@@ -155,4 +155,13 @@ class CarController extends Controller
 		
         return redirect()->back();
     }
+
+    public function last_km(Request $request) 
+    {
+        $car = Car::find($request['car_id']);
+        $current_km = $car->current_km;
+
+        return $current_km;
+    }
+    
 }

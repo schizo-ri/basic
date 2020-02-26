@@ -1,4 +1,4 @@
-$('.button_nav').click(function(e){   
+$('.button_nav').click(function(e){
     //window.history.replaceState({}, document.title, location['origin']+'/dashboard');
     window.history.replaceState({}, document.title, $(this).attr('href'));
   
@@ -61,6 +61,19 @@ $('.button_nav').click(function(e){
                     $.getScript( '/../js/posts.js');
                     $.getScript( '/../js/filter.js');
                 }
+                if( $( '.button_nav.active' ).hasClass('campaigns_button')) {                    
+                    $.getScript( '/../js/datatables.js');
+                    $.getScript( '/../js/filter_table.js');                    
+                    $.getScript( '/../restfulizer.js');
+                    $.getScript( '/../js/event.js');
+                    $('.collapsible').click(function(event){        
+                        $(this).siblings().toggle();
+                 });
+                } 
+                if( $( '.button_nav.active' ).hasClass('benefits_button')) {
+                    $.getScript( '/../js/benefit.js');
+                    $.getScript( '/../js/filter.js');
+                }            
                 if( $( '.button_nav.active' ).hasClass('ads_button')) {
                     $('.placeholder').show();
                    
@@ -80,4 +93,10 @@ $('.button_nav').click(function(e){
     if(body_width < 800) {
         $('#myTopnav').removeClass('responsive');
     }
+});
+
+$(function() {
+    var url_modul = window.location.pathname;
+    url_modul = url_modul.replace("/","");
+    console.log(url_modul);
 });

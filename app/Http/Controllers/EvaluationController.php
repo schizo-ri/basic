@@ -42,7 +42,8 @@ class EvaluationController extends Controller
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 		} 
 		
-		$employees = Employee::join('users','employees.user_id', '=', 'users.id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name','ASC')->where('checkout',null)->get();
+		$employees = Employee::join('users','employees.user_id', '=', 'users.id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name','ASC')->where('checkout',null)->where('employees.id','<>',1)->get();
+		
 		$questionnaires = Questionnaire::get();
 		$evaluationCategories = EvaluationCategory::get();
 		$mjesec_godina = EvaluationEmployee::select('mm_yy')->distinct()->get();
@@ -52,7 +53,7 @@ class EvaluationController extends Controller
 		}
 
 		$evaluationEmployees  = EvaluationEmployee::get();
-	
+		
 		return view('Centaur::evaluations.index',['evaluationEmployees'=>$evaluationEmployees,'permission_dep'=>$permission_dep ,'evaluations'=>$evaluations,'mjeseci'=>$mjeseci,'employees'=>$employees,'questionnaires'=>$questionnaires,'evaluationCategories'=>$evaluationCategories]);
     }
 
@@ -171,7 +172,7 @@ class EvaluationController extends Controller
 			
 			$employee = Employee::join('users','employees.user_id', '=', 'users.id')->select('employees.*','users.first_name','users.last_name')->where('first_name', $user->first_name)->where('last_name', $user->last_name)->first();
 			
-			$employees = Employee::get();
+			$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 			$questionnaire = Questionnaire::find($input['questionnaire_id']);
 			$evaluationCategory = EvaluationCategory::where('questionnaire_id', $questionnaire->id)->get();
 			$evaluatingQuestion = EvaluationQuestion::get();

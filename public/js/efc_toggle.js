@@ -2,6 +2,7 @@
        // $('.efc').css('visibility','initial');
        $('.salery_hidden').hide();
        $('.salery_show').toggle();
+       $('.salery_show').css('display','block');
         $('.efc_show').hide();
         $('.efc_hide').show();
     });

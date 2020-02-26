@@ -43,7 +43,7 @@ class QuestionnaireController extends Controller
 		$questionnaires = Questionnaire::get();
 		$empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
-		$employees = Employee::where('checkout',null)->get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		$evaluations = Evaluation::get();
 		$results = QuestionnaireResult::get();
 		
@@ -182,7 +182,7 @@ class QuestionnaireController extends Controller
 		$danas = new DateTime('now');
 		$mjesec_godina = date_format($danas,'Y-m');
 		$evaluationRatings = EvaluationRating::get();
-		$employees = Employee::where('checkout',null)->get(); //svi djelatnici
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get(); //svi djelatnici
 		
 		$employee = Employee::where('user_id', $user->id)->first();
 		if($employee) {
@@ -351,7 +351,7 @@ class QuestionnaireController extends Controller
 		//$emailings = Emailing::get();
 		$send_to = array();
 		//$departments = Department::get();
-		$employees = Employee::where('checkout', null)->get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		$questionnaire = Questionnaire::find($request['id']);
 		
 		/* if(isset($emailings)) {
@@ -409,7 +409,7 @@ class QuestionnaireController extends Controller
 
 	public static function progress_perc ($id) {
 
-		$employees = Employee::where('checkout',null)->get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		
 		return QuestionnaireController::progress_count( $id ) / count($employees) * 100;
 	}

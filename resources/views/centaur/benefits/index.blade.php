@@ -3,7 +3,7 @@
 		<label>
 			<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 		</label>
-		@if(Sentinel::getUser()->hasAccess(['benefits.create']) || in_array('benefits.view', $permission_dep))
+		@if(Sentinel::getUser()->hasAccess(['benefits.create']) || in_array('benefits.create', $permission_dep))
 			<a class="btn-new" href="{{ route('benefits.create') }}" rel="modal:open">
 				<i class="fas fa-plus"></i>
 			</a>
@@ -18,8 +18,9 @@
 					<tr>
 						<th>@lang('basic.name')</th>
 						<th>@lang('basic.description')</th>
-						<th>@lang('basic.text')</th>
-						<th>URL</th>
+						{{-- <th>@lang('basic.contact_person')</th>
+						<th>E-mail</th>
+						<th>@lang('basic.phone')</th> --}}
 						<th>Status</th>
 						<th class="not-export-column">@lang('basic.options')</th>
 					</tr>
@@ -27,14 +28,11 @@
 				<tbody>
 					@foreach ($benefits as $benefit)
 						<tr>
-							<td><a href="{{ route('benefits.show', $benefit->id ) }}" >{{ $benefit->name }}</a></td>
-							<td>{{ $benefit->description }}</td>
-							<td>{!! str_limit(strip_tags($benefit->comment), 100) !!}</td>
-							<td>{{ $benefit->url }}
-								@if ($benefit->url2)
-								<br>{{ $benefit->url }}									
-								@endif
-							</td>
+							<td><a href="{{ route('benefits.show', $benefit->id ) }}" >{{ $benefit->title }}</a></td>
+							<td>{!! str_limit(strip_tags($benefit->description), 100) !!}</td>
+							{{-- <td>{{ $benefit->contact }}</td>
+							<td>{{ $benefit->email }}</td>
+							<td>{{ $benefit->phone }}</td> --}}
 							<td>{!! $benefit->status == 1 ? 'aktivna' : 'neaktivna' !!}</td>
 							<td class="center">
 								<button class="collapsible option_dots float_r"></button>

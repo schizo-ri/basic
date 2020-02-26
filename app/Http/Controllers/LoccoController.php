@@ -52,7 +52,7 @@ class LoccoController extends Controller
     public function create(Request $request)
     {
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::get();
+        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
         $reg = null;
         if( $request->get('reg')) {
@@ -104,7 +104,7 @@ class LoccoController extends Controller
                 $emailings = Emailing::get();
                 $send_to = array();
                 $departments = Department::get();
-                $employees = Employee::get();
+                $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
                 if(isset($emailings)) {
                     foreach($emailings as $emailing) {
@@ -168,7 +168,7 @@ class LoccoController extends Controller
         $locco = Locco::find($id);
 
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::get();
+        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
         return view('Centaur::loccos.edit', ['locco' => $locco, 'cars' => $cars, 'employees' => $employees]);
     }

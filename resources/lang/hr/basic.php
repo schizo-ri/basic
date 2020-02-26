@@ -108,7 +108,7 @@ return [
 	'time'	=> 'Vrijeme',
 	'ad_categories'	=> 'Kategorije oglasa',
 	'ad_category'	=> 'Kategorija oglasa',
-	'add_category'	=> 'Dodaj kategoriju',
+	'new_category'	=> 'Dodaj kategoriju',
 	'edit_category'	=> 'Ispravi kategoriju',
 	'ads'		=> 'Oglasi',
 	'ad'		=> 'Oglas',
@@ -216,6 +216,7 @@ return [
 	'repetition_period'	=> 'Razdoblje ponavljanja',
 	'edit_campaigns'	=> 'Ispravi kampanju',
 	'add_campaign'		=> 'Dodaj kampanju',
+	'new_campaign'		=> 'Nova kampanja',	
 	'no_repeat'			=> 'Bez ponavljanja',
 	'every_day'			=> 'Svaki dan',
 	'once_week'			=> 'Jednom tjedno',
@@ -272,9 +273,12 @@ return [
 	'average_consumption'  => 'Prosječna potrošnja',
 	'statistic'  		=> 'Statistika',
 	'jump_all_notice'   => 'Sve obavijesti',
-	'add_question'   => 'DODAJ PITANJE',
-	'add_category'   => 'DODAJ KATEGORIJU',
-	'add_answer'   => 'DODAJ ODGOVOR',
+	'add_question'   	=> 'DODAJ PITANJE',
+	'add_category'   	=> 'DODAJ KATEGORIJU',
+	'add_answer'   		=> 'DODAJ ODGOVOR',
+	'add_image' 		=> 'Dodaj sliku',	
+	'contact_person' 	=> 'Kontakt osoba',	
+	'contact_info' 		=> 'Kontakt info',
 ];	
 
 ?>

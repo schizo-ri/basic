@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Benefit extends Model
 {
-    protected $fillable = ['name','description','comment','url','url2','status'];
+    protected $fillable = ['title','description','contact','email','phone','status'];
 
     /*
 	* Save Benefit

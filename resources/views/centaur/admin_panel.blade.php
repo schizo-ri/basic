@@ -43,7 +43,7 @@
                                 <span class="space" ></span>
                                 <a href="{{ route('loccos.index') }}" class="line_height_45 admin_link" id="cars">@lang('basic.loccos')</a>
                             </li>
-                           {{--  
+                            
                              <li class="first_group {{ Request::is('campaigns*') ? 'active' : '' }}">
                                 <span class="space" ></span>
                                 <a href="{{ route('campaigns.index') }}" class="line_height_45 admin_link" id="campaigns">@lang('basic.campaigns')</a>
@@ -55,7 +55,7 @@
                             <li class="first_group {{ Request::is('benefits*') ? 'active' : '' }}">
                                 <span class="space" ></span>
                                 <a href="{{ route('benefits.index') }}" class="line_height_45 admin_link" id="benefits">@lang('basic.benefits')</a>
-                            </li> --}}
+                            </li>
                             <li class="{{ Request::is('companies*') ? 'active' : '' }}">
                                 <span class="image_company" ></span> 
                                 <a href="{{ route('companies.index') }}" class="line_height_61 admin_link" id="companies">@lang('basic.company')</a>

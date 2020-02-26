@@ -1,4 +1,5 @@
 <span hidden class="locale" >{{ App::getLocale() }}</span>
+
 <div class="modal-header">
 	<h3 class="panel-title">@lang('basic.add_employee')</h3>
 </div>
@@ -9,10 +10,10 @@
 				<label>@lang('basic.user')</label>
 				<select class="form-control" name="user_id" required>
 					<option value="" disabled selected ></option>
-					@foreach($users as $user)
-						@if(! $employees->where('user_id', $user->id)->first())
+					@foreach($users as $user)					
+						@if( ! Sentinel::findById($user->id)->inRole('superadmin') && ! $employees->where('user_id', $user->id)->first())
 							<option value="{{ $user->id}}" {!! isset($user1) && $user1->id ==  $user->id ? 'selected' : '' !!}>{{ $user->first_name . ' ' . $user->last_name }}</option>
-						@endif
+						@endif					
 					@endforeach
 				</select>
 				{!! ($errors->has('user_id') ? $errors->first('user_id', '<p class="text-danger">:message</p>') : '') !!}

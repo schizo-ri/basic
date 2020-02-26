@@ -35,6 +35,9 @@
 		<link rel="stylesheet" href="{{ URL::asset('/../css/calendar.css') }}"/>
 		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/>
 		
+		<!-- ICON -->
+		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
+
 		<!--Jquery -->
 		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
 		<script src="{{ URL::asset('/../node_modules/chart.js/dist/Chart.js') }}"></script>
@@ -45,8 +48,7 @@
 			use App\Http\Controllers\DashboardController;
 			use App\Http\Controllers\CompanyController;
 			$permission_dep = DashboardController::getDepartmentPermission();
-			$moduli = CompanyController::getModules();
-		
+			$moduli = CompanyController::getModules();		
 		?>
     </head>
     <body>
@@ -83,7 +85,7 @@
 							@endif
 						</ul>
 					</nav>
-					<section class="padd_0">
+					<section class="section_top_nav padd_0">
 						<div class="topnav col-xs-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 padd_0 float_left" id="myTopnav">
 							<div class="col-sm-12 col-md-6 col-lg-6 float_left">
 								<a class="button_nav active" href="{{ route('dashboard') }}">
@@ -105,7 +107,7 @@
 							@endif
 							@if(Sentinel::getUser()->hasAccess(['documents.view']) || in_array('documents.view', $permission_dep) )
 								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
-									<a class="button_nav load_button doc_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('documents.index') }}">
+									<a class="button_nav load_button documents_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('documents.index') }}">
 										<span class="button_nav_img documents"></span>
 										<p>@lang('basic.documents')</p>
 									</a>
@@ -138,22 +140,22 @@
 									</a>	
 								</div>
 							@endif
-						{{-- 	@if(Sentinel::getUser()->hasAccess(['campaigns.view']) || in_array('campaigns.view', $permission_dep) )
+							@if(Sentinel::getUser()->hasAccess(['campaigns.view']) || in_array('campaigns.view', $permission_dep) )
 								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
-									<a class="button_nav load_button ads_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('campaigns.show',1) }}">
+									<a class="button_nav load_button campaigns_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('campaigns.index') }}">
 										<span class="button_nav_img ads"></span>
 										<p>@lang('basic.campaigns')</p>	
 									</a>	
 								</div>
 							@endif
-							@if(Sentinel::getUser()->hasAccess(['campaigns.view']) || in_array('campaigns.view', $permission_dep) )
+							@if(Sentinel::getUser()->hasAccess(['benefits.view']) || in_array('benefits.view', $permission_dep) )
 								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
-									<a class="button_nav load_button ads_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('benefits.show', 1) }}">
+									<a class="button_nav load_button benefits_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('benefits.show', 1) }}">
 										<span class="button_nav_img ads"></span>
 										<p>@lang('basic.benefits')</p>
 									</a>	
 								</div>
-							@endif --}}
+							@endif
 						</div>
 					</section>
 				</header>
@@ -182,7 +184,11 @@
 				} 
 			}
 
-			
+			$("a[rel='modal:open']").addClass('disable');
+
+			$( document ).ready(function() {
+				$("a[rel='modal:open']").removeClass('disable');
+			});
 		</script>
         <!-- Latest compiled and minified Bootstrap JavaScript -->
         <!-- Bootstrap js -->
@@ -210,8 +216,7 @@
 		<script src="{{ URL::asset('/../node_modules/pg-calendar/dist/js/pignose.calendar.min.js') }}"></script>
 
 		<!-- Datatables -->
-		<script type="text/javascript" src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
-		<script type="text/javascript" src="{{ URL::asset('/../dataTables/Buttons-1.5.6/js/buttons.print.min.js') }}"></script>
+		<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
 
 		<!-- tinymce js -->
 		<script src="{{ URL::asset('/node_modules/tinymce/tinymce.min.js') }}" ></script>

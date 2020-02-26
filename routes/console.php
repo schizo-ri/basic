@@ -21,15 +21,10 @@ Artisan::command('email:absence_day', function () {
     $this->comment(absence_day::quote());
 })->describe('Display an Absences quote');
 
-Artisan::command('build {project}', function ($project) {
-    $this->info("Building {$project}!");
-});
-/*
-Artisan::command('email:campaign', function () {
-    $this->comment(campaign::quote());
-})->describe('Display an Campaign quote');
-*/
+Artisan::command('command:clear_database', function () {
+    $this->comment(clear_database::quote());
+})->describe('Display an clear_database quote');
 
-Artisan::command('email:notice', function () {
+Artisan::command('notice', function () {
     $this->comment(notice::quote());
-})->describe('Display an notice quote'); 
+})->describe('Display an notice quote');

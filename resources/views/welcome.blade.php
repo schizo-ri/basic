@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>@yield('title')</title>
+        <title>{{ config('app.name') }}</title>
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="{{ URL::asset('node_modules/bootstrap/dist/css/bootstrap.min.css') }}"/>
 
@@ -12,7 +12,8 @@
 		<link rel="stylesheet" href="{{ URL::asset('css/layout.css') }}"/>
 		<link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}"/>
 		<link rel="stylesheet" href="{{ URL::asset('css/basic.css') }}"/>
-
+		<!-- ICON -->
+		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
@@ -27,8 +28,7 @@
 		<!--Jquery -->
 		<script src="{{ URL::asset('/node_modules/jquery/dist/jquery.min.js') }}"></script>
 
-		@stack('stylesheet')
-		
+		@stack('stylesheet')		
     </head>
     <body>
 		@php

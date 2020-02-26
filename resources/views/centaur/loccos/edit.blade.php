@@ -6,7 +6,7 @@
 		<fieldset>
 			<div class="form-group {{ ($errors->has('car_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.car')</label>
-				<select class="form-control" name="car_id" value="{{ old('car_id') }}" required >
+				<select class="form-control" name="car_id" id="car_id" value="{{ old('car_id') }}" required >
 					<option selected disabled ></option>
 					@foreach ($cars as $car)
 						<option name="car_id" value="{{ $car->id }}" {!! $locco->car_id == $car->id  ? 'selected' : '' !!} >{{ $car->registration }}</option>
@@ -77,6 +77,33 @@
 			$('#distance').css('border','1px solid red');
 		} else {
 			$('#distance').css('border','1px solid #F0F4FF');
+		}
+	});
+
+	$('#car_id').change(function(){
+		var car_id = $( this ).val();
+
+		try {
+			var token = $('meta[name="csrf-token"]').attr('content');
+
+			$.ajax({
+				url:  "last_km", 
+				type: 'post',
+				data: {
+						'_token':  token,
+						'car_id': car_id,                   
+					}
+			})
+			.done(function( response ) {     
+				var current_km = response;
+				console.log(current_km);  
+				$('#start_km').val(current_km);
+			})
+			.fail(function() {
+				alert( "Nije uspjelo" );
+			})
+		} catch (error) {
+			
 		}
 	});
 </script>

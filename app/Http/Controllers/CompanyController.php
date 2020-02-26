@@ -263,7 +263,7 @@ class CompanyController extends Controller
 		$moduli_company = array(); 
 		$company = Company::first();
 		if ($company) {
-			$company_oib = Company::first()->oib;
+			$company_oib = $company->oib;
 			if($company_oib) {
 				//konektiranje na superadmin bazu
 				$db_ext = DB::connection('mysql_external'); 
@@ -295,6 +295,40 @@ class CompanyController extends Controller
 		$url = array( 'SERVER_NAME' => $_SERVER['SERVER_NAME'],'SERVER_NAME'=>  $_SERVER['SERVER_NAME'], 'host' => $_SERVER['HTTP_HOST'], 'uri' => $_SERVER['REQUEST_URI'],);
 		
 		return $url;
+	}
+
+	public static function getUsersNumber() {
+		$company = Company::first();
+		
+		if($company) {
+			$company_oib = $company->oib;
+			
+			if($company_oib) {
+				//konektiranje na superadmin bazu
+				$db_ext = DB::connection('mysql_external'); 
+
+				//dohvaćanje iz tbl zahtjeva zahtjev korisnika
+				try {
+					$client_request = $db_ext->table('client_requests')->join('clients','client_requests.client_id','clients.id')->select('client_requests.no_users','clients.*')->where('clients.oib',$company_oib)->orderBy('client_requests.updated_at','DESC')->first();
+					if($client_request) {
+						$users_number = $client_request->no_users;					
+					}
+				} catch (Exception $e) {
+					session()->flash('error',  __('ctrl.retrieving_error'));
+					return redirect()->back();
+					//echo 'Caught exception: ',  $e->getMessage(), "\n";
+				}
+			} else {
+				session()->flash('error',  __('ctrl.no_oib'));
+				return redirect()->back();
+			}
+		} else {
+			session()->flash('error',  __('ctrl.no_company'));
+			return redirect()->back();
+		}
+
+		return $users_number;
+
 	}
 
 }

@@ -12,7 +12,12 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if(Sentinel::check()) {
+        return redirect('dashboard');
+    } else {
+        return view('welcome');
+    }
+  
 });
 
 // Authorization
@@ -200,3 +205,6 @@ Route::get('all_event', ['as' => 'all_event', 'uses' => 'EventController@modal_e
 // Start Campaign
 Route::get('startCampaign', ['as' => 'sendEmail', 'uses' => 'CampaignController@startCampaign']);
 Route::get('imageDelete', ['as' => 'imageDelete', 'uses' => 'DocumentController@imageDelete']);
+
+// Get last km for car
+Route::post('last_km', 'CarController@last_km');

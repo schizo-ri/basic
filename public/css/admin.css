@@ -62,13 +62,11 @@ ul.admin_pages li >span.space {
 #admin_page .index_table_filter {
     height: 100%;
 }
-#admin_page .btn-new {
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
+#admin_page .btn-new {     
     width: 41px;
     height: 35px;
+    float: right;
+    margin-left: 15px;
 }
 #admin_page table img {
     width: 25px;

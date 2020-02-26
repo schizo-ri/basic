@@ -90,9 +90,11 @@
 </div>
 </div>
 <script>
+    $.getScript( '/../js/event.js');
     $(function() {
         $('.calender_view').pignoseCalendar({
         });
     });
+   
 </script>
 @endif

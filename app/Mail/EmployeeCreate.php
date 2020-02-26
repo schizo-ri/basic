@@ -15,7 +15,8 @@ class EmployeeCreate extends Mailable
     /**
      * The emplyee instance.
      *
-     * @var vacationRequest
+     * @var employee;
+
      */
     public $employee;
 	

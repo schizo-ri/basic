@@ -36,7 +36,7 @@ class AbsenceController extends BasicAbsenceController
     public function index()
     {
         $empl = Sentinel::getUser()->employee;
-		$employees = Employee::get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		$permission_dep = array();
 		$departments = Department::get();
 		$years = BasicAbsenceController::yearsRequests(); // sve godine zahtjeva
@@ -75,7 +75,7 @@ class AbsenceController extends BasicAbsenceController
 			$type = $request['type'];
 		}
 		
-		$employees = Employee::where('checkout',null)->get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		$absenceTypes = AbsenceType::get();
 		
 		$user = Sentinel::getUser();
@@ -129,7 +129,7 @@ class AbsenceController extends BasicAbsenceController
 			$emailings = Emailing::get();
 			$send_to = array();
 			$departments = Department::get();
-			$employees = Employee::get();
+			$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
 			if(isset($emailings)) {
 				foreach($emailings as $emailing) {
@@ -191,7 +191,7 @@ class AbsenceController extends BasicAbsenceController
     public function edit($id)
     {
         $absence = Absence::find($id);
-		$employees = Employee::where('checkout',null)->get();
+		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		$absenceTypes = AbsenceType::get();
 		
 		$user = Sentinel::getUser();
@@ -272,7 +272,7 @@ class AbsenceController extends BasicAbsenceController
 			$emailings = Emailing::get();
 			$send_to = array();
 			$departments = Department::get();
-			$employees = Employee::get();
+			$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
 			$employee_mail = $absence->employee->email;
 			array_push($send_to, $employee_mail ); // mail zaposlenika
@@ -327,7 +327,7 @@ class AbsenceController extends BasicAbsenceController
 			$emailings = Emailing::get();
 			$send_to = array();
 			$departments = Department::get();
-			$employees = Employee::get();
+			$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 			
 			$employee_mail = $absence->employee->email;
 			array_push($send_to, $employee_mail ); // mail zaposlenika

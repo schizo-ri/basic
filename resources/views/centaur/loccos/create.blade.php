@@ -1,12 +1,12 @@
 @php	
 	$car_id = null;
-	if( $registracija ) {
-		$car = $cars->where('registration', $registracija)->first();
+	if( $registracija != null ) {
+		$car_employee = $cars->where('registration', $registracija)->first();
 	} else {
-		$car = $cars->where('employee_id', Sentinel::getUser()->employee->id )->first();
+		$car_employee = $cars->where('employee_id', Sentinel::getUser()->employee->id )->first();
 	}
-	if ($car) {
-		$car_id = $car->id;
+	if ($car_employee) {
+		$car_id = $car_employee->id;
 	}
 @endphp
 <div class="modal-header">
@@ -17,7 +17,7 @@
 		<fieldset>
 			<div class="form-group {{ ($errors->has('car_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.car')</label>
-				<select class="form-control" name="car_id" value="{{ old('car_id') }}" required >
+				<select class="form-control" name="car_id" id="car_id" value="{{ old('car_id') }}" required >
 					<option selected disabled ></option>
 					@if(count($cars)>0)
 					@foreach ($cars as $car)
@@ -50,7 +50,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('start_km'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.start_km')</label>
-				<input class="form-control" name="start_km" type="number" id="start_km" required value="{!! $car ? $car->current_km : '' !!}"/>	
+				<input class="form-control" name="start_km" type="number" id="start_km" required value="{!! $car_employee ? $car_employee->current_km : '' !!}"/>	
 				{!! ($errors->has('start_km') ? $errors->first('start_km', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('end_km'))  ? 'has-error' : '' }}">
@@ -89,6 +89,33 @@
 			$('#distance').css('border','1px solid red');
 		} else {
 			$('#distance').css('border','1px solid #F0F4FF');
+		}
+	});
+
+	$('#car_id').change(function(){
+		var car_id = $( this ).val();
+
+		try {
+			var token = $('meta[name="csrf-token"]').attr('content');
+
+			$.ajax({
+				url:  "last_km", 
+				type: 'post',
+				data: {
+						'_token':  token,
+						'car_id': car_id,                   
+					}
+			})
+			.done(function( response ) {     
+				var current_km = response;
+				console.log(current_km);  
+				$('#start_km').val(current_km);
+			})
+			.fail(function() {
+				alert( "Nije uspjelo" );
+			})
+		} catch (error) {
+			
 		}
 	});
 </script>

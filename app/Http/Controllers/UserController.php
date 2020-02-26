@@ -9,11 +9,13 @@ use Centaur\AuthManager;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Work;
+use App\User;
 use App\Models\UserInteres;
 use App\Models\Department;
 use App\Models\DepartmentRole;
 use Centaur\Mail\CentaurWelcomeEmail;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
+use App\Http\Controllers\CompanyController; 
 
 class UserController extends Controller
 {
@@ -45,7 +47,7 @@ class UserController extends Controller
     public function index()
     {
         $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->get();
-		$employees = Employee::get();
+        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		$departmentRoles = DepartmentRole::get();
 		$works = Work::get();
 		$empl = Sentinel::getUser()->employee;
@@ -103,7 +105,7 @@ class UserController extends Controller
         }
 
         // Do we need to send an activation email?
-        if (! $activate) {
+        if (! $activate ) {
             $code = $result->activation->getCode();
             $email = $result->user->email;
             try {
@@ -120,6 +122,15 @@ class UserController extends Controller
                 $role->users()->attach($result->user);
             }
         }
+
+        $data_employee = [
+            'user_id'   => User::orderBy('id','DESC')->first()->id,
+            'email'   => User::orderBy('id','DESC')->first()->email,
+            'work_id'   => Work::orderBy('id','ASC')->first()->id,
+        ];
+
+        $employee = new Employee();
+        $employee->saveEmployee( $data_employee );
 
         if ($request->hasFile('fileToUpload')) {
             $image = $request->file('fileToUpload');
@@ -144,10 +155,8 @@ class UserController extends Controller
               } catch (\Throwable $th) {
                 return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
               }
-
         }
 
-       
         session()->flash('error',"User {$request->get('email')} has been created.");
         return redirect()->back();
      //   $result->setMessage("User {$request->get('email')} has been created.");

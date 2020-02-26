@@ -215,7 +215,8 @@ return [
 	'campaign'			=> 'Campaign',
 	'repetition_period'	=> 'Repetition period',
 	'edit_campaigns'	=> 'Edit campaign',
-	'add_campaign'		=> 'Add campaign',
+	'add_campaign'		=> 'Add campaign',	
+	'new_campaign'		=> 'New campaign',	
 	'no_repeat'			=> 'No repeat',
 	'every_day'			=> 'Every day',
 	'once_week'			=> 'Once a week',
@@ -273,9 +274,12 @@ return [
 	'average_consumption'  => 'Average consumption',
 	'statistic'  		=> 'Statistic',
 	'jump_all_notice'   => 'Jump to all notice',
-	'add_question'   => 'ADD QUESTION',
-	'add_category'   => 'ADD CATEGORY',
-	'add_answer'   => 'ADD ANSWER',
+	'add_question'   	=> 'ADD QUESTION',
+	'add_category'   	=> 'ADD CATEGORY',
+	'add_answer'   		=> 'ADD ANSWER',
+	'add_image' 		=> 'Add image',	
+	'contact_person' 	=> 'Contact person',
+	'contact_info' 		=> 'Contact info',
 	
 ];	
 ?>

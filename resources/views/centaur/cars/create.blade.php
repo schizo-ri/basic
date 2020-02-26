@@ -65,6 +65,6 @@
 	</form>
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
-<script>
+<script>	
 	$.getScript( '/../js/validate.js');	
 </script>

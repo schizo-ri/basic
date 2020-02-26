@@ -47,7 +47,7 @@ class DocumentController extends Controller
         }
         $documents = Document::where('path','like','%'.$user_name .'/documents/%')->orWhere('path','like','%svi/documents/%')->get();
      
-        $employees = Employee::get();
+        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
         
         $path = 'storage/' . $user_name . '/documents/';
         
@@ -79,7 +79,7 @@ class DocumentController extends Controller
      */
     public function create()
     {
-		  $employees = Employee::where('checkout',null)->get();
+		  $employees = Employee::where('employees.id','<>',1)->where('checkout',null)->get();
 		
 		  return view('Centaur::documents.create',['employees' => $employees]);
     }
@@ -287,16 +287,7 @@ class DocumentController extends Controller
       return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
     
     } else {                                                              // if everything is ok, try to upload file
-      if (move_uploaded_file($fileToUpload["tmp_name"], $target_file)) {
-
-        $data = array(
-          'employee_id'  	=> $user->id,
-          'title'  		=> basename($fileToUpload["name"]),
-          'path'  		=> $path
-        );
-        
-        $document = new Document();
-        $document->saveDocument($data);
+      if (move_uploaded_file($fileToUpload["tmp_name"], $target_file)) {       
         
         return redirect()->back()->with('success',"The file ". basename( $fileToUpload["name"]).  __('ctrl.has_uploaded'));
 

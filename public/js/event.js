@@ -2,8 +2,11 @@ $(function() {
     var url_basic = location.origin + '/events';
 
     //console.log($('.dataArr').text());
-
-    var data1 = JSON.parse( $('.dataArr').text());
+    var data1;
+    if( $('.dataArr').text()) {
+        var data1 = JSON.parse( $('.dataArr').text());
+    }
+    
     /*
     var data1 = [];
     for (i = 0; i < data.length; i++) { 

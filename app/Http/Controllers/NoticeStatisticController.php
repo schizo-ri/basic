@@ -33,9 +33,8 @@ class NoticeStatisticController extends Controller
         $departments = Department::get();
         $data = array();
 
-        if(isset($request['notice_id'])) {
-            $employees = Employee::where('checkout',null)->get()->count();
-            
+        if(isset($request['notice_id'])) {            
+            $employees = Employee::where('id','<>',1)->where('checkout',null)->get()->count();
             $notice_statistics = NoticeStatistic::where('notice_id',$request['notice_id'])->get();
             $procitano = count($notice_statistics) / $employees * 100;
             $notice = Notice::find($request['notice_id']);

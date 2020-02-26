@@ -57,11 +57,12 @@
 						<label>
 							<input type="search" placeholder="{{ __('basic.search')}}" onkeyup="mySearchDoc()" id="mySearch">
 						</label>
-						<span class="change_view"></span>
-						<span class="change_view2"></span>
+						
 						@if(Sentinel::getUser()->hasAccess(["questionnaires.create"]) || in_array("questionnaires.create", $permission_dep) )
 							<a class="add_new new_questionnaire" href="{{ route('questionnaires.create') }}" rel="modal:open"  title="{{ __('questionnaire.add_questionnaire')}}"><i style="font-size:11px" class="fa">&#xf067;</i></a>
 						@endif
+						<span class="change_view"></span>
+						<span class="change_view2"></span>
 					</div>
 					</header>
 					<div class="table-responsive first_view">
@@ -160,7 +161,8 @@
 	</main>
 </div>
 <script>
-	//$.getScript( "/../js/collaps.js" );
+	$.getScript( '/../js/datatables.js');
 	$.getScript( '/../js/questionnaire.js');
+	$.getScript( '/../js/filter_table.js');
 </script>
 @stop

@@ -3,31 +3,37 @@
 	<h3 class="panel-title">@lang('basic.add_benefit')</h3>
 </div>
 <div class="modal-body">
-	<form class="form_benefit" accept-charset="UTF-8" role="form" method="post" action="{{ route('benefits.store') }}">
+	<form class="form_benefit" accept-charset="UTF-8" role="form" method="post" action="{{ route('benefits.store') }}" enctype="multipart/form-data" >
 		<fieldset>
-			<div class="form-group {{ ($errors->has('name'))  ? 'has-error' : '' }}">
-				<label>@lang('basic.name')</label>
-				<input name="name" type="text" class="form-control" maxlength="255" value="{{ old('name') }}" required >
-				{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
+			<div class="form-group">
+				<label class="label_file" for="file">@lang('basic.add_image')<span><img src="{{ URL::asset('icons/download.png') }}" />Add image here</span></label>
+				<input type='file' id="file" name="fileToUpload" >
+				<span id="file_name"></span>
 			</div>
-			<div class="form-group {{ ($errors->has('description'))  ? 'has-error' : '' }}">
+			<div class="form-group {{ ($errors->has('title'))  ? 'has-error' : '' }}">
+				<label>@lang('basic.title')</label>
+				<input name="title" type="text" class="form-control" maxlength="255" value="{{ old('title') }}" required >
+				{!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
+			</div>			
+			<div class="form-group {{ ($errors->has('description')) ? 'has-error' : '' }}">
 				<label>@lang('basic.description')</label>
-				<textarea name="description" type="text" rows="4" maxlength="255" class="form-control" required>{{ old('description') }}</textarea>
+				<textarea name="description" id="mytextarea"  maxlength="16777215"  >{{ old('description') }}</textarea>
 				{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('comment')) ? 'has-error' : '' }}">
-				<textarea name="comment" id="mytextarea"  maxlength="16777215"  >{{ old('comment') }}</textarea>
-				{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
-			</div>
-			<div class="form-group {{ ($errors->has('url'))  ? 'has-error' : '' }}">
-				<label>URL</label>
-				<input name="url" type="url" class="form-control" maxlength="255" value="{{ old('url') }}"  >
+			<div class="form-group {{ ($errors->has('contact'))  ? 'has-error' : '' }}">
+				<label>@lang('basic.contact_person')</label>
+				<input name="contact" type="text" class="form-control" maxlength="100" value="{{ old('url') }}"  >
 				{!! ($errors->has('url') ? $errors->first('url', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('url2'))  ? 'has-error' : '' }}">
-				<label>URL</label>
-				<input name="url2" type="url" class="form-control" maxlength="255" value="{{ old('url2') }}"  >
-				{!! ($errors->has('url2') ? $errors->first('url2', '<p class="text-danger">:message</p>') : '') !!}
+			<div class="form-group {{ ($errors->has('email'))  ? 'has-error' : '' }}">
+				<label>E-mail</label>
+				<input name="email" type="text" class="form-control" maxlength="100" value="{{ old('email') }}"  >
+				{!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="form-group {{ ($errors->has('phone'))  ? 'has-error' : '' }}">
+				<label>@lang('basic.phone')</label>
+				<input name="phone" type="text" class="form-control" maxlength="100" value="{{ old('phone') }}"  >
+				{!! ($errors->has('phone') ? $errors->first('phone', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group">
 				<label>Status</label>
@@ -36,13 +42,17 @@
 			</div>
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">
+			<a href="" class="modal_close float_r" rel="modal:close">@lang('basic.cancel')</a>
 		</fieldset>
 	</form>
 </div>
 <script>
-	$.getScript( '/../js/validate.js');
+	//$.getScript( '/../js/validate.js');
 	$.getScript( '/../js/tinymce.js');
 	$('body').on($.modal.CLOSE, function(event, modal) {
 		$.getScript('/../node_modules/tinymce/tinymce.min.js');
+	});
+	$('#file').change(function(){
+        $('#file_name').text( $('input[type=file]').val());
 	});
 </script>
