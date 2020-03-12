@@ -111,7 +111,7 @@
 								@lang('basic.no_file2')
 								</p>
 							</div>
-					@endif
+						@endif
 					</section>
 				</div>
 			</main>
@@ -122,5 +122,6 @@
 	$.getScript( '/../js/datatables.js');
 	$.getScript( '/../js/documents.js');
 	$.getScript( '/../js/filter_table.js');
+	$.getScript( '/../js/open_modal.js');
 </script>
 @stop

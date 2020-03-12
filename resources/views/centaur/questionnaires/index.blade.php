@@ -53,17 +53,17 @@
 			<main class="all_documents main_questionnaire">
 				@if(count($questionnaires))
 					<header class="page-header">
-					<div class="index_table_filter">
-						<label>
-							<input type="search" placeholder="{{ __('basic.search')}}" onkeyup="mySearchDoc()" id="mySearch">
-						</label>
-						
-						@if(Sentinel::getUser()->hasAccess(["questionnaires.create"]) || in_array("questionnaires.create", $permission_dep) )
-							<a class="add_new new_questionnaire" href="{{ route('questionnaires.create') }}" rel="modal:open"  title="{{ __('questionnaire.add_questionnaire')}}"><i style="font-size:11px" class="fa">&#xf067;</i></a>
-						@endif
-						<span class="change_view"></span>
-						<span class="change_view2"></span>
-					</div>
+						<div class="index_table_filter">
+							<label>
+								<input type="search" placeholder="{{ __('basic.search')}}" onkeyup="mySearchDoc()" id="mySearch">
+							</label>
+							
+							@if(Sentinel::getUser()->hasAccess(["questionnaires.create"]) || in_array("questionnaires.create", $permission_dep) )
+								<a class="add_new new_questionnaire" href="{{ route('questionnaires.create') }}" rel="modal:open"  title="{{ __('questionnaire.add_questionnaire')}}"><i style="font-size:11px" class="fa">&#xf067;</i></a>
+							@endif
+							<span class="change_view"></span>
+							<span class="change_view2"></span>
+						</div>
 					</header>
 					<div class="table-responsive first_view">
 						<table id="index_table" class="display table dataTable table-hover">
@@ -164,5 +164,6 @@
 	$.getScript( '/../js/datatables.js');
 	$.getScript( '/../js/questionnaire.js');
 	$.getScript( '/../js/filter_table.js');
+	$.getScript( '/../js/open_modal.js');
 </script>
 @stop

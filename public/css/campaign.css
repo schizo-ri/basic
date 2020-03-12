@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap');
+
+html {
+    height: 100vh;
+    width: 100vw;
+    font-size: 16px;
+    font-family: Montserrat, sans-serif;
+}
+body, form {
+    height: 100%;
+    width: 100%;
+    font-family: Montserrat, sans-serif;
+    background: #F8FAFF;
+}
+header {
+    height: 90px;
+    padding: 20px;
+    text-align: center;
+    background: #F8FAFF;
+}
+main {
+    height: calc(100% - 90px);
+}
+#editor-container {
+    height: 100%;
+}
+.btn-back, .btn-submit {
+    font-family: Montserrat, sans-serif;   
+    border: 1px solid #E0E8FF;
+    box-sizing: border-box;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 10px;
+    text-align: center;
+    float: right;    
+    padding: 10px 40px;
+}
+
+.btn-back {
+    background: #F3F6FF;
+    color: #1594F0;
+    margin-right: 15px;
+}
+.btn-submit {
+    background: #1594F0;
+    color: #FFFFFF;
+}
+
+.unlayer.container {
+    float: right;
+    width: 425px;
+}
+
+.form_sequence h3 {
+    width: calc(100% - 425px);
+    float: left;
+}
+
+@media screen and (max-width: 1170px) {
+    .unlayer.container {
+        width: 351px;
+    }
+    .form_sequence h3 {
+        width: calc(100% - 351px);
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    header {
+        padding: 10px;
+    }
+    .btn-back, .btn-submit {
+
+    }
+    .form_sequence h3{
+        font-size: 1.25rem;
+        width: 100%;
+    }
+    .unlayer.container {
+        width: 100%;
+        float: none;
+        margin-bottom: 15px;
+        overflow: hidden;
+        
+    }
+    .btn-back, .btn-submit {
+        padding: 5px 20px;
+    }
+}
+#editor{
+    background: #F8FAFF;
+}

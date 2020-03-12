@@ -78,5 +78,5 @@
     </form>
 </div>
 <script>
-    $.getScript('/js/validate_user.js');
+    $.getScript('/js/validate.js');
 </script>

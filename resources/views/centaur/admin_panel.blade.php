@@ -29,22 +29,26 @@
                             <li class="first_group {{ Request::is('works*') ? 'active' : '' }}"><span class="space" ></span>
                                 <a href="{{ route('works.index') }}"  class="line_height_45 admin_link" id="works">@lang('basic.works')</a>
                             </li>
-                            <li class="first_group {{ Request::is('ad_categories*') ? 'active' : '' }}"><span class="space" ></span>
-                                <a href="{{ route('ad_categories.index') }}"  class="line_height_45 admin_link" id="ad_categories">@lang('basic.ad_categories')</a>
-                            </li>
+                            @if(in_array('Oglasnik',$moduli))
+                                <li class="first_group {{ Request::is('ad_categories*') ? 'active' : '' }}"><span class="space" ></span>
+                                    <a href="{{ route('ad_categories.index') }}"  class="line_height_45 admin_link" id="ad_categories">@lang('basic.ad_categories')</a>
+                                </li>
+                            @endif
                             <li class="first_group {{ Request::is('absence_types*') ? 'active' : '' }}"><span class="space" ></span>
                                 <a href="{{ route('absence_types.index') }}"  class="line_height_45 admin_link" id="absence_types">@lang('absence.abs_types')</a>
-                            </li>                          
-                            <li class="first_group {{ Request::is('cars*') ? 'active' : '' }}">
-                                <span class="space" ></span>
-                                <a href="{{ route('cars.index') }}" class="line_height_45 admin_link" id="cars">@lang('basic.cars')</a>
-                            </li>
-                            <li class="first_group {{ Request::is('loccos*') ? 'active' : '' }}">
-                                <span class="space" ></span>
-                                <a href="{{ route('loccos.index') }}" class="line_height_45 admin_link" id="cars">@lang('basic.loccos')</a>
-                            </li>
+                            </li>              
+                            @if(in_array('Locco vožnja', $moduli))            
+                                <li class="first_group {{ Request::is('cars*') ? 'active' : '' }}">
+                                    <span class="space" ></span>
+                                    <a href="{{ route('cars.index') }}" class="line_height_45 admin_link" id="cars">@lang('basic.cars')</a>
+                                </li>
+                                <li class="first_group {{ Request::is('loccos*') ? 'active' : '' }}">
+                                    <span class="space" ></span>
+                                    <a href="{{ route('loccos.index') }}" class="line_height_45 admin_link" id="cars">@lang('basic.loccos')</a>
+                                </li>
+                            @endif
                             
-                             <li class="first_group {{ Request::is('campaigns*') ? 'active' : '' }}">
+                           {{--   <li class="first_group {{ Request::is('campaigns*') ? 'active' : '' }}">
                                 <span class="space" ></span>
                                 <a href="{{ route('campaigns.index') }}" class="line_height_45 admin_link" id="campaigns">@lang('basic.campaigns')</a>
                             </li>
@@ -55,7 +59,7 @@
                             <li class="first_group {{ Request::is('benefits*') ? 'active' : '' }}">
                                 <span class="space" ></span>
                                 <a href="{{ route('benefits.index') }}" class="line_height_45 admin_link" id="benefits">@lang('basic.benefits')</a>
-                            </li>
+                            </li> --}}
                             <li class="{{ Request::is('companies*') ? 'active' : '' }}">
                                 <span class="image_company" ></span> 
                                 <a href="{{ route('companies.index') }}" class="line_height_61 admin_link" id="companies">@lang('basic.company')</a>
@@ -63,9 +67,14 @@
                             <li class="{{ Request::is('emailings*') ? 'active' : '' }}">
                                 <span class="image_emailings" ></span> 
                                 <a href="{{ route('emailings.index') }}" class="line_height_61 admin_link" id="emailings">@lang('basic.emailings')</a>
-                            </li>                           
+                            </li>      
+                                                  
                         @endif
                         @if (Sentinel::inRole('superadmin'))
+                            <li class="{{ Request::is('settings*') ? 'active' : '' }}">
+                                <span class="image_settings" ><i class="fas fa-cog"></i></span> 
+                                <a href="{{ route('settings.index') }}" class="line_height_61 admin_link" id="settings">@lang('basic.settings')</a>
+                            </li>
                             <li class="{{ Request::is('tables*') ? 'active' : '' }}">
                                 <span class="image_tables" ></span> 
                                 <a href="{{ route('tables.index') }}" class="line_height_61 admin_link" id="tables">@lang('basic.tables')</a>

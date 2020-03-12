@@ -105,7 +105,8 @@
     $('.open_statistic').click(function(){
         $.getScript('/../node_modules/chart.js/dist/Chart.js');
     });
-    $("a[rel='modal:close']").click(function(){
+    $.getScript( '/../js/open_modal.js'); 
+    /* $("a[rel='modal:close']").click(function(){
         $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
         escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -121,5 +122,5 @@
         fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
         fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
       };    
-    });
+    }); */
 </script>

@@ -64,4 +64,5 @@
        		$(this).siblings().toggle();
 		});
 	});
+	$.getScript( '/../js/open_modal.js');
 </script>

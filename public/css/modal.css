@@ -25,6 +25,10 @@
 	overflow: auto;
 	scrollbar-width: thin;	
 }
+.modal .panel-title {
+	margin: 0.5rem;
+}
+
 .modal.slide {
 	width: 1060px;
     height: 715px;
@@ -463,6 +467,13 @@ span.work {
 	font-size: 0.625rem;
 	color: #2B2B2B;
 }
+.form-group>label:first-child {
+	width: 100%;
+}
+.modal-body label:not(.label_file, .container_radio) {
+	width: 100%;
+}
+
 .modal-body .form-group.datum {
 	width: 45%;
 	display: block;
@@ -475,7 +486,9 @@ span.work {
 .modal .form_sequence input[type="date"] {
 	width: 45%;
 }
-
+.modal.car_modal {
+	max-width: 700px;
+}
 .modal.slide .modal-body {
 	width: 75%;
 	float: left;
@@ -678,9 +691,14 @@ input[type="time"]::-webkit-inner-spin-button {
 	display: none;
 }
 
-.modal form.absence .form-group.time:first-child {
-	margin-right: 20px;
+.modal .form-control.date_time {
+	float: left;
+	width: 45%;
 }
+.modal input.form-control.date_time {
+	margin-right: 5%;
+}
+
 .modal select, .modal input[type="text"], .modal input[type="date"], .modal input[type="email"], .modal input[type="password"], .modal input[type="tel"], .modal input[type="number"], .modal input[type="url"]  {
 	width: 100%;
 	height: 45px;
@@ -1223,6 +1241,9 @@ option::selection {
 .modal.modal_notice form {
 	height: 100%;
 }
+.modal.modal_notice.modal_campaign form {
+	height: auto;
+}
 
 .modal.modal_notice .modal-header, .modal.modal_notice .modal-header,  .modal.modal_questionnaire .modal-header  {
 	background: #F8FAFF;
@@ -1250,7 +1271,12 @@ option::selection {
 .modal.modal_notice .modal-body .notice_content, .modal.modal_notice .modal-body {
 	padding: 25px 50px 40px 40px;
 }
-
+.modal.modal_notice.modal_campaign .dt-buttons {
+	display: none;
+}
+.modal.modal_notice.modal_campaign .modal-body {
+	padding: 15px 40px 40px 30px;
+}
 .modal.modal_notice .close-modal, .modal.modal_questionnaire .close-modal  {
 	display: none;
 }
@@ -1299,6 +1325,19 @@ option::selection {
 	text-align: center;
 	color: #071E57;
 }
+.modal.modal_notice.modal_campaign .modal-header>h3 {
+	margin: 35px 0;
+	line-height: 60px;
+}
+.modal.modal_notice.modal_campaign .modal-header>p {
+	padding: 0 40px;
+    font-weight: 500;
+    font-size: 0.8125rem;
+    /* line-height: 25px; */
+    color: #292929;
+    margin-bottom: 30px;
+}
+
 
 .modal.modal_notice .form-group>label {
 	font-weight: 600;
@@ -1323,6 +1362,10 @@ option::selection {
 	line-height: 18px;
 	color: #1594F0;
 	text-transform: uppercase;
+}
+
+.modal.modal_notice.modal_campaign .btn-delete, .modal.modal_notice.modal_campaign .btn-edit {
+    margin: 0;
 }
 
 .modal.modal_questionnaire .btn-delete i, .modal.modal_questionnaire .btn-delete svg {
@@ -1640,24 +1683,24 @@ input#file {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-  }
+}
   
 
-  .modal.modal_questionnaire .new_questionnaire  .aktivna .container_radio {
+.modal.modal_questionnaire .new_questionnaire  .aktivna .container_radio {
 	margin-right: 20px;
 	font-weight: 400;
 	font-size: 0.875rem;
-  }
-  
-  /* Hide the browser's default radio button */
-  .container_radio input {
+}
+
+/* Hide the browser's default radio button */
+.container_radio input {
 	position: absolute;
 	opacity: 0;
 	cursor: pointer;
-  }
+}
   
   /* Create a custom radio button */
-  .container_radio .checkmark {
+.container_radio .checkmark {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -1666,25 +1709,151 @@ input#file {
 	background-color: #EDEFF3;
 	border-radius: 3px;
 	border: none;
-  }
-  
-  .container_radio .checkmark.radio {
-	border-radius: 50%;
+}
+
+.type.form-group>label:first-child {
+	width: 100%;
+}
+/* 
+  .active_status .container_radio.status_checked .checkmark {
+	background: #1594F0;
+    border-radius: 3px 0px 0px 3px;
+    line-height: 55px;
+    color: #fff;
+    width: 74px;
+    float: left;
   }
 
-	.container_radio.count {
-		line-height: 40px;
-		padding-left: 55px;
-	}
-	.container_radio.count .checkmark.count_results {
-		width: 40px;
-		height: 40px;
-		background-color: #1594F0;
-		color: #ffffff;
-		border-radius: 50%;
-		font-size: 0.75rem;
-		text-align: center;
-	}
+.active_status .container_radio.status_unchecked .checkmark{
+	background: #F7F9FF;
+	border: 1px solid #F0F4FF;
+	border-radius: 0px 3px 3px 0px;
+	line-height: 55px;
+	color: #D7D7D7;
+	width: 74px;
+	float: left;
+} */
+/*   .active_status .container_radio .checkmark {
+	  display: none;
+  } */
+
+
+
+
+/* Customize the label (the container) */
+.container_radio.status_checked {
+	display: block;
+	position: relative;
+	padding-left: 35px;
+	margin-bottom: 12px;
+	cursor: pointer;
+	font-size: 22px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	font-size: 0.625rem;
+	line-height: 16px;
+	padding: 10px;
+	width: 74px;
+}
+
+/* Hide the browser's default checkbox */
+.container_radio.status_checked input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+
+/* Create a custom checkbox */
+.container_radio.status_checked .checkmark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: #eee;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+/* On mouse-over, add a grey background color */
+.container_radio.status_checked hover input ~ .checkmark {
+	background-color: #ccc;
+	color: #D7D7D7;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container_radio.status_checked input:checked ~ .checkmark {
+	background-color: #2196F3;
+	color: #ffffff;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.container_radio.status_checked  .checkmark:after {	
+	position: absolute;
+	display: block;
+	background-color: inherit;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	line-height: 38px;
+}
+.container_radio.status_checked  .checkmark.active:after {
+	content: "Active";
+}
+.container_radio.status_checked  .checkmark.inactive:after {
+	content: "Inactive";
+}
+
+/* Show the checkmark when checked */
+.container_radio.status_checked input:checked ~ .checkmark:after {
+	display: block;
+}
+
+.modal_campaign .active_status {
+	float: right;
+	margin-top: 30px;
+	margin-right: 10px;
+}
+
+.modal_campaign .dataTables_wrapper .dataTables_info {
+	display: none;
+}
+  .type .container_radio {
+	margin-right: 10px;
+  }
+
+.type .container_radio .checkmark {
+	border-radius: 50%;
+	height: 14px;
+	width: 14px;
+}
+
+.container_radio .checkmark.radio {
+	border-radius: 50%;
+}
+
+.container_radio.count {
+	line-height: 40px;
+	padding-left: 55px;
+}
+.container_radio.count .checkmark.count_results {
+	width: 40px;
+	height: 40px;
+	background-color: #1594F0;
+	color: #ffffff;
+	border-radius: 50%;
+	font-size: 0.75rem;
+	text-align: center;
+}
 	.ocj .container_radio.count:nth-child(2) .checkmark.count_results {
 		background: rgba(21, 148, 240, 0.8);
 	}
@@ -1702,11 +1871,12 @@ input#file {
   .container_radio:hover input ~ .checkmark {
 	background-color: #EDEFF3;
 	border: 1px solid #1594F0;
+	
   }
-  
   /* When the radio button is checked, add a blue background */
   .container_radio input:checked ~ .checkmark {
 	background-color: #eee;
+	color: #D7D7D7;
   }
   
   /* Create the indicator (the dot/circle - hidden when not checked) */
@@ -1732,6 +1902,14 @@ input#file {
 	  border-radius: 3px;
   }
 
+  .type .container_radio .checkmark:after {	
+	border-radius: 50%;
+	width: 8px;
+	height: 8px;
+	top: 3px;
+	left: 3px;
+  }
+
   .container_radio .checkmark.radio:after {
 	border-radius: 50%;
   }
@@ -1742,12 +1920,12 @@ input#file {
 	border-radius: 3px;
   }
   .modal.modal_questionnaire input.btn-submit.fill  {
-		padding: 0 40px;
-		height: 40px;
-		line-height: 40px;
-		border-radius: 5px;
-		font-weight: 600;
-		font-size: 0.6875rem;
+	padding: 0 40px;
+	height: 40px;
+	line-height: 40px;
+	border-radius: 5px;
+	font-weight: 600;
+	font-size: 0.6875rem;
 		
 	}
 	
@@ -2306,4 +2484,57 @@ span.file_name {
 
 .modal .tox .tox-mbtn, .modal .tox .tox-tbtn {
 	height: 25px;
+}
+
+.modal_none {
+	display: none;
+}
+
+.modal_body_task {
+	padding-top: 20px;
+}
+
+.modal input.day_go{
+	width: 100px;
+    float: left;
+}
+.span_day_go {
+	line-height: 45px;
+	padding: 0 10px;
+}
+
+.add_new {
+	cursor: pointer;
+    text-decoration: underline;
+    float: right;
+    color: #1b95f0;
+}
+.group_abs {
+	overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.modal .remove {
+	line-height: 45px;
+    cursor: pointer;
+    color: #dc3545;
+    margin-left: 15px;
+}
+.modal.modal_notice.modal_campaign .btn-delete.modal_delete {
+	background: #F3F6FF;
+    border: 1px solid #E0E8FF;
+    box-sizing: border-box;
+    border-radius: 3px;
+    padding: 10px 20px;
+    font-weight: 600;
+	font-size: 0.6875rem;
+    line-height: 12px;
+    text-align: center;
+	color: #1594F0;
+	margin-top: 30px;
+}
+
+.modal_campaign .modal_delete >svg {	
+	font-size: 0.8125rem;
+	margin-right: 10px;
 }

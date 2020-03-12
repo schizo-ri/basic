@@ -1,5 +1,5 @@
 // on load
-$( document ).ready(function() {   
+$( document ).ready(function() {
     // placeholder text
     $('.placeholder').show();
     $( '.type_message' ).attr('Placeholder','Type message...');
@@ -103,50 +103,53 @@ $( '.tablink' ).on( "click", function () {
         }
         //$(this).find('last.post-content').focus();
     });
-
+    
     (function poll(){
         var date = new Date();
         var url = location.origin;  // http://localhost:8000
+       
         var url_update = "posts/" + post_id + "/" + date.getFullYear() + '/' +  (date.getMonth() +1) + '/' + date.getDate() + '/' + date.getHours()  + '/' + date.getMinutes() + '/' + date.getSeconds();
-        setTimeout(function(){
-           $.ajax({ url:  url_update, success: function(data) {
-             //Update your dashboard gauge
-             if(data) {
-                $( '.refresh.' + tab_id ).load( url + '/posts .refresh.' + tab_id + ' .message');
+       
+        setTimeout(function(){            
+            $.ajax({ url: url+"/"+url_update, success: function(data) {
+                //Update your dashboard gauge
+                if(data) {
+                    $( '.refresh.' + tab_id ).load( url + '/posts .refresh.' + tab_id + ' .message');
+                    
+                    var mess_comm_height = $("#" + tab_id ).find('.mess_comm').height();
+                    var refresh_height = $("#" + tab_id ).find('.refresh').height();
                 
-                var mess_comm_height = $("#" + tab_id ).find('.mess_comm').height();
-                var refresh_height = $("#" + tab_id ).find('.refresh').height();
-               
-                 //   $('.refresh').height(mess_comm_height);
-              
-                if(refresh_height < mess_comm_height ) {
-                    $("#" + tab_id ).find('.refresh').css({"position": "absolute", "bottom": "0", "width": "100%"});
+                    //   $('.refresh').height(mess_comm_height);
+                
+                    if(refresh_height < mess_comm_height ) {
+                        $("#" + tab_id ).find('.refresh').css({"position": "absolute", "bottom": "0", "width": "100%"});
+                    }
+                
+                    $('.all_post ').load(  url + '/posts .all_post .main_post');
+                    $( '.topnav>.div_posts').load( url + '/posts .topnav>.div_posts .post_button');
+                    if($('.tablink#post_id').find('.count_coments')) {
+                        setPostAsRead(post_id);
+                    }
+                
                 }
-              
-                $('.all_post ').load(  url + '/posts .all_post .main_post');
                 $( '.topnav>.div_posts').load( url + '/posts .topnav>.div_posts .post_button');
-                if($('.tablink#post_id').find('.count_coments')) {
-                   setPostAsRead(post_id);
-               }
-              
-             }
-             $( '.topnav>.div_posts').load( url + '/posts .topnav>.div_posts .post_button');
-             //Setup the next poll recursively
-             poll();
-           }, dataType: "json"});
-       }, 3000);
+                //Setup the next poll recursively
+                poll();
+            }, dataType: "json"});
+        }, 3000);
+       
+           
      })();
 
     $( this).find('.count_coments').remove();
 });
 
-function setPostAsRead(post_id) {
-   
+function setPostAsRead(post_id) {   
     var url_read = "setCommentAsRead/" + post_id;
     try {
         $.ajax({
             type: "GET",
-            url: url_read, 
+            url: url+"/"+url_read, 
             success: function(response) {
              
             } 
@@ -180,7 +183,6 @@ function updatePost(post_id) {
    
 }
 */
-
 /*
 function loadlink(post_id){
     var url = location.origin;  // http://localhost:8000
@@ -221,8 +223,6 @@ function loadlink(post_id){
     });
 }
     */
-
-
     /*
     setInterval(function(){
         try {

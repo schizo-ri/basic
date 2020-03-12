@@ -36,7 +36,6 @@
 </main>
 <script>
 	$(function(){
-				
 		$('a.open_locco').click(function(e) {
 			click_element = $(this);
 			$.getScript( '/../restfulizer.js');
@@ -58,5 +57,6 @@
 			$(this).siblings().toggle();
 		});
 	});
+	
 	$.getScript( '/../restfulizer.js');
 </script>		

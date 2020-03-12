@@ -11,7 +11,7 @@ class CampaignSequence extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['campaign_id','text','start_date','send_interval'];
+	protected $fillable = ['campaign_id','text','text_json','start_date','send_interval'];
 	
 	/*
 	* The Eloquent campaign model name

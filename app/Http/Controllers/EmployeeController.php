@@ -86,6 +86,14 @@ class EmployeeController extends Controller
 			$first_job = $input['first_job'];
 		}
 		
+		$abs_days = array();
+		if( $request['abs_days']) {
+			foreach ($request['abs_days'] as $key => $abs_day) {
+				if( $abs_day != '' && $abs_day != 0 && $request['abs_year'][$key] != '' && $request['abs_year'][$key] ) 
+				$abs_days[$request['abs_year'][$key]] = $abs_day;
+			}
+		}
+
 		$data = array(
 			'user_id'  				=> $input['user_id'],
 			'father_name'     		=> $input['father_name'],
@@ -112,7 +120,9 @@ class EmployeeController extends Controller
 			'years_service' 	   	=> $staz,
 			'termination_service' 	=> $termination_service,
 			'first_job' 			=> $first_job,
-			'comment' 	   		    => $input['comment']
+			'comment' 	   		    => $input['comment'],
+			'color' 	   		    => $input['color'],
+			'abs_days' 	    		=> count($abs_days) > 0 ? serialize($abs_days) : null
 		);
 		
 		if( $input['superior_id'] != 0 ) {
@@ -213,54 +223,66 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(EmployeeRequest $request, $id)
+    public function update(Request $request, $id)
     {
 		$employee = Employee::find($id);
 		
 		$input = $request->except(['_token']);
 		
 		$staz = $input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'];
-		if(!isset($input['termination_service'])) {
+		if(!isset($input['termination_service']) || $input['termination_service'] == '') {
 			$termination_service = null;
 		} else {
 			$termination_service = $input['termination_service'];
 		}
-		if(!isset($input['first_job'])) {
+		if(! isset($input['first_job']) || $input['first_job'] == '' ) {
 			$first_job = null;
 		} else {
 			$first_job = $input['first_job'];
 		}
+	
+		$abs_days = array();
+		if( $request['abs_days']) {
+			foreach ($request['abs_days'] as $key => $abs_day) {
+				if( $abs_day != '' && $abs_day != 0 && $request['abs_year'][$key] != '' && $request['abs_year'][$key] ) 
+				$abs_days[$request['abs_year'][$key]] = $abs_day;
+			}
+		}
+	
 		$data = array(
-			'user_id'  				=> $input['user_id'],
-			'father_name'     		=> $input['father_name'],
-			'mather_name'     		=> $input['mather_name'],
-			'oib'           		=> $input['oib'],
-			'oi'           			=> $input['oi'],
-			'oi_expiry'           	=> $input['oi_expiry'],
-			'b_day'					=> $input['b_day'],
-			'b_place'       		=> $input['b_place'],
-			'mobile'  				=> $input['mobile'],
-			'priv_mobile'  			=> $input['priv_mobile'],
-			'email'  				=> $input['email'],
-			'priv_email'  			=> $input['priv_email'],
-			'prebiv_adresa'   		=> $input['prebiv_adresa'],
-			'prebiv_grad'     		=> $input['prebiv_grad'],
-			'borav_adresa'      	=> $input['borav_adresa'],
-			'borav_grad'        	=> $input['borav_grad'],
-			'title'  			    => $input['title'],
-			'qualifications'  		=> $input['qualifications'],
-			'marital'  	    		=> $input['marital'],
-			'work_id'  	    		=> $input['work_id'],
-			'reg_date' 	    		=> $input['reg_date'],
-			'probation' 	   		=> $input['probation'],
+			'user_id'  				=> intval($input['user_id']),
+			'father_name'     		=> $input['father_name'] == '' ? null : $input['father_name'],
+			'mather_name'     		=> $input['mather_name'] == '' ? null : $input['mather_name'],
+			'oib'           		=> $input['oib'] == '' ? null : $input['oib'],
+			'oi'           			=> $input['oi'] == '' ? null : $input['oi'],
+			'oi_expiry'           	=> $input['oi_expiry'] == '' ? null : $input['oi_expiry'],
+			'b_day'					=> $input['b_day'] == '' ? null : $input['b_day'],
+			'b_place'       		=> $input['b_place'] == '' ? null : $input['b_place'],
+			'mobile'  				=> $input['mobile'] == '' ? null : $input['mobile'],
+			'priv_mobile'  			=> $input['priv_mobile'] == '' ? null : $input['priv_mobile'],
+			'email'  				=> $input['email'] == '' ? null : $input['email'],
+			'priv_email'  			=> $input['priv_email'] == '' ? null : $input['priv_email'],
+			'prebiv_adresa'   		=> $input['prebiv_adresa'] == '' ? null : $input['prebiv_adresa'],
+			'prebiv_grad'     		=> $input['prebiv_grad'] == '' ? null : $input['prebiv_grad'],
+			'borav_adresa'      	=> $input['borav_adresa'] == '' ? null : $input['borav_adresa'],
+			'borav_grad'        	=> $input['borav_grad'] == '' ? null : $input['borav_grad'],
+			'title'  			    => $input['title'] == '' ? null : $input['title'],
+			'qualifications'  		=> $input['qualifications'] == '' ? null : $input['qualifications'],
+			'marital'  	    		=> $input['marital'] == '' ? null : $input['marital'],
+			'work_id'  	    		=> $input['work_id'] == '' ? null : intval($input['work_id']),
+			'reg_date' 	    		=> $input['reg_date'] == '' ? null : $input['reg_date'],
+			'checkout' 	    		=> $input['checkout'] == '' ? null : $input['checkout'],
+			'probation' 	   		=> $input['probation'] == '' ? null : intval($input['probation']),
 			'years_service' 	   	=> $staz,
 			'termination_service' 	=> $termination_service,
 			'first_job' 			=> $first_job,
-			'comment' 	   		    => $input['comment']
+			'comment' 	   		    => $input['comment'] == '' ? null : $input['comment'],
+			'color' 	   		    => $input['color'],
+			'abs_days' 	    		=> count($abs_days) > 0 ? serialize($abs_days) : null
 		);
-
+		
 		if( $input['superior_id'] != 0 ) {
-			$data += ['superior_id'  => $input['superior_id']];
+			$data += ['superior_id'  => $input['b_day'] == '' ? null : intval($input['superior_id'])];
 		} 
 		if( $request ['effective_cost']) {
 			$data += ['effective_cost'  => str_replace(',','.', $input['effective_cost'])];
@@ -270,6 +292,7 @@ class EmployeeController extends Controller
 		} 
 		
 		$employee->updateEmployee($data);
+
 		/* mail obavijest o novoj poruci */
 		$emailings = Emailing::get();
 		$send_to = array();

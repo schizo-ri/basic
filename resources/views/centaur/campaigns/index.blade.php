@@ -22,7 +22,7 @@
 					@endif
 				</div>
 			</header>
-			<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12 main_campaign">
 				<div class="table-responsive">
 					@if(count($campaigns))
 						<table id="index_table" class="display table table-hover table_campaign">
@@ -30,7 +30,7 @@
 								<tr>
 									<th>@lang('basic.name')</th>
 									<th>@lang('basic.description')</th>
-									<th>@lang('basic.created_at')</th>
+									<th>@lang('absence.start_date')</th>
 									<th>Status</th>
 							<!--	<th>@lang('basic.recipient')</th>
 									
@@ -41,23 +41,18 @@
 							<tbody>
 								@foreach ($campaigns as $campaign)
 									<tr>
-										<td>{{ $campaign->name }}</td>
+										<td><a class="campaign_show" href="{{ route('campaigns.show',$campaign->id ) }}" rel="modal:open">{{ $campaign->name }}</a></td>
 										<td>{{ $campaign->description }}</td>
-										<td>{{ date('d.m.Y', strtotime($campaign->created_at)) }}</td>
-										<td></td>
+										<td>{!! $campaign->start_date ? date('d.m.Y', strtotime($campaign->start_date)) :  __('basic.not_set') !!}</td>
+										<td>{!! $campaign->active == 1 ? __('basic.active') : __('basic.inactive') !!}</td>
 										<!--<td>{{ "odjeli" }}</td>										
 										<td>{{ date('d.m.Y', strtotime($campaign->end_date)) }}</td>
 										<td>{{ $campaign->period }}</td>-->
 										<td class="center">
 											<button class="collapsible option_dots float_r"></button>
 											
-											@if( ! $campaign_sequences->where('campaign_id', $campaign->id)->first()  && Sentinel::getUser()->hasAccess(['campaigns.delete']) || in_array('campaigns.delete', $permission_dep) && !$works->where('department_id',$department->id)->first())
-											<a href="{{ route('campaigns.destroy', $campaign->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
-												<i class="far fa-trash-alt"></i>
-											</a>
-											@endif
 											@if(Sentinel::getUser()->hasAccess(['campaigns.update']) || in_array('campaigns.update', $permission_dep))
-												<a href="{{ route('campaigns.edit', $campaign->id) }}" class="btn-edit" title="{{ __('basic.edit_campaigns')}}" style="display:none" rel="modal:open">
+												<a href="{{ route('campaigns.edit', $campaign->id) }}" class="btn-edit" title="{{ __('basic.edit_campaign')}}" style="display:none" rel="modal:open">
 													<i class="far fa-edit"></i>
 												</a>
 											@endif
@@ -66,6 +61,11 @@
 											@endif
 											@if(Sentinel::getUser()->hasAccess(['campaign_sequences.create']) || in_array('campaign_sequences.create', $permission_dep))
 												<a href="{{ route('campaign_sequences.create', ['id' =>$campaign->id ]) }}" rel="modal:open" title="{{ __('basic.add_sequence') }}" style="display:none" ><i class="fas fa-plus"></i>
+												</a>
+											@endif
+											@if( ! $campaign_sequences->where('campaign_id', $campaign->id)->first() && Sentinel::getUser()->hasAccess(['campaigns.delete']) || in_array('campaigns.delete', $permission_dep) && !$works->where('department_id',$department->id)->first())
+												<a href="{{ route('campaigns.destroy', $campaign->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
+													<i class="far fa-trash-alt"></i>
 												</a>
 											@endif
 										</td>
@@ -90,5 +90,7 @@
        		$(this).siblings().toggle();
 		});
 	});
+	$.getScript( '/../js/open_modal.js');
+	
 </script>		
 @stop

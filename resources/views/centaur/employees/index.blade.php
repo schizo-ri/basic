@@ -8,7 +8,7 @@
 				<i class="fas fa-plus"></i>
 			</a>
 		@endif
-		<span class="change_view"></span>
+	{{-- 	<span class="change_view"></span> --}}
 	</div>
 </header>
 <main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -27,7 +27,10 @@
 				<tbody>
 					@foreach ($employees as $employee)
 						<tr>
-							<td>{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}</td>
+							<td>{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}
+								<span class="employee_color" {!! $employee->color ? 'style="background-color:' . $employee->color . '"' : '' !!}>
+								</span>
+							</td>
 							<td>{!! $employee->b_day ? date("d.m.Y",strtotime($employee->b_day)) : '' !!}</td>
 							<td>{{ $employee->work['name'] }}</td>
 							<td>{!! $employee->reg_date ? date("d.m.Y",strtotime($employee->reg_date)) : '' !!}</td>
@@ -61,7 +64,7 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-	$('.collapsible').click(function(event){        
+	$('.collapsible').click(function(event){
        		$(this).siblings().toggle();
 		});
 	});

@@ -41,6 +41,7 @@
 		$ukupno_GO = 0;
 		$ukupnoDani = 0;
 	} 
+	
 @endphp
 @section('content')
 <div class="index_page index_absence">
@@ -68,10 +69,10 @@
 						<p class="col-6 float_l">
 							{{ $data_absence['years_service']->y . '-' . 
 							$data_absence['years_service']->m . '-' .  $data_absence['years_service']->d }}
-							<span>Experience<br><small>gg-mm-dd</small></span>
+							<span>@lang('absence.experience')<br><small>@lang('absence.yy_mm_dd')</small></span>
 						<p class="col-6 float_l">
 							{{ $data_absence['all_servise'][0] . '-' . $data_absence['all_servise'][1]  . '-' .  $data_absence['all_servise'][2]  }}
-							<span>Experience total<br><small>gg-mm-dd</small></span>
+							<span>@lang('absence.experience') @lang('absence.total')<br><small>@lang('absence.yy_mm_dd')</small></span>
 						</p>
 					</div>
 					<div class="col-3 info_abs">
@@ -83,15 +84,17 @@
 							</select>
 						</span>
 						<p class="col-6 float_l">
-							{{  $data_absence['days_OG'] }} ( {{  $data_absence['razmjeranGO'] }} )
-							
-							<span>Total days</span>
+							@foreach ($years as $year)
+								<span class="go go_{{ $year }}">{{ BasicAbsenceController::godisnjiGodina($employee, $year) }} ( {{ BasicAbsenceController::razmjeranGO_Godina($employee, $year) }} )
+								</span>
+							@endforeach	
+							<span>@lang('absence.total_days')</span>
 						</p>
 						<p class="col-6 float_l">
 							@foreach ($years as $year)
 								@php
 									$razmjeranGO_PG = BasicAbsenceController::razmjeranGO_Godina($employee, $year); // razmjerni dani prošla godina
-								
+									
 									if ($year == $prosla_godina && date('n') < 7) {   //  ako je danas mjesec manji od 7
 										$ukupno_GO += $razmjeranGO_PG;
 									} elseif ( $year == $ova_godina ){
@@ -107,16 +110,17 @@
 									} else {
 										$prijenos_zahtjeva = 0;
 									} 
-									if ( $year == $ova_godina ||$year == $prosla_godina  ){
-										$ukupnoDani += count ($data_absence['zahtjevi'][ $year]);
-									}
-									
+									if ( $year == $ova_godina || $year == $prosla_godina  ){
+										if(isset($data_absence['zahtjevi'][ $year])) {
+											$ukupnoDani += count ($data_absence['zahtjevi'][ $year]);
+										}									
+									}									
 								@endphp
 								<span class="go go_{{ $year }}">
-									{{ intval(count ($data_absence['zahtjevi'][ $year]))}} - {{ intval($razmjeranGO_PG) -  intval(count ($data_absence['zahtjevi'][ $year])) }}
+									{!! isset($data_absence['zahtjevi'][ $year]) ? intval(count($data_absence['zahtjevi'][ $year])) . ' - ' . (intval($razmjeranGO_PG) - intval(count ($data_absence['zahtjevi'][ $year]))) : 0 !!}
 								</span>
 							@endforeach
-							<span>Used - Unused</span>
+							<span>@lang('absence.used_unused')</span>
 						</p>
 					</div>
 					<div class="col-3 info_abs">
@@ -129,13 +133,13 @@
 						</span>
 						<p class="col-6 float_l">
 							@foreach ($years as $year)
-								<span class="bol bol_{{ $year }}">{{  $bolovanje[ $year] }}</span>
+								<span class="bol bol_{{ $year }}">{!! isset($bolovanje[ $year]) ? $bolovanje[ $year] : 0 !!}</span>
 							@endforeach
-							<span>Total used</span>
+							<span>@lang('absence.total_used')</span>
 						</p>
 						<p class="col-6 float_l">
-							<span class="bol_om">{{ $bolovanje['bolovanje_OM'] }}</span>
-							<span>This month</span>
+							<span class="bol_om">{!! isset($bolovanje['bolovanje_OM']) ? $bolovanje['bolovanje_OM'] : 0 !!}</span>
+							<span>@lang('absence.this_month')</span>
 						</p>
 					</div>
 				</header>
@@ -236,17 +240,19 @@
 		</section>
 	</main>
 </div>
-@if(isset($absence))
-	<script>
-		$( function () {
-			$('#index_table_filter').show();
-			$('#index_table_filter').prepend('<a class="add_new" href="{{ route('absences.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('absence.new_request')</a>');
-			$('#index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
-			$.getScript( 'js/datatables.js');
-			$.getScript( 'js/filter_table.js');
-			$.getScript( 'js/absence.js');
-			$.getScript("js/collaps.js");
-		});
-	</script>
-@endif
+
+<script>
+	$( function () {
+		$('#index_table_filter').show();
+		$('#index_table_filter').prepend('<a class="add_new" href="{{ route('absences.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('absence.new_request')</a>');
+		$('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+	});
+</script>
+
+<script>
+	$.getScript( 'js/datatables.js');
+	$.getScript( 'js/filter_table.js');
+	$.getScript( 'js/absence.js');
+	$.getScript("js/collaps.js");
+</script>
 @stop

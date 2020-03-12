@@ -100,6 +100,8 @@
 	</div>
 </main>
 <script>
+	$.getScript( '/../js/open_modal.js'); 
+	/* 
 $('a.edit_user[rel="modal:open"]').click(function(){
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
@@ -135,5 +137,5 @@ $('a[rel="modal:close"]').click(function(event) {
         fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
     };
 });
-
+ */
 </script>

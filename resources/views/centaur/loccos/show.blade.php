@@ -25,7 +25,7 @@
 						<th>@lang('basic.distance')</th>
 						<th>@lang('basic.comment')</th>
 						<th>@lang('basic.options')</th>
-					</tr>				
+					</tr>
 				</thead>
 				<tbody>
 					@foreach ($loccos as $locco)
@@ -37,7 +37,7 @@
 							<td>{{ $locco->start_km }}</td>
 							<td>{{ $locco->end_km }}</td>
 							<td>{{ $locco->distance }}</td>
-							<td>{{ $locco->options }}</td>
+							<td>{{ $locco->comment }}</td>
 							<td>
 								<button class="collapsible option_dots float_r"></button>
 								@if( Sentinel::getUser()->hasAccess(['loccos.delete']) || in_array('loccos.delete', $permission_dep))

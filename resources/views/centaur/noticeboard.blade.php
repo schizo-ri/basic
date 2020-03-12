@@ -19,7 +19,7 @@
 					<div class="filter">
 						<div class="float_left col-6 height100 position_rel padd_0">
 							<img class="img_search" src="{{ URL::asset('icons/search.png')  }}" alt="Search"/>
-							<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="Type ... " class="input_search" autofocus>
+							<input type="text" id="mySearch_noticeboard" placeholder="{{ __('basic.search')}}" title="Type ... " class="input_search" autofocus>
 						</div>
 						<div class="float_right col-6 height100  position_rel padd_tb_17">
 							<div class='add_notice float_right'>
@@ -113,7 +113,7 @@
 												<i class="far fa-trash-alt"></i>
 											</a>
 										@endif
-										<a href="{{ route('notices.show', $notice->id) }}" class="col-3 notice_link panel notice_show" rel="modal:open"> 
+										<a href="{{ route('notices.show', $notice->id) }}" class="notice_link panel notice_show" rel="modal:open"> 
 											<header class="ad_header">
 												@if($notice_img)
 													<img class="" src="{{ URL::asset('storage/notice/' . $notice->id . '/' . end($notice_img)) }}" alt="Profile image" title="Notice image"  />
@@ -133,7 +133,7 @@
 													@endif
 													<span>{{ $notice->employee->user['first_name'] . ' ' . $notice->employee->user['last_name'] }}</span>
 												</span>
-												<span class="noticeboard_notice_time" >{{ date('l, d.F.Y',strtotime($notice->created_at))}}</span>
+												<span class="noticeboard_notice_time" >{!! $notice->schedule_date ? date('l, d.F.Y',strtotime($notice->schedule_date)) :  date('l, d.F.Y',strtotime($notice->created_at)) !!}</span>
 											</div>
 										</a>
 									</article>
@@ -163,7 +163,8 @@
 		$.getScript( '/../js/filter_dropdown.js');
 		$.getScript( '/../js/set_height_notice.js');
 		$('.select_filter.sort').change(function () {
-			$('.section_notice .notices').load($(this).val() + ' .section_notice .notices .notice_link ');
+			console.log($(this).val());
+			$('.section_notice .notices').load($(this).val() + ' .section_notice .notices .noticeboard_notice_body');
 		});
 		
 		$('.placeholder').show();

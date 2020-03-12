@@ -56,8 +56,12 @@ return [
 	'dont_send_email' => 'Ne slati mail',
 	'other_requests' => 'Ostali zahtjevi',
 	'total_used'	 => 'Ukupno korišteno',
-	'this_month' => 'Ovaj mjesec',
-	 
+	'total'	 		=> 'ukupno',
+	'this_month' 	=> 'Ovaj mjesec',
+	'used_unused' 	=> 'Iskorišteni - Neiskorišteni',
+	'total_days' 	=> 'Ukupno dana',	
+	'experience' 	=> 'Radni staž',
+	'yy_mm_dd' 		=> 'gg-mm-dd',
 	
 ];
 ?>

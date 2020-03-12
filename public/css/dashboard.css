@@ -436,7 +436,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: none;
+   /*  display: none; */
     clear: left;
     overflow: hidden;
     background: inherit;
@@ -450,7 +450,14 @@
     height: calc(100% - 40px);
     
 }
-
+.all_post .placeholder {
+/*     margin-top: 50%;
+    margin-bottom: 50%;
+    transform: translateY(-50%);
+    position: relative;
+    top: auto;
+    left: auto; */
+}
 .placeholder_cal {
     height: auto;
     display: none;

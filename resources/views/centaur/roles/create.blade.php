@@ -3,7 +3,7 @@
     <h3 class="panel-title">@lang('basic.create_role')</h3>
 </div>
 <div class="modal-body">
-    <form accept-charset="UTF-8" role="form" method="post" action="{{ route('roles.store') }}">
+    <form accept-charset="UTF-8" class="roles_form" role="form" method="post" action="{{ route('roles.store') }}">
         <div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
         <input class="form-control" placeholder="{{ __('basic.name')}}" name="name" maxlength="191" type="text" value="{{ old('name') }}" required />
             {!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}

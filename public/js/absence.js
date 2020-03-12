@@ -3,9 +3,9 @@ $(function(){
 	var ova_godina = d.getFullYear();
 	var prosla_godina = ova_godina - 1;
 	var year = '';
-	
-	$('.info_abs>p>.go.go_'+ova_godina).show();
-	$('.info_abs>p>.bol.bol_'+ova_godina).show();
+	console.log(ova_godina);
+	$('.info_abs .go.go_'+ova_godina).show();
+	$('.info_abs .bol.bol_'+ova_godina).show();
 	$('tbody tr.tr_'+ova_godina).show();
 
 	$('#year_vacation').change(function(){
@@ -45,8 +45,5 @@ $(function(){
 		var end_date = $( "#end_date" );
 		end_date.val(start_date);
 	});
-	
-	
-
 });
 	

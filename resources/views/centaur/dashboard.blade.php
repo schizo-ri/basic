@@ -2,10 +2,12 @@
 
 @section('title',config('app.name'))
 @php
-	use App\Models\Employee;
 	use App\Http\Controllers\PostController;
 	use App\Http\Controllers\DashboardController;
+	use App\Http\Controllers\CompanyController;
 	$thisYear = date('Y');
+	
+	$moduli = CompanyController::getModules();
 @endphp
 @section('content')
 	@if (Sentinel::check())
@@ -14,8 +16,7 @@
 				<div class="col-md-3 float_left user_header_info">
 					@php
 						$profile_image = DashboardController::profile_image(Sentinel::getUser()->employee['id']);
-						$user_name =  DashboardController::user_name(Sentinel::getUser()->employee['id']);
-					
+						$user_name =  DashboardController::user_name(Sentinel::getUser()->employee['id']);					
 					@endphp
 					@if($profile_image && ! empty($profile_image))
 						<span class="image_prof">
@@ -31,7 +32,7 @@
 					<p>{{ $employee->work['name'] }}</p>
 					<div class="header_user_go">
 						<p>
-							<span>{{ $data_absence['ukupnoPreostalo']}}</span>
+							<span>{{ $data_absence['ukupnoPreostalo'] . '(' .$data_absence['ukupnoGO'] . ')' }} </span>
 							<span>@lang('absence.vacation')<br>@lang('absence.days_left')</span>
 						</p>
 						<p>
@@ -63,12 +64,14 @@
 								<p>@lang('absence.sick_leave')</p>
 							</span></a>
 						</button>
-						<button class="" ><a href="{{ route('loccos.create') }}" rel="modal:open">
-							<span>
-								<span class="img car"></span>
-								<p>@lang('basic.add_locco')</p>
-							</span></a>
-						</button>
+						@if(in_array('Locco vožnja', $moduli))  
+							<button class="" ><a href="{{ route('loccos.create') }}" rel="modal:open">
+								<span>
+									<span class="img car"></span>
+									<p>@lang('basic.add_locco')</p>
+								</span></a>
+							</button>
+						@endif
 						<button class="button_absence" ><a href="{{ route('absences.index') }}" >
 							<span>
 								<span class="img all_req"><p>@lang('absence.view_all_request')</p></span>
@@ -88,10 +91,9 @@
 					<div class="box">
 						<div class="header">
 							<h2>@lang("calendar.calendar")
-								@if(isset($events) && count($events) > 0)
+								@if(in_array('Kalendar',$moduli) && isset($events) && count($events) > 0)
 									<a class="view_all" href="{{ route('events.index') }}" >@lang("basic.view_all")</a>
-								@endif
-							
+								@endif							
 								<button id="right-button" class="scroll_right_cal"></button>
 								<button id="left-button" class="scroll_left_cal"></button>
 							</h2>
@@ -102,14 +104,15 @@
 							</ul>	
 						</div>	
 					</div>
-				</div>	
+				</div>
 				<div class="comming_agenda">
-					@if(isset($employee))<a class="btn btn-primary btn-lg btn-new" href="{{ route('events.create') }}" rel="modal:open">
-							<i style="font-size:11px" class="fa">&#xf067;</i>
-					</a>@endif
-					<h3 class="agenda_title">@lang('calendar.your_agenda') </h3>
-
-					@if(isset($events) && count($events) > 0)
+					@if(in_array('Kalendar',$moduli))
+						@if(isset($employee))
+							<a class="btn btn-primary btn-lg btn-new" href="{{ route('events.create') }}" rel="modal:open">
+									<i style="font-size:11px" class="fa">&#xf067;</i>
+							</a>
+						@endif
+						<h3 class="agenda_title">@lang('calendar.your_agenda') </h3>
 						@foreach($events->take(5) as $event)
 							<p class="agenda display_none" id="{{ $event->date }}">
 								<span class="agenda_mark"><span class="green"></span></span>
@@ -128,8 +131,8 @@
 		<section class="col-xs-12 col-sm-12 col-md-12 col-lg-3 float_left posts">
 			<div class="all_post">
 				<div>
-					<h2>@lang('basic.latest_messages') <a class="view_all" href="{{ route('posts.index') }}" >@lang('basic.view_all')</a></h2>
-					@if( isset($posts) && count( $posts ) > 0)
+					@if( in_array('Poruke',$moduli) && isset($posts) && count( $posts ) > 0)
+						<h2>@lang('basic.latest_messages') <a class="view_all" href="{{ route('posts.index') }}" >@lang('basic.view_all')</a></h2>
 						@foreach($posts as $post)
 							@php							
 								$post_comment = PostController::profile($post)['post_comment'];

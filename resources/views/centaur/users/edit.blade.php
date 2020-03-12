@@ -32,10 +32,10 @@
                 <input class="form-control" name="email" id="email" type="text" maxlength="191" value="{{ $user->email}}" required >
                 {!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
             </div>
-            <div class="submit_element">
-                <button class="btn-next" type="button">@lang('basic.next')</button>
-                <a class="btn-cancel" type="button" rel="modal:close">@lang('basic.cancel')</a>
-            </div>
+            
+            <button class="btn-next" type="button">@lang('basic.next')</button>
+            <a class="btn-cancel" type="button" rel="modal:close">@lang('basic.cancel')</a>
+           
         </div>
         <div class="second_tab">
             <div class="form-group  {{ ($errors->has('password')) ? 'has-error' : '' }}">
@@ -74,5 +74,5 @@
 </div>
 </div>
 <script>
-    $.getScript('/js/validate_user_edit.js');
+    $.getScript('/js/validate.js');
 </script>

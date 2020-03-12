@@ -5,6 +5,7 @@ return [
     'your_agenda' 	=> 'Tvoj dnevni raspored',
     'events'        => 'Događaji',
     'event'         => 'Događaj',
+    'task'         => 'Zadatak',
     'add_event'     => 'Dodaj događaj',
     'edit_event'    => 'Ispravi događaj',
     'to'		    => 'do',
@@ -29,13 +30,16 @@ return [
     'fri'		    => 'P',
     'sat'		    => 'S',
     'sun'		    => 'N',
-    'add_event'		    => 'Dodajte događaj',
+    'monday'		=> 'Ponedjeljak',
+    'tuesday'		=> 'Utorak',
+    'wednesday'		=> 'Srijeda',
+    'thursday'		=> 'Četvrtak',
+    'friday'		    => 'Petak',
+    'saturday'		    => 'Subota',
+    'sunday'		    => 'Nedjelja',
     'add_task'		    => 'Dodajte zadatak',
-    'add_other_event'	=> 'Dodajte druge događaje',
-    'create_event'	    => 'Kreirajte svoj događaj',
-    'create_task'	    => 'Spremite zadatak kako ga ne biste propustili',
-    'create_other_event'    => 'Dodajte proslave, rođendane za uredske zabave',
-    
-
+    'edit_task'		    => 'Ispravi zadatak',
+    'create_your_event'	=> 'Kreirajte svoj događaj',
+    'save_any_task'	    => 'Spremite zadatak kako ga ne biste propustili',
 ];
 ?>

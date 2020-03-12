@@ -23,14 +23,19 @@
 				</select>
 				{!! ($errors->has('user_id') ? $errors->first('user_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<div class="form-group  {{ ($errors->has('color'))  ? 'has-error' : '' }}" style="padding-top: 10px">
+				<label>@lang('basic.color') </label>
+				<input class="form-control color"  type="color" name="color" value="{{ $employee->color}}" >
+				{!! ($errors->has('color') ? $errors->first('color', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
 			<div class="form-group {{ ($errors->has('b_day')) ? 'has-error' : '' }}">
 				<label>@lang('basic.b_day')</label>
-				<input class="form-control" placeholder="{{ __('basic.b_day')}}" name="b_day" type="date" value="{{ $employee->b_day }}" required />
+				<input class="form-control" placeholder="{{ __('basic.b_day')}}" name="b_day" type="date" value="{{ $employee->b_day }}" />
 				{!! ($errors->has('b_day') ? $errors->first('b_day', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('b_place')) ? 'has-error' : '' }}">
 				<label>@lang('basic.b_place')</label>
-				<input class="form-control" placeholder="{{ __('basic.b_place')}}" name="b_place" maxlength="50" type="text" value="{{ $employee->b_place }}" required />
+				<input class="form-control" placeholder="{{ __('basic.b_place')}}" name="b_place" maxlength="50" type="text" value="{{ $employee->b_place }}"  />
 				{!! ($errors->has('b_place') ? $errors->first('b_place', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('father_name')) ? 'has-error' : '' }}">
@@ -50,12 +55,12 @@
 			</div>
 			<div class="form-group {{ ($errors->has('oi')) ? 'has-error' : '' }}">
 				<label>@lang('basic.oi')</label>
-				<input class="form-control" placeholder="{{ __('basic.oi')}}" name="oi" type="text" maxlength="20" value="{{ $employee->oi }}" required />
+				<input class="form-control" placeholder="{{ __('basic.oi')}}" name="oi" type="text" maxlength="20" value="{{ $employee->oi }}" />
 				{!! ($errors->has('oi') ? $errors->first('oi', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('oi_expiry')) ? 'has-error' : '' }}">
 				<label>@lang('basic.oi_expiry')</label>
-				<input class="form-control" placeholder="{{ __('basic.oi_expiry')}}" name="oi_expiry" type="date" value="{{ $employee->oi_expiry }}" required />
+				<input class="form-control" placeholder="{{ __('basic.oi_expiry')}}" name="oi_expiry" type="date" value="{{ $employee->oi_expiry }}"  />
 				{!! ($errors->has('oi_expiry') ? $errors->first('oi_expiry', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('mobile')) ? 'has-error' : '' }}">
@@ -70,7 +75,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}">
 				<label>e-mail</label>
-				<input class="form-control" placeholder="e-mail" name="email" type="email" maxlength="50" value="{{$employee->email }}"  />
+				<input class="form-control" placeholder="e-mail" name="email" type="email" maxlength="50" value="{{$employee->email }}" required />
 				{!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('priv_email')) ? 'has-error' : '' }}">
@@ -100,17 +105,17 @@
 			</div>
 			<div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}">
 				<label>@lang('basic.metier')</label>
-				<input name="title" type="text" class="form-control" value="{{ $employee->title }}" maxlength="50" required >
+				<input name="title" type="text" class="form-control" value="{{ $employee->title }}" maxlength="50"  >
 				{!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('qualifications')) ? 'has-error' : '' }}">
 				<label>@lang('basic.qualifications')</label>
-				<input name="qualifications" type="text" class="form-control" value="{{ $employee->qualifications }}" maxlength="20"  required >
+				<input name="qualifications" type="text" class="form-control" value="{{ $employee->qualifications }}" maxlength="20"  >
 				{!! ($errors->has('qualifications') ? $errors->first('qualifications', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group  {{ ($errors->has('marital'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.marital')</label>
-				<select class="form-control" name="marital" value="{{ $employee->marital }}"  required >
+				<select class="form-control" name="marital" value="{{ $employee->marital }}"   >
 					<option selected="selected" value=""></option>
 					<option {!! $employee->marital == 'yes' ? 'selected' : '' !!}  value="yes" >@lang('basic.married')</option>
 					<option {!! $employee->marital == 'no' ? 'selected' : '' !!}  value="no" >@lang('basic.not_married')</option>
@@ -130,7 +135,7 @@
 			<div class="form-group {{ ($errors->has('superior_id'))  ? 'has-error' : '' }}">
 				<span><b>Nadređeni djelatnik:</b></span>
 				<select class="form-control" name="superior_id"  >
-					<option selected value="0"></option>
+					<option disabled></option>
 					@foreach($employees as $djelatnik)
 						<option name="superior_id" value="{{ $djelatnik->id }}" {!! $employee->superior_id == $djelatnik->id ? 'selected' : '' !!} >{{ $djelatnik->user['last_name'] . ' '. $djelatnik->user['first_name'] }}</option>
 					@endforeach	
@@ -139,13 +144,13 @@
 			</div>
 			<div class="form-group {{ ($errors->has('effective_cost'))  ? 'has-error' : '' }}">
 				<span><b>Efektivna cijena sata:</b></span>
-				<input class="form-control" name="effective_cost" type="text" value="{{ $employee->effective_cost }}" pattern="[-+]?[0-9]*[.,]?[0-9]+"
+				<input class="form-control" name="effective_cost" type="number" step="0.01" value="{{ $employee->effective_cost }}" pattern="[-+]?[0-9]*[.,]?[0-9]+"
 				title="This must be a number with up to 2 decimal places" />
 				{!! ($errors->has('effective_cost') ? $errors->first('effective_cost', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('brutto'))  ? 'has-error' : '' }}">
 				<span><b>Brutto godišnja plaća:</b></span>
-				<input class="form-control" name="brutto" type="text"  value="{{ $employee->brutto }}" pattern="[-+]?[0-9]*[.,]?[0-9]+"
+				<input class="form-control" name="brutto" type="number" step="0.01" value="{{ $employee->brutto }}" pattern="[-+]?[0-9]*[.,]?[0-9]+"
 				title="This must be a number with up to 2 decimal places" />
 				{!! ($errors->has('brutto') ? $errors->first('brutto', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
@@ -154,16 +159,21 @@
 				<input class="form-control" placeholder="{{ __('basic.reg_date')}}" name="reg_date" type="date" value="{{ $employee->reg_date }}" required />
 				{!! ($errors->has('reg_date') ? $errors->first('reg_date', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<div class="form-group {{ ($errors->has('checkout')) ? 'has-error' : '' }}">
+				<label>@lang('basic.checkout')</label>
+				<input class="form-control" placeholder="{{ __('basic.checkout')}}" name="checkout" type="date" value="{{ $employee->checkout }}"  />
+				{!! ($errors->has('checkout') ? $errors->first('checkout', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
 			<div class="form-group {{ ($errors->has('probation')) ? 'has-error' : '' }}">
 				<label>@lang('basic.probation')</label>
-				<input class="form-control" placeholder="{{ __('basic.probation')}}" name="probation" type="text" value="{{ $employee->probation }}" pattern="[0-9]" />
+				<input class="form-control" placeholder="{{ __('basic.probation')}}" name="probation" type="number" step="1" value="{{ $employee->probation }}" pattern="[0-9]" />
 				{!! ($errors->has('probation') ? $errors->first('probation', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('years_service'))  ? 'has-error' : '' }}">
 				<label>Staž kod prošlog poslodavca (godina-mjeseci-dana):</label><br>
-				<input name="stazY" type="text" class="staz" value="{{ $stazY }}" maxlength="2" required>-
-				<input name="stazM" type="text" class="staz" value="{{ $stazM }}" maxlength="2" required>-
-				<input name="stazD" type="text" class="staz" value="{{ $stazD }}" maxlength="2" required>
+				<input name="stazY" type="text" class="staz" value="{{ $stazY }}" maxlength="2" >-
+				<input name="stazM" type="text" class="staz" value="{{ $stazM }}" maxlength="2" >-
+				<input name="stazD" type="text" class="staz" value="{{ $stazD }}" maxlength="2" >
 				{!! ($errors->has('years_service') ? $errors->first('years_service', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('termination_service'))  ? 'has-error' : '' }}">
@@ -178,6 +188,35 @@
 				<textarea class="form-control" name="comment" maxlength="65535" >{{ $employee->comment }}</textarea>
 				{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			@php
+				$abs_day = 0;
+				$abs_year = date('Y');
+				if( $employee->abs_days) {
+					$abs_days = unserialize( $employee->abs_days);
+				}
+				
+			@endphp
+			<div class="form-group group_abs_days {{ ($errors->has('abs_days'))  ? 'has-error' : '' }}" style="padding-top: 10px">
+				<label>@lang('basic.abs_days') <span class="add_new">@lang('basic.add')</span></label>
+				@if(isset($abs_days))
+					@foreach ($abs_days as $year => $days)
+						<div class="group_abs">
+							<input class="form-control day_go" type="number" step="1" maxlength="2" name="abs_days[]" value="{{ $days }}" />
+							<span class="float_l span_day_go">@lang('absence.days')  @lang('basic.for_year')</span>
+							<input class="form-control day_go" type="number" step="1" maxlength="4" placeholder="{{ __('basic.year') }}" name="abs_year[]" value="{{ $year }}" />
+							<span class="remove"><i class="far fa-trash-alt"></i></span>
+						</div>
+					@endforeach
+				@else
+					<div class="group_abs">
+						<input class="form-control day_go" type="number" step="1" maxlength="2" name="abs_days[]" value="{!! old('abs_days') ?  old('abs_days')  : 0 !!}" />
+						<span class="float_l span_day_go">@lang('absence.days')  @lang('basic.for_year')</span>
+						<input class="form-control day_go" type="number" step="1" maxlength="4" placeholder="{{ __('basic.year') }}" name="abs_year[]" value="{!! old('abs_year') ? old('abs_year')  : date('Y')!!}" />
+						<span class="remove"><i class="far fa-trash-alt"></i></span>
+					</div>
+				@endif				
+				{!! ($errors->has('abs_days') ? $errors->first('abs_days', '<p class="text-danger">:message</p>') : '') !!}
+			</div>			
 			{{ csrf_field() }}
 			{{ method_field('PUT') }}
 			<input class="btn-submit" type="submit" value="{{ __('basic.edit')}}">
@@ -186,5 +225,14 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-    $.getScript( '/../js/validate.js');
+	$('.add_new').click(function(){
+		$('.group_abs_days').append('<div class="group_abs"><input class="form-control day_go" type="number" step="1" maxlength="2" name="abs_days[]" value="0" /><span class="float_l span_day_go">@lang('absence.days')  @lang('basic.for_year')</span><input class="form-control day_go" type="number" step="1" maxlength="4" placeholder="{{ __('basic.year') }}" name="abs_year[]" /><span class="remove"><i class="far fa-trash-alt"></i></span></div>');
+		$('.remove').click(function(){
+			$(this).parent().remove();
+			console.log("remove");
+		});
+	});
+	
+     $.getScript( '/../js/validate.js'); 
 </script>
+

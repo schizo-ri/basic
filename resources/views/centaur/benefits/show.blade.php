@@ -10,7 +10,7 @@
 	<main class="col-lg-12 col-xl-8 index_main benefit_main float_right">
 		<section>
 			<header class="header_benefits">
-				<div class="filter">
+				<div class="index_table_filter">
 					<div class="float_left col-6 height100 position_rel padd_0">
 						<img class="img_search" src="{{ URL::asset('icons/search.png')  }}" alt="Search"/>
 						<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="{{ __('basic.search')}}" class="input_search" >
@@ -53,8 +53,7 @@
 							@endforeach
 							
 						</div><button id="right-button" class="scroll_right"></button>
-					</div>
-					
+					</div>				
 					<div class="main_benefits_body">
 						@foreach($benefits as $benefit)
 							@if ( $benefit->status == 1 || Sentinel::inRole('administrator'))
@@ -68,10 +67,12 @@
 										}
 								@endphp											
 								<div class="benefit_body" id="_{{ $benefit->id }}" >	
-									<a class="btn-edit" href="{{ route('benefits.edit', $benefit->id) }}"  title="{{ __('basic.add_benefit')}}" rel="modal:open">
-										<img class="img_statistic" src="{{ URL::asset('icons/edit.png') }}" alt="edit" />
-										<span>Edit</span>
-									</a>	
+									@if(Sentinel::getUser()->hasAccess(['benefits.update']) || in_array('benefits.update', $permission_dep))
+										<a class="btn-edit" href="{{ route('benefits.edit', $benefit->id) }}"  title="{{ __('basic.add_benefit')}}" rel="modal:open">
+											<img class="img_statistic" src="{{ URL::asset('icons/edit.png') }}" alt="edit" />
+											<span>Edit</span>
+										</a>	
+									@endif
 									<div class="col-12 bnf_img">
 										@if($benefit_img)
 											<img class="" src="{{ URL::asset($path_benefit . end($benefit_img)) }}" alt="{{ $benefit->title }}" title="{{ $benefit->title }}"  />
@@ -112,5 +113,7 @@
 <script>
 	$.getScript( '/../js/filter.js');
 	$.getScript( '/../js/benefit.js');
+	$.getScript( '/../js/open_modal.js');
+	
 </script>
 @stop

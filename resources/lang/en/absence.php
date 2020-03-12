@@ -55,7 +55,12 @@ return [
 	'send_email' 	=> 'Send mail',
 	'dont_send_email' => 'Don\'t send mail',	
 	'other_requests' => 'Other requests',	
+	'total'	 => 'total',
 	'total_used'	 => 'Total used',
 	'this_month' => 'This month',
+	'used_unused' => 'Used - Unused',
+	'total_days' => 'Total days',
+	'experience' => 'Experience',
+	'yy_mm_dd' 		=> 'yy-mm-dd',
 ];
 ?>

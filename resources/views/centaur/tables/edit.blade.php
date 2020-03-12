@@ -2,7 +2,7 @@
 	<h3 class="panel-title">@lang('basic.edit_table')</h3>
 </div>
 <div class="modal-body">
-	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('tables.update', $table->id ) }}" enctype="multipart/form-data">
+	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('tables.update', $table->id ) }}">
 		<div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
 			<label>@lang('basic.name')</label>
 			<input class="form-control" placeholder="{{ __('basic.name')}}" name="name" type="text" value="{{ $table->name }}" required />

@@ -70,8 +70,6 @@ class RegistrationController extends Controller
         $code = $result->activation->getCode();
         $email = $result->user->email;
 
-        Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code, __('ctrl.acc_created')));
-        
         // Ask the user to check their email for the activation link
         $result->setMessage( __('ctrl.reg_complete') );
 
@@ -94,6 +92,12 @@ class RegistrationController extends Controller
         $employee = new Employee();
         $employee->saveEmployee( $data_employee);
        
+        try {
+            Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code, __('ctrl.acc_created')));
+        } catch (\Throwable $th) {
+            Session::flash('error', $th);
+        }
+        
         // Return the appropriate response
         return $result->dispatch(route('dashboard'));
     }

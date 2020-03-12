@@ -34,7 +34,7 @@ class TableController extends Controller
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
         } 
         
-		return view('Centaur::tables.index', ['tables' => $tables]);
+		return view('Centaur::tables.index', ['tables' => $tables, 'permission_dep' => $permission_dep]);
     }
 
     /**

@@ -38,11 +38,10 @@ class FuelController extends Controller
         } 
 
         if( $request['car_id'] ) {
-            $car_id = $request['car_id'];
-            $car = Car::find($car_id);
-            $fuels = Fuel::where('car_id', $car_id)->orderBy('date','DESC')->get();
+           
+            $fuels = Fuel::where('car_id', $request['car_id'])->orderBy('date','DESC')->get();
 
-            return view('Centaur::fuels.index', ['fuels' => $fuels, 'car' => $car, 'permission_dep' => $permission_dep]);
+            return view('Centaur::fuels.index', ['fuels' => $fuels, 'permission_dep' => $permission_dep]);
         } else {
             $fuels = Fuel::orderBy('date','DESC')->get();
 
@@ -110,7 +109,10 @@ class FuelController extends Controller
      */
     public function edit($id)
     {
-        //
+        $fuel = Fuel::find($id);
+        $cars = Car::get();
+
+        return view('Centaur::fuels.edit', ['cars' => $cars,'fuel' => $fuel]);
     }
 
     /**
@@ -122,7 +124,21 @@ class FuelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $fuel = Fuel::find($id);
+
+        $data = array(
+			'car_id'        => $request['car_id'],
+			'employee_id'   => Sentinel::getUser()->employee->id,
+			'liters'        => $request['liters'],
+			'km'            => $request['km'],
+			'date'          => $request['date'],
+		);
+		
+        $fuel->updateFuel($data);
+        
+        session()->flash('success',  __('ctrl.data_edit'));
+        return redirect()->back();
+        
     }
 
     /**
@@ -133,6 +149,11 @@ class FuelController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $fuel = Fuel::find($id);
+        $fuel->delete();
+
+        session()->flash('success',__('ctrl.data_delete'));
+		
+        return redirect()->back();
     }
 }

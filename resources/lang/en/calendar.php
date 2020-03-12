@@ -28,14 +28,18 @@ return [
     'thu'		    => 'T',
     'fri'		    => 'F',
     'sat'		    => 'S',
-    'sun'		    => 'S',
-    'add_event'		    => 'Add event',
+    'sun'		    => 'S',    
+    'monday'		=> 'Monday',
+    'tuesday'		=> 'Tuesday',
+    'wednesday'		=> 'Wednesday',
+    'thursday'		=> 'Thursday',
+    'friday'		=> 'Friday',
+    'saturday'		=> 'Saturday',
+    'sunday'		=> 'Sunday',
     'add_task'		    => 'Add task',
-    'add_other_event'	=> 'Add other events',
-    'create_event'	    => 'Creat your event',
-    'create_task'	    => 'Save any task so you don’t miss any',
-    'create_other_event'    => 'Add celebrating, birthdays for office parties',
-    
+    'edit_task'		    => 'Edit task',
+    'create_your_event'	    => 'Creat your event',
+    'save_any_task'	    => 'Save any task so you don’t miss any',
 ];
 
 ?>

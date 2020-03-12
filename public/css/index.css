@@ -4,6 +4,9 @@
     font-family: Montserrat, sans-serif;
 }
 
+.form-control.color {
+    width: 100px;
+}
 
 .index_page h1 {
     font-weight: 600;
@@ -132,6 +135,10 @@
     padding: 0;
 }
 
+.index_page .index_main.index_event_month {
+    display: none;
+}
+
 .index_page .index_main.benefit_main {
     background: inherit;
     box-shadow: none;
@@ -160,17 +167,15 @@ main.index_main>section {
 
 .index_main header {
     width: 100%;
-    height: 78px;
+    height: 80px;
+    min-height: 78px;
     padding: 20px 25px;
     margin: 0;
     background: #F8FAFF;
-    border-radius: 3px 3px 0 0 ; 
+    border-radius: 3px 3px 0 0;
     border-bottom: 1px solid #e9ecf3;
-    position: inherit;
-}
-
-.index_event.index_main header {
-    height: 95px;
+    position: relative;
+    overflow: hidden;
 }
 
 .index_main.admin_main header  {
@@ -526,6 +531,7 @@ class="select-css"
     padding: 15px 0;
     position: absolute;
     right: 140px;
+    z-index: 1;
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-date {
@@ -545,6 +551,7 @@ class="select-css"
     padding: 15px 0;
     position: absolute;
     right: 90px;
+    z-index: 1;
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-year, .pignose-calendar .pignose-calendar-top .pignose-calendar-top-month , .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-month{
@@ -597,62 +604,108 @@ class="select-css"
     top: 7px;
     bottom: 0;
 }
+.employee_color {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    line-height: 15px;
+    margin-left: 15px;
+}
 
 .show_event {
-    display: block;
-    float: left;
-    width: 33.3%;
-    height: fit-content;
-    border-radius: 5px;
-    padding: 0 20px;
-    line-height: 41px;
-    margin-right: 12px;
-    color: #ffffff;
-    margin-bottom: 5px;
+    padding-left: 0;
+    padding-right: 20px;
     position: relative;
 }
 
-.show_event.blue {
+.main_calendar_month .show_event {
+    padding: 0;
+}
+
+.main_calendar_month .show_event div {
+
+}
+
+.main_calendar_month .show_event div.event  {
+    margin-bottom: 5px;
+    padding: 3px 5px;
+}
+.out_month {
+    background-color: #eee;
+    color: #ccc;
+}
+.show_event div {
+    display: block;
+    float: left;
+    height: fit-content;
+    border-radius: 5px;
+    padding: 0 20px;
+    line-height: 30px;
+    margin-right: 1%;
+    color: #ffffff;
+    margin-bottom: 15px;
+    width: 100%;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.show_event div.event {
+    cursor: pointer;
+}
+
+.show_event > .blue {
     background: #1292EE;
 }
 
-.show_event.orange {
+.show_event div.event.orange {
     background: #EA9413;
+    cursor: default;
 }
 
-.show_event.green {
+.show_event div.event.green {
     background: #13EA90;
+    cursor: default;
 }
 
 .show_event .event p {
     font-weight: 600;
     font-size: 0.75rem;
     color: #FFFFFF;
-    line-height: 41px;
+    line-height: 30px;
     margin: 0;
+}
+
+.main_calendar_month .show_event .event p  {
+    line-height: initial;
+    font-weight: 400;
+    font-size: 0.6875rem;
 }
 .show_event .btn-delete {
     position: absolute;
-    right: -10px;
-    top: -10px;
+    right: 15px;
+    top: -6px;
     background: white;
     border-radius: 50%;
-    padding: 5px;
-    border: 1px solid;    
+    padding: 3px;
+    border: 1px solid;
     line-height: 14px;
+    font-size: 12px;
 }
 .show_event .btn-edit {
     position: absolute;
-    right: -12px;
+    left: -8px;
     /* left: 5px; */
-    bottom: -10px;
+    top: -6px;
     /* transform: translateY(-50%); */
-    padding: 5px;
+    padding: 3px;
     background: white;
     border-radius: 50%;
     border: 1px solid;
-    color: #ccc;    
+    color: #ccc;
     line-height: 14px;
+    font-size: 12px;
 }
 
 .header_calendar .event_day {
@@ -676,7 +729,7 @@ class="select-css"
     line-height: 20px;
 }
 
-.header_calendar>span {
+.header_calendar>span.event_day {
     float: left;
     height: 100%;
     line-height: 50px;
@@ -700,18 +753,72 @@ class="select-css"
 
 .header_calendar>div>span {
     float: left;
+    display: block;
+    height: 50px;
+    line-height: 50px;
+}
+.header_calendar>div>span.arrow {
+    padding: 0;
+}
+
+.header_calendar_month>div>span {
+    float: left;
+    display: block;
+    height: 50px;
+    line-height: 50px;
 }
 
 .header_calendar>div>span.month_year {
     line-height: 50px;
 }
 
+.index_event_month table {
+    height: 100%;
+    display: inline-table;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding: 0;
+}
 
+.index_event_month table tr {
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+
+.index_event_month table th, .index_event_month table td {
+    padding: 10px 0;
+    width: 14.28%;
+    border-right: 1px solid #ccc;
+}
+
+.index_event_month table th {
+    text-align: center;
+}
+
+.index_event_month table td {
+    height: 100px;
+    vertical-align: baseline;
+    padding: 5px;
+    cursor: pointer;
+}
+.index_event_month table td.out_month{
+    cursor: default;
+}
 .month_year {
     font-weight: 600;
     font-size: 1.125rem;
     text-align: center;
     color: #071E57;
+}
+
+.today {
+    /* background-color: #ccc; */
+}
+
+.index_event_month table td.selected_day {
+    border: 2px solid #1694f0;
 }
 
 .header_calendar>div:nth-child(2) >span {
@@ -756,6 +863,18 @@ class="select-css"
     display: flex;
     justify-content: flex-start;
 }
+.hour_in_day >a , .hour_in_day>div {
+    float: left;
+}
+.hour_in_day >a {
+    width: 5%;
+}
+
+.hour_in_day >div {
+    width: 95%;
+    display: flex;
+    flex-wrap: wrap;
+} 
 
 .index_main main {
     height: calc(100% - 90px);
@@ -763,6 +882,9 @@ class="select-css"
     background-color: inherit;
 }
 
+.index_main main.main_campaign,.index_main main.main_benefits {
+    background-color: #fff;
+}
 .index_main main.main_benefits {
     height: calc(100% - 78px);
 }
@@ -964,7 +1086,7 @@ main.campaign_main {
     padding: 20px 25px;
 }
 
-.index_main main.main_calendar {
+.index_main main.main_calendar,.index_main main.main_calendar_month  {
     width: 100%;
     display: block;
     position: absolute;
@@ -973,7 +1095,9 @@ main.campaign_main {
     scrollbar-width: thin;
     overscroll-behavior-y: contain;
 }
-
+.index_main main.main_calendar_month {
+    padding: 20px;
+}
 
 .main_calendar > div {
     padding: 10px;
@@ -1269,6 +1393,11 @@ footer.ad_footer {
 .header_ads .filter .img_search, .header_ads .filter .input_search, .header_ads .filter .select_filter {
     float: left;
 }
+ 
+.header_campaign .index_table_filter .input_search {
+    padding-left: 35px;
+    background: #ffffff;
+}
 
 .header_ads .filter .img_filter, .section_notice .img_filter  {
     float: right;
@@ -1301,8 +1430,32 @@ footer.ad_footer {
     border-radius: 5px;
     outline: none;
 }
+.header_campaign {
+    overflow: hidden;
+    padding: 10px 0;
+}
 
-.header_ads .filter .select_filter, .notice_filter .select_filter {
+.modal_campaign .index_table_filter {
+    background: #ffffff;
+    float: none;
+    height: auto;
+    padding: 10px 0;
+    overflow: hidden;
+}
+.modal_campaign .index_table_filter >label {
+    padding: 0 10px;
+    padding-right: 0;
+    position: static;
+    transform: none;
+    float: left;
+    display: inline-block;
+    margin: 0;
+}
+
+.modal_campaign .index_table_filter >label input {
+    padding-left: 40px;
+}
+.header_ads .index_table_filter .select_filter, .notice_filter .select_filter {
     width: auto;
     height: 38px;   
     float: right;
@@ -1323,6 +1476,14 @@ footer.ad_footer {
     margin-right: -5px;
     margin-left: 20px;
     cursor: pointer;
+}
+
+.header_ads .index_table_filter>div>img.img_search, .header_benefits .index_table_filter>div>img.img_search, .header_campaign .index_table_filter>div>img.img_search{
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    transform: translateY(-50%);
+    margin-left: 15px;
 }
 
 .header_ads .filter .select_filter {
@@ -1427,8 +1588,7 @@ footer.ad_footer {
     z-index: 2;
     cursor: pointer;
     float: right;
-    line-height: 38px;
-    
+    line-height: 39px;
 }
 
 .index_page a.add_new {
@@ -1449,6 +1609,13 @@ footer.ad_footer {
     margin-left: 20px;
 }
 
+.index_page .all_absences a.add_new {
+    float: right;
+    top: 50%;
+    bottom: 50%;
+    transform: translateY(-50%);
+    right: 20px;
+}
 .index_page a.add_new i, .index_page a.add_new svg {
     margin-right: 20px;
 }
@@ -1683,8 +1850,7 @@ footer.ad_footer {
     border-radius: 3px;
     height: 100%;    
     padding-bottom: 20px;
-    overflow: hidden;
-    padding: 0 10px;
+    overflow: auto;
 }
 
 .table-responsive .dataTables_wrapper {
@@ -1843,7 +2009,7 @@ span.show i, span.show svg, span.hide i, span.hide svg {
     padding: 20px;
     background: #051847;
   
-    border-radius: 3px;
+    border-radius: 0;
     margin: auto;
 }
 
@@ -1971,6 +2137,7 @@ button.scroll_left {
     height: 100%;
     display: block;
     padding: 0;
+    background: none;
 }
 
 #file {
@@ -1991,7 +2158,7 @@ button.scroll_left {
 }
 .index_page .index_main.main_absence, .index_page.index_documents .index_main.main_documents {
     background: none;
-    background: #ffffff;
+    /* background: #ffffff; */
   /*  box-shadow: none;*/
     border: none;
     color: inherit;
@@ -2151,7 +2318,7 @@ main.all_absences >section {
 
 }
 
-.info_abs>p>.go, .info_abs>p>.bol {
+.info_abs>p>.go:not(:first-child), .info_abs>p>.bol:not(:first-child) {
     display: none;
 }
 
@@ -2202,7 +2369,7 @@ main.all_absences >section {
     overflow: hidden;
     position: relative;
     height: calc(100% - 65px);
-    background: #fff;
+    background: none;
     color: #000;
 }
 
@@ -2389,6 +2556,7 @@ main.all_absences >section {
 
 .all_documents.main_questionnaire .table-responsive {
     border-radius: 0 0 3px 3px;
+    padding: 0 10px;
 }
 
 .table tbody td {
@@ -2397,7 +2565,17 @@ main.all_absences >section {
     font-size: 0.75rem;
     line-height: 15px;
     color: #2B2B2B;
+    padding: 25px 10px;
 }
+
+.modal_campaign .table tbody tr> td:first-child {
+    font-weight: 600;
+}
+
+.table tbody tr>td:last-child, .table thead tr>th:last-child  {
+    min-width: 100px;
+}
+
 .table tbody td a {
     font-size: 0.875rem;
 }
@@ -2444,10 +2622,33 @@ table.dataTable#index_table tbody td:last-child > a {
     cursor: pointer;
 }
 
+.header_calendar .change_view, .header_calendar_month .change_view2  {
+    background: none;
+}
+
 .change_view2 {
     display: none;
     background: url(../icons/view2.png) no-repeat center;
 }
+
+.header_calendar .change_view, .header_calendar_month .change_view2 {
+    margin-left: 0;
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    right: 20px;
+    display: inline-block;
+    height: inherit;
+    height: 11px;
+    transform: translateY(-50%);
+    /* text-align: right; */
+    width: auto;
+    font-size: 0.625rem;
+    color: #1192ee;
+    text-decoration: underline;
+    line-height: inherit;
+}
+
 
 .q_progress {
     font-weight: 600;
@@ -2457,10 +2658,10 @@ table.dataTable#index_table tbody td:last-child > a {
 }
 
 .index_table_filter {
-    float: none;
+    float: left;
     text-align: left;
     width: 100%;
-    height: 100%;
+    height: auto;
     background: #F8FAFF;
     border-radius: 3px 3px 0px 0px;
     display: block;
@@ -2468,7 +2669,7 @@ table.dataTable#index_table tbody td:last-child > a {
 
 }
 
-.index_table_filter >label {
+.index_table_filter >label, #index_table_filter >label {
     margin: 0;
     position: absolute;
     top: 50%;
@@ -2478,7 +2679,7 @@ table.dataTable#index_table tbody td:last-child > a {
     margin-left: 20px;
 }
 
-.index_table_filter input {
+.index_table_filter input, #index_table_filter input  {
     width: 100%;
     height: 38px;
     border: none;
@@ -2486,6 +2687,10 @@ table.dataTable#index_table tbody td:last-child > a {
     border-radius: 5px;
     margin: 0;
     padding: 0 20px;
+}
+
+.header_ads .index_table_filter input, .header_benefits .index_table_filter input  {
+    padding-left: 35px;
 }
 
 .modal_filter input {
@@ -2763,7 +2968,6 @@ a.chat{
     margin-bottom: 0;
     padding: 5px 0;
 }
-
 .user_profile .user_info .label_value {
     font-weight: 500;
     font-size: 0.9375rem;
@@ -3075,6 +3279,7 @@ a.modal_close {
     .show_event {
         overflow: auto;
         scrollbar-width: thin;
+
    
     }
     .index_main header.header_calendar {
@@ -3083,9 +3288,12 @@ a.modal_close {
         overflow: hidden;
     }
     .index_main header.header_calendar>div {
-        width: 100%;
+       /*  width: 100%;
         max-width: 100%;
-        padding-bottom: 10px;
+        padding-bottom: 10px; */
+    }
+    .index_main main.main_calendar_month {
+        position: static;
     }
     .container .calendar>div {
         height: auto;
@@ -3419,12 +3627,12 @@ a.modal_close {
         padding: 0;
         padding-right: 10px;
     }
-    .index_table_filter >label, .index_table_filter > a.add_new {
+    .index_table_filter >label, #index_table_filter >label, .index_table_filter > a.add_new {
         position: relative;
         transform: none;
         display: inline-block;
     }
-    .index_table_filter >label {
+    .index_table_filter >label,  #index_table_filter >label{
         float: left;
     }
     .index_table_filter > a.add_new  {
@@ -3503,6 +3711,8 @@ a.modal_close {
         outline: none;
         margin: 10px;
     }
+   
+
     .add_benefit {
         margin: 10px 0;
     }

@@ -57,8 +57,18 @@
 										<i class="fas fa-gas-pump"></i>
 									</a>
 								@endif
+								@if(Sentinel::getUser()->hasAccess(['vehical_services.create']) || in_array('vehical_services.create', $permission_dep))
+									<a href="{{ route('vehical_services.create', [ 'car_id' => $car->id]) }}" class="btn-edit" title="{{ __('basic.add_service')}}" style="display:none" rel="modal:open">
+										<i class="fas fa-tools"></i>
+									</a>
+								@endif
 								@if(Sentinel::getUser()->hasAccess(['fuels.view']) || in_array('fuels.view', $permission_dep))
-									<a href="{{ route('fuels.index', [ 'car_id' => $car->id]) }}" class="btn-edit" title="{{ __('basic.fuel')}}" style="display:none" rel="modal:open">
+									<a href="{{ route('fuels.index', [ 'car_id' => $car->id]) }}" class="open_car_modal btn-edit" title="{{ __('basic.fuel')}}" style="display:none" rel="modal:open">
+										<i class="fas fa-list"></i>
+									</a>
+								@endif
+								@if(Sentinel::getUser()->hasAccess(['vehical_services.view']) || in_array('vehical_services.view', $permission_dep))
+									<a href="{{ route('vehical_services.index', [ 'car_id' => $car->id]) }}" class="open_car_modal btn-edit" title="{{ __('basic.vehical_services')}}" style="display:none" rel="modal:open">
 										<i class="fas fa-list"></i>
 									</a>
 								@endif
@@ -75,9 +85,27 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-		$('.collapsible').click(function(event){        
+		$('.collapsible').click(function(event){
        		$(this).siblings().toggle();
 		});
 	});
+	$.getScript( '/../js/open_modal.js'); 
+	/* $('.open_car_modal').click(function(){
+		$.modal.defaults = {
+			closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+			escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+			clickClose: false,       // Allows the user to close the modal by clicking the overlay
+			closeText: 'Close',     // Text content for the close <a> tag.
+			closeClass: '',         // Add additional class(es) to the close <a> tag.
+			showClose: true,        // Shows a (X) icon/link in the top-right corner
+			modalClass: "modal car_modal",    // CSS class added to the element being displayed in the modal.
+			// HTML appended to the default spinner during AJAX requests.
+			spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+
+			showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+			fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+			fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+		};
+	}); */
 	$.getScript( '/../restfulizer.js');
 </script>

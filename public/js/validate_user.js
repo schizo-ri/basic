@@ -21,7 +21,9 @@ $('.roles').change(function(event){
     }
 });
 
-$('.btn-submit').click(function(event){       
+console.log("validate2" + validate2);
+
+$('.btn-submit').click(function(event){
     var validate_role = '';
     
     if(locale == 'hr') {
@@ -29,7 +31,7 @@ $('.btn-submit').click(function(event){
     } else if( locale = 'en') {
         validate_role = "Required role assignment";            
     }       
-
+   
     if( validate2 == false ) {
         event.preventDefault();
 
@@ -148,6 +150,7 @@ $('.btn-next').click(function(event){
     }
 
 });
+
 $('.btn-back').click(function(){
     $('.first_tab').toggle();
     $('.second_tab').toggle();

@@ -4,7 +4,6 @@ $( document ).ready(function() {  // filter knowledge base
 		if(trazi == "all"){
 			$('.panel').show();
 		} else {
-
 			$('.panel').filter(function() {
 				$(this).toggle($(this).text().toLowerCase().indexOf(trazi) > -1)
 			});

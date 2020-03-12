@@ -45,6 +45,8 @@ class CreateEmployeesTable extends Migration
             $table->text('comment');
             $table->double('effective_cost', 8, 2)->comment('efektivna nijena sata rada')->nullable();
             $table->double('brutto', 8, 2)->comment('brutto godišnja plaća')->nullable();
+            $table->string('color',20)->nullable();
+            $table->string('abs_days',255)->comment('početni dani GO ova godina')->nullable();
             $table->timestamps();
         });
     }

@@ -17,10 +17,10 @@ class CreateCampaignsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name',255);
             $table->string('description',255);
-            $table->string('recipient_id',100)->nullable();
+            $table->string('type',10)->nullable();
             $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
-            $table->string('period',100)->nullable();
+            $table->time('start_time')->nullable();
+            $table->integer('active',100)->nullable();
             $table->timestamps();
         });
     }

@@ -14,7 +14,7 @@ var validate_passwordconf = '';
 var roles;
 var fileName;
 var validate = false;
-var validate2;
+var validate2 = [];
 
 var locale = $('.locale').text();
 
@@ -25,6 +25,7 @@ if(locale == 'hr') {
     validate_password = "Obavezan unos lozinke";
     validate_passwordconf = "Obavezna potvrda lozinke";
     validate_password_lenght = "Obavezan unos minimalno 6 znaka";
+    validate_role = "Obavezna dodjela uloge";
    
 } else if( locale = 'en') {
     validate_name = "Required name entry";
@@ -33,8 +34,8 @@ if(locale == 'hr') {
     validate_password = "Required password entry";
     validate_passwordconf = "Password confirmation required";
     validate_password_lenght = "Minimum of 6 characters is required";
+    validate_role = "Required role assignment";   
 }
-
 
 var second_tab_height = $('.second_tab').height();
 $('.first_tab').height(second_tab_height);
@@ -45,16 +46,17 @@ $('input[type="file"]').change(function(e){
     fileName = e.target.files[0].name;
     $('#file_name').text(fileName);
 });
+
 if( roles.is(':checked')) {
-    validate2 = true;
+    validate2.push(true);
 } else {
-    validate2 = false;
+    validate2.push("block");
 }
 $('.roles').change(function(event){
     if( roles.is(':checked')) {
-        validate2 = true;
+        validate2.push(true);
     } else {
-        validate2 = false;
+        validate2.push("block");
     }
 });
 
@@ -62,13 +64,29 @@ $('.btn-submit').click(function(event){
     password = $("#password");
     conf_password = $("#conf_password");    
     
-    if(locale == 'hr') {
-        validate_role = "Obavezna dodjela uloge";
-    } else if( locale = 'en') {
-        validate_role = "Required role assignment";            
-    }       
+    if(password.val().length > 0 ) {
+        if( password.val().length < 6) {
+            if( password.parent().find('.validate').length  == 0 ) {
+                password.parent().append(' <p class="validate">' + validate_password_lenght + '</p>');
+            } else {
+                password.parent().find('.validate').text(validate_password_lenght);  
+            }
+            validate2.push("block");
+        } else {
+            password.parent().find('.validate').text("");     
+            if( ! conf_password.val() || (password.val() != conf_password.val()) ) {
+            if( conf_password.parent().find('.validate').length  == 0 ) {                
+                    conf_password.parent().append(' <p class="validate">' + validate_passwordconf + '</p>');
+                }
+                validate2.push("block");
+            } else {
+                conf_password.parent().find('.validate').text("");     
+                validate2.push(true);
+            }
+        }
+    }
 
-    if( validate2 == false ) {
+    if( validate2.includes("block") ) {
         event.preventDefault();
 
         if( roles.parent().parent().find('.validate').length  == 0 ) {                
@@ -77,30 +95,6 @@ $('.btn-submit').click(function(event){
     } else {
             roles.parent().find('.validate').text("");
     }
-
-    if(password.val().length > 0 ) {
-        if( password.val().length < 6) {
-            if( password.parent().find('.validate').length  == 0 ) {
-                password.parent().append(' <p class="validate">' + validate_password_lenght + '</p>');
-            } else {
-                password.parent().find('.validate').text(validate_password_lenght);  
-            }
-            validate2 = false;
-        } else {
-            password.parent().find('.validate').text("");     
-            if( ! conf_password.val() || (password.val() != conf_password.val()) ) {
-            if( conf_password.parent().find('.validate').length  == 0 ) {                
-                    conf_password.parent().append(' <p class="validate">' + validate_passwordconf + '</p>');
-                }
-                validate2 = false;
-            } else {
-                conf_password.parent().find('.validate').text("");     
-                validate2 = true;  
-            }
-        }
-    }
-
-
 });
 
 $('.btn-next').click(function(event){  
@@ -166,6 +160,5 @@ $('.btn-back').click(function(){
     if($('.second_tab').is(':visible')) {
         $('.mark1').css('background','rgba(21, 148, 240, 0.4)');
         $('.mark2').css('background','#1594F0');
-
     }
 });

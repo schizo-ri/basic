@@ -13,6 +13,7 @@ use App\Models\Event;
 use App\Models\Employee;
 use App\Models\Department;
 use App\Models\Company;
+use App\Models\Setting;
 use App\Http\Controllers\BasicAbsenceController;
 use Sentinel;
 use DateTime;
@@ -42,8 +43,8 @@ class DashboardController extends Controller
 
             $docs = '';
             if($employee) {
-                $data_absence = BasicAbsenceController::zahtjevi( $employee );
-
+                $data_absence = BasicAbsenceController::zahtjevi( $employee );               
+             
                 //dohvaća dopuštenja odjela za korisnika
                 if(isset($employee->work) && $employee->work->department->departmentRole->isNotEmpty()) {
                     $permission_dep = explode(',', $employee->work->department->departmentRole->toArray()[0]['permissions']);
@@ -131,45 +132,9 @@ class DashboardController extends Controller
         } 
     }
 
-    public static function getDBName ()
-    {
-    
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-
-        $dbname = "novi_portal"; 
-        
-       
-     /*    $servername = "icom-superadmin.duplico.hr";
-        $username = "duplicoh_jelena";
-        $password = "Sifra123jj";
-        
-        $dbname = "duplicoh_icom-superadmin"; */
-        
-
-        try {           
-            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-          
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            if (isset($_SERVER['HTTP_HOST'])) {
-                $host = $_SERVER['HTTP_HOST'];
-            } else {
-                $host = 'localhost:8000'; 
-            }
-            $stmt = $conn->prepare("SELECT db FROM client_requests WHERE url='" . $host . "' LIMIT 1");
-            $stmt->execute();
-            $db = $stmt->fetch()['db'];
-
-            $conn = null;
-        } catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
-        }
-       
-        return $db;
-    }
-
-    public function openAdmin() {
-        return view('Centaur::admin_panel');
+    public function openAdmin() 
+    {    
+	    $moduli = CompanyController::getModules();
+        return view('Centaur::admin_panel',['moduli' => $moduli]);
     }
 }

@@ -67,16 +67,19 @@ class CampaignSequenceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        if($request['interval'] != null) {
+    {   
+        if(isset($request['interval']) && $request['interval'] != null) {
             $send_interval = $request['interval'] . '-' .$request['period'] ;
-        } else {
+        } elseif( isset($request['send_interval']) && $request['send_interval']) {
             $send_interval = $request['send_interval'];
+        } else {
+            $send_interval = null;
         }
         
         $data = array(
 			'campaign_id'  => $request['campaign_id'],
-			'text'  	    => $request['text'],
+			'text'  	    => $request['text_html'],
+			'text_json'  	=> $request['text_json'],
 			'start_date'  	=> $request['start_date'],
 			'send_interval' => $send_interval
         );
@@ -109,19 +112,26 @@ class CampaignSequenceController extends Controller
     public function edit($id)
     {
         $campaign_sequence = CampaignSequence::find($id);
-        $campaigns = Campaign::get();
+        //$campaigns = Campaign::get();
+        $send_interval = null;
 
-        if(strpos($campaign_sequence['send_interval'], '-')) {
-            $send_interval = explode('-', $campaign_sequence['send_interval']);  // 1-day
-            $period = $send_interval[0];   // 1
-            $interval = $send_interval[1];   // day
-        } else {
-            $send_interval = $campaign_sequence['send_interval'];
-            $period = null;   
-            $interval = $send_interval[1]; 
+        $this_campaign = Campaign::find($campaign_sequence->campaign_id);
+
+        if($campaign_sequence['send_interval'] ) {
+            if(strpos($campaign_sequence['send_interval'], '-')) {
+                $send_interval = explode('-', $campaign_sequence['send_interval']);  // 1-day
+                $period = $send_interval[0];   // 1
+                $interval = $send_interval[1];   // day
+            } else {
+                $send_interval = $campaign_sequence['send_interval'];
+                $period = null;   
+                $interval = $send_interval[1]; 
+            }
         }
-     
-        return view('Centaur::campaign_sequences.edit',['campaigns' => $campaigns, 'campaign_sequence' => $campaign_sequence, 'send_interval' => $send_interval]);
+        
+        return view('Centaur::campaign_sequences.edit',['this_campaign' => $this_campaign, 'campaign_sequence' => $campaign_sequence, 'send_interval' => $send_interval]);
+
+     //   return response(view('Centaur::campaign_sequences.edit',array('text'=>$campaign_sequence->text, 'campaign_sequence'=>$campaign_sequence)),200, ['Content-Type' => 'application/json']);
     }
 
     /**
@@ -133,21 +143,23 @@ class CampaignSequenceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
         $campaign_sequence = CampaignSequence::find($id);
-        
-        if($request['interval'] != null) {
+
+        if(isset($request['interval']) && $request['interval'] != null) {
             $send_interval = $request['interval'] . '-' .$request['period'] ;
-        } else {
+        } elseif( isset($request['send_interval']) && $request['send_interval']) {
             $send_interval = $request['send_interval'];
+        } else {
+            $send_interval = null;
         }
        
         $data = array(
-			'campaign_id'  => $request['campaign_id'],
-			'text'  	    => $request['text'],
+			'campaign_id'   => $request['campaign_id'],
+			'text'  	    => $request['text_html'],
+			'text_json'  	=> $request['text_json'],
 			'start_date'  	=> $request['start_date'],
 			'send_interval' => $send_interval
-        );
+        );        
         
         $campaign_sequence->updateCampaignSequence($data);
 
@@ -172,4 +184,12 @@ class CampaignSequenceController extends Controller
         return redirect()->back();
 
     }
+
+    public function campaign_mail(Request $request) 
+    {        
+        $campaign_sequence = CampaignSequence::find($request['sequence_id']);
+
+        return view('Centaur::campaign_sequences.campaign_mail', ['campaign_sequence' => $campaign_sequence ]);
+    }
+    
 }

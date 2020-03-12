@@ -39,9 +39,14 @@ class AbsenceController extends BasicAbsenceController
 		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		$permission_dep = array();
 		$departments = Department::get();
-		$years = BasicAbsenceController::yearsRequests(); // sve godine zahtjeva
+
+		$ova_godina = date('Y');
+		$years = BasicAbsenceController::yearsRequests($empl); // sve godine zahtjeva
+		if(! in_array($ova_godina,$years)) {
+			array_push($years, $ova_godina );
+		}
 		arsort($years);
-		
+
 		if( Sentinel::inRole('administrator') ) {
 			$absences = Absence::get();			
 		} else {

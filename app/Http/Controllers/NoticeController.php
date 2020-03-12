@@ -482,16 +482,17 @@ class NoticeController extends Controller
         $departments = Department::get();
         $user_department = array();
         $permission_dep = array();
-        $sort = 'DESC';	
+        
+        if(isset($request['sort'])) { 
+            $sort = $request['sort'];
+        } else {
+            $sort = 'DESC';	
+        }
+
         $dataArr = EventController::getDataArr();
 
         if(Sentinel::inRole('administrator')) {
-            if(isset($request['sort'])) {
-                $notices = Notice::orderBy('created_at', $request['sort'])->get();
-                $sort = $request['sort'];
-            } else {
-                $notices = Notice::orderBy('created_at','DESC')->get();
-            }
+            $notices = Notice::orderBy('created_at', $sort)->get();        
         } else {
             $notices = NoticeController::getNotice($sort);
         }

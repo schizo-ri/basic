@@ -1,4 +1,7 @@
 <?php
+/* use Illuminate\Support\Facades\DB;
+
+$settings = DB::table('settings')->get(); */
 
 return [
 
@@ -80,7 +83,7 @@ return [
     |
     */
 
-    'locale' => 'hr',
+    'locale' => 'hr', //$lang
 
     /*
     |--------------------------------------------------------------------------
@@ -150,7 +153,8 @@ return [
         Illuminate\Filesystem\FilesystemServiceProvider::class,
         Illuminate\Foundation\Providers\FoundationServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
-        Illuminate\Mail\MailServiceProvider::class,
+    /*     Illuminate\Mail\MailServiceProvider::class, */
+        App\Providers\CustomMailServiceProvider::class,
         Illuminate\Notifications\NotificationServiceProvider::class,
         Illuminate\Pagination\PaginationServiceProvider::class,
         Illuminate\Pipeline\PipelineServiceProvider::class,

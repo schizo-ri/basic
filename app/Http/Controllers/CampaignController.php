@@ -65,30 +65,18 @@ class CampaignController extends Controller
      */
     public function store(Request $request)
     {
-     //   $recipients = implode(";", $request['recipient_id']);
-
         $data = array(
 			'name'  		=> $request['name'],
 			'description'  	=> $request['description'],
-		//	'recipient_id'  => $recipients,
-		//	'start_date'  	=> $request['start_date'],
-		//	'end_date'  	=> $request['end_date'],
-		//	'period'  	    => $request['period']
+			'type'          => $request['type'],
+		    'start_date'  	=> $request['start_date'],
+			'start_time'  	=> $request['start_time'],
+			'active'  	    => $request['active']
 		);
 		
 		$campaign = new Campaign();
         $campaign->saveCampaign($data);
-        /*
-        foreach ($request['recipient_id'] as $recipient_id) {
-            $data_recipinet = array(
-                'campaign_id'  	=> $campaign->id,
-                'department_id' => $recipient_id
-            );
-
-            $campaign_recipinet = new CampaignRecipient();
-            $campaign_recipinet->saveCampaignRecipient($data_recipinet);
-        }
-        */
+   
         session()->flash('success',  __('ctrl.data_save'));
 		return redirect()->back();
     }
@@ -101,10 +89,17 @@ class CampaignController extends Controller
      */
     public function show($id)
     {
-        $campaigns = Campaign::get();
-        $campaignSequences = CampaignSequence::get();
+        $campaign = Campaign::find($id);
+        $campaignSequences = CampaignSequence::where('campaign_id',$id )->get();
+
+        $empl = Sentinel::getUser()->employee;
+		$permission_dep = array();
         
-		return view('Centaur::campaigns.show', ['campaigns' => $campaigns, 'campaignSequences' => $campaignSequences ]);
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
+
+		return view('Centaur::campaigns.show', ['campaign' => $campaign, 'campaignSequences' => $campaignSequences, 'permission_dep' => $permission_dep ]);
     }
 
     /**
@@ -133,7 +128,11 @@ class CampaignController extends Controller
 
         $data = array(
 			'name'  		=> $request['name'],
-			'description'  	=> $request['description']	
+			'description'  	=> $request['description'],
+			'type'          => $request['type'],
+		    'start_date'  	=> $request['start_date'],
+			'start_time'  	=> $request['start_time'],
+			'active'  	    => $request['active']
 		);
 	
         $campaign->updateCampaign($data);
@@ -152,6 +151,12 @@ class CampaignController extends Controller
     public function destroy($id)
     {
         $campaign = Campaign::find( $id );
+        $campaign_sequences = CampaignSequence::where('campaign_id', $campaign->id)->get();
+
+        foreach ($campaign_sequences as $campaign_sequence) {
+            $campaign_sequence->delete();
+        }
+
         $campaign->delete();
 
         session()->flash('success',__('ctrl.data_delete'));

@@ -149,6 +149,15 @@ Route::resource('fuels', 'FuelController');
 // Locco
 Route::resource('loccos', 'LoccoController');
 
+// Task
+Route::resource('tasks', 'TaskController');
+
+// Setting
+Route::resource('settings', 'SettingController');
+
+// VehicalService
+Route::resource('vehical_services', 'VehicalServiceController');
+
 // Dashboard 
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
@@ -165,6 +174,7 @@ Route::get('oglasnik', ['as' => 'oglasnik', 'uses' => 'AdController@oglasnik']);
 Route::get('sort', ['as' => 'sort', 'uses' => 'AdController@sort']);
 
 // Noticeboard
+
 Route::get('noticeboard', ['as' => 'noticeboard', 'uses' => 'NoticeController@noticeboard']);
 Route::get('notices.schedule', ['as' => 'notices.schedule', 'uses' => 'NoticeController@schedule']);
 
@@ -196,6 +206,7 @@ use App\Http\Resources\EventCollection;
 Route::get('/event', function () {
     return new EventCollection(Event::all());
 });
+Route::get('side_calendar', ['as' => 'side_calendar', 'uses' => 'EventController@side_calendar']);
 
 // Admin panel
 Route::get('admin_panel', ['as' => 'admin_panel', 'uses' => 'DashboardController@openAdmin']);
@@ -208,3 +219,6 @@ Route::get('imageDelete', ['as' => 'imageDelete', 'uses' => 'DocumentController@
 
 // Get last km for car
 Route::post('last_km', 'CarController@last_km');
+Route::post('getMailSettings', 'SettingController@getMailSettings');
+
+Route::get('campaign_mail', ['as' => 'campaign_mail', 'uses' => 'CampaignSequenceController@campaign_mail']);

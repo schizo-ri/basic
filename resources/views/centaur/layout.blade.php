@@ -41,17 +41,16 @@
 		<!--Jquery -->
 		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
 		<script src="{{ URL::asset('/../node_modules/chart.js/dist/Chart.js') }}"></script>
-		
 		@stack('stylesheet')
+    </head>
+    <body>
 		<?php 
 			use App\Http\Controllers\PostController;
 			use App\Http\Controllers\DashboardController;
 			use App\Http\Controllers\CompanyController;
 			$permission_dep = DashboardController::getDepartmentPermission();
-			$moduli = CompanyController::getModules();		
+			$moduli = CompanyController::getModules();
 		?>
-    </head>
-    <body>
 		<section>
 			@if (Sentinel::check())
 				<header class="header_nav">
@@ -93,36 +92,43 @@
 									<p>@lang('welcome.home')</p>
 								</a>
 							</div>
-							@if(Sentinel::getUser()->hasAccess(['posts.view']) || in_array('posts.view', $permission_dep) )
-								<div class="col-sm-12 col-md-6 col-lg-6 float_left div_posts">
-									<a class="button_nav load_button post_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('posts.index') }}">
-										<span class="button_nav_img messages">
-											<span class="line_btn">
-												@if(PostController::countComment_all() >0)<span class="count_comment">{{ PostController::countComment_all() }}</span>@endif  
+
+							@if(in_array('Poruke', $moduli))
+								@if(Sentinel::getUser()->hasAccess(['posts.view']) || in_array('posts.view', $permission_dep) )
+									<div class="col-sm-12 col-md-6 col-lg-6 float_left div_posts">
+										<a class="button_nav load_button post_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('posts.index') }}">
+											<span class="button_nav_img messages">
+												<span class="line_btn">
+													@if(PostController::countComment_all() >0)<span class="count_comment">{{ PostController::countComment_all() }}</span>@endif  
+												</span>
 											</span>
-										</span>
-										<p>@lang('basic.posts')</p>
-									</a>
-								</div>
+											<p>@lang('basic.posts')</p>
+										</a>
+									</div>
+								@endif
 							@endif
-							@if(Sentinel::getUser()->hasAccess(['documents.view']) || in_array('documents.view', $permission_dep) )
-								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
-									<a class="button_nav load_button documents_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('documents.index') }}">
-										<span class="button_nav_img documents"></span>
-										<p>@lang('basic.documents')</p>
-									</a>
-								</div>
+							@if(in_array('Dokumenti', $moduli))
+								@if(Sentinel::getUser()->hasAccess(['documents.view']) || in_array('documents.view', $permission_dep) )
+									<div class="col-sm-12 col-md-6 col-lg-6 float_left">
+										<a class="button_nav load_button documents_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('documents.index') }}">
+											<span class="button_nav_img documents"></span>
+											<p>@lang('basic.documents')</p>
+										</a>
+									</div>
+								@endif
 							@endif
-							@if(Sentinel::getUser()->hasAccess(['events.view']) || in_array('events.view', $permission_dep) )
-								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
-									<a class="button_nav load_button event_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('events.index') }}" >
-										<span class="button_nav_img calendar"></span>
-										<p>@lang('calendar.calendar')</p>
-									</a>
-								</div>
+							@if(in_array('Kalendar', $moduli))
+								@if(Sentinel::getUser()->hasAccess(['events.view']) || in_array('events.view', $permission_dep) )
+									<div class="col-sm-12 col-md-6 col-lg-6 float_left">
+										<a class="button_nav load_button event_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('events.index') }}" >
+											<span class="button_nav_img calendar"></span>
+											<p>@lang('calendar.calendar')</p>
+										</a>
+									</div>
+								@endif
 							@endif
 							<!--Provjera kod superadmina ima li korisnik modul-->
-							@if(in_array('Ankete',$moduli))
+							@if(in_array('Ankete', $moduli))
 								@if(Sentinel::getUser()->hasAccess(['questionnaires.view']) || in_array('questionnaires.view', $permission_dep) )
 									<div class="col-sm-12 col-md-6 col-lg-6 float_left">
 										<a class="button_nav load_button quest_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('questionnaires.index') }}">
@@ -132,29 +138,35 @@
 									</div>
 								@endif
 							@endif
-							@if(Sentinel::getUser()->hasAccess(['ads.view']) || in_array('ads.view', $permission_dep) )
-								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
-									<a class="button_nav load_button ads_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('oglasnik') }}">
-										<span class="button_nav_img ads"></span>
-										<p>Njuškalo</p>	
-									</a>	
-								</div>
+							@if(in_array('Oglasnik',$moduli))
+								@if(Sentinel::getUser()->hasAccess(['ads.view']) || in_array('ads.view', $permission_dep) )
+									<div class="col-sm-12 col-md-6 col-lg-6 float_left">
+										<a class="button_nav load_button ads_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('oglasnik') }}">
+											<span class="button_nav_img ads"></span>
+											<p>@lang('basic.ads')</p>	
+										</a>	
+									</div>
+								@endif
 							@endif
-							@if(Sentinel::getUser()->hasAccess(['campaigns.view']) || in_array('campaigns.view', $permission_dep) )
-								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
-									<a class="button_nav load_button campaigns_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('campaigns.index') }}">
-										<span class="button_nav_img ads"></span>
-										<p>@lang('basic.campaigns')</p>	
-									</a>	
-								</div>
+							@if(in_array('Kampanje', $moduli))
+								@if(Sentinel::getUser()->hasAccess(['campaigns.view']) || in_array('campaigns.view', $permission_dep) )
+									<div class="col-sm-12 col-md-6 col-lg-6 float_left">
+										<a class="button_nav load_button campaigns_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('campaigns.index') }}">
+											<span class="button_nav_img ads"></span>
+											<p>@lang('basic.campaigns')</p>	
+										</a>	
+									</div>
+								@endif
 							@endif
-							@if(Sentinel::getUser()->hasAccess(['benefits.view']) || in_array('benefits.view', $permission_dep) )
-								<div class="col-sm-12 col-md-6 col-lg-6 float_left">
-									<a class="button_nav load_button benefits_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('benefits.show', 1) }}">
-										<span class="button_nav_img ads"></span>
-										<p>@lang('basic.benefits')</p>
-									</a>	
-								</div>
+							@if(in_array('Pogodnosti', $moduli))							
+								@if(Sentinel::getUser()->hasAccess(['benefits.view']) || in_array('benefits.view', $permission_dep) )
+									<div class="col-sm-12 col-md-6 col-lg-6 float_left">
+										<a class="button_nav load_button benefits_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('benefits.show', 1) }}">
+											<span class="button_nav_img ads"></span>
+											<p>@lang('basic.benefits')</p>
+										</a>	
+									</div>
+								@endif
 							@endif
 						</div>
 					</section>
@@ -209,7 +221,6 @@
 		<script src="{{URL::asset('/../js/efc_toggle.js') }}"></script>
 		<script src="{{URL::asset('/../js/set_height.js') }}"></script>
 		<script src="{{URL::asset('/../js/calendar.js') }}"></script>
-		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
 
 		<!-- Pignoise calendar -->
 		<script src="{{ URL::asset('/../node_modules/moment/moment.js') }}"></script>
@@ -228,7 +239,6 @@
 				$('#schedule_modal').modal();
 			</script>
 		@endif
-		@stack('script')
-		
+		@stack('script')		
     </body>
 </html>

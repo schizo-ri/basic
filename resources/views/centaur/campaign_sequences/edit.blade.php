@@ -1,62 +1,146 @@
-<div class="modal-header">
-	<h3 class="panel-title">@lang('basic.edit_sequence')</h3>
-</div>
-<div class="modal-body">
-	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('campaign_sequences.update', $campaign_sequence->id) }}">
-		<fieldset>
-			<div class="form-group {{ ($errors->has('campaign_id'))  ? 'has-error' : '' }}">
-				<label>@lang('basic.campaign')</label>
-				<select  class="form-control" name="campaign_id" value="{{ old('campaign_id') }}" required >
-					@foreach($campaigns as $campaign)
-						<option value="{{ $campaign->id }}" {!! $campaign->id == $campaign_sequence->campaign_id ? 'selected' : '' !!} >{{ $campaign->name }}</option>
-					@endforeach				
-				</select>
-				{!! ($errors->has('campaign_id') ? $errors->first('campaign_id', '<p class="text-danger">:message</p>') : '') !!}
-			</div>
-			<div class="form-group {{ ($errors->has('text')) ? 'has-error' : '' }}">
-				<textarea name="text" id="mytextarea" maxlength="16777215" required >{!! $campaign_sequence->text  !!}</textarea>
-				{!! ($errors->has('text') ? $errors->first('text', '<p class="text-danger">:message</p>') : '') !!}
-			</div>
-			<div class="form-group datum float_l">
-				<label for="start_date">@lang('absence.start_date')</label>
-				<input class="form-control" name="start_date" id="start_date" type="date" maxlength="255" value="{{ date('Y-m-d',strtotime($campaign_sequence->start_date )) }}" required />
-				{!! ($errors->has('start_date') ? $errors->first('start_date', '<p class="text-danger">:message</p>') : '') !!}
-			</div>
-			<div class="form-group {{ ($errors->has('send_interval'))  ? 'has-error' : '' }} clear_l" id="period">
-				<label class="label_period">@lang('basic.repetition_period')</label>
-				<select  class="form-control period" name="send_interval" value="{{ old('send_interval') }}" {!! ! is_array($send_interval) ? 'required' : 'style="display: none"' !!}>
-					<option value="no_repeat"  {!! ! is_array($send_interval) && $send_interval == 'no_repeat' ? 'selected' : ''  !!} >@lang('basic.no_repeat')</option>
-					<option value="every_day" {!! ! is_array($send_interval) && $send_interval == 'every_day' ? 'selected' : ''  !!} >@lang('basic.every_day')</option>
-					<option value="once_week" {!! ! is_array($send_interval) && $send_interval == 'once_week' ? 'selected' : ''  !!} >@lang('basic.once_week')</option>
-					<option value="once_month" {!! ! is_array($send_interval) && $send_interval == 'once_month' ? 'selected' : ''  !!} >@lang('basic.once_month')</option>
-					<option value="once_year" {!! ! is_array($send_interval) && $send_interval == 'once_year' ? 'selected' : ''  !!} >@lang('basic.once_year')</option>
-					<option value="customized" {!! is_array($send_interval) ? 'selected' : ''  !!} >@lang('basic.customized')</option>
-				</select>
-			</div>
-			<div class="form-group clear_l" id="interval"  {!! is_array($send_interval) ? 'style="display: block"' : ''  !!}>
-				<label class="label_custom_interal">@lang('basic.custom_interal')</label>
-				<input class="form-control input_interval" type="number" name="interval" value="{!! is_array($send_interval) ? $send_interval['0'] : ''  !!}" {!! is_array($send_interval) ? 'required' : ''  !!}  />
-				<select  class="form-control select_period" name="period" {!! is_array($send_interval) ? 'required' : ''  !!} >
-					<option value="day" {!! is_array($send_interval) && $send_interval[1] == 'day' ? 'selected' : '' !!} >@lang('basic.day')</option>
-					<option value="week" {!! is_array($send_interval) && $send_interval[1] == 'week' ? 'selected' : '' !!}>@lang('basic.week')</option>
-					<option value="month" {!! is_array($send_interval) && $send_interval[1] == 'month' ? 'selected' : '' !!}>@lang('basic.month')</option>
-					<option value="year" {!! is_array($send_interval) && $send_interval[1] == 'year' ? 'selected' : '' !!} >@lang('basic.year')</option>
-				</select>
-			</div>
-			{{ method_field('PUT') }}
-			{{ csrf_field() }}
-			<input class="btn-submit" type="submit" value="{{ __('basic.edit')}}">
-		</fieldset>
-	</form>
-	
-</div>
-<span hidden class="locale" >{{ App::getLocale() }}</span>
-<script>
-	$.getScript( '/../js/validate.js');
-	$.getScript( '/../js/campaign_sequences.js');
-	$.getScript( '/../js/tinymce.js');
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="description" content="Portal za zaposlenike">
+		<meta name="author" content="Jelena Juras">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="csrf-token" content="{{ csrf_token() }}">
+		<title>@yield('title')</title>
+        <!-- Bootstrap - Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/bootstrap/dist/css/bootstrap.min.css') }}"/>
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+		
+		<!--Awesome icons -->
+		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}"/>
 
-	$('body').on($.modal.CLOSE, function(event, modal) {
-		$.getScript('/../node_modules/tinymce/tinymce.min.js');
-	});	
-</script>
+		<!-- JS modal -->
+		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
+
+		<!-- CSS -->
+		<link rel="stylesheet" href="{{ URL::asset('/../css/campaign.css') }}"/>
+		<!-- ICON -->
+		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
+		<script src="//editor.unlayer.com/embed.js"></script>
+		<!--Jquery -->
+		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
+		@stack('stylesheet')
+	</head>
+	<body>
+		<form class="form_sequence" accept-charset="UTF-8" role="form" method="post" action="{{ route('campaign_sequences.update', $campaign_sequence->id ) }}">
+			<input type="hidden" name="campaign_id" id="campaign_id" value="{{  $campaign_sequence->campaign_id }}">
+			<input type="hidden" name="id" id="id" value="{{  $campaign_sequence->id }}">
+			<textarea name="text_html" id="text_html" hidden >{{ $campaign_sequence->text }}</textarea>
+			<textarea name="text_json" id="text_json" hidden >{{ $campaign_sequence->text_json }}</textarea>
+			<header>
+				{{ csrf_field() }}
+				{{ method_field('PUT') }}
+				<div class="unlayer container">
+					<button  class="btn-submit" {{-- (click)="exportHtml()" --}}>@lang('basic.save')</button>
+					<email-editor></email-editor>
+					{{-- 	<input class="btn-submit" type="submit" value="{{ __('basic.save')}}"> --}}
+					<a class="btn-back" href="{{ url()->previous() }}">
+						@lang('basic.back')
+					</a>
+				</div>			
+				<h3 class="panel-title">@lang('basic.add_sequence')  {{ $campaign_sequence->campaign['name']  }}{{--  {!! $this_campaign ? count($campaign_sequences)+1 : '' !!} --}} </h3>
+			</header>
+			<main>
+				<div id="editor-container"></div>
+			</main>
+		</form>
+
+		<span hidden class="locale" >{{ App::getLocale() }}</span>
+		<span hidden class="dataArr">{{ ($campaign_sequence->text_json) }}</span>
+
+		<!-- Latest compiled and minified Bootstrap JavaScript -->
+        <!-- Bootstrap js -->
+		<script src="{{ URL::asset('/../node_modules/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+		<script src="{{ URL::asset('/../node_modules/popper.js/dist/umd/popper.min.js') }}"></script>
+        <!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
+        <script src="{{ asset('/../restfulizer.js') }}"></script>
+				
+		<script>
+			var design = JSON.parse( $('.dataArr').text()); // template JSON */
+			var form_data = $('.form_sequence').serialize();
+			var url = $('form.form_sequence').attr('action');
+			
+			var data_new = {};
+			var json = '';
+			var html = '';
+			var id = $('#id').val();
+			
+			unlayer.init({
+				id: 'editor-container',
+				projectId: form_data['campaign_id'],
+				displayMode: 'email'
+			})
+
+			unlayer.loadDesign(design);
+
+			unlayer.addEventListener('design:updated', function(updates) {
+				unlayer.exportHtml(function(data) {
+					json = data.design; // design json
+					html = data.html; // design html
+
+					$('#text_html').text( html.replace(/\n\s+|\n/g, ""));
+					$('#text_json').text(JSON.stringify(json));
+
+				})
+			})		
+
+			$('.btn-submit').click(function(e) {
+				e.preventDefault();
+				form_data = $('.form_sequence').serialize();
+				data_new = form_data + '&start_date=' + '2020-03-15';
+
+				$.ajaxSetup({
+					headers: {
+						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+					}
+				});
+
+				$.ajax({
+					url: url,
+					type: "post",
+					data: data_new,
+					success: function( response ) {
+						alert("Dizajn je spremljen!");
+					}, 
+					error: function(xhr,textStatus,thrownError) {
+						console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError); 							         
+					}
+				});
+			});
+		</script>
+
+		<!--Awesome icons -->
+		<script src="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/js/all.min.js') }}"></script>
+	
+		<!-- Jquery modal -->
+		<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
+		
+		<!--Unlayer modal -->
+		{{-- <script src="{{ URL::asset('/../node_modules/react-email-editor/umd/react-email-editor.min.js') }}"></script> --}}
+
+		<!-- Scripts -->
+		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
+		<script src="{{URL::asset('/../js/campaign_sequences.js') }}"></script>
+
+		<!-- tinymce js -->
+		<script src="{{ URL::asset('/node_modules/tinymce/tinymce.min.js') }}" ></script>
+		
+		@if(session()->has('modal'))
+			<script>
+				$('.row.notification').modal();
+			</script>
+		@endif
+		@stack('script')		
+    </body>
+</html>

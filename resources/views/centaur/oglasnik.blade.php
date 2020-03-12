@@ -13,7 +13,7 @@ use App\Models\Ads;
 	<main class="col-lg-12 col-xl-8 index_main float_right">
 		<section>
 			<header class="header_ads">
-				<div class="filter">
+				<div class="index_table_filter">
 					<div class="float_left col-6 height100 position_rel padd_0">
 						<img class="img_search" src="{{ URL::asset('icons/search.png')  }}" alt="Search"/>
 						<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="{{ __('basic.search')}}" class="input_search" >
@@ -131,6 +131,7 @@ use App\Models\Ads;
 	</main>
 </div>
 <script>
+	$.getScript( '/../js/open_modal.js');
 	$(function(){
 		var body_width = $('body').width();
 
@@ -152,5 +153,6 @@ use App\Models\Ads;
 		$.getScript( 'js/filter_dropdown.js');
 		$.getScript( 'js/ads.js');
 	});
+	
 </script>
 @stop

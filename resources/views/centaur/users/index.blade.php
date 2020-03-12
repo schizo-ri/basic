@@ -208,8 +208,9 @@
 			return true;
 		}
 	});
-
-	jQuery(document).ready(function($) {
+	$.getScript( '/../js/open_modal.js'); 
+	
+/* 	jQuery(document).ready(function($) {
 		$("a.show_user").click(function(event) {
 			$.modal.defaults = {
 				closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
@@ -261,7 +262,7 @@
 				fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
 			};
 		});
-	});
+	}); */
 
 	function Ascending_sort(a, b) { 
 		return ($(b).attr('title').toUpperCase()) <  

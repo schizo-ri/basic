@@ -1,8 +1,7 @@
 $('.button_nav').click(function(e){
     //window.history.replaceState({}, document.title, location['origin']+'/dashboard');
     window.history.replaceState({}, document.title, $(this).attr('href'));
-  
-    //console.log($(this).attr('href'));
+
     $.ajaxSetup({
         cache: true
     });
@@ -98,5 +97,6 @@ $('.button_nav').click(function(e){
 $(function() {
     var url_modul = window.location.pathname;
     url_modul = url_modul.replace("/","");
-    console.log(url_modul);
+    console.log();
+
 });

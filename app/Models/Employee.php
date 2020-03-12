@@ -13,7 +13,7 @@ class Employee extends Model
 	*/
 	protected $fillable = [
 		'user_id','father_name','mather_name','oib','oi','oi_expiry','b_day','b_place','mobile','email','priv_mobile','priv_email','prebiv_adresa','prebiv_grad','borav_adresa','borav_grad','title','qualifications','marital','work_id','superior_id','reg_date','probation','years_service','termination_service','first_job','comment','checkout',
-	'effective_cost','brutto'];
+		'effective_cost','brutto','color','abs_days'];
 	
 	/*
 	* The Eloquent user model name

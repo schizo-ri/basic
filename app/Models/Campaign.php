@@ -11,24 +11,8 @@ class Campaign extends Model
 	*
 	* @var array
 	*/
-    protected $fillable = ['name','description','recipient_id','start_date','end_date','period'];
+    protected $fillable = ['name','description','type','active','start_date','start_time'];
 	
-	/*
-	* The Eloquent department model name
-	* 
-	* @var string
-	*/
-	protected static $departmentModel = 'App\Models\Department'; 
-	
-	/*
-	* Returns the department relationship
-	* 
-	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-	*/
-	public function department()
-	{
-		return $this->belongsTo(static::$departmentModel,'recipient_id');
-	}
 
 	/*
 	* The Eloquent CampaignSequence model name

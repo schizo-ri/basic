@@ -77,4 +77,7 @@
         $('section.noticeboard').height(aside_height);
         $('.placeholder').show();        
     });
+    
+    $.getScript( '/../js/open_modal.js');
+    
 </script>
