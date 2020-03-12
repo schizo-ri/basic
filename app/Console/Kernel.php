@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        \App\Console\Commands\EquipmentListUpdate::class,
     ];
 
     /**
@@ -26,6 +26,16 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->command('command:listUpdate')
+                  ->dailyAt('11:00')
+                  ->evenInMaintenanceMode();
+        $schedule->command('command:listUpdate')
+                  ->dailyAt('15:00')
+                  ->evenInMaintenanceMode();
+        $schedule->command('command:listUpdate')
+                    ->everyMinute()
+                  ->evenInMaintenanceMode();
+
     }
 
     /**

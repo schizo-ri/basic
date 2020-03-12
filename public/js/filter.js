@@ -28,12 +28,23 @@ function mySearchTable() {
         $('#index_table tbody tr').show();
     });
 }
+var trazi_status;
+var text;
+
 
 function mySearch_preparation() {
+    
     $('#mySearch_preparation').keyup(function() {
+        text = $('#mySearch_preparation').parent().siblings('.show_inactive').text();
+        console.log(text);
         var trazi = $( this ).val().toLowerCase();
-       
-        $('.row_preparation_text').filter(function() {
+        if(text == 'Prikaži neaktivne') {
+            trazi_status = '.active';
+        } else {
+            trazi_status = '.inactive';
+        }
+
+        $('.row_preparation_text' + trazi_status).filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(trazi) > -1)
         });
         $('.form_preparation:visible').filter(function() {
@@ -43,7 +54,7 @@ function mySearch_preparation() {
     
     $('.clearable__clear').click(function(){
         $('#mySearch_preparation').val('');
-        $('.row_preparation_text').show();
+        $('.row_preparation_text' + trazi_status).show();
  //       $('.form_preparation').hide();
     });
 }

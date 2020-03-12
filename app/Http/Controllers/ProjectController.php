@@ -57,12 +57,11 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        
-        if(Project::where('project_no',$request['project_no'])->first()) {
+      /*   if(Project::where('project_no',$request['project_no'])->first()) {
             session()->flash('error', "Projekt sa tim brojem već postoji");
 		
             return redirect()->back();
-        } else {
+        } else { */
             $categories = '';
             if($request['categories']) {
                 $categories = implode(',',$request['categories']);
@@ -91,7 +90,7 @@ class ProjectController extends Controller
             
             return redirect()->back();
         }
-    }
+ //   }
 
     /**
      * Display the specified resource.

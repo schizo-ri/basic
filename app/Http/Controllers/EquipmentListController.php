@@ -43,9 +43,9 @@ class EquipmentListController extends Controller
      */
     public function store(Request $request)
     {
+
         $before_all = array();       
         $after_all = array();
-        
         
         foreach ($request['delivered'] as $key_delivered => $delivered) {
             if ( $delivered != null ) {
@@ -97,6 +97,7 @@ class EquipmentListController extends Controller
                             $data = array(
                                 'quantity'  => $upis_kolicine,
                                 'item_id'  => $list_id,
+                                'user_id'  => Sentinel::getUser()->id,
                             );
                             $promjena = true;
 
@@ -149,7 +150,7 @@ class EquipmentListController extends Controller
         
      
         foreach( array_unique($send_to_mail) as $email) {
-            Mail::to($email)->send(new EquipmentMail($preparation, $before_all, $after_all ));
+         /*    Mail::to($email)->send(new EquipmentMail($preparation, $before_all, $after_all )); */
         }
        
         session()->flash('success', "Podaci su upisani");
@@ -166,23 +167,34 @@ class EquipmentListController extends Controller
     public function addItem(Request $request)
     {
         $preparation_id = $request['preparation_id'];
-        $product_number = $request['product_number'];
-        $mark = $request['mark'];
+        $product_number = $request['product_number'];      
         $name = $request['name'];
         $unit = $request['unit'];
-        $quantity = $request['quantity'];
-        $replaced_item_id = $request['replaced_item_id'];
+        $quantity = $request['quantity'];       
 
         $data = array(
             "preparation_id"    => intval($preparation_id),
-            "product_number"    => $product_number,
-            "mark"              => $mark,
+            "product_number"    => $product_number,            
             "name"              => $name,
             "unit"              => $unit,
-            "quantity"          => $quantity,
-            "replaced_item_id"  => $replaced_item_id,
+            "quantity"          => $quantity,            
             'user_id'           => Sentinel::getUser()->id
         );
+
+        if(isset($request['replaced_item_id'])) {         
+            $data += ['replaced_item_id'=> $request['replaced_item_id']];
+        }
+        if(isset($request['stavka_id_level1']) && $request['stavka_id_level1'] != '') {
+            $item_level1 = EquipmentList::where('preparation_id', $preparation_id)->where('product_number', $request['stavka_id_level1'])->first();
+            $data += ["stavka_id_level1"=> $item_level1->id];
+        }
+        if(isset($request['stavka_id_level2'])  && $request['stavka_id_level2'] != '') {
+            $item_level2 = EquipmentList::where('preparation_id', $preparation_id)->where('product_number', $request['stavka_id_level2'])->first();
+            $data += ["stavka_id_level2"=> $item_level2->id ];
+        }
+        if(isset($request['mark'])) {
+            $data += ["mark"=> $request['mark']];
+        }      
 
         $equipment_list = new EquipmentList();
         $equipment_list->saveEquipmentList($data);
@@ -305,7 +317,7 @@ class EquipmentListController extends Controller
        // array_push( $send_to_mail, 'jelena.juras@duplico.hr');
         
         foreach( array_unique($send_to_mail) as $email) {
-            Mail::to($email)->send(new EquipmentMail($preparation, $before_all, $after_all ));
+          /*   Mail::to($email)->send(new EquipmentMail($preparation, $before_all, $after_all )); */
         }
        
         session()->flash('success', "Podaci su upisani");
@@ -321,7 +333,25 @@ class EquipmentListController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $item_level1 = EquipmentList::find($id);
+        
+        $items_level2 = EquipmentList::where('stavka_id_level1', $item_level1->id)->get();
+        if(count($items_level2)>0) {
+            foreach ($items_level2 as $item_level2) {
+                $items_level3 = EquipmentList::where('stavka_id_level2', $item_level2->id)->get();
+                if(count($items_level3)>0) {
+                    foreach ($items_level3 as $item_level3) {
+                        $item_level3->delete();
+                    }
+                }  
+                $item_level2->delete();              
+            }
+        }
+        $item_level1->delete();
+        
+        session()->flash('success', "Ormar je obrisan");
+        
+        return redirect()->back();
     }
 
     public function import ()
@@ -395,24 +425,41 @@ class EquipmentListController extends Controller
 
     public function exportList(Request $request) 
     {
-        $equipments =  EquipmentList::where('preparation_id', $request['id'])->select('product_number','name','unit','quantity','delivered')->get();
-
+        $equipments =  EquipmentList::where('preparation_id', $request['id'])->select('id','product_number','name','unit','quantity','delivered')->get();
+       
+        $listUpdates = ListUpdate::orderBy('created_at', 'ASC')->get();
+       
         if( $request['status'] == 'no') {
             $equipments = $equipments->where('delivered', null);
         }
 
         $equipments2 = collect();
         if( $request['status'] == 'ok') {
-            foreach ($equipments as $equipment) {
-                if ( $equipment->quantity == $equipment->delivered ) {
+            foreach ($equipments as $equipment) { 
+              
+                $listUpdates_item = $listUpdates->where('item_id', $equipment->id );
+                $delivered = $equipment->delivered;
+                
+                foreach ($listUpdates_item as $listUpdate) {
+                    $delivered +=  $listUpdate->quantity;                   
+                }
+                $equipment->delivered =  $delivered;
+                if ( $equipment->quantity == $delivered ) {
+                 
                     $equipments2->push($equipment);
                 }
             }
-              
         }
         if( $request['status'] == 'part') {
                 foreach ($equipments as $equipment) {
-                    if ( $equipment->delivered != null && $equipment->delivered < $equipment->quantity ) {
+                    $listUpdates_item = $listUpdates->where('item_id', $equipment->id );
+                    $delivered = $equipment->delivered;
+    
+                    foreach ($listUpdates_item as $listUpdate) {
+                        $delivered +=  $listUpdate->quantity;
+                    }
+                    $equipment->delivered =  $delivered;
+                    if ( $delivered != null && $delivered < $equipment->quantity ) {
                         $equipments2->push($equipment);
                 }
             }            
@@ -420,10 +467,11 @@ class EquipmentListController extends Controller
         if( $equipments2->isNotEmpty() ) {
             $equipments = $equipments2;
         }
-   
+     
         $export = new EquipmentListExport([
             $equipments
         ]);
+    
         return Excel::download($export, 'list.xlsx');
         
       //  return Excel::download($export, 'list.csv', \Maatwebsite\Excel\Excel::CSV);

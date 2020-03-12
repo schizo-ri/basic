@@ -2,7 +2,7 @@
     <span class="input_preparation file_input"></span>
 
     <span class="input_preparation project_no_input">
-        <input  name="project_no" type="text" value="{{ $preparation->project_no }}" maxlength="10" required autofocus {!! Sentinel::inRole('subscriber') ? 'readonly style="border:none"' : '' !!} />
+        <input  name="project_no" type="text" value="{{ $preparation->project_no }}" maxlength="30" required autofocus {!! Sentinel::inRole('subscriber') ? 'readonly style="border:none"' : '' !!} />
     </span>
     <span class="input_preparation name_input">
         <input class=""  name="name" type="text" value="{{ $preparation->name }}" maxlength="100"  {!! Sentinel::inRole('subscriber') ? 'readonly style="border:none"' : '' !!}  />

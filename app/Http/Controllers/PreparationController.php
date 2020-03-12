@@ -9,6 +9,7 @@ use App\Models\EquipmentList;
 use App\User;
 use App\Models\PreparationRecord;
 use App\Imports\EquipmentImport;
+use App\Imports\EquipmentImportSiemens;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PreparationController extends Controller
@@ -52,6 +53,7 @@ class PreparationController extends Controller
      */
     public function store(Request $request)
     {
+
         $data = array(
             'name'                  => $request['name'],
             'project_no'            => $request['project_no'],
@@ -81,7 +83,12 @@ class PreparationController extends Controller
         
         if(request()->file('file')) {
             try {
-                Excel::import(new EquipmentImport, request()->file('file'));
+                if( $request['siemens'] == "1" ) {
+                    Excel::import(new EquipmentImportSiemens, request()->file('file')); 
+                } else {
+                     Excel::import(new EquipmentImport, request()->file('file'));
+                }
+               
             } catch (\Throwable $th) {
                 session()->flash('error', "Došlo je do problema, dokument nije učitan!");
             

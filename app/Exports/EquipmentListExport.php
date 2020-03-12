@@ -6,10 +6,13 @@ use App\Models\EquipmentList;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
 
-class EquipmentListExport implements FromArray, WithHeadings, ShouldAutoSize
+class EquipmentListExport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBinder implements FromArray, WithCustomValueBinder, WithHeadings, WithColumnFormatting, ShouldAutoSize
 {
-    protected $invoices;
+    protected $equipments;
 
     public function __construct(array $equipments)
     {
@@ -19,6 +22,7 @@ class EquipmentListExport implements FromArray, WithHeadings, ShouldAutoSize
     public function headings(): array
     {
         return [
+            'id',
             'product_id/default_code',
             'product_id/name_template',
             'uom_id/name',
@@ -30,5 +34,12 @@ class EquipmentListExport implements FromArray, WithHeadings, ShouldAutoSize
     public function array(): array
     {
         return $this->equipments;
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'B' => DataType::TYPE_STRING,
+        ];
     }
 }

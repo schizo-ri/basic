@@ -38,7 +38,8 @@ class DashboardController extends Controller
             $dataArr = array();
             $dataArrResource = array();
     
-            foreach($projects as $project) {
+            foreach($projects->where('active',1) as $project) {
+
                 $count_people = 0;
                 $unique_people = array();
                 $projEmpls  = ProjectEmployee::where('project_id', $project->id)->orderBy('date','DESC')->get();

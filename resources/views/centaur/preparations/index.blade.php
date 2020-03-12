@@ -3,6 +3,7 @@
 @section('title', 'Priprema i mehanička obrada')
 
 @section('content')
+
 <span hidden class="today">{{ date('Y-m-d') }}</span>
 <div class="page-header">
     <h1>Priprema i mehanička obrada</h1>
@@ -43,18 +44,19 @@
                             Sentinel::inRole('administrator') || 
                             Sentinel::inRole('subscriber') || 
                             Sentinel::inRole('priprema') || 
-                            Sentinel::inRole('list_view'))
+                            Sentinel::inRole('list_view') || 
+                            Sentinel::inRole('upload_list') )
                             @php
                                 $preparationRecords1 = $preparationRecords->where('preparation_id',$preparation->id);
                                 $preparationRecord_today = $preparationRecords1->where('preparation_id',$preparation->id)->where('date', date('Y-m-d'))->first();
+                    
                             @endphp
                                 <!-- Ispis pripreme -->  
 
                                     <a class="open_upload_link"><i class="fas fa-upload"></i></a>
                                     <div class="upload_links" >
                                         <h3>Upload</h3>
-                                        
-                                        @if(! Sentinel::inRole('subscriber'))                                        
+                                        @if(! Sentinel::inRole('subscriber'))
                                             <form class="upload_file" action="{{ action('EquipmentListController@import') }}" method="POST" enctype="multipart/form-data">
                                                 <div class="file-input-wrapper">
                                                     <button class="btn-file-input"><i class="fas fa-upload"></i> Upload</button>
@@ -73,7 +75,7 @@
                                                     @csrf
                                                 </form>
                                             @endif
-                                            @if( Sentinel::inRole('administrator'))
+                                            @if( Sentinel::inRole('administrator') || Sentinel::inRole('moderator') || Sentinel::inRole('upload_list'))
                                                 <form class="upload_file_replace" action="{{ action('EquipmentListController@importSiemens') }}" method="POST" enctype="multipart/form-data" title ="Multiple replace">
                                                     <div class="file-input-wrapper">
                                                         <button class="btn-file-input"><i class="fas fa-upload"></i> Upload Siemens Linde</button>
@@ -172,7 +174,7 @@
                         @endif
                     @endforeach
                     <!-- Novi unos -->     
-                    @if(! Sentinel::inRole('subscriber')  && ! Sentinel::inRole('list_view') && ! Sentinel::inRole('priprema'))
+                    @if( Sentinel::inRole('moderator') || Sentinel::inRole('voditelj') || Sentinel::inRole('administrator') || Sentinel::inRole('upload_list'))
                         @include('centaur.preparation_create')
                     @endif
                 </div>
@@ -240,7 +242,7 @@
             showClose: true,        // Shows a (X) icon/link in the top-right corner
             modalClass: "modal equipment_lists",    // CSS class added to the element being displayed in the modal.
             // HTML appended to the default spinner during AJAX requests.
-            spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+            spinnerHtml: "<div id='loader'><span class='ajax-loader1'></span></div>",
         
             showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
             fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
@@ -257,7 +259,7 @@
             showClose: true,        // Shows a (X) icon/link in the top-right corner
             modalClass: "modal",    // CSS class added to the element being displayed in the modal.
             // HTML appended to the default spinner during AJAX requests.
-            spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+            spinnerHtml: "<div id='loader'><span class='ajax-loader1'></span></div>",
         
             showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
             fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)

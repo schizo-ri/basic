@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ListUpdate extends Model
+class ListReport extends Model
 {
-    
     protected $fillable = [
-        'item_id','quantity','user_id'];
-    
+        'item_id','delivered_before','delivered_after'];
+
     /*
 	* The Eloquent project model name
 	* 
@@ -28,25 +27,26 @@ class ListUpdate extends Model
     }
     
     /*
-	* Save ListUpdate
+	* Save ListReport
 	* 
-	* @param array $listUpdate
+	* @param array $listReport
 	* @return void
 	*/
-	public function saveListUpdate($listUpdate=array())
+	public function saveListReport($listReport=array())
 	{
-		return $this->fill($listUpdate)->save();
+		return $this->fill($listReport)->save();
 	}
 	
 	/*
-	* Update ListUpdate
+	* Update ListReport
 	* 
-	* @param array $listUpdate
+	* @param array $listReport
 	* @return void
 	*/
 	
-	public function updateListUpdate($listUpdate=array())
+	public function updateListReport($listReport=array())
 	{
-		return $this->update($listUpdate);
+		return $this->update($listReport);
 	}	
+    
 }

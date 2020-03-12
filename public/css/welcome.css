@@ -44,6 +44,10 @@ body .row {
     max-height: 100%;
     overflow-y: auto;
 }
+.modal a.close-modal {
+	top: 12.5px;
+    right: 12.5px;
+}
 
 .calendar_main, .calendar_main>section {
 	clear: left;
@@ -629,6 +633,15 @@ span.text_preparation.option_input {
 	padding: 20px;
 }
 
+.modal .create_item_siemens {
+	padding: 20px;
+}
+
+.modal .create_item input, .modal .create_item_siemens input {
+	border-radius: 3px;
+	padding: 5px;
+}
+
 .modal p.tr.not_delivered {
 	background-color: rgba(255,0,0,0.1);
 }
@@ -670,7 +683,9 @@ p.tr {
 	border-bottom: 1px solid #ccc;
 	margin: 0;
 }
-
+p.tr.collapsible {
+	cursor: pointer;
+}
 .content {	
 	display: none;
 	overflow: hidden;
@@ -711,6 +726,9 @@ span.input_preparation > input:not(.btn_spremi), span.input_preparation > select
 	padding: 3px;
     margin: 3px 0;
     border-radius: 5px;
+}
+span.input_preparation > input[type=checkbox] {
+	width: auto;
 }
 span.input_preparation > select {
 	padding: 7px 3px;
@@ -845,11 +863,12 @@ span.input_preparation > select {
 .store_changes {
 	margin: 20px 0;
     width: auto;
-    margin-left: 50%;
-    margin-right: 50%;
-    transform: translatex(-50%);
+    /* margin-left: 50%; */
+    /* margin-right: 50%; */
+    /* transform: translatex(-50%); */
     padding: 10px 50px;
     border-radius: 5px;
+    float: right;
 }
 .title {
 	text-align: center;
@@ -948,6 +967,7 @@ span.input_preparation > select {
 		border-left: 1px solid #ccc;
 		border-right: 1px solid #ccc;
 	 }
+	
 	 .modal p.tr:first-child {
 		border-top: 1px solid #ccc;
 	 }
@@ -1031,11 +1051,16 @@ span.input_preparation > select {
 	cursor: pointer;
 }
 .item_level2 {
-	font-weight: 600;
-	padding-left: 20px;
+	font-weight: 600;	
 	cursor: pointer;
 }
-
+.level2 {
+	padding-left: 20px;
+}
 .item_level3 {
 	padding-left: 40px;
+}
+.ajax-loader1 {
+	background: url(../icons/ajax-loader1.gif) no-repeat center;
+	display: inline-block;
 }

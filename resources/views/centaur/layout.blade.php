@@ -25,8 +25,8 @@
         <!-- Font Awesome -->
         <script src="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/js/all.js') }}"></script>
         <link rel="stylesheet" href="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/css/all.css') }}" type="text/css" />
-       <!-- CSS modal -->
-        <link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.css') }}" type="text/css" />
+        <!-- CSS modal -->
+        <link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
         <link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}" type="text/css" />
  
         <link href="{{ URL::asset('node_modules/@fullcalendar/core/main.css') }}" rel='stylesheet' />
@@ -94,7 +94,7 @@
         <script src="{{ asset('restfulizer.js') }}"></script>
         
         <!-- Jquery modal -->
-        <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.js') }}"></script>
+        <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
         <!-- Modal js -->
         <script src="{{URL::asset('/../js/open_modal.js') }}"></script>        
         
