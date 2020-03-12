@@ -60,6 +60,22 @@
 							<input class="form-control input_url" placeholder="URL [http://icom-user.duplico.hr/]" name="url" type="text" value="{{ $client_request->url }}" >
 							{!! ($errors->has('url') ? $errors->first('url', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
+						<div class="form-group  {{ ($errors->has('price_per_user')) ? 'has-error' : '' }}">
+							<input class="form-control" placeholder="Cijena po korisniku" name="price_per_user" type="number" step="0.01" value="{{  $client_request->price_per_user }}" >
+							{!! ($errors->has('price_per_user') ? $errors->first('price_per_user', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
+						<div class="form-group  {{ ($errors->has('no_users')) ? 'has-error' : '' }}">
+							<input class="form-control" placeholder="Broj korisnika" name="no_users" type="number" value="{{  $client_request->no_users }}" >
+							{!! ($errors->has('no_users') ? $errors->first('no_users', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
+						<div class="form-group  {{ ($errors->has('calculate_method')) ? 'has-error' : '' }}">
+							<label for="calculate_method">Način obračuna</label>
+							<select class="form-control" name="calculate_method" id="calculate_method" >
+								<option value="month" {!!  $client_request->calculate_method == 'month' ? 'selected' : '' !!}>mjesečno</option>
+								<option value="year" {!!  $client_request->calculate_method == 'month' ? 'selected' : '' !!}>godišnje</option>
+							</select>
+							{!! ($errors->has('calculate_method') ? $errors->first('calculate_method', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
 						{{ csrf_field() }}
 						{{ method_field('PUT') }}
 						<input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('welcome.signUp')}}">

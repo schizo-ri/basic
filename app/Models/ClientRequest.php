@@ -12,7 +12,7 @@ class ClientRequest extends Model
 	* @var array
 	*/
 	protected $fillable = [
-		'client_id','modules','db','url'
+		'client_id','modules','db','url','price_per_user','no_users','calculate_method'
 	];
 	
 	/*

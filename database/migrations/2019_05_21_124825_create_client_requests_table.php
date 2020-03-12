@@ -18,7 +18,8 @@ class CreateClientRequestsTable extends Migration
 			$table->integer('client_id');
 			$table->string('modules',255);
 			$table->string('db',50);
-			$table->string('url',255);
+            $table->string('url',255);            
+			$table->integer('no_users');
             $table->timestamps();
         });
     }

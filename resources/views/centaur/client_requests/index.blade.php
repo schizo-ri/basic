@@ -26,6 +26,9 @@
 								<th>@lang('basic.modules')</th>
 								<th>@lang('clients.create_db')</th>
 								<th>URL</th>
+								<th>Cijena po korisniku</th>
+								<th>Broj korisnika</th>
+								<th>Način obračuna</th>
 								<th>@lang('basic.options')</th>
 							</tr>
 						</thead>
@@ -37,6 +40,9 @@
 									<td>@foreach($modules_req as $module_req ){{ $modules->where('id', $module_req)->first()->name }}<br>@endforeach</td>
 									<td>{{ $request->db }}</td>
 									<td>{{ $request->url }}</td>
+									<td>{{ $request->price_per_user }}</td>
+									<td>{{ $request->no_users }}</td>
+									<td>{{ $request->calculate_method }}</td>
 									<td class="center">
 										@if(Sentinel::getUser()->hasAccess(['client_requests.update']))
 											<a href="{{ route('client_requests.edit', $request->id) }}" class="btn-edit">

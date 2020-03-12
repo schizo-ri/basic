@@ -60,6 +60,22 @@
 							<input class="form-control" placeholder="URL [icom-user.duplico.hr]" name="url" type="text" value="{{ old('url') }}" >
 							{!! ($errors->has('url') ? $errors->first('url', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
+						<div class="form-group  {{ ($errors->has('price_per_user')) ? 'has-error' : '' }}">
+							<input class="form-control" placeholder="Cijena po korisniku" name="price_per_user" type="number" step="0.01" value="{{ old('price_per_user') }}" >
+							{!! ($errors->has('price_per_user') ? $errors->first('price_per_user', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
+						<div class="form-group  {{ ($errors->has('no_users')) ? 'has-error' : '' }}">
+							<input class="form-control" placeholder="Broj korisnika" name="no_users" type="number" value="{{ old('no_users') }}" >
+							{!! ($errors->has('no_users') ? $errors->first('no_users', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
+						<div class="form-group  {{ ($errors->has('calculate_method')) ? 'has-error' : '' }}">
+							<label for="calculate_method">Način obračuna</label>
+							<select class="form-control" name="calculate_method" value="{{ old('calculate_method') }}" id="calculate_method" >
+								<option value="month">mjesečno</option>
+								<option value="year">godišnje</option>
+							</select>
+							{!! ($errors->has('calculate_method') ? $errors->first('calculate_method', '<p class="text-danger">:message</p>') : '') !!}
+						</div>
 						<input name="_token" value="{{ csrf_token() }}" type="hidden">
 						<input class="btn btn-lg btn-primary btn-block" type="submit" value="{{ __('welcome.signUp')}}">
 					</fieldset>

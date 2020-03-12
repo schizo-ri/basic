@@ -54,7 +54,10 @@ class ClientRequestController extends Controller
 			'first_name'  	=> $request['first_name'],
 			'last_name'  	=> $request['last_name'],
 			'email'  		=> trim($request['email']),
-			'phone'  		=> $request['phone']
+			'phone'  		=> $request['phone'],
+			'price_per_user'=> $request['price_per_user'],
+			'no_users'  	=> $request['no_users'],
+			'calculate_method'=> $request['calculate_method']
 		);
 		
 		$client = new Client();
@@ -73,7 +76,7 @@ class ClientRequestController extends Controller
         $client_req->saveClientRequest($data_request);
         
         if($request['db'] && $request['url'] ) {
-            DatabaseController::create($request['db'], $request['url'], $client->id);
+          //  DatabaseController::create($request['db'], $request['url'], $client->id);
         }
 		
         $message = session()->flash('success', 'Podaci su spremljeni.');
@@ -127,7 +130,8 @@ class ClientRequestController extends Controller
 			'first_name'  	=> $request['first_name'],
 			'last_name'  	=> $request['last_name'],
 			'email'  		=> trim($request['email']),
-			'phone'  		=> $request['phone']
+            'phone'  		=> $request['phone'],
+            
 		);
 		
         $client->updateClient($data_client);
@@ -138,7 +142,10 @@ class ClientRequestController extends Controller
 			'client_id'  	=> $client->id,
             'modules'  		=> $modules,
             'db'        	=>  $request['db'],
-            'url'  	        =>  $request['url']
+            'url'  	        =>  $request['url'],
+            'price_per_user'=> $request['price_per_user'],
+			'no_users'  	=> $request['no_users'],
+			'calculate_method'=> $request['calculate_method']
 		);
 		
 		$client_request->updateClientRequest($data_request);
