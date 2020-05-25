@@ -7,9 +7,35 @@
     <span class="td text_preparation manager_input"></span>
     <span class="td text_preparation designed_input"></span>
     <span class="td text_preparation date_input">{{ date('d.m.Y', strtotime($record->date)) }}</span> 
-    <span class="td text_preparation preparation_input wrap" {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!}  >{{ $record->preparation }}</span>
-    <span class="td text_preparation mechanical_input wrap" {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!} >{{ $record->mechanical_processing }}</span>
-    <span class="td text_preparation marks_input wrap" {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!} >{{ $record->marks_documentation }}</span>
+    @if($record->preparation && json_decode($record->preparation))
+        <span class="td text_preparation preparation_input" {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!}  >
+            @foreach(json_decode($record->preparation) as $key => $preparation1)
+                <span >{{ $key . ': '}}<b>{{ $preparation1 }}</b></span>
+            @endforeach
+        </span>
+    @else
+        <span class="td text_preparation preparation_input " {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!}  >{{ $record->preparation }}</span>
+    @endif
+    @if($record->mechanical_processing && json_decode($record->mechanical_processing))
+        <span class="td text_preparation mechanical_input" {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!} >
+        @foreach(json_decode($record->mechanical_processing) as $key => $mechanical)
+            <span >{{ $key . ': '}}<b>{{ $mechanical }}</b></span>
+        @endforeach
+        </span>
+    @else
+        <span class="td text_preparation mechanical_input " {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!} >
+            {{ $record->mechanical_processing }}</span>
+    @endif
+    @if($record->marks_documentation && json_decode($record->marks_documentation))
+        <span class="td text_preparation marks_input" {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!} >
+            @foreach(json_decode($record->marks_documentation) as $key => $mark)
+                <span >{{ $key . ': '}}<b>{{ $mark }}</b></span>
+            @endforeach
+        </span>
+    @else
+        <span class="td text_preparation marks_input " {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!} >
+        {{ $record->marks_documentation }}</span>
+    @endif
     <span class="td text_preparation equipment_input"></span>
     <span class="td text_preparation history_input"></span>
     <span class="td text_preparation option_input">
@@ -32,13 +58,53 @@
     <span class="input_preparation designed_input"></span>
     <span class="input_preparation date_input">{{ date('d.m.Y', strtotime($record->date)) }}</span>
     <span class="input_preparation preparation_input">
-        <textarea name="preparation" cols="30" rows="3" placeholder="Priprema..." {!! Sentinel::inRole('moderator') ? 'readonly ' : '' !!} >{{ $record->preparation }}</textarea>
+        @foreach($priprema as $key1 => $priprema1) 
+            <h5>{{ $priprema1 }}</h5>
+            <input type="hidden" name="preparation_title[{{ $key1 }}]" value="{{ $priprema1 }}"   >
+            <span class="col-md-4">
+                <input type="radio" name="preparation[{{ $key1 }}]" value="DA" {!! json_decode($record->preparation,true)[$priprema1]  == 'DA' ? 'checked' : '' !!} />
+                <label >DA</label>
+            </span>
+            <span class="col-md-4">
+                <input type="radio" name="preparation[{{ $key1 }}]" value="NE" {!! json_decode($record->preparation,true)[$priprema1] == 'NE' || ( json_decode($preparation->preparation,true)[$priprema1] != 'DA' ||  json_decode($preparation->preparation,true)[$priprema1] != 'N/A' ) ? 'checked' : '' !!}  />
+                <label >NE</label>
+            </span>
+            <span class="col-md-4">
+                <input type="radio" name="preparation[{{ $key1 }}]" value="N/A" {!!  json_decode($record->preparation,true)[$priprema1] == 'N/A' ? 'checked' : '' !!} />
+                <label >N/A</label>
+            </span>
+           
+        @endforeach
     </span>
     <span class="input_preparation mechanical_input">
-        <textarea name="mechanical_processing" cols="30" rows="3" placeholder="Mehanička obrada ..." {!! Sentinel::inRole('moderator') ? 'readonly' : '' !!}  >{{ $record->mechanical_processing }}</textarea>      
+        @foreach($mehanicka as $key => $meh_obrada) 
+            <h5>{{ $meh_obrada }}</h5>
+            <input type="hidden" name="mechanical_title[{{ $key }}]" value="{{ $meh_obrada}}"   >
+            <span class="col-md-4">
+                <input type="radio" name="mechanical_processing[{{ $key }}]" value="DA" {!! json_decode($record->mechanical_processing,true)[$meh_obrada] == 'DA' ? 'checked' : '' !!} /><label >DA</label>
+            </span>
+            <span class="col-md-4">
+                <input type="radio" name="mechanical_processing[{{ $key }}]" value="NE"  {!! json_decode($record->mechanical_processing,true)[$meh_obrada] == 'NE' || ( json_decode($preparation->mechanical_processing,true)[$meh_obrada] != 'DA' ||  json_decode($preparation->mechanical_processing,true)[$meh_obrada] != 'N/A') ? 'checked' : '' !!}  /><label >NE</label>
+            </span>
+            <span class="col-md-4">
+                <input type="radio" name="mechanical_processing[{{ $key }}]" value="N/A"  {!! json_decode($record->mechanical_processing,true)[$meh_obrada] == 'N/A' ? 'checked' : '' !!} /><label >N/A</label></span>
+           
+        @endforeach
     </span>
     <span class="input_preparation marks_input">
-        <textarea name="marks_documentation" cols="30" rows="3" placeholder="Oznake i dokumentacija ..." {!! Sentinel::inRole('moderator') ? 'readonly' : '' !!} >{{ $record->marks_documentation }}</textarea>
+        @foreach($oznake as $key2 => $oznake1) 
+            <h5>{{ $oznake1 }}</h5>
+            <input type="hidden" name="marks_title[{{ $key2 }}]" value="{{ $oznake1}}"   >
+            <span class="col-md-4">
+                <input type="radio" name="marks_documentation[{{ $key2 }}]" value="DA" {!! json_decode($record->marks_documentation,true)[$oznake1] == 'DA' ? 'checked' : '' !!} /><label >DA</label>
+            </span>
+            <span class="col-md-4">
+                <input type="radio" name="marks_documentation[{{ $key2 }}]" value="NE" {!! json_decode($record->marks_documentation,true)[$oznake1] == 'NE' || ( json_decode($preparation->marks_documentation,true)[$oznake1] != 'DA' ||  json_decode($preparation->marks_documentation,true)[$oznake1] != 'N/A')  ? 'checked' : '' !!} /><label >NE</label>
+            </span>
+            <span class="col-md-4">
+                <input type="radio" name="marks_documentation[{{ $key2 }}]" value="N/A"  {!! json_decode($record->marks_documentation,true)[$oznake1] == 'N/A' ? 'checked' : '' !!} /><label >N/A</label></span>
+            record
+        @endforeach
     </span>
     {{ csrf_field() }}
     {{ method_field('PUT') }}

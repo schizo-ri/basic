@@ -27,13 +27,37 @@ class PreparationController extends Controller
      */
     public function index()
     {
-        $preparations = Preparation::orderBy('created_at','ASC')->get();
-        $preparationRecords = PreparationRecord::orderBy('created_at','DESC')->get();
-        $equipmentLists = EquipmentList::get();
+        $preparations = Preparation::where('active', 1)->orderBy('project_no','ASC')->get();
+        $preparations = $preparations->groupBy('project_no');
+       
+        $mehanicka = array('Obradjena ploca','Obradjen ormar','Postavljeni PF-ovi','Montirane kanalice','Montirane din sine','Postavljena oprema na vrata ormara');
+        $oznake = array('Pripremljene oznake za opremu','Pripremljene oznake za stezaljke','Pripremljene i postavljene oznake s nazivom ormara i QR pločica','Pripremljene opisne oznake','Napravljena izlazna dokumentacija i pripremljena shema');
+        $priprema = array('Oprema preuzeta iz skladišta','Postavljene oznake na opremu','Oprema namontirana na ploču ormara','Periferna oprema postavljena (lampa, grijač, uvodnice...)',
+        'Postavljene i označene stezaljke');
+      
+      //  $preparationRecords = PreparationRecord::orderBy('created_at','DESC')->get();
+      //  $equipmentLists = EquipmentList::get();
+        $users = User::orderBy('first_name','ASC')->get();
+        
+      //  return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations, 'preparationRecords' => $preparationRecords, 'equipmentLists' => $equipmentLists]);
+        return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'priprema' => $priprema, 'mehanicka' => $mehanicka,'oznake' => $oznake]);
+    }
+
+    public function preparations_active (Request $request)
+    {
+        if(isset($request['active'])) {
+            $active = $request['active'];
+        } else {
+            $active = 1;
+        }
         $users = User::orderBy('first_name','ASC')->get();
 
-        return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations, 'preparationRecords' => $preparationRecords, 'equipmentLists' => $equipmentLists]);
-    }
+        $preparations = Preparation::where('active',$active)->orderBy('project_no','ASC')->get();
+        $preparations = $preparations->groupBy('project_no');
+
+        return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations]);
+        
+    } 
 
     /**
      * Show the form for creating a new resource.
@@ -53,15 +77,18 @@ class PreparationController extends Controller
      */
     public function store(Request $request)
     {
-
+       
         $data = array(
             'name'                  => $request['name'],
-            'project_no'            => $request['project_no'],
+            'project_no'            => str_replace(" ", "_",$request['project_no']),
             'project_manager'       => $request['project_manager'],
             'designed_by'           => $request['designed_by'],
-            'preparation'           => $request['preparation'],
+           /*  'preparation'           => $request['preparation'],
             'mechanical_processing' => $request['mechanical_processing'],
-            'marks_documentation'   => $request['marks_documentation'],
+            'marks_documentation'   => $request['marks_documentation'], */
+            'preparation'           => '{"Oprema preuzeta iz skladi\u0161ta":"NE","Postavljene oznake na opremu":"NE","Oprema namontirana na plo\u010du ormara":"NE","Periferna oprema postavljena (lampa, grija\u010d, uvodnice...)":"NE","Postavljene i ozna\u010dene stezaljke":"NE"}',
+            'mechanical_processing' => '{"Obradjena ploca":"NE","Obradjen ormar":"NE","Postavljeni PF-ovi":"NE","Montirane kanalice":"NE","Montirane din sine":"NE","Postavljena oprema na vrata ormara":"NE"}',
+            'marks_documentation'   => '{"Pripremljene oznake za opremu":"NE","Pripremljene oznake za stezaljke":"NE","Pripremljene i postavljene oznake s nazivom ormara i QR plo\u010dica":"NE","Pripremljene opisne oznake":"NE","Napravljena izlazna dokumentacija i pripremljena shema":"NE"}',
             'delivery'              => $request['delivery'],
         );
       
@@ -82,6 +109,7 @@ class PreparationController extends Controller
         }
         
         if(request()->file('file')) {
+           
             try {
                 if( $request['siemens'] == "1" ) {
                     Excel::import(new EquipmentImportSiemens, request()->file('file')); 
@@ -133,16 +161,44 @@ class PreparationController extends Controller
      */
     public function update(Request $request, $id)
     {
+   /*  dd($request); */
         $preparation = Preparation::find($id);
-      
+        
+        $preparation_val = array();
+        $marks_val = array();
+        $mehan_val = array();
+        foreach ($request['preparation_title'] as $key_title => $title) {
+            foreach ($request['preparation'] as $key_value => $value) {
+                if($key_title == $key_value) {
+                    $preparation_val += [$title => $value];
+                }
+            }
+        }
+
+        foreach ($request['mechanical_title'] as $key_title => $title) {
+            foreach ($request['mechanical_processing'] as $key_value => $value) {
+                if($key_title == $key_value) {
+                    $mehan_val += [$title => $value];
+                }
+            }
+        }
+
+        foreach ($request['marks_title'] as $key_title => $title) {
+            foreach ($request['marks_documentation'] as $key_value => $value) {
+                if($key_title == $key_value) {
+                    $marks_val += [$title =>  $value];
+                }
+            }
+        }
+
         $data = array(
             'name' => $request['name'],
-            'project_no'  => $request['project_no'],
+            'project_no'  => str_replace(" ", "_",$request['project_no']),
             'project_manager'  => $request['project_manager'],
             'designed_by'  => $request['designed_by'],
-            'preparation'  => $request['preparation'],
-            'mechanical_processing'  => $request['mechanical_processing'],
-            'marks_documentation'   => $request['marks_documentation'],
+            'preparation'  => json_encode($preparation_val ),
+            'mechanical_processing'  => json_encode($mehan_val ),
+            'marks_documentation'   => json_encode($marks_val ),
             'delivery'  => $request['delivery'],
         );
         $preparation->updatePreparation($data);
@@ -151,10 +207,10 @@ class PreparationController extends Controller
 
         if( $request['preparation'] || $request['mechanical_processing'] || $request['marks_documentation']) {            
             $data = array(
-                'preparation_id'  => $preparation->id,
-                'preparation'  => $request['preparation'],
-                'mechanical_processing'  => $request['mechanical_processing'],
-                'marks_documentation'   => $request['marks_documentation'],
+                'preparation_id' => $preparation->id,
+                'preparation'  => json_encode($preparation_val ),
+                'mechanical_processing'  =>  json_encode($mehan_val ),
+                'marks_documentation'   => json_encode($marks_val ),
                 'date'  => date('Y-m-d'),
             );
             
@@ -222,4 +278,6 @@ class PreparationController extends Controller
         
         return redirect()->back();
     }
+
+    
 }

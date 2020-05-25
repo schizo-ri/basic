@@ -85,10 +85,38 @@ class PreparationRecordController extends Controller
     {
         $preparationRecord = PreparationRecord::find($id);
 
+        $preparation_val = array();
+        $marks_val = array();
+        $mehan_val = array();
+        foreach ($request['preparation_title'] as $key_title => $title) {
+            foreach ($request['preparation'] as $key_value => $value) {
+                if($key_title == $key_value) {
+                    $preparation_val += [$title =>  $value];
+                }
+            }
+        }
+
+        foreach ($request['mechanical_title'] as $key_title => $title) {
+            foreach ($request['mechanical_processing'] as $key_value => $value) {
+                if($key_title == $key_value) {
+                    $mehan_val += [$title =>  $value];
+                }
+            }
+        }
+
+        foreach ($request['marks_title'] as $key_title => $title) {
+            foreach ($request['marks_documentation'] as $key_value => $value) {
+                if($key_title == $key_value) {
+                    $marks_val += [$title =>  $value];
+                }
+            }
+        }
+
         $data = array(
-            'preparation'       => $request['preparation'],
-            'mechanical_processing'  => $request['mechanical_processing'],
-            'marks_documentation'   => $request['marks_documentation'],
+            'preparation'  => json_encode($preparation_val ),
+            'mechanical_processing'  => json_encode($mehan_val ),
+            'marks_documentation'   => json_encode($marks_val ),
+          
         );
 
         $preparationRecord->updatePreparationRecord($data);

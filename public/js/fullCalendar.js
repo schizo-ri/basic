@@ -78,7 +78,7 @@
                         url:  url_store, 
                         dataType: "text",
                         success: function(data) {
-                            $.getScript( "/js/open_modal.js");
+                           
                             if(data == "") {
                                 alert( "Zaposlenik je već zadužen na projektu, ne može se spremiti na cijeli projekt. Pokušaj spremiti na određeni dan");
                             }
@@ -161,7 +161,7 @@
                         url:  url_project_update, 
                         dataType: "text",
                         success: function(data) {
-                            $.getScript( "/js/open_modal.js");
+                            
                         }, 
                         error: function(xhr,textStatus,thrownError) {
                             console.log("eventMouseLeave brisi error " + xhr + "\n" + textStatus + "\n" + thrownError);  
@@ -237,7 +237,7 @@
                             if(response) {
                                 $('#external-events').load( url + ' #external-events .resource');
                                 $('a.fc-day-grid-event').attr('rel','modal:open');
-                                $.getScript( "/js/open_modal.js");
+                            
                             }
                            
                         },
@@ -254,3 +254,4 @@
         $('.fc-scroller.fc-day-grid-container').css('overflow','hidden');
     });
  }
+ console.log("fullcalendar");

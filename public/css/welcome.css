@@ -12,7 +12,15 @@ body {
     height: auto;
     overflow: auto;
 }
+input {
+	max-width: 100%;
+    padding: 0 5px;
+    border-radius: 5px;
+}
 
+.create_item_siemens input, .create_item input {
+	padding: 5px;
+}
 body > nav.navbar {
 	margin: 0;
 }
@@ -446,7 +454,7 @@ span.text_preparation.file_input {
 }
 .create_preparation span.input_preparation.file_input, 
 .form_preparation span.input_preparation.file_input {
-	display: none;
+/* 	display: none; */
 }
 span.th.project_no_input,
 span.input_preparation.project_no_input,
@@ -454,9 +462,13 @@ span.text_preparation.project_no_input {
 	width: 3%;
 	min-width: 75px;
 }
-.create_preparation span.input_preparation.project_no_input,
-.form_preparation span.input_preparation.project_no_input {
+.create_preparation span.input_preparation.project_no_input {
 	width: 5%;
+	z-index: 1;
+}
+
+.form_preparation span.input_preparation.project_no_input {
+	width: 3%;
 	z-index: 1;
 }
 span.th.name_input,
@@ -493,17 +505,29 @@ span.text_preparation.date_input {
 }
 
 span.input_preparation.date_input {
-	border: none;;
+	/* border: none; */
 }
 span.th.preparation_input,
 span.text_preparation.preparation_input {
-	width: 12.5%;
+	width: 200px;
 	border-right: 1px solid #bbb;
 	min-width: 200px;
 }
+span.text_preparation.preparation_input>span, span.text_preparation.mechanical_input >span, span.text_preparation.marks_input>span{
+	width: 100%;
+    display: inline-block;
+	font-size: 11px;
+
+}
 span.th.mechanical_input,
 span.text_preparation.mechanical_input {
-	width: 12.5%;
+	width: 200px;
+	border-right: 1px solid #bbb;
+	min-width: 200px;
+}
+span.th.marks_input,
+span.text_preparation.marks_input {
+	width: 200px;
 	border-right: 1px solid #bbb;
 	min-width: 200px;
 }
@@ -513,9 +537,23 @@ span.td.text_preparation.wrap {
 span.input_preparation.mechanical_input,
 span.input_preparation.preparation_input,
 span.input_preparation.marks_input {
-	width: 12.5%;
+	width: 200px;
+    border-right: 1px solid #bbb;
+	min-width: 200px;
+	font-size: 12px;
 }
-
+span.input_preparation.mechanical_input  input[type=radio] ,
+span.input_preparation.preparation_input input[type=radio],
+span.input_preparation.marks_input input[type=radio]{
+	font-size: 10px;
+    width: 10px;
+    height: 10px;
+}
+span.input_preparation.mechanical_input>h5,
+span.input_preparation.preparation_input>h5,
+span.input_preparation.marks_input>h5 {
+	font-size: 12px;
+}
 span.th.marks_input,
 span.text_preparation.marks_input {
 	width: 12.5%;
@@ -536,8 +574,8 @@ span.text_preparation.submit_preparation {
 span.th.equipment_input,
 span.input_preparation.equipment_input,
 span.text_preparation.equipment_input {
-	width: 5%;
-	min-width: 55px;
+	width: 200px;
+    min-width: 200px;
 }
 span.th.history_input,
 span.input_preparation.history_input,
@@ -551,6 +589,10 @@ span.text_preparation.option_input {
 	width: 5%;
 	min-width: 55px;
 }
+span.td.text_preparation.equipment_input > a {
+	display: block;
+}
+
 .modal span.th:first-child,  .modal span.td:first-child, .modal span.input_preparation:first-child {
 	width: 10%;
 }
@@ -561,6 +603,9 @@ span.text_preparation.option_input {
 }
 .item_replace_list textarea {
 	line-height: 20px;
+}
+form.edit_list {
+	overflow: hidden;
 }
 .modal span.th_50 {
 	width: 50%;
@@ -637,7 +682,7 @@ span.text_preparation.option_input {
 	padding: 20px;
 }
 
-.modal .create_item input, .modal .create_item_siemens input {
+.modal .create_item input:not(input[type=submit]), .modal .create_item_siemens input:not(input[type=submit]) {
 	border-radius: 3px;
 	padding: 5px;
 }
@@ -667,7 +712,9 @@ span.text_preparation.option_input {
 .table .thead, .table .tbody {
     min-width: fit-content;
 }
-
+p.tr.row_preparation_text.active, p.tr.row_preparation_text.inactive {
+	display: none;
+}
 p.tr {
 	clear: left;
     font-size: 13px;
@@ -682,6 +729,7 @@ p.tr {
 	outline: none;
 	border-bottom: 1px solid #ccc;
 	margin: 0;
+	
 }
 p.tr.collapsible {
 	cursor: pointer;
@@ -720,7 +768,11 @@ span.input_preparation {
 	padding: 0 5px;
 	line-height: 25px;
 }
-
+span.input_preparation >span {
+	display: inline-block;
+	padding: 0;
+    text-align: center;
+}
 span.input_preparation > input:not(.btn_spremi), span.input_preparation > select {
 	width: 100%;
 	padding: 3px;
@@ -776,7 +828,13 @@ span.input_preparation > select {
 	color: black;
 	cursor: pointer;
 }
-
+.collapsible_project {
+	padding: 10px;
+    color: #333;
+    cursor: pointer;
+    background-color: #eee;
+    font-size: 15px;
+}
 .open_upload_link {
 	display: inline-block;
 	margin-top: 15px;
@@ -878,7 +936,7 @@ span.input_preparation > select {
 	margin: 20px 0;
 }
 
-.show_inactive {
+.show_inactive, .show_active {
 	cursor: pointer;
     padding: 5px;
     border: 1px solid #ccc;
@@ -890,6 +948,9 @@ span.input_preparation > select {
     float: left;
     border-radius: 5px;
     box-shadow: 3px 3px 3px #ccc;
+}
+.show_active {
+/* 	display: none; */
 }
 @media only screen and (max-width: 600px) {
 	body {

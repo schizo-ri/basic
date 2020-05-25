@@ -1,6 +1,17 @@
 @extends('Centaur::layout')
 
 @section('title', 'Raspored')
+<link href="{{ URL::asset('node_modules/@fullcalendar/core/main.css') }}" rel='stylesheet' />
+<link href="{{ URL::asset('node_modules/@fullcalendar/daygrid/main.css') }}" rel='stylesheet' />
+<link href="{{ URL::asset('node_modules/@fullcalendar/list/main.css') }}" rel='stylesheet' />
+
+<script  src="{{ URL::asset('node_modules/@fullcalendar/core/main.js') }}"></script>
+<script type="module" src="{{ URL::asset('node_modules/@fullcalendar/daygrid/main.js') }}"></script>
+<script type="module" src="{{ URL::asset('node_modules/@fullcalendar/interaction/main.js') }}"></script>
+<script type="module" src="{{ URL::asset('node_modules/@fullcalendar/list/main.js') }}"></script>
+<script type="module" src="{{ URL::asset('node_modules/@fullcalendar/resource-common/main.js') }}"></script>
+<script src="{{ URL::asset('screenshot/html2canvas.min.js') }}"></script>
+<script src="{{ URL::asset('screenshot/canvas2image.js') }}"></script>
 @php
     $url = $_SERVER['HTTP_HOST'] . $_SERVER["REQUEST_URI"] ;
     if(isset(parse_url($url)['query'])) {
@@ -9,10 +20,10 @@
         $date = date("Y-m-d");
     }
     $tommorow = date('Y-m-d', strtotime('+1 day', strtotime($date)));
+ //   dd(get_defined_vars());
 @endphp
 
 @section('content')
-
 <div class="row calendar_main">
     @if (Sentinel::check())    
         <main class="col-lg-6 col-md-12" >

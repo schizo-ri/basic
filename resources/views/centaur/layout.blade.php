@@ -28,19 +28,6 @@
         <!-- CSS modal -->
         <link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
         <link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}" type="text/css" />
- 
-        <link href="{{ URL::asset('node_modules/@fullcalendar/core/main.css') }}" rel='stylesheet' />
-        <link href="{{ URL::asset('node_modules/@fullcalendar/daygrid/main.css') }}" rel='stylesheet' />
-        <link href="{{ URL::asset('node_modules/@fullcalendar/list/main.css') }}" rel='stylesheet' />
-    
-        <script  src="{{ URL::asset('node_modules/@fullcalendar/core/main.js') }}"></script>
-        <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/daygrid/main.js') }}"></script>
-        <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/interaction/main.js') }}"></script>
-        <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/list/main.js') }}"></script>
-        <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/resource-common/main.js') }}"></script>
-        <script src="{{ URL::asset('screenshot/html2canvas.min.js') }}"></script>
-        <script src="{{ URL::asset('screenshot/canvas2image.js') }}"></script>
-
 		@stack('stylesheet')
     </head>
     <body> 
@@ -97,7 +84,6 @@
         <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
         <!-- Modal js -->
         <script src="{{URL::asset('/../js/open_modal.js') }}"></script>        
-        
 		@stack('script')
     </body>
 </html>

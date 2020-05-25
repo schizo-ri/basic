@@ -29,9 +29,16 @@ class DashboardController extends Controller
                     $projects = $projects->merge(Project::where('id', $proj->project_id)->get());
                 }
             } else {
-                $project_employees  = ProjectEmployee::get();
-                $projects = Project::get();
-            }
+                $today = date('Y-m-d');
+                $date = date_create($today);
+                date_modify($date, '-1 month');
+                
+                $projects = Project::whereDate('end_date', '>', date_format($date, 'Y-m-d'))->get();
+                $project_employees = collect();
+                foreach( $projects as $project ) {            
+                    $project_employees = $project_employees->merge(ProjectEmployee::where('project_id',$project->id)->get());
+                }
+            } 
             $categories = CategoryEmployee::orderBy('mark')->get();
             $employees = Employee::orderBy('employees.first_name','ASC')->get();
            
@@ -118,14 +125,7 @@ class DashboardController extends Controller
                                 $weekdays = 2;
                                 $days = 5;
                             }
-                       /*   
-                            if(date('N',strtotime("+" .   $weekdays . " day", strtotime($end_date) )) == 7) {
-                                $start_date =  date('Y-m-d',strtotime("+" .   ($weekdays + 1 ) . " day", strtotime($end_date) ));
-                                $project_duration--;
-                            } else {
-                                $start_date =  date('Y-m-d',strtotime("+" .   $weekdays . " day", strtotime($end_date) ));
-                            }
-                          */  
+                      
                           $start_date =  date('Y-m-d',strtotime("+" .   $weekdays . " day", strtotime($end_date) ));
                           
                             switch (date( 'N',strtotime( $start_date)) ) {
@@ -192,9 +192,7 @@ class DashboardController extends Controller
                         $title = $project->project_no . ' | ' . $project->name . ' | ' . $count .  $lj  . ' | ' . 'kat: ' .   $category_list;
                         $description = $project->name;
                         $classNames = $project->project_no; 
-                        
 
-                        
                         $resourceIds = '"' . 'Rok: ' . date('d.m.Y',strtotime($project->end_date )) .'",';
                         if($projEmpls->first()) {
                             $resourceIds .= '"' . 'Završetak izvođenja: ' . date('d.m.Y', strtotime($projEmpls->first()->date)) . ' ",';

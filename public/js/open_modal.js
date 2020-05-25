@@ -1,6 +1,5 @@
 $( document ).ready(function() {  
-   
-    $("a[rel='modal:open']").show();
+   console.log('modal:open');    $("a[rel='modal:open']").show();
 
     $.modal.defaults = {
     closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.

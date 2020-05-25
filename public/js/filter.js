@@ -31,11 +31,10 @@ function mySearchTable() {
 var trazi_status;
 var text;
 
-
 function mySearch_preparation() {
-    
+
     $('#mySearch_preparation').keyup(function() {
-        text = $('#mySearch_preparation').parent().siblings('.show_inactive').text();
+        text = $('.show_inactive').text();
         console.log(text);
         var trazi = $( this ).val().toLowerCase();
         if(text == 'Prikaži neaktivne') {

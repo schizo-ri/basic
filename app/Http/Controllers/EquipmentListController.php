@@ -43,7 +43,6 @@ class EquipmentListController extends Controller
      */
     public function store(Request $request)
     {
-
         $before_all = array();       
         $after_all = array();
         
@@ -181,14 +180,14 @@ class EquipmentListController extends Controller
             'user_id'           => Sentinel::getUser()->id
         );
 
-        if(isset($request['replaced_item_id'])) {         
+        if(isset($request['replaced_item_id'])) {
             $data += ['replaced_item_id'=> $request['replaced_item_id']];
         }
         if(isset($request['stavka_id_level1']) && $request['stavka_id_level1'] != '') {
             $item_level1 = EquipmentList::where('preparation_id', $preparation_id)->where('product_number', $request['stavka_id_level1'])->first();
             $data += ["stavka_id_level1"=> $item_level1->id];
         }
-        if(isset($request['stavka_id_level2'])  && $request['stavka_id_level2'] != '') {
+        if(isset($request['stavka_id_level2']) && $request['stavka_id_level2'] != '') {
             $item_level2 = EquipmentList::where('preparation_id', $preparation_id)->where('product_number', $request['stavka_id_level2'])->first();
             $data += ["stavka_id_level2"=> $item_level2->id ];
         }
@@ -219,18 +218,28 @@ class EquipmentListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
+        
         $equipments = EquipmentList::where('preparation_id', $id)->get();
-        $listUpdates = ListUpdate::orderBy('created_at', 'ASC')->get();  
 
+        $listUpdates = collect();
+        foreach ($equipments as $equipment ) {
+            $listUpdates =  $listUpdates->merge(ListUpdate::where('item_id',$equipment->id)->orderBy('created_at', 'ASC')->get());
+        }
+     //   $listUpdates = ListUpdate::orderBy('created_at', 'ASC')->get();  
+        $equipment_level1 = null;
+        if(isset($request['equipment_level1'])) {
+            $equipment_level1 = EquipmentList::find($request['equipment_level1']);
+        }
+        
         $equipments_dates = $equipments->unique('created_at'); 
         $list_dates = array();
         foreach ($equipments_dates as $date ) {
            array_push($list_dates, $date->created_at->toDateTimeString());
         }       
-   
-        return view('Centaur::equipment_lists.edit', ['equipments' => $equipments, 'preparation_id' => $id, 'list_dates' => $list_dates, 'listUpdates' => $listUpdates]);
+     
+        return view('Centaur::equipment_lists.edit', ['equipments' => $equipments,'equipment_level1' => $equipment_level1, 'preparation_id' => $id, 'list_dates' => $list_dates, 'listUpdates' => $listUpdates]);
     }
 
     /**
@@ -242,6 +251,7 @@ class EquipmentListController extends Controller
      */
     public function update(Request $request, $id)
     {        
+     
         $before_all = array();
        
         $after_all = array();
@@ -356,10 +366,8 @@ class EquipmentListController extends Controller
 
     public function import ()
     {
-       
-         try {
+        try {
             Excel::import(new EquipmentImport, request()->file('file'));
-
         } catch (\Throwable $th) {
             
             session()->flash('error', "Došlo je do problema, dokument nije učitan!");

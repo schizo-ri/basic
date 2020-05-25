@@ -98,3 +98,9 @@ Route::get('exportList/', 'EquipmentListController@exportList')->name('export');
 Route::post('replaceItem', ['as' => 'replaceItem', 'uses' => 'EquipmentListController@replaceItem']);
 Route::get('multiReplaceItem', ['as' => 'multiReplaceItem', 'uses' => 'EquipmentListController@multiReplaceItem']);
 Route::post('multiReplaceStore', ['as' => 'multiReplaceStore', 'uses' => 'EquipmentListController@multiReplaceStore']);
+Route::get('Centaur::preparations/index', ['as' => 'preparations_active', 'uses' => 'PreparationController@preparations_active']);
+
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    return "Cache is cleared";
+});

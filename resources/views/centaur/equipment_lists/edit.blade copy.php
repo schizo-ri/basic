@@ -1,6 +1,5 @@
 @php
 ini_set('memory_limit','-1');
-
 @endphp
 
 <a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
@@ -39,7 +38,7 @@ ini_set('memory_limit','-1');
             </div>
             <div class="tbody">
                 @if ( $equipments->where('level1',1)->first())
-                   
+                    @foreach ($equipments->where('level1', 1) as $equipment_level1)
                         <!-- naslov -->
                             <!-- <input name="id[]" value="{{ $equipment_level1->id }}" hidden/> -->
                             <p class="tr row_preparation_text_item1 {!! $equipment_level1->replace_item == 1 ? 'removed_item' : '' !!} item_level1 {!! count($equipments->where('stavka_id_level1',$equipment_level1->id))>0 ? 'collapsible' : '' !!}" id="{{ $equipment_level1->id }}" >
@@ -80,7 +79,38 @@ ini_set('memory_limit','-1');
                                 <span class="td text_preparation"></span>
                                 <span class="td text_preparation"></span>
                                 <span class="td text_preparation"></span>
-                              
+                                <!-- <span class="td text_preparation ">{{ $equipment_level1->unit }}</span>
+                                <span class="td text_preparation quantity ">{{ $equipment_level1->quantity }}</span>
+                                <span class="td text_preparation delivered">
+                                    <input name="delivered[]" type="number" step="0.01"  title="Please enter number only" value="{{ $delivered }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} />    
+                                    @if ( $delivered )
+                                        @if (Sentinel::inRole('administrator') || Sentinel::inRole('list_view')  )
+                                            <span class="arrow_down"><i class="fas fa-arrow-down"></i></span>  
+                                            <span class="delivered_history">
+                                                @if ( $equipment_level1->delivered)
+                                                    <span class="item_delivered">
+                                                        {{ date('d.m.Y',strtotime($equipment_level1->created_at)) . ' | ' . $equipment_level1->delivered . ' ' .  $equipment_level1->unit }}
+                                                    </span>
+                                                @endif
+                                                @foreach ($listUpdates_item as $listUpdate)
+                                                    <span class="item_delivered">
+                                                        @if ($listUpdate->quantity)
+                                                            {{ date('d.m.Y H:i',strtotime($listUpdate->created_at)) . ' | ' . $listUpdate->quantity  . ' ' .  $equipment_level1->unit}}
+                                                        @endif
+                                                    </span>
+                                                @endforeach
+                                            </span>
+                                        @endif                                        
+                                    @endif
+                                </span>
+                                <span class="td text_preparation replace">
+                                    @if (Sentinel::inRole('list_view') || Sentinel::inRole('moderator') || Sentinel::inRole('administrator'))
+                                        @if ($equipment_level1->replace_item == null && $equipment_level1->delivered < $equipment_level1->quantity || $delivered == 0  )
+                                            <span class="action_confirm2 btn-file-input equipment_lists_mark" title="Zamjeni stavku" id="{{ $equipment_level1->id }}" ><i class="fas fa-exchange-alt"></i></span>
+                                        @endif 
+                                    @endif  
+                                    
+                                </span> -->
                                 @if (Sentinel::inRole('administrator') || ($equipment_level1->preparation1->manager && $equipment_level1->preparation1->manager->id == Sentinel::getUser()->id) || 
                                     ($equipment_level1->preparation1->designed &&  $equipment_level1->preparation1->designed->id == Sentinel::getUser()->id )) 
                                    <!--  <a href="{{ route('equipment_lists.destroy', $equipment_level1->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši ormar">
@@ -258,7 +288,7 @@ ini_set('memory_limit','-1');
                                 @endforeach
                             </span>
                         <!-- end naslov -->
-                                
+                    @endforeach                    
                 @else
                     @php
                         $i = 1;
@@ -357,280 +387,282 @@ ini_set('memory_limit','-1');
             <input name="unit" id="unit" placeholder="Upiši jmj..." value="{{ old('unit') }}" required/>
             <input name="quantity" id="quantity" placeholder="Upiši količinu..." value="{{ old('quantity') }}" required />
             {{ csrf_field() }}    
-            <input type="submit" class="btn btn-lg btn-primary store_changes" value="Upiši" />
+            <input type="submit" value="upiši" />
         </form>
-        @if ( $equipments->where('level1',1)->first())
-            <form class="create_item_siemens" accept-charset="UTF-8" role="form" method="post" action="{{ route('equipment_lists.create') }}">
-                <input name="preparation_id" id="preparation_id1"  value="{{ $preparation_id }}" hidden />
-                <input name="product_number" id="product_number1" placeholder="Upiši broj produkta..." value="{{ old('product_number') }}" required/>
-                <input name="mark" id="mark1" placeholder="Upiši oznaku..." value="{{ old('mark') }}" />
-                <input name="name" id="name1" placeholder="Upiši naziv..." value="{{ old('name') }}" required/>
-                <input name="unit" id="unit1" placeholder="Upiši jmj..." value="{{ old('unit') }}" required/>
-                <input name="quantity" id="quantity1" placeholder="Upiši količinu..." value="{{ old('quantity') }}" required />
-                <input name="stavka_id_level1" id="stavka_id_level1" placeholder="Upiši stavku level1..." value="{{ old('stavka_id_level1') }}"  />
-                <input name="stavka_id_level2" id="stavka_id_level2" placeholder="Upiši stavku level2..." value="{{ old('stavka_id_level2') }}" />
-                
-                {{ csrf_field() }}    
-                <input type="submit" class="btn btn-lg btn-primary store_changes" value="Upiši" />
-            </form>
+        @if(! Sentinel::inRole('upload_list'))
+            @if ( $equipments->where('level1',1)->first())
+                <form class="create_item_siemens" accept-charset="UTF-8" role="form" method="post" action="{{ route('equipment_lists.create') }}">
+                    <input name="preparation_id" id="preparation_id1"  value="{{ $preparation_id }}" hidden />
+                    <input name="product_number" id="product_number1" placeholder="Upiši broj produkta..." value="{{ old('product_number') }}" required/>
+                    <input name="mark" id="mark1" placeholder="Upiši oznaku..." value="{{ old('mark') }}" />
+                    <input name="name" id="name1" placeholder="Upiši naziv..." value="{{ old('name') }}" required/>
+                    <input name="unit" id="unit1" placeholder="Upiši jmj..." value="{{ old('unit') }}" required/>
+                    <input name="quantity" id="quantity1" placeholder="Upiši količinu..." value="{{ old('quantity') }}" required />
+                    <input name="stavka_id_level1" id="stavka_id_level1" placeholder="Upiši stavku level1..." value="{{ old('stavka_id_level1') }}"  />
+                    <input name="stavka_id_level2" id="stavka_id_level2" placeholder="Upiši stavku level2..." value="{{ old('stavka_id_level2') }}" />
+                    
+                    {{ csrf_field() }}    
+                    <input type="submit" value="upiši" />
+                </form>
+            @endif
         @endif
         <a href="#first_anchor"><i class="fas fa-arrow-up" ></i></a>
     </div>
 </div>
 <script>
-    $.getScript( "/restfulizer.js");
-    $(function() {
-        $('.collapsible').click(function(event){    
-            $(this).next('.content').toggle();
-        });
-        var id_row;
-        $('.link_to_replaced').click(function(){
-            id_row = $( this ).attr('href').replace('#', '');
-            $('#'+id_row).css('font-weight','bold');
-            $('#'+id_row).css('border','2px solid red');
-            $( '.link_to_replaced' ).prop("disabled", true);
-            
-            setTimeout(return_css, 2000);
-        });
-        var return_css = function(){
-            $('#'+id_row).css('font-weight','normal');
-            $('#'+id_row).css('border-left','none');
-            $('#'+id_row).css('border-right','none');
-            $('#'+id_row).css('border-bottom','1px solid #ccc');
-            $('#'+id_row).css('border-top','1px solid #ccc');     
+$.getScript( "/restfulizer.js");
+$(function() {
+    $('.collapsible').click(function(event){    
+        $(this).next('.content').toggle();
+    });
+    var id_row;
+    $('.link_to_replaced').click(function(){
+        id_row = $( this ).attr('href').replace('#', '');
+        $('#'+id_row).css('font-weight','bold');
+        $('#'+id_row).css('border','2px solid red');
+        $( '.link_to_replaced' ).prop("disabled", true);
         
-        };
+        setTimeout(return_css, 2000);
+    });
+    var return_css = function(){
+        $('#'+id_row).css('font-weight','normal');
+        $('#'+id_row).css('border-left','none');
+        $('#'+id_row).css('border-right','none');
+        $('#'+id_row).css('border-bottom','1px solid #ccc');
+        $('#'+id_row).css('border-top','1px solid #ccc');     
+      
+    };
 
-        var equipment_lists_height = $('.modal.equipment_lists').height();
-        var id; // item id
+    var equipment_lists_height = $('.modal.equipment_lists').height();
+    var id; // item id
 
-        var el_replace;
+    var el_replace;
 
-        $('.action_confirm2').click(function(){
-            if( confirm("Sigurno želiš zamjeniti stavku?") ) {
+    $('.action_confirm2').click(function(){
+       if( confirm("Sigurno želiš zamjeniti stavku?") ) {
 
-                $('.modal .create_item').show();
-                $('.modal.equipment_lists').scrollTop(equipment_lists_height);
-                $('#product_number').focus();
+            $('.modal .create_item').show();
+            $('.modal.equipment_lists').scrollTop(equipment_lists_height);
+            $('#product_number').focus();
 
-                id = $( this ).attr('id');
+            id = $( this ).attr('id');
 
-                el_replace = $( this );
-                
-                el_replace.parent().parent().removeClass('all_delivered');
-                el_replace.parent().parent().removeClass('not_delivered');
-                el_replace.parent().parent().removeClass('partial');
-                el_replace.parent().parent().addClass('removed_item');
-                el_replace.parent().prev('.delivered').find('input').attr('disabled','disabled');
-                el_replace.remove();
-
-            }  else {
-                    return false;
-            }
-        
-        });
-
-        $('.create_item_siemens').submit(function(e){
-            e.preventDefault();
-            console.log($('#stavka_id_level1').val());
-            console.log($('#stavka_id_level2').val());
-            var preparation_id = $('#preparation_id1').val();
-            var product_number = $('#product_number1').val();
-            var mark = $('#mark1').val();
-            var name = $('#name1').val();
-            var unit = $('#unit1').val();
-            var quantity = $('#quantity1').val();
-            var stavka_id_level1 = $('#stavka_id_level1').val();
-            var stavka_id_level2 = $('#stavka_id_level2').val();
-            var token = $('meta[name="csrf-token"]').attr('content');
-            var url_update = location.origin + '/equipment_lists/' + preparation_id +'/edit/';  
-
-            $.ajax({
-                url:  'addItem', 
-                type: 'post',
-                data: {
-                        '_token':  token,
-                        'preparation_id': preparation_id,
-                        'product_number': product_number,
-                        'mark': mark,
-                        'name': name,
-                        'unit': unit,
-                        'quantity': quantity,
-                        'stavka_id_level1': stavka_id_level1,
-                        'stavka_id_level2': stavka_id_level2                
-                    }
-            })
-            .done(function( msg ) {
+            el_replace = $( this );
             
-                $.ajax({
-                    type: 'POST',
-                    url: 'replaceItem',
-                    data: {'id':id,
-                            '_token':  $('meta[name="csrf-token"]').attr('content') },
-                    success: function(data){
-                        console.log( msg );
-                    },
-                });
-               // $('.modal').load( url_update );
-                console.log( "Stavka je spremljena!" );
-            
-            })
-            .fail(function(data) {
-                alert( "Spremanje nije uspjelo" );
-                console.log(data);
-            })
-        });
-    
-        $('.create_item').submit(function(e){
-            e.preventDefault();
+            el_replace.parent().parent().removeClass('all_delivered');
+            el_replace.parent().parent().removeClass('not_delivered');
+            el_replace.parent().parent().removeClass('partial');
+            el_replace.parent().parent().addClass('removed_item');
+            el_replace.parent().prev('.delivered').find('input').attr('disabled','disabled');
+            el_replace.remove();
 
-            var preparation_id = $('#preparation_id').val();
-            var product_number = $('#product_number').val();
-            var mark = $('#mark').val();
-            var name = $('#name').val();
-            var unit = $('#unit').val();
-            var quantity = $('#quantity').val();
-            var token = $('meta[name="csrf-token"]').attr('content');
-            var url_update = location.origin + '/equipment_lists/' + preparation_id +'/edit/';   
-            
-            $.ajax({
-                url:  'addItem', 
-                type: 'post',
-                data: {
-                        '_token':  token,
-                        'preparation_id': preparation_id,
-                        'product_number': product_number,
-                        'mark': mark,
-                        'name': name,
-                        'unit': unit,
-                        'quantity': quantity,
-                        'replaced_item_id': id
-                    }         
-            })
-            .done(function( msg ) {
-                
-                $.ajax({
-                    type: 'POST',
-                    url: 'replaceItem',
-                    data: {'id':id,
-                            '_token':  $('meta[name="csrf-token"]').attr('content') },
-                    success: function(data){
-                    /* el_replace.parent().parent().removeClass('all_delivered');
-                        el_replace.parent().parent().removeClass('not_delivered');
-                        el_replace.parent().parent().removeClass('partial');
-                        el_replace.parent().parent().addClass('removed_item');
-                        el_replace.parent().prev('.delivered').find('input').attr('disabled','disabled');
-                        el_replace.remove();*/
-                        
-                    },
-                });
-                $('.modal').load( url_update );
-                console.log( "Stavka je spremljena!" );
-            
-            })
-            .fail(function() {
-                alert( "Spremanje nije uspjelo" );
-            })
-        });
+       }  else {
+            return false;
+       }
+     
+    });
 
-        $('.arrow_down').click(function(){
-            $( this ).siblings('.delivered_history').toggle();
-        });
+    $('.create_item_siemens').submit(function(e){
+        e.preventDefault();
+        console.log($('#stavka_id_level1').val());
+        console.log($('#stavka_id_level2').val());
+        var preparation_id = $('#preparation_id1').val();
+        var product_number = $('#product_number1').val();
+        var mark = $('#mark1').val();
+        var name = $('#name1').val();
+        var unit = $('#unit1').val();
+        var quantity = $('#quantity1').val();
+        var stavka_id_level1 = $('#stavka_id_level1').val();
+        var stavka_id_level2 = $('#stavka_id_level2').val();
+        var token = $('meta[name="csrf-token"]').attr('content');
+        var url_update = location.origin + '/equipment_lists/' + preparation_id +'/edit/';  
 
-        var delivered = 0;
-        var quantity = 0;
-        $.each( $('.row_preparation_text'), function( index, value ) {
-            if( $( this ).hasClass('removed_item') || $( this ).hasClass('item_level1') || $( this ).hasClass('item_level2') ) {
-                //
-            } else {
-                delivered = $( this ).children('.delivered').find('input').val();
-                quantity =  $( this ).children('.quantity').text();
-
-                if( delivered == 'undefined' || delivered == '' || delivered == '0') {
-                    $( this ).addClass('not_delivered');
-                } else if(delivered == quantity || delivered > parseInt(quantity)) {
-                    $( this ).addClass('all_delivered');          
-                } else if(delivered < parseInt(quantity)) {
-                    $( this ).addClass('partial');          
+        $.ajax({
+            url:  'addItem', 
+            type: 'post',
+            data: {
+                    '_token':  token,
+                    'preparation_id': preparation_id,
+                    'product_number': product_number,
+                    'mark': mark,
+                    'name': name,
+                    'unit': unit,
+                    'quantity': quantity,
+                    'stavka_id_level1': stavka_id_level1,
+                    'stavka_id_level2': stavka_id_level2                
                 }
-            }      
-        });
+        })
+        .done(function( msg ) {
+         
+            $.ajax({
+                type: 'POST',
+                url: 'replaceItem',
+                data: {'id':id,
+                        '_token':  $('meta[name="csrf-token"]').attr('content') },
+                success: function(data){
+                    console.log( msg );
+                },
+            });
+            $('.modal').load( url_update );
+            console.log( "Stavka je spremljena!" );
+          
+        })
+        .fail(function(data) {
+            alert( "Spremanje nije uspjelo" );
+            console.log(data);
+        })
+    });
+   
+    $('.create_item').submit(function(e){
+        e.preventDefault();
 
-        $('.text_preparation.delivered>input').change(function(){
-            delivered = $( this ).val();
-            quantity = $( this ).parent().prev().text();
+        var preparation_id = $('#preparation_id').val();
+        var product_number = $('#product_number').val();
+        var mark = $('#mark').val();
+        var name = $('#name').val();
+        var unit = $('#unit').val();
+        var quantity = $('#quantity').val();
+        var token = $('meta[name="csrf-token"]').attr('content');
+        var url_update = location.origin + '/equipment_lists/' + preparation_id +'/edit/';   
         
+        $.ajax({
+            url:  'addItem', 
+            type: 'post',
+            data: {
+                    '_token':  token,
+                    'preparation_id': preparation_id,
+                    'product_number': product_number,
+                    'mark': mark,
+                    'name': name,
+                    'unit': unit,
+                    'quantity': quantity,
+                    'replaced_item_id': id
+                }         
+        })
+        .done(function( msg ) {
+            
+            $.ajax({
+                type: 'POST',
+                url: 'replaceItem',
+                data: {'id':id,
+                        '_token':  $('meta[name="csrf-token"]').attr('content') },
+                success: function(data){
+                   /* el_replace.parent().parent().removeClass('all_delivered');
+                    el_replace.parent().parent().removeClass('not_delivered');
+                    el_replace.parent().parent().removeClass('partial');
+                    el_replace.parent().parent().addClass('removed_item');
+                    el_replace.parent().prev('.delivered').find('input').attr('disabled','disabled');
+                    el_replace.remove();*/
+                    
+                },
+            });
+            $('.modal').load( url_update );
+            console.log( "Stavka je spremljena!" );
+          
+        })
+        .fail(function() {
+            alert( "Spremanje nije uspjelo" );
+        })
+    });
+
+    $('.arrow_down').click(function(){
+        $( this ).siblings('.delivered_history').toggle();
+    });
+
+    var delivered = 0;
+    var quantity = 0;
+    $.each( $('.row_preparation_text'), function( index, value ) {
+        if( $( this ).hasClass('removed_item') || $( this ).hasClass('item_level1') || $( this ).hasClass('item_level2') ) {
+            //
+        } else {
+            delivered = $( this ).children('.delivered').find('input').val();
+            quantity =  $( this ).children('.quantity').text();
+
             if( delivered == 'undefined' || delivered == '' || delivered == '0') {
-                $( this ).parent().parent().removeClass('all_delivered');  
-                $( this ).parent().parent().removeClass('partial');   
-                $( this ).parent().parent().addClass('not_delivered');  
-            } 
-            if((delivered == parseInt(quantity)) || (delivered > parseInt(quantity))) {
-                $( this ).parent().parent().removeClass('not_delivered');
-                $( this ).parent().parent().removeClass('partial');
-                $( this ).parent().parent().addClass('all_delivered');          
+                $( this ).addClass('not_delivered');
+            } else if(delivered == quantity || delivered > parseInt(quantity)) {
+                $( this ).addClass('all_delivered');          
+            } else if(delivered < parseInt(quantity)) {
+                $( this ).addClass('partial');          
             }
-            if(delivered < parseInt(quantity)) {
-                $( this ).parent().parent().removeClass('not_delivered');
-                $( this ).parent().parent().removeClass('all_delivered');
-                $( this ).parent().parent().addClass('partial');          
-            }
-        });
+        }      
+    });
 
-        var inputs = $(".text_preparation.delivered > input");
+    $('.text_preparation.delivered>input').change(function(){
+        delivered = $( this ).val();
+        quantity = $( this ).parent().prev().text();
+       
+        if( delivered == 'undefined' || delivered == '' || delivered == '0') {
+            $( this ).parent().parent().removeClass('all_delivered');  
+            $( this ).parent().parent().removeClass('partial');   
+            $( this ).parent().parent().addClass('not_delivered');  
+        } 
+        if((delivered == parseInt(quantity)) || (delivered > parseInt(quantity))) {
+            $( this ).parent().parent().removeClass('not_delivered');
+            $( this ).parent().parent().removeClass('partial');
+            $( this ).parent().parent().addClass('all_delivered');          
+        }
+        if(delivered < parseInt(quantity)) {
+            $( this ).parent().parent().removeClass('not_delivered');
+            $( this ).parent().parent().removeClass('all_delivered');
+            $( this ).parent().parent().addClass('partial');          
+        }
+    });
 
-        $(inputs).keypress(function(e){
-            if (e.keyCode == 13){
-                inputs[inputs.index(this)+1].focus();
-                e.preventDefault();
-            }
-        });
+    var inputs = $(".text_preparation.delivered > input");
 
-        var color;
-        var status;
+    $(inputs).keypress(function(e){
+        if (e.keyCode == 13){
+            inputs[inputs.index(this)+1].focus();
+            e.preventDefault();
+        }
+    });
 
-        $('.filter_color>span').click(function(){
-            color = this.className;
+    var color;
+    var status;
 
-            if (color == 'red') {
-                status = 'not_delivered';
-            } else if (color == 'green') {
-                status = 'all_delivered';
-            } else if (color == 'yellow') {
-                status = 'partial';
-            } else if (color == 'grey') {
-                status = 'removed_item';
-            }
+    $('.filter_color>span').click(function(){
+        color = this.className;
 
-            $.each($('.modal .row_preparation_text'), function( index, value ) {
-                if(color == 'all') {               
+        if (color == 'red') {
+            status = 'not_delivered';
+        } else if (color == 'green') {
+            status = 'all_delivered';
+        } else if (color == 'yellow') {
+            status = 'partial';
+        } else if (color == 'grey') {
+            status = 'removed_item';
+        }
+
+        $.each($('.modal .row_preparation_text'), function( index, value ) {
+            if(color == 'all') {               
+                $( this ).show();
+            } else {
+                if( $(this).hasClass(status)) {
                     $( this ).show();
                 } else {
-                    if( $(this).hasClass(status)) {
-                        $( this ).show();
-                    } else {
-                        $( this ).hide();
-                    }
-                }           
-            });
+                    $( this ).hide();
+                }
+            }           
         });
-    });   
-    $('body').on($.modal.AFTER_CLOSE, function(event, modal) {
-        $.modal.defaults = {
-            closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
-            escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
-            closeText: 'Close',     // Text content for the close <a> tag.
-            closeClass: '',         // Add additional class(es) to the close <a> tag.
-            showClose: true,        // Shows a (X) icon/link in the top-right corner
-            modalClass: "modal",    // CSS class added to the element being displayed in the modal.
-            // HTML appended to the default spinner during AJAX requests.
-            spinnerHtml: "<div id='loader'><span class='ajax-loader1'></span></div>",
-        
-            showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
-            fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
-            fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
-        };
     });
-    $.getScript('/../js/filter.js');
+});   
+$('body').on($.modal.AFTER_CLOSE, function(event, modal) {
+    $.modal.defaults = {
+        closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+        escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+        clickClose: false,       // Allows the user to close the modal by clicking the overlay
+        closeText: 'Close',     // Text content for the close <a> tag.
+        closeClass: '',         // Add additional class(es) to the close <a> tag.
+        showClose: true,        // Shows a (X) icon/link in the top-right corner
+        modalClass: "modal",    // CSS class added to the element being displayed in the modal.
+        // HTML appended to the default spinner during AJAX requests.
+        spinnerHtml: "<div id='loader'><span class='ajax-loader1'></span></div>",
+    
+        showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+        fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+        fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+    };
+});
+$.getScript('/../js/filter.js');
 </script>

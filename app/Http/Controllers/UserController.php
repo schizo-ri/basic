@@ -39,7 +39,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->userRepository->createModel()->with('roles')->paginate(15);
+        $users = $this->userRepository->createModel()->with('roles')->orderBy('last_name','ASC')->get();
 
         return view('Centaur::users.index', ['users' => $users]);
     }

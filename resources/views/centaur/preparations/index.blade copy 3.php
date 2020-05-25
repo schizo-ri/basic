@@ -4,23 +4,15 @@
 
 @section('content')
 @php  
-    set_time_limit(120);
-
-    use App\Models\PreparationRecord;
-    use App\Models\EquipmentList;  
-@endphp
+set_time_limit(120);
+use App\Models\PreparationRecord;
+use App\Models\EquipmentList;  @endphp
 <span hidden class="today">{{ date('Y-m-d') }}</span>
 <div class="page-header">
 <div style="float:right"><span class="alert alert-danger" style="display: block; margin: 0;">Molim obrisati cache sa ctrl+f5 da se povuće novi dizajn</span></div>
     <h1>Priprema i mehanička obrada</h1>
-    <div class='btn-toolbar pull-right'>
-        @if( isset($_GET["active"]) && $_GET["active"] == 1)
-            <span class="show_inactive"><a href="{{ action('PreparationController@preparations_active', ['active' => 0]) }}">Prikaži neaktivne</a></span>
-        @elseif( isset($_GET["active"]) && $_GET["active"] == 0) 
-            <span class="show_active"><a href="{{ action('PreparationController@preparations_active', ['active' => 1]) }}">Prikaži aktivne</a></span>
-        @else 
-            <span class="show_inactive"><a href="{{ action('PreparationController@preparations_active', ['active' => 0]) }}">Prikaži neaktivne</a></span>
-        @endif
+     <div class='btn-toolbar pull-right'>
+        <span class="show_inactive">Prikaži neaktivne</span>
         <label class="filter_empl">
             <input type="search" placeholder="Traži..." id="mySearch_preparation">
             <i class="clearable__clear">&times;</i>
@@ -49,9 +41,12 @@
                        <span class="th option_input">Opcije</span>
                     </p>
                 </div>
+                
                 <div class="tbody">
                     @foreach ($preparations as $proj_no => $preparation1)
-                        @if( $proj_no)<h4 class="collapsible_project">{{ $proj_no  }}</h4> @endif
+                        @if($preparation1->toArray()[0]['active'] == 1)
+                            <h4 class="collapsible_project">{{ $proj_no }}</h4>
+                        @endif
                         @foreach ($preparation1 as $preparation)
                             @if (Sentinel::getUser()->id == $preparation->project_manager || 
                             Sentinel::getUser()->id == $preparation->designed_by || 
@@ -64,11 +59,11 @@
                                 @php
                                     $preparationRecords1 = PreparationRecord::where('preparation_id',$preparation->id)->get();
                                     $preparationRecord_today = $preparationRecords1->where('preparation_id',$preparation->id)->where('date', date('Y-m-d'))->first();
-  
                                 @endphp
+                               
                                 <p class="tr row_preparation_text {!! $preparation->active == 1 ? 'active' : 'inactive' !!} {{ str_replace(':','_', $proj_no)  }}">
-                                    @if ( $preparation->active == 1) 
-                                        <a class="open_upload_link"><i class="fas fa-upload"></i><span class="preparation_id" hidden>{{ $preparation->id }}</span></a>
+                                     @if ( $preparation->active == 1) 
+                                        <a class="open_upload_link"><i class="fas fa-upload"></i><span class="preparation_id"></span></a>
                                     @endif
                                     <span class="td text_preparation file_input">
                                     </span>
@@ -78,57 +73,34 @@
                                     <span class="td text_preparation manager_input">{{ $preparation->manager['first_name'] . ' ' . $preparation->manager['last_name']  }}</span>
                                     <span class="td text_preparation designed_input">{{ $preparation->designed['first_name'] . ' ' . $preparation->designed['last_name']  }}</span>
                                     <span class="td text_preparation date_input">{{ date('d.m.Y')}}</span>
-                                    <!-- Priprema -->
-                                    <span class="td text_preparation date_change preparation_input"  >
-                                            @if (json_decode($preparation->preparation))
-                                                @foreach(json_decode($preparation->preparation) as $key => $preparation1)
-                                                    <span class="date_{{ $preparation->date }}">{{ $key . ': '}}<b>{{ $preparation1 }}</b></span>
-                                                @endforeach
-                                            @endif
-                                       <!--  @if ( $preparation->active == 1)
+                                    <span class="td text_preparation date_change preparation_input"   >
+                                        @if ( $preparation->active == 1)
                                             @if (!Sentinel::inRole('moderator') && ! Sentinel::inRole('list_view') )
                                                 @if ($preparationRecord_today)
-                                                    @foreach(json_decode($preparationRecord_today->preparation) as $key => $preparation1)
-                                                        <span class="date_{{ $preparationRecord_today->date }}">{{ $key . ': '}}<b>{{ $preparation1 }}</b></span>
-                                                    @endforeach
+                                                    <span class="date_{{ $preparationRecord_today->date }}">{{ $preparationRecord_today->preparation }}</span>
                                                 @endif
-
                                             @endif
-                                        @endif -->
+                                        @endif
                                     </span>
                                     <!-- Mehanička obrada -->
                                     <span class="td text_preparation date_change mechanical_input">
-                                        @if (json_decode($preparation->mechanical_processing))
-                                            @foreach(json_decode($preparation->mechanical_processing) as $key => $mechanical)
-                                                <span class="date_{{ $preparation->date }}">{{ $key . ': '}}<b>{{ $mechanical }}</b></span>
-                                            @endforeach
-                                        @endif
-                                      <!--   @if ( $preparation->active == 1)
+                                        @if ( $preparation->active == 1)
                                             @if (!Sentinel::inRole('moderator')&& ! Sentinel::inRole('list_view') )
                                                 @if ($preparationRecord_today)
-                                                    @foreach(json_decode($preparationRecord_today->mechanical_processing) as $key => $mechanical)
-                                                        <span class="date_{{ $preparationRecord_today->date }}">{{ $key . ': '}}<b>{{ $mechanical }}</b></span>
-                                                    @endforeach
+                                                    <span class="date_{{ $preparationRecord_today->date }}">{{ $preparationRecord_today->mechanical_processing }}</span>
                                                 @endif
                                             @endif
-                                        @endif -->
+                                        @endif
                                     </span>
                                     <!-- Oznake i dokumentacija -->
-                                    <span class="td text_preparation date_change marks_input">
-                                        @if (json_decode($preparation->marks_documentation))
-                                            @foreach(json_decode($preparation->marks_documentation) as $key => $marks)
-                                                <span class="date_{{ $preparation->date }}">{{ $key . ': '}}<b>{{ $marks }}</b></span>
-                                            @endforeach
-                                        @endif
-                                       <!--  @if ( $preparation->active == 1)
+                                    <span class="td text_preparation date_change mechanical_input">
+                                        @if ( $preparation->active == 1)
                                             @if (!Sentinel::inRole('moderator')&& ! Sentinel::inRole('list_view') )
                                                 @if ($preparationRecord_today)
-                                                    @foreach(json_decode($preparationRecord_today->marks_documentation) as $key => $marks)
-                                                        <span class="date_{{ $preparationRecord_today->date }}">{{ $key . ': '}}<b>{{ $marks }}</b></span>
-                                                    @endforeach
+                                                    <span class="date_{{ $preparationRecord_today->date }}">{{ $preparationRecord_today->marks_documentation }}</span>
                                                 @endif
                                             @endif
-                                        @endif -->
+                                        @endif
                                     </span>
                                     <!-- Upis opreme -->                                      
                                     <span class="td text_preparation equipment_input">    
@@ -241,6 +213,7 @@
     @endif           
 </div>
 <script>
+    
     $('.open_upload_link').click(function(){
         var preparation_id = $( this ).find('.preparation_id').text();
         console.log(preparation_id);
@@ -248,16 +221,19 @@
         $('.upload_links').modal();
         return false;
     });
-   
+    $('.table_preparations .inactive').hide();
     $('.show_inactive').click(function(){
-        $('.show_active').toggle();
-        $('.show_inactive').toggle();
-       
-    });
-    $('.show_active').click(function(){
-        $('.show_active').toggle();
-        $('.show_inactive').toggle();
-      
+        $('.table_preparations .inactive').toggle();
+        $('.table_preparations .active').toggle();
+        if($(this).text() == 'Prikaži neaktivne') {
+            $(this).text('Prikaži aktivne');
+            $('.upload_file').hide();
+            $('.upload_file_replace').hide();
+        } else {
+            $(this).text('Prikaži neaktivne');
+            $('.upload_file').show();
+            $('.upload_file_replace').show();
+        }
     });
     $('.upload_file input[type=file]').change(function(){
         $(this).parent().parent().submit();
@@ -281,7 +257,7 @@
            
             $('p.row_preparation_text.'+id).css('display','flex');
         }
-        $(this).next('.open_upload_link').toggle();
+      //  $(this).next('.open_upload_link').toggle();
         
     });
     
@@ -336,20 +312,27 @@
     });
   
     $('#mySearch_preparation').keyup(function() {
+        text = $('.show_inactive').text();
+       
         var trazi = $( this ).val().toLowerCase();
-        $('.collapsible_project').filter(function() {
+        if(text == 'Prikaži neaktivne') {
+            trazi_status = '.active';
+        } else {
+            trazi_status = '.inactive';
+        }
+
+        $('.row_preparation_text' + trazi_status).filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(trazi) > -1)
         });
         $('.form_preparation:visible').filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(trazi) > -1)
         });
     });	
+    
     $('.clearable__clear').click(function(){
         $('#mySearch_preparation').val('');
-        $('.collapsible_project').show();
+        $('.row_preparation_text' + trazi_status).show();
  //       $('.form_preparation').hide();
     });
-
-    $('.table_preparations .tbody').width($('.table_preparations .thead').width());
 </script>
 @stop

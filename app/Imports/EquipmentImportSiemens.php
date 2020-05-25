@@ -6,6 +6,7 @@ use App\Models\EquipmentList;
 use App\Models\Preparation;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Sentinel;
 
 class EquipmentImportSiemens implements ToModel, WithHeadingRow
 {
@@ -55,7 +56,8 @@ class EquipmentImportSiemens implements ToModel, WithHeadingRow
             'quantity' => $row['quantity'],
             'level1' =>  $level1,
             'stavka_id_level1' =>  $stavka_id_level1,
-            'stavka_id_level2' =>  $stavka_id_level2
+            'stavka_id_level2' =>  $stavka_id_level2,
+            'user_id' => Sentinel::getUser()->id
         ]);  
     }
 }

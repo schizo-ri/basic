@@ -6,6 +6,7 @@ use App\Models\EquipmentList;
 use App\Models\Preparation;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Sentinel;
 
 class EquipmentImport implements ToModel, WithHeadingRow
 {
@@ -33,8 +34,9 @@ class EquipmentImport implements ToModel, WithHeadingRow
            'product_number' => $row['product_number'], 
            'mark' => $row['mark'], 
            'name'    => $row['name'], 
-           'unit' => $row['unit'], 
-           'quantity' => $row['quantity']          
+           'unit' => intval($row['unit']), 
+           'quantity' => $row['quantity'],
+           'user_id' => Sentinel::getUser()->id
         ]);
     }
 }

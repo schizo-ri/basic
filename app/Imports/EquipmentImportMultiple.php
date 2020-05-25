@@ -49,6 +49,7 @@ class EquipmentImportMultiple implements ToModel, WithHeadingRow
                     'unit' => $row['unit'],   
                     'quantity' => $row['quantity'],        
                     'replaced_item_id' => $replaced_item->id,
+                    'user_id' => Sentinel::getUser()->id
                  ]);
             }
         } 
