@@ -5,18 +5,22 @@
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('cars.update', $car->id) }}" >
 		<fieldset>
 			<div class="form-group {{ ($errors->has('manufacturer')) ? 'has-error' : '' }}">
+				<label for="">@lang('basic.manufacturer')</label>
 				<input class="form-control" placeholder="{{ __('basic.manufacturer')}}" name="manufacturer" type="text" maxlength="50" value="{{ $car->manufacturer }}" required />
 				{!! ($errors->has('manufacturer') ? $errors->first('manufacturer', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('model')) ? 'has-error' : '' }}">
+				<label for="">@lang('basic.model')</label>
 				<input class="form-control" placeholder="Model" name="model" type="text" maxlength="50" value="{{ $car->model }}" required />
 				{!! ($errors->has('model') ? $errors->first('model', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('registration')) ? 'has-error' : '' }}">
+			<label for="">@lang('basic.license_plate')</label>
 				<input class="form-control" placeholder="{{ __('basic.license_plate')}}" name="registration" type="text" maxlength="20" value="{{ $car->registration }}" required />
 				{!! ($errors->has('registration') ? $errors->first('registration', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('chassis')) ? 'has-error' : '' }}">
+				<label for="">@lang('basic.chassis')</label>
 				<input class="form-control" placeholder="{{ __('basic.chassis')}}" name="chassis" type="text" maxlength="30" value="{{ $car->chassis }}" required />
 				{!! ($errors->has('chassis') ? $errors->first('chassis', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
@@ -36,7 +40,8 @@
 				{!! ($errors->has('last_service') ? $errors->first('last_service', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('current_km')) ? 'has-error' : '' }}">
-				<input class="form-control" placeholder="{{ __('basic.current_km')}}" name="current_km" type="number" value="{{ $car->current_km }}" required />
+				<label for="">@lang('basic.current_km')</label>
+				<input class="form-control" placeholder="{{ __('basic.current_km')}}" name="current_km" type="number" maxlength="20" value="{{ $car->current_km }}" maxlength="20" required />
 				{!! ($errors->has('current_km') ? $errors->first('current_km', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('department_id')) ? 'has-error' : '' }}">

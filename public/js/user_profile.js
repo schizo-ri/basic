@@ -5,7 +5,6 @@ $( function () {
     $( ".profile_images > .profile_img" ).each( (index, element) => {
         all_width += $(element).width();
     });
-
     if(all_width > div_width ) {
         $('.profile_images .scroll_right').show();
     }

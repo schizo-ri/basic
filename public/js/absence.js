@@ -3,19 +3,34 @@ $(function(){
 	var ova_godina = d.getFullYear();
 	var prosla_godina = ova_godina - 1;
 	var year = '';
-	console.log(ova_godina);
-	$('.info_abs .go.go_'+ova_godina).show();
-	$('.info_abs .bol.bol_'+ova_godina).show();
-	$('tbody tr.tr_'+ova_godina).show();
 
 	$('#year_vacation').change(function(){
 		year = $(this).val();
-		$('tbody tr').hide();
-		$('.tr_'+year).show();
+		
 		$('.info_abs>p>.go').hide();
 		$('.info_abs>p>.go.go_'+year).show();
 		$('#mySearchTbl').val("");
-	
+
+		var url = location.href + '?year='+year;
+		console.log(url);
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});     
+		$.ajax({
+			url: url,
+			type: "GET",
+			success: function( response ) {
+				console.log("prošlo");
+				$('table').load(url + ' table',function(){
+					$.getScript( '/../restfulizer.js');
+				});
+			}, 
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr);                            
+			}
+		});
 	});
 	$('#year_sick').change(function(){
 		console.log($(this).val());
@@ -23,11 +38,28 @@ $(function(){
 		$('.info_abs>p>.bol').hide();
 		$('.info_abs>p>.bol.bol_'+year).show();
 
-		$('tbody tr').hide();
-		$('.tr_'+year+'.bol').show();
+		var url = location.href + '?year='+year+'&type=BOL';
+		console.log(url);
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});     
+		$.ajax({
+			url: url,
+			type: "GET",
+			success: function( response ) {
+				console.log("prošlo");
+				$('table').load(url + ' table',function(){
+					$.getScript( '/../restfulizer.js');
+				});
+			}, 
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr);                            
+			}
+		});
 
 	});
-	
 	$( "#request_type" ).change(function() {
 		if($(this).val() == 'IZL') {
 			$('.form-group.time').show();

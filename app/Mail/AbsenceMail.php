@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Absence; 
 use App\Models\Employee; 
+use App\Models\Template; 
 use App\Http\Controllers\BasicAbsenceController;
 
 class AbsenceMail extends Mailable
@@ -43,11 +44,12 @@ class AbsenceMail extends Mailable
         $dani_zahtjev = BasicAbsenceController::daniGO($zahtjev);
         $zahtjevi = BasicAbsenceController::zahtjevi($employee);
         $neiskoristeno_GO = $zahtjevi['ukupnoPreostalo']; //vraća neiskorištene dane 
-        
+        $template = Template::where('module','absence')->first();
         return $this->from('info@duplico.hr', 'Duplico')
-                    ->view('Centaur::email.absence')
+                    ->view('Centaur::email.absence') 
                     ->subject( __('emailing.new_absence') . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])
                     ->with([
+                        'template' => $template,
                         'absence' => $this->absence,
                         'dani_zahtjev' => $dani_zahtjev,
                         'neiskoristeno_GO' => $neiskoristeno_GO

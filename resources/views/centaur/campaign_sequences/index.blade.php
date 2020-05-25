@@ -30,14 +30,14 @@
 							<td>{!! $sequence->start_date ? date('d.m.Y', strtotime($sequence->start_date)) : '' !!}</td>
 							<td>{{ $sequence->send_interval }}</td>
 							<td class="center">
-								<button class="collapsible option_dots float_r"></button>								
+								<!-- <button class="collapsible option_dots float_r"></button> -->								
 								@if(Sentinel::getUser()->hasAccess(['campaign_sequences.delete']) || in_array('campaign_sequences.delete', $permission_dep) && !$works->where('department_id',$department->id)->first())
-								<a href="{{ route('campaign_sequences.destroy', $sequence->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
+								<a href="{{ route('campaign_sequences.destroy', $sequence->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
 									<i class="far fa-trash-alt"></i>
 								</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['campaign_sequences.update']) || in_array('campaign_sequences.update', $permission_dep))
-									<a href="{{ route('campaign_sequences.edit', $sequence->id) }}" style="display:none" class="btn-edit" title="{{ __('basic.edit_campaigns')}}" rel="modal:open">
+									<a href="{{ route('campaign_sequences.edit', $sequence->id) }}" class="btn-edit" title="{{ __('basic.edit_campaigns')}}" rel="modal:open">
 										<i class="far fa-edit"></i>
 									</a>
 								@endif
@@ -55,7 +55,6 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-	//	$.getScript( '/../node_modules/tinymce/tinymce.min.js');
 		$('.collapsible').click(function(event){        
        		$(this).siblings().toggle();
 		});

@@ -18,19 +18,19 @@
                 }
             @endphp
                 @if(pathinfo($image)['extension'] == 'mp4')
-                <div class="mySlides">
-                    <video width="1000" controls>
-                        <source src="{{ URL::asset( $path . $image ) }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <a href="{{ route('documents.destroy', $document_id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" hidden="true" >
+                    <div class="mySlides">
+                        <video width="1000" controls>
+                            <source src="{{ URL::asset( $path . $image ) }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <a href="{{ route('documents.destroy', $document_id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" hidden="true" >
                             <i class="far fa-trash-alt"></i>
                         </a>
-                </div>
+                    </div>
                 @elseif(! strpos(pathinfo($image)['basename'], '_small') && (pathinfo($image)['extension'] == 'jpg' ||  pathinfo($image)['extension'] == 'jpeg' ||  pathinfo($image)['extension'] == 'png' ||  pathinfo($image)['extension'] == 'gif' ||  pathinfo($image)['extension'] == 'svg' ))    
-                <div class="mySlides">
-                    <img src="{{ URL::asset( $path . $image ) }}" alt="image"  />
-                    <a href="{{ route('documents.destroy', $document_id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" hidden="true" >
+                    <div class="mySlides">
+                        <img src="{{ URL::asset( $path . $image ) }}" alt="image"  />
+                        <a href="{{ route('documents.destroy', $document_id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" hidden="true" >
                             <i class="far fa-trash-alt"></i>
                         </a>
                     </div>
@@ -75,7 +75,7 @@
                             <p>
                                 {{ $document->employee->user['first_name'] . ' ' .  $document->employee->user['last_name']  }}
                                 <span class="profile_photo">
-                                    @if(isset($profile_image))
+                                    @if(isset($profile_image) && is_array(isset($profile_image)))
                                         <img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image"  />
                                     @else
                                         <img class="radius50 " src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />

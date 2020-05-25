@@ -40,7 +40,7 @@
 			click_element = $(this);
 			$.getScript( '/../restfulizer.js');
 			var url = $(this).attr('href');
-			console.log(url);
+		//	console.log(url);
 		
 			$( '#admin_page' ).load( url, function( response, status, xhr ) {
 				if ( status == "error" ) {
@@ -53,9 +53,9 @@
 			return false;
 		});
 		
-		$('.collapsible').click(function(event){        
+	/* 	$('.collapsible').click(function(event){        
 			$(this).siblings().toggle();
-		});
+		}); */
 	});
 	
 	$.getScript( '/../restfulizer.js');

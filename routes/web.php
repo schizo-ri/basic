@@ -102,7 +102,15 @@ Route::resource('evaluations', 'EvaluationController');
 
 // Post
 Route::resource('posts', 'PostController');
-Route::post('/comment/store', ['as' => 'comment.store', 'uses' => 'PostController@storeComment']);
+Route::post('/comment/store', ['as' => 'comment.store', 'uses' => 'PostController@storeComment', function () {
+    event(new App\Events\MessageSend($message, $comment, $id));
+    return "Event has been sent!";
+}]);
+
+
+// post update
+Route::get('posts/{id}/{year?}/{month?}/{day?}/{hour?}/{minute?}/{second?}', ['as' => 'posts', 'uses' => 'PostController@updated']);
+Route::get('setCommentAsRead/{id}', ['as' => 'setCommentAsRead', 'uses' => 'PostController@setCommentAsRead']);
 
 // Event
 Route::resource('events', 'EventController');
@@ -158,6 +166,9 @@ Route::resource('settings', 'SettingController');
 // VehicalService
 Route::resource('vehical_services', 'VehicalServiceController');
 
+// Template
+Route::resource('templates', 'TemplateController');
+
 // Dashboard 
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 
@@ -174,9 +185,10 @@ Route::get('oglasnik', ['as' => 'oglasnik', 'uses' => 'AdController@oglasnik']);
 Route::get('sort', ['as' => 'sort', 'uses' => 'AdController@sort']);
 
 // Noticeboard
-
 Route::get('noticeboard', ['as' => 'noticeboard', 'uses' => 'NoticeController@noticeboard']);
 Route::get('notices.schedule', ['as' => 'notices.schedule', 'uses' => 'NoticeController@schedule']);
+Route::get('notices.test_mail', ['as' => 'notices.test_mail', 'uses' => 'NoticeController@test_mail_open']);
+Route::post('sendTestEmail', ['as' => 'sendTestEmail', 'uses' => 'NoticeController@sendTestEmail']);
 
 // Send mail questionnaire
 Route::get('sendEmail', ['as' => 'sendEmail', 'uses' => 'QuestionnaireController@sendEmail']);
@@ -186,16 +198,13 @@ Route::get('confirmation', ['as' => 'confirmation', 'uses' => 'AbsenceController
 Route::get('confirmation_update', ['as' => 'confirmation_update', 'uses' => 'AbsenceController@storeConf_update']);
 // Open absence confirmation page
 Route::get('absence/confirmation_show', ['as' => 'confirmation_show', 'uses' => 'AbsenceController@confirmation_show']);
+
 // User edit 
 Route::get('user/edit_user/{id}', ['as' => 'user.edit', 'uses' => 'UserController@edit_user']);
 
 // Upload image 
 Route::get('upload_image', ['as' => 'upload', 'uses' => 'DocumentController@uploadImage']);
-// post update
 
-Route::get('posts/{id}/{year?}/{month?}/{day?}/{hour?}/{minute?}/{second?}', ['as' => 'posts', 'uses' => 'PostController@updated']);
-
-Route::get('setCommentAsRead/{id}', ['as' => 'setCommentAsRead', 'uses' => 'PostController@setCommentAsRead']);
 
 // Open slide show
 Route::get('users.slide_show/{id}', ['as' => 'slide_show', 'uses' => 'UserController@slide_show']);
@@ -217,8 +226,17 @@ Route::get('all_event', ['as' => 'all_event', 'uses' => 'EventController@modal_e
 Route::get('startCampaign', ['as' => 'sendEmail', 'uses' => 'CampaignController@startCampaign']);
 Route::get('imageDelete', ['as' => 'imageDelete', 'uses' => 'DocumentController@imageDelete']);
 
+// CampaignSequence mail
+Route::get('campaign_mail', ['as' => 'campaign_mail', 'uses' => 'CampaignSequenceController@campaign_mail']);
+Route::get('campaign_sequences.test_mail', ['as' => 'campaign_sequences.test_mail', 'uses' => 'CampaignSequenceController@test_mail_open']);
+Route::post('sendTestSequence', ['as' => 'sendTestSequence', 'uses' => 'CampaignSequenceController@sendTestEmail']);
+Route::post('setOrder', ['as' => 'setOrder', 'uses' => 'CampaignSequenceController@setOrder']);
+
 // Get last km for car
 Route::post('last_km', 'CarController@last_km');
 Route::post('getMailSettings', 'SettingController@getMailSettings');
 
-Route::get('campaign_mail', ['as' => 'campaign_mail', 'uses' => 'CampaignSequenceController@campaign_mail']);
+Route::get('/t', function () {
+    event(new \App\Events\MessageSendEvent());
+    dd('Event Run Successfully.');
+});

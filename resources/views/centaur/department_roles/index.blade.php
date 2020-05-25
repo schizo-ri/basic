@@ -27,14 +27,14 @@
 							<td>{{ $department_role->department['name'] }}</td>
 							<td>{{ $department_role->permissions }}</td>
 							<td class="center">
-								<button class="collapsible option_dots float_r"></button>
+								<!-- <button class="collapsible option_dots float_r"></button> -->
 								@if(Sentinel::getUser()->hasAccess(['department_roles.update']) || in_array('department_roles.update', $permission_dep))
-									<a href="{{ route('department_roles.edit', $department_role->id) }}" title="{{ __('basic.edit_roles') }}" style="display:none" class="btn-edit" rel="modal:open">
+									<a href="{{ route('department_roles.edit', $department_role->id) }}" title="{{ __('basic.edit_roles') }}" class="btn-edit" rel="modal:open">
 											<i class="far fa-edit"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['department_roles.delete']) || in_array('department_roles.delete', $permission_dep))
-									<a href="{{ route('department_roles.destroy', $department_role->id) }}" title="{{ __('basic.delete_roles') }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+									<a href="{{ route('department_roles.destroy', $department_role->id) }}" title="{{ __('basic.delete_roles') }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -51,9 +51,9 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');	
-	$('.collapsible').click(function(event){        
+	/* $('.collapsible').click(function(event){        
        		$(this).siblings().toggle();
-		});
-	});
+		});*/
+	}); 
 	$.getScript( '/../restfulizer.js');
 </script>

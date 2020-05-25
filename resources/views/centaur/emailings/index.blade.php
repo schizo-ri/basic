@@ -43,14 +43,14 @@
 								@endif
 							</td>
 							<td class="center">
-								<button class="collapsible option_dots float_r"></button>
+								<!-- 	<button class="collapsible option_dots float_r"></button> -->
 								@if(Sentinel::getUser()->hasAccess(['emailings.update']) || in_array('emailings.update', $permission_dep))
-									<a href="{{ route('emailings.edit', $emailing->id) }}" style="display:none"  title="{{ __('basic.edit')}}" class="btn-edit" rel="modal:open">
+									<a href="{{ route('emailings.edit', $emailing->id) }}" title="{{ __('basic.edit')}}" class="btn-edit" rel="modal:open">
 											<i class="far fa-edit"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['works.delete']) || in_array('works.delete', $permission_dep) && !$employees->where('work_id',$work->id)->first())
-									<a href="{{ route('emailings.destroy', $emailing->id) }}" style="display:none" title="{{ __('basic.delete')}}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+									<a href="{{ route('emailings.destroy', $emailing->id) }}" title="{{ __('basic.delete')}}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -67,9 +67,9 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-	$('.collapsible').click(function(event){        
+	/* 	$('.collapsible').click(function(event){        
        		$(this).siblings().toggle();
-		});
+		}); */
 	});
 	$.getScript( '/../restfulizer.js');
 	$.getScript( '/../js/validate.js');

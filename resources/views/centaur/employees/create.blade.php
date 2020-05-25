@@ -20,7 +20,7 @@
 			</div>
 			<div class="form-group  {{ ($errors->has('color'))  ? 'has-error' : '' }}" style="padding-top: 10px">
 				<label>@lang('basic.color') </label>
-				<input class="form-control color"  type="color" name="color" value="{{ old('color')}}" >
+				<input class="form-control color" type="color" name="color" value="{{ old('color')}}" >
 				{!! ($errors->has('color') ? $errors->first('color', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('b_day')) ? 'has-error' : '' }}">
@@ -30,7 +30,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('b_place')) ? 'has-error' : '' }}">
 				<label>@lang('basic.b_place')</label>
-				<input class="form-control"  name="b_place" type="text" value="{{ old('b_place') }}"  maxlength="50" />
+				<input class="form-control"  name="b_place" type="text" value="{{ old('b_place') }}" maxlength="50" />
 				{!! ($errors->has('b_place') ? $errors->first('b_place', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('father_name')) ? 'has-error' : '' }}">
@@ -85,7 +85,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('prebiv_grad')) ? 'has-error' : '' }}">
 				<label>Grad prebivališta</label>
-				<input class="form-control" name="prebiv_grad" type="text "maxlength="50" value="{{ old('prebiv_grad') }}"  />
+				<input class="form-control" name="prebiv_grad" type="text" maxlength="50" value="{{ old('prebiv_grad') }}"  />
 				{!! ($errors->has('prebiv_grad') ? $errors->first('prebiv_grad', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('borav_adresa')) ? 'has-error' : '' }}">
@@ -108,7 +108,7 @@
 				<input name="qualifications" type="text" class="form-control" maxlength="20" value="{{ old('qualifications') }}"   >
 				{!! ($errors->has('qualifications') ? $errors->first('qualifications', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group  {{ ($errors->has('marital'))  ? 'has-error' : '' }}">
+			<div class="form-group {{ ($errors->has('marital'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.marital')</label>
 				<select class="form-control" name="marital" value="{{ old('marital') }}"   >
 					<option selected="selected" value=""></option>
@@ -156,7 +156,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('probation')) ? 'has-error' : '' }}">
 				<label>@lang('basic.probation')</label>
-				<input class="form-control" placeholder="{{ __('basic.probation')}}" type="number" step="1" type="text" value="{{ old('probation') }}" pattern="[0-9]" />
+				<input class="form-control" placeholder="{{ __('basic.probation')}}" name="probation" type="number" step="1" value="{{ old('probation') }}" pattern="[0-9]" />
 				{!! ($errors->has('probation') ? $errors->first('probation', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('years_service'))  ? 'has-error' : '' }}">
@@ -187,12 +187,25 @@
 				</div>
 				{!! ($errors->has('abs_days') ? $errors->first('abs_days', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			@if(in_array('Kampanje', $moduli))
+				<div class="form-group {{ ($errors->has('campaign_id')) ? 'has-error' : '' }}">
+					<label>@lang('basic.campaigns')</label>
+					<select class="form-control" name="campaign_id[]" multiple >
+						<option value="" disabled selected ></option>
+						@foreach($campaigns as $campaign)	
+							<option value="{{ $campaign->id}}" >{{ $campaign->name }}</option>
+						@endforeach
+					</select>
+					{!! ($errors->has('campaign_id') ? $errors->first('campaign_id', '<p class="text-danger">:message</p>') : '') !!}
+				</div>
+			@endif
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">
 		</fieldset>
 	</form>
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
+
 <script>
 	$('.add_new').click(function(){
 		$('.group_abs_days').append('<div class="group_abs"><input class="form-control day_go" type="number" step="1" maxlength="2" name="abs_days[]" value="0" /><span class="float_l span_day_go">@lang('absence.days')  @lang('basic.for_year')</span><input class="form-control day_go" type="number" step="1" maxlength="4" placeholder="{{ __('basic.year') }}" name="abs_year[]" /><span class="remove"><i class="far fa-trash-alt"></i></span></div>');
@@ -201,5 +214,5 @@
 			console.log("remove");
 		});
 	});
-     $.getScript( '/../js/validate.js'); 
+    $.getScript( '/../js/validate.js'); 
 </script>

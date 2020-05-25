@@ -14,7 +14,7 @@
 						@endforeach
 					@endif
 				</select>
-				{!! ($errors->has('vozilo_id') ? $errors->first('vozilo_id', '<p class="text-danger">:message</p>') : '') !!}
+				{!! ($errors->has('car_id') ? $errors->first('car_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>			
 			<div class="form-group {{ ($errors->has('date')) ? 'has-error' : '' }}">
 				<label for="">@lang('basic.date')</label>

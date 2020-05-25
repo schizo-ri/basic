@@ -60,15 +60,17 @@ $( function () {
 				},
 				customize: function( xlsx ) {
 					var sheet = xlsx.xl.worksheets['sheet1.xml'];
-					$('row c', sheet).attr( 's', '25' );
+				/* 	$('row c', sheet).attr( 's', '25' );  borders */
 					$('row:first c', sheet).attr( 's', '27' );
 				}	
 			}
 		]
 	});
-	
-	$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+	if($(".index_table_filter .show_button").length == 0) {
+		$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+	}
+
 	$('.show_button').click(function () {
 		$('.index_page .dt-buttons').toggle();		
-	})	
+	})
 });

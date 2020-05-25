@@ -1,6 +1,7 @@
 $(function() {
     var url_basic = location.origin + '/events';
-  
+    var calendar_main_height;
+    var calendar_aside_height;
     var data1;
     if( $('.dataArr').text()) {
         var data1 = JSON.parse( $('.dataArr').text());
@@ -15,6 +16,11 @@ $(function() {
     */
     $('.calender_view').pignoseCalendar({
         multiple: false,
+        init: function(contex) {
+            calendar_aside_height = $('.calendar_aside').height();
+            calendar_main_height = $('.calendar_main').height();
+            $('.index_aside .day_events').height(calendar_aside_height -calendar_main_height - 110 );          
+        },
         scheduleOptions: {
             colors: {
                 event: '#1390EA',
@@ -43,39 +49,51 @@ $(function() {
                         var url = url_basic + '?dan=' + datum;
                         
                         $('.index_aside .day_events').load(url + ' .index_aside .day_events >div');
-                        
-                        $('.index_event_month').load( url + ' .index_event_month>section');
 
-                        $('.index_event').load( url + ' .index_event>section', function() {
-                            $.getScript( '/../restfulizer.js');
-                            $('.change_view').click(function(){
-                                $('.index_event').toggle();
-                                $('.index_event_month').toggle();
+                        if($('.main_calendar_day').is(":visible")) {
+                            $('.index_event').load( url + ' .index_event>section', function() {
+                                $.getScript( '/../js/load_calendar2.js');
+                                $.getScript( '/../restfulizer.js');
+                                $('.main_calendar_month tbody td').click(function(){
+                                    var date = $(this).attr('data-date');
+                                    $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
+                                });
                             });
-                            $('.change_view2').click(function(){
-                                $('.index_event').toggle();
-                                $('.index_event_month').toggle();
+                        }
+                        if($('.main_calendar_month').is(":visible")) {
+                            $('.header_calendar').load(url + ' .header_calendar >div', function() {
+                                $('.change_view_calendar').val('month') ;
+                                $('.header_calendar>div:first-child').removeClass('col-5');
+                                $('.header_calendar>div:first-child').addClass('col-10');
+                                $('.header_calendar>div:nth-child(2)').hide();
+                            });
+                           
+                            $('.main_calendar_month').load( url + ' .main_calendar_month>table', function() {
+                                $.getScript( '/../js/load_calendar2.js');
+                                $.getScript( '/../restfulizer.js');
+                                $('.main_calendar_month tbody td').click(function(){
+                                    var date = $(this).attr('data-date');
+                                    $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
+                                });
+                            });
+                        }
+                        if($('.main_calendar_week').is(":visible")) {
+                            $('.header_calendar').load(url + ' .header_calendar >div', function() {
+                                $('.change_view_calendar').val('week') ;
+                                $('.header_calendar>div:first-child').removeClass('col-5');
+                                $('.header_calendar>div:first-child').addClass('col-10');
+                                $('.header_calendar>div:nth-child(2)').hide();
                             });
 
-                        });
-
-                        $('.index_event_month').load( url + ' .index_event_month>section', function() {
-                            $.getScript( '/../restfulizer.js');
-                            $('.change_view').click(function(){
-                                $('.index_event').hide();
-                                $('.index_event_month').show();
+                            $('.main_calendar_week').load( url + ' .main_calendar_week>table', function() {
+                                $.getScript( '/../js/load_calendar2.js');
+                                $.getScript( '/../restfulizer.js');
+                                $('.main_calendar_month tbody td').click(function(){
+                                    var date = $(this).attr('data-date');
+                                    $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
+                                });
                             });
-                            
-                            $('.change_view2').click(function(){
-                                $('.index_event').show();
-                                $('.index_event_month').hide();
-                            });
-                            $('.main_calendar_month tbody td').click(function(){
-                                var date = $(this).attr('data-date');
-                                $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
-                        
-                            });
-                        });                        
+                        }
                     }
                 }
             },
@@ -110,27 +128,12 @@ $(function() {
                 
                 $('.index_event').load( url + ' .index_event>section', function() {
                     $.getScript( '/../restfulizer.js');
-                    $('.change_view').click(function(){
-                        $('.index_event').toggle();
-                        $('.index_event_month').toggle();
-                    });
-                    $('.change_view2').click(function(){
-                        $('.index_event').toggle();
-                        $('.index_event_month').toggle();
-                    });
-
+                   
                 });
 
                 $('.index_event_month').load( url + ' .index_event_month>section', function() {
                     $.getScript( '/../restfulizer.js');
-                    $('.change_view').click(function(){
-                        $('.index_event').hide();
-                        $('.index_event_month').show();
-                    });
-                    $('.change_view2').click(function(){
-                        $('.index_event').show();
-                        $('.index_event_month').hide();
-                    });
+                
                 });
               
             },
@@ -169,35 +172,19 @@ $(function() {
 
                 $('.index_event').load( url + ' .index_event>section', function() {
                     $.getScript( '/../restfulizer.js');
-                    $('.change_view').click(function(){
-                        $('.index_event').toggle();
-                        $('.index_event_month').toggle();
-                    });
-                    $('.change_view2').click(function(){
-                        $('.index_event').toggle();
-                        $('.index_event_month').toggle();
-                    });
+                    
 
                 });
 
                 $('.index_event_month').load( url + ' .index_event_month>section', function() {
                     $.getScript( '/../restfulizer.js');
-                    $('.change_view').click(function(){
-                        $('.index_event').hide();
-                        $('.index_event_month').show();
-                    });
-                    $('.change_view2').click(function(){
-                        $('.index_event').show();
-                        $('.index_event_month').hide();
-                    });
+                   
                 });
-            }
-
+            }   
     });
-
     
-
     $('.index_aside .day_events').show();
+    
     $.getScript( '/../js/open_modal.js'); 
    /*  $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.

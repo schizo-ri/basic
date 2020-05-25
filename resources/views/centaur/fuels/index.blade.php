@@ -1,5 +1,5 @@
 <div class="modal-header">
-	<h3 class="panel-title">@lang('basic.fuel_consumption') - {{ $fuels->first()->car->registration }}</h3>
+	<h3 class="panel-title">@lang('basic.fuel_consumption') - {!! $fuels->first() ? $fuels->first()->car->registration : '' !!}</h3>
 </div>
 <div class="modal-body">
 	<table class="table_fuel">
@@ -25,7 +25,7 @@
 						<td>{!! $fuel_prev ? round($fuel->liters / ($fuel->km - $fuel_prev->km)  * 100,2) : 0 !!}</td>
 						<td>
 							@if(Sentinel::getUser()->hasAccess(['fuels.view']) || in_array('fuels.view', $permission_dep))
-								<a href="{{ route('fuels.edit',$fuel->id ) }}" class="edit_service btn-edit" title="{{ __('basic.fuels')}}" rel="modal:open">
+								<a href="{{ route('fuels.edit',$fuel->id ) }}" class="edit_service btn-edit" title="{{ __('basic.fuel')}}" rel="modal:open">
 									<i class="far fa-edit"></i>
 								</a>
 							@endif
@@ -39,7 +39,7 @@
 				@endforeach
 			@else 
 				<tr>
-					<td class="no-data" colspan="4" >@lang('basic.no_data')</td>
+					<td class="no-data" colspan="5" >@lang('basic.no_data')</td>
 			@endif
 		</tbody>
 	</table>	

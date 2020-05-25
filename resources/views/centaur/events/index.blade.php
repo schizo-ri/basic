@@ -23,7 +23,7 @@
 	$year = $selected['god_select'];
 	$selected_day = $year .'-'. $month .'-'. $day;
 	
-//	$days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);  // broj dana u mjesecu
+	//	$days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);  // broj dana u mjesecu
 
 	if ($year%4 == 0)
 	{
@@ -47,13 +47,15 @@
 ?>
 @section('content')
 <div class="index_page posts_index">
-	<aside class="col-4 index_aside calendar_aside">
-		@include('Centaur::side_calendar')
+	<aside class="col-xs-12 col-sm-12 col-md-4 col-lg-4 index_aside calendar_aside">
+		<div>
+			@include('Centaur::side_calendar')
+		</div>
 	</aside>
-	<main class="col-8 index_main index_event">
+	<main class="col-xs-12 col-sm-12 col-md-8 col-lg-8 index_main index_event">
 		<section>
 			<header class="header_calendar">
-				<div class="col-6 float_left padd_0">
+				<div class="col-5 float_left padd_0 daycontainer">
 					<span class="event_day">
 						<span class="week_day">{{ $selected['week_day'] }}</span>
 						<span class="day">{{ $selected['dan_select'] }}</span>
@@ -67,14 +69,21 @@
 						{{ $selected['month'] . ' ' .  $selected['god_select'] }}
 					</span>
 				</div>
-				<div class="col-6 float_left padd_0">
+				<div class="col-5 float_left padd_0 event_container">
 					<span class="meeting col-4"><span class="blue"></span>@lang('basic.meeting')<span>{{ $count_days['dani_event'] }}</span></span>
 					<span class="tasks col-4"><span class="orange"></span>@lang('basic.birthdays')<span>{{ $count_days['dani_rodjendani'] }}</span></span>
 					<span class="on_vacation col-4"><span class="green"></span>@lang('basic.on_vacation')<span>{{ $count_days['dani_odmor'] }}</span></span>
 				</div>
-				<div class="change_view">@lang('basic.view_monthly')</div>				
+				<div class="col-2 float_left daycontainer" >
+					<select class="change_view_calendar">
+						<option value="day" selected >@lang('basic.view_daily')</option>
+						<option value="week">@lang('basic.view_weekly')</option>
+						<option value="month">@lang('basic.view_monthly')</option>
+					</select>
+				</div>
+				
 			</header>
-			<main class="main_calendar" >
+			<main class="main_calendar main_calendar_day" >
 				<div class="all_events">
 					@if(count($hours_array) > 0)
 						@foreach($hours_array as $hour)
@@ -155,17 +164,6 @@
 				</div>				
 				<div hidden class="dataArr">{!! ! empty($dataArr) ? json_encode($dataArr) : '' !!}</div>
 			</main>
-		</section>
-	</main>
-	<main class="col-8 index_main index_event_month">
-		<section>
-			<header class="header_calendar_month">
-				<div class="col-6 float_left padd_0">
-					<span class="arrow"><img class="img_button month_before" src="{{ URL::asset('icons/arrow_left.png') }}" alt="arrow"/><img class="img_button month_after" src="{{ URL::asset('icons/arrow_right.png') }}" alt="arrow"/></span>
-					<span class="month_year">{{ $selected['month'] . ' ' .  $selected['god_select'] }}</span>
-				</div>
-				<div class="change_view2">@lang('basic.view_daily')</div>
-			</header>
 			<main class="main_calendar_month" >				
 				<table class="col-12 ">
 					<thead class="col-12">
@@ -261,11 +259,130 @@
 					</tbody>
 				</table>
 			</main>
+			<main class="main_calendar_week" >
+				@php
+					$today = new DateTime($dan); //2020-03-31
+					$date_in_week = new DateTime($dan); //2020-03-31
+					$day_in_week = date_format($date_in_week, 'N') - 1 ;  // 2 -1 = ponedjeljak,
+					$start_date = $date_in_week->modify('-'. $day_in_week.'day'); 
+					
+				@endphp
+				<table class="col-12 ">
+					<thead class="col-12">
+						<tr class="col-12">
+							<th class="col-2"></th>
+							<th class="col-2 {!! date_format( $start_date->modify('+0day'), 'Y-m-d') == date_format( $today, 'Y-m-d') ? 'today' : '' !!}">
+								<span class="day_in_week">@lang('calendar.monday1')</span><span class="date_in_week">{{ date_format( $start_date, 'd') }}</span>
+							</th>
+							<th class="col-2 {!! date_format( $start_date->modify('+1day'), 'Y-m-d') == date_format( $today, 'Y-m-d') ? 'today' : '' !!}">
+								<span class="day_in_week">@lang('calendar.tuesday1')</span><span class="date_in_week">{{ date_format( $start_date, 'd') }}</span>
+							</th>
+							<th class="col-2 {!! date_format( $start_date->modify('+1day'), 'Y-m-d') == date_format( $today, 'Y-m-d') ? 'today' : '' !!}">
+								<span class="day_in_week">@lang('calendar.wednesday1')</span><span class="date_in_week">{{ date_format( $start_date, 'd') }}</span>
+							</th>
+							<th class="col-2 {!! date_format( $start_date->modify('+1day'), 'Y-m-d') == date_format( $today, 'Y-m-d') ? 'today' : '' !!}">
+								<span class="day_in_week">@lang('calendar.thursday1')</span><span class="date_in_week">{{ date_format( $start_date, 'd') }}</span>
+							</th>
+							<th class="col-2 {!! date_format( $start_date->modify('+1day'), 'Y-m-d') == date_format( $today, 'Y-m-d') ? 'today' : '' !!}">
+								<span class="day_in_week">@lang('calendar.friday1')</span><span class="date_in_week">{{  date_format( $start_date, 'd') }}</span>
+							</th>
+							<th class="col-2 {!! date_format( $start_date->modify('+1day'), 'Y-m-d') == date_format( $today, 'Y-m-d') ? 'today' : '' !!}">
+								<span class="day_in_week">@lang('calendar.saturday1')</span><span class="date_in_week">{{ date_format( $start_date, 'd') }}</span>
+							</th>
+							<th class="col-2 {!! date_format( $start_date->modify('+1day'), 'Y-m-d') == date_format( $today, 'Y-m-d') ? 'today' : '' !!}">
+								<span class="day_in_week">@lang('calendar.sunday1')</span><span class="date_in_week">{{ date_format( $start_date, 'd') }}</span>
+							</th>
+						</tr>
+					</thead>
+					<tbody class="col-12">
+						@php
+							
+						@endphp
+						@foreach($hours_array as $hour)
+							<tr class="col-12">
+								<td>{{ $hour }}</td>
+								@for ($i = 0; $i < 7; $i++)
+									@php
+										$today = new DateTime($dan); //2020-03-31
+										$date_in_week = new DateTime($dan); //2020-03-31
+										$day_in_week = date_format($date_in_week, 'N') - 1 ;  // 2 -1 = ponedjeljak,
+										$start_date = $date_in_week->modify('-'. $day_in_week.'day');
+									
+										$date1 = $start_date->modify('+'. $i .'day');
+									@endphp
+									<td id="{{ date_format($date1, 'Y-m-d') }}">
+										@foreach ($events->where('date', date_format($date1, 'Y-m-d') ) as $event)
+											@if (strstr($event->time1,':',true) == strstr($hour,':',true) || 
+													(intval(strstr($event->time1,':',true)) < intval(strstr($hour,':',true) ) && intval(strstr($event->time2,':',true)) > intval(strstr($hour,':',true)) ))
+												<a href="{{ route('events.show', $event->id) }}" rel="modal:open">
+													<div class="show_event col-12" >
+														<div class="event blue">
+															<p>{{ date('H:i',strtotime($event->time1)) . ' - ' . date('G:i',strtotime($event->time2)) }} {{ $event->title }}
+																{{-- <a href="{{ route('events.edit', $event->id) }}" class="btn-edit" rel="modal:open" >
+																	<i class="far fa-edit"></i>
+																</a>
+																<a href="{{ route('events.destroy', $event->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+																	<i class="far fa-trash-alt"></i>
+																</a> --}}
+															</p>
+														</div>
+													</div>
+												</a>
+											@endif
+										@endforeach
+										@foreach($tasks as $task)
+											@if (strstr($task->time1,':',true) == strstr($hour,':',true) || 
+													(intval(strstr($task->time1,':',true)) < intval(strstr($hour,':',true) ) && intval(strstr($task->time2,':',true)) > intval(strstr($hour,':',true)) ))
+												@if( $task->date == date_format($date1, 'Y-m-d') )
+													<a href="{{ route('tasks.show', $task->id) }}" rel="modal:open">
+														<div class="show_event col-12" >
+															<div class="event" {!! $task->employee->color ? 'style="background-color:' . $task->employee->color . '"' : 'style="background-color:#aaa"' !!} >
+																<p>{{ $task->employee->user['first_name'] }} {!! $task->car_id ? ' - ' . $task->car->registration : '' !!} {{ ' - ' . $task->title }}
+																	{{-- {{ date('H:i',strtotime($task->time1)) . ' - ' . date('G:i',strtotime($task->time2)) }} {{ $task->title }}, {{ $task->description }} --}}
+																</p>
+															</div>
+														</div>
+													</a>
+												@endif
+											@endif
+										@endforeach
+										@foreach($dataArr as $key => $data)
+											@if($data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task')
+												@if( $data['date'] == date_format($date1, 'Y-m-d') && date('H', strtotime($hour)) == date('H', strtotime($data['start_time'])) )
+													<div class="show_event col-12" >
+														<div class="event green">
+															<p>
+															{{ isset($data['employee']) ? $data['type'] . ' - ' . $data['employee'] : ''  }}
+															{!! $data['name'] == 'IZL' ? '('. date('H:i', strtotime($data['start_time'])) . '-' . date('H:i', strtotime($data['end_time'] )) . ')' : '' !!}
+															</p>
+														</div>
+													</div>
+												@endif
+											@endif
+											@if($data['name'] == 'birthday')
+												@if(date("m-d",strtotime($data['date'])) == date_format($date1, 'm-d') && strstr($hour,':',true) == '08')
+													<div class="show_event col-12" >
+														<div class="event orange">
+															<p>{{ $data['type'] . ' - ' . $data['employee'] }}</p>
+														</div>
+													</div>
+												@endif
+											@endif
+										@endforeach
+									</td>
+								@endfor
+							</tr>
+						@endforeach
+					</tbody>
+				</table>
+			</main>
 		</section>
 	</main>
+
 </div>
 <script>
-	$.getScript( '/../js/load_calendar2.js');	
+	$.getScript( '/../js/load_calendar2.js');
 	
+
 </script>
 @stop

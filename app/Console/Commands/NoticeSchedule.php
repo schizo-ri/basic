@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Notice;
+use App\Models\Employee;
 use App\Mail\NoticeMail;
 use Illuminate\Support\Facades\Mail;
 
@@ -41,14 +42,17 @@ class NoticeSchedule extends Command
     public function handle(NoticeMail $noticeMail)
     {
         $send_to_mail = 'jelena.juras@duplico.hr';
-        $notice = Notice::first();
-        Mail::to($send_to_mail)->send(new NoticeMail($notice));
+     
+        $notices = Notice::get();
+
+        // $notice = Notice::first();
+        //  Mail::to($send_to_mail)->send(new NoticeMail($notice));
         
        /*  foreach ($notices as $notice) {
             Mail::to($send_to_mail)->send(new NoticeMail($notice));
         } */
         
-       /*  if(count($notices) > 0) {       
+         if(count($notices) > 0) {
             $prima = array();
             $employees = Employee::where('id','<>',1)->where('checkout', null)->get();
     
@@ -63,18 +67,19 @@ class NoticeSchedule extends Command
                             } 
                         }      
                     }
+                    try {
+                        foreach ($prima as $mail) {
+                            Mail::to($mail)->send(new NoticeMail($notice));
+                        }      
+                        Mail::to('jelena.juras@duplico.hr')->send(new NoticeMail($notice));              
+                    } catch (\Throwable $th) {
+                        $message = session()->flash('success',  __('emailing.not_send'));
+                        return redirect()->back()->withFlashMessage($message);
+                    }
                 }
-                try {
-                    foreach ($prima as $mail) {
-                        Mail::to($mail)->send(new NoticeMail($notice));
-                    }      
-                    Mail::to('jelena.juras@duplico.hr')->send(new NoticeMail($notice));              
-                } catch (\Throwable $th) {
-                    $message = session()->flash('success',  __('emailing.not_send'));
-                    return redirect()->back()->withFlashMessage($message);
-                }
+               
             }
-        } */
+        } 
     }
 
 }

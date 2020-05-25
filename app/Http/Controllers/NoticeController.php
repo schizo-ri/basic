@@ -10,9 +10,11 @@ use App\Models\Notice;
 use App\Models\NoticeStatistic;
 use App\Models\Department;
 use App\Models\Employee;
+use App\Models\Template;
 use Sentinel;
 use App\Mail\NoticeMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class NoticeController extends Controller
 {
@@ -56,8 +58,9 @@ class NoticeController extends Controller
         $departments0 = Department::where('level1',0)->orderBy('name','ASC')->get();
 		$departments1 = Department::where('level1',1)->orderBy('name','ASC')->get();
         $departments2 = Department::where('level1',2)->orderBy('name','ASC')->get();
-        
-        return view('Centaur::notices.create', ['departments0' => $departments0, 'departments1' => $departments1, 'departments2' => $departments2]);
+        $templates = Template::get();
+
+        return view('Centaur::notices.create', ['templates' => $templates, 'departments0' => $departments0, 'departments1' => $departments1, 'departments2' => $departments2]);
     }
 
     /**
@@ -73,48 +76,24 @@ class NoticeController extends Controller
            
             $employee_id = Sentinel::getUser()->employee->id;
             $to_department_id = implode(',', $request['to_department']);
-
-            if($request['notice']) {
-                $notice = $request['notice'];
-                $dom = new \DomDocument();
-                libxml_use_internal_errors(true);
-                $dom->loadHtml(mb_convert_encoding($notice, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-                $images = $dom->getElementsByTagName('img');
-                
-                foreach($images as $k => $img){
-                    $data = $img->getAttribute('src');
-                    $dataFilename = $img->getAttribute('data-filename');
-                    list($type, $data) = explode(';', $data);
-                    list(, $data)      = explode(',', $data);
-                    $data = base64_decode($data);
-                    if(!file_exists(public_path() . "/img/notices")){
-                        mkdir(public_path()."/img/notices");
-                    }
-                    $image_name= "/img/notices/" . $dataFilename;
-                    $path = public_path() .  $image_name;
-                   
-                    file_put_contents($path, $data);
-                    $img->removeAttribute('src');
-                    $img->setAttribute('src', $image_name);
+            if(isset($request['schedule_date'])) {
+                if($request['schedule_time'] != null) {
+                    $shedule = $request['schedule_date'] . ' ' . $request['schedule_time'];
+                } else {
+                    $shedule = $request['schedule_date'] . ' 08:00';
                 }
-                    
-                $notice = $dom->saveHTML();
             } else {
-                $notice = '';
+                $shedule = date('Y-m-d') . ' 08:00';
             }
            
-            if($request['schedule_time'] != null) {
-                $shedule = $request['schedule_date'] . ' ' . $request['schedule_time'];
-            } else {
-                $shedule = $request['schedule_date'] . ' 08:00';
-            }
 
             $data1 = array(
                 'employee_id'   	=> $employee_id,
                 'to_department'     => $to_department_id,
                 'schedule_date'     => $shedule,
                 'title'  			=> $request['title'],
-                'notice'  			=> $notice
+                'notice'  			=> $request['text_html'],
+                'text_json'  		=> $request['text_json']
             );
            
             $notice1 = new Notice();
@@ -136,7 +115,7 @@ class NoticeController extends Controller
                 if(!file_exists($target_dir)){
                     mkdir($target_dir);
                 }
-    
+
                 $target_file = $target_dir . '/' . basename($_FILES["fileToUpload"]["name"]); //$target_file specifies the path of the file to be uploaded
                 if(isset($request['fileToUpload']) && file_exists($target_file)){
                     array_map('unlink', glob($target_file)); // ako postoji file - briše ga
@@ -176,7 +155,7 @@ class NoticeController extends Controller
                 } else {
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 
-                        if($request['schedule_set'] == 0 || $now >= $notice1->schedule_date ) {
+                        if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
                             $prima = array();
                             $employees = Employee::where('id','<>',1)->where('checkout', null)->get();
                            
@@ -224,20 +203,42 @@ class NoticeController extends Controller
 
            /* ************************* SEND MAIL *********************************** */
      
-            if($request['schedule_set'] == 0 || $now >= $notice1->schedule_date ) {
+            if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
                 $prima = array();
                 $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+
                 foreach($request['to_department'] as $department_id) {
                     $department = Department::where('id', $department_id)->first();
-                   
-                    foreach ($employees as $employee) {
-                        if ( $employee->work->department_id == $department->id) {
+                    if($department->level1 == 0) {
+                        foreach ($employees as $employee) {
                             array_push($prima, $employee->email );
-                        } 
-                    }           
+                        }
+                    }
+                    if($department->level1 == 1) {
+                        foreach ($employees as $employee) {
+                            if ( $employee->work->department_id == $department->id) {
+                                array_push($prima, $employee->email );
+                            }
+                        }
+                        $departments2 = Department::where('level2', $department->id)->get();
+                        foreach ($departments2 as $department2) {
+                            foreach ($employees as $employee) {
+                                if ( $employee->work->department_id == $department2->id) {
+                                    array_push($prima, $employee->email );
+                                }
+                            }
+                        }
+                    }
+                    if($department->level1 == 2) {
+                        foreach ($employees as $employee) {
+                            if ( $employee->work->department_id == $department->id) {
+                                array_push($prima, $employee->email );
+                            }
+                        }
+                    }
                 }
                 try {
-                    foreach ($prima as $mail) {
+                    foreach (array_unique($prima) as $mail) {
                         Mail::to($mail)->send(new NoticeMail($notice1));
                     }                    
                 } catch (\Throwable $th) {
@@ -298,12 +299,13 @@ class NoticeController extends Controller
     {
         $notice = Notice::find($id);
         $departments = explode(',', $notice->to_department );
-        
+        $templates = Template::get();
+
         $departments0 = Department::where('level1',0)->orderBy('name','ASC')->get();
 		$departments1 = Department::where('level1',1)->orderBy('name','ASC')->get();
         $departments2 = Department::where('level1',2)->orderBy('name','ASC')->get();
 
-        return view('Centaur::notices.edit', ['notice' => $notice, 'departments' => $departments, 'departments0' => $departments0, 'departments1' => $departments1, 'departments2' => $departments2]);
+        return view('Centaur::notices.edit', ['notice' => $notice, 'templates' => $templates, 'departments' => $departments, 'departments0' => $departments0, 'departments1' => $departments1, 'departments2' => $departments2]);
     }
 
     /**
@@ -319,49 +321,31 @@ class NoticeController extends Controller
       //  dd($request);
         if(Sentinel::getUser()->employee) {
             $employee_id = Sentinel::getUser()->employee->id;
-
-            $notice = $request['notice'];
-           
-            $dom = new \DomDocument();
-            libxml_use_internal_errors(true);
-            $dom->loadHtml(mb_convert_encoding( $notice , 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-            $images = $dom->getElementsByTagName('img');
-            
-            foreach($images as $k => $img){
-                $data = $img->getAttribute('src');
-                $dataFilename = $img->getAttribute('data-filename');
-                list($type, $data) = explode(';', $data);
-                list(, $data)      = explode(',', $data);
-                $data = base64_decode($data);
-                if(!file_exists(public_path() . "/img/notices")){
-                    mkdir(public_path()."/img/notices");
-                }
-                $image_name= "/img/notices/" . $dataFilename;
-                $path = public_path() .  $image_name;
-               
-                file_put_contents($path, $data);
-                $img->removeAttribute('src');
-                $img->setAttribute('src', $image_name);
-            }
-                
-            $notice = $dom->saveHTML();
-            
-            $now = date('Y-m-d H:i');
-
-           
             $to_department_id = implode(',', $request['to_department']);
+            if(isset($request['schedule_date'])) {
+                if($request['schedule_time'] != null) {
+                    $shedule = $request['schedule_date'] . ' ' . $request['schedule_time'];
+                } else {
+                    $shedule = $request['schedule_date'] . ' 08:00';
+                }
+            } else {
+                $shedule = date('Y-m-d') . ' 08:00';
+            }
+           
+
             $data1 = array(
                 'employee_id'   	=> $employee_id,
                 'to_department'     => $to_department_id,
+                'schedule_date'     => $shedule,
                 'title'  			=> $request['title'],
-                'notice'  			=> $notice,
-                
+                'notice'  			=> $request['text_html'],
+                'text_json'  		=> $request['text_json']
             );
-            if($request['schedule'] == true) {
-                $data1 += array('schedule_date'  => date("Y-m-d h:i", strtotime($request['date'])));
-            } 
            
+
             $notice1->updateNotice($data1);
+            
+            $now = date('Y-m-d H:i');
 
             /* ***************************  posebna slika  ******************************** */
 
@@ -423,23 +407,49 @@ class NoticeController extends Controller
                     }
                 }
             }
-            if($now >= $notice1->schedule_date ) {
-                foreach($request['to_department'] as $department) {
-                    $department = Department::where('id', $department)->first();
-                    $prima = $department->email;
-                    
-                    if(! $prima) {
-                        $message = session()->flash('error',  __('emailing.no_mail'));
-                        return redirect()->back()->withFlashMessage($message);
-                    
-                    } else {
-                        try {
-                            Mail::to($prima)->send(new NoticeMail($notice1));
-                        } catch (\Throwable $th) {
-                            $message = session()->flash('error',  __('emailing.not_send'));
-                            return redirect()->back()->withFlashMessage($message);
+            /* ************************* SEND MAIL *********************************** */
+     
+            if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
+                $prima = array();
+                $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+
+                foreach($request['to_department'] as $department_id) {
+                    $department = Department::where('id', $department_id)->first();
+                    if($department->level1 == 0) {
+                        foreach ($employees as $employee) {
+                            array_push($prima, $employee->email );
                         }
-                    }      
+                    }
+                    if($department->level1 == 1) {
+                        foreach ($employees as $employee) {
+                            if ( $employee->work->department_id == $department->id) {
+                                array_push($prima, $employee->email );
+                            }
+                        }
+                        $departments2 = Department::where('level2', $department->id)->get();
+                        foreach ($departments2 as $department2) {
+                            foreach ($employees as $employee) {
+                                if ( $employee->work->department_id == $department2->id) {
+                                    array_push($prima, $employee->email );
+                                }
+                            }
+                        }
+                    }
+                    if($department->level1 == 2) {
+                        foreach ($employees as $employee) {
+                            if ( $employee->work->department_id == $department->id) {
+                                array_push($prima, $employee->email );
+                            }
+                        }
+                    }
+                }
+                try {
+                    foreach (array_unique($prima) as $mail) {
+                        Mail::to($mail)->send(new NoticeMail($notice1));
+                    }                    
+                } catch (\Throwable $th) {
+                    $message = session()->flash('success',  __('emailing.not_send'));
+                    return redirect()->back()->withFlashMessage($message);
                 }
             }
  
@@ -525,5 +535,30 @@ class NoticeController extends Controller
 
         return $notices;
     }
+
+    public function test_mail_open (Request $request)
+    {
+        return view('Centaur::notices.test_mail',['notice_id' => $request['id']]);
+    }
+
+    public function sendTestEmail(Request $request) 
+	{
+        $send_to = $request['recipient'];
+        
+        $notice = Notice::find($request['notice_id']);
+
+        if( $send_to != null ) {
+            try {
+                Mail::to($send_to)->send(new NoticeMail($notice)); 
+            } catch (\Throwable $th) {
+                $message = session()->flash('error', __('emailing.not_send'));
+		        return redirect()->back()->withFlashMessage($message);
+            }
+        }
+
+		$message = session()->flash('success', __('emailing.email_send'));
+		
+		return redirect()->back()->withFlashMessage($message);
+	}
 
 }

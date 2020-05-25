@@ -22,7 +22,7 @@
 <section class="col-12 float_left noticeboard">
     <h2>@lang('basic.noticeboard')
         @if(Sentinel::getUser()->employee && Sentinel::getUser()->hasAccess(['notices.create']) || in_array('notices.create', $permission_dep) )
-            <a class="btn btn-primary btn-lg btn-new create_notice" href="{{ route('notices.create') }}" rel="modal:open" title="{{ __('basic.add_notice')}}">
+            <a class="btn btn-primary btn-lg btn-new create_notice" href="{{ route('notices.create') }}" title="{{ __('basic.add_notice')}}">
                 <i style="font-size:11px" class="fa" >&#xf067;</i>
             </a>
         @endif
@@ -51,7 +51,7 @@
                                 </span>
                             </div>
                             <div class="col-10 float_left">
-                                <span class="notice_text">{!! str_limit(strip_tags($notice->notice),200) !!}</span>
+                                <span class="notice_text">{!! $notice->title !!} </span>
                             </div>
                         </article>
                     </a>
@@ -74,7 +74,7 @@
 <script>
     $(function(){
         var aside_height = $('.index_page.index_documents aside').height();
-        $('section.noticeboard').height(aside_height);
+       
         $('.placeholder').show();        
     });
     

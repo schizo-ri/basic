@@ -1,14 +1,31 @@
 
+.index_page aside > .admin_panel {
+    height: 100%;
+    clear: both;
+    position: static;
+    top: 0;
+    transform: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15); 
+    border-radius: 5px;
+}
+
 .index_page.index_admin h1 {
-    margin: 40px 0 0;
+    padding: 25px 15px 20px;
     position: sticky;
     top: 0;
     background: #ffffff;
     z-index: 1;
-    padding-bottom: 35px;
+    margin: 0;
 }
 ul.admin_pages {
     list-style: none;  
+    padding: 0 15px ;
+    height: calc(100% - 100px);
+    overflow: auto;
 }
 ul.admin_pages li {
     font-weight: 500;
@@ -66,6 +83,15 @@ ul.admin_pages li >span.space {
 .image_emailings{
     background: url(../icons/emailings.png) no-repeat center;
 } 
+ul.admin_pages li >span.image_template{
+    background-color: #ebebeb;
+    text-align: center;
+    display: flex;
+    font-size: 25px;
+    color: #b6b6b6;
+    align-items: center;
+    justify-content: center;
+} 
 .image_tables {
     background: url(../icons/tables.png) no-repeat center;
 } 
@@ -80,6 +106,12 @@ ul.admin_pages li >span.space {
 #admin_page .btn-new {     
     width: 41px;
     height: 35px;
+    float: right;
+    margin-left: 15px;
+    padding: 0 16px;
+}
+#admin_page .btn-template {
+    line-height: 35px;
     float: right;
     margin-left: 15px;
 }
@@ -147,9 +179,11 @@ ul.admin_pages li >span.space {
 
     .admin_main .link_back {
         display: block;
+        padding: 10px 15px;
     }
     .index_main #admin_page header {
-        padding: 25px 0;
+        padding: 10px;
+        height: auto;
     }
     .admin_main .index_table_filter input {
         height: 30px;
@@ -157,5 +191,10 @@ ul.admin_pages li >span.space {
     #admin_page .btn-new {
         width: 36px;
         height: 30px;
+        margin: 0 0 0 20px;
+    }
+    #admin_page .change_view, .change_view2, #admin_page .show_button {
+        height: 30px;
+        line-height: 30px;
     }
 }

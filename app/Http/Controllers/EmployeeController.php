@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CompanyController;
 use App\Models\Work;
 use App\Models\Employee;
+use App\Models\Campaign;
+use App\Models\CampaignRecipient;
 use App\User;
 use Sentinel;
 use App\Mail\EmployeeCreate;
@@ -55,11 +58,14 @@ class EmployeeController extends Controller
 		$works = Work::get();
 		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
+		$campaigns = Campaign::where('type','evergreen')->get();
+		$moduli = CompanyController::getModules(); // provjera da li se koriste moduli kampanja
+
 		if(isset($request['user_id'])) {
 			$user1 = User::find($request->user_id);
-			return view('Centaur::employees.create', ['works' => $works,'employees' => $employees, 'user1' => $user1, 'users' => $users]);
+			return view('Centaur::employees.create', ['works' => $works,'employees' => $employees, 'campaigns' => $campaigns,'moduli' => $moduli,'user1' => $user1, 'users' => $users]);
 		} else {
-			return view('Centaur::employees.create', ['works' => $works, 'employees' => $employees,'users' => $users]);
+			return view('Centaur::employees.create', ['works' => $works, 'employees' => $employees,'campaigns' => $campaigns,'moduli' => $moduli,'users' => $users]);
 		}
     }
 
@@ -87,7 +93,7 @@ class EmployeeController extends Controller
 		}
 		
 		$abs_days = array();
-		if( $request['abs_days']) {
+		if( $request['abs_days'] ) {
 			foreach ($request['abs_days'] as $key => $abs_day) {
 				if( $abs_day != '' && $abs_day != 0 && $request['abs_year'][$key] != '' && $request['abs_year'][$key] ) 
 				$abs_days[$request['abs_year'][$key]] = $abs_day;
@@ -138,6 +144,17 @@ class EmployeeController extends Controller
 		$employee = new Employee();
 		$employee->saveEmployee($data);
 		
+		if(isset( $input['campaign_id']) && count($input['campaign_id']) > 0) {
+			foreach ($input['campaign_id'] as $campaign_id) {
+				$data_campaign = array(
+					'campaign_id' => $campaign_id,
+					'employee_id' => $employee->id,
+				);
+				$campaignRecipient = new CampaignRecipient();
+				$campaignRecipient->saveCampaignRecipient($data_campaign);
+			}
+		}
+
 		/* mail obavijest o novoj poruci */
 		$emailings = Emailing::get();
 		$send_to = array();
@@ -211,8 +228,12 @@ class EmployeeController extends Controller
 		$users = User::get();
 		$works = Work:: get();
 		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
-		
-		return view('Centaur::employees.edit', ['works' => $works, 'users' => $users, 'employee' => $employee, 'employees' => $employees]);
+		$campaigns = Campaign::where('type','evergreen')->get();
+		$campaignRecipients = CampaignRecipient::where('employee_id',$employee->id )->get();
+
+		$moduli = CompanyController::getModules(); // provjera da li se koriste moduli kampanja
+
+		return view('Centaur::employees.edit', ['works' => $works, 'users' => $users,'moduli' => $moduli, 'employee' => $employee, 'employees' => $employees,'campaigns' => $campaigns,'campaignRecipients' => $campaignRecipients]);
 		
     }
 
@@ -225,6 +246,7 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
+		
 		$employee = Employee::find($id);
 		
 		$input = $request->except(['_token']);
@@ -292,6 +314,25 @@ class EmployeeController extends Controller
 		} 
 		
 		$employee->updateEmployee($data);
+
+		if(isset($input['campaign_id']) && $input['campaign_id']) {
+			$campaignRecipients = CampaignRecipient::where('employee_id', $employee->id)->get();
+			foreach ($input['campaign_id'] as $campaign_id) {
+				if( ! $campaignRecipients->where('campaign_id', $campaign_id )->first()) {
+					$data_campaign = array(
+						'campaign_id' => $campaign_id,
+						'employee_id' => $employee->id,
+					);
+					$campaignRecipient = new CampaignRecipient();
+					$campaignRecipient->saveCampaignRecipient($data_campaign);
+				}
+			}
+		 	foreach ($campaignRecipients as $recipient) {
+				if(! in_array( $recipient->campaign_id, $input['campaign_id'])) {
+					$recipient->delete();
+				}
+			} 
+		}
 
 		/* mail obavijest o novoj poruci */
 		$emailings = Emailing::get();

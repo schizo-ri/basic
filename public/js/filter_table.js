@@ -13,9 +13,7 @@ function mySearchTableAbsence() {
     var value = $(this).val().toLowerCase();
     var godina = $('#year_vacation').val();
     $("#index_table tbody tr").filter(function() {
-      if($(this).hasClass('tr_' + godina )) {
-          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      }
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
   });
 }

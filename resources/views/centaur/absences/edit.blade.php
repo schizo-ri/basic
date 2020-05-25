@@ -6,12 +6,10 @@
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.employee')</label>
-				<select class="form-control" name="employee_id" value="{{ old('employee_id') }}" size="10" autofocus required >
-					<option value="" disabled></option>
-					@foreach ($employees as $employee)
-						<option name="employee_id" value="{{ $employee->id }}" {!! $absence->employee_id ==  $employee->id ? 'selected' : '' !!}>{{ $employee->user['last_name']  . ' ' . $employee->user['first_name'] }}</option>
-						
-					@endforeach	
+				<select class="form-control" name="employee_id" value="{{ old('employee_id') }}" required >
+					<option name="employee_id" value="{{ $absence->employee->id }}"  >
+						{{ $absence->employee->user['last_name']  . ' ' . $absence->employee->user['first_name'] }} 
+					</option>
 				</select>
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
@@ -75,6 +73,9 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
+	console.log($('#request_type').val());
+	$('#request_type').val() == 'IZL' ? $('.form-group.time').removeAttr('hidden') : '';
+
 	$( document ).ready(function() {
 		$( "#request_type" ).change(function() {
 			if($(this).val() == 'IZL') {

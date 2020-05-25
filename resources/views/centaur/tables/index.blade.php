@@ -30,14 +30,14 @@
 							<td>{{ $table->description }}</td>
 							<td>{!! $table->emailing == '0' ? 'neaktivno' : 'aktivno' !!}</td>
 							<td class="center">
-								<button class="collapsible option_dots float_r"></button>
+								<!-- <button class="collapsible option_dots float_r"></button> -->
 								@if(Sentinel::getUser()->hasAccess(['tables.update']))
-									<a href="{{ route('tables.edit', $table->id) }}" style="display:none" class="btn-edit" title="{{ __('basic.edit')}}" rel="modal:open">
+									<a href="{{ route('tables.edit', $table->id) }}" class="btn-edit" title="{{ __('basic.edit')}}" rel="modal:open">
 										<i class="far fa-edit"></i>
 									</a>
 								@endif								
 								@if(Sentinel::getUser()->hasAccess(['tables.delete']))
-									<a href="{{ route('tables.destroy', $table->id) }}" style="display:none" class="action_confirm btn-delete danger" title="{{ __('basic.delete')}}" data-method="delete" data-token="{{ csrf_token() }}">
+									<a href="{{ route('tables.destroy', $table->id) }}" class="action_confirm btn-delete danger" title="{{ __('basic.delete')}}" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -54,9 +54,9 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-	//	$.getScript( '/../js/collaps.js');
-	$('.collapsible').click(function(event){        
+
+	/* $('.collapsible').click(function(event){        
        		$(this).siblings().toggle();
-		});
-	});
+		});*/
+	}); 
 </script>

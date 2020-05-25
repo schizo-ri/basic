@@ -36,8 +36,33 @@ $( function () {
     });
    
     //prikaz evenata za selektirani dan
-    var active_li =  $('.dates li.active_date').attr('id');
-    if(active_li) {
+    $('.dates li').click(function(){
+        var active_li =  $(this).attr('id');
+        var active_date = active_li.replace('li-','');
+        console.log(active_date);
+
+        var url = location.origin + '/dashboard?active_date='+active_date;
+        console.log(url);
+        $.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});   
+        $.ajax({
+			url: url,
+			type: "GET",
+			success: function( response ) {
+				console.log("prošlo");
+				$('.comming_agenda').load(url + ' .comming_agenda>a, .comming_agenda>h3, .comming_agenda .all_agenda');
+			}, 
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr);
+			}
+        });
+    });
+    
+ 
+    /*i f(active_li) {
         var active_li_id = active_li.replace("li-",""); // selektirani datum
         $( ".comming_agenda > .agenda" ).each( function(index, element) {
             $(element).addClass('display_none');
@@ -47,13 +72,13 @@ $( function () {
             }
         });
     }
-
+ */
     if(! $('.comming_agenda .agenda.show_agenda').length) {
         var calendar_height = $('section.calendar>div').height() - $('section.calendar #calendar').height() -40;
         $('.comming_agenda .placeholder').show();
         var placeholder_height =  $('.placeholder img').height();
         $('.calendar .comming_agenda').height(calendar_height );
- //       $('.placeholder_cal >p').css('line-height',placeholder_height + 'px' );
+        //   $('.placeholder_cal >p').css('line-height',placeholder_height + 'px' );
     } else {
         $('.comming_agenda .placeholder').hide();
     }

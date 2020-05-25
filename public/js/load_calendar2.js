@@ -27,14 +27,28 @@ $(function() {
         $('.pignose-calendar-body').find('[data-date="' + searchDate_bef + '"] > a' ).click();
     });
 
-    $('.change_view').click(function(){
-        $('.index_event').hide();
-        $('.index_event_month').show();
-    });
-    $('.change_view2').click(function(){
-        $('.index_event').show();
-        $('.index_event_month').hide();
-    });
+    $( ".change_view_calendar" ).change(function() {
+		var view = $( this ).val();
+		console.log(view);
+		if(view == 'day') {
+		   $('.main_calendar_day').show();
+		   $('.main_calendar_week').hide();
+		   $('.main_calendar_month').hide();
+		  
+	   } 
+	   if(view == 'week') {
+		$('.main_calendar_day').hide();
+		   $('.main_calendar_week').show();
+		   $('.main_calendar_month').hide();
+		  
+	   } 
+	   if(view == 'month') {
+			$('.main_calendar_day').hide();
+		   $('.main_calendar_week').hide();
+		   $('.main_calendar_month').show();
+		   
+	   }
+	});
 
     $(document).on('click', '.arrow .month_after', function(e) {
         e.preventDefault(); 

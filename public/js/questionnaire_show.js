@@ -102,7 +102,7 @@
 		}
 		
 	});*/
-	/* $('.add_new, #add_event[rel="modal:open"], .ads_button, .post_button, .doc_button, .event_button').click(function(){
+	/* $('.add_new, #add_event[rel="modal:open"], .oglasnik_button, .posts_button, .doc_button, .events_button').click(function(){
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -154,7 +154,7 @@
         };
     });
 
-    $('.quest_button, a.new_questionnaire[rel="modal:open"], .thumb_content a[rel="modal:open"]').click(function(){
+    $('.questionnaires_button, a.new_questionnaire[rel="modal:open"], .thumb_content a[rel="modal:open"]').click(function(){
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`

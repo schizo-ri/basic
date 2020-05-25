@@ -10,6 +10,7 @@ $('.benefit_title').click(function(){
 });
 var main_benefits_height = $('.main_benefits').height();
 var main_benefits_head_height = $('.main_benefits_head').height()+40;
+var benefits_scroll = $('.benefits_scroll').height();
 var body_width = $('body').width();
 var div_width = $( '.main_benefits_head').width();
 var all_width = 0;
@@ -17,7 +18,8 @@ var all_width = 0;
 $('.benefit_title').first().addClass('active');
 
 if(body_width > 450) {
-	$('.main_benefits_body').height(main_benefits_height-main_benefits_head_height-97);
+	
+	$('.main_benefits_body').height(main_benefits_height-main_benefits_head_height-benefits_scroll);
 	$( ".main_benefits_head > .benefit_title" ).each( (index, element) => {
 		all_width += 203;
 	});

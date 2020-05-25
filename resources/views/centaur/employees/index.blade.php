@@ -35,14 +35,14 @@
 							<td>{{ $employee->work['name'] }}</td>
 							<td>{!! $employee->reg_date ? date("d.m.Y",strtotime($employee->reg_date)) : '' !!}</td>
 							<td class="center">
-								<button class="collapsible option_dots float_r"></button>
+								<!-- <button class="collapsible option_dots float_r"></button> -->
 								@if(Sentinel::getUser()->hasAccess(['employees.update']) || in_array('employees.update', $permission_dep))
-									<a href="{{ route('employees.edit', $employee->id) }}" title="{{ __('basic.edit_employee') }}"  style="display:none" rel="modal:open">
+									<a href="{{ route('employees.edit', $employee->id) }}" title="{{ __('basic.edit_employee') }}"  rel="modal:open">
 										<i class="fas fa-user-cog"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['users.update']))
-									<a href="{{ route('users.edit', $employee->user_id) }}" class="" title="{{ __('basic.edit_user') }}" style="display:none" rel="modal:open">
+									<a href="{{ route('users.edit', $employee->user_id) }}" class="" title="{{ __('basic.edit_user') }}" rel="modal:open">
 										<i class="far fa-edit"></i>
 									</a>
 								@endif
@@ -64,9 +64,9 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-	$('.collapsible').click(function(event){
+		/* $('.collapsible').click(function(event){
        		$(this).siblings().toggle();
-		});
+		}); */
 	});
 	$.getScript( '/../restfulizer.js');
 </script>

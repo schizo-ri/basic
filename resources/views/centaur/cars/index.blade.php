@@ -40,35 +40,35 @@
 							<td>{{ $car->department['name'] }}</td>
 							<td>{!! $car->employee ? $car->employee->user['first_name'] . ' ' . $car->employee->user['last_name'] : '' !!}</td>					
 							<td class="center">
-								<button class="collapsible option_dots float_r"></button>
+								<!-- <button class="collapsible option_dots float_r"></button> -->
 								
 								@if( ! $loccos->where('car_id', $car->id)->first() && (Sentinel::getUser()->hasAccess(['cars.delete']) || in_array('cars.delete', $permission_dep)))
-									<a href="{{ route('cars.destroy', $car->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
+									<a href="{{ route('cars.destroy', $car->id) }}"  class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['cars.update']) || in_array('cars.update', $permission_dep))
-									<a href="{{ route('cars.edit', $car->id) }}" class="btn-edit" title="{{ __('basic.edit')}}" style="display:none" rel="modal:open">
+									<a href="{{ route('cars.edit', $car->id) }}" class="btn-edit" title="{{ __('basic.edit')}}" rel="modal:open">
 										<i class="far fa-edit"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['fuels.create']) || in_array('fuels.create', $permission_dep))
-									<a href="{{ route('fuels.create', [ 'car_id' => $car->id]) }}" class="btn-edit" title="{{ __('basic.add_fuel')}}" style="display:none" rel="modal:open">
+									<a href="{{ route('fuels.create', [ 'car_id' => $car->id]) }}" class="btn-edit" title="{{ __('basic.add_fuel')}}" rel="modal:open">
 										<i class="fas fa-gas-pump"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['vehical_services.create']) || in_array('vehical_services.create', $permission_dep))
-									<a href="{{ route('vehical_services.create', [ 'car_id' => $car->id]) }}" class="btn-edit" title="{{ __('basic.add_service')}}" style="display:none" rel="modal:open">
+									<a href="{{ route('vehical_services.create', [ 'car_id' => $car->id]) }}" class="btn-edit" title="{{ __('basic.add_service')}}" rel="modal:open">
 										<i class="fas fa-tools"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['fuels.view']) || in_array('fuels.view', $permission_dep))
-									<a href="{{ route('fuels.index', [ 'car_id' => $car->id]) }}" class="open_car_modal btn-edit" title="{{ __('basic.fuel')}}" style="display:none" rel="modal:open">
+									<a href="{{ route('fuels.index', [ 'car_id' => $car->id]) }}" class="open_car_modal btn-edit" title="{{ __('basic.fuel')}}" rel="modal:open">
 										<i class="fas fa-list"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['vehical_services.view']) || in_array('vehical_services.view', $permission_dep))
-									<a href="{{ route('vehical_services.index', [ 'car_id' => $car->id]) }}" class="open_car_modal btn-edit" title="{{ __('basic.vehical_services')}}" style="display:none" rel="modal:open">
+									<a href="{{ route('vehical_services.index', [ 'car_id' => $car->id]) }}" class="open_car_modal btn-edit" title="{{ __('basic.vehical_services')}}" rel="modal:open">
 										<i class="fas fa-list"></i>
 									</a>
 								@endif
@@ -85,9 +85,9 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-		$('.collapsible').click(function(event){
+		/* $('.collapsible').click(function(event){
        		$(this).siblings().toggle();
-		});
+		}); */
 	});
 	$.getScript( '/../js/open_modal.js'); 
 	/* $('.open_car_modal').click(function(){

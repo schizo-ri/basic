@@ -75,24 +75,24 @@
 									@endif
 								</td>
 								<td class="center">
-									<button class="collapsible option_dots float_r"></button>
+									<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['users.update']))
-										<a href="{{ route('users.edit', $user->id) }}" class="" title="{{ __('basic.edit_user') }}" style="display:none" rel="modal:open">
+										<a href="{{ route('users.edit', $user->id) }}" class="" title="{{ __('basic.edit_user') }}" rel="modal:open">
 												<i class="far fa-edit"></i>
 										</a>
 									@endif
 									@if(Sentinel::getUser()->hasAccess(['employees.create']) && ! $employees->where('user_id',$user->id)->first())
-										<a href="{{ route('employees.create', ['user_id' => $user->id] ) }}" class="" title="{{ __('basic.add_employee') }}" style="display:none" rel="modal:open">
+										<a href="{{ route('employees.create', ['user_id' => $user->id] ) }}" class="" title="{{ __('basic.add_employee') }}" rel="modal:open">
 											<i class="fas fa-user-plus"></i>
 										</a>
 									@endif
 									@if(Sentinel::getUser()->hasAccess(['employees.update']) && $employees->where('user_id',$user->id)->first())
-										<a href="{{ route('employees.edit',$employees->where('user_id',$user->id)->first()->id ) }}" class="" title="{{ __('basic.edit_employee') }}" style="display:none" rel="modal:open">
+										<a href="{{ route('employees.edit',$employees->where('user_id',$user->id)->first()->id ) }}" class="" title="{{ __('basic.edit_employee') }}" rel="modal:open">
 											<i class="fas fa-user-cog"></i>
 										</a>
 									@endif
 									@if(Sentinel::getUser()->hasAccess(['users.delete'])&& ! $employees->where('user_id',$user->id)->first())
-										<a href="{{ route('users.destroy', $user->id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" style="display:none" >
+										<a href="{{ route('users.destroy', $user->id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" >
 											<i class="far fa-trash-alt"></i>
 										</a>
 									@endif
@@ -139,24 +139,24 @@
 					<div class="user_card" title="{{  $user->last_name }}">
 						<div>
 							<span>
-								<button class="collapsible option_dots float_r"></button>
+								<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['users.update']))
-										<a href="{{ route('users.edit', $user->id) }}" class="edit_user" title="{{ __('basic.edit_user') }}" style="display:none" rel="modal:open">
+										<a href="{{ route('users.edit', $user->id) }}" class="edit_user" title="{{ __('basic.edit_user') }}" rel="modal:open">
 											<i class="far fa-edit"></i>
 										</a>
 									@endif
 									@if(Sentinel::getUser()->hasAccess(['employees.create']) && ! $employees->where('user_id',$user->id)->first())
-										<a href="{{ route('employees.create', ['user_id' => $user->id] ) }}" class="edit_user" title="{{ __('basic.add_employee') }}" style="display:none" rel="modal:open">
+										<a href="{{ route('employees.create', ['user_id' => $user->id] ) }}" class="edit_user" title="{{ __('basic.add_employee') }}" rel="modal:open">
 											<i class="fas fa-user-plus"></i>
 										</a>
 									@endif
 									@if(Sentinel::getUser()->hasAccess(['employees.update']) && $employees->where('user_id',$user->id)->first())
-										<a href="{{ route('employees.edit',$employees->where('user_id',$user->id)->first()->id ) }}" class="edit_user" title="{{ __('basic.edit_employee') }}" style="display:none" rel="modal:open">
+										<a href="{{ route('employees.edit',$employees->where('user_id',$user->id)->first()->id ) }}" class="edit_user" title="{{ __('basic.edit_employee') }}" rel="modal:open">
 											<i class="fas fa-user-cog"></i>
 										</a>
 									@endif
 									@if(Sentinel::getUser()->hasAccess(['users.delete'])&& !$employees->where('user_id',$user->id)->first())
-										<a href="{{ route('users.destroy', $user->id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" style="display:none" >
+										<a href="{{ route('users.destroy', $user->id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" >
 											<i class="far fa-trash-alt"></i>
 										</a>
 									@endif
@@ -210,60 +210,6 @@
 	});
 	$.getScript( '/../js/open_modal.js'); 
 	
-/* 	jQuery(document).ready(function($) {
-		$("a.show_user").click(function(event) {
-			$.modal.defaults = {
-				closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
-				escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-				clickClose: false,       // Allows the user to close the modal by clicking the overlay
-				closeText: 'Close',     // Text content for the close <a> tag.
-				closeClass: '',         // Add additional class(es) to the close <a> tag.
-				showClose: true,        // Shows a (X) icon/link in the top-right corner
-				modalClass: "modal modal_user",    // CSS class added to the element being displayed in the modal.
-				// HTML appended to the default spinner during AJAX requests.
-				spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
-
-				showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
-				fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
-				fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
-			};
-		});
-		$("a.edit_user").click(function(event) {
-			$.modal.defaults = {
-				closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
-				escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-				clickClose: false,       // Allows the user to close the modal by clicking the overlay
-				closeText: 'Close',     // Text content for the close <a> tag.
-				closeClass: '',         // Add additional class(es) to the close <a> tag.
-				showClose: true,        // Shows a (X) icon/link in the top-right corner
-				modalClass: "modal modal_user",    // CSS class added to the element being displayed in the modal.
-				// HTML appended to the default spinner during AJAX requests.
-				spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
-
-				showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
-				fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
-				fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
-			};
-		});
-		$("a.create_user").click(function(event) {
-			$.modal.defaults = {
-				closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
-				escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-				clickClose: false,       // Allows the user to close the modal by clicking the overlay
-				closeText: 'Close',     // Text content for the close <a> tag.
-				closeClass: '',         // Add additional class(es) to the close <a> tag.
-				showClose: true,        // Shows a (X) icon/link in the top-right corner
-				modalClass: "modal",    // CSS class added to the element being displayed in the modal.
-				// HTML appended to the default spinner during AJAX requests.
-				spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
-
-				showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
-				fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
-				fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
-			};
-		});
-	}); */
-
 	function Ascending_sort(a, b) { 
 		return ($(b).attr('title').toUpperCase()) <  
 			($(a).attr('title').toUpperCase()) ? 1 : -1;  
@@ -281,7 +227,9 @@
 	});	
 	$(function(){
 		$.getScript( '/../js/users.js');   
-		$.getScript( '/../js/collaps.js'); 
+		/* $('.collapsible').click(function(event){
+            $(this).siblings().toggle();
+        }); */
 	});
 
 	$.getScript( '/../restfulizer.js');

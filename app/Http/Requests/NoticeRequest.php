@@ -27,7 +27,7 @@ class NoticeRequest extends FormRequest
             'to_department'	=> 'required|max:100',
             'employee_id'	=> 'required|max:100',
             'title'		    => 'required|max:100',
-            'notice'	    => 'required|max:16777215',
+            'notice'	    => 'required',
         ];
     }
 }

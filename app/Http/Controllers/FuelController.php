@@ -46,7 +46,6 @@ class FuelController extends Controller
             $fuels = Fuel::orderBy('date','DESC')->get();
 
             return view('Centaur::fuels.index', ['fuels' => $fuels, 'permission_dep' => $permission_dep]);
-
         }
     }
 

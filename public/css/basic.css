@@ -197,3 +197,35 @@
    .color_grey {
         color: rgb(137, 137, 137);
    }
+@media (min-width: 576px) {
+    .col-sm-49 {
+        -ms-flex: 0 0 49%;
+        flex: 0 0 49%;
+        max-width: 49%;
+    }
+}
+@media (min-width: 768px) {
+    .col-md-32 {
+        -ms-flex: 0 0 32.333%;
+        flex: 0 0 32.33%;
+        max-width: 32.33%;
+    }
+}
+@media (min-width: 992px) {
+    .col-lg-24 {
+        -ms-flex: 0 0 24%;
+        flex: 0 0 24%;
+        max-width: 24%;
+    }
+}
+@media (min-width: 1200px) {
+    .col-xl-19 {
+        -ms-flex: 0 0 19%;
+        flex: 0 0 19%;
+        max-width: 19%;
+    }
+}
+  
+  
+   
+  

@@ -11,7 +11,7 @@ class CampaignRecipient extends Model
 	*
 	* @var array
 	*/
-    protected $fillable = ['campaign_id','department_id'];
+    protected $fillable = ['campaign_id','employee_id','department_id'];
 	
 	/*
 	* The Eloquent department model name
@@ -28,6 +28,23 @@ class CampaignRecipient extends Model
 	public function department()
 	{
 		return $this->belongsTo(static::$departmentModel,'department_id');
+	}
+
+	/*
+	* The Eloquent department model name
+	* 
+	* @var string
+	*/
+	protected static $employeeModel = 'App\Models\Employee'; 
+
+	/*
+	* Returns the department relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	public function employee()
+	{
+		return $this->belongsTo(static::$employeeModel,'employee_id');
 	}
 
     /*

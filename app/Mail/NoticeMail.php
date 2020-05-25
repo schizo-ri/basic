@@ -36,11 +36,12 @@ class NoticeMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('Centaur::email.notice_send')
+        return $this->markdown('Centaur::email.notice_send1')
                     ->from('info@duplico.hr', 'Duplico')
                     ->subject( __('emailing.new_notice') . ' - ' . $this->notice->title )
                     ->with(['notice'    => $this->notice,
                             'url'       => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']  . '/dashboard'
+                         //   'url'       => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . 'http://localhost:8000/dashboard'
                     ]);
     }
 }

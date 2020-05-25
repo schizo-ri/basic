@@ -30,17 +30,18 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->command('email:absence_day')
-                  ->dailyAt('8:00')
+                 /*  ->dailyAt('8:00') */
+                  ->everyMinute()
                   ->evenInMaintenanceMode();
         $schedule->command('email:campaign')
-                  ->dailyAt('8:00')
-                  ->evenInMaintenanceMode();
+                   ->everyMinute()
+                   ->evenInMaintenanceMode();
         $schedule->command('notice')
                   ->everyMinute()
                   ->evenInMaintenanceMode();
-        $schedule->command('command:clear_database')
+        /* $schedule->command('command:clear_database')
                   ->dailyAt('00:00')
-				  ->evenInMaintenanceMode();
+				  ->evenInMaintenanceMode(); */
     }
 
     /**

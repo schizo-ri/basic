@@ -7,18 +7,19 @@ use App\Models\Ads;
 ?>
 @section('content')
 <div class="index_page ads_index">
-	<aside class="col-lg-12 col-xl-12 float_left">
-		@include('Centaur::side_noticeboard')
-	</aside>
-	<main class="col-lg-12 col-xl-8 index_main float_right">
+	
+	<main class="col-xs-12 col-sm-12 col-md-12 index_main float_right">
 		<section>
+			<div class="page-header header_document">
+				@lang('basic.ads')
+			</div>
 			<header class="header_ads">
 				<div class="index_table_filter">
-					<div class="float_left col-6 height100 position_rel padd_0">
+					<div class="">
 						<img class="img_search" src="{{ URL::asset('icons/search.png')  }}" alt="Search"/>
 						<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="{{ __('basic.search')}}" class="input_search" >
 					</div>
-					<div class="float_right col-6 height100 padd_0 position_rel">
+					<div class="">
 						<div class='add_ads float_right '>
 							@if(Sentinel::getUser()->employee)
 								<a class="btn btn-primary btn-new" href="{{ route('ads.create') }}"  title="{{ __('basic.add_ad')}}" rel="modal:open">
@@ -28,7 +29,7 @@ use App\Models\Ads;
 						</div>
 						{{-- <span class="arrow_left1"></span> --}}
 						<select id="filter" class="select_filter" >
-							<option>@lang('basic.view_all')</option>
+							<option value="all">@lang('basic.view_all')</option>
 							@foreach($ads->unique('category_id') as $ad)
 								<option value="{{  $ad->category['name'] }}">{{ $ad->category['name'] }}</option>
 							@endforeach
@@ -71,10 +72,10 @@ use App\Models\Ads;
 								$profile_img = '';
 							}
 						?>
-						<article class="ad panel col-sm-12 col-md-6 col-lg-4 col-xl-3 float_left">
-							<div>
-								<header class="ad_header">
-									<a href="{{ route('ads.show', $ad->id) }}" rel="modal:open">
+						<article class="col-xs-12 col-sm-49 col-md-32 col-lg-24 col-xl-19 noticeboard_notice_body panel">
+							<a href="{{ route('ads.show', $ad->id) }}" rel="modal:open">
+								<div>
+									<header class="ad_header">
 										@if(isset($docs))
 											@if(file_exists($path . end($docs)) && end($docs) != ""  )
 												<img src="{{ asset($path .  end($docs)) }}" alt="Ad image"/>
@@ -84,34 +85,50 @@ use App\Models\Ads;
 										@else 
 											<img class="placeholder_image" src="{{ URL::asset('icons/placeholderAd.png') }}" alt="Ad image"/>
 										@endif
+									</header>
+									<main class="ad_main">
+										<span class="ad_category">{{ $ad->category['name'] }}</span>
+										<span class="ad_content"><b>{{ $ad->subject }}</b> <br> {!! str_limit(strip_tags($ad->description),45) !!} </span>
+									</main>
+									<footer class="ad_footer">
+										<div class="ad_empl">
+											<span class="profile_img">
+												@if($profile_img)
+													<img class="radius50 " src="{{ URL::asset($path_profile . end($profile_img)) }}" alt="Profile image"  />
+												@else
+													<img class="radius50 profile_img" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+												@endif
+											</span>
+											<p class="employee">
+												{{ $ad->employee->user['first_name'] . ' ' . $ad->employee->user['last_name'] }} 
+												<span>{{  $ad->employee->work['name'] }}</span>
+											</p> 
+										</div>
+										<div class="price">
+											<p>@lang('basic.price'): {!! $ad->price ?  $ad->price : ' - ' !!} {!! is_numeric($ad->price) ? ' Kn' : '' !!} </p>
+										</div>
+									</footer>
+								</div>
+							</a>
+							<div class="notice_links">
+								
+								@if(Sentinel::getUser()->hasAccess(['ads.delete']) || in_array('ads.delete', $permission_dep))
+									<a href="{{ route('ads.destroy', $ad->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+										<i class="far fa-trash-alt"></i>
 									</a>
-								</header>
-								<main class="ad_main">
-									<a href="{{ route('ads.show', $ad->id) }}" rel="modal:open"><span class="ad_category">{{ $ad->category['name'] }}</span>
-									<span class="ad_content"><b>{{ $ad->subject }}</b> <br> {!! str_limit(strip_tags($ad->description),45) !!} </span></a>
-								</main>
-								<footer class="ad_footer">
-									<div class="ad_empl">
-										<span class="profile_img">
-											@if($profile_img)
-												<img class="radius50 " src="{{ URL::asset($path_profile . end($profile_img)) }}" alt="Profile image"  />
-											@else
-												<img class="radius50 profile_img" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
-											@endif
-										</span>
-										<p class="employee">
-											{{ $ad->employee->user['first_name'] . ' ' . $ad->employee->user['last_name'] }} 
-											<span>{{  $ad->employee->work['name'] }}</span>
-										</p> 
-										
-										<span class="contact"><a class="btn-send" href="{{ route('posts.create', ['employee_publish' => $ad->employee ] ) }}" rel="modal:open"><img class="img_send" src="{{ URL::asset('icons/chat.png') }}" alt="messages"/></a></span>
-										<span class="contact"><a class="btn-send" href="{{ route('posts.create', ['employee_publish' => $ad->employee ] ) }}" rel="modal:open"><img class="img_send" src="{{ URL::asset('icons/envelope.png') }}" alt="messages"/></a></span>
-									</div>
-									<div class="price">
-										<p>@lang('basic.price'): {!! $ad->price ?  $ad->price : ' - ' !!} {!! is_numeric($ad->price) ? ' Kn' : '' !!} </p>
-									</div>
-								</footer>
-							</div>
+								@endif
+								@if(Sentinel::getUser()->hasAccess(['ads.update']) || in_array('ads.update', $permission_dep) )
+									<a href="{{ route('ads.edit', $ad->id) }}" class="btn-edit" rel="modal:open">
+											<i class="far fa-edit"></i>
+									</a>
+								@endif
+								<a class="btn-send" href="{{ route('posts.create', ['employee_publish' => $ad->employee ] ) }}" rel="modal:open">
+									<i class="far fa-comment-dots"></i>
+								</a>
+								<!-- <a class="btn-send" href="{{ route('posts.create', ['employee_publish' => $ad->employee ] ) }}" rel="modal:open"><img class="img_send" src="{{ URL::asset('icons/envelope.png') }}" alt="messages"/></a> -->
+								
+								
+							</div>	
 						</article>
 					@endforeach
 				@else 

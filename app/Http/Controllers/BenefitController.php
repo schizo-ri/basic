@@ -116,7 +116,7 @@ class BenefitController extends Controller
             // if everything is ok, try to upload file
             } else {
                 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                    return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]).  __('ctrl.has_uploaded'));
+                    return redirect()->back()->with('success', __('basic.image') . ' ' . basename( $_FILES["fileToUpload"]["name"]).  __('ctrl.has_uploaded'));
                 } else {
                     return redirect()->back()->with('error',  __('ctrl.file_error')); 
                 }
@@ -233,7 +233,7 @@ class BenefitController extends Controller
             // if everything is ok, try to upload file
             } else {
                 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                    return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]).  __('ctrl.has_uploaded'));
+                    return redirect()->back()->with('success',__('basic.image') . ' ' . basename( $_FILES["fileToUpload"]["name"]).  __('ctrl.has_uploaded'));
                 } else {
                     return redirect()->back()->with('error',  __('ctrl.file_error')); 
                 }

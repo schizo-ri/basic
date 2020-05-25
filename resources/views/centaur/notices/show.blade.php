@@ -1,3 +1,4 @@
+
 <div class="modal-header">
     <a class="link_back" rel="modal:close">
         <img src="{{ URL::asset('icons/arrow_left2.png') }}" />
@@ -11,7 +12,7 @@
             <img class="img_statistic" src="{{ URL::asset('icons/arrow_statistic.png') }}" alt="statistic" />
             <span>@lang('basic.statistic')</span>
         </a>
-        <a href="{{ route('notices.edit', $notice->id) }}" class="btn-edit" rel="modal:open" >
+        <a href="{{ route('notices.edit', $notice->id) }}" class="btn-edit" >
             <img class="img_statistic" src="{{ URL::asset('icons/edit.png') }}" alt="edit" />
             <span>@lang('basic.edit')</span>
         </a>
@@ -58,6 +59,7 @@
 </div>
 <div class="modal-body">
     @if($notice_img)
+    @php krsort($notice_img) @endphp
         <div class="image_notice">
             <img class="img_notice" src="{{ URL::asset('storage/notice/' . $notice->id . '/' . end($notice_img)) }}" alt="Notice image" title="Zoom"  />
         </div>

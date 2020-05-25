@@ -51,6 +51,7 @@ class LoccoController extends Controller
      */
     public function create(Request $request)
     {
+      
         $cars = Car::orderBy('registration','ASC')->get();
         $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 
@@ -58,8 +59,12 @@ class LoccoController extends Controller
         if( $request->get('reg')) {
             $reg = $request->get('reg');
         }      
-
-        return view('Centaur::loccos.create', ['cars' => $cars, 'employees' => $employees, 'registracija' => $reg]);
+        if( $request->get('car_id')) {
+            $car_id = $request->get('car_id');
+        } else {
+            $car_id = null;
+        }
+        return view('Centaur::loccos.create', ['cars' => $cars, 'employees' => $employees, 'registracija' => $reg, 'car_id' => $car_id]);
     }
 
     /**

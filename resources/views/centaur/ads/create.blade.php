@@ -1,9 +1,3 @@
-<!-- Jquery validation -->
-<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/jquery.validate.js') }}"></script>
-<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/additional-methods.js') }}"></script>
-@if (App::isLocale('hr'))
-	<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/localization/messages_hr.js') }}"></script>
-@endif
 <div class="modal-header">
 		<h3 class="panel-title">@lang('basic.add_ad')</h3>
 	</div>
@@ -21,12 +15,12 @@
 		</div>
 		<div class="form-group {{ ($errors->has('subject'))  ? 'has-error' : '' }}">
 			<label>@lang('basic.subject')</label>
-			<input name="subject" type="text" class="form-control" value="{{ old('subject') }}" required >
+			<input name="subject" type="text" class="form-control" value="{{ old('subject') }}" maxlength="150" required >
 			{!! ($errors->has('subject') ? $errors->first('subject', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group {{ ($errors->has('description'))  ? 'has-error' : '' }}">
 			<label>@lang('basic.description'):</label>
-			<textarea name="description" rows="5" required></textarea>
+			<textarea name="description" rows="5" maxlength="21845" required></textarea>
 			{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group">
@@ -49,17 +43,6 @@
 	$('#file').change(function(){
         $('#file_name').text( $('input[type=file]').val());
 	});
-	
-	$( "form" ).validate({
-		rules: {
-			subject: {
-				required: true,
-				maxlength: 150
-			},
-			description: {
-				required: true,
-				maxlength: 65535
-			}
-		}
-	});
+
+/* 	$.getScript( '/../js/validate.js'); */
 </script>

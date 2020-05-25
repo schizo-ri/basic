@@ -83,10 +83,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // Validate the form data
-        $result = $this->validate($request, [
+      /*   $result = $this->validate($request, [
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
-        ]);
+        ]); */
 
         // Assemble registration credentials and attributes
         $credentials = [
@@ -124,9 +124,10 @@ class UserController extends Controller
         }
 
         $data_employee = [
-            'user_id'   => User::orderBy('id','DESC')->first()->id,
+            'user_id' => User::orderBy('id','DESC')->first()->id,
             'email'   => User::orderBy('id','DESC')->first()->email,
-            'work_id'   => Work::orderBy('id','ASC')->first()->id,
+            'work_id' => Work::orderBy('id','ASC')->first()->id,
+            'reg_date' => date('Y-m-d'),
         ];
 
         $employee = new Employee();
@@ -426,7 +427,11 @@ class UserController extends Controller
             if($employee->email) {
                 $user_name = explode('.',strstr($employee->email,'@',true));
 
-                $user_name = $user_name[1] . '_' . $user_name[0];
+                if(count($user_name) == 2) {
+                    $user_name = $user_name[1] . '_' . $user_name[0];
+                } else {
+                    $user_name = $user_name[0];
+                }
     
                 $path = 'storage/' . $user_name . '/interest/';
                 

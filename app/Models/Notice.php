@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notice extends Model
 {
-	protected $fillable = ['employee_id','to_department','to_employee','title','notice','schedule_date'];
+	protected $fillable = ['employee_id','to_department','to_employee','title','notice','text_json','schedule_date'];
 	
     /*
 	* The Eloquent employee model name

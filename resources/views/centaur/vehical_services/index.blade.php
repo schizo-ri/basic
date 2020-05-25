@@ -1,5 +1,5 @@
 <div class="modal-header">
-	<h3 class="panel-title">@lang('basic.vehical_services') - {{ $vehicalServices->first()->car->registration }}</h3>
+	<h3 class="panel-title">@lang('basic.vehical_services') {!! $vehicalServices->first() ? '- ' . $vehicalServices->first()->car->registration : '' !!}</h3>
 </div>
 <div class="modal-body">
 	<table class="table_service">
@@ -38,7 +38,7 @@
 				@endforeach
 			@else 
 				<tr>
-					<td class="no-data" colspan="4" >@lang('basic.no_data')</td>
+					<td class="no-data" colspan="6" >@lang('basic.no_data')</td>
 			@endif
 		</tbody>
 	</table>

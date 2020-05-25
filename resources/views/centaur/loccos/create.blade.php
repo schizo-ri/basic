@@ -1,12 +1,16 @@
 @php	
-	$car_id = null;
-	if( $registracija != null ) {
-		$car_employee = $cars->where('registration', $registracija)->first();
+	if($car_id != null) {
+		$car_employee = $cars->where('id', $car_id)->first();
 	} else {
-		$car_employee = $cars->where('employee_id', Sentinel::getUser()->employee->id )->first();
-	}
-	if ($car_employee) {
-		$car_id = $car_employee->id;
+		$car_id = null;
+		if( $registracija != null ) {
+			$car_employee = $cars->where('registration', $registracija)->first();
+		} else {
+			$car_employee = $cars->where('employee_id', Sentinel::getUser()->employee->id )->first();
+		}
+		if ($car_employee) {
+			$car_id = $car_employee->id;
+		}
 	}
 @endphp
 <div class="modal-header">
@@ -94,10 +98,8 @@
 
 	$('#car_id').change(function(){
 		var car_id = $( this ).val();
-
 		try {
 			var token = $('meta[name="csrf-token"]').attr('content');
-
 			$.ajax({
 				url:  "last_km", 
 				type: 'post',

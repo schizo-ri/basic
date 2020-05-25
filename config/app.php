@@ -1,7 +1,4 @@
 <?php
-/* use Illuminate\Support\Facades\DB;
-
-$settings = DB::table('settings')->get(); */
 
 return [
 
@@ -16,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Duplico d.o.o.'),
+    'name' => env('APP_NAME', 'Kuća sv. Franje'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +39,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', true),
+    'debug' => env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost:8000'),
+    'url' => env('APP_URL', 'https://kuca-sv-franje.myintranet.io'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -155,6 +152,7 @@ return [
         Illuminate\Hashing\HashServiceProvider::class,
     /*     Illuminate\Mail\MailServiceProvider::class, */
         App\Providers\CustomMailServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         Illuminate\Notifications\NotificationServiceProvider::class,
         Illuminate\Pagination\PaginationServiceProvider::class,
         Illuminate\Pipeline\PipelineServiceProvider::class,
@@ -167,7 +165,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 		Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class,
 		Centaur\CentaurServiceProvider::class, 
-		
+        
         /*
          * Package Service Providers...
          */

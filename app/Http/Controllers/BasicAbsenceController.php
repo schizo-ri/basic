@@ -457,7 +457,7 @@ class BasicAbsenceController extends Controller
 				
 			}
 			
-		//	$array_godine['ukupnoPreostalo'] = $ukupno_dana_GO - $ukupno_dana_zahtjevi;
+			//	$array_godine['ukupnoPreostalo'] = $ukupno_dana_GO - $ukupno_dana_zahtjevi;
 			
 			$GO_razmjeran = BasicAbsenceController::razmjeranGO($user); // razmjerni dani ova godina
 			$GO_PG = BasicAbsenceController::razmjeranGO_PG($user); // razmjerni dani prošla godina
@@ -467,7 +467,7 @@ class BasicAbsenceController extends Controller
 			$preostalo_OG = $GO_razmjeran;
 			$zahtjevi_Dani_OG = 0;
 			$zahtjevi_Dani_PG = 0;
-		
+		/* 
 			foreach($zahtjevi as $zahtjev){
 				$begin = new DateTime($zahtjev->start_date);
 				$end = new DateTime($zahtjev->end_date);
@@ -516,7 +516,7 @@ class BasicAbsenceController extends Controller
 			}
 			if ($mjesec_danas >= 7 ) {
 				$preostalo_PG = 0;
-			}
+			} */
 
 			/*
 				array:3 [▼
@@ -772,9 +772,9 @@ class BasicAbsenceController extends Controller
 			$requestsArray = array();
 		
 			$years = BasicAbsenceController::yearsRequests($user); // sve godine zahtjeva
-		
-			$requests = Absence::join('absence_types', 'absence_types.id', 'absences.type')->select('absences.*', 'absence_types.mark' )->where('employee_id', $user->id)->where('approve',1)->orderBy('start_date','ASC')->get(); // svi zahtjevi djelatnika
 			
+			$requests = Absence::join('absence_types', 'absence_types.id', 'absences.type')->select('absences.*', 'absence_types.mark' )->where('employee_id', $user->id)->where('approve',1)->orderBy('start_date','ASC')->get(); // svi zahtjevi djelatnika
+			dd($requests );
 			$requests_next_year = array();
 			$requests_previous_year = array();
 

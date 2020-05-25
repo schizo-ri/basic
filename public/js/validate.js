@@ -1,15 +1,34 @@
 var locale = $('.locale').text();
+var validate_text;
+var email_unique;
+var error;
+var request_send;
+var status_requests;
+var all_requests;
+var done;
 
-if(locale == 'hr') {
-    validate_text = "Obavezno polje";
-} else if( locale = 'en') {
-    validate_text = "Required field";            
+if(locale == 'en') {
+    validate_text = "Required field";
+    email_unique = "Email must be unique";
+    error = "there was an error";
+    saved = "Data saved successfully.";
+    request_send = "Request sent";
+    status_requests = "To see you request status and see all request visit All requests page";
+    all_requests = "All requests";
+    done = "Done";
 } else {
     validate_text = "Obavezno polje";
-}   
+    email_unique = "E-mail mora biti jedinstven";
+    error = "Došlo je do greške";
+    saved = "Podaci su spremljeni";
+    request_send = "Zahtjev je poslan";
+    status_requests = "Da biste vidjeli status zahtjeva i pogledali sve zahtjeve posjetite Svi zahtjevi stranicu";
+    all_requests = "Svi zahtjevi";
+    done = "Gotovo";
+}
+
 $('.remove').click(function(){
     $(this).parent().remove();
-    console.log("remove");
 });
 var page = $('.admin_pages li').find('a.active_admin');
 var modul_name = $('.admin_pages li').find('a.active_admin').attr('id');
@@ -20,6 +39,7 @@ $('.btn-submit').click(function(event){
     let url = $(this).parents('form:first').attr('action');
     var form_data = form.serialize();
     console.log(form_data);
+    console.log(url);
     
     var validate = [];
     
@@ -78,13 +98,13 @@ $('.btn-submit').click(function(event){
             validate.push(true);
         }
     }
-    
+    console.log(validate);
     if(validate.includes("block") ) {
        event.preventDefault();
      
        validate = [];
        
-    } else {     
+    } else {
         $('.roles_form .checkbox').show();
         $.ajaxSetup({
             headers: {
@@ -100,25 +120,49 @@ $('.btn-submit').click(function(event){
                 $.modal.close();
                 var url_load = window.location.href;
                 var pathname = window.location.pathname;
+               console.log("url_load " +url_load);
+               console.log("url " + url);
+               /*  console.log("url " + url);
+                console.log("admin_pages li " + $(page).attr('href')); */ //admin_pages li
                 if(pathname == '/events' ) {
                    $('.all_events').load(url_load + ' .all_events .hour_in_day');
-                }
-                if(url.includes("/vehical_services/")) {                  
+                } else if(url.includes("/vehical_services/")) {
                     url = window.location.origin + '/vehical_services';
                     $('.modal-body').load(url + " .modal-body table" );
                     $.getScript( '/../restfulizer.js');
-                }
-                if(url.includes("/fuels/")) {                    
+                } else if(url_load.includes("/oglasnik")) {
+                        url = window.location.origin + '/oglasnik';
+                        $('.main_ads').load(url + " .main_ads article" );
+                        $.getScript( '/../restfulizer.js');
+
+                } else if(url.includes("/fuels/")) {                    
                     url = window.location.origin + '/fuels';
                     $('.modal-body').load(url + " .modal-body table" );
                     $.getScript( '/../restfulizer.js');
+                } else if (url_load.includes("/admin_panel")) {
+                    $('tbody').load($(page).attr('href') + " tbody>tr",function(){
+                    /*  $.getScript( '/../js/collaps.js');	 */
+                    });
+                } else if (pathname.includes("/edit_user")) {
+                    location.reload();
+                } else {
+                    $('.index_main').load(url + " .index_main>section");
+                }
+                if(url.includes("/absences")) {
+                    $('<div><div class="modal-header"><span class="img-success"></span></div><div class="modal-body"><div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>success:</strong>' + request_send + '<p>' + status_requests + '</p></div></div><div class="modal-footer"><span><button class="btn_all" ><a href="' + location.origin + '/absences' + '" >' + all_requests + '</a></button></span><button class="done"><a href="#close" rel="modal:close" >' + done + '</a></button></div></div>').appendTo('body').modal();
+                } else {
+                    $('<div><div class="modal-header"><span class="img-success"></span></div><div class="modal-body"><div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>success:</strong>' + saved + '</div></div></div>').appendTo('body').modal();
                 }
             }, 
             error: function(xhr,textStatus,thrownError) {
-                console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError); 
+                console.log(xhr); 
+                console.log(textStatus); 
+                console.log(thrownError); 
                 if(url.includes("users") && thrownError == 'Unprocessable Entity' ) {
-                    alert("E-mail mora biti jedinstven / Email must be unique");
-                }                
+                    alert(email_unique);
+                }  else {
+                    $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + error + '</div></div></div>').appendTo('body').modal();
+                }
             }
           });
           

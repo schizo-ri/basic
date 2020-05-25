@@ -5,7 +5,7 @@
 @section('content')
      @if(Sentinel::check() && Sentinel::inRole('administrator'))
         <div class="index_page index_admin">
-            <aside class="col-lg-12 col-xl-12 float_left admin_aside">
+            <aside class="col-md-12 col-lg-4 col-xl-4 float_left admin_aside">
                 <section class="col-12 float_left admin_panel">
                     <h1>@lang('welcome.admin_panel')</h1>
                     <ul class="admin_pages">
@@ -47,19 +47,6 @@
                                     <a href="{{ route('loccos.index') }}" class="line_height_45 admin_link" id="cars">@lang('basic.loccos')</a>
                                 </li>
                             @endif
-                            
-                           {{--   <li class="first_group {{ Request::is('campaigns*') ? 'active' : '' }}">
-                                <span class="space" ></span>
-                                <a href="{{ route('campaigns.index') }}" class="line_height_45 admin_link" id="campaigns">@lang('basic.campaigns')</a>
-                            </li>
-                            <li class="first_group {{ Request::is('campaign_sequences*') ? 'active' : '' }}">
-                                <span class="space" ></span> 
-                                <a href="{{ route('campaign_sequences.index') }}" class="line_height_45 admin_link" id="campaign_sequences">@lang('basic.campaign_sequences')</a>
-                            </li>
-                            <li class="first_group {{ Request::is('benefits*') ? 'active' : '' }}">
-                                <span class="space" ></span>
-                                <a href="{{ route('benefits.index') }}" class="line_height_45 admin_link" id="benefits">@lang('basic.benefits')</a>
-                            </li> --}}
                             <li class="{{ Request::is('companies*') ? 'active' : '' }}">
                                 <span class="image_company" ></span> 
                                 <a href="{{ route('companies.index') }}" class="line_height_61 admin_link" id="companies">@lang('basic.company')</a>
@@ -68,9 +55,12 @@
                                 <span class="image_emailings" ></span> 
                                 <a href="{{ route('emailings.index') }}" class="line_height_61 admin_link" id="emailings">@lang('basic.emailings')</a>
                             </li>      
-                                                  
+                            <li class="{{ Request::is('templates*') ? 'active' : '' }}">
+                                <span class="image_template" ><i class="far fa-clone"></i></span> 
+                                <a href="{{ route('templates.index') }}" class="line_height_61 admin_link" id="emailings">@lang('basic.templates')</a>
+                            </li>   
                         @endif
-                        @if (Sentinel::inRole('superadmin'))
+                        @if (Sentinel::inRole('superadmin') )
                             <li class="{{ Request::is('settings*') ? 'active' : '' }}">
                                 <span class="image_settings" ><i class="fas fa-cog"></i></span> 
                                 <a href="{{ route('settings.index') }}" class="line_height_61 admin_link" id="settings">@lang('basic.settings')</a>
@@ -83,10 +73,12 @@
                     </ul>
                 </section>
             </aside>
-            <main class="col-lg-12 col-xl-8 index_main float_right admin_main">
-                <span class="link_back"><span class="curve_arrow_left"></span></span>
-                <div id="admin_page">
-                </div>
+            <main class="col-md-12 col-lg-8 col-xl-8 index_main float_right admin_main">
+                <section>
+                    <span class="link_back"><span class="curve_arrow_left"></span></span>
+                    <div id="admin_page">
+                    </div>
+                </section>
             </main>
         </div>
     @endif    

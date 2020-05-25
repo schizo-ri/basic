@@ -5,7 +5,7 @@ return [
 	'with_day'				=> 'With day',
 	'employed_worker' 		=> 'employed is',
 	'in_the_workplace'		=> 'in the workplace',
-	'email_send'			=> 'The notification was sent',
+	'email_send'			=> 'E-mail was sent',
 	'new_article'			=> 'New article',
 	'new_absence'			=> 'Absence request',
 	'new_article_publish'	=> 'A new educational article has been published on the portal',

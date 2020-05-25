@@ -23,7 +23,7 @@
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             <strong>{{ ucfirst($key) }}:</strong> {!! $value !!}
                             @if(session()->has('absence'))
-                               @lang('ctrl.status_requests')<br>@lang('ctrl.all_requests_page'). </p>
+                                <p>@lang('ctrl.status_requests')<br>@lang('ctrl.all_requests_page'). </p>
                             @endif
                             @if(session()->has('evaluation'))
                                 <p class="padd_t_15 margin_0">@lang('ctrl.q_thanks')</p>

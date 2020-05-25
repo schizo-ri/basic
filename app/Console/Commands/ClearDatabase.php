@@ -39,7 +39,7 @@ class ClearDatabase extends Command
     public function handle()
     {
         DB::transaction(function () {      
-            $date = date('2020-02-21');  
+            $date = date('2020-05-24');  
 
             DB::table('ads')->whereDate('created_at','>', $date)->delete();
             DB::table('absences')->whereDate('created_at','>', $date)->delete();

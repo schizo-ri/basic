@@ -12,6 +12,8 @@ use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use Sentinel;
 use DateTime;
+use App\Events\MessageSend;
+use Pusher;
 
 class PostController extends Controller
 {
@@ -134,7 +136,7 @@ class PostController extends Controller
 		
 		$comment = new Comment();
 		$comment->saveComment($data1);
-
+	
 		session()->flash('success', "Poruka je poslana");
 		
         return redirect()->back();
@@ -229,7 +231,7 @@ class PostController extends Controller
 		return redirect()->back()->withFlashMessage($message);
     }
 	
-	public function storeComment(CommentRequest $request)
+	public function storeComment(Request $request)
 	{
 		$employee = Sentinel::getUser()->employee;
 		
@@ -243,12 +245,22 @@ class PostController extends Controller
 		$comment = new Comment();
 		$comment->saveComment($data);
 		
-		$data1 = array('content'  =>  $request->get('content'));
+		$data1 = array('content'  => $request->get('content'));
 		$post = Post::find($request->get('post_id'));
 		
 		$post->updatePost($data1);
+	
+		if( $post->employee_id == $comment->employee_id) {
+			$show_alert_to_employee = $post->to_employee_id;
+		} else if ($post->to_employee_id == $comment->employee_id) {
+			$show_alert_to_employee = $post->employee_id;
+		} else {
+			$show_alert_to_employee = null;
+		}
+		
+		event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
 
-		$message = session()->flash('success', 'You have successfully addad a new comment.');
+		$message = session()->flash('success', __('basic.sent_message'));
 
 		return redirect()->back()->withFlashMessage($message);
 		//return redirect()->route('admin.posts.index')->withFlashMessage($message);
@@ -370,7 +382,7 @@ class PostController extends Controller
 	{
 		$post = Post::findOrFail($id);
 		$date = new DateTime($year . '-' .  $month . '-' . $day . ' ' . $hour . ':' . $minute . ':' . $second);
-		$date->modify('-10 seconds');
+		$date->modify('-1 seconds');
 
 		if ($post && ($post->updated_at > $date) ) {
 			PostController::setCommentAsRead($id, true);
@@ -403,4 +415,20 @@ class PostController extends Controller
 	public static function previous($id, $post_id) {
 		return Comment::where('id', '<', $id)->where('post_id', $post_id)->orderBy('id','desc')->first();
 	}
+
+	 /**
+     * Ship the given order.
+     *
+     * @param  int  $orderId
+     * @return Response
+     */
+   /*  public function send($postId)
+    {
+        $post = Post::findOrFail($postId);
+
+        // Order shipment logic...
+
+        event(new SendMessage($post));
+	} */
+	
 }

@@ -216,7 +216,19 @@
 					</div>
 				@endif				
 				{!! ($errors->has('abs_days') ? $errors->first('abs_days', '<p class="text-danger">:message</p>') : '') !!}
-			</div>			
+			</div>		
+			@if(in_array('Kampanje', $moduli))
+				<div class="form-group {{ ($errors->has('campaign_id')) ? 'has-error' : '' }}">
+					<label>@lang('basic.campaigns')</label>
+					<select class="form-control" name="campaign_id[]" multiple >
+						<option value=""  ></option>
+						@foreach($campaigns as $campaign)	
+							<option value="{{ $campaign->id}}" {!! $campaignRecipients->where('campaign_id', $campaign->id)->first() ? 'selected' : '' !!}>{{ $campaign->name }}</option>
+						@endforeach
+					</select>
+					{!! ($errors->has('campaign_id') ? $errors->first('campaign_id', '<p class="text-danger">:message</p>') : '') !!}
+				</div>
+			@endif	
 			{{ csrf_field() }}
 			{{ method_field('PUT') }}
 			<input class="btn-submit" type="submit" value="{{ __('basic.edit')}}">

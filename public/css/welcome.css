@@ -22,8 +22,7 @@ body {
 	width: 100%;
 	height: 100%;
 	font-family: Montserrat, sans-serif;
-	overflow-y: auto;
-    overflow-x: hidden;
+	overflow: hidden;
 	overscroll-behavior-y: contain;
 	scrollbar-width: thin;
 	display: block;
@@ -355,19 +354,18 @@ p.terms>span {
 }
 .btn-new {
 	width: auto;
-    height: 38px;
+    height: 26px;
     background: #1594F0;
     border-radius: 5px;
     color: #fff;
     margin: auto;
-    padding: 0 15px;
+    padding: 0 10px;
     float: right;
-    line-height: 35px;
+	line-height: 26px;
     position: static;
     transform: none;
     display: flex;
-	align-items: center;
-	margin-left: 15px;
+    align-items: center;
 }
 
 .btn-new svg, .btn-new i {
@@ -403,13 +401,20 @@ main:hover > ::-webkit-scrollbar-thumb, section:hover > ::-webkit-scrollbar-thum
 
 .container {
 	overflow: hidden;
-	padding: 0 20px 30px 15px;
-	height: 60%;
+	padding: 0 20px 20px 30px;
+	height: calc(100% - 92px);
+	width: 100%;
+	background: linear-gradient(#071E57 35%, #ffffff 35%);
 }
 .container >section {
 	height: 100%;
+    padding: 0;
+    background: none;
+    padding-right: 20px;
 }
-
+.container section.side_noticeboard {
+	width: calc( 33.333333% - 50px);
+}
 span.img-success {
 	background: url('../icons/success.png') no-repeat center;
 	width: 131px;
@@ -431,6 +436,9 @@ span.img-success {
 }
 
 @media (max-width: 1300px) {
+	html, body{
+		font-size: 15px;
+	}
 	body section.welcome  {
 		padding-left: 40px;
 	}
@@ -438,27 +446,49 @@ span.img-success {
 
 @media (max-width: 1200px) {
 	html, body{
-		font-size: 15px;
-	}
-	
-	.container >section {
-		padding: 0;
+		font-size: 14px;
 	}
 }
 
-@media (max-width: 992px) {
-	body {
-		
+@media (max-width: 1024px) {
+	html, body{
+		font-size: 13px;
 	}
+	.container {
+        padding: 0 15px 15px 5px;
+        height: calc(100% - 52px);
+		overflow: auto;
+		
+    }
+}
+@media (max-width: 990px) {
 	html, body{
 		font-size: 14px;
 	}
+	.container {
+		
+	}
+	.user_header {
+		order: 1;
+		margin-bottom: 10px;
+		padding: 10px;
+		margin-top: 10px;
+	}
+	.container >section:first-child, .container >section:last-child{
+		margin-bottom: 10px;
+		height: auto;
+	}	
+	.container >section {
+		padding: 0 10px;
+		order: 2;
+	}
+	
 }
 
 @media (max-width: 768px) {
 	
 	html{
-		font-size: 13px;
+		font-size: 12px;
 		height: 100vh;
 	}
 	body {
@@ -483,7 +513,7 @@ span.img-success {
 
 @media (max-width: 600px) {
 	html, body{
-		font-size: 12px;
+		font-size: 11px;
 	}
 }
 
@@ -494,7 +524,7 @@ span.img-success {
 	}
 	
 	html, body{
-		font-size: 11px;
+		font-size: 10px;
 	}
 	body {
 		height: 100%;
@@ -545,3 +575,11 @@ span.img-success {
 		}
 	}
 
+	@media (max-height: 800px) { 
+		html {
+			font-size: 14px;
+		}
+		.container {
+			height: calc(100% - 52px);
+		}
+	}

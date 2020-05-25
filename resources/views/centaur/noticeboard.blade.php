@@ -1,36 +1,29 @@
 @extends('Centaur::layout')
 
-@section('title', __('basic.ads'))
+@section('title', __('basic.notices'))
 @php
 	use App\Http\Controllers\DashboardController;
 @endphp
 @section('content')
 <div class="index_page noticeboard_index">
-	<aside class="col-4 index_aside">
-		@include('Centaur::side_calendar')
-	</aside>
-	<main class="col-lg-12 col-xl-8 index_main main_noticeboard float_right">
+	<main class="col-lg-12 col-xl-12 index_main main_noticeboard float_right">
 		<section>
-			<header class="header_noticeboard">
-				<a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a>@lang('basic.notice_board')
-			</header>
+			<div class="page-header header_document">
+			
+				@lang('basic.notices')
+			</div>
 			<main class="all_notices">
-				<header class="header_ads header_notice">
-					<div class="filter">
-						<div class="float_left col-6 height100 position_rel padd_0">
-							<img class="img_search" src="{{ URL::asset('icons/search.png')  }}" alt="Search"/>
-							<input type="text" id="mySearch_noticeboard" placeholder="{{ __('basic.search')}}" title="Type ... " class="input_search" autofocus>
-						</div>
-						<div class="float_right col-6 height100  position_rel padd_tb_17">
-							<div class='add_notice float_right'>
-								@if(Sentinel::getUser()->employee && Sentinel::getUser()->hasAccess(['notices.create']) || in_array('notices.create', $permission_dep) )
-									<a class="add_new create_notice" href="{{ route('notices.create') }}" rel="modal:open" >
-										<i style="font-size:11px" class="fa">&#xf067;</i>@lang('basic.add_notice')
-									</a>
-								@endif
-							</div>
+				<header class="page-header">
+					<div class="index_table_filter">
+						<label>
+							<input type="search" id="mySearch_noticeboard" placeholder="{{ __('basic.search')}}" title="Type ... " class="input_search" autofocus>
+						</label>
+						@if(Sentinel::getUser()->employee && Sentinel::getUser()->hasAccess(['notices.create']) || in_array('notices.create', $permission_dep) )
 							
-						</div>
+							<a class="add_new create_notice" href="{{ route('notices.create') }}"  >
+								<i style="font-size:11px" class="fa">&#xf067;</i>
+							</a>
+						@endif
 					</div>
 				</header>
 				<section class="section_notice bg_white">
@@ -69,18 +62,17 @@
 									}
 								@endphp
 								@if(Sentinel::inRole('administrator'))
-									<article class="noticeboard_notice_body">
-										@if(Sentinel::getUser()->hasAccess(['notices.delete']) || in_array('notices.delete', $permission_dep))
-											<a href="{{ route('notices.destroy', $notice->id) }}" class="delete action_confirm" data-method="delete" data-token="{{ csrf_token() }}">
-												<i class="far fa-trash-alt"></i>
-											</a>
-										@endif
+									<article class="col-xs-12 col-sm-49 col-md-32 col-lg-24 col-xl-19 noticeboard_notice_body">
+										
 										<a href="{{ route('notices.show', $notice->id) }}" class="notice_link panel notice_show" rel="modal:open">    
 											<header class="ad_header">
 												@if($notice_img)
+													@php krsort($notice_img) @endphp
 													<img class="" src="{{ URL::asset('storage/notice/' . $notice->id . '/' . end($notice_img)) }}" alt="Profile image" title="Notice image" />
+													
 												@else 
-													<img class="placeholder_image" src="{{ URL::asset('icons/placeholderAd.png') }}" alt="Ad image"/>
+													{!! $notice->notice !!}
+													<!-- <img class="placeholder_image" src="{{ URL::asset('icons/placeholderAd.png') }}" alt="Ad image"/> -->
 												@endif
 											</header>
 											<div class="ad_main">
@@ -102,9 +94,25 @@
 													@endif
 													<span>{{ $notice->employee->user['first_name'] . ' ' . $notice->employee->user['last_name'] }}</span>
 												</span>
-												<span class="noticeboard_notice_time">{{ date('l, d.F.Y',strtotime($notice->created_at))}}</span>												
+												<span class="noticeboard_notice_time">{{ date('l, d.F.Y',strtotime($notice->created_at))}}</span>	
+																					
 											</div>
+											
 										</a>
+										<div class="notice_links">
+											@if(Sentinel::getUser()->hasAccess(['notices.delete']) || in_array('notices.delete', $permission_dep))
+												<a href="{{ route('notices.destroy', $notice->id) }}" class="delete action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+													<i class="far fa-trash-alt"></i>
+												</a>
+												<a href="{{ action('NoticeController@test_mail_open', ['id' => $notice->id]) }}" class="edit btn-edit sendEmail" title="{{ __('basic.sendEmail')}}" rel="modal:open"><i class="far fa-envelope"></i></a>
+
+											@endif
+											@if(Sentinel::getUser()->hasAccess(['notices.update']) || in_array('notices.update', $permission_dep))
+												<a href="{{ route('notices.edit', $notice->id) }}" class="btn-edit" >
+													<i class="far fa-edit"></i>
+												</a>
+											@endif
+										</div>	
 									</article>
 								@elseif(array_intersect($user_department, $notice_dep) )
 									<article class="noticeboard_notice_body">
@@ -135,6 +143,7 @@
 												</span>
 												<span class="noticeboard_notice_time" >{!! $notice->schedule_date ? date('l, d.F.Y',strtotime($notice->schedule_date)) :  date('l, d.F.Y',strtotime($notice->created_at)) !!}</span>
 											</div>
+											
 										</a>
 									</article>
 								@endif
@@ -160,6 +169,7 @@
 <script>
 	$( function () {
 		$.getScript( '/../js/filter.js');
+		$.getScript( '/../js/open_modal.js');
 		$.getScript( '/../js/filter_dropdown.js');
 		$.getScript( '/../js/set_height_notice.js');
 		$('.select_filter.sort').change(function () {

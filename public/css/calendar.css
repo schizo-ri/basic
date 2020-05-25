@@ -246,3 +246,14 @@ div#calendar ul li.active_date {
     }
 
 }
+
+@media (max-height: 800px) {
+    div#calendar ul.dates li {
+        height: 75px;
+    }
+    div#calendar ul.dates  {
+        height: 75px;
+        margin-bottom: 10px;
+}
+    }
+    

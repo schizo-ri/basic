@@ -34,14 +34,14 @@
 							<td>{{ $company->phone }}</td>
 							<td>@foreach($modules as $key => $value) {{ $value }} <br>@endforeach</td>
 							<td class="center">
-								<button class="collapsible option_dots float_r"></button>
+								<!-- <button class="collapsible option_dots float_r"></button> -->
 								@if(Sentinel::getUser()->hasAccess(['companies.update']) || in_array('companies.update', $permission_dep))
-									<a href="{{ route('companies.edit', $company->id) }}" style="display:none" class="btn-edit"  title="{{ __('basic.edit')}}" rel="modal:open">
+									<a href="{{ route('companies.edit', $company->id) }}" class="btn-edit"  title="{{ __('basic.edit')}}" rel="modal:open">
 											<i class="far fa-edit"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['companies.delete']) || in_array('companies.delete', $permission_dep) && ! $departments->where('company_id',$company->id)->first())
-									<a href="{{ route('companies.destroy', $company->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" title="{{ __('basic.delete')}}" data-token="{{ csrf_token() }}">
+									<a href="{{ route('companies.destroy', $company->id) }}" class="action_confirm btn-delete danger" data-method="delete" title="{{ __('basic.delete')}}" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -58,9 +58,9 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-	$('.collapsible').click(function(event){        
+	/* 	$('.collapsible').click(function(event){        
        		$(this).siblings().toggle();
-		});
+		}); */
 	});
 	$.getScript( '/../restfulizer.js');
 </script>

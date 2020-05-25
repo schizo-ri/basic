@@ -63,8 +63,6 @@ class Employee_absence extends Command
 				}
 			}
         }
-
-        
         
         foreach(array_unique($send_to) as $send_to_mail) {
 			if( $send_to_mail != null & $send_to_mail != '' ) {

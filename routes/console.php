@@ -28,3 +28,7 @@ Artisan::command('command:clear_database', function () {
 Artisan::command('notice', function () {
     $this->comment(notice::quote());
 })->describe('Display an notice quote');
+
+Artisan::command('email:campaign', function () {
+    $this->comment(campaign::quote());
+})->describe('Display an campaign quote');

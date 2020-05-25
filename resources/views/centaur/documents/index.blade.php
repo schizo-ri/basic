@@ -4,16 +4,16 @@
 
 @section('content')
 <div class="index_page index_documents">
-	<aside class="col-lg-12 col-xl-12 float_left">
-		@include('Centaur::side_noticeboard')
-	</aside>
-	<main class="col-lg-12 col-xl-8 index_main main_documents float_right">
+	
+	<main class="col-md-12 index_main main_documents float_right">
 		<section>
 			<div class="page-header header_document">
-				<a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a>
+				<!-- <a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a> -->
 				@lang('basic.documents')
-				<span class="show float_r">@lang('basic.show')<i class="fas fa-caret-down"></i></span>
-				<span class="hide float_r">@lang('basic.hide')<i class="fas fa-caret-up"></i></span>
+				@if(count($documents)>0)
+					<span class="show float_r">@lang('basic.show')<i class="fas fa-caret-down"></i></span>
+					<span class="hide float_r">@lang('basic.hide')<i class="fas fa-caret-up"></i></span>
+				@endif
 				<div class="preview_doc">
 					<button id="left-button" class="scroll_left"></button>
 					@if(Sentinel::getUser()->hasAccess(["documents.create"]) || in_array("documents.create", $permission_dep) )
@@ -89,12 +89,14 @@
 											<td>{{ Carbon\Carbon::parse($document->created_at)->diffForHumans()  }}</td>
 											<td class="options center">
 												@if(Sentinel::getUser()->hasAccess(['documents.update']) || in_array('documents.update', $permission_dep) || Sentinel::getUser()->hasAccess(['documents.delete']) || in_array('abdocumentssences.delete', $permission_dep))
-													<button class="collapsible option_dots float_r"></button>
+													<!-- <button class="collapsible option_dots float_r"></button> -->
 													
-													@if(Sentinel::getUser()->hasAccess(["documents.delete"]) || in_array("documents.delete", $permission_dep))
-														<a href="{{ route("documents.destroy", $document->id) }}" class="action_confirm btn-delete danger " data-method="delete" data-token="{{ csrf_token() }}" style="display:none"><i class="far fa-trash-alt"></i></a>
-													@endif
-													
+												
+													@if(Sentinel::getUser()->hasAccess(['documents.delete']) || in_array('documents.delete', $permission_dep))
+													<a href="{{ route('documents.destroy', $document->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
+														<i class="far fa-trash-alt"></i>
+													</a>
+												@endif
 												@endif
 											</td>
 										</tr>
@@ -105,10 +107,13 @@
 							<div class="placeholder">
 								<img class="" src="{{ URL::asset('icons/placeholder_document.png') }}" alt="Placeholder image" />
 								<p> @lang('basic.no_file1')
-									<label type="text" class="add_new" rel="modal:open" >
-										<i style="font-size:11px" class="fa">&#xf067;</i>
-									</label>
-								@lang('basic.no_file2')
+									@if(Sentinel::getUser()->hasAccess(["documents.create"]) || in_array("documents.create", $permission_dep) )
+									@lang('basic.no_file2')
+										<label type="text" class="add_new" rel="modal:open" >
+											<i style="font-size:11px" class="fa">&#xf067;</i>
+										</label>
+										@lang('basic.no_file3')
+									@endif
 								</p>
 							</div>
 						@endif

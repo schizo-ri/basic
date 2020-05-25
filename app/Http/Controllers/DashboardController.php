@@ -31,17 +31,11 @@ class DashboardController extends Controller
     public function index()
     {
     //  $company = Company::where('url', CompanyController::getCompanyURL()['host'])->first()->db;
-    //  dd($company);
 
         if(Sentinel::check()) {
-            $questionnaires = Questionnaire::where('status','1')->get();
             $employee = Sentinel::getUser()->employee;
+            $moduli = CompanyController::getModules();  //dohvaća module firme
 
-            $departments = Department::get();
-            //dohvaća module firme
-            $moduli = CompanyController::getModules();
-
-            $docs = '';
             if($employee) {
                 $data_absence = BasicAbsenceController::zahtjevi( $employee );               
              
@@ -53,26 +47,28 @@ class DashboardController extends Controller
                 }
 
                 $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id',$employee->id)->orderBy('updated_at','DESC')->get()->take(5);
-                $comments = Comment::orderBy('created_at','DESC')->get();
-                $user_department = '';
-                if(isset($employee->work)) {
-                    $user_department = $employee->work->department->id;
-                }
-               
-                $date = new DateTime();
+
+           /*      $date = new DateTime();
                 $date->modify('-30 day');
-
-                $events = Event::where('employee_id',$employee->id)->where('date','>=', $date->format('Y-m-d'))->orderBy('date','DESC')->get();
-
-                return view('Centaur::dashboard',['questionnaires' => $questionnaires, 'posts' => $posts, 'comments' => $comments,'user_department' => $user_department,'events' => $events,'departments' => $departments,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence]);
+ */
+                if(isset($_GET['active_date']) && $_GET['active_date']) {
+                    $date = $_GET['active_date'];
+                   
+                } else {
+                    $date = date('Y-m-d');
+                }
+                
+                $events = Event::where('employee_id',$employee->id)->where('date', $date)->orderBy('date','DESC')->get();
+               
+                return view('Centaur::dashboard',[ 'posts' => $posts, 'events' => $events,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence]);
             } else {
-                return view('Centaur::dashboard',['questionnaires' => $questionnaires, 'departments' => $departments,'moduli' => $moduli,'docs' => $docs]);
+                return view('Centaur::dashboard',['moduli' => $moduli]);
             }
         } else {
             return view('welcome');
         }
     }
-
+    
     public static function profile_image( $employee_id ) 
     {
         $image = '';
@@ -82,8 +78,11 @@ class DashboardController extends Controller
         
         if(file_exists($path)){
             $image = array_diff(scandir($path), array('..', '.', '.gitignore'));
+        } else {
+			$image = '';
         }
-		return $image;
+
+        return $image;
     }
     
     public static function user_name( $employee_id ) 

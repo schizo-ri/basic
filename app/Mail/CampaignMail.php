@@ -17,7 +17,7 @@ class CampaignMail extends Mailable
      *
      * @var Campaign
      */
-    public $campaign;
+    public $campaignSequence;
 
 
     /**
@@ -25,9 +25,9 @@ class CampaignMail extends Mailable
      *
      * @return void
      */
-    public function __construct(Campaign $campaign)
+    public function __construct(CampaignSequence $campaignSequence)
     {
-        $this->campaign = $campaign;
+        $this->campaignSequence = $campaignSequence;
     }
 
     /**
@@ -37,14 +37,21 @@ class CampaignMail extends Mailable
      */
     public function build()
     {
-        $campaign_sequences = $this->campaign->campaignSequence->toArray();
+       /*  $campaign_sequences = $this->campaign->campaignSequence->toArray();
 
         $campaign_sequences = CampaignSequence::where('campaign_id',  $this->campaign->id)->orderBy('created_at','ASC')->get();
         $first_sequence = $campaign_sequences->first();
-                
-        return $this->markdown('emails.campaign.template')
+                 */
+       /*  return $this->markdown('emails.campaign.template')
                     ->subject($this->campaign->name)
                     ->with([
-                        'first_sequence' => $first_sequence]);
+                        'first_sequence' => $first_sequence]); */
+
+        return $this->from('info@duplico.hr', 'Duplico')
+					->view('Centaur::campaign_sequences.campaign_mail')
+					->subject($this->campaignSequence->subject )
+					->with([
+						'campaign_sequence' =>  $this->campaignSequence
+					]);
     }
 }

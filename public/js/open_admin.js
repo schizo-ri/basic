@@ -1,16 +1,23 @@
 $(".admin_pages a.admin_link").addClass('disable');
 var body_width = $('body').width();
+var url_location = location.href;
 
 $(function(){
     if(body_width > 450) {
-        $('.admin_pages>li>a').first().click();
+        if(url_location.includes('templates')) {
+            $('.admin_pages>li>a#emailings').click();
+        
+            window.history.pushState( url_location, 'Title',location.origin + '/admin_panel');
+        } else {
+            $('.admin_pages>li>a').first().click();
+        }
     }
-    $(".admin_pages a.admin_link").removeClass('disable');
+        $(".admin_pages a.admin_link").removeClass('disable');
 });
 
 var click_element;
 
-$('.admin_pages>li>a').click(function(e) {    
+$('.admin_pages>li>a').click(function(e) {
     click_element = $(this);
    
     var url = $(this).attr('href');

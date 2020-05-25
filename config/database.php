@@ -51,9 +51,9 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'novi_portal_basic'),      // duplicoh_icom-user    /novi_portal_basic   /   myintran_tvrtka
-            'username' => env('DB_USERNAME','root'),                    //duplicoh_jelena       /root                /   myintran_jelenaj
-            'password' => env('DB_PASSWORD', ''),                       // Sifra123jj           / ''                 /   19ELiyGVyLcd
+            'database' => env('DB_DATABASE', 'myintran_kuca-sv-franje'),      // duplicoh_icom-user    /novi_portal_basic   /   myintran_tvrtka
+            'username' => env('DB_USERNAME','myintran'),                    //duplicoh_jelena       /root                /   myintran_jelenaj
+            'password' => env('DB_PASSWORD', '80d3NHgv7i'),                // Sifra123jj           / ''                 /   19ELiyGVyLcd
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -72,9 +72,9 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_EXT_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_EXT_DATABASE', 'novi_portal'),  // novi_portal-superadmin
-            'username' => env('DB_EXT_USERNAME', 'root'),        //duplicoh_jelena
-            'password' => env('DB_EXT_PASSWORD', ''),             //Sifra123jj
+            'database' => env('DB_EXT_DATABASE', 'duplicoh_icom-superadmin'),  // novi_portal-superadmin // duplicoh_icom-superadmin
+            'username' => env('DB_EXT_USERNAME', 'duplicoh_jelena'),        //duplicoh_jelena
+            'password' => env('DB_EXT_PASSWORD', 'Sifra123jj'),             //Sifra123jj
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -146,11 +146,13 @@ return [
         'client' => env('REDIS_CLIENT', 'predis'),
 
         'options' => [
-            'cluster' => env('REDIS_CLUSTER', 'predis'),
-            'prefix' => Str::slug(env('APP_NAME', 'laravel'), '_').'_database_',
+            'cluster' => env('REDIS_CLUSTER', 'redis'), 
+            'prefix' => env('REDIS_PREFIX', ''),
+            /* 'prefix' => Str::slug(env('APP_NAME', 'laravel'), '_').'_database_', */
         ],
 
         'default' => [
+            'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),
@@ -158,6 +160,7 @@ return [
         ],
 
         'cache' => [
+            'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),

@@ -11,9 +11,9 @@ $( function () {
     if(all_width > div_width ) {
         $('.preview_doc .scroll_right').show();
     }
-    $('.collapsible').click(function(event){ 
+    /* $('.collapsible').click(function(event){ 
         $(this).siblings().toggle();
-    });
+    }); */
     $('#right-button').click(function() {
         event.preventDefault();
         $('.preview_doc').animate({
@@ -75,13 +75,13 @@ $( function () {
     });
     
     $('.button_nav').css({
-        'background': '#051847',
-        'color': '#ffffff'
+       /*  'background': '#051847',
+        'color': '#ffffff' */
     });
     
     $( '.doc_button' ).css({
-        'background': '#0A2A79',
-        'color': '#ccc'
+       /*  'background': '#0A2A79',
+        'color': '#ccc' */
     });
     
     $(function() {

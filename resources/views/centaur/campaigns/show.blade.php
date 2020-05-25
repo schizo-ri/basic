@@ -1,8 +1,115 @@
-<div class="modal-header">
-    <a class="link_back" rel="modal:close">
-        <img src="{{ URL::asset('icons/arrow_left2.png') }}" />
-	</a>
-	@if( Sentinel::getUser()->hasAccess(['campaigns.delete']) || in_array('campaigns.delete', $permission_dep) && !$works->where('department_id',$department->id)->first())
+@extends('Centaur::layout')
+
+@section('title', __('basic.campaigns'))
+
+@section('content')
+<div class="index_page index_documents">
+
+	<main class="col-lg-12 col-xl-8 index_main main_documents float_right">
+		<section>
+			<div class="page-header header_document">
+				<a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a>
+				@lang('basic.campaign_sequences')
+			</div>
+			<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12 main_campaign">
+				<div class="table-responsive">
+					<header class="page-header">
+						<div class="index_table_filter">
+							<label>
+								<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
+							</label>
+							@if(Sentinel::getUser()->hasAccess(['campaign_sequences.create']) || in_array('campaign_sequences.create', $permission_dep))
+								<a class="btn btn-primary btn-new" href="{{ route('campaign_sequences.create',['id' => $campaign->id ]) }}"  title="{{ __('basic.add_campaign')}}">
+									<i class="fas fa-plus"></i>
+								</a>
+							@endif
+						</div>
+					</header>
+					@if(count($campaignSequences))
+						<table id="index_table" class="display table table-hover table_campaign">
+							<thead>
+								<tr>
+									<th>@lang('basic.campaign')</th>
+									<th>@lang('basic.text')</th>
+									<th>@lang('absence.start_date')</th>
+									<th>@lang('basic.interval')</th>
+									<th class="not-export-column">@lang('basic.options')</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach ($campaignSequences as $sequence)
+									<tr>
+										<td><a class="campaign_mail" href="{{ route('campaign_mail', ['sequence_id' => $sequence->id ]) }}" rel="modal:open">{{ $sequence->campaign['name'] }}</a></td>
+										<td></td>
+										<td>{!! $sequence->start_date ? date('d.m.Y', strtotime($sequence->start_date)) : '' !!}</td>
+										<td>@if ($sequence->send_interval) @lang('basic.'. $sequence->send_interval ) @endif</td>
+										<td class="center">
+											<!-- <button class="collapsible option_dots float_r"></button>	 -->							
+											@if(Sentinel::getUser()->hasAccess(['campaign_sequences.delete']) || in_array('campaign_sequences.delete', $permission_dep) && !$works->where('department_id',$department->id)->first())
+											<a href="{{ route('campaign_sequences.destroy', $sequence->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
+												<i class="far fa-trash-alt"></i>
+											</a>
+											@endif
+											@if(Sentinel::getUser()->hasAccess(['campaign_sequences.update']) || in_array('campaign_sequences.update', $permission_dep))
+												<a href="{{ route('campaign_sequences.edit', $sequence->id) }}" class="btn-edit" title="{{ __('basic.edit_campaigns')}}">
+													<i class="far fa-edit"></i>
+												</a>
+											@endif
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
+					@else
+						<p class="no_data">@lang('basic.no_data')</p>
+					@endif
+				</div>
+			</main>
+		</section>
+	</main>
+</div>
+<script>
+	$('.campaign_mail').click(function(){
+		console.log("campaign_mail1");
+    });
+	$('.header_campaign #mySearchTable').keyup(function(){
+		var value = $(this).val().toLowerCase();
+		console.log("filter");
+		$("#index_table tbody tr").filter(function() {
+		$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+		});
+	});	
+	/* $('.collapsible').click(function(event){        
+		$(this).siblings().toggle();
+	}); */
+	
+	$('.status_checked').click(function(){
+		var url = $(this).parents('form#form_edit_campaign').attr('action');
+		var form = $(this).parents('form#form_edit_campaign');
+		var form_data = form.serialize();
+		
+		$.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });     
+       
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: form_data,
+            success: function( response ) {
+               //alert("Podaci su spremljeni!")
+            }, 
+            error: function(xhr,textStatus,thrownError) {
+                console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError);                            
+            }
+		  });
+	});
+	
+	$.getScript( '/../restfulizer.js');	
+</script>
+<!-- @if( Sentinel::getUser()->hasAccess(['campaigns.delete']) || in_array('campaigns.delete', $permission_dep) && !$works->where('department_id',$department->id)->first())
 		<a href="{{ route('campaigns.destroy', $campaign->id) }}" class="action_confirm btn-delete modal_delete" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
 			<i class="far fa-trash-alt"></i> @lang('basic.delete')
 		</a>
@@ -39,9 +146,8 @@
 	<h3 class="panel-title">{{ $campaign->name }}</h3>
 	<p>{{ $campaign->description }}</p>
 	
-</div>
-<div class="modal-body">
-	
+	</div>
+	<div class="modal-body">
 		<header class="header_campaign">
 			<div class="index_table_filter">
 				<div class="float_left col-8">
@@ -50,149 +156,27 @@
 				</div>
 				<div class="float_right col-4">
 					<div class='add_campaign float_right '>
-						@if(Sentinel::getUser()->employee)
-							<a class="btn btn-primary btn-new" href="{{ route('campaign_sequences.create',['id' => $campaign->id ]) }}"  title="{{ __('basic.add_campaign')}}">
-								<i class="fas fa-plus"></i>
-							</a>
-						@endif
+						
 					</div>
 				</div>
 			</div>
 		</header>
 		@if(count($campaignSequences)>0)
-		<main class="index_main">
-			<div class="table-responsive">
-					<table id="index_table" class="display table table-hover sequence_table">
-						<thead>
-							<tr>
-								<th>@lang('basic.campaign')</th>
-								<th>@lang('basic.text')</th>
-								<th>@lang('absence.start_date')</th>
-								<th>@lang('basic.interval')</th>
-								<th class="not-export-column">@lang('basic.options')</th>
-						</thead>
-						<tbody>
-							@foreach ($campaignSequences as $sequence)
-								<tr>
-									<td><a href="{{ route('campaign_mail', ['sequence_id' => $sequence->id ]) }}" rel="modal:open">{{ $sequence->campaign['name'] }}</a></td>
-									<td></td>
-									<td>{!! $sequence->start_date ? date('d.m.Y', strtotime($sequence->start_date)) : '' !!}</td>
-									<td>{!! $sequence->send_interval ? __('basic.'.$sequence->send_interval) : '' !!}</td>
-									<td class="center">
-										<button class="collapsible option_dots float_r"></button>								
-										@if(Sentinel::getUser()->hasAccess(['campaign_sequences.delete']) || in_array('campaign_sequences.delete', $permission_dep) && !$works->where('department_id',$department->id)->first())
-										<a href="{{ route('campaign_sequences.destroy', $sequence->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
-											<i class="far fa-trash-alt"></i>
-										</a>
-										@endif
-										@if(Sentinel::getUser()->hasAccess(['campaign_sequences.update']) || in_array('campaign_sequences.update', $permission_dep))
-											<a href="{{ route('campaign_sequences.edit', $sequence->id) }}" style="display:none" class="btn-edit" title="{{ __('basic.edit_campaigns')}}">
-												<i class="far fa-edit"></i>
-											</a>
-										@endif
-									</td>
-								</tr>
-							@endforeach
-						</tbody>
-					</table>
-				
-			</div>
-		</main>
-		@else
-		<p class="no_data">@lang('basic.no_data')</p>
-	@endif
-</div>
-<script>
-	$('.header_campaign #mySearchTable').keyup(function(){
-		var value = $(this).val().toLowerCase();
-		console.log("filter");
-		$("#index_table tbody tr").filter(function() {
-		$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-		});
-	});	
-	$('.collapsible').click(function(event){        
-		$(this).siblings().toggle();
-	});
-
-	$('.status_checked').click(function(){
-		var url = $(this).parents('form#form_edit_campaign').attr('action');
-		var form = $(this).parents('form#form_edit_campaign');
-		var form_data = form.serialize();
-		
-		$.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });     
-       
-        $.ajax({
-            url: url,
-            type: "POST",
-            data: form_data,
-            success: function( response ) {
-               //alert("Podaci su spremljeni!")
-            }, 
-            error: function(xhr,textStatus,thrownError) {
-                console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError);                            
-            }
-		  });
-	});
-	$.getScript( '/../restfulizer.js');
-</script>
-	{{-- <main class="col-lg-12 col-xl-8 index_main float_right">
-		<section>
-			<header class="header_campaign">
-				<div class="filter">
-					<div class="float_left col-6 height100 position_rel padd_0">
-						<img class="img_search" src="{{ URL::asset('icons/search.png')  }}" alt="Search"/>
-						<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="{{ __('basic.search')}}" class="input_search" >
+			<main class="index_main">
+				<section>
+					<div class="table-responsive">
+						<table id="index_table" class="display table table-hover sequence_table">
+							<thead>
+								
+							</thead>
+							<tbody>
+								
+							</tbody>
+						</table>
 					</div>
-					<div class="float_right col-6 height100  position_rel padd_tb_5">
-						<div class='add_campaign float_right '>
-							@if(Sentinel::getUser()->employee)
-								<a class="btn btn-primary btn-new" href="{{ route('campaigns.create') }}"  title="{{ __('basic.add_campaign')}}" rel="modal:open">
-									<i class="fas fa-plus"></i>
-								</a>
-							@endif
-						</div>
-					</div>
-				</div>
-			</header>
-			<main class="main_campaign">
-				@if(isset($campaigns) && count($campaigns) >0)
-					@foreach($campaigns as $campaign)
-						@if ( $campaignSequences->where('campaign_id', $campaign->id)->first())
-							@php
-								$sequences = $campaignSequences->where('campaign_id', $campaign->id);
-							@endphp
-							<article class="campaign panel col-sm-12 col-md-12 col-lg-6 col-xl-6 float_left">
-								<div>
-									<header class="campaign_head">
-										<h4>{{ $campaign->name }}</h4>
-										<h4><em>{{ $campaign->description }}</em></h4>
-									</header>
-									<main class="campaign_main">
-										@foreach ($sequences as $sequence)
-											<p>{!! $sequence->text !!}</p>
-										@endforeach
-									</main>
-									<footer>														
-									</footer>
-								</div>
-							</article>
-						@endif
-					@endforeach
-				@else 
-					<div class="placeholder">
-						<img class="" src="{{ URL::asset('icons/placeholder_ad.png') }}" alt="Placeholder image" />
-						<p>@lang('basic.no_ad1')
-							<label type="text" class="add_new" rel="modal:open" >
-								<i style="font-size:11px" class="fa">&#xf067;</i>
-							</label>
-							@lang('basic.no_ad2')
-						</p>
-					</div>
-				@endif
+				</section>
 			</main>
-		</section>
-	</main> --}}
+		@else
+			<p class="no_data">@lang('basic.no_data')</p>
+		@endif
+</div> -->

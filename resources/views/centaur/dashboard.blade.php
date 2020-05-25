@@ -6,12 +6,15 @@
 	use App\Http\Controllers\DashboardController;
 	use App\Http\Controllers\CompanyController;
 	$thisYear = date('Y');
-	
+
 	$moduli = CompanyController::getModules();
 @endphp
 @section('content')
 	@if (Sentinel::check())
-		<div class="user_header col-xs-8 col-sm-8  " >
+		<section class="col-xs-12 col-sm-12 col-md-12 col-lg-4 float_left">
+			@include('Centaur::side_noticeboard')
+		</section>
+		<div class="user_header col-xs-12 col-sm-12 col-md-12 col-lg-8" >
 			<div class="info ">
 				<div class="col-md-3 float_left user_header_info">
 					@php
@@ -32,7 +35,7 @@
 					<p>{{ $employee->work['name'] }}</p>
 					<div class="header_user_go">
 						<p>
-							<span>{{ $data_absence['ukupnoPreostalo'] . '(' .$data_absence['ukupnoGO'] . ')' }} </span>
+							<span>@if(isset($data_absence)){{ $data_absence['ukupnoPreostalo']  }}@endif</span>
 							<span>@lang('absence.vacation')<br>@lang('absence.days_left')</span>
 						</p>
 						<p>
@@ -47,7 +50,7 @@
 					<span class="efc_hide">@lang('basic.hide_salery')<img class="radius50" src="{{ URL::asset('icons/arrow_up.png') }}" alt="arrow" /></span>
 					<span class="efc_show">@lang('basic.show_salery')<img class="radius50" src="{{ URL::asset('icons/arrow_down.png') }}" alt="arrow" /></span>
 					<div class="efc col-md-12">
-						<p class="col-4"><span class="salery_show">{{ number_format($employee->brutto, 2, ',', '.') }} kn</span><span class="salery_hidden">- Kn</span>@lang('basic.yearly_salary')</p>
+						<p class="col-4"><span class="salery_show" >{{ number_format($employee->brutto, 2, ',', '.') }} kn</span><span class="salery_hidden">- Kn</span>@lang('basic.yearly_salary')</p>
 						<p class="col-4"><span class="salery_show">{{ number_format($employee->brutto /12, 2, ',', '.') }}  kn</span><span class="salery_hidden">- Kn</span>@lang('basic.monthly_cost')</p>
 						<p class="col-4"><span class="salery_show">{{ number_format($employee->effective_cost, 2, ',', '.')}}  kn</span><span class="salery_hidden">- Kn</span>@lang('basic.hourly_rate')</p>
 					</div>
@@ -82,9 +85,6 @@
 				@endif
 			</div>
 		</div>
-		<section class="col-xs-12 col-sm-12 col-md-12 col-lg-4 float_left">
-			@include('Centaur::side_noticeboard')
-		</section>		
 		<section class="col-xs-12 col-sm-12 col-md-12 col-lg-5 float_left calendar">
 			<div>
 				<div id="calendar">
@@ -106,25 +106,31 @@
 					</div>
 				</div>
 				<div class="comming_agenda">
-					@if(in_array('Kalendar',$moduli))
+					@if(in_array('Kalendar', $moduli))
 						@if(isset($employee))
 							<a class="btn btn-primary btn-lg btn-new" href="{{ route('events.create') }}" rel="modal:open">
 									<i style="font-size:11px" class="fa">&#xf067;</i>
 							</a>
 						@endif
 						<h3 class="agenda_title">@lang('calendar.your_agenda') </h3>
-						@foreach($events->take(5) as $event)
-							<p class="agenda display_none" id="{{ $event->date }}">
-								<span class="agenda_mark"><span class="green"></span></span>
-								<span class="agenda_time">{{ date('H:i',strtotime($event->time1)) }}<br><span>{{ date('H:i',strtotime($event->time2)) }}</span></span>
-								<span class="agenda_comment">{{ $event->description }}</span>
-							</p>
-						@endforeach
+						<div class="all_agenda">
+							@if(isset($events) && count($events)>0)
+								@foreach($events->take(5) as $event)
+									<p class="agenda" id="{{ $event->date }}">
+										<span class="agenda_mark"><span class="green"></span></span>
+										<span class="agenda_time">{{ date('H:i',strtotime($event->time1)) }}<br><span>{{ date('H:i',strtotime($event->time2)) }}</span></span>
+										<span class="agenda_comment">{{ $event->description }}</span>
+									</p>
+								@endforeach
+							@else
+								<div class="placeholder">
+									<img class="" src="{{ URL::asset('icons/placeholder_calendar.png') }}" alt="Placeholder image" />
+									<p><span>@lang('basic.no_schedule')</span></p>
+								</div>
+							@endif
+						</div>
 					@endif
-					<div class="placeholder">
-						<img class="" src="{{ URL::asset('icons/placeholder_calendar.png') }}" alt="Placeholder image" />
-						<p><span>@lang('basic.no_schedule')</span></p>
-					</div>
+					
 				</div>
 			</div>
 		</section>
@@ -200,15 +206,15 @@
 		if($('.comming_agenda'))
 		$('.placeholder').show();
 		
-		var placeholder_height =  $('.placeholder img').height();
-        $('.calendar .comming_agenda').height(placeholder_height + 60);
+	//	var placeholder_height =  $('.placeholder img').height();
+      //  $('.calendar .comming_agenda').height(placeholder_height + 60);
 		
 		$.getScript( '/../js/event_click.js');
 		
 	});
 	$( window ).resize(function() {
-		var placeholder_height = $('.placeholder_cal>img').height();
-		$('.placeholder_cal>p').height(placeholder_height);
+	/* 	var placeholder_height = $('.placeholder_cal>img').height();
+		$('.placeholder_cal>p').height(placeholder_height); */
 	});
 </script>
 @stop

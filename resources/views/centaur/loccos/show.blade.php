@@ -3,11 +3,11 @@
 		<label>
 			<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 		</label>
-		@if(Sentinel::getUser()->hasAccess(['loccos.create']) || in_array('loccos.create', $permission_dep))
+		<!-- @if(Sentinel::getUser()->hasAccess(['loccos.create']) || in_array('loccos.create', $permission_dep))
 			<a class="btn-new" href="{{ route('loccos.create', ['car_id' => $car_id]) }}" rel="modal:open">
 				<i class="fas fa-plus"></i>
 			</a>
-		@endif
+		@endif -->
 	</div>
 </header>
 <main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -39,14 +39,14 @@
 							<td>{{ $locco->distance }}</td>
 							<td>{{ $locco->comment }}</td>
 							<td>
-								<button class="collapsible option_dots float_r"></button>
+								<!-- <button class="collapsible option_dots float_r"></button> -->
 								@if( Sentinel::getUser()->hasAccess(['loccos.delete']) || in_array('loccos.delete', $permission_dep))
-									<a href="{{ route('loccos.destroy', $locco->id) }}" style="display:none" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
+									<a href="{{ route('loccos.destroy', $locco->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['loccos.update']) || in_array('loccos.update', $permission_dep))
-									<a href="{{ route('loccos.edit', $locco->id) }}" class="btn-edit" title="{{ __('basic.edit')}}" style="display:none" rel="modal:open">
+									<a href="{{ route('loccos.edit', $locco->id) }}" class="btn-edit" title="{{ __('basic.edit')}}" rel="modal:open">
 										<i class="far fa-edit"></i>
 									</a>
 								@endif
@@ -64,9 +64,9 @@
 
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-		$('.collapsible').click(function(event){        
+		/* $('.collapsible').click(function(event){        
        		$(this).siblings().toggle();
-		});
+		}); */
 	});
 	$.getScript( '/../restfulizer.js');
 </script>

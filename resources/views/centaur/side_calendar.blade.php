@@ -37,9 +37,8 @@
 </div>
 <div class="col-12 day_events">
     <div class="col-12">
+        <h6>Global events <a class="three_dots" rel="modal:open" href="{{ route('all_event', ['dataArr_day' => $dataArr_day, 'uniqueType' => $uniqueType, 'dan' => $dan] ) }}" > @lang('basic.view_all')</a></h6>
         @if (isset($dataArr_day)  && count($dataArr_day) > 0)
-            <a class="three_dots" rel="modal:open" href="{{ route('all_event', ['dataArr_day' => $dataArr_day, 'uniqueType' => $uniqueType, 'dan' => $dan] ) }}" > @lang('basic.view_all')</a>
-           
             @if(isset($uniqueType) && count($uniqueType)>0)
                 @foreach ($uniqueType as $type)
                     @php
@@ -77,6 +76,11 @@
                     </p>
                 @endforeach
             @endif
+        @else
+            <div class="placeholder">
+                <img class="" src="{{ URL::asset('icons/placeholder_calendar.png') }}" alt="Placeholder image" />
+                <p><span>@lang('basic.no_schedule')</span></p>
+            </div>
         @endif
 </div>
 </div>

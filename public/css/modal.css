@@ -50,26 +50,6 @@
 	padding: 0;
 }
 
-#interval {
-	display: none;
-}
-
-#interval > .input_interval {
-	width: 100px;
-	float: left;
-	margin-right: 20px;
-}
-
- #interval > .select_period {
-	width: auto;
-    float: left;
-}
-
-label.label_custom_interal {
-    display: block;
-    width: 100%;
-}
-
 .form_create_user .second_tab, .form_edit_user .second_tab {
 	display: none;
 }
@@ -223,7 +203,7 @@ span.work {
 
 .modal_user main .basic_info >div>span {
 	font-weight: 500;
-    font-size: 15px;
+    font-size: 0.875rem;
     color: #1390E9;
     display: block;
     margin-bottom: 20px;
@@ -231,6 +211,7 @@ span.work {
 
 .modal_user main .basic_info >div, .modal_user main .permissions >div  {
 	clear: left;
+	overflow-wrap: break-word;
 }
 
 .modal_user main .permissions {
@@ -268,6 +249,7 @@ span.work {
 	padding:20px 35px 25px 35px; 
 	height: auto; 
 	max-height: 100%; 
+	max-width: 575px;
 	overflow: auto;
 	scrollbar-width: thin;
 	-webkit-border-radius: 3px;
@@ -283,6 +265,10 @@ span.work {
 	background: #fff;
 
 }
+.modal.campaign_mail {
+	max-width: 700px;
+}
+
 .modal.slide .modal_side {
     width: 25%;
     float: left;
@@ -1417,6 +1403,7 @@ option::selection {
 
 .modal.modal_notice.notice_show .image_notice.show_all {
 	height: auto;
+	max-height: fit-content;
 }
 
 .modal.modal_notice.notice_show .modal-body {
@@ -1669,6 +1656,7 @@ input#file {
 
 .ad .panel-body {
 	padding: 20px 0;
+	font-size: 12px;
 }
 
 /* The container */
@@ -2073,7 +2061,33 @@ body .blocker {
 input.form-control.date {
 	width: auto;
 }
+@media (max-width:1300px) { 
+	.modal.modal_user>header, .modal.modal_user>main {
+		padding: 20px;
+		
+	}
+	.modal.modal_user>main {
+		overflow: auto;
+	}
+	.modal.modal_user>header .user_data {
+		padding-top: 20px;
+	}
+	.modal_user .user_img >img, .modal_user .user_data .user_name, .modal_user .user_data .days_left, .modal_user .user_data .days_used {
+		height: 70px;
+	}
+	.modal_user .user_data .user_name {
+		padding-left: 10px;
+	}
+	.modal_user .user_data .user_name >span.name, .modal_user .user_data .days_left >span:first-child, .modal_user .user_data .days_used >span:first-child {
+		font-size: 1.5rem;
+		padding: 0;
+	}
+	.modal_user .user_data .days_left >span, .modal_user .user_data .days_used >span {
+		padding-top: 0;
+	}
+	
 
+}
 @media (max-width:1200px) {
 	.modal.modal_notice, .modal.modal_questionnaire, .modal.modal_user {
 		display: inline-block;
@@ -2103,14 +2117,17 @@ input.form-control.date {
 }
 
 @media (max-width:768px){
+	body .blocker {
+		padding: 10px;
+	}
 	.modal.modal_notice.notice_show .modal-body.statistic_body {
 		padding: 10px;
 	}
 	body .modal {
 		padding: 0 !important;
-		width: 95%;
+		width: 100%;
 		height: auto;
-		max-height: 95%;
+		max-height: 100%;
 	}
 	.modal.slide {
 		padding: 0 !important;

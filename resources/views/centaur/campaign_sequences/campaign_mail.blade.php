@@ -1,2 +1,2 @@
 
-{!!$campaign_sequence->text!!}
+{!! $campaign_sequence->text !!}

@@ -10,13 +10,11 @@ use App\Models\Document;
 $i = 0;
 @endphp
 <div class="index_page index_profile">
-	<aside class="col-lg-12 col-xl-12 float_left">
-		@include('Centaur::side_noticeboard')
-	</aside>
-	<main class="col-lg-12 col-xl-8 index_main profile_main float_right">
+	
+	<main class="col-lg-12 col-xl-12 index_main profile_main float_right">
 		<section>
 			<div class="page-header header_profile">
-				<a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a>
+				
 				@lang('basic.profile')
 			</div>
 			<main class="main_profile">
@@ -73,6 +71,7 @@ $i = 0;
 					<a class="btn-new" href="{{ route('upload') }}" rel="modal:open" title="{{ __('basic.upload_photo') }}">
 						<i class="fas fa-plus"></i>
 					</a>
+					<div>
 					<div class="profile_images">
 						@if(count($images_interest)>0)
 							<button id="left-button" class="scroll_left"></button>
@@ -87,9 +86,9 @@ $i = 0;
 									}
 								@endphp
 								@if(pathinfo($image)['extension'] == 'mp4')
-								@php
-									$i++;
-								@endphp
+									@php
+										$i++;
+									@endphp
 									<span class="profile_img">
 										<a class="slide_show_open" href="{{ route('slide_show', $i) }}" rel="modal:open">
 											<video width="200"  height="200"  controls>
@@ -101,20 +100,20 @@ $i = 0;
 											<i class="far fa-trash-alt"></i>
 										</a>
 									</span>
-								@endif
-								@if(strpos(pathinfo($image)['basename'], '_small'))
-								@php
-									$i++;
-								@endphp
-									<span class="profile_img">
-										<a class="slide_show_open" href="{{ route('slide_show', $i) }}" rel="modal:open">
-											<img src="{{ URL::asset( $path . $image ) }}" alt="image" />
-										</a>
-										<a href="{{ route('documents.destroy', $document_id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" hidden="true" >
-											<i class="far fa-trash-alt"></i>
-										</a>
-									</span>
-								
+								@else
+									@if(strpos(pathinfo($image)['basename'], '_small'))
+										@php
+											$i++;
+										@endphp
+										<span class="profile_img">
+											<a class="slide_show_open" href="{{ route('slide_show', $i) }}" rel="modal:open">
+												<img src="{{ URL::asset( $path . $image ) }}" alt="image" />
+											</a>
+											<a href="{{ route('documents.destroy', $document_id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" hidden="true" >
+												<i class="far fa-trash-alt"></i>
+											</a>
+										</span>
+									@endif
 								@endif
 							@endforeach
 							<button id="right-button" class="scroll_right"></button>
@@ -130,6 +129,8 @@ $i = 0;
 							</div>
 						@endif
 					</div>
+					</div>
+					
 					<p class="about_me float_l">{{ $interes_info }}
 						@if ($user_interes)
 							<a href="{{ route('user_interes.edit',$user_interes->id ) }}" rel="modal:open"><i class="fas fa-pen"></i></a>
@@ -169,13 +170,11 @@ $i = 0;
 						<span class="float_l click_to_add" >Click on + to add</span>
 					</div>
 				</div>
-
 			</main>
 		</section>
 	</main>
 </div>
 <script>
-	   
 	$( function () {
 		$.getScript( '/../js/user_profile.js');
 		$('.profile_img a.danger').removeAttr('hidden');

@@ -4,7 +4,6 @@ $('.dates>li').click(function(){
     var this_li = $(this).attr('id');
     if(this_li) {
         var this_id = this_li.replace("li-",""); // selektirani datum
-        
         $( ".comming_agenda > .agenda" ).each( (index, element) => {
             $(element).addClass('display_none');
             $(element).removeClass('show_agenda');
@@ -12,9 +11,7 @@ $('.dates>li').click(function(){
                 $(element).removeClass('display_none');
                 $(element).addClass('show_agenda');
             }
-    
         });
-        
     }
     if(! $('.comming_agenda .agenda.show_agenda').length) {
         $('.comming_agenda .placeholder').show();

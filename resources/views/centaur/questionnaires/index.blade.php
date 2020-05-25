@@ -4,13 +4,13 @@
 @php use App\Http\Controllers\QuestionnaireController; @endphp
 @section('content')
 <div class="index_page index_documents">
-	<aside class="col-lg-12 col-xl-12 float_left">
+	<!-- <aside class="col-xs-12 col-sm-12 col-md-4 col-lg-4 float_left">
 		@include('Centaur::side_noticeboard')
-	</aside>
-	<main class="col-lg-12 col-xl-8 index_main main_documents float_right">
+	</aside> -->
+	<main class="col-xs-12 col-sm-12 col-md-12 index_main main_documents float_right">
 		<section>
 			<div class="page-header header_questionnaire">
-				<a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a>
+				<!-- <a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a> -->
 				@lang('questionnaire.questionnaires')
 				<span class="show float_r">@lang('basic.show')<i class="fas fa-caret-down"></i></span>
 				<span class="hide float_r">@lang('basic.hide')<i class="fas fa-caret-up"></i></span>
@@ -57,7 +57,6 @@
 							<label>
 								<input type="search" placeholder="{{ __('basic.search')}}" onkeyup="mySearchDoc()" id="mySearch">
 							</label>
-							
 							@if(Sentinel::getUser()->hasAccess(["questionnaires.create"]) || in_array("questionnaires.create", $permission_dep) )
 								<a class="add_new new_questionnaire" href="{{ route('questionnaires.create') }}" rel="modal:open"  title="{{ __('questionnaire.add_questionnaire')}}"><i style="font-size:11px" class="fa">&#xf067;</i></a>
 							@endif
@@ -73,7 +72,9 @@
 									<th>@lang('basic.created_at')</th>
 									<th>Status</th>
 									<th>@lang('basic.completion')</th>
-									<th class="not-export-column no-sort"></th>
+									@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.update']) || in_array('questionnaires.update', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.delete']) || in_array('questionnaires.delete', $permission_dep))
+										<th class="not-export-column no-sort"></th>
+									@endif
 								</tr>
 							</thead>
 							<tbody >
@@ -104,9 +105,10 @@
 											</span>
 											<span class="progress_val">{{ $progress_count1 }} / {{count($employees)}}</span>
 										</td>
-										<td class="options center">
-											@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.update']) || in_array('questionnaires.update', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.delete']) || in_array('questionnaires.delete', $permission_dep))
-												<button class="collapsible option_dots float_r"></button>
+									
+										@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.update']) || in_array('questionnaires.update', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.delete']) || in_array('questionnaires.delete', $permission_dep))
+											<td class="options center">
+												<!-- <button class="collapsible option_dots float_r"></button> -->
 												@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep))
 													<a href="{{ action('QuestionnaireController@sendEmail', ['id' => $questionnaire->id ] ) }}" class="btn-edit sendEmail" title="{{ __('basic.sendEmail')}}"><i class="far fa-envelope"></i></a>
 												@endif 
@@ -118,8 +120,9 @@
 														<i class="far fa-trash-alt"></i>
 													</a>
 												@endif
-											@endif
-										</td>
+											</td>
+										@endif
+										
 									</tr>
 								@endforeach
 							</tbody>

@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<title>@yield('title')</title>
+		<title>@lang('basic.add_sequence')</title>
         <!-- Bootstrap - Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/bootstrap/dist/css/bootstrap.min.css') }}"/>
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -25,39 +25,59 @@
 
 		<!-- CSS -->
 		<link rel="stylesheet" href="{{ URL::asset('/../css/campaign.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/basic.css') }}"/>
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
 		<script src="//editor.unlayer.com/embed.js"></script>
 		<!--Jquery -->
 		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
-		
 		@stack('stylesheet')
-	
 	</head>
 	<body>
 		<form class="form_sequence" accept-charset="UTF-8" role="form" method="post" action="{{ route('campaign_sequences.store') }}">
-			<input type="hidden" name="campaign_id" id="campaign_id" value="{{  $this_campaign->id }}">
-			<textarea name="text_html" id="text_html" hidden ></textarea>
-			<textarea name="text_json" id="text_json" hidden ></textarea>
-			<header>
-				{{ csrf_field() }}
-				<div class="unlayer container">
-					<button  class="btn-submit" {{-- (click)="exportHtml()" --}}>@lang('basic.save')</button>
-					<email-editor></email-editor>
-					{{-- 	<input class="btn-submit" type="submit" value="{{ __('basic.save')}}"> --}}
-					<a class="btn-back" href="{{ url()->previous() }}">
-						@lang('basic.back')
-					</a>
-				</div>
-				<h3 class="panel-title">@lang('basic.add_sequence')  {{$this_campaign->name }}{{--  {!! $this_campaign ? count($campaign_sequences)+1 : '' !!} --}} </h3>
-			</header>
-			<main>
-				<div id="editor-container"></div>
+			<section class="header_campaign">
+				<input type="hidden" name="campaign_id" id="campaign_id" value="{{  $this_campaign->id }}">
+				<header>
+					{{ csrf_field() }}
+					<div class="unlayer container">
+						<button  class="btn-submit" {{-- (click)="exportHtml()" --}}>@lang('basic.save')</button>
+						<email-editor></email-editor>
+						{{-- 	<input class="btn-submit" type="submit" value="{{ __('basic.save')}}"> --}}
+						<a class="btn-back" href="{{ url()->previous() }}">
+							@lang('basic.back')
+						</a>
+					</div>
+					<h3 class="panel-title">@lang('basic.add_sequence') - {{$this_campaign->name }}{{--  {!! $this_campaign ? count($campaign_sequences)+1 : '' !!} --}} </h3>
+				</header>
+				<section class="campaign_set">
+					<div class="campaign_subject col-sm-12 col-md-6 float_left {{ ($errors->has('subject'))  ? 'has-error' : '' }}">
+						<label for="subject">@lang('basic.subject')</label>
+						<input type="text" name="subject" maxlength="255" id="subject" value="{{ old('subject') }}" required>
+						{!! ($errors->has('subject') ? $errors->first('subject', '<p class="text-danger">:message</p>') : '') !!}
+					</div>
+					<div class="campaign_interval col-sm-12 col-md-3 float_left" id="interval"  >
+						<label class="label_custom_interal">@lang('basic.time_shift')</label>
+						<input class="input_interval" type="number" name="interval" value="" />
+						<select  class=" select_period" name="period"  >
+							<option value="day" >@lang('basic.day')</option>
+							<option value="week">@lang('basic.week')</option>
+							<option value="month">@lang('basic.month')</option>
+							<option value="year">@lang('basic.year')</option>
+						</select>
+					</div>
+				</section>
+			</section>
+			<main class="main_campaign">
+				<div class="{!! count($templates) > 0 ? 'col-10' : 'col-12' !!}" id="editor-container"></div>
+                @if(count($templates) > 0 )
+                    <div class="col-2" id="template-container"></div>
+                @endif
 			</main>
 		</form>
-
 		<span hidden class="locale" >{{ App::getLocale() }}</span>
-
+		<span hidden class="dataArrTemplates">{{ ($templates) }}</span>
+		<textarea name="text_html" id="text_html" hidden ></textarea>
+        <textarea name="text_json" id="text_json" hidden ></textarea>
 		<!-- Latest compiled and minified Bootstrap JavaScript -->
         <!-- Bootstrap js -->
 		<script src="{{ URL::asset('/../node_modules/bootstrap/dist/js/bootstrap.min.js') }}"></script>
@@ -65,75 +85,8 @@
         <!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
         <script src="{{ asset('/../restfulizer.js') }}"></script>
 		
-		
-		<script>
-			var form_data = $('.form_sequence').serialize();
-			var url = $('form.form_sequence').attr('action');
-			var data_new = {};
-			var json;
-			var html; 
-
-			unlayer.init({
-				appearance: {
-					theme: 'light',
-					panels: {
-					tools: {
-						dock: 'right'
-					}
-					}
-				},
-				id: 'editor-container',
-				projectId: form_data['campaign_id'],
-				displayMode: 'email',
-				
-			})
-
-			unlayer.addEventListener('design:updated', function(updates) {
-				unlayer.exportHtml(function(data) {
-					json = data.design; // design json
-					html = data.html; // design html
-
-					$('#text_html').text(html);
-					$('#text_json').text(JSON.stringify(json));
-
-					/* var lenght = html.length; */
-				/* 	var html1 = html.substr(0, Math.round(lenght/2));
-					var html2 = html.substr(Math.round(lenght/2), lenght); */
-					/* data_new = form_data + '&text1=' + html1,
-						data_new = data_new + '&text2=' + html2, */
-					/* data_new = data_new + '&text_json=' +  JSON.stringify(json); */
-				})
-			})		
-
-			$('.btn-submit').click(function(e) {
-				e.preventDefault();
-				form_data = $('.form_sequence').serialize();				
-				data_new = form_data + '&start_date=' + '2020-03-15';
-
-				console.log(form_data);
-				$.ajaxSetup({
-					headers: {
-						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-					}
-				});     
-
-				$.ajax({
-					url: url,
-					type: "post",
-					data: data_new,
-					success: function( response ) {
-						alert("Dizajn je spremljen!");
-					}, 
-					error: function(xhr,textStatus,thrownError) {
-						console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError); 							         
-					}
-				});
-			});
-			$(function() {
-				$('.nav-link').css('background-color','#F8FAFF !important');
-				$('.active.nav-link').css('background-color','#1594F0 !important');
-				
-			});
+		<script>	
+		//	$.getScript( '/../js/validate.js');	 DUPLO SNIMI
 		</script>
 
 		<!--Awesome icons -->
@@ -149,9 +102,7 @@
 		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
 		<script src="{{URL::asset('/../js/campaign_sequences.js') }}"></script>
 
-		<!-- tinymce js -->
-		<script src="{{ URL::asset('/node_modules/tinymce/tinymce.min.js') }}" ></script>
-		
+	
 		@if(session()->has('modal'))
 			<script>
 				$('.row.notification').modal();

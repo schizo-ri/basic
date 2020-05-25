@@ -30,14 +30,14 @@
 							<td>{{ $setting->description }}</td>
 							<td>{{ $setting->value }}</td>						
 							<td class="center">
-								<button class="collapsible option_dots float_r"></button>
+								<!-- <button class="collapsible option_dots float_r"></button> -->
 								@if(Sentinel::inRole('superadmin') && Sentinel::getUser()->hasAccess(['settings.update']))
-									<a href="{{ route('settings.edit', $setting->id) }}" style="display:none" class="btn-edit" title="{{ __('basic.edit')}}" rel="modal:open">
+									<a href="{{ route('settings.edit', $setting->id) }}" class="btn-edit" title="{{ __('basic.edit')}}" rel="modal:open">
 										<i class="far fa-edit"></i>
 									</a>
 								@endif								
 								@if(Sentinel::inRole('superadmin') && Sentinel::getUser()->hasAccess(['settings.delete']))
-									<a href="{{ route('settings.destroy', $setting->id) }}" style="display:none" class="action_confirm btn-delete danger" title="{{ __('basic.delete')}}" data-method="delete" data-token="{{ csrf_token() }}">
+									<a href="{{ route('settings.destroy', $setting->id) }}" class="action_confirm btn-delete danger" title="{{ __('basic.delete')}}" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
@@ -54,10 +54,10 @@
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-		$('.collapsible').click(function(event){        
+		/* $('.collapsible').click(function(event){        
 			   $(this).siblings().toggle();
 			   console.log("klik collapsible");
-		});
+		}); */
 	});
 	$.getScript( '/../restfulizer.js');
 </script>

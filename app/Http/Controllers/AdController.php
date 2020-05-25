@@ -56,7 +56,7 @@ class AdController extends Controller
      */
     public function create(Request $request)
     {
-		$categories = AdCategory::get();
+		$categories = AdCategory::orderBy('name','ASC')->get();
 		
 		if(isset($request->category_id)) {
 			return view('Centaur::ads.create',['categories' => $categories, 'category_id' => $request->category_id]);
@@ -133,7 +133,7 @@ class AdController extends Controller
 			// if everything is ok, try to upload file
 			} else {
 				if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                    return redirect()->route('oglasnik')->with('success', __('basic.ad') . ' ' .  __('ctrl.has_uploaded'));
+                    return redirect()->route('oglasnik')->with('success', __('basic.image') . ' ' .  __('ctrl.has_uploaded'));
 
 				} else {
 					return redirect()->route('oglasnik')->with('error', __('basic.file_error')); 
