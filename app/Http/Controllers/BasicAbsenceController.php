@@ -129,16 +129,20 @@ class BasicAbsenceController extends Controller
 
 			return $stazPG;
 		}
+	/* ########################      STAŽ kraj     ######################## */	
 
 	/* ########################      DANI GODIŠENJEG ODMORA    ######################## */	
 
 		// Vraća broj dana godišnjeg ova godina    
 		public static function daysThisYear($user)
 		{
-			$all_service = BasicAbsenceController::yearsServiceAll($user);  /* ukupan staž  */			
-			
-			if( date('Y', strtotime($user->reg_date)) == date('Y') && $user->abs_days_this_y ) {
-				$days = $user->abs_days_this_y;
+			$all_service = BasicAbsenceController::yearsServiceAll($user);  /* ukupan staž  */
+			$date = new DateTime('now');    /* današnji dan */
+			$ova_godina = date_format($date,'Y');
+
+			if($user->abs_days != null && array_key_exists($ova_godina, unserialize( $user->abs_days)) ) {
+				$absence_days = unserialize( $user->abs_days);
+				$days = intval($absence_days[$ova_godina]);
 			} else {
 				/* Godišnji odmor - dani*/
 				$days = AbsenceType::where('mark','GO')->first()->min_days;
@@ -157,8 +161,9 @@ class BasicAbsenceController extends Controller
 						$days = 25;
 					}
 				}
-			}			
+			}
 			
+					
 			return $days;
 		}
 		
@@ -408,7 +413,8 @@ class BasicAbsenceController extends Controller
 			
 			return $razmjeranGO_PG;
 		}
-	
+	/* ########################      DANI GODIŠENJEG ODMORA  kraj  ######################## */	
+
 	/* ########################      ZAHTJEVI    ######################## */	
 
 		public static function zahtjevi ($user) 
@@ -422,8 +428,8 @@ class BasicAbsenceController extends Controller
 			
 			$years = BasicAbsenceController::yearsRequests($user); // sve godine zahtjeva
 			
-			if(! in_array($ova_godina,$years)) {
-				array_push($years,$ova_godina );
+			if(! in_array($ova_godina, $years)) {
+				array_push($years, $ova_godina );
 			}
 
 			$array_godine = array();
@@ -433,8 +439,8 @@ class BasicAbsenceController extends Controller
 			$ukupno_dana_GO = 0;
 
 			foreach ($years  as $year) {
-				$razmjerni_dani =  BasicAbsenceController::razmjeranGO_Godina($user, $year);
-				if( isset($requestAllYear[ $year ])) {
+				$razmjerni_dani =  BasicAbsenceController::razmjeranGO_Godina($user, $year);  
+				if( isset($requestAllYear[ $year ] ) && ! empty($requestAllYear[ $year ]) ) {
 					$preostali_dani = BasicAbsenceController::razmjeranGO_Godina($user, $year)- count($requestAllYear[ $year ]);
 					$zahtjevi = $requestAllYear[ $year ];
 					$dani_zahtjeva = count($requestAllYear[ $year ]);
@@ -456,94 +462,6 @@ class BasicAbsenceController extends Controller
 				$array_godine['ukupnoPreostalo'] += $preostali_dani;
 				
 			}
-			
-			//	$array_godine['ukupnoPreostalo'] = $ukupno_dana_GO - $ukupno_dana_zahtjevi;
-			
-			$GO_razmjeran = BasicAbsenceController::razmjeranGO($user); // razmjerni dani ova godina
-			$GO_PG = BasicAbsenceController::razmjeranGO_PG($user); // razmjerni dani prošla godina
-			$zahtjevi = Absence::where('employee_id',$user->id)->where('approve',1)->get();
-			
-			$preostalo_PG = $GO_PG;
-			$preostalo_OG = $GO_razmjeran;
-			$zahtjevi_Dani_OG = 0;
-			$zahtjevi_Dani_PG = 0;
-		/* 
-			foreach($zahtjevi as $zahtjev){
-				$begin = new DateTime($zahtjev->start_date);
-				$end = new DateTime($zahtjev->end_date);
-				$end->setTime(0,0,1);
-				$interval = DateInterval::createFromDateString('1 day');
-				$period = new DatePeriod($begin, $interval, $end);
-				foreach ($period as $dan) {
-					if(date_format($dan,'N') < 6 ){
-						if(date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
-							date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
-							date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
-							date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
-							date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
-							date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
-							date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
-							date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
-							date_format($dan,'d') == '01' && date_format($dan,'m') == '11' ||
-							date_format($dan,'d') == '25' && date_format($dan,'m') == '12' ||
-							date_format($dan,'d') == '26' && date_format($dan,'m') == '12' ||
-							date_format($dan,'d') == '02' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2018' ||
-							date_format($dan,'d') == '31' & date_format($dan,'m') == '05' & date_format($dan,'Y') == '2018' ||
-							date_format($dan,'d') == '22' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2019' ||
-							date_format($dan,'d') == '20' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2019' ||
-							date_format($dan,'d') == '13' & date_format($dan,'m') == '04' & date_format($dan,'Y') == '2020' ||
-							date_format($dan,'d') == '11' & date_format($dan,'m') == '06' & date_format($dan,'Y') == '2020'){
-								//
-						} else {
-								if($preostalo_PG > 0) {
-									if(date_format($dan,'Y') == $prosla_godina) {
-										$preostalo_PG -= 1;
-										$zahtjevi_Dani_PG += 1;
-									} elseif(date_format($dan,'m') < '07' && date_format($dan,'Y') == $ova_godina) {
-										$preostalo_PG -= 1;
-										$zahtjevi_Dani_PG += 1;
-									} else {
-										$preostalo_OG -= 1;
-										$zahtjevi_Dani_OG += 1;
-									}
-								} else {
-									$preostalo_OG -= 1;
-									$zahtjevi_Dani_OG += 1;
-								}
-						}
-					}
-				}	
-			}
-			if ($mjesec_danas >= 7 ) {
-				$preostalo_PG = 0;
-			} */
-
-			/*
-				array:3 [▼
-					2019 => array:4 [▼
-						"zahtjevi" => array:7 [▼
-						0 => "2019-10-21"
-						1 => "2019-10-22"
-						2 => "2019-10-23"
-						3 => "2019-10-24"
-						4 => "2019-10-25"
-						6 => "2019-10-30"
-						7 => "2019-10-31"
-						]
-						"razmjerniDani" => 25
-						"dani_zahtjeva" => 7
-						"preostalo_dana" => 18
-					]
-					2020 => array:4 [▼
-						"zahtjevi" => []
-						"razmjerniDani" => 4.0
-						"dani_zahtjeva" => 0
-						"preostalo_dana" => 4.0
-					]
-					"ukupnoPreostalo" => 22.0
-				]
- 			*/
-		//	dd($array_godine);
 		
 			return $array_godine;
 		}
@@ -553,6 +471,8 @@ class BasicAbsenceController extends Controller
 		{
 			/* Zahtjevi ova godina */	
 			$zahtjevi = Absence::where('employee_id',$user->employee->id)->where('approve','1')->get();
+			$holidays = BasicAbsenceController::holidays();
+
 			$datum = new DateTime('now');    /* današnji dan */
 			$ova_godina = date_format($datum,'Y');
 			
@@ -567,13 +487,68 @@ class BasicAbsenceController extends Controller
 					$interval = DateInterval::createFromDateString('1 day');
 					$period = new DatePeriod($begin, $interval, $end);
 					foreach ($period as $dan) {
-						if(date_format($dan,'N') < 6 ){
-							if(date_format($dan,'Y') == $ova_godina ){
-								if(date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
+						
+						if(date_format($dan,'Y') == $ova_godina ){
+							if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
+								$ukupnoGO += 1;
+							}
+							/* 
+							if(date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
+								date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
+								date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
+								date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
+								date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
+								date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
+								date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
+								date_format($dan,'d') == '01' && date_format($dan,'m') == '11' ||
+								date_format($dan,'d') == '25' && date_format($dan,'m') == '12' ||
+								date_format($dan,'d') == '26' && date_format($dan,'m') == '12' ||
+								date_format($dan,'d') == '02' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2018' ||
+								date_format($dan,'d') == '31' && date_format($dan,'m') == '05' && date_format($dan,'Y') == '2018' ||
+								date_format($dan,'d') == '22' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2019' ||
+								date_format($dan,'d') == '20' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2019' ||
+								date_format($dan,'d') == '13' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2020' ||
+								date_format($dan,'d') == '11' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2020'){
+									//
+							} else {
+								$ukupnoGO += 1;
+							} */
+						}
+						
+					}	
+				}
+			}
+			return $ukupnoGO;
+		}
+
+		//računa iskorištene dane godišnjeg odmora zadana godina  
+		public static function daniZahtjeviGodina($user, $year)
+		{
+			$holidays = BasicAbsenceController::holidays();
+
+			/* Zahtjevi zadana godina */	
+			if($user->employee) {
+				$zahtjevi = Absence::where('employee_id', $user->employee->id)->where('approve','1')->get();
+				/* ukupno iskorišteno godišnji zaposlenika*/
+				$ukupnoGO = 0;
+				
+				foreach($zahtjevi as $zahtjev){
+					if($zahtjev->absence['mark'] == 'GO') {
+						$begin = new DateTime($zahtjev->start_date);
+						$end = new DateTime($zahtjev->end_date);
+						$end->setTime(0,0,1);
+						$interval = DateInterval::createFromDateString('1 day');
+						$period = new DatePeriod($begin, $interval, $end);
+						foreach ($period as $dan) {
+							if(date_format($dan,'Y') == $year ){
+								if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
+									$ukupnoGO += 1;
+								}
+
+								/* if(date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
 									date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
 									date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
 									date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
-									date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
 									date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
 									date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
 									date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
@@ -589,56 +564,7 @@ class BasicAbsenceController extends Controller
 										//
 								} else {
 									$ukupnoGO += 1;
-								}
-							}
-						}
-					}	
-				}
-			}
-			return $ukupnoGO;
-		}
-
-		//računa iskorištene dane godišnjeg odmora zadana godina  
-		public static function daniZahtjeviGodina($user, $year)
-		{
-			/* Zahtjevi zadana godina */	
-			if($user->employee) {
-				$zahtjevi = Absence::where('employee_id', $user->employee->id)->where('approve','1')->get();
-				/* ukupno iskorišteno godišnji zaposlenika*/
-				$ukupnoGO = 0;
-				
-				foreach($zahtjevi as $zahtjev){
-					if($zahtjev->absence['mark'] == 'GO') {
-						$begin = new DateTime($zahtjev->start_date);
-						$end = new DateTime($zahtjev->end_date);
-						$end->setTime(0,0,1);
-						$interval = DateInterval::createFromDateString('1 day');
-						$period = new DatePeriod($begin, $interval, $end);
-						foreach ($period as $dan) {
-							if(date_format($dan,'N') < 6 ){
-								if(date_format($dan,'Y') == $year ){
-									if(date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
-										date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
-										date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
-										date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
-										date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
-										date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
-										date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
-										date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
-										date_format($dan,'d') == '01' && date_format($dan,'m') == '11' ||
-										date_format($dan,'d') == '25' && date_format($dan,'m') == '12' ||
-										date_format($dan,'d') == '26' && date_format($dan,'m') == '12' ||
-										date_format($dan,'d') == '02' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2018' ||
-										date_format($dan,'d') == '31' && date_format($dan,'m') == '05' && date_format($dan,'Y') == '2018' ||
-										date_format($dan,'d') == '22' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2019' ||
-										date_format($dan,'d') == '20' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2019' ||
-										date_format($dan,'d') == '13' && date_format($dan,'m') == '04' && date_format($dan,'Y') == '2020' ||
-										date_format($dan,'d') == '11' && date_format($dan,'m') == '06' && date_format($dan,'Y') == '2020'){
-											//
-									} else {
-										$ukupnoGO += 1;
-									}
-								}
+								} */
 							}
 						}	
 					}
@@ -654,6 +580,8 @@ class BasicAbsenceController extends Controller
 		// Računa broj radnih dana između dva datuma, ako je izlazak 
 		public static function daniGO($zahtjev)
 		{
+			$holidays = BasicAbsenceController::holidays();
+
 			$begin = new DateTime($zahtjev['start_date']);
 			$end = new DateTime($zahtjev['end_date']);
 			$end->setTime(0,0,1);
@@ -663,30 +591,34 @@ class BasicAbsenceController extends Controller
 			$brojDana = 0;
 			
 			foreach ($period as $dan) {
-				if( date_format($dan,'N') < 6 &&
-					date_format($dan,'d-m') != '01-01' &&
-					date_format($dan,'d-m') != '06-01' &&
-					date_format($dan,'d-m') != '01-05' && 
-					date_format($dan,'d-m') != '22-06' &&
-					date_format($dan,'d-m') != '25-06' && 
-					date_format($dan,'d-m') != '15-08' && 
-					date_format($dan,'d-m') != '05-08' && 
-					date_format($dan,'d-m') != '08-10' && 
-					date_format($dan,'d-m') != '01-11' && 
-					date_format($dan,'d-m') != '25-12' &&
-					date_format($dan,'d-m') != '26-12' &&
-					date_format($dan,'d-m-Y') != '02-04-2018' &&
-					date_format($dan,'d-m-Y') != '31-05-2018' &&
-					date_format($dan,'d-m-Y') != '22-04-2019' && 
-					date_format($dan,'d-m-Y') != '20-06-2019' &&
-					date_format($dan,'d-m-Y') != '13-04-2020' &&
-					date_format($dan,'d-m-Y') != '11-06-2020' )
-				{
+				if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
 					$brojDana += 1;
 				}
 			}
 			return $brojDana;
 		}
+
+		// Računa broj radnih dana između dva datuma, ako je izlazak 
+		public static function array_dani_zahtjeva($zahtjev)
+		{
+			$holidays = BasicAbsenceController::holidays();
+
+			$begin = new DateTime($zahtjev['start_date']);
+			$end = new DateTime($zahtjev['end_date']);
+			$end->setTime(0,0,1);
+			$interval = DateInterval::createFromDateString('1 day');
+			$period = new DatePeriod($begin, $interval, $end);
+			
+			$array_dani = array();
+			
+			foreach ($period as $dan) {
+				if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
+					array_push($array_dani,date_format($dan,'Y-m-d'));
+				}
+			}
+			return $array_dani;
+		}
+
 
 		/** bolovanje za određen mjesec */
 		public static function bolovanje($user)
@@ -697,7 +629,7 @@ class BasicAbsenceController extends Controller
 			$mjesec_danas = date_format($datum,'m');
 			$bolovanje = array();
 			$bolovanje_OM = 0;
-		
+			$holidays = BasicAbsenceController::holidays();
 
 			$zahtjevi = Absence::join('absence_types', 'absence_types.id', 'absences.type')->select('absences.*', 'absence_types.mark' )->where('employee_id',$user->id)->where('mark','BOL')->where('approve', 1)->orderBy('start_date','ASC')->get();
 			$years = BasicAbsenceController::yearsRequests($user); // sve godine zahtjeva	
@@ -712,12 +644,19 @@ class BasicAbsenceController extends Controller
 					$period = new DatePeriod($begin, $interval, $end);
 					foreach ($period as $dan) {
 						if(date_format($dan,'Y') == $year) {
-							if(date_format($dan,'N') < 6 ){
+
+							if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
+								$bolovanje_dani += 1;
+								if(date_format($dan,'m') == $mjesec_danas && date_format($dan,'Y') == $ova_godina) {
+									$bolovanje_OM += 1;
+								}
+							}
+
+						/* 	if(date_format($dan,'N') < 6 ){
 								if(date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
 								date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
 								date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
 								date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
-								date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
 								date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
 								date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
 								date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
@@ -737,7 +676,7 @@ class BasicAbsenceController extends Controller
 										$bolovanje_OM += 1;
 									}
 								}
-							}
+							} */
 						}
 					}
 				}
@@ -752,17 +691,35 @@ class BasicAbsenceController extends Controller
 		{
 			$date = new DateTime('now');    /* današnji dan */
 			$this_year = date_format($date,'Y');
-			$requests = Absence::join('absence_types', 'absence_types.id', 'absences.type')->select('absences.*', 'absence_types.mark' )->where('approve',1)->where('employee_id', $user->id)->orderBy('start_date','ASC')->get();
+			$requests = Absence::join('absence_types', 'absence_types.id', 'absences.type')->select('absences.*', 'absence_types.mark' )->where('employee_id', $user->id)->orderBy('start_date','ASC')->get();
 		
 			$years = array();
-			if($requests->first()) {
+			if( count($requests) > 0 ) {
 				$first_year = date('Y', strtotime($requests->first()->start_date));
 				while ($first_year <= $this_year) {
 					array_push($years, strval($first_year));
 					$first_year++;
 				}
 			}	
+			if(! in_array($this_year, $years)) {
+				array_push($years, strval($this_year) );
+			}
+
+				
+            $abs_days = '';
+			if( $user->abs_days) {
+				$abs_days = unserialize( $user->abs_days);
+				
+			}
+			if(is_array($abs_days)) {
 			
+				foreach ($abs_days as $year => $days) {
+					if(! in_array($year, $years)) {
+						array_push($years, strval($year) );
+					}
+				}
+			}
+
 			return $years;
 		}
 
@@ -770,18 +727,22 @@ class BasicAbsenceController extends Controller
 		public static function requestAllYear ($user) 
 		{
 			$requestsArray = array();
-		
-			$years = BasicAbsenceController::yearsRequests($user); // sve godine zahtjeva
-			
-			$requests = Absence::join('absence_types', 'absence_types.id', 'absences.type')->select('absences.*', 'absence_types.mark' )->where('employee_id', $user->id)->where('approve',1)->orderBy('start_date','ASC')->get(); // svi zahtjevi djelatnika
-			dd($requests );
 			$requests_next_year = array();
 			$requests_previous_year = array();
 
+			$years = BasicAbsenceController::yearsRequests($user); // sve godine zahtjeva
+			$holidays = BasicAbsenceController::holidays();
+
+			$requests = Absence::join('absence_types', 'absence_types.id', 'absences.type')->select('absences.*', 'absence_types.mark' )->where('employee_id', $user->id)->where('approve',1)->orderBy('start_date','ASC')->get(); // svi zahtjevi djelatnika
+			asort($years);
 			foreach ($years as $year) {
+				
+				
+				$requestsArray[$year] = array();
 				$GO_dani = BasicAbsenceController::razmjeranGO_Godina($user, $year); // razmjerni dani za godinu
 				
-				$requests_previous_year = array_unique(array_merge($requests_previous_year, $requests_next_year));
+				$requests_previous_year = array_unique(array_merge($requests_previous_year, $requests_next_year));// zahtjevi_PG - zahtjevi iz slijedeće godine do 30.6. ako ima razmjernih dana slobodnih + prebačeni zahtjevi iz prošle godine ako nije bilo dana - maknuti dupli datumi
+				
 				$zahtjevi_godina = array();
 				
 				foreach($requests as $request){
@@ -792,12 +753,44 @@ class BasicAbsenceController extends Controller
 					$period = new DatePeriod($begin, $interval, $end);
 
 					foreach ($period as $dan) {
-						if(date_format($dan,'N') < 6 ){
+						if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
+							if($GO_dani > 0) {
+								if(date_format($dan,'Y') == $year) {
+									if(isset( $requestsArray[$year-1] )) {
+										
+										if( ! in_array( date_format($dan,'Y-m-d'), $requestsArray[$year-1])) {
+											array_push($zahtjevi_godina, date_format($dan,'Y-m-d'));
+											$GO_dani--;	
+										}
+									} else {
+										array_push($zahtjevi_godina, date_format($dan,'Y-m-d'));
+										$GO_dani--;	
+									}
+																
+								} elseif(date_format($dan,'m') < '07' && date_format($dan,'Y') == $year+1 ) {
+									array_push($zahtjevi_godina, date_format($dan,'Y-m-d'));
+									array_push($requests_previous_year, date_format($dan,'Y-m-d'));
+									$GO_dani--;
+								}	
+							} else {   // ako nema slobodnih dana u godini prijenos zahtjeva u drugu godinu
+								if(date_format($dan,'Y') == $year) {
+									array_push($requests_next_year, date_format($dan,'Y-m-d'));
+								}
+								if( $year == date('Y') ) {
+									array_push($zahtjevi_godina, date_format($dan,'Y-m-d'));
+									$GO_dani--;	
+								} else if(date_format($dan,'Y') == $year) {
+									array_push($requests_next_year, date_format($dan,'Y-m-d'));
+									$GO_dani--;	
+								}
+							}
+						}
+
+						/* if(date_format($dan,'N') < 6 ){
 							if(date_format($dan,'d') == '01' && date_format($dan,'m') == '01' ||
 								date_format($dan,'d') == '06' && date_format($dan,'m') == '01' ||
 								date_format($dan,'d') == '01' && date_format($dan,'m') == '05' ||
 								date_format($dan,'d') == '22' && date_format($dan,'m') == '06' ||
-								date_format($dan,'d') == '25' && date_format($dan,'m') == '06' ||
 								date_format($dan,'d') == '15' && date_format($dan,'m') == '08' ||
 								date_format($dan,'d') == '05' && date_format($dan,'m') == '08' ||
 								date_format($dan,'d') == '08' && date_format($dan,'m') == '10' ||
@@ -833,9 +826,9 @@ class BasicAbsenceController extends Controller
 									if(date_format($dan,'Y') == $year) {
 										array_push($requests_next_year, date_format($dan,'Y-m-d'));
 									}
-								}			
+								}
 							}
-						}
+						} */
 					}	
 				}
 				$requestsArray[$year] = array_unique(array_merge( $zahtjevi_godina));		
@@ -843,4 +836,28 @@ class BasicAbsenceController extends Controller
 			
 			return $requestsArray;
 		}
+	/* ########################      ZAHTJEVI  kraj  ######################## */	
+
+	public static function holidays ()
+	{
+		$holidays = array();
+
+		//2018
+		array_push($holidays,
+		'2018-01-01','2018-01-06','2018-04-01','2018-04-02','2018-05-01','2018-05-31','2018-06-22','2018-06-25','2018-08-05','2018-08-15','2018-10-08','2018-11-01','2018-12-25','2018-12-26');
+		//2019
+		array_push($holidays,
+		'2019-01-01','2019-01-06','2019-04-21','2019-04-22','2019-05-01','2019-06-20','2019-06-22','2019-06-25','2019-08-05','2019-08-15','2019-10-08','2019-11-01','2019-12-25','2019-12-26');
+		//2020
+		array_push($holidays,
+		'2020-01-01','2020-01-06','2020-04-12','2020-04-13','2020-05-01','2020-05-30','2020-06-11','2020-06-22','2020-08-05','2020-08-15','2020-11-01','2020-11-18','2020-12-25','2020-12-26');
+		//2021
+		array_push($holidays,
+		'2021-01-01','2021-01-06','2021-04-04','2021-04-05','2021-05-01','2021-05-30','2021-06-03','2021-06-22','2021-08-05','2021-08-15','2021-11-01','2021-11-18','2021-12-25','2021-12-26');
+		//2022
+		array_push($holidays,
+		'2022-01-01','2022-01-06','2022-04-17','2022-04-18','2022-05-01','2022-05-30','2022-06-16','2022-06-22','2022-08-05','2022-08-15','2022-11-01','2022-11-18','2022-12-25','2022-12-26');
+
+		return $holidays;
+	}
 }

@@ -3,8 +3,6 @@ var prev_url = location.href;
 var url_modul;
 
 $('.button_nav').click(function(e){
-   /*  $('.button_nav_text').hide();
-    $('.img_logo').show(); */
     
     //window.history.replaceState({}, document.title, location['origin']+'/dashboard');
    // window.history.replaceState({}, document.title, $(this).attr('href') ); 
@@ -37,15 +35,10 @@ $('.button_nav').click(function(e){
     } else {
         $.getScript( "/../js/nav_button_color.js" );
         
-        
         if($( this).hasClass('load_button')) {
             e.preventDefault();
             var page = $(this).attr('href');
 
-            $('.button_nav').css({
-               /*  'background': '#051847',
-                'color': '#ffffff' */
-            });
             $('.button_nav').removeClass('active');
             $( this ).addClass('active');
 
@@ -96,7 +89,7 @@ $('.button_nav').click(function(e){
                     $('.placeholder').show();
                     $.getScript( '/../restfulizer.js');
                    
-                    if(body_width > 450) {
+                    if(body_width > 768) {
                         var header_width = $('.index_main header.ad_header').width();
                         $('.index_main header.ad_header').css('max-height',header_width);
                         $.getScript( '/../js/filter.js');
@@ -109,13 +102,15 @@ $('.button_nav').click(function(e){
                     $('.' + url_modul + '_button').click();
                    
                 }); 
+
             });
         }
         $( this).addClass('active');
     }
 
-    if(body_width < 800) {
+    if(body_width < 450) {
         $('.section_top_nav').removeClass('responsive');
+
     } else {
         $('.close_topnav').click();
     }
@@ -145,7 +140,8 @@ $('.close_topnav').click(function(){
     $('.section_top_nav').css('width', 0);
 });
 var body_width = $('body').width();
-if(body_width > 450) {
+
+if(body_width > 768) {
     $("body").click(function(){
         $('.close_topnav').click();
     });
@@ -165,16 +161,17 @@ $( document ).ready(function() {
     
     url_modul = window.location.pathname;
     url_modul = url_modul.replace("/","");
-   //  console.log(url_modul);
-
+    if(url_modul.indexOf("/") > 0) {
+        url_modul = url_modul.slice(0, url_modul.indexOf("/"));
+    }
+ 
     if(url_modul.includes('campaign_sequences') ) {
         $('.button_nav').removeClass('active');
         $('.button_nav.'+ 'campaigns_button').addClass('active');
     } else if(url_modul == 'admin_panel/') { //povratna putanja sa admin_panel/templates 
         //
-    } /*  ČEMU OVO SLUŽI ?????? else if( $('.button_nav.'+url_modul+' _button').length > 0) {
+    } else if( $('.button_nav.'+url_modul+'_button').length > 0) {   // na reload stavlja klasu activ na button prema url pathname
         $('.button_nav').removeClass('active');
         $('.button_nav.'+url_modul+'_button').addClass('active');
-    }  */
-   
+    }
 });

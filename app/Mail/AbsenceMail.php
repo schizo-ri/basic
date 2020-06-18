@@ -45,8 +45,7 @@ class AbsenceMail extends Mailable
         $zahtjevi = BasicAbsenceController::zahtjevi($employee);
         $neiskoristeno_GO = $zahtjevi['ukupnoPreostalo']; //vraća neiskorištene dane 
         $template = Template::where('module','absence')->first();
-        return $this->from('info@duplico.hr', 'Duplico')
-                    ->view('Centaur::email.absence') 
+        return $this->view('Centaur::email.absence') 
                     ->subject( __('emailing.new_absence') . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])
                     ->with([
                         'template' => $template,

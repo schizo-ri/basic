@@ -46,11 +46,11 @@
 										<i class="far fa-edit"></i>
 									</a>
 								@endif
-								<!--@if(Sentinel::getUser()->hasAccess(['employees.delete']) || in_array('employees.delete', $permission_dep))
+								@if(Sentinel::inRole('superadmin'))
 									<a href="{{ route('employees.destroy', $employee->id ) }}" style="display:none" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
-								@endif-->
+								@endif
 							</td>
 						</tr>
 					@endforeach

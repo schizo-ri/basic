@@ -10,7 +10,7 @@ var done;
 if(locale == 'en') {
     validate_text = "Required field";
     email_unique = "Email must be unique";
-    error = "there was an error";
+    error = "There was an error";
     saved = "Data saved successfully.";
     request_send = "Request sent";
     status_requests = "To see you request status and see all request visit All requests page";
@@ -19,7 +19,7 @@ if(locale == 'en') {
 } else {
     validate_text = "Obavezno polje";
     email_unique = "E-mail mora biti jedinstven";
-    error = "Došlo je do greške";
+    error = "Došlo je do greške, poslana je poruka na podršku";
     saved = "Podaci su spremljeni";
     request_send = "Zahtjev je poslan";
     status_requests = "Da biste vidjeli status zahtjeva i pogledali sve zahtjeve posjetite Svi zahtjevi stranicu";
@@ -38,27 +38,29 @@ $('.btn-submit').click(function(event){
     var form = $(this).parents('form:first');
     let url = $(this).parents('form:first').attr('action');
     var form_data = form.serialize();
-    console.log(form_data);
-    console.log(url);
-    
+  
+    var url_load = window.location.href;
+    var pathname = window.location.pathname;
+
     var validate = [];
-    
+    console.log(form_data);
+    console.log("url " + url);
+    console.log("url_load " +url_load);
+    console.log("pathname " +pathname);
+
     $( "textarea" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 ) {
                 if( !$( this ).parent().find('.modal_form_group_danger').length) {
                     $( this ).parent().append('<p class="modal_form_group_danger">' + validate_text + '</p>');
                 }
-                
                 validate.push("block");
-
             } else {
                 $( this ).parent().find('.modal_form_group_danger').remove();
                 validate.push(true);
             }
         }
     });
-
     $( "input" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 || $(this).val() == '') {
@@ -101,9 +103,7 @@ $('.btn-submit').click(function(event){
     console.log(validate);
     if(validate.includes("block") ) {
        event.preventDefault();
-     
        validate = [];
-       
     } else {
         $('.roles_form .checkbox').show();
         $.ajaxSetup({
@@ -111,21 +111,14 @@ $('.btn-submit').click(function(event){
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });     
-       
         $.ajax({
             url: url,
             type: "POST",
             data: form_data,
             success: function( response ) {
                 $.modal.close();
-                var url_load = window.location.href;
-                var pathname = window.location.pathname;
-               console.log("url_load " +url_load);
-               console.log("url " + url);
-               /*  console.log("url " + url);
-                console.log("admin_pages li " + $(page).attr('href')); */ //admin_pages li
                 if(pathname == '/events' ) {
-                   $('.all_events').load(url_load + ' .all_events .hour_in_day');
+                    $('.all_events').load(url_load + ' .all_events .hour_in_day');
                 } else if(url.includes("/vehical_services/")) {
                     url = window.location.origin + '/vehical_services';
                     $('.modal-body').load(url + " .modal-body table" );
@@ -141,31 +134,54 @@ $('.btn-submit').click(function(event){
                     $.getScript( '/../restfulizer.js');
                 } else if (url_load.includes("/admin_panel")) {
                     $('tbody').load($(page).attr('href') + " tbody>tr",function(){
-                    /*  $.getScript( '/../js/collaps.js');	 */
+                        $.getScript( '/../restfulizer.js');
                     });
                 } else if (pathname.includes("/edit_user")) {
                     location.reload();
+                } else if (url.includes("/events") && pathname == '/dashboard' ) {
+                    $('.all_agenda').load(url + " .all_agenda .agenda");
                 } else {
-                    $('.index_main').load(url + " .index_main>section");
+                   
+                    $('.index_main').load(url + " .index_main>section",function(){
+                        if(url.includes("/absences")) {
+                            $('#index_table_filter').show();
+                            $('#index_table_filter').prepend('<a class="add_new" href="' + location.origin+'/absences/create' +'" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>Novi zahtjev</a>');
+                            $('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+                            $.getScript( '/../restfulizer.js');
+                        }
+                    });
                 }
                 if(url.includes("/absences")) {
+                  
                     $('<div><div class="modal-header"><span class="img-success"></span></div><div class="modal-body"><div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>success:</strong>' + request_send + '<p>' + status_requests + '</p></div></div><div class="modal-footer"><span><button class="btn_all" ><a href="' + location.origin + '/absences' + '" >' + all_requests + '</a></button></span><button class="done"><a href="#close" rel="modal:close" >' + done + '</a></button></div></div>').appendTo('body').modal();
                 } else {
                     $('<div><div class="modal-header"><span class="img-success"></span></div><div class="modal-body"><div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>success:</strong>' + saved + '</div></div></div>').appendTo('body').modal();
                 }
             }, 
-            error: function(xhr,textStatus,thrownError) {
-                console.log(xhr); 
-                console.log(textStatus); 
-                console.log(thrownError); 
-                if(url.includes("users") && thrownError == 'Unprocessable Entity' ) {
+            error: function(jqXhr, json, errorThrown) {
+                
+                var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                    'message':  jqXhr.responseJSON.message,
+                                    'file':  jqXhr.responseJSON.file,
+                                    'line':  jqXhr.responseJSON.line };
+                if(url.includes("users") && errorThrown == 'Unprocessable Entity' ) {
                     alert(email_unique);
                 }  else {
-                    $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + error + '</div></div></div>').appendTo('body').modal();
+                    $.modal.close();
+                    $.ajax({
+                        url: 'errorMessage',
+                        type: "get",
+                        data: data_to_send,
+                        success: function( response ) {
+                            $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+                        }, 
+                        error: function(jqXhr, json, errorThrown) {
+                            console.log(jqXhr.responseJSON); 
+                        }
+                    });
                 }
             }
-          });
-          
+        });
         if($(page).length > 0) {
             $(page).click();
         } else {

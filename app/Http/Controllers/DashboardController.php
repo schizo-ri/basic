@@ -5,11 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CompanyController;
-use App\Models\Questionnaire;
 use App\Models\Post;
-use App\Models\Comment;
-use App\Models\Notice;
 use App\Models\Event;
+use App\Models\Task;
 use App\Models\Employee;
 use App\Models\Department;
 use App\Models\Company;
@@ -17,9 +15,7 @@ use App\Models\Setting;
 use App\Http\Controllers\BasicAbsenceController;
 use Sentinel;
 use DateTime;
-use PDO;
 use DB;
-use App\Http\Controllers\NoticeController;
 
 class DashboardController extends Controller
 {
@@ -30,14 +26,21 @@ class DashboardController extends Controller
      */
     public function index()
     {
-    //  $company = Company::where('url', CompanyController::getCompanyURL()['host'])->first()->db;
+         //  $company = Company::where('url', CompanyController::getCompanyURL()['host'])->first()->db;
 
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
             $moduli = CompanyController::getModules();  //dohvaća module firme
+      
+            $datum = new DateTime('now');    /* današnji dan */
+			$ova_godina = date_format($datum,'Y');
+			$prosla_godina = date_format($datum,'Y') - 1;
+			$mjesec_danas = date_format($datum,'m');
 
             if($employee) {
-                $data_absence = BasicAbsenceController::zahtjevi( $employee );               
+                $datum = new DateTime('now');    /* današnji dan */
+			
+                $data_absence = BasicAbsenceController::zahtjevi( $employee ); 
              
                 //dohvaća dopuštenja odjela za korisnika
                 if(isset($employee->work) && $employee->work->department->departmentRole->isNotEmpty()) {
@@ -48,9 +51,6 @@ class DashboardController extends Controller
 
                 $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id',$employee->id)->orderBy('updated_at','DESC')->get()->take(5);
 
-           /*      $date = new DateTime();
-                $date->modify('-30 day');
- */
                 if(isset($_GET['active_date']) && $_GET['active_date']) {
                     $date = $_GET['active_date'];
                    
@@ -59,8 +59,12 @@ class DashboardController extends Controller
                 }
                 
                 $events = Event::where('employee_id',$employee->id)->where('date', $date)->orderBy('date','DESC')->get();
-               
-                return view('Centaur::dashboard',[ 'posts' => $posts, 'events' => $events,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence]);
+                $tasks = Task::where('employee_id',$employee->id)->where('date', $date)->orderBy('date','DESC')->get();
+
+                $profile_image = DashboardController::profile_image(Sentinel::getUser()->employee['id']);
+                $user_name =  DashboardController::user_name(Sentinel::getUser()->employee['id']);					
+                        
+                return view('Centaur::dashboard',[ 'posts' => $posts, 'events' => $events,'tasks' => $tasks,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence, 'profile_image' => $profile_image, 'user_name' => $user_name]);
             } else {
                 return view('Centaur::dashboard',['moduli' => $moduli]);
             }

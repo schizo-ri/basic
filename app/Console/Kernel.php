@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\Employee_absence::class,
         \App\Console\Commands\CampaignEmails::class,
         \App\Console\Commands\NoticeSchedule::class,
-        \App\Console\Commands\ClearDatabase::class,
+       /*  \App\Console\Commands\ClearDatabase::class, */
     ];
 
     /**

@@ -21,9 +21,9 @@ Artisan::command('email:absence_day', function () {
     $this->comment(absence_day::quote());
 })->describe('Display an Absences quote');
 
-Artisan::command('command:clear_database', function () {
+/* Artisan::command('command:clear_database', function () {
     $this->comment(clear_database::quote());
-})->describe('Display an clear_database quote');
+})->describe('Display an clear_database quote'); */
 
 Artisan::command('notice', function () {
     $this->comment(notice::quote());

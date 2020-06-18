@@ -16,7 +16,7 @@ var active_tabcontent;
 $( document ).ready(function() {
  
     tablink_on_click();
-    refreshHeight(tab_id);
+    
     broadcastingPusher();
     $('.placeholder').show();
     $( '.type_message' ).attr('Placeholder','Type message...');
@@ -92,13 +92,32 @@ $('.form_post').on('submit',function(e){
                 } 
                 
             });   
+        },
+        error: function(jqXhr, json, errorThrown) {
+            var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                'message':  jqXhr.responseJSON.message,
+                                'file':  jqXhr.responseJSON.file,
+                                'line':  jqXhr.responseJSON.line };
+
+            $.ajax({
+                url: 'errorMessage',
+                type: "get",
+                data: data_to_send,
+                success: function( response ) {
+                    $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+                }, 
+                error: function(jqXhr, json, errorThrown) {
+                    console.log(jqXhr.responseJSON); 
+                    
+                }
+            });
         }
     })
 });
 
 function tablink_on_click() {
     $( '.tablink' ).on( "click", function () {
-
+        
         post_id = $( this ).attr('id');
         tab_id = '_' + post_id;
         if(body_width < 768) {
@@ -118,8 +137,10 @@ function tablink_on_click() {
                 setPostAsRead(post_id);
             } 
             tablink_on_click();
+            
         });   
         $(active_tabcontent).find('.type_message ').focus();
+        refreshHeight(tab_id);
     });
 }
 
@@ -127,22 +148,39 @@ function tablink_on_click() {
 function setPostAsRead(post_id) {
 
     var url_read = location.origin +"/setCommentAsRead/" + post_id;
-    try {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.ajax({
-            type: "GET",
-            url: url_read, 
-            success: function(response) {
-            
-            } 
-        });
-    } catch (error) {
-        console.log(error);
-    }
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        type: "GET",
+        url: url_read, 
+        success: function(response) {
+        
+        },
+        error: function(jqXhr, json, errorThrown) {
+            var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                'message':  jqXhr.responseJSON.message,
+                                'file':  jqXhr.responseJSON.file,
+                                'line':  jqXhr.responseJSON.line };
+
+            $.ajax({
+                url: 'errorMessage',
+                type: "get",
+                data: data_to_send,
+                success: function( response ) {
+                    $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+                }, 
+                error: function(jqXhr, json, errorThrown) {
+                    console.log(jqXhr.responseJSON); 
+                    
+                }
+            });
+        }
+    });
+   
 }
 
 function refreshHeight(tab_id) {
@@ -162,6 +200,7 @@ function refreshHeight(tab_id) {
     } else {
         $("#" + tab_id ).find('.mess_comm').scrollTop(refresh_height);
     }
+    $("#" + tab_id ).find('.mess_comm').scrollTop(refresh_height);
 }
 
 function broadcastingPusher () {

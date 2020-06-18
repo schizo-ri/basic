@@ -32,7 +32,7 @@
 						<tr>
 							<td>{{ date('d.m.Y.', strtotime($locco->date)) }}</td>
 							<td>{{ $locco->car['registration'] }}</td>
-							<td>{{ $locco->employee->user['first_name'] . ' ' . $locco->employee->user['last_name'] }}</td>
+							<td>{!! $locco->employee ? $locco->employee->user['first_name'] . ' ' . $locco->employee->user['last_name'] : '' !!}</td>
 							<td>{{ $locco->destination }}</td>
 							<td>{{ $locco->start_km }}</td>
 							<td>{{ $locco->end_km }}</td>

@@ -37,8 +37,7 @@ class EmployeeCreate extends Mailable
      */
     public function build()
     {
-        return $this->from('info@duplico.hr', 'Duplico')
-					->view('Centaur::email.employee_add')
+        return $this->view('Centaur::email.employee_add')
 					->subject( __('emailing.new_employee') );
     }
 }

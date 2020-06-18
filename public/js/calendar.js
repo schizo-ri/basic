@@ -1,3 +1,4 @@
+// kalendar dashboard
 $( function () {
     $('.dates li').first().addClass('active_date');
 
@@ -8,16 +9,13 @@ $( function () {
     var monthNames = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
     var today = new Date();
     var date_today = today.getFullYear() + '-' +  ('0' + (today.getMonth() +1) ).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
-
     var broj_dana = div_width / all_width;
 
     dates.append('<li id="li-' + date_today + '" class="active_date"><span class="month">' + monthNames[today.getMonth()] +  '</span><span class="day">' + today.getDate() +  '</span><span class="week_day">' + day_of_week[today.getDay()]  +  '</span><span class="display_none YYYY_mm">' + today.getFullYear()  + '-' + + ('0' + (today.getMonth()+1)).slice(-2)+ '</span></li>');
 
     for(i=0; i<broj_dana-1; i++) {
         var date_plus1 = new Date(today.setDate(today.getDate() +1));
-
         var date_new = date_plus1.getFullYear() + '-' +  ('0' + (date_plus1.getMonth() +1) ).slice(-2) + '-' + ('0' + date_plus1.getDate()).slice(-2);
-
         dates.append('<li id="li-' + date_new + '" class=""><span class="month">' + monthNames[date_plus1.getMonth()] +  '</span><span class="day">' + date_plus1.getDate() +  '</span><span class="week_day">' + day_of_week[date_plus1.getDay()]  +  '</span><span class="display_none YYYY_mm">' + today.getFullYear()  + '-' + + ('0' + (today.getMonth()+1)).slice(-2)+ '</span></li>');
     }
 
@@ -39,10 +37,9 @@ $( function () {
     $('.dates li').click(function(){
         var active_li =  $(this).attr('id');
         var active_date = active_li.replace('li-','');
-        console.log(active_date);
 
         var url = location.origin + '/dashboard?active_date='+active_date;
-        console.log(url);
+    
         $.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -52,33 +49,52 @@ $( function () {
 			url: url,
 			type: "GET",
 			success: function( response ) {
-				console.log("prošlo");
-				$('.comming_agenda').load(url + ' .comming_agenda>a, .comming_agenda>h3, .comming_agenda .all_agenda');
+                $('.comming_agenda').load(url + ' .comming_agenda>a, .comming_agenda>h3, .comming_agenda .all_agenda',function(){
+                    if( $( '.comming_agenda .all_agenda .agenda').length == 0 ) {
+                       $('.comming_agenda .placeholder').show();
+                    };
+                });
 			}, 
 			error: function(jqXhr, json, errorThrown) {
-				console.log(jqXhr);
+				var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+									'message':  jqXhr.responseJSON.message,
+									'file':  jqXhr.responseJSON.file,
+									'line':  jqXhr.responseJSON.line };
+
+				$.ajax({
+					url: 'errorMessage',
+					type: "get",
+					data: data_to_send,
+					success: function( response ) {
+						$('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+					}, 
+					error: function(jqXhr, json, errorThrown) {
+						console.log(jqXhr.responseJSON); 
+						
+					}
+				});
 			}
         });
     });
-    
- 
-    /*i f(active_li) {
-        var active_li_id = active_li.replace("li-",""); // selektirani datum
-        $( ".comming_agenda > .agenda" ).each( function(index, element) {
-            $(element).addClass('display_none');
-            if($(element).attr('id') == active_li_id ) {
-                $(element).removeClass('display_none');
-                $(element).addClass('show_agenda');
-            }
-        });
+
+    setHeight();
+
+    function setHeight() {
+        if($('body').width() > 1000) {
+            var div_height = $('section.calendar>div').height();
+            var calendar_height = $('section.calendar #calendar').height();
+           
+            $('.comming_agenda').height(div_height - calendar_height -30);
+        }
+      
     }
- */
-    if(! $('.comming_agenda .agenda.show_agenda').length) {
+    
+    if(! $('.comming_agenda .all_agenda.show_agenda').length) {
         var calendar_height = $('section.calendar>div').height() - $('section.calendar #calendar').height() -40;
         $('.comming_agenda .placeholder').show();
         var placeholder_height =  $('.placeholder img').height();
-        $('.calendar .comming_agenda').height(calendar_height );
-        //   $('.placeholder_cal >p').css('line-height',placeholder_height + 'px' );
+        /* /* $('.calendar .comming_agenda').height(calendar_height ); */
+        //   $('.placeholder_cal >p').css('line-height',placeholder_height + 'px' ); */
     } else {
         $('.comming_agenda .placeholder').hide();
     }
@@ -106,7 +122,7 @@ $( function () {
         active_li.removeClass('active_date');
         
         previous_li.click();
-
+        setHeight();
         $.getScript( '/../js/event_click.js');
     });
 
@@ -139,7 +155,7 @@ $( function () {
         next_li.addClass('active_date');
         active_li.removeClass('active_date');
         next_li.click();        
-        
+        setHeight();
         $.getScript( '/../js/event_click.js');
     });
 });

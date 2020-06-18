@@ -71,12 +71,11 @@ class AbsenceCronMail extends Mailable
             }
         }
         if(count($day_absences)>0) {
-            return $this->from('info@duplico.hr', 'Duplico')
-                ->view('Centaur::email.absence_day')
-                ->subject( __('emailing.day_absence') . ' ' . date_format($datum,'d.m.Y'))
-                ->with([
-                    'day_absences' => $day_absences
-                ]);
+            return $this->view('Centaur::email.absence_day')
+                    ->subject( __('emailing.day_absence') . ' ' . date_format($datum,'d.m.Y'))
+                    ->with([
+                        'day_absences' => $day_absences
+                    ]);
         }
     }
 }

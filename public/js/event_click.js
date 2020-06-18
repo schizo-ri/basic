@@ -1,4 +1,4 @@
-$('.dates>li').click(function(){
+/* $('.dates>li').click(function(){
     $('.dates>li').removeClass('active_date');
     $( this ).addClass('active_date');
     var this_li = $(this).attr('id');
@@ -16,10 +16,10 @@ $('.dates>li').click(function(){
     if(! $('.comming_agenda .agenda.show_agenda').length) {
         $('.comming_agenda .placeholder').show();
         var placeholder_height =  $('.placeholder img').height();
-        $('.calendar .comming_agenda').height(placeholder_height + 60);
- //       $('.placeholder_cal >p').css('line-height',placeholder_height + 'px' );
+         $('.calendar .comming_agenda').height(placeholder_height + 60);
+      $('.placeholder_cal >p').css('line-height',placeholder_height + 'px' );
     } else {
         $('.comming_agenda .placeholder').hide();
     }
-    
 });
+ */

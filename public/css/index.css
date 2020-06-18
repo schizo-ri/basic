@@ -2,6 +2,7 @@
     height: 100%;
     font-family: Montserrat, sans-serif;
     display: flex;
+    padding: 0 10px;
 }
 
 .form-control.color {
@@ -176,7 +177,7 @@
 .all_agenda {
     clear: left;
     display: block;
-    height: calc(100% - 20px);
+    height: calc(100% - 24px);
 }
 .index_page.ads_index .index_main  {
     overflow: auto;
@@ -206,6 +207,7 @@ main.index_main>section {
     background: #F8FAFF;
     border-radius: 3px 3px 0 0;
     border-bottom: 1px solid #e9ecf3;
+    border-top: 1px solid #e9ecf3;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -756,6 +758,7 @@ class="select-css"
     line-height: initial;
     font-weight: 400;
     font-size: 0.625rem;
+    padding: 2px;
 }
 .show_event .btn-delete {
     position: absolute;
@@ -874,7 +877,6 @@ class="select-css"
     border-bottom: 1px solid #ccc;
 }
 
-
 .main_calendar_month table th, .main_calendar_month table td {
     padding: 10px 0;
     width: 14.28%;
@@ -891,18 +893,21 @@ class="select-css"
     padding: 5px;
     cursor: pointer;
 }
+.main_calendar_month table td a {
+    display: block;
+}
 .main_calendar_month table td.out_month{
     cursor: default;
+}
+.day_of_month {
+    margin-bottom: 10px;
+    display: block;
 }
 .month_year {
     font-weight: 600;
     font-size: 1.125rem;
     text-align: center;
     color: #071E57;
-}
-
-.today {
-    /* background-color: #ccc; */
 }
 
 .main_calendar_month table td.selected_day {
@@ -1242,7 +1247,7 @@ main.campaign_main {
 
 .index_aside .day_events {
     display: none;
-    overflow: hidden;
+    overflow: auto;
     position: relative;
     box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
     border-radius: 5px;
@@ -1360,7 +1365,7 @@ main.main_ads {
     position: relative;
     margin: auto;
     /* margin-left: -10px; */
-    margin-top: -10px;
+    /* margin-top: -10px; */
     /* width: calc(100% + 10px); */
     /* width: 100%; */
     /* height: 100%; */
@@ -2333,6 +2338,7 @@ main.index_main.main_absence >section {
     padding: 10px 20px;
     height: 65px;
     min-height: 65px;
+    font-size: 0.875rem;
 }
 
 .arrow_left_wh {
@@ -2797,7 +2803,7 @@ table.dataTable#index_table tbody td:last-child > a {
     color: #071E57;
 }
 .main_calendar_week table tbody tr {
-    height: 90px;
+    min-height: 90px;
 }
 .main_calendar_week table thead th {
     font-weight: 500;
@@ -3319,6 +3325,15 @@ a.modal_close {
     .search_post {
         margin: 3px 10px 3px 0;
     }
+    .header_calendar .event_day, .arrow img {
+        margin-right: 20px;
+    }
+}
+@media (max-width: 1100px) {
+    .second_view .user_card {
+		width: 33.33%;
+		float: none;
+	}
 }
 @media (max-width: 1024px) {
     .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-nav.pignose-calendar-top-prev {
@@ -3333,7 +3348,6 @@ a.modal_close {
     .index_page aside {
         overflow: visible;
         scrollbar-width: thin;
-        padding-left: 10px;
         height: 100%;
     }
     .index_aside>div.calendar_main .btn-new {
@@ -3350,6 +3364,11 @@ a.modal_close {
         width: 40px;
         height: 40px;
     }
+    .header_calendar>div>span {
+        height: 40px;
+        line-height: 40px;
+    }
+    
     .header_calendar .event_day .week_day, .header_calendar .event_day .day {
         height: 50%;
         line-height: 15px;
@@ -3394,6 +3413,15 @@ a.modal_close {
     .header_calendar>div:nth-child(2) >span {
         padding: 0;
         text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .daycontainer {
+        padding: 0;
+    }
+    .change_view_calendar {
+        margin: 0;
     }
     .header_ads>.filter>div:first-child {
         width: 40%;
@@ -3408,7 +3436,8 @@ a.modal_close {
         padding: 10px;
     }
     .noticeboard .notice {
-        margin-top: 20px;
+        margin-top: 0;
+        padding: 10px 0;
     }
     .index_main main {
         height:calc(100% - 80px);
@@ -3461,13 +3490,6 @@ a.modal_close {
     }
     
 }
-
-@media (max-width: 1100px) {
-    .second_view .user_card {
-		width: 33.33%;
-		float: none;
-	}
-}
 @media (max-width: 990px) {
     .index_page.index_documents {
         display: block;
@@ -3480,11 +3502,9 @@ a.modal_close {
 	}
 }
 @media (max-height: 1024px) {
-
     .placeholder_cal {
         position: static;
     }
-    
     .main_benefits_body {
         margin-top: 0;
     }
@@ -3495,7 +3515,10 @@ a.modal_close {
         width: 100%;
         max-width: 100%;
         margin: auto;
-        height: auto;
+        height: 100%;
+    }
+    .index_page aside.latest_messages>div {
+        box-shadow: none;
     }
     .index_page.posts_index .index_main  {
         display: none;
@@ -3503,11 +3526,11 @@ a.modal_close {
     }
     .header_nav {
         padding: 0 15px 0 15px;
-        height: auto;
     }
     .container {
         padding: 0;
-        height: calc(100% - 50px);
+        padding-bottom: 10px;
+        height: calc(100% - 92px);
         margin: auto;
         width: 100%;
         background: none;
@@ -3517,10 +3540,11 @@ a.modal_close {
         margin: auto;
         width: 100%;
         max-width: 100%;
-        padding: 20px 10px;
         overflow: auto;
         scrollbar-width: thin;
-   
+    }
+    .index_page{
+        padding: 10px;
     }
     .index_main header.post_sent .link_back {
         display: inline-block;
@@ -3547,7 +3571,6 @@ a.modal_close {
         height: auto;
         max-height: initial;
         padding: 0;
-        margin-bottom: 20px;
     }
     .container .posts {
 		height: auto;
@@ -3599,7 +3622,7 @@ a.modal_close {
     .index_main main.main_calendar {
         top: 0;
         position: static;
-        overflow: hidden;
+        overflow: auto;
         height: auto;
     }
     .show_event {
@@ -3680,16 +3703,22 @@ a.modal_close {
         width: 100%;
         padding: 0;
         padding-bottom: 10px;
+        box-shadow: none;
     }
     .index_page.posts_index .index_main >section {
         padding: 0;
     }
    
 }
+@media (max-width: 768px) {
+    .index_admin .admin_main {
+        display: none;
+    }
+}
 
 @media (max-width: 450px) {
     header.header_nav {
-		height: auto;
+        height: 50px;
 		display: block;
 		z-index: 2;
 		min-height: auto;		
@@ -3713,6 +3742,19 @@ a.modal_close {
     .index_page, main.index_main>section, .index_page.index_documents .index_main.main_documents, .index_main main.all_absences, main.all_absences >section, .index_main.main_documents >section, .index_main main.all_documents {
         padding: 0;
         height: 100%;
+    }
+    .all_absences .dataTables_filter {
+        height: 50px;
+    }
+    .index_table_filter input, #index_table_filter input, .index_page a.add_new {
+        height: 30px;
+    }
+    .arrow img {
+        margin-right: 10px;
+    }
+    .header_calendar>div>span.month_year {
+        height: auto;
+        line-height: initial;
     }
     .table-responsive,  main.index_main>section {
         overflow: auto; 
@@ -3777,7 +3819,7 @@ a.modal_close {
         overflow: auto;
         scrollbar-width: thin;
         height: calc(100% - 52px);
-        display: grid;
+        padding-bottom: 10px;
     }    
     .container .noticeboard {
         height: auto;
@@ -3790,6 +3832,7 @@ a.modal_close {
     }
    .container >section:first-child, .container >section:last-child {
         margin:0;
+        margin-bottom: 10px;
     }
     .container .noticeboard {
         padding: 10px;
@@ -3818,12 +3861,10 @@ a.modal_close {
         padding: 0 20px;
         text-align: center;
     }
-
     .index_page {
         overflow: auto;
         scrollbar-width: thin;   
     }
-    
     .index_page aside {
         margin: auto;
         height: auto;
@@ -3848,6 +3889,9 @@ a.modal_close {
     index_page.posts_index  .index_main {
         margin-bottom: 20px;
     }
+    .index_aside .day_events .day_events_data>span:first-child {
+        width: 100%;
+    }
     .index_page aside {
         margin: auto;
         height: 100%;
@@ -3865,9 +3909,10 @@ a.modal_close {
     }
     .index_page aside.latest_messages .posts {
         box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
-        margin-bottom: 10px;
-        height: calc(100% - 85px);
-    
+        height: calc(100% - 60px);
+    }
+    .table-responsive .table thead th {
+        min-width: 33%;
     }
     .index_page .index_aside {
         width: 100%;
@@ -3894,10 +3939,22 @@ a.modal_close {
         margin: auto;
         overflow: hidden;
     }   
+    .index_main header.ad_header > img {
+        max-width: -webkit-fill-available;
+        max-height: inherit;
+        width: auto;
+        height: auto;
+    }
+    .tabcontent .comments .message >div.right .comment_content, .tabcontent .comments .message >div.left .comment_content {
+        padding: 5px 5px;
+    }
+    .tabcontent .comments .message .profile_img {
+        width: 23px;
+        height: 23px;
+    }
     main.main_ads, .index_page.ads_index .index_main {
         overflow: auto;
         scrollbar-width: thin;
-   
     }
     .index_page.posts_index .index_main >div {
         overflow: hidden;
@@ -3910,22 +3967,48 @@ a.modal_close {
         padding: 0;
         overflow: hidden;
     }
-   
-    
-    .index_aside>div.calendar_main {
+    .index_aside div.calendar_main {
+        padding: 10px;
+    }
+    .index_main header.header_calendar>div.event_container {
+        display: none;
+    }
+    .index_main header.header_calendar>div:last-child {
+        width: 50%;
+        max-width: 50%;
+        flex: 0 0 50%;
+    }
+    .index_aside .day_events {
+        padding: 10px;
+    }
+    .main_calendar > div.all_events {
         padding: 0 10px;
     }
-     .index_main.profile_main .main_profile .user_profile {
+    .index_aside .day_events >div {
+        padding: 0;
+    }
+    .hour_in_day {
+        min-height: 30px;
+        overflow: visible;
+    }
+    .main_calendar .hour_val {
+        min-height: 30px;
+    }
+    .hour_in_day >div {
+        overflow: visible;
+    }
+    .hour_in_day >a {
+        width: 14%;
+    }
+    .index_main.profile_main .main_profile .user_profile {
         width: 100%;
         margin-bottom: 10px;
         margin-left: 0;
     }
-       
     .index_main .post_sent img {
         width: 30px;
         height: 30px;
     }
-   
     .index_main header.post_sent .link_back .curve_arrow_left {
         margin-right: 10px;
     }
@@ -3949,11 +4032,32 @@ a.modal_close {
     .show_event {
         line-height: inherit;
         padding: 5px;
-        overflow: auto;
+        overflow: visible;
         scrollbar-width: thin;
-   
+    }    
+    .show_event div {
+        margin-bottom: 5px;
     }
-    
+    .show_event>a:first-child {
+        width: 100%;
+        display: inline-block;
+    }
+    .index_main main.main_calendar_month, .index_main main.main_calendar_week {
+        padding: 0;
+    }
+    .index_main main.main_calendar_week table, .index_main main.main_calendar_month table, .main_calendar_week table tbody tr {
+        padding: 0;
+    }
+
+    .modal select.change_view_calendar {
+        margin: 0;
+    }
+    .index_main main.main_calendar, .index_main main.main_calendar_month, .index_main main.main_calendar_week {
+        height: calc(100% - 50px);
+    }
+    .main_calendar_month table th, .main_calendar_month table td {
+        min-width: 110px;
+    }
     .tabcontent .comments {
         padding: 10px;
         overflow: auto;
@@ -3962,13 +4066,31 @@ a.modal_close {
     }
     .index_main.profile_main .page-header.header_profile {
         color: #071E57;
+        margin: 0;
+    }
+    .main_calendar_week table tbody tr {
+        min-height: 40px;
+        height: 40px;
+    }
+    .main_calendar_week table tbody tr td:first-child, .main_calendar_week table thead th:first-child {
+        padding: 10px;
+        text-align: center;
+        
+    }
+    .main_calendar_week table tbody tr td:not(:first-child), .main_calendar_week table thead tr th:not(:first-child) {
+        width: 100px;
+        min-width: 100px;
     }
     .index_main main {
         height: auto;
         clear: left;
     }
+    .all_agenda {
+        height: auto;
+    }
     .index_main main.main_profile {
         padding: 10px;
+        overflow: hidden;
     }
     .index_main main.all_notices {
         height: auto;
@@ -3977,9 +4099,13 @@ a.modal_close {
     .index_main header, .filter {
         height: auto;
         overflow: hidden;
-        padding: 10px;
+        padding: 0;
         clear: both;
         min-height: auto;
+    }
+    .page-main {
+        height: auto;
+        padding: 0;
     }
     .group_question .question .option_dots, .group_category .category .option_dots {
         right:0;
@@ -3992,12 +4118,15 @@ a.modal_close {
     }
    
     .index_table_filter>div {
-        height: 100%;
+        height: auto;
         float: none;
         width: 100%;
         flex: 0 0 100%;
         max-width: 100%;
-        margin-bottom: 10px;
+        overflow: hidden;
+    }
+    .header_ads .index_table_filter {
+        padding: 10px;
     }
     .header_benefits .index_table_filter>div {
         float: left;
@@ -4021,9 +4150,14 @@ a.modal_close {
         display: inline-block;
         top: auto;
     }
+    
     .index_table_filter >label,  #index_table_filter >label{
         float: left;
         margin: 0;
+        left: 10px
+    }
+    .show_button {
+        display: none;
     }
     .link_back {
         margin: 0;
@@ -4190,12 +4324,13 @@ a.modal_close {
     }
     .main_absence main >header {
         flex-wrap: wrap;
+        padding: 0;
     }
     .col-3.info_abs {
         flex: 0 0 50%;
         border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
         margin-bottom: 10px;
-        padding-bottom: 10px;
+        padding: 5px;
         width: 50%;
         max-width: 50%;
     }
@@ -4205,8 +4340,15 @@ a.modal_close {
     .index_main header.header_absence {
         background: inherit;
         color: #212529;
+        height: auto;
+        min-height: auto;
+        padding: 10px;
+        line-height: inherit;
     }
-    
+    .index_page .all_absences a.add_new {
+        right: 10px;
+    }
+   
     .index_main.main_noticeboard .header_noticeboard {
         line-height: 72px;
         padding: 0;
@@ -4236,6 +4378,13 @@ a.modal_close {
         width: 100%;
         margin: auto;
         box-shadow: none;
+        padding: 10px;
+    }
+    .index_page.index_profile .user_interest .profile_images {
+        height: auto;
+    }
+    .profile_images span.profile_img {
+        max-width: 50%;
     }
     .modal.modal_questionnaire #anketa .rbr, .modal.modal_questionnaire #anketa_1 .rbr, .modal.modal_questionnaire #anketa_2 .rbr, .container_radio .checkmark {
         width: 20px;
@@ -4286,8 +4435,6 @@ a.modal_close {
     }
 
 }
-
-
 .user_filter {
     width: 100%;
 }

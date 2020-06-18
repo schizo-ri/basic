@@ -30,7 +30,7 @@
 							<td>{{ $work->department['name'] }}</td>
 							<td>{{ $work->name }}</td>
 							<td>{{ $work->job_description }}</td>
-							<td>{{ $work->employee['first_name'] . ' ' . $work->employee['last_name'] }}</td>
+							<td>{!!  $work->employee ? $work->employee['first_name'] . ' ' . $work->employee['last_name'] : '' !!}</td>
 							<td class="center">
 								<!-- <button class="collapsible option_dots float_r"></button> -->
 								@if(Sentinel::getUser()->hasAccess(['works.update']) || in_array('works.update', $permission_dep))

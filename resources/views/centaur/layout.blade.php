@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
 		<meta charset="UTF-8">
-		<meta name="description" content="Portal za zaposlenike">
+		<meta name="description" content="{{ Config::get('app.name') }}" >
 		<meta name="author" content="Jelena Juras">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -103,13 +103,14 @@
 					</nav>
 					<section class="section_top_nav" id="section_top_nav">
 						<span class="close_topnav">
+							
 							@if(file_exists('../public/storage/company_img/logo.png'))
 								<img src="{{ URL::asset('storage/company_img/logo.png')}}" alt="company_logo"/>
 							@else 
 								<img src="{{ URL::asset('icons/myIntranet.png')}}" alt="company_logo"/>
 							@endif
 							<i class=" fas fa-times"></i></span>
-						<div class="topnav " id="myTopnav">
+						<div class="topnav" id="myTopnav">
 							<div class="">
 								<a class="button_nav dashboard_button active" href="{{ route('dashboard') }}" title="{{ __('welcome.dashboard') }}">
 									<span class="button_nav_img arrow_dashboard"></span>
@@ -218,7 +219,7 @@
 				//Pusher.logToConsole = true;
 				var employee_id = $('#employee_id').text();
 
-				var pusher = new Pusher('4a26c2ee9ed5420ded10', {
+				var pusher = new Pusher('4a492cc413b6d538e6c2', {
 										cluster: 'eu'
 										});
 
@@ -258,7 +259,9 @@
 
 			<!-- Datatables -->
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
-			
+			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
+			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
+			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
 			<!-- tinymce js -->
 			<script src="{{ URL::asset('/node_modules/tinymce/tinymce.min.js') }}" ></script>
 			

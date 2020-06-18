@@ -37,8 +37,7 @@ class EducationArticleMail extends Mailable
      */
     public function build()
     {
-         return $this->from('info@duplico.hr', 'Duplico')
-					->view('Centaur::email.article_add')
+         return $this->view('Centaur::email.article_add')
 					->subject( __('emailing.new_article') . ' - ' . $this->educationArticle->subject )
 					->with([
 						'educationArticle' => $this->educationArticle

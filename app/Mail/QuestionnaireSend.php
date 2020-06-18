@@ -30,8 +30,7 @@ class QuestionnaireSend extends Mailable
      */
     public function build()
     {
-		return $this->from('info@duplico.hr', 'Duplico')
-					->view('Centaur::email.Questionnaire')
+		return $this->view('Centaur::email.Questionnaire')
 					->subject( __('questionnaire.questionnaire') . ' - ' . $this->questionnaire->name)
 					->with([
 						'questionnaire' => $this->questionnaire

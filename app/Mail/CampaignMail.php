@@ -47,8 +47,7 @@ class CampaignMail extends Mailable
                     ->with([
                         'first_sequence' => $first_sequence]); */
 
-        return $this->from('info@duplico.hr', 'Duplico')
-					->view('Centaur::campaign_sequences.campaign_mail')
+        return $this->view('Centaur::campaign_sequences.campaign_mail')
 					->subject($this->campaignSequence->subject )
 					->with([
 						'campaign_sequence' =>  $this->campaignSequence

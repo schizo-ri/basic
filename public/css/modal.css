@@ -48,6 +48,7 @@
 }
 .modal.modal_user {
 	padding: 0;
+	max-width: 50%;
 }
 
 .form_create_user .second_tab, .form_edit_user .second_tab {
@@ -2189,7 +2190,7 @@ input.form-control.date {
 	.modal select, .modal input[type="text"], .modal input[type="date"],  .modal input[type="time"], .modal input[type="email"], .modal input[type="password"], .modal input[type="tel"], .modal input[type="number"], .modal input[type="url"]{
 		margin-bottom: 15px;
 		height: 30px;
-		
+		padding: 0;
 		line-height: 30px;
 	}
 	select.form-control[multiple], select.form-control[size] {

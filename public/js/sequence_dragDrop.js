@@ -35,9 +35,25 @@ $(  "#sortable" ).sortable({
             success: function(response) {
                 $('.section_emails .emails').load(location.href + ' .section_emails .emails .emails_email_body')
             }, 
-            error: function(xhr,textStatus,thrownError) {
-                console.log(" error " + xhr + "\n" + textStatus + "\n" + thrownError);  
-            }
+            error: function(jqXhr, json, errorThrown) {
+				var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+									'message':  jqXhr.responseJSON.message,
+									'file':  jqXhr.responseJSON.file,
+									'line':  jqXhr.responseJSON.line };
+
+				$.ajax({
+					url: 'errorMessage',
+					type: "get",
+					data: data_to_send,
+					success: function( response ) {
+						$('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+					}, 
+					error: function(jqXhr, json, errorThrown) {
+						console.log(jqXhr.responseJSON); 
+						
+					}
+				});
+			}
         });
     }
 });

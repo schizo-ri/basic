@@ -32,7 +32,7 @@ class SessionController extends Controller
     public function getLogin()
     {
         if(Sentinel::check()) {
-            return view('Centaur::dashboard');
+            return view('dashboard');
         } else {
             return view('welcome');
         }
@@ -73,7 +73,7 @@ class SessionController extends Controller
         /*
         session()->flash('success','Prijava nije uspjela.');
        
-        return view('Centaur::auth.login');*/
+        return view('auth.login');*/
       
     }
     /**

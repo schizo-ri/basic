@@ -48,10 +48,8 @@
 }
 
 .container .posts, .container .calendar {
-    padding: 20px 0 8px 0;
-    /* margin-top: -90px; */
+    padding: 20px 0 0 0;
     overflow: visible;
-    /* padding-top: 90px;*/
 }
 .container .posts {
     padding-left: 10px;
@@ -250,6 +248,7 @@
     height: 100%;
     margin: auto;
     padding-top: 25px;
+    padding-bottom: 15px;
     position: relative;
     overflow: hidden;
     overscroll-behavior-y: contain;
@@ -351,10 +350,9 @@
 
 .comming_agenda {
     width: 100%;
-    padding: 20px 30px;
+    padding: 20px 30px 0;
     position: relative;
-    height: auto;
-    /* min-height: 250px; */
+    overflow: auto;
 }
 
 .comming_agenda .agenda_title {
@@ -460,8 +458,11 @@
     transform: translateY(-50%); */
 }
 .comming_agenda .placeholder {
-    height: calc(100% - 40px);
+    height: 100%;
     display: none;
+    margin: auto;
+    position: static;
+    transform: none;
 }
 
 .comming_agenda .placeholder img {
@@ -542,8 +543,19 @@
 
 @media (max-width: 1024px) {
    
-    .placeholder, .placeholder_cal {
-       /*  position: relative; */
+   .container .calendar{
+        height: auto;
+        margin: 0;
+        padding: 0 10px;
+        margin-bottom: 20px;
+    }
+    .container .posts{
+        height: auto;
+        margin: 0;
+        padding: 0 10px;
+    }
+    .all_agenda {
+        min-height: 150px;
     }
     .placeholder >img {
        max-width: 60%;
@@ -588,20 +600,12 @@
         height: auto;
         width: 100%;
         max-width: 100%;
-        padding: 0;
-        margin: 0;
     }
     .container .calendar>div, .container .noticeboard>div {
 		height: auto;
 		margin: auto;
-		width: 97%;
     }
-    	
-	
-    .container .noticeboard, .container .posts, .container .calendar {
-        overflow: hidden;
-        padding: 10px;
-    }
+   
     .placeholder, .placeholder_cal {
         display: none;
         position: static;
@@ -680,7 +684,15 @@
 @media (max-width: 450px) {
     .container .noticeboard h2 {
 		padding-top: 0;
-	}
+    }
+    .comming_agenda .placeholder {
+        height: auto;
+       /*  top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        position: absolute; */
+    }
+  
     .container .noticeboard, .container .posts, .container .calendar, .container .calendar>div {
         height: auto;
     }

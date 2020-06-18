@@ -51,7 +51,7 @@
 				</div>
 			</div>
 			<main class="all_documents main_questionnaire">
-				@if(count($questionnaires))
+				
 					<header class="page-header">
 						<div class="index_table_filter">
 							<label>
@@ -64,6 +64,7 @@
 							<span class="change_view2"></span>
 						</div>
 					</header>
+				@if(count($questionnaires))
 					<div class="table-responsive first_view">
 						<table id="index_table" class="display table dataTable table-hover">
 							<thead>

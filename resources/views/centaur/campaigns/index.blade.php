@@ -84,7 +84,17 @@
 							</tbody>
 						</table>
 					@else
-						<p class="no_data">@lang('basic.no_data')</p>
+						<div class="placeholder_div">
+							<div class="placeholder">
+								<img class="" src="{{ URL::asset('icons/placeholder_ad.png') }}" alt="Placeholder image" />
+								<p>@lang('basic.no_campaigns')
+									<label type="text" class="add_new" rel="modal:open" >
+										<i style="font-size:11px" class="fa">&#xf067;</i>
+									</label>
+								
+								</p>
+							</div>
+						</div>
 					@endif
 				</div>
 			</main>

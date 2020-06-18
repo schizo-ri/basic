@@ -82,11 +82,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the form data
-      /*   $result = $this->validate($request, [
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
-        ]); */
+         // Validate the form data
+         $result = $this->validate($request, [
+            'email' => 'required|max:255|unique:users',
+            'password' => 'required|confirmed|min:4',
+        ]);
 
         // Assemble registration credentials and attributes
         $credentials = [
@@ -114,7 +114,6 @@ class UserController extends Controller
                 return redirect()->back()->with('error',  __('ctrl.no_valid_email')); 
             }            
         }
-
         // Assign User Roles
         foreach ($request->get('roles', []) as $slug => $id) {
             $role = Sentinel::findRoleBySlug($slug);
@@ -133,6 +132,9 @@ class UserController extends Controller
         $employee = new Employee();
         $employee->saveEmployee( $data_employee );
 
+        $result->setMessage("User {$request->get('email')} has been created.");
+        return $result->dispatch(route('users.index'));
+   
         if ($request->hasFile('fileToUpload')) {
             $image = $request->file('fileToUpload');
             $user_name = $request['last_name'] . '_' . $request['first_name'];
@@ -151,18 +153,15 @@ class UserController extends Controller
                 $request->file('fileToUpload')->move($path, $docName);
                 DocumentController::createResizedImage($path . $docName, $path . pathinfo($docName)['filename'] . '_small.' . pathinfo($docName)['extension'], 200, 250);
 
-                return redirect()->back()->with('success', __('ctrl.uploaded'));
+            /*     return redirect()->back()->with('success', __('ctrl.uploaded')); */
   
               } catch (\Throwable $th) {
                 return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
               }
         }
-
-        session()->flash('error',"User {$request->get('email')} has been created.");
+       
+        session()->flash('success',"User {$request->get('email')} has been created.");
         return redirect()->back();
-     //   $result->setMessage("User {$request->get('email')} has been created.");
-
-      //  return $result->dispatch(route('users.index'));
     }
 
     /**
@@ -222,9 +221,9 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         // Validate the form data
-        $result = $this->validate($request, [
-            'email' => 'required|email|max:255|unique:users,email,'.$id,
-        ]);
+     /*    $result = $this->validate($request, [
+            'email' => 'required|max:255|unique:users,email,'.$id,
+        ]); */
 
         // Assemble the updated attributes
         $attributes = [
@@ -235,9 +234,9 @@ class UserController extends Controller
 
         // Do we need to update the password as well?
         if ($request->has('password')  && $request->get('password') != null) {
-            $result = $this->validate($request, [
-				'password' => 'nullable|confirmed|min:8',
-			]);
+          /*   $result = $this->validate($request, [
+				'password' => 'nullable|confirmed|min:5',
+			]); */
 			$attributes['password'] = $request->get('password');
         }
 
@@ -380,7 +379,12 @@ class UserController extends Controller
                     }
                 } else {
                     $user_name = explode('.',strstr(Sentinel::getUser()->email,'@',true));
-                    $user_name = $user_name[1] . '_' . $user_name[0];
+                    
+                    if(count($user_name) == 2) {
+                        $user_name = $user_name[1] . '_' . $user_name[0];
+                    } else {
+                        $user_name = $user_name[0];
+                    }
                     $path = 'storage/' . $user_name . '/interest/';
                     $path2 = 'storage/' . $user_name . '/interesting_fact/';
                     

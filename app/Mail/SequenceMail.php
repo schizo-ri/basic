@@ -38,11 +38,10 @@ class SequenceMail extends Mailable
      */
     public function build()
     {
-        return $this->from('info@duplico.hr', 'Duplico')
-        ->view('Centaur::campaign_sequences.campaign_mail')
-        ->subject($this->sequence->subject )
-        ->with([
-            'campaign_sequence' =>  $this->sequence
-        ]);
+        return $this->view('Centaur::campaign_sequences.campaign_mail')
+                    ->subject($this->sequence->subject )
+                    ->with([
+                        'campaign_sequence' =>  $this->sequence
+                    ]);
     }
 }

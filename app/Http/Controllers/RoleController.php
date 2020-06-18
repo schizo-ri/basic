@@ -85,7 +85,7 @@ class RoleController extends Controller
             'name' => 'required',
             'slug' => 'required|alpha_dash|unique:roles',
         ]);
-
+            
         // Create the Role
         $role = Sentinel::getRoleRepository()->createModel()->create([
             'name' => trim($request->get('name')),

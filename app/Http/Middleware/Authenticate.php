@@ -16,7 +16,7 @@ class Authenticate extends Middleware
     {
         if (! $request->expectsJson()) {
             if(Sentinel::check()) {
-                return route('Centaur::dashboard');
+                return route('dashboard');
             } else {
                 return route('welcome');
             }            

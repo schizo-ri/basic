@@ -11,10 +11,7 @@ $( document ).ready(function() {
         $('.container > .calendar').height(container_height - user_header_height -20);  
         $('.container > .posts').height(container_height - user_header_height -20);  
     }
-   
-    
 });
-
 
 $( window ).resize(function() {
     var body_width = $('body').width();
@@ -29,5 +26,4 @@ $( window ).resize(function() {
         $('.container > .calendar').height(container_height - user_header_height -20);  
         $('.container > .posts').height(container_height - user_header_height -20);  
     }
-   
 }); 

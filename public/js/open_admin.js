@@ -3,7 +3,7 @@ var body_width = $('body').width();
 var url_location = location.href;
 
 $(function(){
-    if(body_width > 450) {
+    if(body_width > 768) {
         if(url_location.includes('templates')) {
             $('.admin_pages>li>a#emailings').click();
         
@@ -12,7 +12,7 @@ $(function(){
             $('.admin_pages>li>a').first().click();
         }
     }
-        $(".admin_pages a.admin_link").removeClass('disable');
+    $(".admin_pages a.admin_link").removeClass('disable');
 });
 
 var click_element;
@@ -37,7 +37,7 @@ $('.admin_pages>li>a').click(function(e) {
     return false;
 });
 
-if(body_width < 450) {
+if(body_width < 768) {
     $('.admin_pages>li>a').click(function(e) { 
         $('aside.admin_aside').hide();
         $('main.admin_main').show();

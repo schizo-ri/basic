@@ -130,12 +130,11 @@ $i = 0;
 						@endif
 					</div>
 					</div>
-					
 					<p class="about_me float_l">{{ $interes_info }}
 						@if ($user_interes)
-							<a href="{{ route('user_interes.edit',$user_interes->id ) }}" rel="modal:open"><i class="fas fa-pen"></i></a>
+							<a href="{{ route('user_interes.edit',$user_interes->id ) }}" rel="modal:open" title="{{ __('basic.about_me') }}"><i class="fas fa-pen"></i></a>
 						@else
-							<a href="{{ route('user_interes.create') }}" rel="modal:open"><i class="fas fa-plus"></i></a>
+							<a href="{{ route('user_interes.create') }}" rel="modal:open"  title="{{ __('basic.about_me') }}"><i class="fas fa-plus"></i></a>
 						@endif
 					</p>
 					<p class="tags float_l">
@@ -146,14 +145,14 @@ $i = 0;
 						@endif
 						<span>
 							@if ($user_interes)
-								<a href="{{ route('user_interes.edit', ['id' => $user_interes->id,'tag' => true]) }}" rel="modal:open"><i class="fas fa-pen"></i></a>
+								<a href="{{ route('user_interes.edit', ['id' => $user_interes->id,'tag' => true]) }}" rel="modal:open" title="{{ __('basic.my_interest') }}"><i class="fas fa-pen"></i></a>
 							@else
-								<a href="{{ route('user_interes.create',['tag' => true]) }}" rel="modal:open"><i class="fas fa-plus"></i></a>
+								<a href="{{ route('user_interes.create',['tag' => true]) }}" rel="modal:open" title="{{ __('basic.my_interest') }}"><i class="fas fa-plus"></i></a>
 							@endif
 						</span>
 					</p>
 				</div>	
-				<div class="interesing_facts float_l">
+				{{-- <div class="interesing_facts float_l">
 					<h4>@lang('basic.interesing_facts')</h4>
 					<div class="col-6 float_l">
 						<p class="">Favorite movie</p>
@@ -169,7 +168,7 @@ $i = 0;
 						<span class="add_favorite float_l"><i class="fas fa-plus"></i></span>
 						<span class="float_l click_to_add" >Click on + to add</span>
 					</div>
-				</div>
+				</div> --}}
 			</main>
 		</section>
 	</main>

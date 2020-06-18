@@ -59,9 +59,11 @@ return [
 	'other_requests' => 'Other requests',	
 	'total'	 => 'total',
 	'total_used'	 => 'Total used',
-	'this_month' => 'This month',
+	'this_month' 	=> 'This month',
+	'this_year' 	=> 'this year',
 	'used_unused' => 'Used - Unused',
 	'total_days' => 'Total days',
+	'proportion' 	=> 'proportion',
 	'experience' => 'Experience',
 	'yy_mm_dd' 		=> 'yy-mm-dd',
 ];

@@ -91,7 +91,6 @@
 			var start_date = $( this ).val();
 			var end_date = $( "#end_date" );
 			end_date.val(start_date);
-		
 		});
 	});
 	$.getScript( '/../js/validate.js');

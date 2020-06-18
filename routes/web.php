@@ -240,3 +240,10 @@ Route::get('/t', function () {
     event(new \App\Events\MessageSendEvent());
     dd('Event Run Successfully.');
 });
+
+Route::get('errorMessage', ['as' => 'errorMessage', 'uses' => 'ErrorController@errorMessage']);
+
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    return "Cache is cleared";
+});

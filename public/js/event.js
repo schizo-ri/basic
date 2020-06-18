@@ -2,11 +2,12 @@ $(function() {
     var url_basic = location.origin + '/events';
     var calendar_main_height;
     var calendar_aside_height;
+    var body_width = $('body').width();
+    
     var data1;
     if( $('.dataArr').text()) {
         var data1 = JSON.parse( $('.dataArr').text());
     }
-    
     /*
     var data1 = [];
     for (i = 0; i < data.length; i++) { 
@@ -19,7 +20,12 @@ $(function() {
         init: function(contex) {
             calendar_aside_height = $('.calendar_aside').height();
             calendar_main_height = $('.calendar_main').height();
-            $('.index_aside .day_events').height(calendar_aside_height -calendar_main_height - 110 );          
+            if($('body').width() > 450) {
+                $('.index_aside .day_events').height(calendar_aside_height -calendar_main_height - 110 );   
+            } else {
+                $('.index_aside .day_events').height(calendar_aside_height -calendar_main_height - 60 );
+            }
+                   
         },
         scheduleOptions: {
             colors: {
@@ -48,11 +54,31 @@ $(function() {
                         var datum = year + '-' + month + '-' + day;
                         var url = url_basic + '?dan=' + datum;
                         
-                        $('.index_aside .day_events').load(url + ' .index_aside .day_events >div');
-
+                        $('.index_aside .day_events').load(url + ' .index_aside .day_events >div', function() {
+                                                
+                        });
                         if($('.main_calendar_day').is(":visible")) {
                             $('.index_event').load( url + ' .index_event>section', function() {
-                                $.getScript( '/../js/load_calendar2.js');
+                                $( ".change_view_calendar" ).change(function() {
+                                    var view = $( this ).val();
+                                    
+                                    if(view == 'day') {
+                                       $('.main_calendar_day').show();
+                                       $('.main_calendar_week').hide();
+                                       $('.main_calendar_month').hide();
+                                   } 
+                                   if(view == 'week') {
+                                    $('.main_calendar_day').hide();
+                                       $('.main_calendar_week').show();
+                                       $('.main_calendar_month').hide();
+                                      
+                                   } 
+                                   if(view == 'month') {
+                                        $('.main_calendar_day').hide();
+                                       $('.main_calendar_week').hide();
+                                       $('.main_calendar_month').show();
+                                   }
+                                });
                                 $.getScript( '/../restfulizer.js');
                                 $('.main_calendar_month tbody td').click(function(){
                                     var date = $(this).attr('data-date');
@@ -63,14 +89,35 @@ $(function() {
                         if($('.main_calendar_month').is(":visible")) {
                             $('.header_calendar').load(url + ' .header_calendar >div', function() {
                                 $('.change_view_calendar').val('month') ;
-                                $('.header_calendar>div:first-child').removeClass('col-5');
-                                $('.header_calendar>div:first-child').addClass('col-10');
+                                if(body_width > 768) {
+                                    $('.header_calendar>div:first-child').removeClass('col-5');
+                                    $('.header_calendar>div:first-child').addClass('col-10');
+                                }
                                 $('.header_calendar>div:nth-child(2)').hide();
                             });
-                           
+                            
                             $('.main_calendar_month').load( url + ' .main_calendar_month>table', function() {
-                                $.getScript( '/../js/load_calendar2.js');
                                 $.getScript( '/../restfulizer.js');
+                                $( ".change_view_calendar" ).change(function() {
+                                    var view = $( this ).val();
+                                    
+                                    if(view == 'day') {
+                                       $('.main_calendar_day').show();
+                                       $('.main_calendar_week').hide();
+                                       $('.main_calendar_month').hide();
+                                   } 
+                                   if(view == 'week') {
+                                    $('.main_calendar_day').hide();
+                                       $('.main_calendar_week').show();
+                                       $('.main_calendar_month').hide();
+                                      
+                                   } 
+                                   if(view == 'month') {
+                                        $('.main_calendar_day').hide();
+                                       $('.main_calendar_week').hide();
+                                       $('.main_calendar_month').show();
+                                   }
+                                });
                                 $('.main_calendar_month tbody td').click(function(){
                                     var date = $(this).attr('data-date');
                                     $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
@@ -80,13 +127,34 @@ $(function() {
                         if($('.main_calendar_week').is(":visible")) {
                             $('.header_calendar').load(url + ' .header_calendar >div', function() {
                                 $('.change_view_calendar').val('week') ;
-                                $('.header_calendar>div:first-child').removeClass('col-5');
-                                $('.header_calendar>div:first-child').addClass('col-10');
+                                if(body_width > 768) {
+                                    $('.header_calendar>div:first-child').removeClass('col-5');
+                                    $('.header_calendar>div:first-child').addClass('col-10');
+                                }
                                 $('.header_calendar>div:nth-child(2)').hide();
                             });
 
                             $('.main_calendar_week').load( url + ' .main_calendar_week>table', function() {
-                                $.getScript( '/../js/load_calendar2.js');
+                                $( ".change_view_calendar" ).change(function() {
+                                    var view = $( this ).val();
+                                    
+                                    if(view == 'day') {
+                                       $('.main_calendar_day').show();
+                                       $('.main_calendar_week').hide();
+                                       $('.main_calendar_month').hide();
+                                   } 
+                                   if(view == 'week') {
+                                    $('.main_calendar_day').hide();
+                                       $('.main_calendar_week').show();
+                                       $('.main_calendar_month').hide();
+                                      
+                                   } 
+                                   if(view == 'month') {
+                                        $('.main_calendar_day').hide();
+                                       $('.main_calendar_week').hide();
+                                       $('.main_calendar_month').show();
+                                   }
+                                });
                                 $.getScript( '/../restfulizer.js');
                                 $('.main_calendar_month tbody td').click(function(){
                                     var date = $(this).attr('data-date');
@@ -94,6 +162,9 @@ $(function() {
                                 });
                             });
                         }
+                        if(body_width < 768) {
+                            $('.index_main.index_event').modal();
+                        }  
                     }
                 }
             },
@@ -122,20 +193,36 @@ $(function() {
                 var url = url_basic + '?dan=' + searchDate;
                
                 $('.index_aside .day_events').load(url + ' .index_aside .day_events >div');
-               
-
-                $('.index_event_month').load( url + ' .index_event_month>section');
                 
                 $('.index_event').load( url + ' .index_event>section', function() {
                     $.getScript( '/../restfulizer.js');
-                   
+                    $( ".change_view_calendar" ).change(function() {
+                        var view = $( this ).val();
+                        
+                        if(view == 'day') {
+                           $('.main_calendar_day').show();
+                           $('.main_calendar_week').hide();
+                           $('.main_calendar_month').hide();
+                       } 
+                       if(view == 'week') {
+                        $('.main_calendar_day').hide();
+                           $('.main_calendar_week').show();
+                           $('.main_calendar_month').hide();
+                          
+                       } 
+                       if(view == 'month') {
+                            $('.main_calendar_day').hide();
+                           $('.main_calendar_week').hide();
+                           $('.main_calendar_month').show();
+                       }
+                    });
                 });
 
                 $('.index_event_month').load( url + ' .index_event_month>section', function() {
                     $.getScript( '/../restfulizer.js');
-                
+                   
                 });
-              
+                console.log("prev");
             },
             next: function(info, context) {
                 /**
@@ -168,37 +255,40 @@ $(function() {
                 $('.pignose-calendar-body').find('[data-date="' + searchDate + '"] > a' ).click();
 
                 $('.index_aside .day_events').load(url + ' .index_aside .day_events >div');
-                $('.index_event_month').load( url + ' .index_event_month>section');
 
                 $('.index_event').load( url + ' .index_event>section', function() {
+                    $( ".change_view_calendar" ).change(function() {
+                        var view = $( this ).val();
+                        
+                        if(view == 'day') {
+                           $('.main_calendar_day').show();
+                           $('.main_calendar_week').hide();
+                           $('.main_calendar_month').hide();
+                       } 
+                       if(view == 'week') {
+                        $('.main_calendar_day').hide();
+                           $('.main_calendar_week').show();
+                           $('.main_calendar_month').hide();
+                          
+                       } 
+                       if(view == 'month') {
+                            $('.main_calendar_day').hide();
+                           $('.main_calendar_week').hide();
+                           $('.main_calendar_month').show();
+                       }
+                    });
                     $.getScript( '/../restfulizer.js');
-                    
-
                 });
-
                 $('.index_event_month').load( url + ' .index_event_month>section', function() {
                     $.getScript( '/../restfulizer.js');
-                   
+                 
                 });
+                console.log("next");
             }   
     });
     
     $('.index_aside .day_events').show();
     
     $.getScript( '/../js/open_modal.js'); 
-   /*  $.modal.defaults = {
-        closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
-        escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-        clickClose: false,       // Allows the user to close the modal by clicking the overlay
-        closeText: 'Close',     // Text content for the close <a> tag.
-        closeClass: '',         // Add additional class(es) to the close <a> tag.
-        showClose: true,        // Shows a (X) icon/link in the top-right corner
-        modalClass: "modal",    // CSS class added to the element being displayed in the modal.
-        // HTML appended to the default spinner during AJAX requests.
-        spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
-
-        showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
-        fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
-        fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
-    }; */
+   
 });

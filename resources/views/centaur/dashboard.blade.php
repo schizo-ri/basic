@@ -3,11 +3,8 @@
 @section('title',config('app.name'))
 @php
 	use App\Http\Controllers\PostController;
-	use App\Http\Controllers\DashboardController;
-	use App\Http\Controllers\CompanyController;
+	
 	$thisYear = date('Y');
-
-	$moduli = CompanyController::getModules();
 @endphp
 @section('content')
 	@if (Sentinel::check())
@@ -17,10 +14,7 @@
 		<div class="user_header col-xs-12 col-sm-12 col-md-12 col-lg-8" >
 			<div class="info ">
 				<div class="col-md-3 float_left user_header_info">
-					@php
-						$profile_image = DashboardController::profile_image(Sentinel::getUser()->employee['id']);
-						$user_name =  DashboardController::user_name(Sentinel::getUser()->employee['id']);					
-					@endphp
+				
 					@if($profile_image && ! empty($profile_image))
 						<span class="image_prof">
 							<img class="" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image"  />
@@ -35,12 +29,12 @@
 					<p>{{ $employee->work['name'] }}</p>
 					<div class="header_user_go">
 						<p>
-							<span>@if(isset($data_absence)){{ $data_absence['ukupnoPreostalo']  }}@endif</span>
+							<span>@if(isset($data_absence)) {{ $data_absence['ukupnoPreostalo']  }}@endif</span>
 							<span>@lang('absence.vacation')<br>@lang('absence.days_left')</span>
 						</p>
 						<p>
 							<span>{!! isset($data_absence[$thisYear]) && count($data_absence[$thisYear]) > 0 ? $data_absence[$thisYear]['dani_zahtjeva'] : 0 !!}</span>
-							<span>@lang('absence.vacation')<br>@lang('absence.days_used')</span>
+							<span>@lang('absence.vacation')<br>@lang('absence.days_used') <br> @lang('absence.this_year')</span>
 						</p>
 					</div>
 					@endif
@@ -91,9 +85,9 @@
 					<div class="box">
 						<div class="header">
 							<h2>@lang("calendar.calendar")
-								@if(in_array('Kalendar',$moduli) && isset($events) && count($events) > 0)
+								@if(in_array('Kalendar', $moduli) )
 									<a class="view_all" href="{{ route('events.index') }}" >@lang("basic.view_all")</a>
-								@endif							
+								@endif
 								<button id="right-button" class="scroll_right_cal"></button>
 								<button id="left-button" class="scroll_left_cal"></button>
 							</h2>
@@ -109,17 +103,24 @@
 					@if(in_array('Kalendar', $moduli))
 						@if(isset($employee))
 							<a class="btn btn-primary btn-lg btn-new" href="{{ route('events.create') }}" rel="modal:open">
-									<i style="font-size:11px" class="fa">&#xf067;</i>
+								<i style="font-size:11px" class="fa">&#xf067;</i>
 							</a>
 						@endif
 						<h3 class="agenda_title">@lang('calendar.your_agenda') </h3>
 						<div class="all_agenda">
-							@if(isset($events) && count($events)>0)
+							@if((isset($events) && count($events)>0) || ( isset($tasks) && count($tasks) > 0) )
 								@foreach($events->take(5) as $event)
 									<p class="agenda" id="{{ $event->date }}">
 										<span class="agenda_mark"><span class="green"></span></span>
 										<span class="agenda_time">{{ date('H:i',strtotime($event->time1)) }}<br><span>{{ date('H:i',strtotime($event->time2)) }}</span></span>
 										<span class="agenda_comment">{{ $event->description }}</span>
+									</p>
+								@endforeach
+								@foreach($tasks->take(5) as $task)
+									<p class="agenda" id="{{ $task->date }}">
+										<span class="agenda_mark"><span class="green"></span></span>
+										<span class="agenda_time">{{ date('H:i',strtotime($task->time1)) }}<br><span>{{ date('H:i',strtotime($task->time2)) }}</span></span>
+										<span class="agenda_comment">{{ $task->title . ' - ' }} {{ $task->description }}{!! $task->car_id ? ', ' . $task->car['registration']  : '' !!}</span>
 									</p>
 								@endforeach
 							@else
@@ -203,18 +204,8 @@
 	@endif
 <script>
 	$( function () {
-		if($('.comming_agenda'))
-		$('.placeholder').show();
-		
-	//	var placeholder_height =  $('.placeholder img').height();
-      //  $('.calendar .comming_agenda').height(placeholder_height + 60);
-		
 		$.getScript( '/../js/event_click.js');
 		
-	});
-	$( window ).resize(function() {
-	/* 	var placeholder_height = $('.placeholder_cal>img').height();
-		$('.placeholder_cal>p').height(placeholder_height); */
 	});
 </script>
 @stop

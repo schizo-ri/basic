@@ -51,8 +51,7 @@ class AbsenceConfirmMail extends Mailable
             $odobrenje = __('absence.not_approved');
         }
 
-        return $this->from('info@duplico.hr', 'Duplico')
-                    ->view('Centaur::email.absence_confirm')
+        return $this->view('Centaur::email.absence_confirm')
                     ->subject( __('absence.approve_absence') . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])
                     ->with([
                         'absence' => $this->absence,

@@ -43,7 +43,7 @@ unlayer.init({
         }
     },
     id: 'editor-container',
-    projectId: 4839,
+    projectId: 4441,
     displayMode: 'email'
 })
 
@@ -109,12 +109,25 @@ $('.btn-submit').click(function(e) {
                 $(".btn-submit").prop("disabled", false);
               //  location.reload();
             },
-            error: function (e) {
-                alert("Dizajn nije spremljen, došlo je do greške!");
-                console.log("ERROR : ", e);
-                $(".btn-submit").prop("disabled", false);
+            error: function(jqXhr, json, errorThrown) {
+				var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+									'message':  jqXhr.responseJSON.message,
+									'file':  jqXhr.responseJSON.file,
+									'line':  jqXhr.responseJSON.line };
 
-            }
+				$.ajax({
+					url: 'errorMessage',
+					type: "get",
+					data: data_to_send,
+					success: function( response ) {
+						$('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+					}, 
+					error: function(jqXhr, json, errorThrown) {
+						console.log(jqXhr.responseJSON); 
+						
+					}
+				});
+			}
         });
      }  
 });

@@ -17,13 +17,13 @@
 				$user_name = DashboardController::user_name($user->employee->id);
 				$work = $user->employee->work;
 				
-				if($work && $departmentRoles->where('department_id', $work->id)) {
+				if($work && $departmentRoles->where('department_id', $work->id)->first()) {
 					$dep_roles = explode(  ',', $departmentRoles->where('department_id', $work->id)->first()->permissions);
 				}
 			}
 		@endphp
 		<span class="user_img">
-			@if($user->employee)
+			@if($user->employee && is_array($image_employee))
 				<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_employee)) }}" alt="Profile image"  />
 			@else
 				<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />

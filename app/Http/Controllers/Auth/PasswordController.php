@@ -35,7 +35,7 @@ class PasswordController extends Controller
      */
     public function getRequest()
     {
-        return view('Centaur::auth.reset');
+        return view('auth.reset');
     }
 
     /**
@@ -90,7 +90,7 @@ class PasswordController extends Controller
             return redirect()->route('dashboard');
         }
 
-        return view('Centaur::auth.password')
+        return view('auth.password')
             ->with('code', $code);
     }
 

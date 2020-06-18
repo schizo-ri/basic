@@ -155,14 +155,19 @@ ul.admin_pages li >span.image_template{
     line-height: 12px;
     overflow-wrap: break-word;
 }
-@media (max-width: 450px) {
-    section.admin_panel {
-        padding: 0;
-    }
 
+@media (max-width: 768px) {
+    .index_page aside > .admin_panel {
+        padding: 0;
+        box-shadow: none;
+    }
     .index_page.index_admin h1 {
         margin: 10px 0;
         padding: 0;
+    }
+    ul.admin_pages {
+        height: 100%;
+        overflow: unset;
     }
     ul.admin_pages li >span {
         width: 52px;
@@ -175,11 +180,14 @@ ul.admin_pages li >span.image_template{
     }
     .index_page .index_main.admin_main {
         display: none;
+        box-shadow: none;
     }
-
+    .index_page .index_main.admin_main>section {
+        padding: 0;
+    }
     .admin_main .link_back {
         display: block;
-        padding: 10px 15px;
+        margin-top: 0;
     }
     .index_main #admin_page header {
         padding: 10px;
@@ -187,6 +195,9 @@ ul.admin_pages li >span.image_template{
     }
     .admin_main .index_table_filter input {
         height: 30px;
+    }
+    #admin_page {
+        height: calc(100% - 45px);
     }
     #admin_page .btn-new {
         width: 36px;
@@ -196,5 +207,11 @@ ul.admin_pages li >span.image_template{
     #admin_page .change_view, .change_view2, #admin_page .show_button {
         height: 30px;
         line-height: 30px;
+    }
+}
+
+@media (max-width: 450px) {
+    .admin_main .link_back {
+        padding: 10px;
     }
 }

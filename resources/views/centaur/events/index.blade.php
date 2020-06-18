@@ -120,17 +120,17 @@
 															<div class="event" {!! $task->employee->color ? 'style="background-color:' . $task->employee->color . '"' : 'style="background-color:#aaa"' !!} >
 																<p>{{ $task->employee->user['first_name'] }} {!! $task->car_id ? ' - ' . $task->car->registration : '' !!} {{ ' - ' . $task->title }}
 																	{{-- {{ date('H:i',strtotime($task->time1)) . ' - ' . date('G:i',strtotime($task->time2)) }} {{ $task->title }}, {{ $task->description }} --}}
-																	
 																</p>
-															
 															</div>
 														</a>
-														<a href="{{ route('tasks.edit', $task->id) }}" class="btn-edit" rel="modal:open" >
-															<i class="far fa-edit"></i>
-														</a>
-														<a href="{{ route('tasks.destroy', $task->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
-															<i class="far fa-trash-alt"></i>
-														</a>
+														@if(Sentinel::getUser()->hasAccess(['tasks.update']) || in_array('tasks.update', $permission_dep))
+															<a href="{{ route('tasks.edit', $task->id) }}" class="btn-edit" rel="modal:open" >
+																<i class="far fa-edit"></i>
+															</a>
+															<a href="{{ route('tasks.destroy', $task->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+																<i class="far fa-trash-alt"></i>
+															</a>
+														@endif
 													</div>
 												@endif
 											@endforeach
@@ -168,26 +168,27 @@
 				<table class="col-12 ">
 					<thead class="col-12">
 						<tr class="col-12">
-							<th class="col-2">@lang('calendar.monday')</th>
-							<th class="col-2">@lang('calendar.tuesday')</th>
-							<th class="col-2">@lang('calendar.wednesday')</th>
-							<th class="col-2">@lang('calendar.thursday')</th>
-							<th class="col-2">@lang('calendar.friday')</th>
-							<th class="col-2">@lang('calendar.saturday')</th>
-							<th class="col-2">@lang('calendar.sunday')</th>
+							<th class="col-sm-3 col-md-2">@lang('calendar.monday')</th>
+							<th class="col-sm-3 col-md-2">@lang('calendar.tuesday')</th>
+							<th class="col-sm-3 col-md-2">@lang('calendar.wednesday')</th>
+							<th class="col-sm-3 col-md-2">@lang('calendar.thursday')</th>
+							<th class="col-sm-3 col-md-2">@lang('calendar.friday')</th>
+							<th class="col-sm-3 col-md-2">@lang('calendar.saturday')</th>
+							<th class="col-sm-3 col-md-2">@lang('calendar.sunday')</th>
 						</tr>
 					</thead>
 					<tbody class="col-12">
 						@php
-							$start_date = new DateTime($year .'-'. $month .'-'. '01'); //2020-03-01
-							$end_date =  date_modify(new DateTime($year .'-'. $month .'-'. '01'), '+'. ($days_in_month-1) . 'days'); //2020-03-31
-							$day_in_week = intval(date_format($start_date, 'N'));  //7,
+							$start_date = new DateTime($year .'-'. $month .'-'. '01'); //2020-06-01
+							$end_date =  date_modify(new DateTime($year .'-'. $month .'-'. '01'), '+'. ($days_in_month-1) . 'days'); //2020-06-30
+							$day_in_week = intval(date_format($start_date, 'N'));   // 1 (1.6.  == ponedjeljak)
 							 
 							if( $day_in_week > 1) {
 								$date_modify = date_modify( new DateTime($year .'-'. $month .'-'. '01'), '-'. ($day_in_week) . 'days');
 							} else {
-								$date_modify = $start_date;
+								$date_modify = date_modify(new DateTime($year .'-'. $month .'-'. '01'), '-1days');
 							}
+							
 						@endphp
 						@for ($i = 0; $i < ($days_in_month + $day_in_week) ; $i++) {{-- dani u mjesecu --}}
 							@if ( $i%7 == 0)
@@ -195,9 +196,10 @@
 									@for ($j = 1; $j <= 7; $j++)  {{-- dani u tjednu --}}
 										@php
 											$next_date = date_modify($date_modify, '+ 1day');
+											
 										@endphp
 										<td class="{!! date_format($next_date, 'Y-m-d') == $today ? 'today' : '' !!} {!! date_format($next_date, 'Y-m-d') == $selected_day ? 'selected_day' : '' !!} {!! $next_date < $start_date || $next_date > $end_date ? 'out_month' : '' !!}" data-date="{{ date_format($next_date, 'Y-m-d') }}">
-											<span>{{ date_format($next_date, 'd') }}</span>
+											<span class="day_of_month">{{ date_format($next_date, 'd') }}</span>
 											@foreach ($events->where('date', date_format($next_date, 'Y-m-d') ) as $event)
 												<a href="{{ route('events.show', $event->id) }}" rel="modal:open">
 													<div class="show_event col-12" >
@@ -378,11 +380,8 @@
 			</main>
 		</section>
 	</main>
-
 </div>
 <script>
 	$.getScript( '/../js/load_calendar2.js');
-	
-
 </script>
 @stop

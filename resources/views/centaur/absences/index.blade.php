@@ -7,6 +7,7 @@
 	$prijenos_zahtjeva = 0;
 	$ukupno_GO = 0;
 	$ukupnoDani = 0;
+/* dd($data_absence['zahtjevi'][2019]); */
 @endphp
 @section('content')
 <div class="index_page index_absence">
@@ -42,15 +43,18 @@
 							<select id="year_vacation" class="year_select">
 								@foreach ($years as $year)
 									<option >{{ $year }}</option>
-								@endforeach								
+								@endforeach
 							</select>
 						</span>
 						<p class="col-6 float_l">
+							@if( ! in_array($ova_godina,$years))
+								<span class="go go_{{ $ova_godina }}"></span>
+							@endif
 							@foreach ($years as $year)
 								<span class="go go_{{ $year }}">{{ BasicAbsenceController::godisnjiGodina($employee, $year) }} ( {{ BasicAbsenceController::razmjeranGO_Godina($employee, $year) }} )
 								</span>
 							@endforeach	
-							<span>@lang('absence.total_days')</span>
+							<span>@lang('absence.total_days') <br> ( @lang('absence.proportion') ) </span>
 						</p>
 						<p class="col-6 float_l">
 							@foreach ($years as $year)
@@ -115,6 +119,12 @@
 												$start_date = new DateTime($absence->start_date . $absence->start_time);
 												$end_date = new DateTime($absence->end_date . $absence->end_time );
 												$interval = $start_date->diff($end_date);
+												$zahtjev = array('start_date' => $absence->start_date, 'end_date' => $absence->end_date);
+												$array_dani_zahtjeva = BasicAbsenceController::array_dani_zahtjeva($zahtjev);
+												$dani_go = BasicAbsenceController::daniGO($absence);
+
+											 	$dana_GO_OG = count(array_intersect($array_dani_zahtjeva,($data_absence['zahtjevi'][ $ova_godina])));
+												$dana_GO_PG = $dani_go - $dana_GO_OG;
 												
 												$hours   = $interval->format('%h'); 
 												$minutes = $interval->format('%i');
@@ -129,7 +139,7 @@
 													<td>{{ $absence->start_time . '-' .  $absence->end_time }}</td>-->
 													<td>
 														@if( $absence->absence['mark'] != 'IZL' )
-															[{{ BasicAbsenceController::daniGO($absence) }} @lang('absence.days') ] 
+															[{{ $dani_go }} @lang('absence.days')  {!! $dana_GO_PG ? '| PG: ' .$dana_GO_PG : '' !!} ] 
 														@else
 															[{{ $hours . ' h, ' . $minutes . ' m'}}]
 														@endif
@@ -142,9 +152,10 @@
 														@if($absence->approve == "0") 
 															<span class="img_denied"><span>@lang('absence.not_approved')</span></span>
 														@endif
+													
 													</td>
-													<!--<td>{{ $absence->approved['first_name'] . ' ' . $absence->approved['last_name'] }}</td>
-													<td>{{ $absence->approved_date }}</td>-->
+													{{-- <td>{!! $absence->approved ? $absence->approved['first_name'] . ' ' . $absence->approved['last_name'] : ''!!}</td> --}}
+													{{-- <td>{{ $absence->approved_date }}</td> --}}
 													<td class="options center">
 														@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep) || Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
 															<!-- <button class="collapsible option_dots float_r"></button> -->

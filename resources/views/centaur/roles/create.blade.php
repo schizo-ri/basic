@@ -12,7 +12,7 @@
         <input class="form-control" placeholder="{{ __('absence.mark') }}" name="slug" maxlength="191" type="text" value="{{ old('slug') }}" required />
             {!! ($errors->has('slug') ? $errors->first('slug', '<p class="text-danger">:message</p>') : '') !!}
         </div>
-        <h5>@lang('basic.permissions'):{{--  <span class="modal_filter"><input type="search" placeholder="{{ __('basic.search')}}" id="mySearch"></span> --}}</h5>
+        <h5>@lang('basic.permissions'): <span class="modal_filter"><input type="search" placeholder="{{ __('basic.search')}}" id="mySearch"></span></h5>
         @foreach($tables as $table_name => $table_description)
             @foreach($methodes as  $methode_name => $methode_description)
                 <div class="checkbox col-6 float_l panel">

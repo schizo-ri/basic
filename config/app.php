@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Kuća sv. Franje'),
+    'name' => env('APP_NAME', 'MyIntranet'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://kuca-sv-franje.myintranet.io'),
+    'url' => env('APP_URL', 'http://localhost:8000/'),
 
     'asset_url' => env('ASSET_URL', null),
 

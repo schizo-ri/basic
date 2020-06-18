@@ -36,7 +36,7 @@ class RegistrationController extends Controller
      */
     public function getRegister()
     {
-        return view('Centaur::auth.register');
+        return view('auth.register');
     }
 
     /**
@@ -136,7 +136,7 @@ class RegistrationController extends Controller
      */
     public function getResend()
     {
-        return view('Centaur::auth.resend');
+        return view('auth.resend');
     }
 
     /**

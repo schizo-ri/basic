@@ -100,7 +100,7 @@
 				$('#start_km').val(current_km);
 			})
 			.fail(function() {
-				alert( "Nije uspjelo" );
+				alert( "Došlo je do problema" );
 			})
 		} catch (error) {
 			
