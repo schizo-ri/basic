@@ -86,8 +86,34 @@
                                 alert ("Zaposlenik je već zadužen na projektu za taj dan");
                             }
                         }, 
-                        error: function(xhr,textStatus,thrownError) {
-                            console.log("eventMouseLeave store error " + xhr + "\n" + textStatus + "\n" + thrownError);  
+                        error: function(jqXhr, json, errorThrown) {
+                            alert("Dizajn nije spremljen, došlo je do greške!");
+                            $(".btn-submit").prop("disabled", false);
+                            var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                                'message':  jqXhr.responseJSON.message,
+                                                'file':  jqXhr.responseJSON.file,
+                                                'line':  jqXhr.responseJSON.line };
+            
+                            console.log(data_to_send); 
+                       
+                            if(url.includes("users") && errorThrown == 'Unprocessable Entity' ) {
+                                alert(email_unique);
+                            }  else {
+                                $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + error + '</div></div></div>').appendTo('body').modal();
+                                
+                                $.ajax({
+                                    url: 'errorMessage',
+                                    type: "get",
+                                    data: data_to_send,
+                                    success: function( response ) {
+                                        console.log(response);
+                                    }, 
+                                    error: function(jqXhr, json, errorThrown) {
+                                        console.log(jqXhr.responseJSON); 
+                                      
+                                    }
+                                });
+                            }
                         }
                     });
                     /*
@@ -127,8 +153,34 @@
                             
                             $.getScript( "/js/open_modal.js");
                         },
-                        error: function(xhr,textStatus,thrownError) {
-                            console.log("eventMouseLeave update error " + xhr + "\n" + textStatus + "\n" + thrownError); 
+                        error: function(jqXhr, json, errorThrown) {
+                            alert("Dizajn nije spremljen, došlo je do greške!");
+                            $(".btn-submit").prop("disabled", false);
+                            var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                                'message':  jqXhr.responseJSON.message,
+                                                'file':  jqXhr.responseJSON.file,
+                                                'line':  jqXhr.responseJSON.line };
+            
+                            console.log(data_to_send); 
+                       
+                            if(url.includes("users") && errorThrown == 'Unprocessable Entity' ) {
+                                alert(email_unique);
+                            }  else {
+                                $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + error + '</div></div></div>').appendTo('body').modal();
+                                
+                                $.ajax({
+                                    url: 'errorMessage',
+                                    type: "get",
+                                    data: data_to_send,
+                                    success: function( response ) {
+                                        console.log(response);
+                                    }, 
+                                    error: function(jqXhr, json, errorThrown) {
+                                        console.log(jqXhr.responseJSON); 
+                                      
+                                    }
+                                });
+                            }
                         }
                     }); 
                 } else {
@@ -163,8 +215,34 @@
                         success: function(data) {
                             
                         }, 
-                        error: function(xhr,textStatus,thrownError) {
-                            console.log("eventMouseLeave brisi error " + xhr + "\n" + textStatus + "\n" + thrownError);  
+                        error: function(jqXhr, json, errorThrown) {
+                            alert("Dizajn nije spremljen, došlo je do greške!");
+                            $(".btn-submit").prop("disabled", false);
+                            var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                                'message':  jqXhr.responseJSON.message,
+                                                'file':  jqXhr.responseJSON.file,
+                                                'line':  jqXhr.responseJSON.line };
+            
+                            console.log(data_to_send); 
+                       
+                            if(url.includes("users") && errorThrown == 'Unprocessable Entity' ) {
+                                alert(email_unique);
+                            }  else {
+                                $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + error + '</div></div></div>').appendTo('body').modal();
+                                
+                                $.ajax({
+                                    url: 'errorMessage',
+                                    type: "get",
+                                    data: data_to_send,
+                                    success: function( response ) {
+                                        console.log(response);
+                                    }, 
+                                    error: function(jqXhr, json, errorThrown) {
+                                        console.log(jqXhr.responseJSON); 
+                                      
+                                    }
+                                });
+                            }
                         }
                     });
                 }               
@@ -185,10 +263,34 @@
                         $('#external-events').load( url_update + ' #external-events .resource');                  
                         $('aside .list').load( url_update + ' aside .list .projects_list');
                     },
-                    error: function(xhr,textStatus,thrownError) {
-                        console.log("dateClick error"); 
-                        alert(xhr + "\n" + textStatus + "\n" + thrownError);
-                       
+                    error: function(jqXhr, json, errorThrown) {
+                        alert("Dizajn nije spremljen, došlo je do greške!");
+                        $(".btn-submit").prop("disabled", false);
+                        var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                            'message':  jqXhr.responseJSON.message,
+                                            'file':  jqXhr.responseJSON.file,
+                                            'line':  jqXhr.responseJSON.line };
+        
+                        console.log(data_to_send); 
+                   
+                        if(url.includes("users") && errorThrown == 'Unprocessable Entity' ) {
+                            alert(email_unique);
+                        }  else {
+                            $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + error + '</div></div></div>').appendTo('body').modal();
+                            
+                            $.ajax({
+                                url: 'errorMessage',
+                                type: "get",
+                                data: data_to_send,
+                                success: function( response ) {
+                                    console.log(response);
+                                }, 
+                                error: function(jqXhr, json, errorThrown) {
+                                    console.log(jqXhr.responseJSON); 
+                                  
+                                }
+                            });
+                        }
                     }
                 });
             },
@@ -217,7 +319,7 @@
                 $('.tooltiptopicevent').remove();
     
             },
-            eventRender: function(eventObj) {  // ne radi
+            /* eventRender: function(eventObj) {  // ne radi
                 var d = new Date();
                 var today = d.getFullYear() + '-' + (d.getMonth() +1) + '-' + d.getDate();
                
@@ -247,7 +349,7 @@
                         }
                     });                    
                 }
-            }
+            } */
         });
         calendar.render();
         $('.fc-scroller.fc-day-grid-container').css('height','auto');

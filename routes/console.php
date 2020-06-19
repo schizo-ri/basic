@@ -20,3 +20,9 @@ Artisan::command('inspire', function () {
 Artisan::command('command:listUpdate', function () {
     $this->comment(listUpdate::quote());
 })->describe('Display an listUpdate quote');
+Artisan::command('command:preparation_create', function () {
+    $this->comment(PreparationCreate::quote());
+})->describe('Display an preparation_create quote');
+Artisan::command('command:preparation_update', function () {
+    $this->comment(PreparationUpdate::quote());
+})->describe('Display an PreparationUpdate quote');

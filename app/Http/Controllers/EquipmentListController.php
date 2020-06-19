@@ -15,6 +15,7 @@ use App\Models\Preparation;
 use App\Mail\EquipmentMail;
 use App\Exports\MarksExport;
 use App\Exports\EquipmentListExport;
+use App\Mail\ErrorMail;
 use Carbon;
 use Sentinel;
 
@@ -168,6 +169,7 @@ class EquipmentListController extends Controller
         $preparation_id = $request['preparation_id'];
         $product_number = $request['product_number'];      
         $name = $request['name'];
+        $mark = $request['mark'];
         $unit = $request['unit'];
         $quantity = $request['quantity'];       
 
@@ -185,15 +187,21 @@ class EquipmentListController extends Controller
         }
         if(isset($request['stavka_id_level1']) && $request['stavka_id_level1'] != '') {
             $item_level1 = EquipmentList::where('preparation_id', $preparation_id)->where('product_number', $request['stavka_id_level1'])->first();
-            $data += ["stavka_id_level1"=> $item_level1->id];
+            if( $item_level1 ) {
+                $data += ["stavka_id_level1"=> $item_level1->id];
+            }
         }
         if(isset($request['stavka_id_level2']) && $request['stavka_id_level2'] != '') {
             $item_level2 = EquipmentList::where('preparation_id', $preparation_id)->where('product_number', $request['stavka_id_level2'])->first();
-            $data += ["stavka_id_level2"=> $item_level2->id ];
+            if( $item_level2 ) {
+                $data += ["stavka_id_level2"=> $item_level2->id ];
+            }
         }
-        if(isset($request['mark'])) {
+        if(isset($request['mark']) && $request['mark'] != '' ) {
             $data += ["mark"=> $request['mark']];
-        }      
+        } else if(isset($request['mark']) && $request['mark'] == '' ) {
+            $data += ["mark"=> null];
+        }
 
         $equipment_list = new EquipmentList();
         $equipment_list->saveEquipmentList($data);
@@ -218,20 +226,18 @@ class EquipmentListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
-    {
-        
-        $equipments = EquipmentList::where('preparation_id', $id)->get();
+    public function edit($id)
+    {   
+        $equipment_level1 = EquipmentList::find($id);
+        $preparation_id = $equipment_level1->preparation_id;
+        $equipments = EquipmentList::where('preparation_id',$preparation_id )->get();
 
         $listUpdates = collect();
         foreach ($equipments as $equipment ) {
             $listUpdates =  $listUpdates->merge(ListUpdate::where('item_id',$equipment->id)->orderBy('created_at', 'ASC')->get());
         }
      //   $listUpdates = ListUpdate::orderBy('created_at', 'ASC')->get();  
-        $equipment_level1 = null;
-        if(isset($request['equipment_level1'])) {
-            $equipment_level1 = EquipmentList::find($request['equipment_level1']);
-        }
+      
         
         $equipments_dates = $equipments->unique('created_at'); 
         $list_dates = array();
@@ -239,7 +245,7 @@ class EquipmentListController extends Controller
            array_push($list_dates, $date->created_at->toDateTimeString());
         }       
      
-        return view('Centaur::equipment_lists.edit', ['equipments' => $equipments,'equipment_level1' => $equipment_level1, 'preparation_id' => $id, 'list_dates' => $list_dates, 'listUpdates' => $listUpdates]);
+        return view('Centaur::equipment_lists.edit', ['equipments' => $equipments,'equipment_level1' => $equipment_level1, 'preparation_id' => $preparation_id, 'list_dates' => $list_dates, 'listUpdates' => $listUpdates]);
     }
 
     /**
@@ -369,6 +375,10 @@ class EquipmentListController extends Controller
         try {
             Excel::import(new EquipmentImport, request()->file('file'));
         } catch (\Throwable $th) {
+          
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail($th->getMessage(), $url)); 
             
             session()->flash('error', "Došlo je do problema, dokument nije učitan!");
         
@@ -386,6 +396,10 @@ class EquipmentListController extends Controller
 
         } catch (\Throwable $th) {
             
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail($th->getMessage(), $url)); 
+            
             session()->flash('error', "Došlo je do problema, dokument nije učitan!");
         
             return redirect()->back();
@@ -397,24 +411,27 @@ class EquipmentListController extends Controller
 
     public function importSiemens ()
     {       
-        Excel::import(new EquipmentImportSiemens, request()->file('file')); 
-        /* try {
+        try {
             Excel::import(new EquipmentImportSiemens, request()->file('file'));
 
         } catch (\Throwable $th) {
             
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail($th->getMessage(), $url)); 
+            
             session()->flash('error', "Došlo je do problema, dokument nije učitan!");
         
             return redirect()->back();
-        }  */
+        } 
        
         session()->flash('success', "Dokument je učitan");
         return back();
     }
 
-    public function export(Request $request) 
+    public function export($id) 
     {
-        $lists = EquipmentList::where('preparation_id', $request['id'])->get();
+        $lists = EquipmentList::where('preparation_id', $id)->get();
      
         $list_arr = array();
         foreach ($lists as $list) {
@@ -501,9 +518,9 @@ class EquipmentListController extends Controller
         return redirect()->back();
     }
 
-    public function multiReplaceItem (Request $request) 
+    public function multiReplaceItem ($id) 
     {
-        $equipments = EquipmentList::where('preparation_id', $request['preparation_id'])->get();
+        $equipments = EquipmentList::where('preparation_id', $id)->get();
         $listUpdates = ListUpdate::orderBy('created_at', 'ASC')->get();  
 
         $equipments_dates = $equipments->unique('created_at'); 
@@ -514,7 +531,7 @@ class EquipmentListController extends Controller
             }
         }
    
-        return view('Centaur::equipment_lists.multiReplaceItem', ['equipments' => $equipments, 'preparation_id' => $request['preparation_id'], 'list_dates' => $list_dates, 'listUpdates' => $listUpdates]);
+        return view('Centaur::equipment_lists.multiReplaceItem', ['equipments' => $equipments, 'preparation_id' =>$id, 'list_dates' => $list_dates, 'listUpdates' => $listUpdates]);
     }
 
     public function multiReplaceStore (Request $request) {
@@ -555,4 +572,23 @@ class EquipmentListController extends Controller
         
        
     }
+
+    public function equipmentList($id) 
+    {
+        $equipmentLists = EquipmentList::where('preparation_id', $id)->get(); 
+
+        $equipmentLists_withmark = $equipmentLists->where('mark', '<>',null)->first();
+        if($equipmentLists_withmark) {
+            $hasmark = true;
+        } else {
+            $hasmark = false;
+        }
+
+        if( $equipmentLists->where('level1',1 )->first()) {
+            $equipmentLists =  $equipmentLists->where('level1',1 );
+        }
+        $delivered = PreparationController::delivered( $id);
+        return ['equipmentLists' => json_encode($equipmentLists->toArray()), 'delivered' => $delivered, 'hasmark' => $hasmark ];
+    }
 }
+   

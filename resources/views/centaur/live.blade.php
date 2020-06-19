@@ -47,7 +47,7 @@
         @endphp
 		@stack('stylesheet')
     </head>
-    <body>
+    <body> 
     <div class="row calendar_main calendar_show" style="height: calc(100% + 70px);">
         <main class="col-6" >
             <div id='calendar_view'>

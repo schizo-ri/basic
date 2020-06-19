@@ -46,15 +46,23 @@ Route::resource('employees', 'EmployeeController');
 
 // Project
 Route::resource('projects', 'ProjectController');
+Route::get('url_project_update/{project?}/{date?}', ['as' => 'url_project_update', 'uses' => 'ProjectController@url_project_update']);
+Route::get('close_project/{project?}', ['as' => 'close_project', 'uses' => 'ProjectController@close_project']);
+Route::post('updateProject', ['as' => 'updateProject', 'uses' => 'ProjectController@updateProject']);
 
 // Project
 Route::resource('category_employees', 'CategoryEmployeeController');
 
 // Publish
 Route::resource('publishes', 'PublishController');
+Route::post('saveImg', ['as' => 'saveImg', 'uses' => 'PublishController@saveImg']);
 
 // Preparations
 Route::resource('preparations', 'PreparationController');
+Route::get('close_preparation/{preparation?}', ['as' => 'close_preparation', 'uses' => 'PreparationController@close_preparation']);
+Route::get('delivered/{id?}', ['as' => 'delivered', 'uses' => 'PreparationController@delivered']);
+Route::get('Centaur::preparations/index', ['as' => 'preparations_active', 'uses' => 'PreparationController@preparations_active']);
+
 
 // PreparationRecord
 Route::resource('preparation_records', 'PreparationRecordController');
@@ -65,6 +73,15 @@ Route::resource('list_updates', 'ListUpdateController');
 // EquipmentList
 Route::resource('equipment_lists', 'EquipmentListController');
 Route::post('addItem', 'EquipmentListController@addItem');
+Route::get('equipmentList/{id?}', ['as' => 'equipmentList', 'uses' => 'EquipmentListController@equipmentList']);
+Route::post('replaceItem', ['as' => 'replaceItem', 'uses' => 'EquipmentListController@replaceItem']);
+Route::get('multiReplaceItem/{id?}', ['as' => 'multiReplaceItem', 'uses' => 'EquipmentListController@multiReplaceItem']);
+Route::post('multiReplaceStore', ['as' => 'multiReplaceStore', 'uses' => 'EquipmentListController@multiReplaceStore']);
+Route::post('import', 'EquipmentListController@import')->name('import'); 
+Route::post('import_with_replace', 'EquipmentListController@import_with_replace')->name('import_with_replace'); 
+Route::post('importSiemens', 'EquipmentListController@importSiemens')->name('importSiemens'); 
+Route::get('export/{id?}', 'EquipmentListController@export')->name('export');
+Route::get('exportList/', 'EquipmentListController@exportList')->name('export');
 
 // Project Employees
 Route::resource('project_employees', 'ProjectEmployeeController');
@@ -72,35 +89,19 @@ Route::get('save/{employee?}/{date?}/{project?}/{all_days?}', ['as' => 'save', '
 Route::get('brisi/{project?}', ['as' => 'brisi', 'uses' => 'ProjectEmployeeController@brisi']);
 Route::get('uskladi/{project?}', ['as' => 'uskladi', 'uses' => 'ProjectEmployeeController@uskladi']);
 
-Route::get('url_project_update/{project?}/{date?}', ['as' => 'url_project_update', 'uses' => 'ProjectController@url_project_update']);
-Route::get('close_project/{project?}', ['as' => 'close_project', 'uses' => 'ProjectController@close_project']);
-Route::get('close_preparation/{preparation?}', ['as' => 'close_preparation', 'uses' => 'PreparationController@close_preparation']);
-
-Route::post('saveImg', ['as' => 'saveImg', 'uses' => 'PublishController@saveImg']);
-
 // Dashboard
  /*
 Route::get('dashboard', function () {
-    return view('Centaur::dashboard');
+    return view('dashboard');
 })->name('dashboard');*/
 
 // Dashboard 
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
-
 Route::get('live/{date?}', ['as' => 'live', 'uses' => 'DashboardController@live']);
-
-Route::post('import', 'EquipmentListController@import')->name('import'); 
-Route::post('import_with_replace', 'EquipmentListController@import_with_replace')->name('import_with_replace'); 
-Route::post('importSiemens', 'EquipmentListController@importSiemens')->name('importSiemens'); 
-
-Route::get('export/', 'EquipmentListController@export')->name('export');
-Route::get('exportList/', 'EquipmentListController@exportList')->name('export');
-Route::post('replaceItem', ['as' => 'replaceItem', 'uses' => 'EquipmentListController@replaceItem']);
-Route::get('multiReplaceItem', ['as' => 'multiReplaceItem', 'uses' => 'EquipmentListController@multiReplaceItem']);
-Route::post('multiReplaceStore', ['as' => 'multiReplaceStore', 'uses' => 'EquipmentListController@multiReplaceStore']);
-Route::get('Centaur::preparations/index', ['as' => 'preparations_active', 'uses' => 'PreparationController@preparations_active']);
 
 Route::get('/clear-cache', function() {
     Artisan::call('cache:clear');
     return "Cache is cleared";
 });
+
+Route::get('errorMessage', ['as' => 'errorMessage', 'uses' => 'ErrorController@errorMessage']);

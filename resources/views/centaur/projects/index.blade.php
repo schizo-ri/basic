@@ -17,6 +17,7 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="table-responsive">
+                <form class="form_project" accept-charset="UTF-8" role="form" method="post" action="{{ route('updateProject') }}">
                 <table class="table table-hover table_projects" id="index_table">
                     <thead>
                         <tr>
@@ -33,63 +34,57 @@
                     </thead>
                     <tbody>
                         @foreach ($projects as $project)
-                        @php
-                            $categories = explode(',', $project->categories);
-                        @endphp
-                            <tr class="{!! $project->active == 1 ? 'active' : 'inactive' !!}">
-                                <td>{{ $project->project_no }}</td>
-                                <td>{{ $project->name }}</td>
-                                <td>{{ $project->start_date  }}</td>
-                                <td>{!! $project->end_date != '0000-00-00' && $project->end_date != null ? $project->end_date : ''  !!}</td>
-                                <td>{{ $project->duration  }}</td>
-                                <td>{{ $project->day_hours  }}</td>
-                                <td>{!! $project->saturday == 1 ? 'DA' : 'NE' !!}</td>
-                                <td>
-                                    @foreach ($categories as $category)
-                                        @if ($category != "" && $category != 0)
-                                            <span> {{ $categoryEmp->where('id', $category )->first()->mark }} </span>     
-                                        @endif
-                                    @endforeach
-                                </td>
-                                <td>
-                                    <a href="{{ route('projects.edit', $project->id) }}" class="btn" rel="modal:open">
-                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                        Edit
-                                    </a>
-                                    <a href="{{ action('ProjectController@close_project', $project->id) }}" class="btn" class="action_confirm">
-                                        <i class="fas fa-check"></i>
-                                        @if ($project->active == 1)
-                                            Završi
-                                        @else
-                                            Vrati
-                                        @endif                                       
-                                    </a>
-                                    <a href="{{ route('projects.destroy', $project->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}">
-                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                        Delete
-                                    </a>
-                                </td>
-                            </tr>
+                       
+                                @php
+                                    $categories = explode(',', $project->categories);
+                                @endphp
+                                <tr class="{!! $project->active == 1 ? 'active' : 'inactive' !!}" id="project_{{ $project->id }}">
+                                    <td>{{ $project->project_no }}</td>
+                                    <td class="edit_name editable" ><span class="value" title="name">{{ $project->name }}</span></td>
+                                    <td class="edit_start_date editable" ><span class="value" title="start_date">{{ $project->start_date }}</span></td>
+                                    <td class="edit_end_date editable"><span class="value" title="end_date">{!! $project->end_date != '0000-00-00' && $project->end_date != null ? $project->end_date : ''  !!}</span></td>
+                                    <td class="edit_duration editable"><span class="value" title="duration">{{ $project->duration  }}</span></td>
+                                    <td>{{ $project->day_hours  }}</td>
+                                    <td>{!! $project->saturday == 1 ? 'DA' : 'NE' !!}</td>
+                                    <td>
+                                        @foreach ($categories as $category)
+                                            @if ($category != "" && $category != 0)
+                                                <span> {{ $categoryEmp->where('id', $category )->first()->mark }} </span>     
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('projects.edit', $project->id) }}" class="btn" rel="modal:open">
+                                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                            Edit
+                                        </a>
+                                        <a href="{{ action('ProjectController@close_project', $project->id) }}" class="btn" class="action_confirm">
+                                            <i class="fas fa-check"></i>
+                                            @if ($project->active == 1)
+                                                Završi
+                                            @else
+                                                Vrati
+                                            @endif                                       
+                                        </a>
+                                        <a href="{{ route('projects.destroy', $project->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                           
                         @endforeach
                     </tbody>
                 </table>
+                @csrf
+                </form>
             </div>
         </div>
     </div>
 <script>	
     $.getScript('/../js/filter.js');
-
-    $('.table_projects .inactive').hide();
-
-    $('.show_inactive').click(function(){
-        $('.table_projects .inactive').toggle();
-        $('.table_projects .active').toggle();
-        if($(this).text() == 'Prikaži neaktivne') {
-            $(this).text('Prikaži aktivne');
-        } else {
-            $(this).text('Prikaži neaktivne');
-        }
-    });
+    $.getScript('/../js/project.js');
+    
 
 </script>
 @stop

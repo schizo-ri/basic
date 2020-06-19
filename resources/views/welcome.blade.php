@@ -29,7 +29,7 @@
 			</div>
 			<div class="row">
 			<div class="title m-b-md">
-					RASPORED
+					PROIZVODNJA
 			</div>
 		
 		@stack('script')

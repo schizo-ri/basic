@@ -121,6 +121,26 @@ class ProjectController extends Controller
         return view('Centaur::projects.edit',['project' => $project, 'categories' => $categories]);
     }
 
+
+    public function updateProject(Request $request)
+    {
+        $project = Project::find($request['id']);
+      
+        if(isset($request['name'])) {
+            $data = array('name' => $request['name']);
+        } else if ($request['start_date'])  {
+            $data = array('start_date' => $request['start_date']);
+        } else if ($request['end_date'])  {
+            $data = ['end_date' => $request['end_date']];
+        } else if ($request['duration'])  {
+            $data = ['duration' => $request['duration']];
+        }
+  
+        $project->updateProject($data);
+        
+        return "sve ok";
+    }
+
     /**
      * Update the specified resource in storage.
      *

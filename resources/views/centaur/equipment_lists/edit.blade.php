@@ -443,10 +443,10 @@ ini_set('memory_limit','-1');
             var stavka_id_level1 = $('#stavka_id_level1').val();
             var stavka_id_level2 = $('#stavka_id_level2').val();
             var token = $('meta[name="csrf-token"]').attr('content');
-            var url_update = location.origin + '/equipment_lists/' + preparation_id +'/edit/';  
+            
 
             $.ajax({
-                url:  'addItem', 
+                url: 'addItem', 
                 type: 'post',
                 data: {
                         '_token':  token,
@@ -461,19 +461,21 @@ ini_set('memory_limit','-1');
                     }
             })
             .done(function( msg ) {
-            
-                $.ajax({
-                    type: 'POST',
-                    url: 'replaceItem',
-                    data: {'id':id,
-                            '_token':  $('meta[name="csrf-token"]').attr('content') },
-                    success: function(data){
-                        console.log( msg );
-                    },
-                });
-               // $('.modal').load( url_update );
-                console.log( "Stavka je spremljena!" );
-            
+                if(id != undefined) {
+                    var url_update = location.origin + '/equipment_lists/' + id +'/edit/';
+                    $.ajax({
+                        type: 'POST',
+                        url: 'replaceItem',
+                        data: {'id':id,
+                                '_token':  $('meta[name="csrf-token"]').attr('content') },
+                        success: function(data){
+                            console.log( msg );
+                        },
+                    });
+                    $('.modal').load( url_update );
+                }
+             
+                Alert( "Stavka je spremljena!" );
             })
             .fail(function(data) {
                 alert( "Spremanje nije uspjelo" );
@@ -491,7 +493,7 @@ ini_set('memory_limit','-1');
             var unit = $('#unit').val();
             var quantity = $('#quantity').val();
             var token = $('meta[name="csrf-token"]').attr('content');
-            var url_update = location.origin + '/equipment_lists/' + preparation_id +'/edit/';   
+            var url_update = location.origin + '/equipment_lists/' + id +'/edit/';   
             
             $.ajax({
                 url:  'addItem', 
@@ -515,7 +517,7 @@ ini_set('memory_limit','-1');
                     data: {'id':id,
                             '_token':  $('meta[name="csrf-token"]').attr('content') },
                     success: function(data){
-                    /* el_replace.parent().parent().removeClass('all_delivered');
+                        /* el_replace.parent().parent().removeClass('all_delivered');
                         el_replace.parent().parent().removeClass('not_delivered');
                         el_replace.parent().parent().removeClass('partial');
                         el_replace.parent().parent().addClass('removed_item');

@@ -45,7 +45,6 @@ class EquipmentListUpdate extends Command
      */
     public function handle()
     {
-
         $today = new DateTime('now', new DateTimeZone('Europe/Zagreb'));
         $hour = date_format($today, 'H');
         $yesterday = date_modify( new DateTime('now'), '-1day');

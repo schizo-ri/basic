@@ -18,22 +18,7 @@
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="table-responsive">
             <div class="table table-hover" id="index_table">
-                <div class="thead">
-                    <p class="tr">
-                        <span class="th file_input"></span>
-                        <span class="th project_no_input">Broj</span>
-                        <span class="th name_input">Naziv</span>
-                        <span class="th delivery_input">Datum isporuke</span>
-                        <span class="th manager_input">Voditelj projekta</span>
-                        <span class="th designed_input">Projektirao</span>
-                        <span class="th date_input">Datum</span>
-                        <span class="th preparation_input">Priprema</span>
-                        <span class="th mechanical_input">Mehanička obrada</span>
-                        <span class="th equipment_input"> Oprema</span>
-                        <span class="th history_input">Povijest</span>
-                       <span class="th option_input">Opcije</span>
-                    </p>
-                </div>
+               
                 <div class="tbody">
                     @foreach ($preparations as $preparation)
                         @if (Sentinel::getUser()->id == $preparation->project_manager || Sentinel::getUser()->id == $preparation->designed_by || Sentinel::inRole('administrator') || Sentinel::inRole('subscriber'))

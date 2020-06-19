@@ -66,12 +66,12 @@
                                             <a class="btn btn-edit" id="edit_{{ $preparation->id }}" ><span class="glyphicon glyphicon-edit not_remove" aria-hidden="true" title="Ispravi"  ></span></a>
                                         @endif
                                         @if ( Sentinel::inRole('administrator'))
-                                            <a href="{{ route('preparations.destroy', $preparation->id) }}"  class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="Obriši"><span class="glyphicon glyphicon-remove not_remove" aria-hidden="true"></span></a>
+                                            <a href="' + location.origin + '/preparations/destroy/' + preparation.id +'" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="Obriši"><span class="glyphicon glyphicon-remove not_remove" aria-hidden="true"></span></a>
                                             <a href="{{ action('PreparationController@close_preparation', $preparation->id) }}" class="btn" class="action_confirm"><i class="fas fa-check"></i>
                                                 @if ($preparation->active == 1)Završi @else Vrati @endif                                                       
                                             </a>
                                         @endif
-                                    </span>
+                                      </span>
                                     <span hidden class="equipmentLists_json not_remove"></span>
                                     <span hidden class="preparation_json not_remove">{{ json_encode($preparation->toArray()) }}</span>
                                 </p>
@@ -121,7 +121,7 @@
         @if( Sentinel::inRole('administrator') || Sentinel::inRole('moderator') || Sentinel::inRole('upload_list'))
             <form class="upload_file_replace" action="{{ action('EquipmentListController@importSiemens') }}" method="POST" enctype="multipart/form-data" title ="Multiple replace">
                 <div class="file-input-wrapper">
-                    <button class="btn-file-input"><i class="fas fa-upload"></i> Upload Siemens Linde (hierarhija)</button>
+                    <button class="btn-file-input"><i class="fas fa-upload"></i> Upload Siemens Linde</button>
                     <input type="file" name="file" required />
                     <input type="text" class="prep_id" name="preparation_id" hidden />
                 </div>

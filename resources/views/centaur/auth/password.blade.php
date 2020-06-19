@@ -20,7 +20,7 @@
                         <input class="form-control" placeholder="Confirm Password" name="password_confirmation" type="password" value="">
                         {!! ($errors->has('password_confirmation') ? $errors->first('password_confirmation', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
-                    {{ csrf_field() }}
+                    <input name="_token" value="{{ csrf_token() }}" type="hidden">
                     <input class="btn btn-lg btn-primary btn-block" type="submit" value="Save">
                 </fieldset>
                 </form>

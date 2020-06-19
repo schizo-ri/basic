@@ -7,20 +7,34 @@ html {
 	width: 100vw;
 	margin: 0;
 }
+
 body {
 	margin-bottom: 30px;
     height: auto;
     overflow: auto;
 }
+
 input {
 	max-width: 100%;
     padding: 0 5px;
     border-radius: 5px;
 }
 
+.delivered_items {
+	display: inline-block;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    font-size: 12px;
+    color: crimson;
+    line-height: initial;
+    padding: 10px 0;
+}
+
 .create_item_siemens input, .create_item input {
 	padding: 5px;
 }
+
 body > nav.navbar {
 	margin: 0;
 }
@@ -481,19 +495,19 @@ span.text_preparation.name_input  {
 span.th.delivery_input,
 span.input_preparation.delivery_input,
 span.text_preparation.delivery_input  {
-	width: 8%;
+	width: 5%;
 	min-width: 150px;
 }
 span.th.manager_input,
 span.input_preparation.manager_input,
 span.text_preparation.manager_input {
-	width: 10%;
+	width: 7%;
 	min-width: 180px;
 }
 span.th.designed_input,
 span.input_preparation.designed_input,
 span.text_preparation.designed_input{
-	width: 10%;
+	width: 7%;
 	min-width: 180px;
 }
 span.th.date_input,
@@ -509,7 +523,7 @@ span.input_preparation.date_input {
 }
 span.th.preparation_input,
 span.text_preparation.preparation_input {
-	width: 200px;
+	width: 16%;
 	border-right: 1px solid #bbb;
 	min-width: 200px;
 }
@@ -521,7 +535,7 @@ span.text_preparation.preparation_input>span, span.text_preparation.mechanical_i
 }
 span.th.mechanical_input,
 span.text_preparation.mechanical_input {
-	width: 200px;
+	width: 16%;
 	border-right: 1px solid #bbb;
 	min-width: 200px;
 }
@@ -537,12 +551,13 @@ span.td.text_preparation.wrap {
 span.input_preparation.mechanical_input,
 span.input_preparation.preparation_input,
 span.input_preparation.marks_input {
-	width: 200px;
+	width: 16%;
     border-right: 1px solid #bbb;
 	min-width: 200px;
 	font-size: 12px;
+	margin-left: 10px;
 }
-span.input_preparation.mechanical_input  input[type=radio] ,
+span.input_preparation.mechanical_input input[type=radio] ,
 span.input_preparation.preparation_input input[type=radio],
 span.input_preparation.marks_input input[type=radio]{
 	font-size: 10px;
@@ -553,10 +568,12 @@ span.input_preparation.mechanical_input>h5,
 span.input_preparation.preparation_input>h5,
 span.input_preparation.marks_input>h5 {
 	font-size: 12px;
+	clear: left;
+	margin-bottom: 0;
 }
 span.th.marks_input,
 span.text_preparation.marks_input {
-	width: 12.5%;
+	width:16%;
 	border-right: 1px solid #bbb;
 }
 
@@ -574,7 +591,7 @@ span.text_preparation.submit_preparation {
 span.th.equipment_input,
 span.input_preparation.equipment_input,
 span.text_preparation.equipment_input {
-	width: 200px;
+	width: 8%;
     min-width: 200px;
 }
 span.th.history_input,
@@ -588,6 +605,13 @@ span.input_preparation.option_input,
 span.text_preparation.option_input {
 	width: 5%;
 	min-width: 55px;
+}
+span.text_preparation.option_input {
+	display: none;
+}
+span.text_preparation.equipment_input {
+	position: relative;
+	padding-bottom: 25px;
 }
 span.td.text_preparation.equipment_input > a {
 	display: block;
@@ -703,14 +727,14 @@ form.edit_list {
 	border: none;
 }
 .table {
-	width: auto;
-	min-width: 100%;
-    max-width: initial;
+	width: 100%;
+	/* min-width: 100%;
+    max-width: initial; */
 	overflow: auto;
 }
 
 .table .thead, .table .tbody {
-    min-width: fit-content;
+    width: 100%;
 }
 p.tr.row_preparation_text.active, p.tr.row_preparation_text.inactive {
 	display: none;
@@ -722,8 +746,8 @@ p.tr {
 	justify-content: space-between;
     line-height: 34px;
 	cursor: auto;
-	width: auto;
-	min-width: fit-content;
+	width: 100%;
+	/* min-width: fit-content; */
     background: none;
 	border: none;
 	outline: none;
@@ -768,16 +792,25 @@ span.input_preparation {
 	padding: 0 5px;
 	line-height: 25px;
 }
-span.input_preparation >span {
+span.input_preparation label:not(.label_file) {
+	width: 100%;
+	height: 100%;
+}
+
+span.input_preparation >span:not(.file_to_upload) {
 	display: inline-block;
 	padding: 0;
-    text-align: center;
+	text-align: center;
+	margin-bottom: 5px;
+	height: 30px;
+    line-height: 30px;
 }
 span.input_preparation > input:not(.btn_spremi), span.input_preparation > select {
 	width: 100%;
 	padding: 3px;
     margin: 3px 0;
-    border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
 }
 span.input_preparation > input[type=checkbox] {
 	width: auto;
@@ -791,7 +824,11 @@ span.input_preparation > select {
 	color: #337ab7;
 	border: none;
 }
-
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
 .form_preparation, .form_preparation_edit {
 	clear: left;
     display: none;
@@ -800,6 +837,9 @@ span.input_preparation > select {
     margin-bottom: 0;
 }
 
+.form_preparation>span {
+	margin: 0 5px;
+}
 .preparation_hide {
 	visibility: hidden;
 }
@@ -952,6 +992,25 @@ span.input_preparation > select {
 .show_active {
 /* 	display: none; */
 }
+
+.table_projects td span.value {
+	line-height: 34px;
+    height: 34px;
+    display: inline-block;
+  
+}
+.table_projects td input {
+	height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 @media only screen and (max-width: 600px) {
 	body {
 		font-size: 12px;

@@ -22,7 +22,6 @@
     $tommorow = date('Y-m-d', strtotime('+1 day', strtotime($date)));
  //   dd(get_defined_vars());
 @endphp
-
 @section('content')
 <div class="row calendar_main">
     @if (Sentinel::check())    
@@ -32,7 +31,6 @@
                 <h2 class="toCanvas" style="display: none">To Canvas</h2>
                 <h2 class="toPic" style="display: none">To Image</h2>
                 <label for="imgW" style="display: none">Image Width:</label>
-         
             </div>   
             <div hidden class="dataArr">{!! json_encode($dataArr) !!}</div>
             <div hidden class="dataArrResource">{!! json_encode($dataArrResource) !!}</div>
@@ -46,7 +44,6 @@
                 var test = $("#calendar").get(0);
 
                 $( "span.publish_btn" ).click(function( event ) {
-                   
                     html2canvas(test).then(function(canvas) {
                         var canvasWidth = canvas.width;// canvas width
                         var canvasHeight = canvas.height;  // canvas height
@@ -79,7 +76,6 @@
                                 $("#loader").hide();
                             }
                         });
-                       
                     });
                 });
             </script>
@@ -208,8 +204,6 @@
                 </div>
             </div>
         </aside>
-        
-      
     @else
         Nisi prijavljen
     @endif
@@ -230,7 +224,7 @@ function show_alert() {
 }
 $('.fc-next-button').click(function(){
     $.getScript( "/../js/open_modal.js");
-    console.log("fc-next-button");
+
 });
 $(function(){
     $('a.fc-day-grid-event').attr('rel','modal:open');
