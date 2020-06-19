@@ -53,118 +53,85 @@ $(function() {
                         var year = date[0]['_i'].split('-')[0];
                         var datum = year + '-' + month + '-' + day;
                         var url = url_basic + '?dan=' + datum;
-                        
-                        $('.index_aside .day_events').load(url + ' .index_aside .day_events >div', function() {
-                                                
+                        var view = $('.change_view_calendar').val();
+                        console.log(date[0]['_i']); //2020-06-08
+                       
+                        console.log(view);
+                        // load side list
+                        $('.index_aside .day_events').load(url + ' .index_aside .day_events >div');
+                        // load main_calendar
+                        $('.index_event').load( url + ' .index_event>section', function() {
+                            $('.main_calendar_month tbody td').click(function(){
+                                var date = $(this).attr('data-date');
+                                $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
+                                
+                            });
+                            $( ".change_employee" ).change(function() {
+                                var value = $(this).val().toLowerCase();
+                                console.log(value);
+                                $(".show_event").filter(function() {
+                                    //$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                    $(this).toggle($(this).hasClass(value));
+                                });
+                                if(value == '') {
+                                    $(".show_event").show();
+                                }
+                                
+                            });
+                            $( ".change_view_calendar" ).change(function() {
+                                var view = $( this ).val();
+                                
+                                if(view == 'day') {
+                                    $('.main_calendar_day').show();
+                                    $('.main_calendar_week').hide();
+                                    $('.main_calendar_month').hide();
+                                    $('.main_calendar_list').hide();
+                                } 
+                                if(view == 'week') {
+                                $('.main_calendar_day').hide();
+                                    $('.main_calendar_week').show();
+                                    $('.main_calendar_month').hide();
+                                    $('.main_calendar_list').hide();
+                                } 
+                                if(view == 'list') {
+                                    $('.main_calendar_list').show();
+                                    $('.main_calendar_day').hide();
+                                    $('.main_calendar_week').hide();
+                                    $('.main_calendar_month').hide();
+                                } 
+                                if(view == 'month') {
+                                    $('.main_calendar_day').hide();
+                                    $('.main_calendar_week').hide();
+                                    $('.main_calendar_month').show();
+                                    $('.main_calendar_list').hide();
+                                }
+                            });
+                            $.getScript( '/../restfulizer.js');
+                            select_view();
                         });
-                        if($('.main_calendar_day').is(":visible")) {
-                            $('.index_event').load( url + ' .index_event>section', function() {
-                                $( ".change_view_calendar" ).change(function() {
-                                    var view = $( this ).val();
-                                    
-                                    if(view == 'day') {
-                                       $('.main_calendar_day').show();
-                                       $('.main_calendar_week').hide();
-                                       $('.main_calendar_month').hide();
-                                   } 
-                                   if(view == 'week') {
-                                    $('.main_calendar_day').hide();
-                                       $('.main_calendar_week').show();
-                                       $('.main_calendar_month').hide();
-                                      
-                                   } 
-                                   if(view == 'month') {
-                                        $('.main_calendar_day').hide();
-                                       $('.main_calendar_week').hide();
-                                       $('.main_calendar_month').show();
-                                   }
-                                });
-                                $.getScript( '/../restfulizer.js');
-                                $('.main_calendar_month tbody td').click(function(){
-                                    var date = $(this).attr('data-date');
-                                    $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
-                                });
-                            });
-                        }
-                        if($('.main_calendar_month').is(":visible")) {
-                            $('.header_calendar').load(url + ' .header_calendar >div', function() {
-                                $('.change_view_calendar').val('month') ;
-                                if(body_width > 768) {
-                                    $('.header_calendar>div:first-child').removeClass('col-5');
-                                    $('.header_calendar>div:first-child').addClass('col-10');
-                                }
-                                $('.header_calendar>div:nth-child(2)').hide();
-                            });
-                            
-                            $('.main_calendar_month').load( url + ' .main_calendar_month>table', function() {
-                                $.getScript( '/../restfulizer.js');
-                                $( ".change_view_calendar" ).change(function() {
-                                    var view = $( this ).val();
-                                    
-                                    if(view == 'day') {
-                                       $('.main_calendar_day').show();
-                                       $('.main_calendar_week').hide();
-                                       $('.main_calendar_month').hide();
-                                   } 
-                                   if(view == 'week') {
-                                    $('.main_calendar_day').hide();
-                                       $('.main_calendar_week').show();
-                                       $('.main_calendar_month').hide();
-                                      
-                                   } 
-                                   if(view == 'month') {
-                                        $('.main_calendar_day').hide();
-                                       $('.main_calendar_week').hide();
-                                       $('.main_calendar_month').show();
-                                   }
-                                });
-                                $('.main_calendar_month tbody td').click(function(){
-                                    var date = $(this).attr('data-date');
-                                    $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
-                                });
-                            });
-                        }
-                        if($('.main_calendar_week').is(":visible")) {
-                            $('.header_calendar').load(url + ' .header_calendar >div', function() {
-                                $('.change_view_calendar').val('week') ;
-                                if(body_width > 768) {
-                                    $('.header_calendar>div:first-child').removeClass('col-5');
-                                    $('.header_calendar>div:first-child').addClass('col-10');
-                                }
-                                $('.header_calendar>div:nth-child(2)').hide();
-                            });
-
-                            $('.main_calendar_week').load( url + ' .main_calendar_week>table', function() {
-                                $( ".change_view_calendar" ).change(function() {
-                                    var view = $( this ).val();
-                                    
-                                    if(view == 'day') {
-                                       $('.main_calendar_day').show();
-                                       $('.main_calendar_week').hide();
-                                       $('.main_calendar_month').hide();
-                                   } 
-                                   if(view == 'week') {
-                                    $('.main_calendar_day').hide();
-                                       $('.main_calendar_week').show();
-                                       $('.main_calendar_month').hide();
-                                      
-                                   } 
-                                   if(view == 'month') {
-                                        $('.main_calendar_day').hide();
-                                       $('.main_calendar_week').hide();
-                                       $('.main_calendar_month').show();
-                                   }
-                                });
-                                $.getScript( '/../restfulizer.js');
-                                $('.main_calendar_month tbody td').click(function(){
-                                    var date = $(this).attr('data-date');
-                                    $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
-                                });
-                            });
-                        }
+                        
                         if(body_width < 768) {
                             $('.index_main.index_event').modal();
                         }  
+                    }
+                }
+                function select_view() {
+                    if(view == 'day') {
+                        $('.change_view_calendar').val('day') ;
+                        $('.main_calendar').hide();
+                        $('.main_calendar_day').show();
+                    } else if(view == 'month') {
+                        $('.change_view_calendar').val('month') ;                                
+                        $('.main_calendar').hide();
+                        $('.main_calendar_month').show();
+                    } else if(view == 'week') {
+                        $('.change_view_calendar').val('week') ;
+                        $('.main_calendar').hide();
+                        $('.main_calendar_week').show();
+                    } else if(view == 'list') {
+                        $('.change_view_calendar').val('week') ;
+                        $('.main_calendar').hide();
+                        $('.main_calendar_week').show();
                     }
                 }
             },
@@ -290,5 +257,6 @@ $(function() {
     $('.index_aside .day_events').show();
     
     $.getScript( '/../js/open_modal.js'); 
-   
+    
+    
 });

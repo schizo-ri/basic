@@ -688,21 +688,18 @@ class="select-css"
     margin-left: 15px;
 }
 
-.show_event {
+.show_event, .show_holiday {
     padding-left: 0;
     padding-right: 20px;
     position: relative;
     overflow: visible;
 }
 
-.main_calendar_month .show_event {
+.main_calendar_month .show_event, .main_calendar_month .show_holiday {
     padding: 0;
     overflow: hidden;
 }
 
-.main_calendar_month .show_event div {
-
-}
 
 .main_calendar_month .show_event div.event  {
     margin-bottom: 5px;
@@ -712,7 +709,7 @@ class="select-css"
     background-color: #eee;
     color: #ccc;
 }
-.show_event div {
+.show_event div, .show_holiday div {
     display: block;
     float: left;
     height: fit-content;
@@ -720,7 +717,6 @@ class="select-css"
     padding: 0 20px;
     line-height: 30px;
     margin-right: 1%;
-    color: #ffffff;
     margin-bottom: 15px;
     width: 100%;
     font-weight: 600;
@@ -728,6 +724,13 @@ class="select-css"
     cursor: pointer;
 }
 
+.show_event div {
+    color: #ffffff;
+}
+
+.show_event.show_holiday div {
+    color: inherit;
+}
 .show_event div.event {
     cursor: pointer;
 }
@@ -753,7 +756,9 @@ class="select-css"
     line-height: 30px;
     margin: 0;
 }
-
+.show_event.show_holiday .event p {
+    color: inherit;
+}
 .main_calendar_month .show_event .event p, .main_calendar_week .show_event .event p   {
     line-height: initial;
     font-weight: 400;
@@ -876,10 +881,25 @@ class="select-css"
     padding: 10px 0;
     border-bottom: 1px solid #ccc;
 }
+.td_week {
+    text-align: center;
+}
+.td_week >span {
+    border: 1px solid rgba(256,0,0,0.4);
+    background: rgba(256,0,0,0.1);
+    border-radius: 50%;
+    padding: 5px;
+}
 
-.main_calendar_month table th, .main_calendar_month table td {
+.main_calendar_month table th:first-child, .main_calendar_month table td:first-child {
     padding: 10px 0;
-    width: 14.28%;
+    width: 5.5%;
+    border-right: 1px solid #ccc;
+}
+
+.main_calendar_month table th:not(.th_week), .main_calendar_month table td:not(.td_week) {
+    padding: 10px 0;
+    width: 13.57%;
     border-right: 1px solid #ccc;
 }
 
@@ -955,6 +975,31 @@ class="select-css"
     overflow: hidden;
     display: flex;
     justify-content: flex-start;
+}
+.month_event {
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    clear: left;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0;
+    font-style: normal;
+    font-size: 0.813rem;
+    color: #071E57;
+}
+.month_event >a {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+.month_event >a span {
+    width: auto;
+    display: inline-block;
+    min-width: 120px;
 }
 .hour_in_day >a , .hour_in_day>div {
     float: left;
@@ -1179,7 +1224,7 @@ main.campaign_main {
     padding: 20px 25px;
 }
 
-.index_main main.main_calendar, .index_main main.main_calendar_month, .index_main main.main_calendar_week  {
+.index_main main.main_calendar_day, .index_main main.main_calendar_month, .index_main main.main_calendar_week  {
     width: 100%;
     display: block;
     position: absolute;
@@ -1189,8 +1234,8 @@ main.campaign_main {
     overscroll-behavior-y: contain;
     height: calc(100% - 80px);
 }
-.index_main main.main_calendar_month, .index_main main.main_calendar_week {
-    padding: 20px 20px 20px 30px;
+.index_main main.main_calendar_day, .index_main main.main_calendar_list, .index_main main.main_calendar_week {
+    padding: 5px;
     overflow: auto;
     display: none;
 }
@@ -2801,6 +2846,7 @@ table.dataTable#index_table tbody td:last-child > a {
     font-size: 0.813rem;
     width: 5%;
     color: #071E57;
+    text-align: center;
 }
 .main_calendar_week table tbody tr {
     min-height: 90px;
@@ -2843,7 +2889,7 @@ table.dataTable#index_table tbody td:last-child > a {
     background: url(../icons/view2.png) no-repeat center;
 }
 
- .change_view_calendar{
+ .change_view_calendar, .change_employee{
     font-family: Montserrat;
     font-style: normal;
     font-weight: 600;
@@ -2861,7 +2907,9 @@ table.dataTable#index_table tbody td:last-child > a {
  .change_view_calendar >option {
     line-height: 20px;
 }
-
+.change_employee {
+    margin-right: 15px;
+}
 
 .q_progress {
     font-weight: 600;

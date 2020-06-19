@@ -297,6 +297,7 @@ return [
 	'abs_days' 			=> 'Početni dani godišnjeg odmora',
 	'add'				=> 'Dodaj',
 	'view_monthly'		=> 'Mjesečno',
+	'view_list'			=> 'Lista',
 	'view_weekly'		=> 'Tjedno',
 	'view_daily'		=> 'Dnevno',
 	'vehical_services'	=> 'Servisi vozila',
@@ -322,6 +323,16 @@ return [
 	'edit_template'	=> 'Ispravi predložak',
 	'new_message'		=> 'Dobio si novu poruku',
 	'sent_message'		=> 'Uspješno ste dodali novi komentar.',
+	'holidays'			=> 'Praznici',
+	'travel_orders'		=> 'Putni nalozi',
+	'add_travel'		=> 'Dodaj putni nalozi',
+	'edit_travel'		=> 'ispravi putni nalozi',
+	'days_no'			=> 'Putovanje može trajati',
+	'calculate_employee'=> 'Podnositelj obračuna',
+	'advance'			=> 'Iznos predujma',
+	'advance_date'		=> 'Datum isplate predujma',
+	'rest_payout'		=> 'Ostaje za isplatu/povrat',
+	
 ];	
 
 ?>

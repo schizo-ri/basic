@@ -295,6 +295,7 @@ return [
 	'abs_days' 			=> 'Holiday days start',
 	'add'				=> 'Add',
 	'view_monthly'		=> 'Monthly',
+	'view_list'			=> 'List',
 	'view_weekly'		=> 'Weekly',
 	'view_daily'		=> 'Daily',
 	'liters'			=> 'liters',
@@ -322,8 +323,8 @@ return [
 	'templates'			=> 'Templates',
 	'new_message'		=> 'You got a new message',
 	'sent_message'		=> 'You have successfully addad a new comment.',
-	
-	
+	'holidays'		=> 'Holidays',
+	'travel_orders'		=> 'Travel orders',
 	
 ];	
 ?>

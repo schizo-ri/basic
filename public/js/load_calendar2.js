@@ -1,3 +1,4 @@
+console.log("load_calendar");
 $(function() {
     var day = $('.event_day .day').text();
     var month =   $('.event_day .month').text();
@@ -28,46 +29,46 @@ $(function() {
         $('.month_year').text(monthNames[date_before.getMonth()] + ' ' +  date_before.getFullYear());
         $('.pignose-calendar-body').find('[data-date="' + searchDate_bef + '"] > a' ).click();
     });
-
+    $( ".change_employee" ).change(function() {
+        var value = $(this).val().toLowerCase();
+        console.log(value);
+		$(".show_event").filter(function() {
+			//$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			$(this).toggle($(this).hasClass(value));
+        });
+        if(value == '') {
+            $(".show_event").show();
+        }
+    });
+    var view;
     $( ".change_view_calendar" ).change(function() {
-		var view = $( this ).val();
-		
+		view = $( this ).val();
 		if(view == 'day') {
 		   $('.main_calendar_day').show();
 		   $('.main_calendar_week').hide();
-		   $('.main_calendar_month').hide();
+           $('.main_calendar_month').hide();
+           $('.main_calendar_list').hide();
 	   } 
 	   if(view == 'week') {
 		$('.main_calendar_day').hide();
 		   $('.main_calendar_week').show();
-		   $('.main_calendar_month').hide();
-		  
-	   } 
+           $('.main_calendar_month').hide();
+           $('.main_calendar_list').hide();
+       } 
+       if(view == 'list') {
+        $('.main_calendar_list').show();
+        $('.main_calendar_day').hide();
+        $('.main_calendar_week').hide();
+        $('.main_calendar_month').hide();
+    } 
 	   if(view == 'month') {
 			$('.main_calendar_day').hide();
 		   $('.main_calendar_week').hide();
-		   $('.main_calendar_month').show();
+           $('.main_calendar_month').show();
+           $('.main_calendar_list').hide();
 	   }
 	});
-   /*  $(document).on('click', '.arrow .month_after', function(e) {
-        console.log("month_after");
-        e.preventDefault(); 
-        var next_month = new Date(currentDate.setMonth(currentDate.getMonth() +1));
-        var searchDate = next_month.getFullYear() + '-' + ('0' + (next_month.getMonth() +1) ).slice(-2) + '-' + ('0' + ( next_month.getDate()) ).slice(-2);
-        $('.month_year').text(monthNames[next_month.getMonth()] + ' ' + next_month.getFullYear());
-
-        $('.pignose-calendar-top-next').click();
-        $('.pignose-calendar-body').find('[data-date="' + searchDate + '"] > a' ).click();
-    });
-    $(document).on('click', '.arrow .month_before', function(e) {
-        console.log("month_before");
-        e.preventDefault(); 
-        var previous_month = new Date(currentDate.setMonth(currentDate.getMonth() -1));
-        var searchDate = previous_month.getFullYear() + '-' + ('0' + (previous_month.getMonth() +1) ).slice(-2) + '-' + ('0' + ( previous_month.getDate()) ).slice(-2);
-        $('.month_year').text(monthNames[previous_month.getMonth()] + ' ' + previous_month.getFullYear());
-        $('.pignose-calendar-top-prev').click();
-        $('.pignose-calendar-body').find('[data-date="' + searchDate + '"] > a' ).click();
-    }); */
+  
     $('.main_calendar_month tbody td').click(function(){
         var date = $(this).attr('data-date');
         $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();

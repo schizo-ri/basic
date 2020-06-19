@@ -48,5 +48,8 @@ return [
     'edit_task'		    => 'Ispravi zadatak',
     'create_your_event'	=> 'Kreirajte svoj događaj',
     'save_any_task'	    => 'Spremite zadatak kako ga ne biste propustili',
+    'week'	    => 'Tjedan',
+    'wk'	    => 'tj',
+    
 ];
 ?>

@@ -21,29 +21,23 @@
 	$day = $selected['dan_select'];
 	$month = $selected['mj_select'];
 	$year = $selected['god_select'];
+
 	$selected_day = $year .'-'. $month .'-'. $day;
 	
 	//	$days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);  // broj dana u mjesecu
-
-	if ($year%4 == 0)
-	{
+	if ($year%4 == 0) {
 		$daysInMonth = array(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-	}
-	else
-	{
+	}else{
 		$daysInMonth = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 	}
 	$days_in_month = $daysInMonth[intval($month)-1];
-
 	$dataArr_day = EventController::event_for_selected_day( $dan );
-
-	$uniqueType = array_unique(array_column($dataArr_day, 'type'));
-	
+ 	$uniqueType = array_unique(array_column($dataArr_day, 'type'));
 	if(count($events)>0) {
 		$events_day = $events->where('date', $dan);
 	}
 	$tasks_day = TaskController::task_for_selected_day( $dan );
-	//dd(get_defined_vars()); //sve varijable
+	
 ?>
 @section('content')
 <div class="index_page posts_index">
@@ -55,7 +49,7 @@
 	<main class="col-xs-12 col-sm-12 col-md-8 col-lg-8 index_main index_event">
 		<section>
 			<header class="header_calendar">
-				<div class="col-5 float_left padd_0 daycontainer">
+				<div class="col-4 float_left padd_0 daycontainer">
 					<span class="event_day">
 						<span class="week_day">{{ $selected['week_day'] }}</span>
 						<span class="day">{{ $selected['dan_select'] }}</span>
@@ -66,22 +60,28 @@
 						<img class="img_button day_after" src="{{ URL::asset('icons/arrow_right.png') }}" alt="arrow"/>
 					</span>
 					<span class="month_year">
-						{{ $selected['month'] . ' ' .  $selected['god_select'] }}
+						{{ $selected['month'] . ' ' .  $selected['god_select'] . ', ' . __('calendar.wk') . ' ' .  $selected['tj_select'] }}
 					</span>
 				</div>
-				<div class="col-5 float_left padd_0 event_container">
+				<div class="col-4 float_left padd_0 event_container">
 					<span class="meeting col-4"><span class="blue"></span>@lang('basic.meeting')<span>{{ $count_days['dani_event'] }}</span></span>
 					<span class="tasks col-4"><span class="orange"></span>@lang('basic.birthdays')<span>{{ $count_days['dani_rodjendani'] }}</span></span>
 					<span class="on_vacation col-4"><span class="green"></span>@lang('basic.on_vacation')<span>{{ $count_days['dani_odmor'] }}</span></span>
 				</div>
-				<div class="col-2 float_left daycontainer" >
+				<div class="col-4 float_left filtercontainer" >
 					<select class="change_view_calendar">
-						<option value="day" selected >@lang('basic.view_daily')</option>
+						<option value="month" selected>@lang('basic.view_monthly')</option>
+						<option value="day">@lang('basic.view_daily')</option>
 						<option value="week">@lang('basic.view_weekly')</option>
-						<option value="month">@lang('basic.view_monthly')</option>
+						<option value="list" >@lang('basic.view_list')</option>
+					</select>
+					<select class="change_employee">
+						<option value="" selected></option>
+						@foreach ($employees as $employee)
+							<option value="empl_{{ $employee->id }}">{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}</option>
+						@endforeach
 					</select>
 				</div>
-				
 			</header>
 			<main class="main_calendar main_calendar_day" >
 				<div class="all_events">
@@ -95,7 +95,7 @@
 											@foreach($events_day as $event)
 												@if (strstr($event->time1,':',true) == strstr($hour,':',true) || 
 													(intval(strstr($event->time1,':',true)) < intval(strstr($hour,':',true) ) && intval(strstr($event->time2,':',true)) > intval(strstr($hour,':',true)) ))
-													<div class="show_event col-xs-12 col-sm-6 col-md-4 col-lg-3 " >														
+													<div class="show_event empl_{{ $event->employee_id }} col-xs-12 col-sm-6 col-md-4 col-lg-3 " >														
 														<div class="event blue">
 															<p>{{ date('H:i',strtotime($event->time1)) . ' - ' . date('G:i',strtotime($event->time2)) }} {{ $event->title }}, {{ $event->description }}
 																<a href="{{ route('events.edit', $event->id) }}" class="btn-edit" rel="modal:open" >
@@ -115,7 +115,7 @@
 											@foreach($tasks_day as $task)
 												@if (strstr($task->time1,':',true) == strstr($hour,':',true) || 
 													(intval(strstr($task->time1,':',true)) < intval(strstr($hour,':',true) ) && intval(strstr($task->time2,':',true)) > intval(strstr($hour,':',true)) ))
-													<div class="show_event col-xs-12 col-sm-6 col-md-4 col-lg-3" >
+													<div class="show_event empl_{{ $task->employee_id }} col-xs-12 col-sm-6 col-md-4 col-lg-3" >
 														<a href="{{ route('tasks.show', $task->id) }}" rel="modal:open">
 															<div class="event" {!! $task->employee->color ? 'style="background-color:' . $task->employee->color . '"' : 'style="background-color:#aaa"' !!} >
 																<p>{{ $task->employee->user['first_name'] }} {!! $task->car_id ? ' - ' . $task->car->registration : '' !!} {{ ' - ' . $task->title }}
@@ -123,22 +123,22 @@
 																</p>
 															</div>
 														</a>
-														@if(Sentinel::getUser()->hasAccess(['tasks.update']) || in_array('tasks.update', $permission_dep))
+														{{-- @if(Sentinel::getUser()->hasAccess(['tasks.update']) || in_array('tasks.update', $permission_dep))
 															<a href="{{ route('tasks.edit', $task->id) }}" class="btn-edit" rel="modal:open" >
 																<i class="far fa-edit"></i>
 															</a>
 															<a href="{{ route('tasks.destroy', $task->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
 																<i class="far fa-trash-alt"></i>
 															</a>
-														@endif
+														@endif --}}
 													</div>
 												@endif
 											@endforeach
 										@endif
 										@foreach($dataArr as $key => $data)
-											@if($data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task')
+											@if($data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task' && $data['name'] != 'holiday')
 												@if( $data['date'] == $dan && date('H', strtotime($hour)) == date('H', strtotime($data['start_time'])) )
-													<div class="show_event col-xs-12 col-sm-6 col-md-4 col-lg-3" >
+													<div class="show_event empl_{{ $data['employee_id'] }} col-xs-12 col-sm-6 col-md-4 col-lg-3" >
 														<div class="event green">
 															{{ isset($data['employee']) ? $data['type'] . ' - ' . $data['employee'] : ''  }}
 															{!! $data['name'] == 'IZL' ? '('. date('H:i', strtotime($data['start_time'])) . '-' . date('H:i', strtotime($data['end_time'] )) . ')' : '' !!}
@@ -148,9 +148,18 @@
 											@endif
 											@if($data['name'] == 'birthday')
 												@if(date("m-d",strtotime($data['date'])) == date("m-d",strtotime($dan)) && $hour == "08:00" )
-													<div class="show_event  col-xs-12 col-sm-6 col-md-4 col-lg-3 " >
+													<div class="show_event empl_{{ $data['employee_id'] }} col-xs-12 col-sm-6 col-md-4 col-lg-3 " >
 														<div class="event orange">
 															{{ $data['type'] . ' - ' . $data['employee'] }}
+														</div>
+													</div>
+												@endif
+											@endif
+											@if($data['name'] == 'holiday')
+												@if(date("Y-m-d",strtotime($data['date'])) == date("Y-m-d",strtotime($dan)) && $hour == "08:00" )
+													<div class="show_event col-xs-12 col-sm-6 col-md-4 col-lg-3 " >
+														<div class=" ">
+															{{ $data['title'] }}
 														</div>
 													</div>
 												@endif
@@ -164,10 +173,11 @@
 				</div>				
 				<div hidden class="dataArr">{!! ! empty($dataArr) ? json_encode($dataArr) : '' !!}</div>
 			</main>
-			<main class="main_calendar_month" >				
+			<main class="main_calendar main_calendar_month" >
 				<table class="col-12 ">
 					<thead class="col-12">
 						<tr class="col-12">
+							<th class="th_week">@lang('calendar.week')</th>
 							<th class="col-sm-3 col-md-2">@lang('calendar.monday')</th>
 							<th class="col-sm-3 col-md-2">@lang('calendar.tuesday')</th>
 							<th class="col-sm-3 col-md-2">@lang('calendar.wednesday')</th>
@@ -185,24 +195,27 @@
 							 
 							if( $day_in_week > 1) {
 								$date_modify = date_modify( new DateTime($year .'-'. $month .'-'. '01'), '-'. ($day_in_week) . 'days');
+								
 							} else {
 								$date_modify = date_modify(new DateTime($year .'-'. $month .'-'. '01'), '-1days');
 							}
-							
 						@endphp
 						@for ($i = 0; $i < ($days_in_month + $day_in_week) ; $i++) {{-- dani u mjesecu --}}
-							@if ( $i%7 == 0)
+							@if ( $i%7 == 0) 
 								<tr class="col-12">
+									@php
+										$week = date('W', strtotime(date_format($date_modify,'Y-m-d') . ' +1 day'));
+									@endphp
+									<td class="td_week"><span>{{ $week }}</span></td>  {{-- tjedan u godini --}}
 									@for ($j = 1; $j <= 7; $j++)  {{-- dani u tjednu --}}
 										@php
 											$next_date = date_modify($date_modify, '+ 1day');
-											
 										@endphp
 										<td class="{!! date_format($next_date, 'Y-m-d') == $today ? 'today' : '' !!} {!! date_format($next_date, 'Y-m-d') == $selected_day ? 'selected_day' : '' !!} {!! $next_date < $start_date || $next_date > $end_date ? 'out_month' : '' !!}" data-date="{{ date_format($next_date, 'Y-m-d') }}">
 											<span class="day_of_month">{{ date_format($next_date, 'd') }}</span>
 											@foreach ($events->where('date', date_format($next_date, 'Y-m-d') ) as $event)
 												<a href="{{ route('events.show', $event->id) }}" rel="modal:open">
-													<div class="show_event col-12" >
+													<div class="show_event empl_{{  $event->employee_id }} col-12" >
 														<div class="event blue">
 															<p>{{ date('H:i',strtotime($event->time1)) . ' - ' . date('G:i',strtotime($event->time2)) }} {{ $event->title }}
 																{{-- <a href="{{ route('events.edit', $event->id) }}" class="btn-edit" rel="modal:open" >
@@ -216,24 +229,22 @@
 													</div>
 												</a>
 											@endforeach
-											@foreach($tasks as $task)
-												@if( $task->date == date_format($next_date, 'Y-m-d') )
-													<a href="{{ route('tasks.show', $task->id) }}" rel="modal:open">
-														<div class="show_event col-12" >
-															<div class="event" {!! $task->employee->color ? 'style="background-color:' . $task->employee->color . '"' : 'style="background-color:#aaa"' !!} >
-																<p>{{ $task->employee->user['first_name'] }} {!! $task->car_id ? ' - ' . $task->car->registration : '' !!} {{ ' - ' . $task->title }}
-																	{{-- {{ date('H:i',strtotime($task->time1)) . ' - ' . date('G:i',strtotime($task->time2)) }} {{ $task->title }}, {{ $task->description }} --}}
-																</p>
-															
-															</div>
+											@foreach($tasks->where('date', date_format($next_date, 'Y-m-d') ) as $task)
+												<a href="{{ route('tasks.show', $task->id) }}" rel="modal:open">
+													<div class="show_event empl_{{  $task->employee_id }} col-12" >
+														<div class="event" {!! $task->employee->color ? 'style="background-color:' . $task->employee->color . '"' : 'style="background-color:#aaa"' !!} >
+															<p>{{ $task->employee->user['first_name'] }} {!! $task->car_id ? ' - ' . $task->car->registration : '' !!} {{ ' - ' . $task->title }}
+																{{-- {{ date('H:i',strtotime($task->time1)) . ' - ' . date('G:i',strtotime($task->time2)) }} {{ $task->title }}, {{ $task->description }} --}}
+															</p>
+														
 														</div>
-													</a>
-												@endif
+													</div>
+												</a>
 											@endforeach
 											@foreach($dataArr as $key => $data)
-												@if($data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task')
+												@if($data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task' && $data['name'] != 'holiday')
 													@if( $data['date'] == date_format($next_date, 'Y-m-d') )
-														<div class="show_event col-12" >
+														<div class="show_event empl_{{ $data['employee_id'] }} col-12" >
 															<div class="event green">
 																<p>
 																{{ isset($data['employee']) ? $data['type'] . ' - ' . $data['employee'] : ''  }}
@@ -245,9 +256,18 @@
 												@endif
 												@if($data['name'] == 'birthday')
 													@if( date("m-d",strtotime($data['date'])) == date_format($next_date, 'm-d') )
-														<div class="show_event col-12" >
+														<div class="show_event empl_{{ $data['employee_id'] }} col-12" >
 															<div class="event orange">
 																<p>{{ $data['type'] . ' - ' . $data['employee'] }}</p>
+															</div>
+														</div>
+													@endif
+												@endif
+												@if($data['name'] == 'holiday')
+													@if( date("Y-m-d",strtotime($data['date'])) == date_format($next_date, 'Y-m-d') )
+														<div class="show_event show_holiday col-12" >
+															<div class="event">
+																<p>{{ $data['title'] }}</p>
 															</div>
 														</div>
 													@endif
@@ -261,18 +281,47 @@
 					</tbody>
 				</table>
 			</main>
-			<main class="main_calendar_week" >
+			<main class="main_calendar main_calendar_list" >
+				<ul>
+					@foreach($tasks->merge($events)->sortBy('date') as $task)
+						@if (date('m',strtotime($task->date)) == $month)
+							<li class="month_event" {!! class_basename($task) == 'Task' && $task->employee->color ? 'style="background-color:'.$task->employee->color.'"':'style="background:none"' !!}>
+								<a href="{{ route('tasks.show', $task->id) }}" rel="modal:open">
+									<span>{{ date('d.m.Y.', strtotime($task->date)) }}</span>
+									<span>{{ $task->employee->user['first_name'] }}</span> 
+									<span>{!! $task->car_id ? ' - ' . $task->car->registration : '' !!}</span>
+									<span>{{  $task->title }}</span>
+									<span>{{ class_basename($task) }}</span>
+									
+								</a>
+							</li>
+						@endif
+					@endforeach
+					{{-- @foreach($events as $event)
+						@if (date('m',strtotime($event->date)) == $month)
+							<li class="month_event">
+								<a href="{{ route('events.show', $event->id) }}" rel="modal:open">
+									<span>{{ date('d.m.Y.', strtotime($event->date)) }}</span>
+									<span>{{ $event->employee->user['first_name'] }}</span> 
+									<span>{{ ' - ' . $event->title }}</span>
+								</a>
+							</li>
+						@endif
+					@endforeach --}}
+				</ul>
+			</main>
+			<main class="main_calendar main_calendar_week" >
 				@php
 					$today = new DateTime($dan); //2020-03-31
 					$date_in_week = new DateTime($dan); //2020-03-31
 					$day_in_week = date_format($date_in_week, 'N') - 1 ;  // 2 -1 = ponedjeljak,
 					$start_date = $date_in_week->modify('-'. $day_in_week.'day'); 
-					
+					$week =date_format($start_date,'W');
 				@endphp
 				<table class="col-12 ">
 					<thead class="col-12">
 						<tr class="col-12">
-							<th class="col-2"></th>
+							<th class="col-2 td_week"><span>{{ $week }}</span></th>
 							<th class="col-2 {!! date_format( $start_date->modify('+0day'), 'Y-m-d') == date_format( $today, 'Y-m-d') ? 'today' : '' !!}">
 								<span class="day_in_week">@lang('calendar.monday1')</span><span class="date_in_week">{{ date_format( $start_date, 'd') }}</span>
 							</th>
@@ -297,9 +346,6 @@
 						</tr>
 					</thead>
 					<tbody class="col-12">
-						@php
-							
-						@endphp
 						@foreach($hours_array as $hour)
 							<tr class="col-12">
 								<td>{{ $hour }}</td>
@@ -317,7 +363,7 @@
 											@if (strstr($event->time1,':',true) == strstr($hour,':',true) || 
 													(intval(strstr($event->time1,':',true)) < intval(strstr($hour,':',true) ) && intval(strstr($event->time2,':',true)) > intval(strstr($hour,':',true)) ))
 												<a href="{{ route('events.show', $event->id) }}" rel="modal:open">
-													<div class="show_event col-12" >
+													<div class="show_event empl_{{ $event->employee_id }} col-12" >
 														<div class="event blue">
 															<p>{{ date('H:i',strtotime($event->time1)) . ' - ' . date('G:i',strtotime($event->time2)) }} {{ $event->title }}
 																{{-- <a href="{{ route('events.edit', $event->id) }}" class="btn-edit" rel="modal:open" >
@@ -337,7 +383,7 @@
 													(intval(strstr($task->time1,':',true)) < intval(strstr($hour,':',true) ) && intval(strstr($task->time2,':',true)) > intval(strstr($hour,':',true)) ))
 												@if( $task->date == date_format($date1, 'Y-m-d') )
 													<a href="{{ route('tasks.show', $task->id) }}" rel="modal:open">
-														<div class="show_event col-12" >
+														<div class="show_event empl_{{ $task->employee_id }} col-12" >
 															<div class="event" {!! $task->employee->color ? 'style="background-color:' . $task->employee->color . '"' : 'style="background-color:#aaa"' !!} >
 																<p>{{ $task->employee->user['first_name'] }} {!! $task->car_id ? ' - ' . $task->car->registration : '' !!} {{ ' - ' . $task->title }}
 																	{{-- {{ date('H:i',strtotime($task->time1)) . ' - ' . date('G:i',strtotime($task->time2)) }} {{ $task->title }}, {{ $task->description }} --}}
@@ -349,9 +395,9 @@
 											@endif
 										@endforeach
 										@foreach($dataArr as $key => $data)
-											@if($data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task')
+											@if($data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task' && $data['name'] != 'holiday')
 												@if( $data['date'] == date_format($date1, 'Y-m-d') && date('H', strtotime($hour)) == date('H', strtotime($data['start_time'])) )
-													<div class="show_event col-12" >
+													<div class="show_event empl_{{ $data['employee_id'] }} col-12" >
 														<div class="event green">
 															<p>
 															{{ isset($data['employee']) ? $data['type'] . ' - ' . $data['employee'] : ''  }}
@@ -363,9 +409,18 @@
 											@endif
 											@if($data['name'] == 'birthday')
 												@if(date("m-d",strtotime($data['date'])) == date_format($date1, 'm-d') && strstr($hour,':',true) == '08')
-													<div class="show_event col-12" >
+													<div class="show_event empl_{{ $data['employee_id'] }} col-12" >
 														<div class="event orange">
 															<p>{{ $data['type'] . ' - ' . $data['employee'] }}</p>
+														</div>
+													</div>
+												@endif
+											@endif
+											@if($data['name'] == 'holiday')
+												@if(date("Y-m-d",strtotime($data['date'])) == date("Y-m-d",strtotime($dan)) && strstr($hour,':',true) == '08')
+													<div class="show_event col-12" >
+														<div class=" ">
+															{{ $data['title'] }}
 														</div>
 													</div>
 												@endif

@@ -37,7 +37,7 @@
                             <li class="first_group {{ Request::is('absence_types*') ? 'active' : '' }}"><span class="space" ></span>
                                 <a href="{{ route('absence_types.index') }}"  class="line_height_45 admin_link" id="absence_types">@lang('absence.abs_types')</a>
                             </li>              
-                            @if(in_array('Locco vožnja', $moduli))            
+                            @if(in_array('Locco vožnja', $moduli))
                                 <li class="first_group {{ Request::is('cars*') ? 'active' : '' }}">
                                     <span class="space" ></span>
                                     <a href="{{ route('cars.index') }}" class="line_height_45 admin_link" id="cars">@lang('basic.cars')</a>
@@ -45,6 +45,10 @@
                                 <li class="first_group {{ Request::is('loccos*') ? 'active' : '' }}">
                                     <span class="space" ></span>
                                     <a href="{{ route('loccos.index') }}" class="line_height_45 admin_link" id="cars">@lang('basic.loccos')</a>
+                                </li>
+                                <li class="first_group {{ Request::is('travel_orders*') ? 'active' : '' }}">
+                                    <span class="space" ></span>
+                                    <a href="{{ route('travel_orders.index') }}" class="line_height_45 admin_link" id="cars">@lang('basic.travel_orders')</a>
                                 </li>
                             @endif
                             <li class="{{ Request::is('companies*') ? 'active' : '' }}">

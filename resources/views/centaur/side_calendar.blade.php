@@ -48,7 +48,8 @@
                         <span class="event_type" >{{ ucfirst($type)  }}</span>
                         @if (isset($dataArr_day) && count($dataArr_day) >0 )
                             @foreach ($dataArr_day as $data_day)
-                                @if ($data_day['type'] == $type && $x < 3 )
+                                @if ( $data_day['name'] != 'holiday')
+                                    @if ($data_day['type'] == $type && $x < 3 )
                                     @php
                                         $image = '';
                                         $user_name = '';
@@ -71,6 +72,8 @@
                                         $x++;
                                     @endphp
                                 @endif
+                            @endif
+                               
                             @endforeach		
                         @endif
                     </p>

@@ -1,9 +1,9 @@
 <!-- Jquery validation -->
-<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/jquery.validate.js') }}"></script>
-<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/additional-methods.js') }}"></script>
-@if (App::isLocale('hr'))
+{{-- <script src="{{ URL::asset('/../node_modules/jquery-validation/dist/jquery.validate.js') }}"></script>
+<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/additional-methods.js') }}"></script> --}}
+{{-- @if (App::isLocale('hr'))
 	<script src="{{ URL::asset('/../node_modules/jquery-validation/dist/localization/messages_hr.js') }}"></script>
-@endif
+@endif --}}
 <div class="modal-header">
 	<h3 class="panel-title">@lang('calendar.edit_event')</h3>
 </div>
@@ -44,7 +44,9 @@
 	</form>
 </div>
 <script>
-	$( "form" ).validate({
+$.getScript( '/../js/validate.js');
+
+	/* $( "form" ).validate({
 		rules: {
 			title: {
 				required: true,
@@ -64,5 +66,5 @@
 				maxlength: 65535
 			}
 		}
-	});
+	}); */
 </script>

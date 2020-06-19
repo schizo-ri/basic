@@ -175,6 +175,10 @@ Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@ind
 // Layout 
 Route::get('layout', ['as' => 'layout', 'uses' => 'LayoutController@index']);
 
+// TravelOrder
+Route::resource('travel_orders', 'TravelOrderController');
+
+
 /*
 Route::get('dashboard', function () {
     return view('Centaur::dashboard');

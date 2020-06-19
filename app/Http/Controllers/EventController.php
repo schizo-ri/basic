@@ -39,8 +39,10 @@ class EventController extends Controller
         $permission_dep = array();
       
         $dataArr = EventController::getDataArr();
+      
         $tasks = Task::get();
-       
+        $employees = Employee::where('checkout',null)->get();
+
         if($empl) {
             $events = Event::where('employee_id', $empl->id)->get();
 
@@ -54,9 +56,9 @@ class EventController extends Controller
             for ($i = 0; $i < $times-1; $i++) {
                 $hours_array[] = $start->add(new DateInterval('PT1H'))->format('H:i');
             }
-          
-            return view('Centaur::events.index',['dataArr'=> $dataArr,'events'=>$events,'tasks'=>$tasks, 'permission_dep' => $permission_dep,'hours_array' => $hours_array]);
            
+            return view('Centaur::events.index',['dataArr'=> $dataArr,'employees'=>$employees,'events'=>$events,'tasks'=>$tasks, 'permission_dep' => $permission_dep,'hours_array' => $hours_array]);
+          
         } else {
             $message = session()->flash('error', __('ctrl.path_not_allow'));
             return redirect()->back()->withFlashMessage($message);
@@ -190,7 +192,7 @@ class EventController extends Controller
 
         $event->updateEvent($data);
         
-        session()->flash('success',  __('ctrl.data_edit'));
+        /* session()->flash('success',  __('ctrl.data_edit')); */
 	
         return redirect()->back();
     }
@@ -223,7 +225,7 @@ class EventController extends Controller
                 if($arr['name'] == 'event') {
                     $dani_event++;
                 } 
-                if($arr['name'] !='event' && $arr['name'] !='birthday') {
+                if($arr['name'] =='BOL' || $arr['name'] =='GO') {
                     $dani_odmor++;
                 }
             }
@@ -242,9 +244,9 @@ class EventController extends Controller
         $select_day = '';
         $dan_select = '';
         $mj_select = '';
-        $mj_select = '';
+        $tj_select = date('W',strtotime($dan));
         $god_select = '';
-
+       
         $select_day = explode('-',$dan);
        
         $week_day = date("D", strtotime($dan) );
@@ -253,7 +255,7 @@ class EventController extends Controller
         $mj_select = $select_day[1];
         $god_select = $select_day[0];
 
-        return ['week_day' => $week_day, 'month' => $month, 'dan_select' => $dan_select, 'mj_select' => $mj_select, 'god_select' => $god_select];
+        return ['week_day' => $week_day, 'month' => $month, 'dan_select' => $dan_select, 'tj_select' => $tj_select, 'mj_select' => $mj_select, 'god_select' => $god_select];
     }
 
     /* Vraća događanje, zadatke, rođendane i izostanke za selektorani dan */
@@ -261,6 +263,15 @@ class EventController extends Controller
     {
         $empl = Sentinel::getUser()->employee;
         $dataArr = array();
+
+        $holidays = BasicAbsenceController::holidays_with_names();
+        
+        if(count($holidays) > 0) {
+            foreach ($holidays as $key => $holiday) {
+                if($date == $key )
+                array_push($dataArr, ['name' => 'holiday', 'type' => __('basic.holidays'), 'date' => $key, 'title' => $holiday ]);
+            }
+        }
 
         $tasks = Task::whereDate('date', $date)->get();        
         if(count( $tasks)>0) {
@@ -303,7 +314,7 @@ class EventController extends Controller
             foreach($employees as $employee) {
                 $dan_birthday = $god_select . '-' . date('m-d', strtotime($employee->b_day));
                 if($dan_birthday == $date) {
-                    array_push($dataArr, ['name' => 'birthday','type' => __('basic.birthday'), 'date' => $dan_birthday, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'], 'employee_id' => $employee->id  ]);
+                    array_push($dataArr, ['name' => 'birthday','type' => __('basic.birthday'), 'date' => $dan_birthday, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'], 'employee_id' => $employee->id ]);
                 }               
             } 
         }
@@ -318,17 +329,39 @@ class EventController extends Controller
        
         $dataArr = array();
         
+        $holidays = BasicAbsenceController::holidays_with_names();
+
+        if(count($holidays) > 0) {
+            foreach ($holidays as $date => $holiday) {
+                array_push($dataArr, ['name' => 'holiday', 'type' => __('basic.holidays'), 'date' => $date, 'title' => $holiday ]);
+            }
+        }
         $tasks = Task::get();
         if(count($tasks) > 0) {
             foreach($tasks as $task) {
-                array_push($dataArr, ['name' => "task", 'type' => __('calendar.task'), 'date' => $task->date,'time1' => $task->time1, 'time2' => $task->time2, 'title' => $task->title, 'employee' => $task->employee->user['first_name'] . ' ' . $task->employee->user['last_name'], 'background' =>  $task->employee->color, 'car' => $task->car['registration'] ]);
+                array_push($dataArr, ['name' => "task", 
+                                      'type' => __('calendar.task'), 
+                                      'date' => $task->date,
+                                      'time1' => $task->time1, 
+                                      'time2' => $task->time2, 
+                                      'title' => $task->title, 
+                                      'employee' => $task->employee->user['first_name'] . ' ' . $task->employee->user['last_name'], 
+                                      'background' =>  $task->employee->color, 
+                                      'car' => $task->car['registration'], 
+                                      'employee_id' => $task->employee_id ]);
             }
         }
 
         $events = Event::where('employee_id', $empl->id)->get();
-         if(count($events) > 0) {
+        if(count($events) > 0) {
             foreach($events as $event1) {
-                array_push($dataArr, ['name' => "event", 'type' => __('calendar.event'), 'date' => $event1->date,'time1' => $event1->time1, 'time2' => $event1->time2, 'title' => $event1->title]);
+                array_push($dataArr, ['name' => "event", 
+                                      'type' => __('calendar.event'), 
+                                      'date' => $event1->date,
+                                      'time1' => $event1->time1, 
+                                      'time2' => $event1->time2, 
+                                      'title' => $event1->title, 
+                                      'employee_id' => $event1->employee_id]);
             }
         }
         
@@ -348,20 +381,31 @@ class EventController extends Controller
                 $period = new DatePeriod($begin, $interval, $end);
                 foreach ($period as $dan) {
                     if(date_format($dan,'Y') == $god_select) {  // ako je trenutna godina
-                        array_push($dataArr, ['name' => $absence->absence['mark'],'type' => $absence->absence['name'], 'date' => date_format($dan,'Y-m-d'), 'start_time' =>  $absence->start_time, 'end_time' =>  $absence->end_time, 'employee' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name']]);
+                        array_push($dataArr, ['name' => $absence->absence['mark'],
+                                              'type' => $absence->absence['name'], 
+                                              'date' => date_format($dan,'Y-m-d'), 
+                                              'start_time' =>  $absence->start_time, 
+                                              'end_time' =>  $absence->end_time, 
+                                              'employee' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name'], 
+                                              'employee_id' => $absence->employee_id]);
                     }
                 }
             }
         }
 
         $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        
         if(count($employees)>0) {
             foreach($employees as $employee) {
                 $dan = $god_select . '-' . date('m-d', strtotime($employee->b_day));
-                array_push($dataArr, ['name' => 'birthday','type' => __('basic.birthday'), 'date' => $dan, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'] ]);
+                array_push($dataArr, ['name' => 'birthday',
+                                      'type' => __('basic.birthday'), 
+                                      'date' => $dan, 
+                                      'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'], 
+                                      'employee_id' => $employee->id ]);
             }
         }
-
+       
         return $dataArr;
     }
 

@@ -860,4 +860,72 @@ class BasicAbsenceController extends Controller
 
 		return $holidays;
 	}
+
+	public static function holidays_with_names () 
+	{
+		$holidays = array(
+			"2019-01-01"	=>	"Nova godina",
+			"2019-01-06"	=>	"Sveta tri kralja",
+			"2019-04-21"	=>	"Uskrs",
+			"2019-04-22"	=>	"Uskrsni ponedjeljak",
+			"2019-05-01"	=>	"Praznik rada",
+			"2019-06-20"	=>	"Tijelovo",
+			"2019-06-22"	=>	"Dan antifašističke borbe",
+			"2019-06-25"	=>	"Dan državnosti",
+			"2019-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
+			"2019-08-15"	=>	"Velika Gospa",
+			"2019-10-08"	=>	"Dan neovisnosti",
+			"2019-11-01"	=>	"Dan svih svetih",
+			"2019-12-25"	=>	"Božić",
+			"2019-12-26"	=>	"Sveti Stjepan",
+
+			"2020-01-01"	=>	"Nova godina",
+			"2020-01-06"	=>	"Sveta tri kralja",
+			"2020-04-12"	=>	"Uskrs",
+			"2020-04-13"	=>	"Uskrsni ponedjeljak",
+			"2020-05-01"	=>	"Praznik rada",
+			"2020-05-30"	=>	"Dan državnosti",
+			"2020-06-11"	=>	"Tijelovo",
+			"2020-06-22"	=>	"Dan antifašističke borbe",
+			"2020-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
+			"2020-08-15"	=>	"Velika Gospa",
+			"2020-11-01"	=>	"Dan svih svetih",
+			"2020-11-18"	=>	"Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje",
+			"2020-12-25"	=>	"Božić",
+			"2020-12-26"	=>	"Sveti Stjepan ",
+
+			"2021-01-01"	=>	"Nova godina",
+			"2021-01-06"	=>	"Sveta tri kralja",
+			"2021-04-04"	=>	"Uskrs",
+			"2021-04-05"	=>	"Uskrsni ponedjeljak",
+			"2021-05-01"	=>	"Praznik rada",
+			"2021-05-30"	=>	"Dan državnosti",
+			"2021-06-03"	=>	"Tijelovo",
+			"2021-06-22"	=>	"Dan antifašističke borbe",
+			"2021-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
+			"2021-08-15"	=>	"Velika Gospa",
+			"2021-11-01"	=>	"Dan svih svetih",
+			"2021-11-18"	=>	"Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje",
+			"2021-12-25"	=>	"Božić",
+			"2021-12-26"	=>	"Sveti Stjepan",
+
+			"2022-01-01"	=>	"Nova godina",
+			"2022-01-06"	=>	"Sveta tri kralja",
+			"2022-04-17"	=>	"Uskrs",
+			"2022-04-18"	=>	"Uskršnji ponedjeljak",
+			"2022-05-01"	=>	"Praznik rada",
+			"2022-05-30"	=>	"Dan državnosti",
+			"2022-06-16"	=>	"Tijelovo",
+			"2022-06-22"	=>	"Dan antifašističke borbe",
+			"2022-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
+			"2022-08-15"	=>	"Velika Gospa",
+			"2022-11-01"	=>	"Dan svih svetih",
+			"2022-11-18"	=>	"Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje",
+			"2022-12-25"	=>	"Božić",
+			"2022-12-26"	=>	"Sveti Stjepan",
+		);
+
+
+		return $holidays;
+	}
 }

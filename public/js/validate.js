@@ -117,7 +117,15 @@ $('.btn-submit').click(function(event){
             data: form_data,
             success: function( response ) {
                 $.modal.close();
-                if(pathname == '/events' ) {
+                if(pathname == '/events' && url.includes("/events/")) {  //event edit
+                    $('.modal-header').load(url + ' .modal-header h5');
+                    $('.modal-body').load(url + ' .modal-body p');
+                    $('.main_calendar_day').load(url_load + ' .main_calendar_day>div');
+                    $('.main_calendar_month').load(url_load + ' .main_calendar_month table');
+                    $('.main_calendar_week').load(url_load + ' .main_calendar_week table');
+                    $('.main_calendar_list').load(url_load + ' .main_calendar_list>list');
+                    $('.all_events').load(url_load + ' .all_events .hour_in_day');
+                } else if(pathname == '/events' ) {
                     $('.all_events').load(url_load + ' .all_events .hour_in_day');
                 } else if(url.includes("/vehical_services/")) {
                     url = window.location.origin + '/vehical_services';
@@ -152,9 +160,8 @@ $('.btn-submit').click(function(event){
                     });
                 }
                 if(url.includes("/absences")) {
-                  
                     $('<div><div class="modal-header"><span class="img-success"></span></div><div class="modal-body"><div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>success:</strong>' + request_send + '<p>' + status_requests + '</p></div></div><div class="modal-footer"><span><button class="btn_all" ><a href="' + location.origin + '/absences' + '" >' + all_requests + '</a></button></span><button class="done"><a href="#close" rel="modal:close" >' + done + '</a></button></div></div>').appendTo('body').modal();
-                } else {
+                } else if(! url.includes("/events/"))  {
                     $('<div><div class="modal-header"><span class="img-success"></span></div><div class="modal-body"><div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>success:</strong>' + saved + '</div></div></div>').appendTo('body').modal();
                 }
             }, 

@@ -8,3 +8,13 @@
 	<p><b>@lang('basic.car'): </b>{{ $task->car['model'] . ' ' . $task->car['registration'] }}</p>
 	<p><b>@lang('basic.description'): </b>{{ $task->description }}</p>
 </div>
+@if(Sentinel::getUser()->hasAccess(['tasks.update']) || in_array('tasks.update', $permission_dep))
+	<div class="modal-footer">
+		<a href="{{ route('tasks.edit', $task->id) }}" class="btn-edit" rel="modal:open" >
+			<i class="far fa-edit"></i>
+		</a>
+		<a href="{{ route('tasks.destroy', $task->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+			<i class="far fa-trash-alt"></i>
+		</a>
+	</div>
+@endif

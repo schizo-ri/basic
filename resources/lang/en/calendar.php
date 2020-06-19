@@ -47,6 +47,8 @@ return [
     'edit_task'		    => 'Edit task',
     'create_your_event'	    => 'Creat your event',
     'save_any_task'	    => 'Save any task so you don’t miss any',
+    'week'	    => 'Week',
+    'wk'	    => 'wk',
 ];
 
 ?>
