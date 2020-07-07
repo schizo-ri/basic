@@ -94,8 +94,7 @@
 													@endif
 													<span>{{ $notice->employee->user['first_name'] . ' ' . $notice->employee->user['last_name'] }}</span>
 												</span>
-												<span class="noticeboard_notice_time">{{ date('l, d.F.Y',strtotime($notice->created_at))}}</span>	
-																					
+												<span class="noticeboard_notice_time">{!! $notice->schedule_date ?  date('l, d.F.Y',strtotime($notice->schedule_date)) : date('l, d.F.Y',strtotime($notice->created_at)) !!}</span>									
 											</div>
 											
 										</a>

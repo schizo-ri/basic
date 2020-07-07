@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\NoticeRequest;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EmailingController;
 use App\Http\Controllers\Controller;
 use App\Models\Notice;
 use App\Models\NoticeStatistic;
@@ -156,6 +157,7 @@ class NoticeController extends Controller
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 
                         if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
+                          
                             $prima = array();
                             $employees = Employee::where('id','<>',1)->where('checkout', null)->get();
                            
@@ -204,6 +206,9 @@ class NoticeController extends Controller
            /* ************************* SEND MAIL *********************************** */
      
             if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
+
+               
+
                 $prima = array();
                 $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 

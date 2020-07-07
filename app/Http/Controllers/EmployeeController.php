@@ -79,7 +79,22 @@ class EmployeeController extends Controller
     {
         $input = $request->except(['_token']);
 		
-		$staz = $input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'];
+		if( $input['stazY'] ){
+			$stazY = $input['stazY'];
+		} else {
+			$stazY = 0;
+		}
+		if( $input['stazM'] ){
+			$stazM = $input['stazM'];
+		} else {
+			$stazM = 0;
+		}
+		if( $input['stazD'] ){
+			$stazD = $input['stazD'];
+		} else {
+			$stazD = 0;
+		}
+		$staz =$stazY.'-'.$stazM.'-'.$stazD;
 		
 		if(!isset($input['termination_service'])) {
 			$termination_service = null;

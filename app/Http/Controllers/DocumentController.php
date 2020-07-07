@@ -113,7 +113,11 @@ class DocumentController extends Controller
             }
           } else {
             $user_name = explode('.',strstr(Sentinel::getUser()->email,'@',true));
-            $user_name = $user_name[1] . '_' . $user_name[0];            
+            if(isset($user_name[1])) {
+              $user_name = $user_name[1] . '_' . $user_name[0];
+            } else {
+                $user_name = $user_name[0];
+            }         
           }          
         } else {
           $user_name = 'svi';

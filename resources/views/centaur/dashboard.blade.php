@@ -14,16 +14,13 @@
 		<div class="user_header col-xs-12 col-sm-12 col-md-12 col-lg-8" >
 			<div class="info ">
 				<div class="col-md-3 float_left user_header_info">
-				
-					@if($profile_image && ! empty($profile_image))
-						<span class="image_prof">
+					<span class="image_prof">
+						@if($profile_image && ! empty($profile_image))
 							<img class="" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image"  />
-						</span>
-					@else
-						<span class="image_prof">
+						@else
 							<img class="radius50 " src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
-						</span>
-					@endif
+						@endif
+					</span>
 					<h2>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</h2>
 					@if(isset($employee))
 					<p>{{ $employee->work['name'] }}</p>

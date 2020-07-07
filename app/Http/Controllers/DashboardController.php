@@ -85,7 +85,7 @@ class DashboardController extends Controller
         } else {
 			$image = '';
         }
-
+        
         return $image;
     }
     
@@ -96,12 +96,11 @@ class DashboardController extends Controller
 		
 		if( $employee ) {
 			$user_name = explode('.',strstr($employee->email,'@',true));
-        
-			if(count($user_name) == 2) {
-				$user_name = $user_name[1] . '_' . $user_name[0];
-			} else {
-				$user_name = $user_name[0];
-			}
+            if(isset($user_name[1])) {
+                $user_name = $user_name[1] . '_' . $user_name[0];
+            } else {
+                  $user_name = $user_name[0];
+            }         
 		}
 
         return $user_name;
