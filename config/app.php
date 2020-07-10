@@ -165,7 +165,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 		Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class,
 		Centaur\CentaurServiceProvider::class, 
-        
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -232,7 +232,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 		'Activation' => Cartalyst\Sentinel\Laravel\Facades\Activation::class,
 		'Reminder'   => Cartalyst\Sentinel\Laravel\Facades\Reminder::class,
-		'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class,
+        'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

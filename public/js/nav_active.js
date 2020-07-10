@@ -1,18 +1,16 @@
 
 var prev_url = location.href;
 var url_modul;
-
+var body_width = $('body').width();
 $('.button_nav').click(function(e){
-    
     //window.history.replaceState({}, document.title, location['origin']+'/dashboard');
-   // window.history.replaceState({}, document.title, $(this).attr('href') ); 
+    // window.history.replaceState({}, document.title, $(this).attr('href') ); 
     url_modul = window.location.pathname;
     url_modul = url_modul.replace("/","");
     url_modul = url_modul.split('/')[0];
 
     window.history.pushState( prev_url, 'Title',  $(this).attr('href'));
 
-   /*  location = $(this).attr('href'); */
     $.ajaxSetup({
         cache: true
     });
@@ -28,8 +26,7 @@ $('.button_nav').click(function(e){
         // Return the jqXHR object so we can chain callbacks
         return jQuery.ajax( options );
     };
-    var body_width;
-    body_width = $('body').width();
+    
     if($( this).hasClass('not_employee')){
         e.preventDefault();
     } else {
@@ -43,7 +40,6 @@ $('.button_nav').click(function(e){
             $( this ).addClass('active');
 
             $('.container').load( page + ' .container > div', function() {
-
                 $.getScript( "/../js/open_modal.js" );
                 if( $( '.button_nav.active' ).hasClass('events_button')) {
                     $.getScript( '/../js/event.js');
@@ -56,9 +52,6 @@ $('.button_nav').click(function(e){
                     $.getScript( '/../js/documents.js');
                     $.getScript( '/../js/filter_table.js');
                     $.getScript( '/../restfulizer.js');
-                   /*  $('.collapsible').click(function(event){        
-                        $(this).siblings().toggle();
-                    }); */
                 }
                 if( $( '.button_nav.active' ).hasClass('questionnaires_button')) {
                     $('.placeholder').show();
@@ -77,9 +70,6 @@ $('.button_nav').click(function(e){
                     $.getScript( '/../restfulizer.js');
                     $.getScript( '/../js/event.js');
                     $.getScript( '/../js/campaign.js');
-                  /*   $('.collapsible').click(function(event){        
-                        $(this).siblings().toggle();
-                    }); */
                 } 
                 if( $( '.button_nav.active' ).hasClass('benefits_button')) {
                     $.getScript( '/../js/benefit.js');
@@ -102,7 +92,6 @@ $('.button_nav').click(function(e){
                     $('.' + url_modul + '_button').click();
                    
                 }); 
-
             });
         }
         $( this).addClass('active');
@@ -110,7 +99,6 @@ $('.button_nav').click(function(e){
 
     if(body_width < 450) {
         $('.section_top_nav').removeClass('responsive');
-
     } else {
         $('.close_topnav').click();
     }
@@ -139,13 +127,11 @@ $('.close_topnav').click(function(){
     $('#myTopnav:not(".responsive")').css('width',0);
     $('.section_top_nav').css('width', 0);
 });
-var body_width = $('body').width();
 
 if(body_width > 768) {
     $("body").click(function(){
         $('.close_topnav').click();
     });
-    
     $(".logo_icon").click(function(event) {
         event.stopPropagation();
     });

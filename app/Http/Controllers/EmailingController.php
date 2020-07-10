@@ -234,4 +234,33 @@ class EmailingController extends Controller
 		
 		return redirect()->back()->withFlashMessage($message);
     }
+
+    public static function sendTo ($table, $method) 
+    {
+
+        $emailings = Emailing::get();
+        $send_to = array();
+        $departments = Department::get();
+        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+
+        if(isset($emailings)) {
+            foreach($emailings as $emailing) {
+                if($emailing->table['name'] == $table && $emailing->method == $method) {
+                    
+                    if($emailing->sent_to_dep) {
+                        foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
+                            array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
+                        }
+                    }
+                    if($emailing->sent_to_empl) {
+                        foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
+                            array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
+                        }
+                    }
+                }
+            }
+        }
+
+        return $send_to;
+    }
 }

@@ -16,6 +16,7 @@ use App\Models\DepartmentRole;
 use Centaur\Mail\CentaurWelcomeEmail;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use App\Http\Controllers\CompanyController; 
+use App\Http\Controllers\BasicAbsenceController; 
 
 class UserController extends Controller
 {
@@ -132,18 +133,28 @@ class UserController extends Controller
         $employee = new Employee();
         $employee->saveEmployee( $data_employee );
 
-        $result->setMessage("User {$request->get('email')} has been created.");
-        return $result->dispatch(route('users.index'));
-   
         if ($request->hasFile('fileToUpload')) {
             $image = $request->file('fileToUpload');
             $user_name = $request['last_name'] . '_' . $request['first_name'];
             if(isset($request['email'])) {
                 $user_name = explode('.',strstr($request['email'],'@',true));
-                $user_name = $user_name[1] . '_' . $user_name[0];
+                if(isset($user_name[1])) {
+                    $user_name = $user_name[1] . '_' . $user_name[0];
+                } else {
+                    $user_name = $user_name[0];
+                }         
+                
             }
-            
-            $path = 'storage/' . $user_name . '/profile_img/';
+
+            $path = 'storage/';
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $path = $path  . $user_name;
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $path =  $path . '/profile_img/';
             if (!file_exists($path)) {
                 mkdir($path);
             }
@@ -178,11 +189,44 @@ class UserController extends Controller
 		$empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
         
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
+        $image_employee = null;
+        $user_name = null;
+        $work = null;
+        $dep_roles = null;
+        $data_absence  = null;
+        $requests = null;
+        $yearsRequests = null;
+        $bolovanje = null;
+        $years = array();
 
-        return view('Centaur::users.show', ['user' => $user, 'departmentRoles' => $departmentRoles, 'permission_dep' => $permission_dep]);
+		if($empl) {
+            $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+
+            if($user->employee) {
+                $image_employee = DashboardController::profile_image($user->employee->id);
+                $user_name = DashboardController::user_name($user->employee->id);
+                $work = $user->employee->work;
+                    
+                if($work && $departmentRoles->where('department_id', $work->id)->first()) {
+                    $dep_roles = explode(  ',', $departmentRoles->where('department_id', $work->id)->first()->permissions);
+                }
+
+                $data_absence = array(
+                    'years_service'  => BasicAbsenceController::yearsServiceCompany( $user->employee ),  
+                    'all_servise'  	=> BasicAbsenceController::yearsServiceAll( $user->employee ), 
+                    'days_OG'  		=> BasicAbsenceController::daysThisYear( $user->employee ), 
+                    'razmjeranGO'  	=> BasicAbsenceController::razmjeranGO( $user->employee ),  //razmjeran go ova godina
+                    'zahtjevi' 		 => BasicAbsenceController::requestAllYear( $user->employee ), 
+                );
+                
+                $requests = BasicAbsenceController::zahtjevi($user->employee);
+                $yearsRequests = BasicAbsenceController::yearsRequests($user->employee);
+                $bolovanje =BasicAbsenceController::bolovanje($user->employee);
+                $years = BasicAbsenceController::yearsRequests($user->employee); // sve godine zahtjeva
+            }
+        }
+
+        return view('Centaur::users.show', ['user' => $user, 'departmentRoles' => $departmentRoles, 'permission_dep' => $permission_dep, 'image_employee' => $image_employee,'years' => $years, 'user_name' => $user_name, 'data_absence' => $data_absence, 'work' => $work, 'dep_roles' => $dep_roles,'requests' => $requests,'yearsRequests' => $yearsRequests,'bolovanje' => $bolovanje]);
     }
 
     /**
@@ -207,6 +251,7 @@ class UserController extends Controller
             ]);
         }
 
+        
         session()->flash('error', __('ctrl.invalid_user') );
         return redirect()->back();
     }
@@ -252,6 +297,44 @@ class UserController extends Controller
 
         // Update the user
         $user = $this->userRepository->update($user, $attributes);
+
+        if ($request->hasFile('fileToUpload')) {
+            $image = $request->file('fileToUpload');
+            $user_name = $request['last_name'] . '_' . $request['first_name'];
+            if(isset($request['email'])) {
+                $user_name = explode('.',strstr($request['email'],'@',true));
+                if(isset($user_name[1])) {
+                    $user_name = $user_name[1] . '_' . $user_name[0];
+                } else {
+                    $user_name = $user_name[0];
+                }         
+                
+            }
+
+            $path = 'storage/';
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $path = $path  . $user_name;
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $path =  $path . '/profile_img/';
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $docName = $request->file('fileToUpload')->getClientOriginalName();  //file name
+            
+            try {
+                $request->file('fileToUpload')->move($path, $docName);
+                DocumentController::createResizedImage($path . $docName, $path . pathinfo($docName)['filename'] . '_small.' . pathinfo($docName)['extension'], 200, 250);
+
+            /*     return redirect()->back()->with('success', __('ctrl.uploaded')); */
+  
+              } catch (\Throwable $th) {
+                return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
+              }
+        }
 
         // Update role assignments
         $roleIds = array_values($request->get('roles', []));

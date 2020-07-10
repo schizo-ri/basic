@@ -44,5 +44,7 @@ return [
     'retrieving_error' => 'Sorry, there was an error retrieving the data.',
     'max_user' => 'Maximum number of users used.',
     'call_duplico' => 'For more users, contact Duplico d.o.o.',  
+    'import_ok'	=> 'Data imported successfully',
+    'import_nok'	=> 'Data not imported, there is a problem',
     ];
 ?>

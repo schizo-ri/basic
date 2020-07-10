@@ -41,6 +41,10 @@ return [
 	'no_oib'     	 => 'Tvrtka nema unesen OIB broj ili broj nije nađen!',
 	'retrieving_error' => 'Nažalost, došlo je do pogreške prilikom dohvačanja podataka.',
 	'max_user' => 'Iskorišten je maximalan broj korisnika.',
-    'call_duplico' => 'Za više korisnika kontaktirajte Duplico d.o.o.',
+	'call_duplico' => 'Za više korisnika kontaktirajte Duplico d.o.o.',
+	'import_ok'	=> 'Podaci su uspješno uvezeni',
+	'import_nok'	=> 'Podaci su uspješno uvezeni',
+
+	
 ];
 ?>

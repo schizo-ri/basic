@@ -102,6 +102,7 @@ return [
 	'file'	=> 'Dokument',
 	'image' =>'Slika',
 	'add_document'	=> 'Dodaj dokument',
+	'upload'	=> 'Učitaj',
 	'upload_file'	=> 'Učitaj dokument',
 	'read_file'	=> 'Dokument',
 	'title'	=> 'Naslov',

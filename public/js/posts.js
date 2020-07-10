@@ -80,8 +80,8 @@ $('.form_post').on('submit',function(e){
         url : url,
         data : data,
         success:function(msg) {
-            $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
-            $( '.button_nav_img').load( location.origin + '/posts .button_nav_img .line_btn');
+            $('.all_post ').load( location.origin + '/posts .all_post .main_post');
+            $( '.posts_button .button_nav_img').load( location.origin + '/posts .posts_button .button_nav_img .line_btn');
             $( '.refresh.' + tab_id ).load( location.origin + '/posts .refresh.' + tab_id + ' .message',function(){
                
                 refreshHeight(tab_id);
@@ -131,7 +131,7 @@ function tablink_on_click() {
         $( this).find('.count_coments').remove();
     
         $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
-        $( '.button_nav_img').load( location.origin + '/posts .button_nav_img .line_btn');
+        $( '.posts_button .button_nav_img').load( location.origin + '/posts .posts_button .button_nav_img .line_btn');
         $( '.refresh.' + tab_id ).load( location.origin + '/posts .refresh.' + tab_id + ' .message',function(){
             if($('.tablink#post_id').find('.count_coments')) {
                 setPostAsRead(post_id);
@@ -219,7 +219,7 @@ function broadcastingPusher () {
         console.log(data.comment);
         if(employee_id == data.show_alert_to_employee) {
             $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
-            $( '.button_nav_img').load( location.origin + '/posts .button_nav_img .line_btn');
+            $( '.posts_button .button_nav_img').load( location.origin + '/posts .posts_button .button_nav_img .line_btn');
             $( '.refresh.' + tab_id ).load( location.origin + '/posts .refresh.' + tab_id + ' .message',function(){
                 refreshHeight(tab_id);
 

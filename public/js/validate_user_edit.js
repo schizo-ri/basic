@@ -52,6 +52,7 @@ if( roles.is(':checked')) {
 } else {
     validate2.push("block");
 }
+
 $('.roles').change(function(event){
     if( roles.is(':checked')) {
         validate2.push(true);

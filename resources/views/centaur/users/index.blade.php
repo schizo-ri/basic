@@ -12,6 +12,7 @@
 		</label>
 		<span class="users_number" hidden >{{ $users_number }}</span>
 		<span class="users_count" hidden >{{ count($users) }}</span>
+		
 		@if(Sentinel::getUser()->hasAccess(['users.create']))
 			<a class="btn-new create_user" href="{{ route('users.create') }}" rel="modal:open">
 				<i class="fas fa-plus"></i>
@@ -19,6 +20,22 @@
 		@endif	
 		<span class="change_view"></span>
 		<span class="change_view2"></span>
+		<span class="upload_file" title="Import"><i class="fas fa-upload" ></i></span>
+		<form class="upload_form" action="{{ action('UserController@import') }}" method="POST" enctype="multipart/form-data">
+			<div class="modal-header">
+				<h3 class="panel-title">@lang('basic.users') - Import</h3>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<input type="file" name="file" required />
+				</div>
+				{{ csrf_field() }}
+				<div class="form-group">
+					<input class="btn-submit" type="submit" value="{{ __('basic.upload')}} "/>
+				</div>  
+			</div>
+            @csrf
+        </form>
 	</div>
 </header>
 <main class="col-xs-12 col-sm-12 col-md-12 col-lg-12 users_main">
@@ -227,9 +244,7 @@
 	});	
 	$(function(){
 		$.getScript( '/../js/users.js');   
-		/* $('.collapsible').click(function(event){
-            $(this).siblings().toggle();
-        }); */
+		
 	});
 
 	$.getScript( '/../restfulizer.js');

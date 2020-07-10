@@ -201,13 +201,13 @@ Route::get('absence/confirmation_show', ['as' => 'confirmation_show', 'uses' => 
 
 // User edit 
 Route::get('user/edit_user/{id}', ['as' => 'user.edit', 'uses' => 'UserController@edit_user']);
+// Open slide show
+Route::get('users.slide_show/{id}', ['as' => 'slide_show', 'uses' => 'UserController@slide_show']);
+// Import users
+Route::post('import', 'UserController@import')->name('import'); 
 
 // Upload image 
 Route::get('upload_image', ['as' => 'upload', 'uses' => 'DocumentController@uploadImage']);
-
-
-// Open slide show
-Route::get('users.slide_show/{id}', ['as' => 'slide_show', 'uses' => 'UserController@slide_show']);
 
 use App\Models\Event;
 use App\Http\Resources\EventCollection;

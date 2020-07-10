@@ -13,7 +13,9 @@ $('.hide').click(function(){
     $( this ).siblings('.more').show();
     $( this ).hide();
 });
-
+$('.upload_file').click(function(){
+    $('.upload_form').modal();
+});
 $('.change_view').click(function(){
     $('.index_table_filter label #mySearchTbl').attr('id','mySearchElement');
     $('.index_table_filter label #mySearchElement').attr('onkeyup','mySearchElement()');

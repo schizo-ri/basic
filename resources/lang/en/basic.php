@@ -101,6 +101,7 @@ return [
 	'add_document'	=> 'Add document',
 	'file'		=> 'The file',
 	'image' 	=>'Image',
+	'upload'	=> 'Upload',
 	'upload_file'	=> 'Upload file',
 	'read_file'	=> 'Upload file',
 	'title'		=> 'Title',

@@ -45,7 +45,13 @@
 .clickable-row {
     cursor: pointer;
 }
-   
+span.upload_file {
+    float: right;
+    margin-left: 15px;
+}
+form.upload_form {
+   display: none;
+}  
 .posts_index .posts .all_post {
     box-shadow: none;
     padding: 0;
@@ -1712,7 +1718,7 @@ footer.ad_footer {
     font-size: 1rem;
 }
 
-.index_table_filter span.show_button {
+.index_table_filter span.show_button, span.upload_file {
     width: auto;
     height: auto;
     z-index: 2;
