@@ -434,10 +434,11 @@ class BasicAbsenceController extends Controller
 
 			$array_godine = array();
 			$array_godine['ukupnoPreostalo'] = 0;
+			
 			$array_godine['ukupnoGO'] = BasicAbsenceController::godisnjiGodina($user, $ova_godina);
 			$ukupno_dana_zahtjevi = 0;
 			$ukupno_dana_GO = 0;
-
+			$array_godine['years'] = array();
 			foreach ($years  as $year) {
 				$razmjerni_dani =  BasicAbsenceController::razmjeranGO_Godina($user, $year);  
 				if( isset($requestAllYear[ $year ] ) && ! empty($requestAllYear[ $year ]) ) {
@@ -451,7 +452,7 @@ class BasicAbsenceController extends Controller
 					$dani_zahtjeva = 0;
 					$ukupno_dana_zahtjevi = 0;
 				}
-				
+			
 				$array_godine[$year] = ["zahtjevi" => $zahtjevi];
 				$array_godine[$year] += ["razmjerniDani" => $razmjerni_dani ];
 				$array_godine[$year] += ["dani_zahtjeva" => $dani_zahtjeva];
@@ -460,9 +461,8 @@ class BasicAbsenceController extends Controller
 				$ukupno_dana_zahtjevi += $ukupno_dana_zahtjevi;
 
 				$array_godine['ukupnoPreostalo'] += $preostali_dani;
-				
+				array_push($array_godine['years'], $year);
 			}
-		
 			return $array_godine;
 		}
 
@@ -618,7 +618,6 @@ class BasicAbsenceController extends Controller
 			}
 			return $array_dani;
 		}
-
 
 		/** bolovanje za određen mjesec */
 		public static function bolovanje($user)
@@ -860,6 +859,19 @@ class BasicAbsenceController extends Controller
 
 		return $holidays;
 	}
+
+	public static function holidaysThisYear ( $year )
+	{
+		$holidays = BasicAbsenceController::holidays();
+		
+		$search_text = $year;
+
+		$holidaysThisYear = array_filter($holidays, function($el) use ($search_text) {
+				return ( strpos($el, $search_text) !== false );
+		});
+		return $holidaysThisYear;
+	}
+
 
 	public static function holidays_with_names () 
 	{

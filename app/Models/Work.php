@@ -34,6 +34,17 @@ class Work extends Model
 	}
 	
 	/*
+	* Returns the TravelLocco relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasMany
+	*/
+	
+	public function workers()
+	{
+		return $this->hasMany(static::$employeeModel,'work_id');
+	}
+
+	/*
 	* The Eloquent department model name
 	* 
 	* @var string

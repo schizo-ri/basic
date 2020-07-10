@@ -3,8 +3,10 @@
 @section('title',config('app.name'))
 @php
 	use App\Http\Controllers\PostController;
+	use App\Http\Controllers\AbsenceController;
 	
 	$thisYear = date('Y');
+	$count_requests =  AbsenceController::countRequest();
 @endphp
 @section('content')
 	@if (Sentinel::check())
@@ -49,30 +51,55 @@
 						<p class="col-4"><span class="salery_show">{{ number_format($employee->effective_cost, 2, ',', '.')}}  kn</span><span class="salery_hidden">- Kn</span>@lang('basic.hourly_rate')</p>
 					</div>
 					<div class="col-md-12 padd_0 float_left layout_button ">
-						<button class=""><a href="{{ route('absences.create', ['type' => 'GO']) }}" rel="modal:open">
+						<button class=""><a href="{{ route('absences.create') }}" rel="modal:open">
 							<span>
 								<span class="img beach"></span>
 								<p>@lang('absence.request_vacation')</p>
 							</span></a>
 						</button>
-						<button class="" ><a href="{{ route('absences.create', ['type' => 'BOL']) }}" rel="modal:open">
+						<button class="" ><a href="{{ route('tasks.index') }}" rel="modal:open">
 							<span>
-								<span class="img sick"></span>
-								<p>@lang('absence.sick_leave')</p>
+								<span class="img task"></span>
+								<p>@lang('calendar.tasks')</p>
 							</span></a>
 						</button>
 						@if(in_array('Locco vožnja', $moduli))  
-							<button class="" ><a href="{{ route('loccos.create') }}" rel="modal:open">
+							<button class="" ><a href="{!! $locco_active->first() ? route('loccos.edit', $locco_active->first()->id ) : route('loccos.create') !!}" rel="modal:open">
 								<span>
 									<span class="img car"></span>
-									<p>@lang('basic.add_locco')</p>
+										<p>{!! $locco_active->first()  ? __('basic.edit_locco') : __('basic.add_locco') !!}</p>
 								</span></a>
 							</button>
 						@endif
-						<button class="button_absence" ><a href="{{ route('absences.index') }}" >
-							<span>
-								<span class="img all_req"><p>@lang('absence.view_all_request')</p></span>
-							</span></a>
+						@if(in_array('Putni nalozi', $moduli))  
+							<button class="" ><a href="{{ route('travel_orders.show', $employee->id) }}" rel="modal:open">
+								<span>
+									<span class="img travel"></span>
+										<p>{{  __('basic.travel_orders') }}</p>
+								</span></a>
+							</button>
+						@endif
+						@if(in_array('Locco vožnja', $moduli))  
+							<button class="" ><a href="{{ route('fuels.create')}}" rel="modal:open">
+								<span>
+									<span class="img fuel"></span>
+										<p>{{  __('basic.fuel') }}</p>
+									</span>
+										
+								</span></a>
+							</button>
+						@endif
+						<button class="button_absence" >
+							<a href="{{ route('absences.index') }}" >
+								<span>
+									<span class="img all_req">
+										<p>@lang('absence.view_all_request')</p>
+										@if($count_requests >0)
+											<span class="count_request">{{ $count_requests }}</span>
+										@endif
+									</span>
+								</span>
+							</a>
 						</button>
 					</div>
 				</div>
@@ -139,7 +166,12 @@
 			<div class="all_post">
 				<div>
 					@if( in_array('Poruke',$moduli) && isset($posts) && count( $posts ) > 0)
-						<h2>@lang('basic.latest_messages') <a class="view_all" href="{{ route('posts.index') }}" >@lang('basic.view_all')</a></h2>
+						<h2>
+							@lang('basic.latest_messages')
+							@if(PostController::countComment_all() > 0)
+								<span class="count_coments">{{ PostController::countComment_all() }}</span>
+							@endif   
+							<a class="view_all" href="{{ route('posts.index') }}" >@lang('basic.view_all')</a></h2>
 						@foreach($posts as $post)
 							@php							
 								$post_comment = PostController::profile($post)['post_comment'];
@@ -157,7 +189,6 @@
 												@else
 													<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
 												@endif
-
 											</span>
 										@endif
 										<span class="post_send">									
@@ -205,7 +236,6 @@
 <script>
 	$( function () {
 		$.getScript( '/../js/event_click.js');
-		
 	});
 </script>
 @stop

@@ -1,7 +1,9 @@
 var form_sequence_height = $('.form_sequence').height();
 var header_campaign_height = $('.header_campaign').height();
 
-$('.main_campaign').height(form_sequence_height-header_campaign_height);
+if($('body').width() > 760) {
+    $('.main_campaign').height(form_sequence_height-header_campaign_height);
+}
 
 var url = $('form.form_sequence').attr('action');
 var form_data;

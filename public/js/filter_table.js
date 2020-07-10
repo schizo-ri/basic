@@ -5,6 +5,9 @@ function mySearchTable() {
     $("#index_table tbody tr").filter(function() {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
+    $("#index_table1 tbody tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
   });
 }
 

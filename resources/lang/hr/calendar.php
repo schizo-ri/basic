@@ -6,6 +6,7 @@ return [
     'events'        => 'Događaji',
     'event'         => 'Događaj',
     'task'         => 'Zadatak',
+    'tasks'         => 'Zadaci',
     'add_event'     => 'Dodaj događaj',
     'edit_event'    => 'Ispravi događaj',
     'to'		    => 'do',

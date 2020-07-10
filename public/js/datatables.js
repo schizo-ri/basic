@@ -2,11 +2,15 @@ $( function () {
 	var kolona = 0;
 	var sort = 'asc';
 
-	if ($('#table_id').hasClass('sort_1_asc')) {
+	if ($('#index_table').hasClass('sort_1_asc')) {
 		kolona = 1;
 		sort = 'asc';
 	}	
-
+	if ($('#index_table').hasClass('sort_1_desc')) {
+		kolona = 1;
+		sort = 'desc';
+	}	
+	
 	var table = $('table.display').DataTable( {
 		"language": {
 			"search": "",
@@ -49,14 +53,16 @@ $( function () {
                 orientation: 'landscape',
                 pageSize: 'A4',
 				exportOptions: {
-					columns: 'th:not(.not-export-column)'
+					columns: 'th:not(.not-export-column)',
+					rows: ':visible'
 				}
             },
 			{
 				extend: 'excelHtml5',
 				autoFilter: true,
 				exportOptions: {
-					columns: 'th:not(.not-export-column)'
+					columns: 'th:not(.not-export-column)',
+					rows: ':visible'
 				},
 				customize: function( xlsx ) {
 					var sheet = xlsx.xl.worksheets['sheet1.xml'];
@@ -66,6 +72,8 @@ $( function () {
 			}
 		]
 	});
+
+
 	if($(".index_table_filter .show_button").length == 0) {
 		$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 	}
@@ -73,4 +81,5 @@ $( function () {
 	$('.show_button').click(function () {
 		$('.index_page .dt-buttons').toggle();		
 	})
+	$('table.display').show();
 });

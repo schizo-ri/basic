@@ -16,7 +16,7 @@
 			<table id="index_table" class="display table table-hover">
 				<thead>
 					<tr>
-						<th>@lang('basic.car')</th>			
+						<th>@lang('basic.car')</th>
 						<th></th>			
 					</tr>				
 				</thead>
@@ -36,6 +36,8 @@
 </main>
 <script>
 	$(function(){
+		var prev_url = location.href;
+
 		$('a.open_locco').click(function(e) {
 			click_element = $(this);
 			$.getScript( '/../restfulizer.js');
@@ -43,6 +45,13 @@
 		//	console.log(url);
 		
 			$( '#admin_page' ).load( url, function( response, status, xhr ) {
+				$('.back_to_prev').click(function(){
+					if(url.includes("/loccos")) {
+						$('.admin_pages>li>a#loccos').click();
+					}
+					console.log("prev_url "+prev_url);
+					console.log("url_location "+url);
+				});
 				if ( status == "error" ) {
 					var msg = "Sorry but there was an error: ";
 					$( "#error" ).html( msg + xhr.status + " " + xhr.statusText );

@@ -16,6 +16,7 @@ use App\Models\DepartmentRole;
 use Centaur\Mail\CentaurWelcomeEmail;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use App\Http\Controllers\CompanyController; 
+use App\Http\Controllers\BasicAbsenceController; 
 
 class UserController extends Controller
 {
@@ -178,11 +179,44 @@ class UserController extends Controller
 		$empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
         
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
+        $image_employee = null;
+        $user_name = null;
+        $work = null;
+        $dep_roles = null;
+        $data_absence  = null;
+        $requests = null;
+        $yearsRequests = null;
+        $bolovanje = null;
+        $years = array();
 
-        return view('Centaur::users.show', ['user' => $user, 'departmentRoles' => $departmentRoles, 'permission_dep' => $permission_dep]);
+		if($empl) {
+            $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+
+            if($user->employee) {
+                $image_employee = DashboardController::profile_image($user->employee->id);
+                $user_name = DashboardController::user_name($user->employee->id);
+                $work = $user->employee->work;
+                    
+                if($work && $departmentRoles->where('department_id', $work->id)->first()) {
+                    $dep_roles = explode(  ',', $departmentRoles->where('department_id', $work->id)->first()->permissions);
+                }
+
+                $data_absence = array(
+                    'years_service'  => BasicAbsenceController::yearsServiceCompany( $user->employee ),  
+                    'all_servise'  	=> BasicAbsenceController::yearsServiceAll( $user->employee ), 
+                    'days_OG'  		=> BasicAbsenceController::daysThisYear( $user->employee ), 
+                    'razmjeranGO'  	=> BasicAbsenceController::razmjeranGO( $user->employee ),  //razmjeran go ova godina
+                    'zahtjevi' 		 => BasicAbsenceController::requestAllYear( $user->employee ), 
+                );
+                
+                $requests = BasicAbsenceController::zahtjevi($user->employee);
+                $yearsRequests = BasicAbsenceController::yearsRequests($user->employee);
+                $bolovanje =BasicAbsenceController::bolovanje($user->employee);
+                $years = BasicAbsenceController::yearsRequests($user->employee); // sve godine zahtjeva
+            }
+        }
+
+        return view('Centaur::users.show', ['user' => $user, 'departmentRoles' => $departmentRoles, 'permission_dep' => $permission_dep, 'image_employee' => $image_employee,'years' => $years, 'user_name' => $user_name, 'data_absence' => $data_absence, 'work' => $work, 'dep_roles' => $dep_roles,'requests' => $requests,'yearsRequests' => $yearsRequests,'bolovanje' => $bolovanje]);
     }
 
     /**

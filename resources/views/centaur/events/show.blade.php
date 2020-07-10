@@ -15,3 +15,6 @@
 		<i class="far fa-trash-alt"></i>
 	</a>
 </div>
+<script>
+	$.getScript( '/../restfulizer.js');
+</script>

@@ -46,7 +46,7 @@ return [
 	'work_history' 	=> 'Povijest rada',
 	'sick_leave' 	=> 'Bolovanje',
 	'new_request' 	=> 'Novi zahtjev',
-	'request_vacation' => 'Zahtjev za godišnji odmor',
+	'request_vacation' => 'Zahtjev za izostanak',
 	'request_overtimes' => 'Zahtjev za prekovremeni rad',
 	'view_all_request' => 'Vidi sve zahtjeve',
 	'request_approved' => 'Zahtjev je već odobren.',

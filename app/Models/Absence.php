@@ -10,7 +10,7 @@ class Absence extends Model
 	*
 	* @var array
 	*/
-    protected $fillable = ['type','employee_id','start_date','end_date','start_time','end_time','comment','approve','approve_reason','approved_id','approved_date'];
+    protected $fillable = ['type','employee_id','start_date','end_date','start_time','end_time','comment','approve','approve_reason','approved_id','approved_date','decree'];
 	
 	/*
 	* The Eloquent employee model name

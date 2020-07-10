@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\NoticeRequest;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EmailingController;
 use App\Http\Controllers\Controller;
 use App\Models\Notice;
 use App\Models\NoticeStatistic;
@@ -159,6 +160,10 @@ class NoticeController extends Controller
                             $prima = array();
                             $employees = Employee::where('id','<>',1)->where('checkout', null)->get();
                            
+                            $send_to = EmailingController::sendTo('notices','create');
+                            dd( $send_to );
+
+
                             foreach($request['to_department'] as $department_id) {
                                 $department = Department::where('id', $department_id)->first();
                                
@@ -204,8 +209,11 @@ class NoticeController extends Controller
            /* ************************* SEND MAIL *********************************** */
      
             if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                $prima = array();
+              /*   $prima = array(); */
                 $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+
+                $prima = EmailingController::sendTo('notices','create');
+             
 
                 foreach($request['to_department'] as $department_id) {
                     $department = Department::where('id', $department_id)->first();
@@ -268,23 +276,22 @@ class NoticeController extends Controller
         $employee_id =  $employee->id;
 
         $permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
-
-        if(! NoticeStatistic::where('notice_id', $notice->id)->where('employee_id',  $employee_id)->first() ) {
-            $data = array(
-                'employee_id'   => $employee_id,
-                'notice_id'     => $notice->id,
-                'status'  		=> 1
-            );
-            
-            $statistic = new NoticeStatistic();
-            $statistic->saveStatistic($data);
-        }
         
-        $notice_statistic = NoticeStatistic::where('notice_id', $notice->id)->get();
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
-        $count_statistic = count( $notice_statistic);
-        $count_employees = count($employees);
-        $statistic = $count_statistic /  $count_employees *100 ;
+            if( $notice  && ! NoticeStatistic::where('notice_id', $notice->id)->where('employee_id',  $employee_id)->first() ) {
+                $data = array(
+                    'employee_id'   => $employee_id,
+                    'notice_id'     => $notice->id,
+                    'status'  		=> 1
+                );
+                
+                $statistic = new NoticeStatistic();
+                $statistic->saveStatistic($data);
+            }
+            $notice_statistic = NoticeStatistic::where('notice_id', $notice->id)->get();
+            $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+            $count_statistic = count( $notice_statistic);
+            $count_employees = count($employees);
+            $statistic = $count_statistic /  $count_employees *100 ;
 
         return view('Centaur::notices.show', ['notice' => $notice,'permission_dep' => $permission_dep, 'statistic' => $statistic]);
     }

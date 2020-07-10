@@ -47,11 +47,25 @@ ul.admin_pages li >a.active_admin {
     color: #0A2A79;
 }
 
-ul.admin_pages li >span {
+ul.admin_pages li >span:not(.arrow_down) {
     width: 62px;
     height: 61px;
     margin-right: 42px;
     display: inline-block;
+}
+ul.admin_pages li >span.arrow_down {
+    margin-left: 30px;
+    line-height: 45px;
+}
+#admin_page .second_view {
+    overflow: auto;
+    height: 100%;
+}
+.car_links {
+    display: none;
+}
+.car_links .admin_link {
+    padding-left: 20px;
 }
 ul.admin_pages li >span.image_settings {
     background-color: #ebebeb;

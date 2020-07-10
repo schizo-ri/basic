@@ -7,7 +7,7 @@ return [
 	'in_the_workplace'			=> 'na radnom mjestu ',
 	'email_send'				=> 'E-mail je poslan',
 	'new_article'				=> 'Novi članak',
-	'new_absence'				=> 'Zahtjev za izostanak',
+	'new_absence'				=> 'Zahtjev za ',
 	'new_article_publish'		=> 'Na portalu je objavljen novi članak edukacije',
 	'new_questinnaire_publish'	=> 'Na portalu je objavljena nova Anketa ',
 	'to_change_password'		=> 'Da biste promijenili lozinku',

@@ -32,3 +32,8 @@ Artisan::command('notice', function () {
 Artisan::command('email:campaign', function () {
     $this->comment(campaign::quote());
 })->describe('Display an campaign quote');
+
+
+Artisan::command('check_out', function () {
+    $this->comment(CheckOut::quote());
+})->describe('Display an workrecord quote');

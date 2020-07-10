@@ -72,7 +72,6 @@
 							
 							</article>
 						@endforeach
-						
 					@else 
 						<div class="placeholder">
 							<img class="" src="{{ URL::asset('icons/placeholder_noticeadd.png') }}" alt="Placeholder image" />

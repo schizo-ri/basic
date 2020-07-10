@@ -1,13 +1,15 @@
 <header class="page-header">
 	<div class="index_table_filter">
+		<span class="back_to_prev"><span class="curve_arrow_left_grey"></span></span>
 		<label>
 			<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 		</label>
-		<!-- @if(Sentinel::getUser()->hasAccess(['loccos.create']) || in_array('loccos.create', $permission_dep))
+		 @if(Sentinel::getUser()->hasAccess(['loccos.create']) || in_array('loccos.create', $permission_dep))
 			<a class="btn-new" href="{{ route('loccos.create', ['car_id' => $car_id]) }}" rel="modal:open">
 				<i class="fas fa-plus"></i>
 			</a>
-		@endif -->
+		@endif 
+		
 	</div>
 </header>
 <main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -37,10 +39,10 @@
 							<td>{{ $locco->start_km }}</td>
 							<td>{{ $locco->end_km }}</td>
 							<td>{{ $locco->distance }}</td>
-							<td>{{ $locco->comment }}</td>
+							<td>{{ $locco->comment }} </td>
 							<td>
 								<!-- <button class="collapsible option_dots float_r"></button> -->
-								@if( Sentinel::getUser()->hasAccess(['loccos.delete']) || in_array('loccos.delete', $permission_dep))
+								@if( ! $locco->travel && (Sentinel::getUser()->hasAccess(['loccos.delete']) || in_array('loccos.delete', $permission_dep))  )
 									<a href="{{ route('loccos.destroy', $locco->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
 										<i class="far fa-trash-alt"></i>
 									</a>

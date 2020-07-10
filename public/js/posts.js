@@ -57,62 +57,68 @@ $('.post_sent .link_back').click(function () {
 
 // on submit ajax store
 $('.form_post').on('submit',function(e){
-
     e.preventDefault();
-    form = $(this);
-    data = form.serialize();
-    url = '/comment/store';
-    post_id = $(this).find('input[name=post_id]').val();
-    content = $(this).find('input[name=content]').val();
-    tab_id = '_' + post_id;
-   
-    $('.post-content').val('');
-    $('.refresh.'+tab_id).append('<b><div class="message"><div class="right"><p class="comment_empl"><small>sada</small></p><div class="content"><p class="comment_content" >'+content+'</p></div></div></div><b>');
-    refreshHeight(tab_id);
+    
+    if($('.post-content').val() == '') {
+        return false;
+    } else {
+        form = $(this);
+        data = form.serialize();
+        url = '/comment/store';
+        post_id = $(this).find('input[name=post_id]').val();
+        content = $(this).find('input[name=content]').val();
+        tab_id = '_' + post_id;
+        
+        $('.post-content').val('');
+        $('.refresh.'+tab_id).append('<b><div class="message"><div class="right"><p class="comment_empl"><small>sada</small></p><div class="content"><p class="comment_content" >'+content+'</p></div></div></div><b>');
+        refreshHeight(tab_id);
+        
+        
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    $.ajax({
-        type : 'post',
-        url : url,
-        data : data,
-        success:function(msg) {
-            $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
-            $( '.button_nav_img').load( location.origin + '/posts .button_nav_img .line_btn');
-            $( '.refresh.' + tab_id ).load( location.origin + '/posts .refresh.' + tab_id + ' .message',function(){
-               
-                refreshHeight(tab_id);
-                tablink_on_click();
-
-                if($('.tablink#post_id').find('.count_coments')) {
-                    setPostAsRead(post_id);
-                } 
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type : 'post',
+            url : url,
+            data : data,
+            success:function(msg) {
+                $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
+                $( '.posts_button .button_nav_img').load( location.origin + '/posts .posts_button .button_nav_img .line_btn');
+                $( '.refresh.' + tab_id ).load( location.origin + '/posts .refresh.' + tab_id + ' .message',function(){
                 
-            });   
-        },
-        error: function(jqXhr, json, errorThrown) {
-            var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
-                                'message':  jqXhr.responseJSON.message,
-                                'file':  jqXhr.responseJSON.file,
-                                'line':  jqXhr.responseJSON.line };
+                    refreshHeight(tab_id);
+                    tablink_on_click();
 
-            $.ajax({
-                url: 'errorMessage',
-                type: "get",
-                data: data_to_send,
-                success: function( response ) {
-                    $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
-                }, 
-                error: function(jqXhr, json, errorThrown) {
-                    console.log(jqXhr.responseJSON); 
+                    if($('.tablink#post_id').find('.count_coments')) {
+                        setPostAsRead(post_id);
+                    } 
                     
-                }
-            });
-        }
-    })
+                });   
+            },
+            error: function(jqXhr, json, errorThrown) {
+                var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                    'message':  jqXhr.responseJSON.message,
+                                    'file':  jqXhr.responseJSON.file,
+                                    'line':  jqXhr.responseJSON.line };
+
+                $.ajax({
+                    url: 'errorMessage',
+                    type: "get",
+                    data: data_to_send,
+                    success: function( response ) {
+                        $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+                    }, 
+                    error: function(jqXhr, json, errorThrown) {
+                        console.log(jqXhr.responseJSON); 
+                        
+                    }
+                });
+            }
+        })
+    }
 });
 
 function tablink_on_click() {
@@ -131,7 +137,7 @@ function tablink_on_click() {
         $( this).find('.count_coments').remove();
     
         $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
-        $( '.button_nav_img').load( location.origin + '/posts .button_nav_img .line_btn');
+        $( '.posts_button .button_nav_img').load( location.origin + '/posts .posts_button .button_nav_img .line_btn');
         $( '.refresh.' + tab_id ).load( location.origin + '/posts .refresh.' + tab_id + ' .message',function(){
             if($('.tablink#post_id').find('.count_coments')) {
                 setPostAsRead(post_id);
@@ -219,14 +225,13 @@ function broadcastingPusher () {
         console.log(data.comment);
         if(employee_id == data.show_alert_to_employee) {
             $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
-            $( '.button_nav_img').load( location.origin + '/posts .button_nav_img .line_btn');
+            $( '.posts_button .button_nav_img').load( location.origin + '/posts .posts_button .button_nav_img .line_btn');
             $( '.refresh.' + tab_id ).load( location.origin + '/posts .refresh.' + tab_id + ' .message',function(){
                 refreshHeight(tab_id);
 
                 if($('.tablink#post_id').find('.count_coments')) {
                     setPostAsRead(post_id);
                 } 
-            
             });   
         }
     }); 

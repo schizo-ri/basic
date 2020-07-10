@@ -25,6 +25,7 @@
 						<th>@lang('basic.current_km')</th>
 						<th>@lang('basic.department')</th> 
 						<th>@lang('basic.employee')</th> 
+						<th>@lang('basic.private_car')</th> 
 						<th class="not-export-column">@lang('basic.options')</th>
 				</thead>
 				<tbody>
@@ -39,6 +40,7 @@
 							<td>{{ $car->current_km }}</td>
 							<td>{{ $car->department['name'] }}</td>
 							<td>{!! $car->employee ? $car->employee->user['first_name'] . ' ' . $car->employee->user['last_name'] : '' !!}</td>					
+							<td>{!! $car->private_car == 1 ? 'privatno' : '' !!}</td>					
 							<td class="center">
 								<!-- <button class="collapsible option_dots float_r"></button> -->
 								
@@ -63,12 +65,12 @@
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['fuels.view']) || in_array('fuels.view', $permission_dep))
-									<a href="{{ route('fuels.index', [ 'car_id' => $car->id]) }}" class="open_car_modal btn-edit" title="{{ __('basic.fuel')}}" rel="modal:open">
+									<a href="{{ route('fuels.show', [ 'car_id' => $car->id]) }}" class="open_car_modal btn-edit" title="{{ __('basic.fuel')}}" rel="modal:open">
 										<i class="fas fa-list"></i>
 									</a>
 								@endif
 								@if(Sentinel::getUser()->hasAccess(['vehical_services.view']) || in_array('vehical_services.view', $permission_dep))
-									<a href="{{ route('vehical_services.index', [ 'car_id' => $car->id]) }}" class="open_car_modal btn-edit" title="{{ __('basic.vehical_services')}}" rel="modal:open">
+									<a href="{{ route('vehical_services.show', [ 'car_id' => $car->id]) }}" class="open_car_modal btn-edit" title="{{ __('basic.vehical_services')}}" rel="modal:open">
 										<i class="fas fa-list"></i>
 									</a>
 								@endif

@@ -6,6 +6,7 @@ var request_send;
 var status_requests;
 var all_requests;
 var done;
+var saved;
 
 if(locale == 'en') {
     validate_text = "Required field";
@@ -16,6 +17,13 @@ if(locale == 'en') {
     status_requests = "To see you request status and see all request visit All requests page";
     all_requests = "All requests";
     done = "Done";
+    validate_name = "Required name entry";
+    validate_lastname = "Required lastname entry ";
+    validate_email = "Required e-mail entry";
+    validate_password = "Required password entry";
+    validate_passwordconf = "Password confirmation required";
+    validate_password_lenght = "Minimum of 6 characters is required";
+    validate_role = "Required role assignment";   
 } else {
     validate_text = "Obavezno polje";
     email_unique = "E-mail mora biti jedinstven";
@@ -25,6 +33,13 @@ if(locale == 'en') {
     status_requests = "Da biste vidjeli status zahtjeva i pogledali sve zahtjeve posjetite Svi zahtjevi stranicu";
     all_requests = "Svi zahtjevi";
     done = "Gotovo";
+    validate_name = "Obavezan unos imena";
+    validate_lastname = "Obavezan unos prezimena";
+    validate_email = "Obavezan unos emaila";
+    validate_password = "Obavezan unos lozinke";
+    validate_passwordconf = "Obavezna potvrda lozinke";
+    validate_password_lenght = "Obavezan unos minimalno 6 znaka";
+    validate_role = "Obavezna dodjela uloge";
 }
 
 $('.remove').click(function(){
@@ -47,6 +62,7 @@ $('.btn-submit').click(function(event){
     console.log("url " + url);
     console.log("url_load " +url_load);
     console.log("pathname " +pathname);
+    console.log("page href " + $(page).attr('href'));
 
     $( "textarea" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
@@ -75,7 +91,6 @@ $('.btn-submit').click(function(event){
             }
         }      
     });
-
     $( "select" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val() == null || $(this).val() == '' || $(this).val() == '') {
@@ -89,7 +104,6 @@ $('.btn-submit').click(function(event){
             }
         }
     });
-    
     if (tinyMCE.activeEditor) {
         if(tinyMCE.activeEditor.getContent().length == 0) {
             if( ! $('#mytextarea').parent().find('.modal_form_group_danger').length) {
@@ -141,22 +155,33 @@ $('.btn-submit').click(function(event){
                     $('.modal-body').load(url + " .modal-body table" );
                     $.getScript( '/../restfulizer.js');
                 } else if (url_load.includes("/admin_panel")) {
-                    $('tbody').load($(page).attr('href') + " tbody>tr",function(){
-                        $.getScript( '/../restfulizer.js');
-                    });
+                    if(url.includes("/work_records")) {
+                        $('tbody').load($(page).attr('href') + " tbody>tr:not(.second_view)",function(){
+                            $.getScript( '/../restfulizer.js');
+                        });
+                    } else {
+                        $('tbody').load($(page).attr('href') + " tbody>tr:not(.second_view tbody>tr)",function(){
+                            $.getScript( '/../restfulizer.js');
+                        });
+                    }
                 } else if (pathname.includes("/edit_user")) {
                     location.reload();
+                } else if (url.includes("/loccos") && pathname == '/dashboard' ) {
+                    $('.layout_button').load(url_load + " .layout_button button" ); 
+
                 } else if (url.includes("/events") && pathname == '/dashboard' ) {
                     $('.all_agenda').load(url + " .all_agenda .agenda");
                 } else {
-                   
                     $('.index_main').load(url + " .index_main>section",function(){
                         if(url.includes("/absences")) {
                             $('#index_table_filter').show();
                             $('#index_table_filter').prepend('<a class="add_new" href="' + location.origin+'/absences/create' +'" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>Novi zahtjev</a>');
                             $('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
                             $.getScript( '/../restfulizer.js');
+                        } else if(url.includes("/employees")) {
+                            $.getScript( '/../js/users.js');
                         }
+                        
                     });
                 }
                 if(url.includes("/absences")) {
@@ -166,7 +191,7 @@ $('.btn-submit').click(function(event){
                 }
             }, 
             error: function(jqXhr, json, errorThrown) {
-                
+                console.log(jqXhr.responseJSON);
                 var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
                                     'message':  jqXhr.responseJSON.message,
                                     'file':  jqXhr.responseJSON.file,
@@ -202,15 +227,20 @@ $('.btn-next').click(function(event){
     l_name = $("#last_name");
     email = $("#email");
     file = $("#file");        
-   var validate2 = [];
+    var validate2 = [];
     //console.log(l_name.val());
+    console.log( f_name);
+    console.log(l_name);
+    console.log( email);
+    console.log(file);
+    console.log(validate2);
     if(! f_name.val()) {
         if( f_name.parent().find('.validate').length  == 0) {
             f_name.parent().append(' <p class="validate">' + validate_name + '</p>');               
         }
         validate2.push("block");
     } else {
-        f_name.parent().find('.validate').text("");  
+        f_name.parent().find('.validate').text("");
         validate2.push(true);
         if(! l_name.val()) {
             if( l_name.parent().find('.validate').length  == 0) {
@@ -222,7 +252,7 @@ $('.btn-next').click(function(event){
             validate2.push(true);
             if(! email.val()) {
                 if( email.parent().find('.validate').length  == 0) {
-                    email.parent().append(' <p class="validate">' + valiate_email + '</p>');
+                    email.parent().append(' <p class="validate">' + validate_email + '</p>');
                 }
                 validate2.push("block");
             } else {
@@ -246,7 +276,6 @@ $('.btn-next').click(function(event){
             $('.mark2').css('background','#1594F0');
         }
     }
-
 });
 
 $('.btn-back').click(function(){

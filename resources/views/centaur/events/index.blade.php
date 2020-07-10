@@ -69,18 +69,25 @@
 					<span class="on_vacation col-4"><span class="green"></span>@lang('basic.on_vacation')<span>{{ $count_days['dani_odmor'] }}</span></span>
 				</div>
 				<div class="col-4 float_left filtercontainer" >
-					<select class="change_view_calendar">
+					<select class="change_view_calendar col-4">
 						<option value="month" selected>@lang('basic.view_monthly')</option>
 						<option value="day">@lang('basic.view_daily')</option>
 						<option value="week">@lang('basic.view_weekly')</option>
 						<option value="list" >@lang('basic.view_list')</option>
 					</select>
-					<select class="change_employee">
-						<option value="" selected></option>
+					<select class="change_employee col-4">
+						<option value="" selected>{{ __('basic.view_all')}} </option>
 						@foreach ($employees as $employee)
 							<option value="empl_{{ $employee->id }}">{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}</option>
 						@endforeach
 					</select>
+					<select class="change_car col-4">
+						<option value="" selected>{{ __('basic.view_all') }}</option>
+						@foreach ($cars as $car)
+							<option value="{{ $car->registration }}">{{ $car->registration }}</option>
+						@endforeach
+					</select>
+					<button class="show_loccos col-2"><i class="fas fa-car"></i></button>
 				</div>
 			</header>
 			<main class="main_calendar main_calendar_day" >
@@ -88,12 +95,12 @@
 					@if(count($hours_array) > 0)
 						@foreach($hours_array as $hour)
 							<div class="hour_in_day">
-								<a href="{{ route('events.create', ['time1' => $hour, 'date' => $selected['god_select'] . '-' .  $selected['mj_select'] . '-' . $selected['dan_select'] ]) }}" title="{{ __('calendar.add_event')}}" rel="modal:open" ><span class="hour_val">{{ $hour}}</span></a>
+								<a href="{{ route('events.create', ['time1' => $hour, 'date' => $selected['god_select'] . '-' .  $selected['mj_select'] . '-' . $selected['dan_select'] ]) }}" title="{{ __('calendar.add_event')}}" rel="modal:open" ><span class="hour_val {!! $hour == '08:00' ? 'position_8' : '' !!} ">{{ $hour}}</span></a>
 								@if(isset($dan))
 									<div>
 										@if( isset($events_day))
 											@foreach($events_day as $event)
-												@if (strstr($event->time1,':',true) == strstr($hour,':',true) || 
+												@if ( date('Y-m-d',strtotime($event->date)) == strval($selected['god_select']) .'-'. strval($selected['mj_select']). '-' .strval($selected['dan_select']) && strstr($event->time1,':',true) == strstr($hour,':',true) || 
 													(intval(strstr($event->time1,':',true)) < intval(strstr($hour,':',true) ) && intval(strstr($event->time2,':',true)) > intval(strstr($hour,':',true)) ))
 													<div class="show_event empl_{{ $event->employee_id }} col-xs-12 col-sm-6 col-md-4 col-lg-3 " >														
 														<div class="event blue">
@@ -157,9 +164,18 @@
 											@endif
 											@if($data['name'] == 'holiday')
 												@if(date("Y-m-d",strtotime($data['date'])) == date("Y-m-d",strtotime($dan)) && $hour == "08:00" )
-													<div class="show_event col-xs-12 col-sm-6 col-md-4 col-lg-3 " >
+													<div class="show_event show_holiday col-xs-12 col-sm-6 col-md-4 col-lg-3 " >
 														<div class=" ">
 															{{ $data['title'] }}
+														</div>
+													</div>
+												@endif
+											@endif
+											@if($data['name'] == 'locco')
+												@if(date("Y-m-d",strtotime($data['date'])) == date("Y-m-d",strtotime($dan)) && $hour == date("H:i",strtotime($data['date'])) )
+													<div class="show_locco col-xs-12 col-sm-6 col-md-4 col-lg-3 " >
+														<div class=" ">
+															{{  $data['reg'] . ' ' .$data['title'] . ' ' . $data['employee']  }}
 														</div>
 													</div>
 												@endif
@@ -272,6 +288,15 @@
 														</div>
 													@endif
 												@endif
+												@if($data['name'] == 'locco')
+													@if( date("Y-m-d",strtotime($data['date'])) == date_format($next_date, 'Y-m-d') )
+														<div class="show_locco col-xs-12">
+															<div class="locco">
+																<p>{{  $data['reg'] . ' ' .$data['title'] . ' ' . $data['employee']  }}</p>
+															</div>
+														</div>
+													@endif
+												@endif
 											@endforeach
 										</td>
 									@endfor
@@ -347,8 +372,8 @@
 					</thead>
 					<tbody class="col-12">
 						@foreach($hours_array as $hour)
-							<tr class="col-12">
-								<td>{{ $hour }}</td>
+							<tr class="col-12 {!! $hour == '08:00' ? 'position_8' : '' !!}">
+								<td >{{ $hour }}</td>
 								@for ($i = 0; $i < 7; $i++)
 									@php
 										$today = new DateTime($dan); //2020-03-31
@@ -417,10 +442,19 @@
 												@endif
 											@endif
 											@if($data['name'] == 'holiday')
-												@if(date("Y-m-d",strtotime($data['date'])) == date("Y-m-d",strtotime($dan)) && strstr($hour,':',true) == '08')
-													<div class="show_event col-12" >
+												@if(date("Y-m-d",strtotime($data['date'])) == date_format($date1, 'Y-m-d') && strstr($hour,':',true) == '08')
+													<div class="show_event show_holiday col-12" >
 														<div class=" ">
 															{{ $data['title'] }}
+														</div>
+													</div>
+												@endif
+											@endif
+											@if($data['name'] == 'locco')
+												@if(date("Y-m-d",strtotime($data['date'])) ==  date_format($date1, 'Y-m-d') && $hour == date("H:i",strtotime($data['date'])) )		
+													<div class="show_locco col-12 " >
+														<div class=" ">
+															{{  $data['reg'] . ' ' .$data['title'] . ' ' . $data['employee']  }}
 														</div>
 													</div>
 												@endif

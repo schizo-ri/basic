@@ -157,7 +157,7 @@ ul.nav_ul.float_right li {
 	margin-left: 12px;
 	line-height: 32px;
 	text-align: center;
-	display: inline-block;
+	display: flex;
 }
 
 ul.nav_ul.float_right {
@@ -602,7 +602,9 @@ ul.nav_ul.float_right li img {
 .danger {
 	color: red !important;
 }
-
+.btn-finish {
+	color:green;
+}
 input.staz {
     width: 50px;
     height: 34px;
@@ -917,7 +919,18 @@ span.img.car {
 	background: url('../icons/car.png') no-repeat;
 	background-size:  65px 65px;
 }
-
+span.img.task {
+	background: url('../icons/task.png') no-repeat;
+	background-size:  65px 65px;
+}
+span.img.travel {
+	background: url('../icons/suitcase.png') no-repeat;
+	background-size:  65px 65px;
+}
+span.img.fuel {
+	background: url('../icons/fuel-pump.png') no-repeat;
+	background-size:  65px 65px;
+}
 span.img-success {
 	background: url('../icons/success.png') no-repeat;
 	width: 131px;
@@ -1511,6 +1524,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	.nav_top img {
 		max-height: 40px;
+		max-width: 30%;
 	}
 	.container .calendar>div {
 		height: auto;
@@ -1618,9 +1632,12 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	.header_nav .section_top_nav.responsive {
 		display: block;
-		background: none;
-		position: sticky;
-		top: 0;
+		background: white;
+		position: fixed;
+		top: 50px;
+		bottom: 0;
+		overflow: hidden;
+		z-index: 1;
 	}
 	.section_top_nav.responsive .close_topnav {
 		display: none;
@@ -2000,4 +2017,22 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 }
 .col-offset-2 {
 	margin-left: 16.6666666667%;
+}
+.evidention_check {
+	color: #98acdf;
+}
+.evidention_check .checkout, .evidention_check .entry {
+	height: 100%;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    align-items: center;
+}
+
+.evidention_check .entry {
+	color: green;
+}
+
+.evidention_check .checkout {
+	color: red;
 }

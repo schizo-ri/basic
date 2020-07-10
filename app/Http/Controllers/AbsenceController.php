@@ -124,9 +124,18 @@ class AbsenceController extends BasicAbsenceController
 	   $departments = Department::get();
 	   $employees = Employee::where('checkout',null)->get();
 
+	   if(isset($request['decree'])) {
+		   if ($request['decree'] == 1) {
+				$decree = 1;
+		  	} else {
+				$decree = 0;
+		   }
+		   
+	   } else {
+			$decree = 0;
+	   }
 	   if(is_array($request['employee_id'])  && count($request['employee_id']) > 0) {
-		
-		   foreach($request['employee_id'] as $employee_id){
+		   	foreach($request['employee_id'] as $employee_id){
 				$data = array(
 					'type'  			=> $absenceType,
 					'employee_id'  		=> $employee_id,
@@ -135,14 +144,40 @@ class AbsenceController extends BasicAbsenceController
 					'start_time'  		=> $request['start_time'],
 					'end_time'  		=> $request['end_time'],
 					'comment'  			=> $request['comment'],
+					'decree'  			=> $decree,
 				);
-
+				if(isset($request['decree']) && $request['decree'] == 1) {
+					$data += ['approve'=>1];
+					$data += ['approved_date'=>date('Y-m-d')];
+					$data += ['approved_id'=>Sentinel::getUser()->employee['id']];
+				}
 				$absence = new Absence();
 				$absence->saveAbsence($data);
 
 				if($request['email'] == 'DA') {
 					/* mail obavijest o novoj poruci */
 		
+					if(isset($request['decree']) && $request['decree'] == 1 ) {
+						array_push($send_to, $absence->employee->email );
+
+						if(isset($emailings)) {
+							foreach($emailings as $emailing) {
+								if($emailing->table['name'] == 'absences' && $emailing->method == 'confirm') {
+									if($emailing->sent_to_dep) {
+										foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
+											array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
+										}
+									}
+									if($emailing->sent_to_empl) {
+										foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
+											array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
+										}
+									}
+								}
+							}
+						}
+					} 
+
 					if(isset($emailings)) {
 						foreach($emailings as $emailing) {
 							if($emailing->table['name'] == 'absences' && $emailing->method == 'create') {
@@ -159,7 +194,7 @@ class AbsenceController extends BasicAbsenceController
 							}
 						}
 					}
-		
+					
 					foreach(array_unique($send_to) as $send_to_mail) {
 						if( $send_to_mail != null & $send_to_mail != '' )
 						Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
@@ -175,7 +210,13 @@ class AbsenceController extends BasicAbsenceController
 				'start_time'  		=> $request['start_time'],
 				'end_time'  		=> $request['end_time'],
 				'comment'  			=> $request['comment'],
+				'decree'  			=> $decree,
 			);
+			if(isset($request['decree']) && $request['decree'] == 1) {
+				$data += ['approve'=>1];
+				$data += ['approved_date'=>date('Y-m-d')];
+				$data += ['approved_id'=>Sentinel::getUser()->employee['id']];
+			}
 			$absence = new Absence();
 			$absence->saveAbsence($data);
 
@@ -265,6 +306,16 @@ class AbsenceController extends BasicAbsenceController
     {
         $absence = Absence::find($id);
 		$absenceType = AbsenceType::where('mark',$request['type'])->first()->id;
+		if(isset($request['decree'])) {
+			if ($request['decree'] == 1) {
+				 $decree = 1;
+			   } else {
+				 $decree = 0;
+			}
+			
+		} else {
+			 $decree = 0;
+		}
 		
 		$data = array(
 			'type'  			=> $absenceType,
@@ -274,8 +325,13 @@ class AbsenceController extends BasicAbsenceController
 			'start_time'  		=> $request['start_time'],
 			'end_time'  		=> $request['end_time'],
 			'comment'  			=> $request['comment'],
+			'decree'  			=> $decree,
 		);
-		
+		if(isset($request['decree']) && $request['decree'] == 1) {
+			$data += ['approve'=>1];
+			$data += ['approved_date'=>date('Y-m-d')];
+			$data += ['approved_id'=>Sentinel::getUser()->employee['id']];
+		}
 		$absence->updateAbsence($data);
 
 		if($request['email'] == 'DA') {
@@ -348,39 +404,39 @@ class AbsenceController extends BasicAbsenceController
 		);
 				
 		$absence->updateAbsence($data);
-		
-		if($request['email'] == 1 ){ 
-			/* mail obavijest o novoj poruci */
-			$emailings = Emailing::get();
-			$send_to = array();
-			$departments = Department::get();
-			$employees = Employee::where('checkout',null)->get();
 
-			$employee_mail = $absence->employee->email;
-			array_push($send_to, $employee_mail ); // mail zaposlenika
+		/* mail obavijest o novoj poruci */
+		$emailings = Emailing::get();
+		$send_to = array('jjuras72@gmail.com');
 
-			if(isset($emailings)) {
-				foreach($emailings as $emailing) {
-					if($emailing->table['name'] == 'absences' && $emailing->method == 'confirm') {
-						if($emailing->sent_to_dep) {
-							foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
-								array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
-							}
+		$departments = Department::get();
+		$employees = Employee::where('checkout',null)->get();
+
+		$employee_mail = $absence->employee->email;
+		array_push($send_to, $employee_mail ); // mail zaposlenika
+
+		if(isset($emailings)) {
+			foreach($emailings as $emailing) {
+				if($emailing->table['name'] == 'absences' && $emailing->method == 'confirm') {
+					if($emailing->sent_to_dep) {
+						foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
+							array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
 						}
-						if($emailing->sent_to_empl) {
-							foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
-								array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
-							}
+					}
+					if($emailing->sent_to_empl) {
+						foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
+							array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
 						}
 					}
 				}
 			}
-
-			foreach(array_unique($send_to) as $send_to_mail) {
-				if( $send_to_mail != null & $send_to_mail != '' )
-				Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
-			}
 		}
+
+		foreach(array_unique($send_to) as $send_to_mail) {
+			if( $send_to_mail != null & $send_to_mail != '' )
+			Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
+		}
+		
 		
 		$message = session()->flash('success', __('absence.approved'));
 
@@ -449,6 +505,32 @@ class AbsenceController extends BasicAbsenceController
 
 		return view('Centaur::absences.confirmation_show',['absence_id'=> $request['absence_id'], 'absence' => $absence]);
 	}
+	public static function countRequest ()  
+	{
+		$employee_id = Sentinel::getUser()->employee->id;
+		
+		$emailings_absence = Emailing::join('tables','tables.id','emailings.model')->select('emailings.*', 'tables.name')->where('tables.name', 'absences')->where('emailings.method', 'create')->first();
+		$absences_count = Absence::where('approve',null)->get()->count();
+		
+		$sent_to_empl = explode(',', $emailings_absence->sent_to_empl );
 
+		if( in_array($employee_id, $sent_to_empl)) {
+			$count = $absences_count;
+		} else {
+			$count = 0;
+		}
+
+		return $count;
+	}
+
+	public static function dateDifference($date_1 , $date_2 , $differenceFormat = '%H:%i' )
+	{
+		$datetime1 = date_create($date_1);
+		$datetime2 = date_create($date_2);
 	
+		$interval = date_diff($datetime1, $datetime2);
+	
+		return $interval->format($differenceFormat);
+	
+	}	
 }

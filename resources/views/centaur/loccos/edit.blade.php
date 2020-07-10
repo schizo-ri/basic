@@ -14,7 +14,7 @@
 				</select>
 				{!! ($errors->has('vozilo_id') ? $errors->first('vozilo_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
+			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}" required>
 				<label>@lang('basic.employee')</label>
 				<select  class="form-control" name="employee_id" >
 					<label>@lang('basic.employee')</label>
@@ -27,8 +27,18 @@
 			</div>
 			<div class="form-group {{ ($errors->has('date')) ? 'has-error' : '' }}">
 				<label for="">@lang('basic.date')</label>
-				<input class="form-control" name="date" type="date" value="{{ $locco->date }}" required />
+				<input class="form-control" name="date" type="datetime-local" value="{{ date('Y-m-d\TH:i', strtotime($locco->date )) }}" required />
 				{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="form-group {{ ($errors->has('end_date')) ? 'has-error' : '' }}">
+				<label for="">@lang('absence.end_date')</label>
+				<input class="form-control" name="end_date" type="datetime-local" required value="{!! $locco->end_date ? date('Y-m-d\TH:i', strtotime($locco->end_date )) : '' !!}"  />
+				{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="form-group {{ ($errors->has('starting_point')) ? 'has-error' : '' }}">
+				<label>@lang('basic.starting_point')</label>
+				<input class="form-control" placeholder="{{ __('basic.starting_point') }}" name="starting_point" type="text" value="{{ $locco->starting_point }}" required />
+				{!! ($errors->has('starting_point') ? $errors->first('starting_point', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('destination')) ? 'has-error' : '' }}">
 				<label>@lang('basic.destination')</label>
@@ -58,6 +68,14 @@
 				<label for="servis">@lang('basic.malfunction')</label>
 				<input class="" type="checkbox" name="servis" value="servis" id="servis" value=""/>
 			</div>
+			@if ( $travel )
+				<input type="hidden" name="travel_id" value="{{ $locco->travel_id }}"/>
+			@else
+				<div class="servis form-group">
+					<label for="travel">@lang('basic.create_travel')</label>
+					<input class="" type="checkbox" name="travel" value="travel" id="travel" {!! $locco->travel_id ? 'checked' : '' !!} />
+				</div>
+			@endif
 			@method('PUT')
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" id="submit" value="{{ __('basic.save')}}">
@@ -71,12 +89,13 @@
 		var poc_km = $('#start_km').val();
 		var zav_km = $('#end_km').val();
 		var udaljenost = zav_km - poc_km;
-
 		$('#distance').val(udaljenost);
 		if (udaljenost < 0 ) {
 			$('#distance').css('border','1px solid red');
+			$('.btn-submit').attr('disabled', 'disabled');
 		} else {
 			$('#distance').css('border','1px solid #F0F4FF');
+			$('.btn-submit').removeAttr('disabled');
 		}
 	});
 

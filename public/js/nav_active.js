@@ -1,8 +1,7 @@
-
 var prev_url = location.href;
 var url_modul;
 
-$('.button_nav').click(function(e){
+$('.button_nav:not(.events_button)').click(function(e){
     
     //window.history.replaceState({}, document.title, location['origin']+'/dashboard');
    // window.history.replaceState({}, document.title, $(this).attr('href') ); 
@@ -38,6 +37,8 @@ $('.button_nav').click(function(e){
         if($( this).hasClass('load_button')) {
             e.preventDefault();
             var page = $(this).attr('href');
+            var title = $(this).text();
+            $("title").text( title ); 
 
             $('.button_nav').removeClass('active');
             $( this ).addClass('active');
@@ -45,10 +46,11 @@ $('.button_nav').click(function(e){
             $('.container').load( page + ' .container > div', function() {
 
                 $.getScript( "/../js/open_modal.js" );
-                if( $( '.button_nav.active' ).hasClass('events_button')) {
-                    $.getScript( '/../js/event.js');
-                    $.getScript( '/../js/load_calendar2.js');
-                    $.getScript( '/../restfulizer.js');
+                if( $( '.button_nav.active' ).hasClass('events_button')) { 
+                    $()
+                   /*  $.getScript( '/../js/load_calendar2.js');
+                    $.getScript( '/../restfulizer.js'); */
+                    location.reload();
                 }
                 if( $( '.button_nav.active' ).hasClass('documents_button')) {
                     $('.placeholder').show();
@@ -173,5 +175,89 @@ $( document ).ready(function() {
     } else if( $('.button_nav.'+url_modul+'_button').length > 0) {   // na reload stavlja klasu activ na button prema url pathname
         $('.button_nav').removeClass('active');
         $('.button_nav.'+url_modul+'_button').addClass('active');
+    }
+});
+
+$('.evidention_check .entry').click(function(){
+    var url = location.origin + '/work_records';
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });     
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: { 'entry': 'entry', 'checkout':false
+        },
+        success: function( response ) {
+            $('<div><div class="modal-header"><span class="img-success"></span></div><div class="modal-body"><div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>success:</strong>' + 'Prijavljen si' + '</div></div></div>').appendTo('body').modal();
+            $('.evidention_check').load(location.href + ' .evidention_check span');
+        }, 
+        error: function(jqXhr, json, errorThrown) {
+            console.log(jqXhr.responseJSON);
+            var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                'message':  jqXhr.responseJSON.message,
+                                'file':  jqXhr.responseJSON.file,
+                                'line':  jqXhr.responseJSON.line };
+            $.modal.close();
+            $.ajax({
+                url: 'errorMessage',
+                type: "get",
+                data: data_to_send,
+                success: function( response ) {
+                    $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+                }, 
+                error: function(jqXhr, json, errorThrown) {
+                    console.log(jqXhr.responseJSON); 
+                }
+            });
+        }
+    });
+});
+
+$('.evidention_check .checkout').click(function(){
+    var confirme_checkout = confirm("Želiš li se sigurno odjaviti!");
+    if (confirme_checkout == true) {
+        var url = location.origin + '/work_records';
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });     
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: { 'entry': false, 'checkout':'checkout'
+            },
+            success: function( response ) {
+                $('<div><div class="modal-header"><span class="img-success"></span></div><div class="modal-body"><div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>success:</strong>' + 'Odjavljen si' + '</div></div></div>').appendTo('body').modal();
+                $('.evidention_check').load(location.href + ' .evidention_check span');
+            }, 
+            error: function(jqXhr, json, errorThrown) {
+                console.log(jqXhr.responseJSON);
+                var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                    'message':  jqXhr.responseJSON.message,
+                                    'file':  jqXhr.responseJSON.file,
+                                    'line':  jqXhr.responseJSON.line };
+            
+                $.modal.close();
+                $.ajax({
+                    url: 'errorMessage',
+                    type: "get",
+                    data: data_to_send,
+                    success: function( response ) {
+                        $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+                    }, 
+                    error: function(jqXhr, json, errorThrown) {
+                        console.log(jqXhr.responseJSON); 
+                    }
+                });
+            }
+        });
+    } else {
+        return false;
     }
 });

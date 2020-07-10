@@ -24,6 +24,11 @@
 				<input class="form-control" placeholder="{{ __('basic.chassis')}}" name="chassis" type="text" maxlength="30" value="{{ $car->chassis }}" required />
 				{!! ($errors->has('chassis') ? $errors->first('chassis', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<div class="form-group {{ ($errors->has('enc')) ? 'has-error' : '' }}">
+				<label for="">ENC</label>
+				<input class="form-control" placeholder="ENC" name="enc" type="text" maxlength="50" value="{{  $car->enc }}" />
+				{!! ($errors->has('enc') ? $errors->first('enc', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
 			<div class="form-group {{ ($errors->has('first_registration')) ? 'has-error' : '' }}">
 				<label for="">@lang('basic.first_registration')</label>
 				<input class="form-control" name="first_registration" type="date" value="{{ $car->first_registration }}" required />
@@ -63,6 +68,10 @@
 					@endforeach
 				</select>
 				{!! ($errors->has('department_id') ? $errors->first('department_id', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="servis form-group">
+				<label for="travel">@lang('basic.private_car')</label>
+				<input class="" type="checkbox" name="private" value="1" id="private"  {!! $car->private == 1 ? 'checked' : '' !!} />
 			</div>
             {{ csrf_field() }}
             @method('PUT')

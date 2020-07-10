@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap');
+
+* {
+	padding: 0;
+	margin: 0;
+}
+.row.notification {
+	display: none;
+}
+html {
+	width: 100vw;
+	height: 100vh;
+	background-color: #fff;
+	font-family: Montserrat, sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	position: relative;
+}
+.travel_section {
+    padding: 15px 20px;
+    overflow: hidden;
+}
+body {
+    width: 800px;
+    height: 100%;
+    font-family: Montserrat, sans-serif;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    display: block;
+    max-width: 100%;
+    margin: auto;
+    font-weight: 500;
+}
+h4, h5 {
+    text-transform: uppercase;
+}
+.travel_header {
+    text-align: center;
+}
+.tr {
+    display: table-row;
+}
+.travel_header h1 {
+    padding-top: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid black;
+}
+.travel_header p {
+    padding-top: 10px;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.travel_main {
+    padding: 15px 0;
+}
+
+.travel_main div.approval, .travel_main div.calculation {
+    overflow: hidden;
+    padding: 5px;
+    padding-bottom: 20px;
+}
+
+.travel_main div h4 {
+    padding: 15px;
+    text-align: center;
+}
+
+.approval p {
+    line-height: 30px;
+
+}
+
+.aproveBy p{
+    position: relative;
+}
+.aproveBy p img{
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    transform: translatey(-50%);
+    max-height: 40px;
+    margin-left: 20px;
+}
+section.table {
+    border: 1px solid black;
+    margin-top: 15px;
+    overflow: hidden;
+}
+.calculation .table {
+    width: 100%;
+    border-top: 1px solid black;
+    display: table;
+}
+
+.calculation .table .thead {
+    font-size: 0.75rem;
+    display: table-header-group;
+    max-width: 100%;
+}
+.calculation .table .thead .th{
+    border-bottom: 1px solid black;
+    text-align: left;
+}
+
+.calculation .table .thead .th:not(:last-child), .calculation .table .tbody .td:not(:last-child) {
+    border-right: 1px solid black;
+}
+.calculation .table .thead .th, .calculation .table .tbody .td {
+    padding: 5px;
+    display: table-cell;
+    border-bottom: 1px solid black;
+}
+.calculation .table .tbody {
+    max-width: 100%;
+    display: table-header-group;
+}
+.calculation h5 {
+    padding: 10px;
+    overflow: hidden;
+}
+
+select, input {
+    border: none;
+    font-size: inherit;
+    padding: 5px;
+    text-align: left;
+    border-bottom: 1px solid black;
+    outline: none;
+}
+input[name=description] {
+    width: 100%;
+}
+.table select, .table input {
+    width: 100% !important;
+    padding: 0;
+}
+
+.btn-submit {
+    background: inherit;
+    margin: 20px;
+    border-radius: 5px;
+    padding: 5px 20px;
+    float: right;
+    border: 1px solid #000000;
+    cursor: pointer;
+}

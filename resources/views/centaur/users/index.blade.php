@@ -226,7 +226,7 @@
 		}
 	});	
 	$(function(){
-		$.getScript( '/../js/users.js');   
+		$.getScript( '/../js/users.js');
 		/* $('.collapsible').click(function(event){
             $(this).siblings().toggle();
         }); */

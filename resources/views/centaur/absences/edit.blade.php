@@ -65,6 +65,12 @@
 		@else
 			<input type="hidden" name="email" value="DA">
 		@endif
+		@if (Sentinel::inRole('administrator'))
+			<div class="display_flex">
+				<label for="decree">@lang('basic.decree')</label>
+				<input class="margin_l_20" type="checkbox" name="decree" value="1" id="decree" {!! $absence->decree == 1 ? 'checked': '' !!}/>
+			</div>
+		@endif
 		{{ csrf_field() }}
 		{{ method_field('PUT') }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.edit')}}" id="stil1">

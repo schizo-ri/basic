@@ -27,26 +27,30 @@ class FuelController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $car_id = null;
         $empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
         
 		if($empl) {
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
         } 
-
-        if( $request['car_id'] ) {
-           
-            $fuels = Fuel::where('car_id', $request['car_id'])->orderBy('date','DESC')->get();
-
-            return view('Centaur::fuels.index', ['fuels' => $fuels, 'permission_dep' => $permission_dep]);
-        } else {
-            $fuels = Fuel::orderBy('date','DESC')->get();
-
-            return view('Centaur::fuels.index', ['fuels' => $fuels, 'permission_dep' => $permission_dep]);
+    
+        $cars = array();
+        foreach (Car::get() as $car) {
+            array_push($cars, $car->registration);
         }
+
+        $fuels = Fuel::orderBy('date','DESC')->get();
+
+        $dates = array();
+        foreach (array_keys($fuels->groupBy('date')->toArray()) as $date) {
+            array_push($dates, date('Y-m',strtotime($date)) );
+        }
+        $dates = array_unique($dates);
+     
+        return view('Centaur::fuels.index', ['fuels' => $fuels,'cars' => $cars, 'dates' => $dates, 'permission_dep' => $permission_dep]);
+    
     }
 
     /**
@@ -97,7 +101,16 @@ class FuelController extends Controller
      */
     public function show($id)
     {
-        //
+        $empl = Sentinel::getUser()->employee;
+		$permission_dep = array();
+        
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
+
+        $fuels = Fuel::where('car_id', $id)->orderBy('date','DESC')->get();
+
+        return view('Centaur::fuels.show', ['fuels' => $fuels, 'permission_dep' => $permission_dep]);
     }
 
     /**

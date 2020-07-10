@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TravelOrder extends Model
 {
-    protected $fillable = ['date','employee_id','car_id','destination','days','start_date','end_date','advance','advance_date','rest_payout','calculate_employee','locco_id'];
+    protected $fillable = ['date','employee_id','car_id','destination','description','days','start_date','end_date','advance','advance_date','rest_payout','calculate_employee','locco_id','status'];
     
     /*
 	* The Eloquent employee model name
@@ -39,7 +39,28 @@ class TravelOrder extends Model
 	protected static $carModel = 'App\Models\Car'; 
 	
 	/*
-	* Returns the employee relationship
+	* The Eloquent locco model name
+	* 
+	* @var string
+	*/
+	protected static $loccoModel = 'App\Models\Locco'; 
+
+	/*
+	* The Eloquent TravelExpense model name
+	* 
+	* @var string
+	*/
+	protected static $expenseModel = 'App\Models\TravelExpense'; 
+	
+	/*
+	* The Eloquent TravelLocco model name
+	* 
+	* @var string
+	*/
+	protected static $loccoTravelModel = 'App\Models\TravelLocco'; 
+
+	/*
+	* Returns the car relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	*/
@@ -47,8 +68,41 @@ class TravelOrder extends Model
 	public function car()
 	{
 		return $this->belongsTo(static::$carModel,'car_id');
+	}
+	
+	/*
+	* Returns the locco relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function locco()
+	{
+		return $this->belongsTo(static::$loccoModel,'locco_id');
     }
-    
+
+	/*
+	* Returns the TravelLocco relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasMany
+	*/
+	
+	public function expenses()
+	{
+		return $this->hasMany(static::$expenseModel,'travel_id');
+	}
+
+	/*
+	* Returns the TravelExpense relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasMany
+	*/
+	
+	public function loccos()
+	{
+		return $this->hasMany(static::$loccoTravelModel,'travel_id');
+	}
+	
 	/*
 	* Save TravelOrder
 	* 
@@ -72,5 +126,4 @@ class TravelOrder extends Model
 	{
 		return $this->update($travelOrder);
 	}	
-
 }

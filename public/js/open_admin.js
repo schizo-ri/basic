@@ -1,13 +1,17 @@
+var prev_url = location.href;
 $(".admin_pages a.admin_link").addClass('disable');
 var body_width = $('body').width();
 var url_location = location.href;
+var active_link;
+var url_modul = location.pathname;
+url_modul = url_modul.replace("/","");
+url_modul = url_modul.split('/')[0];
 
 $(function(){
     if(body_width > 768) {
         if(url_location.includes('templates')) {
             $('.admin_pages>li>a#emailings').click();
         
-            window.history.pushState( url_location, 'Title',location.origin + '/admin_panel');
         } else {
             $('.admin_pages>li>a').first().click();
         }
@@ -19,12 +23,17 @@ var click_element;
 
 $('.admin_pages>li>a').click(function(e) {
     click_element = $(this);
-   
+    var title = click_element.text();
+    $("title").text( title ); 
     var url = $(this).attr('href');
-   // console.log(url);
+
     $('.admin_pages>li>a').removeClass('active_admin');
     $(this).addClass('active_admin');
+    active_link = $('.admin_link.active_admin').attr('id');
+
+
     $( '#admin_page' ).load( url, function( response, status, xhr ) {
+       
       //window.history.replaceState({}, document.title, url);
         if ( status == "error" ) {
             var msg = "Sorry but there was an error: ";
@@ -33,6 +42,7 @@ $('.admin_pages>li>a').click(function(e) {
         $.getScript( 'js/datatables.js');
         $.getScript( 'js/filter_table.js');
     });
+   
    
     return false;
 });

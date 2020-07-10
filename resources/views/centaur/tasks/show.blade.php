@@ -18,3 +18,6 @@
 		</a>
 	</div>
 @endif
+<script>
+$.getScript( '/../restfulizer.js');
+</script>

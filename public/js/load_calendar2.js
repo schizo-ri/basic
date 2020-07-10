@@ -1,4 +1,3 @@
-console.log("load_calendar");
 $(function() {
     var day = $('.event_day .day').text();
     var month =   $('.event_day .month').text();
@@ -40,37 +39,74 @@ $(function() {
             $(".show_event").show();
         }
     });
+    $( ".change_car" ).change(function() {
+        var value = $(this).val().toLowerCase();
+        console.log(value);
+        $(".show_locco").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            
+        });
+        if(value == '') {
+            $(".show_locco").show();
+        }
+        
+    });
     var view;
     $( ".change_view_calendar" ).change(function() {
-		view = $( this ).val();
-		if(view == 'day') {
-		   $('.main_calendar_day').show();
-		   $('.main_calendar_week').hide();
+        view = $( this ).val();
+
+        if(view == 'day') {
+           $('.main_calendar_day').show();
+           $('.main_calendar_week').hide();
            $('.main_calendar_month').hide();
            $('.main_calendar_list').hide();
-	   } 
-	   if(view == 'week') {
-		$('.main_calendar_day').hide();
-		   $('.main_calendar_week').show();
-           $('.main_calendar_month').hide();
-           $('.main_calendar_list').hide();
+           $('button.show_locco').show();
+         
+           var scroll = $('.hour_val.position_8').position().top;
+           $('.main_calendar_day').scrollTop(scroll);
        } 
-       if(view == 'list') {
-        $('.main_calendar_list').show();
-        $('.main_calendar_day').hide();
-        $('.main_calendar_week').hide();
-        $('.main_calendar_month').hide();
-    } 
-	   if(view == 'month') {
-			$('.main_calendar_day').hide();
-		   $('.main_calendar_week').hide();
-           $('.main_calendar_month').show();
-           $('.main_calendar_list').hide();
-	   }
-	});
-  
+       if(view == 'week') {
+            $('.main_calendar_day').hide();
+            $('.main_calendar_week').show();
+            $('.main_calendar_month').hide();
+            $('.main_calendar_list').hide();
+            $('button.show_locco').show();
+            var scroll = $('.main_calendar_week tr.position_8').position().top;
+            $('.main_calendar_week').scrollTop(scroll);
+       } 
+        if(view == 'list') {
+            $('.main_calendar_list').show();
+            $('.main_calendar_day').hide();
+            $('.main_calendar_week').hide();
+            $('.main_calendar_month').hide();
+            $('.change_car').hide();
+            $('button.show_locco').hide();
+        } 
+       if(view == 'month') {
+            $('.main_calendar_day').hide();
+            $('.main_calendar_week').hide();
+            $('.main_calendar_month').show();
+            $('.main_calendar_list').hide();
+            $('button.show_locco').show();
+       }
+    });
     $('.main_calendar_month tbody td').click(function(){
         var date = $(this).attr('data-date');
         $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
     });
+
+    $('button.show_loccos').click(function(e){
+        e.preventDefault();
+        $('.main_calendar td>a').toggle();
+        $('.main_calendar .show_event').toggle();
+        $('.main_calendar .show_locco ').toggle();
+        $('.change_employee').toggle();
+        $('.change_car').toggle();
+        console.log("show_loccos");
+
+    });
+   $('.selected_day a[rel="modal:open"]').click(function(){
+        $.getScript( '/../restfulizer.js');
+   });
+
 });

@@ -699,8 +699,16 @@ class="select-css"
     padding: 0;
     overflow: hidden;
 }
-
-
+.main_calendar .show_locco {
+    padding:  3px 5px;
+    display: none;
+}
+.show_locco p {
+    margin: 0;
+}
+.change_car {
+    display: none;
+}
 .main_calendar_month .show_event div.event  {
     margin-bottom: 5px;
     padding: 3px 5px;
@@ -708,6 +716,9 @@ class="select-css"
 .out_month {
     background-color: #eee;
     color: #ccc;
+}
+.show_event.show_holiday {
+    color: inherit
 }
 .show_event div, .show_holiday div {
     display: block;
@@ -1015,7 +1026,7 @@ class="select-css"
 } 
 
 .index_main main {
-    height: calc(100% - 65px);
+    height: calc(100% - 78px);
     width: 100%;
     background-color: inherit;
     padding: 0;
@@ -1235,7 +1246,7 @@ main.campaign_main {
     height: calc(100% - 80px);
 }
 .index_main main.main_calendar_day, .index_main main.main_calendar_list, .index_main main.main_calendar_week {
-    padding: 5px;
+    padding: 0;
     overflow: auto;
     display: none;
 }
@@ -1621,7 +1632,7 @@ footer.ad_footer {
 .modal_campaign .index_table_filter >label input {
     padding-left: 40px;
 }
-.header_ads .index_table_filter .select_filter, .notice_filter .select_filter {
+.header_ads .index_table_filter .select_filter, .notice_filter .select_filter, .fuel_header .select_filter, .travel_header .select_filter, .work_record_header .select_filter {
     width: auto;
     height: 38px;   
     float: right;
@@ -1642,6 +1653,7 @@ footer.ad_footer {
     margin-right: -5px;
     margin-left: 20px;
     cursor: pointer;
+
 }
 
 .index_table_filter>div {
@@ -1680,6 +1692,7 @@ footer.ad_footer {
 
 .index_page table.dataTable.no-footer, .index_page table.display.table {
     border-bottom: none;
+    display: none;
 }
 
 .index_page table.dataTable tbody tr {
@@ -2400,7 +2413,21 @@ main.index_main.main_absence >section {
     display: inline-block;
     margin-right: 20px;
 }
-
+.curve_arrow_left_grey {
+    background: url('../icons/curve_arrow_left_grey.png') no-repeat;
+    width: 22px;
+    height: 14px;
+    display: inline-block;
+    margin-right: 20px;
+}
+.back_to_prev {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: -15px;
+    transform: translateY(-50%);
+    width: auto;
+}
 .arrow_left1 {
     background: url(../icons/arrow_left.png) no-repeat;
     width: 7px;
@@ -2779,6 +2806,20 @@ label.add_new {
     color: #2B2B2B;
     padding: 25px 10px;
 }
+#index_table1.table_work_record {
+    border: 1px solid #ccc;
+
+}
+#index_table1.table_work_record tr th {
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+}
+#index_table1.table_work_record tr th:last-child {
+    border-right: 1px solid #ddd;
+}
+#index_table1.table_work_record tr td {
+    border-left: 1px solid #ddd;
+}
 
 .modal_campaign .table tbody tr> td:first-child {
     font-weight: 600;
@@ -2858,6 +2899,9 @@ table.dataTable#index_table tbody td:last-child > a {
     text-align: center;
     color: #606060;
     text-transform: uppercase;
+    background-color: white;
+    position: sticky;
+    top: 0;
 }
 .main_calendar_week .day_in_week, .main_calendar_week .date_in_week {
     display: block;
@@ -2888,8 +2932,17 @@ table.dataTable#index_table tbody td:last-child > a {
     display: none;
     background: url(../icons/view2.png) no-repeat center;
 }
-
- .change_view_calendar, .change_employee{
+button.show_loccos {
+    float: right;
+    line-height: 40px;
+    height: 40px;
+    border: none;
+    background: inherit;
+    margin: 5px 0;
+    margin-right: 15px;
+    padding: 0 10px;
+}
+ .change_view_calendar, .change_employee, .change_employee_work, .change_car, .change_month{
     font-family: Montserrat;
     font-style: normal;
     font-weight: 600;
@@ -2900,24 +2953,59 @@ table.dataTable#index_table tbody td:last-child > a {
     padding: 0;
     padding-left: 10px;
     margin: 5px 0;
-    font-size: 0.75rem;
+    font-size: 0.625rem;
     height: 40px;
     float: right;
 }
  .change_view_calendar >option {
     line-height: 20px;
 }
-.change_employee {
+.change_month {
+    margin: 0;
+    margin-left: 15px;
+}
+.change_employee,.change_car {
     margin-right: 15px;
 }
-
+.change_employee_work {
+    margin: 0 0 0 15px;
+}
 .q_progress {
     font-weight: 600;
     font-size: 0.9375rem;
     text-align: center;
     color: #2B2B2B;
 }
-
+.evidention_employee .page-header {
+    padding: 0 20px;
+    overflow: hidden;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e1e0e1;
+}
+main.index_main>section.section_evidention {
+    overflow: hidden;
+}
+.section_evidention .index_table_filter {
+    background: inherit;
+    padding: 0 0 20px;
+}
+.section_evidention .index_table_filter p {
+    margin: 0;
+}
+.section_evidention .index_table_filter .show_button {
+    position: absolute;
+    bottom: 5px;
+    right: 20px;
+}
+.index_main.evidention_employee main {
+    height: calc(100% - 99px);
+}
+.employee_view {
+    height: 100%;
+}
+.evidention_employee .page-header table.dataTable#index_table tbody tr {
+    height: auto;
+}
 .index_table_filter {
     float: left;
     text-align: left;
@@ -2994,6 +3082,24 @@ input[type="search"]::-webkit-search-cancel-button {
     text-align: left;
     padding-left: 12px;
     border-bottom: 1px solid rgba(154, 154, 154, 0.3);
+}
+.evidention_employee table.dataTable#index_table tbody tr {
+    height: auto;
+} 
+.evidention_employee .table-responsive .table thead th,
+.evidention_employee table.dataTable.display tbody tr td,.evidention_employee table.dataTable#index_table tbody td:last-child,.evidention_employee table.dataTable#index_table tfoot td  {
+    text-align: center;
+    padding: 8px 10px;
+}
+.evidention_employee table.dataTable#index_table tfoot td,.evidention_employee table.dataTable#index_table tbody td:last-child {
+    font-weight: 700;
+}
+.evidention_employee table.dataTable.display tbody tr td:nth-child(2) {
+    text-align: left;
+}
+.evidention_employee .table-responsive .table thead th:not(:last-child),
+.evidention_employee table.dataTable.display tbody tr td:not(:last-child) {
+    border-right: 1px solid #ccc;
 }
 .table-responsive .table thead th:last-child {
     min-width: 50px;
@@ -3774,6 +3880,10 @@ a.modal_close {
         position: sticky;
         top: 0;
     }
+    main.main_campaign {
+        height: auto;
+        overflow: hidden;
+    }
     .btn-new, .add_benefit .btn-new {
         margin: 6px 0 6px 20px;
     }
@@ -3803,6 +3913,7 @@ a.modal_close {
     .header_calendar>div>span.month_year {
         height: auto;
         line-height: initial;
+        font-size: 0.8125rem;
     }
     .table-responsive,  main.index_main>section {
         overflow: auto; 
@@ -3868,6 +3979,7 @@ a.modal_close {
         scrollbar-width: thin;
         height: calc(100% - 52px);
         padding-bottom: 10px;
+        z-index: 0;
     }    
     .container .noticeboard {
         height: auto;
@@ -4022,10 +4134,16 @@ a.modal_close {
         display: none;
     }
     .index_main header.header_calendar>div:last-child {
-        width: 50%;
-        max-width: 50%;
-        flex: 0 0 50%;
+        width: 70%;
+        max-width: 70%;
+        flex: 0 0 70%;
+        padding: 0;
+        display: flex;
+        justify-content: space-around;
+        flex-direction: row-reverse;
+        align-items: center;
     }
+    
     .index_aside .day_events {
         padding: 10px;
     }
@@ -4060,6 +4178,7 @@ a.modal_close {
     .index_main header.post_sent .link_back .curve_arrow_left {
         margin-right: 10px;
     }
+   
     .header_document, .page-header {
         color: #606060;
         padding: 10px;
@@ -4097,8 +4216,13 @@ a.modal_close {
         padding: 0;
     }
 
-    .modal select.change_view_calendar {
+    .modal select.change_view_calendar, .modal select.change_employee  {
         margin: 0;
+        font-size: 0.6875rem;
+    }
+    button.show_loccos {
+        line-height: 30px;
+        height: 30px;
     }
     .index_main main.main_calendar, .index_main main.main_calendar_month, .index_main main.main_calendar_week {
         height: calc(100% - 50px);
@@ -4150,6 +4274,18 @@ a.modal_close {
         padding: 0;
         clear: both;
         min-height: auto;
+    }
+    .index_main header.header_calendar {
+        padding: 5px;
+    }
+    .header_calendar>div>span.arrow, .header_calendar .event_day {
+        height: 30px;
+        line-height: 30px;
+        margin-right: 10px;
+    }
+    .header_calendar .event_day .week_day, .header_calendar .event_day .day {
+        line-height: 10px;
+        font-weight: 400;
     }
     .page-main {
         height: auto;
@@ -4493,4 +4629,14 @@ a.modal_close {
     font-size: 0.75rem;
     padding-top: 5px;
     padding-left: 10px
+}
+
+.red_rad {
+    background-color: #ccffb3;
+}
+.abs_GO {
+    background-color: #ffffb3;
+}
+.abs_BOL {
+    background-color: #ffcce6;
 }

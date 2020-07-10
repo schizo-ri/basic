@@ -79,19 +79,23 @@
 .modal_user .user_data .user_img {
 	display: block;
 	float: left;
+	width: 100%;
 }
 
 .modal.modal_user>header .user_data >div {
 	width: calc(100% - 108px);
-    float: left;
+	float: left;
+	text-align: center;
 }
 
 .modal_user .user_data .user_name {
 	float: left;
-    padding-left: 40px;
-    height: 108px;
-	display: flex;
-	margin: auto;
+    padding-left: 0;
+    /* height: 108px; */
+    display: flex;
+    margin: auto;
+    width: 100%;
+    display: block;
 }
 
 .modal_user a.back {
@@ -2555,4 +2559,15 @@ span.file_name {
 .modal_campaign .modal_delete >svg {	
 	font-size: 0.8125rem;
 	margin-right: 10px;
+}
+
+.task_list {
+    border-radius: 3px;
+}
+
+.task_item {
+    padding: 5px 10px;
+    border-radius: 3px;
+	display: inline-block;
+	color: #000000;
 }

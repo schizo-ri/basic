@@ -44,5 +44,6 @@ return [
     'retrieving_error' => 'Sorry, there was an error retrieving the data.',
     'max_user' => 'Maximum number of users used.',
     'call_duplico' => 'For more users, contact Duplico d.o.o.',  
+    'locco_error'	=> 'Error opening travel order, account not open.'
     ];
 ?>

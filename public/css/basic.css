@@ -3,43 +3,60 @@
     width: 100%
 }
 .col-11 {
-    width: 91.66666667%
+    width: 91.66666667%;
+    max-width: 91.66666667%;
 }
 .col-10 {
-    width: 83.33333333%
+    width: 83.33333333%;
+    max-width: 83.33333333%
 }
 .col-9 {
-    width: 75%
+    width: 75%;
+    max-width: 75%
 }
 .col-8 {
-    width: 66.66666667%
+    width: 66.66666667%;
+    max-width: 66.66666667%;
 }
 .col-7 {
-    width: 58.33333333%
+    width: 58.33333333%;
+    max-width: 58.33333333%;
 }
 .col-6 {
-    width: 50%
+    width: 50%;
+    max-width: 50%;
 }
 .col-5 {
-    width: 41.66666667%
+    width: 41.66666667%;
+    max-width: 41.66666667%;
 }
 .col-4 {
-    width: 33.33333333%
+    width: 33.33333333%;
+    max-width: 33.33333333%;
 }
 .col-3 {
-    width: 25%
+    width: 25%;
+    max-width: 25%;
 }
 .col-2 {
-    width: 16.66666667%
+    width: 16.66666667%;
+    max-width: 16.66666667%;
 }
 .col-1 {
-    width: 8.333333333%
+    width: 8.333333333%;
+    max-width: 8.333333333%;
 }
 
 .align_c {
     text-align: center;
 }
+.align_r {
+    text-align: right;
+}
 
+.align_l {
+    text-align: left;
+}
 .padd_0 {
     padding: 0;
 }
@@ -117,6 +134,9 @@
     margin-bottom:30px;
 }
 
+.margin_l_20 {
+    margin-left:20px;
+}
 .position_rel {
     position: relative;
 }
@@ -131,7 +151,12 @@
 .display_none {
     display: none;
 }
-
+.display_inline_block {
+    display: inline-block;
+}
+.display_flex {
+    display: flex;
+}
 .font_14 {
     font-size: 0.875rem;
 }
@@ -162,12 +187,15 @@
       scrollbar-width: thin;
   }
 
-  .bg_white {
-      background-color: white;
-  }
-  .bg_eee {
+.bg_white {
+    background-color: white;
+}
+.bg_eee {
     background-color: #eee;
-    }
+}
+.bg_ccc {
+    background-color: #ccc !important;
+}
 
   .pop-up {
     display: none;
@@ -225,7 +253,3 @@
         max-width: 19%;
     }
 }
-  
-  
-   
-  

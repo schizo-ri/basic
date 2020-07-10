@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Car;
 use App\Models\Employee;
 use App\Models\Task;
+use Sentinel;
 
 class TaskController extends Controller
 {
@@ -17,7 +18,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $employee = Sentinel::getUser()->employee;
+        $date = date('Y-m-d');
+        $tasks_group_date = Task::whereDate('date', '>=', $date)->orderBy('date','ASC')->get()->groupBy('date');
+        return view('Centaur::tasks.index', ['tasks_group_date' => $tasks_group_date]);
     }
 
     /**
@@ -70,8 +74,12 @@ class TaskController extends Controller
     public function show($id)
     {
         $task = Task::find($id);
-      
-        return view('Centaur::tasks.show', ['task' => $task]);
+        $empl = Sentinel::getUser()->employee;
+        $permission_dep = array();
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
+        return view('Centaur::tasks.show', ['task' => $task, 'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -137,8 +145,6 @@ class TaskController extends Controller
     public static function task_for_selected_day ($date) 
     {
         $tasks = Task::whereDate('date', $date)->get();
-
         return $tasks;
     }
-    
 }

@@ -5,6 +5,7 @@ html {
     width: 100vw;
     font-size: 16px;
     font-family: Montserrat, sans-serif;
+    overflow: auto;
 }
 body, form {
     height: 100%;
@@ -352,5 +353,31 @@ label.schedule_set {
     #template-container {
         height: auto;
         padding: 20px;
+    }
+}
+@media (max-width: 450px) {
+    html {
+        height: auto;
+        width: auto;
+        font-size: 16px;
+        font-family: Montserrat, sans-serif;
+        overflow: auto;
+    }
+    body, form {
+        height: auto;
+        width: auto;
+    }
+    #editor-container {
+        height: 1000px;
+        float: none;
+        width: 800px !important;
+    }
+    main.main_campaign {
+        height: 1000px;
+        /* overflow: hidden; */
+        max-height: initial;
+        overflow: visible;
+        width: auto;
+        min-width: 1024px;
     }
 }

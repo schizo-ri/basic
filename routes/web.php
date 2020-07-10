@@ -107,7 +107,6 @@ Route::post('/comment/store', ['as' => 'comment.store', 'uses' => 'PostControlle
     return "Event has been sent!";
 }]);
 
-
 // post update
 Route::get('posts/{id}/{year?}/{month?}/{day?}/{hour?}/{minute?}/{second?}', ['as' => 'posts', 'uses' => 'PostController@updated']);
 Route::get('setCommentAsRead/{id}', ['as' => 'setCommentAsRead', 'uses' => 'PostController@setCommentAsRead']);
@@ -177,7 +176,17 @@ Route::get('layout', ['as' => 'layout', 'uses' => 'LayoutController@index']);
 
 // TravelOrder
 Route::resource('travel_orders', 'TravelOrderController');
+Route::get('close_travel', ['as' => 'close_travel', 'uses' => 'TravelOrderController@close_travel']);
+Route::get('travelShow/{id}', ['as' => 'travelShow', 'uses' => 'TravelOrderController@travelShow']);
+Route::post('travelFilter', ['as' => 'travelFilter', 'uses' => 'TravelOrderController@travelFilter']);
+Route::get('pdfTravel/{id}',array('as'=>'pdfTravel','uses'=>'TravelOrderController@pdfTravel'));
 
+//TravelExpenses
+Route::resource('travel_expenses', 'TravelExpensesController');
+
+
+//WorkRecords
+Route::resource('work_records', 'WorkRecordController');
 
 /*
 Route::get('dashboard', function () {
@@ -251,3 +260,4 @@ Route::get('/clear-cache', function() {
     Artisan::call('cache:clear');
     return "Cache is cleared";
 });
+

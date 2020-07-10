@@ -71,9 +71,10 @@ class CarController extends Controller
 			'last_registration' => $request['last_registration'],
 			'last_service'      => $request['last_service'],
             'current_km'        => $request['current_km'],
+            'enc'               => $request['enc'],
             'department_id'     => $request['department_id'],
             'employee_id'       => $request['employee_id'],
-            
+            'private_car'       => $request['private'],
 		);
 		
 		$car = new Car();
@@ -129,9 +130,10 @@ class CarController extends Controller
 			'last_registration' => $request['last_registration'],
 			'last_service'      => $request['last_service'],
             'current_km'        => $request['current_km'],
+            'enc'               => $request['enc'],
             'department_id'     => $request['department_id'],
             'employee_id'       => $request['employee_id'],
-            
+            'private_car'       => $request['private'],
 		);
 		        
         $car->updateCar($data);

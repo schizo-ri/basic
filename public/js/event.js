@@ -8,6 +8,7 @@ $(function() {
     if( $('.dataArr').text()) {
         var data1 = JSON.parse( $('.dataArr').text());
     }
+  /*   console.log(data1); */
     /*
     var data1 = [];
     for (i = 0; i < data.length; i++) { 
@@ -35,6 +36,7 @@ $(function() {
                 GO: '#13EA90',
                 IZL: '#13EA90',
                 BOL: '#13EA90',
+                locco: '#009933',
             }
         },
         schedules: data1,
@@ -68,7 +70,7 @@ $(function() {
                             });
                             $( ".change_employee" ).change(function() {
                                 var value = $(this).val().toLowerCase();
-                                console.log(value);
+                              
                                 $(".show_event").filter(function() {
                                     //$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                                     $(this).toggle($(this).hasClass(value));
@@ -78,33 +80,65 @@ $(function() {
                                 }
                                 
                             });
-                            $( ".change_view_calendar" ).change(function() {
-                                var view = $( this ).val();
+                            $( ".change_car" ).change(function() {
+                                var value = $(this).val().toLowerCase();
+                                console.log(value);
+                                $(".show_locco").filter(function() {
+                                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                                    
+                                });
+                                if(value == '') {
+                                    $(".show_locco").show();
+                                }
                                 
+                            });
+                            $( ".change_view_calendar" ).change(function() {
+                                view = $( this ).val();
+
                                 if(view == 'day') {
-                                    $('.main_calendar_day').show();
-                                    $('.main_calendar_week').hide();
-                                    $('.main_calendar_month').hide();
-                                    $('.main_calendar_list').hide();
-                                } 
-                                if(view == 'week') {
+                                   $('.main_calendar_day').show();
+                                   $('.main_calendar_week').hide();
+                                   $('.main_calendar_month').hide();
+                                   $('.main_calendar_list').hide();
+                                   $('button.show_locco').show();
+                                   var scroll = $('.hour_val.position_8').position().top;
+                                   $('.main_calendar_day').scrollTop(scroll);
+                               } 
+                               if(view == 'week') {
                                 $('.main_calendar_day').hide();
-                                    $('.main_calendar_week').show();
-                                    $('.main_calendar_month').hide();
-                                    $('.main_calendar_list').hide();
-                                } 
-                                if(view == 'list') {
+                                   $('.main_calendar_week').show();
+                                   $('.main_calendar_month').hide();
+                                   $('.main_calendar_list').hide();
+                                   $('button.show_locco').show();
+                                   var scroll = $('.main_calendar_week tr.position_8').position().top;
+                                   $('.main_calendar_week').scrollTop(scroll);
+                               } 
+                               if(view == 'list') {
                                     $('.main_calendar_list').show();
                                     $('.main_calendar_day').hide();
                                     $('.main_calendar_week').hide();
                                     $('.main_calendar_month').hide();
+                                    $('.change_car').hide();
+                                    $('button.show_locco').hide();
                                 } 
-                                if(view == 'month') {
+                               if(view == 'month') {
                                     $('.main_calendar_day').hide();
                                     $('.main_calendar_week').hide();
                                     $('.main_calendar_month').show();
                                     $('.main_calendar_list').hide();
-                                }
+                                    $('button.show_locco').show();
+                               }
+                            });
+                          
+                            $('button.show_loccos').click(function(e){
+                                e.preventDefault();
+                                $('.main_calendar td>a').toggle();
+                                $('.main_calendar .show_event').toggle();
+                                $('.main_calendar .show_locco ').toggle();
+                                $('.change_employee').toggle();
+                                $('.change_car').toggle();
+                                console.log("show_loccos");
+                        
                             });
                             $.getScript( '/../restfulizer.js');
                             select_view();
@@ -120,16 +154,18 @@ $(function() {
                         $('.change_view_calendar').val('day') ;
                         $('.main_calendar').hide();
                         $('.main_calendar_day').show();
+                        
                     } else if(view == 'month') {
                         $('.change_view_calendar').val('month') ;                                
                         $('.main_calendar').hide();
                         $('.main_calendar_month').show();
+                       
                     } else if(view == 'week') {
                         $('.change_view_calendar').val('week') ;
                         $('.main_calendar').hide();
                         $('.main_calendar_week').show();
                     } else if(view == 'list') {
-                        $('.change_view_calendar').val('week') ;
+                        $('.change_view_calendar').val('list') ;
                         $('.main_calendar').hide();
                         $('.main_calendar_week').show();
                     }
@@ -165,23 +201,39 @@ $(function() {
                     $.getScript( '/../restfulizer.js');
                     $( ".change_view_calendar" ).change(function() {
                         var view = $( this ).val();
-                        
+                       
                         if(view == 'day') {
-                           $('.main_calendar_day').show();
-                           $('.main_calendar_week').hide();
-                           $('.main_calendar_month').hide();
-                       } 
-                       if(view == 'week') {
-                        $('.main_calendar_day').hide();
-                           $('.main_calendar_week').show();
-                           $('.main_calendar_month').hide();
-                          
-                       } 
-                       if(view == 'month') {
-                            $('.main_calendar_day').hide();
-                           $('.main_calendar_week').hide();
-                           $('.main_calendar_month').show();
-                       }
+                            $('.main_calendar_day').show();
+                            $('.main_calendar_week').hide();
+                            $('.main_calendar_month').hide();
+                            $('.main_calendar_list').hide();
+                            $('button.show_locco').show();
+                            var scroll = $('.hour_val.position_8').position().top;
+                            $('.main_calendar_day').scrollTop(scroll);
+                        } 
+                        if(view == 'week') {
+                         $('.main_calendar_day').hide();
+                            $('.main_calendar_week').show();
+                            $('.main_calendar_month').hide();
+                            $('.main_calendar_list').hide();
+                            $('button.show_locco').show();
+                            var scroll = $('.main_calendar_week tr.position_8').position().top;
+                            $('.main_calendar_week').scrollTop(scroll);
+                        } 
+                        if(view == 'list') {
+                             $('.main_calendar_list').show();
+                             $('.main_calendar_day').hide();
+                             $('.main_calendar_week').hide();
+                             $('.main_calendar_month').hide();
+                             $('.change_car').hide();
+                         } 
+                        if(view == 'month') {
+                             $('.main_calendar_day').hide();
+                             $('.main_calendar_week').hide();
+                             $('.main_calendar_month').show();
+                             $('.main_calendar_list').hide();
+                             $('button.show_locco').show();
+                        }
                     });
                 });
 
@@ -226,23 +278,39 @@ $(function() {
                 $('.index_event').load( url + ' .index_event>section', function() {
                     $( ".change_view_calendar" ).change(function() {
                         var view = $( this ).val();
-                        
+                       
                         if(view == 'day') {
-                           $('.main_calendar_day').show();
-                           $('.main_calendar_week').hide();
-                           $('.main_calendar_month').hide();
-                       } 
-                       if(view == 'week') {
-                        $('.main_calendar_day').hide();
-                           $('.main_calendar_week').show();
-                           $('.main_calendar_month').hide();
-                          
-                       } 
-                       if(view == 'month') {
-                            $('.main_calendar_day').hide();
-                           $('.main_calendar_week').hide();
-                           $('.main_calendar_month').show();
-                       }
+                            $('.main_calendar_day').show();
+                            $('.main_calendar_week').hide();
+                            $('.main_calendar_month').hide();
+                            $('.main_calendar_list').hide();
+                            $('button.show_locco').show();
+                            var scroll = $('.hour_val.position_8').position().top;
+                            $('.main_calendar_day').scrollTop(scroll);
+                        } 
+                        if(view == 'week') {
+                         $('.main_calendar_day').hide();
+                            $('.main_calendar_week').show();
+                            $('.main_calendar_month').hide();
+                            $('.main_calendar_list').hide();
+                            $('button.show_locco').show();
+                            var scroll = $('.main_calendar_week tr.position_8').position().top;
+                            $('.main_calendar_week').scrollTop(scroll);
+                        } 
+                        if(view == 'list') {
+                             $('.main_calendar_list').show();
+                             $('.main_calendar_day').hide();
+                             $('.main_calendar_week').hide();
+                             $('.main_calendar_month').hide();
+                             $('.change_car').hide();
+                         } 
+                        if(view == 'month') {
+                             $('.main_calendar_day').hide();
+                             $('.main_calendar_week').hide();
+                             $('.main_calendar_month').show();
+                             $('.main_calendar_list').hide();
+                             $('button.show_locco').show();
+                        }
                     });
                     $.getScript( '/../restfulizer.js');
                 });
@@ -250,13 +318,10 @@ $(function() {
                     $.getScript( '/../restfulizer.js');
                  
                 });
-                console.log("next");
             }   
     });
     
     $('.index_aside .day_events').show();
     
     $.getScript( '/../js/open_modal.js'); 
-    
-    
 });

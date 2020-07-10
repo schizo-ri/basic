@@ -8,6 +8,8 @@ use App\Models\Event;
 use App\Models\Task;
 use App\Models\Employee;
 use App\Models\Absence;
+use App\Models\Locco;
+use App\Models\Car;
 use Sentinel;
 use App\Http\Requests\EventRequest;
 use DateTime;
@@ -33,15 +35,16 @@ class EventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $empl = Sentinel::getUser()->employee;
         $permission_dep = array();
       
         $dataArr = EventController::getDataArr();
-      
+     
         $tasks = Task::get();
         $employees = Employee::where('checkout',null)->get();
+        $cars = Car::get();
 
         if($empl) {
             $events = Event::where('employee_id', $empl->id)->get();
@@ -56,8 +59,8 @@ class EventController extends Controller
             for ($i = 0; $i < $times-1; $i++) {
                 $hours_array[] = $start->add(new DateInterval('PT1H'))->format('H:i');
             }
-           
-            return view('Centaur::events.index',['dataArr'=> $dataArr,'employees'=>$employees,'events'=>$events,'tasks'=>$tasks, 'permission_dep' => $permission_dep,'hours_array' => $hours_array]);
+    
+            return view('Centaur::events.index',['dataArr'=> $dataArr,'employees'=>$employees,'events'=>$events,'tasks'=>$tasks, 'permission_dep' => $permission_dep,'hours_array' => $hours_array,'cars' => $cars]);
           
         } else {
             $message = session()->flash('error', __('ctrl.path_not_allow'));
@@ -280,7 +283,7 @@ class EventController extends Controller
             }
         }     
        
-        if($empl) {            
+        if($empl) {
             $events = Event::where('employee_id', $empl->id)->whereDate('date', $date)->get();
             if(count( $events)>0) {
                 foreach($events as $event1) {
@@ -318,6 +321,19 @@ class EventController extends Controller
                 }               
             } 
         }
+
+        $loccos = Locco::whereDate('date', $date)->get();
+        foreach($loccos as $locco) {
+            if(date('Y-m-d', strtotime($locco->date)) == $date) {
+                array_push($dataArr, ['name' => 'locco',
+                                      'type' => __('basic.locco'), 
+                                      'date' => $locco->date, 
+                                      'employee' => $locco->employee->user['first_name'] . ' ' . $locco->employee->user['last_name'], 
+                                      'employee_id' => $locco->employee->id, 
+                                      'title' => $locco->destination, 
+                                      'reg' => $locco->car['registration'] ]);
+            }               
+        } 
 
         return $dataArr;
     }
@@ -394,7 +410,6 @@ class EventController extends Controller
         }
 
         $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
-        
         if(count($employees)>0) {
             foreach($employees as $employee) {
                 $dan = $god_select . '-' . date('m-d', strtotime($employee->b_day));
@@ -405,7 +420,19 @@ class EventController extends Controller
                                       'employee_id' => $employee->id ]);
             }
         }
-       
+        $loccos = Locco::get();
+        if(count($loccos)>0) {
+            foreach($loccos as $locco) {
+                array_push($dataArr, ['name' => 'locco',
+                                        'type' => __('basic.locco'), 
+                                        'date' => $locco->date, 
+                                        'employee' => $locco->employee ? $locco->employee->user['first_name'] . ' ' . $locco->employee->user['last_name'] : "", 
+                                        'employee_id' => $locco->employee ?  $locco->employee->id : "", 
+                                        'title' => $locco->destination , 
+                                        'reg' => $locco->car['registration'] ]);
+            }
+        }
+
         return $dataArr;
     }
 

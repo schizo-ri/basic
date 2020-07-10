@@ -57,6 +57,8 @@
 			use App\Http\Controllers\CompanyController;
 			$permission_dep = DashboardController::getDepartmentPermission();
 			$moduli = CompanyController::getModules();
+			$check = DashboardController::evidention_check();
+		
 		?>
 		@if (Sentinel::check())
 			<section>
@@ -81,6 +83,14 @@
 						</a>
 						<ul class="nav_ul float_right">
 							@if (Sentinel::check())
+								<li class="evidention_check">
+									{{-- @if(! $check || $check->end != null ) --}} {{-- više prijava u istom danu --}}
+									@if(! $check )
+										<span class="entry" title="{{__('basic.entry') }}" ><i class="far fa-calendar-check"></i></span>
+									@elseif($check && $check->end == null)
+										<span class="checkout" title="{{__('basic.checkout') }}" ><i class="far fa-calendar-times"></i></span>
+									@endif
+								</li>
 								@if(Sentinel::inRole('administrator'))
 									<li><a id="open-admin" href="{{ route('admin_panel') }}" title="{{ __('basic.open_admin')}}"  >
 										<img class="img_button" src="{{ URL::asset('icons/flash.png') }}" alt="messages" title="{{ __('basic.open_admin')}}" /></a>
@@ -95,6 +105,7 @@
 								<li class="icon"><a href="javascript:void(0);" class="icon" onclick="myTopNav()">
 									<i class="fa fa-bars" style="color: #A7BBEE"></i>
 								</a></li>
+								
 							@else
 								<li><a href="{{ route('auth.login.form') }}">@lang('welcome.login')</a></li>
 								<li><a href="{{ route('auth.register.form') }}">@lang('welcome.register')</a></li>

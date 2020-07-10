@@ -23,8 +23,10 @@ $('.label_period').click(function(){
 
 var form_sequence_height = $('.form_sequence').height();
 var header_campaign_height = $('.header_campaign').height();
+if($('body').width() > 760) {
+    $('.main_campaign').height(form_sequence_height-header_campaign_height);
+}
 
-$('.main_campaign').height(form_sequence_height-header_campaign_height);
 
 /* var campaign_id = $('#campaign_id').val(); */
 /* var form_data = $('.form_sequence').serialize(); */

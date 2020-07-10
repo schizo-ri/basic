@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Locco extends Model
 {
-    protected $fillable = ['car_id','date','employee_id','destination','start_km','end_km','distance','comment'];
+    protected $fillable = ['car_id','date','end_date','travel_id','employee_id','starting_point','destination','start_km','end_km','distance','comment','status'];
 
     /*
 	* The Eloquent employee model name
@@ -21,6 +21,13 @@ class Locco extends Model
 	* @var string
 	*/
 	protected static $carsModel = 'App\Models\Car'; 
+
+	/*
+	* The Eloquent Travel model name
+	* 
+	* @var string
+	*/
+	protected static $travelModel = 'App\Models\TravelOrder'; 
 
 	/*
 	* Returns the Employee relationship
@@ -44,6 +51,17 @@ class Locco extends Model
 		return $this->belongsTo(static::$carsModel,'car_id');
 	}
 	
+	/*
+	* Returns the Travel relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function travel()
+	{
+		return $this->hasOne(static::$travelModel,'locco_id');
+	}
+
 	/*
 	* Save Locco
 	* 

@@ -18,18 +18,16 @@ class CreateTravelOrdersTable extends Migration
             $table->date('date');
             $table->integer('employee_id');
             $table->integer('car_id');
-            $table->integer('locco_id');
+            $table->integer('locco_id')->nullable();
             $table->string('destination', 255);
-            $table->string('description', 255);
+            $table->string('description', 255)->nullable();
             $table->integer('days');
             $table->date('start_date');
             $table->date('end_date');
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->string('advance', 255);
-            $table->date('advance_date');
-            $table->string('rest_payout', 255);
-            $table->integer('calculate_employee');
+            $table->string('advance', 255)->nullable();
+            $table->date('advance_date')->nullable();
+            $table->string('rest_payout', 255)->nullable();
+            $table->integer('calculate_employee')->nullable();
             $table->timestamps();
         });
     }

@@ -67,6 +67,13 @@
 		@else
 			<input type="hidden" name="email" value="DA">
 		@endif
+		@if (Sentinel::inRole('administrator'))
+			<div class="display_flex">
+				<label for="decree">@lang('basic.decree')</label>
+				<input class="margin_l_20" type="checkbox" name="decree" value="1" id="decree" />
+			</div>
+		@endif
+		
 		{{ csrf_field() }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1" >
 		<a href="#" rel="modal:close" class="btn-close">@lang('basic.cancel')</a>

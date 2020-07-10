@@ -33,7 +33,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.employee')</label>
-				<select  class="form-control" name="employee_id" value="{{ old('employee_id') }}" >
+				<select  class="form-control" name="employee_id" value="{{ old('employee_id') }}" required>
 					<label>@lang('basic.employee')</label>
 					<option value="" selected disabled></option>
 					@foreach ($employees as $employee)
@@ -44,12 +44,22 @@
 			</div>
 			<div class="form-group {{ ($errors->has('date')) ? 'has-error' : '' }}">
 				<label for="">@lang('basic.date')</label>
-				<input class="form-control" name="date" type="date" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}" required />
+				<input class="form-control" name="date" type="datetime-local" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d\TH:i') !!}" required />
 				{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="form-group {{ ($errors->has('end_date')) ? 'has-error' : '' }}">
+				<label for="">@lang('absence.end_date')</label>
+				<input class="form-control" name="end_date" type="datetime-local" value="{{ old('end_date') }}" />
+				{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="form-group {{ ($errors->has('starting_point')) ? 'has-error' : '' }}">
+				<label>@lang('basic.starting_point')</label>
+				<input class="form-control" placeholder="{{ __('basic.starting_point') }}" name="starting_point" type="text" value="{{ old('starting_point') }}" required />
+				{!! ($errors->has('starting_point') ? $errors->first('starting_point', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('destination')) ? 'has-error' : '' }}">
 				<label>@lang('basic.destination')</label>
-				<input class="form-control" placeholder="{{ __('basic.destination') }}" name="destination" type="text" value="{{ old('destination') }}" required />
+				<input class="form-control" placeholder="{{ __('basic.destination') }}" name="destination" type="text" value="{{ old('destination') }}"  required />
 				{!! ($errors->has('destination') ? $errors->first('destination', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('start_km'))  ? 'has-error' : '' }}">
@@ -59,12 +69,12 @@
 			</div>
 			<div class="form-group {{ ($errors->has('end_km'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.end_km')</label>
-				<input class="form-control" name="end_km" id="end_km" type="number" required value="{{ old('end_km') }}"/>	
+				<input class="form-control" name="end_km" id="end_km" type="number" value="{{ old('end_km') }}"/>
 				{!! ($errors->has('end_km') ? $errors->first('end_km', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('distance'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.distance')</label>
-				<input class="form-control" name="distance" id="distance" type="number"  value="{{ old('distance') }}" readonly required/>	
+				<input class="form-control" name="distance" id="distance" type="number"  value="{{ old('distance') }}" readonly />	
 				{!! ($errors->has('distance') ? $errors->first('distance', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group">
@@ -74,6 +84,10 @@
 			<div class="servis form-group">
 				<label for="servis">@lang('basic.malfunction')</label>
 				<input class="" type="checkbox" name="servis" value="servis" id="servis" value=""/>
+			</div>
+			<div class="servis form-group">
+				<label for="travel">@lang('basic.create_travel')</label>
+				<input class="" type="checkbox" name="travel" value="travel" id="travel" value=""/>
 			</div>
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" id="submit" value="{{ __('basic.save')}}">
@@ -87,12 +101,14 @@
 		var poc_km = $('#start_km').val();
 		var zav_km = $('#end_km').val();
 		var udaljenost = zav_km - poc_km;
-
+		console.log(udaljenost);
 		$('#distance').val(udaljenost);
 		if (udaljenost < 0 ) {
 			$('#distance').css('border','1px solid red');
+			$('.btn-submit').attr('disabled', 'disabled');
 		} else {
 			$('#distance').css('border','1px solid #F0F4FF');
+			$('.btn-submit').attr('disabled', 'false');
 		}
 	});
 

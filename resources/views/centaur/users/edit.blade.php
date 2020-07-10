@@ -7,7 +7,7 @@
     <h3 class="panel-title">@lang('basic.edit_user')</h3>
 </div>
 <div class="modal-body">
-    <form accept-charset="UTF-8" class="form_edit_user" role="form" method="post" action="{{ route('users.update', $user->id) }}">
+    <form accept-charset="UTF-8" class="form_edit_user" role="form" method="post" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data" >
         <div class="first_tab">
             <div class="form-group upload_user_photo">
                 <label class="label_file" for="file">@lang('basic.upload_photo')
@@ -74,5 +74,5 @@
 </div>
 </div>
 <script>
-    $.getScript('/js/validate.js');
+    $.getScript('/js/validate_user_edit.js');
 </script>

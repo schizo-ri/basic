@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="index_page index_documents">
-	
 	<main class="col-md-12 index_main main_documents float_right">
 		<section>
 			<div class="page-header header_document">
@@ -45,11 +44,11 @@
 							<label>
 								<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 							</label>
-						<!--	<span class="change_view"></span>-->
+						{{-- <span class="change_view"></span> --}}
 							@if(Sentinel::getUser()->hasAccess(["documents.create"]) || in_array("documents.create", $permission_dep) )
 								<a class="add_new" href="{{ route('documents.create') }}" class="" rel="modal:open">
 									<i style="font-size:11px" class="fa">&#xf067;</i>
-									<!-- @lang("basic.add_document")-->
+									{{--  @lang("basic.add_document") --}}
 								</a>
 							@endif
 							
@@ -75,13 +74,13 @@
 											$open = $document->path . $document->title;
 										?>
 										<tr>
-											<th style="text-align: center;">
+											<td style="text-align: center;">
 												<span class="{{ pathinfo($open, PATHINFO_EXTENSION) }}"></span>
 												<!--
 												@if(file_exists('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png'))
 													<img class="doc_icons" src="{{ URL::asset('icons/' . pathinfo($open, PATHINFO_EXTENSION) . '.png' )  }}" /> 
-												@endif -->						
-											</th><!--type -->
+												@endif -->
+											</td><!--type -->
 											<td><a href="{{ asset($open) }}" target="_blank">{{ $document->title }}</a></td>
 									<!--	<td>{{ $document->employee->user['first_name'] . ' ' .  $document->employee->user['last_name'] }}</td>-->
 									<!--	<td>{{ $document->path }}</td>-->

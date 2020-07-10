@@ -11,7 +11,9 @@ use App\Models\Task;
 use App\Models\Employee;
 use App\Models\Department;
 use App\Models\Company;
+use App\Models\Locco;
 use App\Models\Setting;
+use App\Models\WorkRecord;
 use App\Http\Controllers\BasicAbsenceController;
 use Sentinel;
 use DateTime;
@@ -30,6 +32,7 @@ class DashboardController extends Controller
 
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
+        
             $moduli = CompanyController::getModules();  //dohvaća module firme
       
             $datum = new DateTime('now');    /* današnji dan */
@@ -64,7 +67,9 @@ class DashboardController extends Controller
                 $profile_image = DashboardController::profile_image(Sentinel::getUser()->employee['id']);
                 $user_name =  DashboardController::user_name(Sentinel::getUser()->employee['id']);					
                         
-                return view('Centaur::dashboard',[ 'posts' => $posts, 'events' => $events,'tasks' => $tasks,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence, 'profile_image' => $profile_image, 'user_name' => $user_name]);
+                $locco_active = Locco::where('employee_id', $employee->id)->where('status',0)->orderBy('date','ASC')->get();
+                
+                return view('Centaur::dashboard',['locco_active' => $locco_active, 'posts' => $posts, 'events' => $events,'tasks' => $tasks,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence, 'profile_image' => $profile_image, 'user_name' => $user_name]);
             } else {
                 return view('Centaur::dashboard',['moduli' => $moduli]);
             }
@@ -139,5 +144,24 @@ class DashboardController extends Controller
     {    
 	    $moduli = CompanyController::getModules();
         return view('Centaur::admin_panel',['moduli' => $moduli]);
+    }
+
+    public static function evidention_check() 
+    {
+        $employee = Sentinel::getUser()->employee;
+
+        $record_yesterday = WorkRecord::where('employee_id', $employee->id)->whereDate('start', '<', date('Y-m-d'))->orderBy('start','DESC')->first();
+        if( $record_yesterday && $record_yesterday['end'] == null ) {
+            $start = $record_yesterday->start;
+            $end = date('Y-m-d', strtotime( $start )) . ' 16:00:00';
+            $data = array(
+                'end'  =>   $end,
+            );
+            $record_yesterday->updateWorkRecords($data);
+        }
+
+        $record = WorkRecord::where('employee_id', $employee->id)->whereDate('start', date('Y-m-d'))->first();
+    
+        return $record;
     }
 }

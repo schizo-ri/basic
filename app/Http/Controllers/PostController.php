@@ -10,6 +10,7 @@ use App\Models\Employee;
 use App\Models\Department;
 use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
+use App\Models\Work;
 use Sentinel;
 use DateTime;
 use App\Events\MessageSend;
@@ -95,17 +96,16 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-		$user = Sentinel::getUser();
-		$employee = Employee::where('user_id', $user->id)->first();
-
-		$data = array(
-			'employee_id'  		=> $employee->id,
-			'content'  			=> $request['content']
-		);
+		$employee = Sentinel::getUser()->employee;
 		$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->get();
 		
 		if($request['to_employee_id'] != null ) {	
-			$data += ['to_employee_id'  	=> $request['to_employee_id']];		
+			$data = array(
+				'employee_id'  		=> $employee->id,
+				'to_employee_id'  	=> $request['to_employee_id'],
+				'content'  			=> $request['content']
+			);
+			
 			if($posts->where('to_employee_id', $request['to_employee_id'])->first()) {
 				$post = $posts->where('to_employee_id', $request['to_employee_id'])->first();
 				$post->updatePost($data);
@@ -116,27 +116,66 @@ class PostController extends Controller
 				$post = new Post();
 				$post->savePost($data);
 			}
+
+			$data1 = array(
+				'employee_id'   =>  $employee->id,
+				'post_id'  		=>  $post->id,
+				'content'  		=>  $request['content'],
+				'status'  		=> '0',
+			);
+			
+			$comment = new Comment();
+			$comment->saveComment($data1);
+
 		}
 		if($request['to_department_id'] != null) {
-			$data += ['to_department_id'  => $request['to_department_id']];
-			if($posts->where('to_department_id', $request['to_department_id'])->first()) {
+			// šalje samo na voditelja odjela
+			/* $data += ['to_department_id'  => $request['to_department_id']];
+			$post = Post::find( $request['to_department_id']);
+			if($post) {
 				$post->updatePost($data);
 			} else {
 				$post = new Post();
 				$post->savePost($data);
+			} */
+
+			// šalje na sve djelatnike odjela
+			$department = Department::find($request['to_department_id']);
+			$works = Work::where('department_id',$department->id)->get();
+			
+			foreach ($works as $work) {
+				$workers = $work->workers;
+				foreach ($workers as $worker) {
+					$data = array(
+						'employee_id'  		=> $employee->id,
+						'to_employee_id' => $worker->id,
+						'content'  			=> $request['content']
+					);
+
+					if($posts->where('to_employee_id', $worker->id)->first()) {
+						$post = $posts->where('to_employee_id', $worker->id)->first();
+						$post->updatePost($data);
+					} elseif($posts->where('employee_id', $worker->id)->first()) {
+						$post = $posts->where('employee_id', $worker->id)->first();
+						$post->updatePost($data);
+					} else {
+						$post = new Post();
+						$post->savePost($data);
+					}
+
+					$data1 = array(
+						'employee_id'   =>  $employee->id,
+						'post_id'  		=>  $post->id,
+						'content'  		=>  $request['content'],
+						'status'  		=> '0',
+					);
+					
+					$comment = new Comment();
+					$comment->saveComment($data1);
+				}
 			}
 		}
 
-		$data1 = array(
-			'employee_id'   =>  $employee->id,
-			'post_id'  		=>  $post->id,
-			'content'  		=>  $request['content'],
-			'status'  		=> '0',
-		);
-		
-		$comment = new Comment();
-		$comment->saveComment($data1);
-	
 		session()->flash('success', "Poruka je poslana");
 		
         return redirect()->back();
@@ -236,7 +275,7 @@ class PostController extends Controller
 		$employee = Sentinel::getUser()->employee;
 		
 		$data = array(
-			'employee_id'  =>  $employee->id,       
+			'employee_id'  => $employee->id,       
 			'post_id'  =>  $request->get('post_id'),
 			'content'  =>  $request->get('content'),
 			'status'  	=> '0',

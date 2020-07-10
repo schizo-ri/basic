@@ -26,9 +26,8 @@ class VehicalServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-       
         $empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
         
@@ -36,15 +35,10 @@ class VehicalServiceController extends Controller
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
         } 
 
-        if( $request['car_id'] ) {
-            $vehicalServices = VehicalService::where('car_id',  $request['car_id'])->orderBy('date','DESC')->get();
+        $vehicalServices = VehicalService::orderBy('date','DESC')->get();
+        $title = 'vehicalServices';
 
-            return view('Centaur::vehical_services.index', ['vehicalServices' => $vehicalServices, 'permission_dep' => $permission_dep]);
-        } else {
-            $vehicalServices = VehicalService::orderBy('date','DESC')->get();
-
-            return view('Centaur::vehical_services.index', ['vehicalServices' => $vehicalServices, 'permission_dep' => $permission_dep]);
-        }
+        return view('Centaur::vehical_services.index',compact('title'), ['vehicalServices' => $vehicalServices, 'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -96,7 +90,17 @@ class VehicalServiceController extends Controller
      */
     public function show($id)
     {
-        //
+        $empl = Sentinel::getUser()->employee;
+		$permission_dep = array();
+        
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
+
+      
+        $vehicalServices = VehicalService::where('car_id',  $id)->orderBy('date','DESC')->get();
+
+        return view('Centaur::vehical_services.show', ['vehicalServices' => $vehicalServices, 'permission_dep' => $permission_dep]);
     }
 
     /**

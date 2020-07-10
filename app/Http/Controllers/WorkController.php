@@ -29,11 +29,11 @@ class WorkController extends Controller
      */
     public function index(Request $request)
     {
-		$empl = Sentinel::getUser()->employee;
-        $permission_dep = array();
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
+      $empl = Sentinel::getUser()->employee;
+      $permission_dep = array();
+      if($empl) {
+        $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+      } 
 		
 		if(isset($request->department_id)) {
 			$works = Work::where('department_id',$request->department_id)->orderBy('name')->get();
