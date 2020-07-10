@@ -7,7 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     protected $fillable = [
-        'name','project_no','duration','day_hours','saturday','start_date','end_date','categories','active'];
+    'name','project_no','duration','day_hours','saturday','start_date','end_date','categories','active','preparation_id'];
+
+	/*
+	* The Eloquent prepacation model name
+	* 
+	* @var string
+	*/
+	protected static $prepacationModel = 'App\Models\Prepacation'; 
+	
+	/*
+	* Returns the user relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function prepacation()
+	{
+		return $this->belongsTo(static::$prepacationModel,'preparation_id');
+	}
 
     /*
 	* Save Project

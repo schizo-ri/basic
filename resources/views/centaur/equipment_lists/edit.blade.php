@@ -1,8 +1,6 @@
 @php
-ini_set('memory_limit','-1');
-
+    ini_set('memory_limit','-1');
 @endphp
-
 <a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 <div class="modal-header" id="first_anchor">
     <h2 class="">Lista opreme: {{ $equipments->first()->preparation1['project_no'] . ' - ' . $equipments->first()->preparation1['name'] }}</h2>
@@ -39,7 +37,6 @@ ini_set('memory_limit','-1');
             </div>
             <div class="tbody">
                 @if ( $equipments->where('level1',1)->first())
-                   
                         <!-- naslov -->
                             <!-- <input name="id[]" value="{{ $equipment_level1->id }}" hidden/> -->
                             <p class="tr row_preparation_text_item1 {!! $equipment_level1->replace_item == 1 ? 'removed_item' : '' !!} item_level1 {!! count($equipments->where('stavka_id_level1',$equipment_level1->id))>0 ? 'collapsible' : '' !!}" id="{{ $equipment_level1->id }}" >

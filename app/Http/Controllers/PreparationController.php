@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Project;
 use App\Models\Preparation;
 use App\Models\EquipmentList;
 use App\User;
@@ -68,8 +69,6 @@ class PreparationController extends Controller
             $roles_text .=  $role['slug'] . ',';
         }
 
-
-
         return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'priprema' => $priprema, 'mehanicka' => $mehanicka,'oznake' => $oznake, 'roles' => substr($roles_text, 0, -1)]);
         
     } 
@@ -92,7 +91,6 @@ class PreparationController extends Controller
      */
     public function store(Request $request)
     {
-       
         $data = array(
             'name'                  => $request['name'],
             'project_no'            => str_replace(" ", "_",$request['project_no']),
@@ -109,8 +107,19 @@ class PreparationController extends Controller
       
         $preparation = new Preparation();
         $preparation->savePreparation($data);
-        
-      /*   if( $request['preparation'] || $request['mechanical_processing'] || $request['marks_documentation']) {
+
+        $data = array(
+            'name'          => $request['name'],
+            'project_no'    => $request['project_no'],
+            'preparation_id'=> $preparation->id,
+            'start_date'      => date('Y-m-d',strtotime($preparation->created_at)),
+            'end_date'      => $request['delivery'],
+        );
+
+        $project = new Project();
+        $project->saveProject($data);
+
+        /* if( $request['preparation'] || $request['mechanical_processing'] || $request['marks_documentation']) {
             $data = array(
                 'preparation_id'  => $preparation->id,
                 'preparation'  => $request['preparation'],
@@ -124,12 +133,16 @@ class PreparationController extends Controller
         } */
         
         if(request()->file('file')) {
-           
-            try {
+            if( $request['siemens'] == "1" ) {
+                Excel::import(new EquipmentImportSiemens, request()->file('file')); 
+            } else {
+                Excel::import(new EquipmentImport, request()->file('file'));
+            }
+           /*  try {
                 if( $request['siemens'] == "1" ) {
                     Excel::import(new EquipmentImportSiemens, request()->file('file')); 
                 } else {
-                     Excel::import(new EquipmentImport, request()->file('file'));
+                    Excel::import(new EquipmentImport, request()->file('file'));
                 }
                
             } catch (\Throwable $th) {
@@ -141,7 +154,7 @@ class PreparationController extends Controller
                 session()->flash('error', "Došlo je do problema, dokument nije učitan!");
             
                 return redirect()->back();
-            }
+            } */
         }
        
 

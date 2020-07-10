@@ -98,6 +98,7 @@ Route::get('dashboard', function () {
 // Dashboard 
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
 Route::get('live/{date?}', ['as' => 'live', 'uses' => 'DashboardController@live']);
+Route::get('missing', ['as' => 'missing', 'uses' => 'DashboardController@missing']);
 
 Route::get('/clear-cache', function() {
     Artisan::call('cache:clear');

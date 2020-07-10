@@ -35,29 +35,34 @@
         <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/interaction/main.js') }}"></script>
         <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/list/main.js') }}"></script>
         <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/resource-common/main.js') }}"></script>
+      
         @php
+       
             $url = $_SERVER['HTTP_HOST'] . $_SERVER["REQUEST_URI"] ;
             if(isset(parse_url($url)['query'])) {
                 $date = str_replace("=","",strstr(parse_url($url)['query'],'='));
             } else {
                 $date=date("Y-m-d");
             }
-
-            ini_set('memory_limit','-1');
-
         @endphp
 		@stack('stylesheet')
     </head>
     <body> 
-    <div class="row calendar_main calendar_show">
-        <aside class="col-12" >
+    <div class="row calendar_main calendar_show" style="height: calc(100% + 70px);">
+        <main class="col-6" >
+            <div id='calendar_view'>
+                <img src="{{ URL::asset('schedules/Raspored.png')}}" alt="Kalendar"/>              
+            </div>
+            <div hidden class="dataArr">{!! json_encode($dataArr) !!}</div>
+        </main>
+        <aside class="col-6" >
             <div class="list">
-                <div class="projects_list col-md-6 col-sm-12 first"> 
+                <div class="projects_list first"> 
                     <h3>Raspored za dan {{ date('d.m.Y', strtotime($date)) }}</h3>
                     <div>
                         @foreach ($projects as $project)
                             @if($project_employees->where('project_id', $project->project_id)->where('date', $date)->first())
-                                <div id="p_{{ $project->project_id}}" class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                                <div id="p_{{ $project->project_id}}" class="col-25">
                                     <h4>{{ $project->project_no . ' - ' . $project->name }} <!--     <a href="{{ action('ProjectEmployeeController@uskladi', $project->project_id) }}">uskladi</a>--></h4>
                                     @foreach ($categories as $category)
                                         @foreach ($project_employees->where('project_id',$project->project_id)->where('date', $date) as $project_employee)
@@ -71,7 +76,7 @@
                                         @endforeach
                                     @endforeach
                                     @foreach ($project_employees->where('project_id',$project->project_id)->where('date', $date) as $project_employee)
-                                        @if($project_employee->employee && $project_employee->employee['category_id'] == 0)
+                                        @if($project_employee->employee['category_id'] == 0)
                                             <div class="{{  count($project_employees->where('employee_id', $project_employee->employee_id)->where('date', $date)) > 1 ? 'double' : ' ' }}">
                                                 <p class="{{ $project_employee->date }}" title="{{ $project_employee->employee->category['description'] }}">
                                                 {{ $project_employee->employee['first_name'] . ' ' . $project_employee->employee['last_name'] }}</p>
@@ -83,12 +88,12 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="projects_list col-md-6 col-sm-12 second"> 
+                <div class="projects_list second"> 
                     <h3>Raspored za dan {{ date_format(date_modify(date_create($date),"+1 days"),'d.m.Y') }}</h3>
                     <div>
                         @foreach ($projects as $project)
                             @if($project_employees->where('project_id', $project->project_id)->where('date', date_format(date_modify(date_create($date),"+1 days"),'Y-m-d'))->first())
-                                <div id="p_{{ $project->project_id}}" class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                                <div id="p_{{ $project->project_id}}" class="col-25">
                                     <h4>{{ $project->project_no . ' - ' . $project->name }} <!--     <a href="{{ action('ProjectEmployeeController@uskladi', $project->project_id) }}">uskladi</a>--></h4>
                                     @foreach ($categories as $category)
                                         @foreach ($project_employees->where('project_id',$project->project_id)->where('date', date_format(date_modify(date_create($date),"+1 days"),'Y-m-d')) as $project_employee)

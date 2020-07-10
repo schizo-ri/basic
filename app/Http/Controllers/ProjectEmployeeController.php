@@ -54,75 +54,83 @@ class ProjectEmployeeController extends Controller
         $project = Project::where('id',  $request['project_id'])->first();
         $project_employees = ProjectEmployee::where('project_id', $project->id)->delete();       
 
-        if( isset($request['employee_id']) && $request['employee_id'] ) {
-            if(is_array($request['employee_id'])) {   // snima za sve dane djelatnika
-                $count_employees = count($request['employee_id']); // 2 djelatnika na projektu
-                $interval = DateInterval::createFromDateString('1 day');
-                $begin = new DateTime($project->start_date);
-             
-                $project_duration =  $project->duration; //120
-                $project_day_hours = $project->day_hours; // 10- sati u danu
-                
-                $days =   $project_duration / $project_day_hours; // 12 - trajanje dana           
-                $calc_days = intval( $days /  $count_employees); 
-               
-                if( ($project_duration % $project_day_hours) || ($days %  $count_employees) ) {
-                    $calc_days ++;
-                }
-             
-                $date = new DateTime($project->start_date);
-              
-                for ($i=0; $i < $calc_days; $i++) {
-                    if( $project->saturday == 0 ) { 
-                        if( date_format($date,'N') <= 5) {
-                            foreach ( $request['employee_id'] as $employee_id) {
-                                $data = array(
-                                    'project_id'    => $request['project_id'],
-                                    'employee_id'   => $employee_id,
-                                    'date'          => date_format($date,'Y-m-d') 
-                                );
-                                
-                                $project_employee = new ProjectEmployee();
-                                $project_employee->saveProjectEmployee($data);
-                            }
-                            $date->modify('+1 day');
-                        }  else if (date_format($date,'N') == 7 || date_format($date,'N') == 6) {
-                            $date->modify('+1 day');
-                            $i--;
-                        }   
-                    } else {
-                        if( date_format($date,'N') <= 6) {
-                            foreach ( $request['employee_id'] as $employee_id) {
-                                $data = array(
-                                    'project_id'    => $request['project_id'],
-                                    'employee_id'   => $employee_id,
-                                    'date'          => date_format($date,'Y-m-d') 
-                                );
-                                
-                                $project_employee = new ProjectEmployee();
-                                $project_employee->saveProjectEmployee($data);
-                            }
-                            $date->modify('+1 day');
-                        } else if (date_format($date,'N') == 7 ) {
-                            $date->modify('+1 day');
-                            $i--;
-                        }                    
-                    }
-                }
-    
-            } else { // snima za određeni dan određenog djelatnika
-                if(isset($request['date'])) {
-                    $data = array(
-                        'project_id'    => $request['project_id'],
-                        'employee_id'   => $request['employee_id'],
-                        'date'          => $request['date']
-                    );
+        if(! $request['employee_id']) {
+            session()->flash('error', "Nedovoljno podataka za snimanje. Nisu uneseni djelatnici.");
+            return redirect()->back();
+        } else if(! $project->day_hours || ! $project->duration ) {
+            session()->flash('error', "Nedovoljno podataka za snimanje. Nisu uneseni svi podaci na projektu.");
+            return redirect()->back();
+        } else {
+            if( isset($request['employee_id']) && $request['employee_id'] ) {
+                if(is_array($request['employee_id'])) {   // snima za sve dane djelatnika
+                    $count_employees = count($request['employee_id']); // 2 djelatnika na projektu
+                    $interval = DateInterval::createFromDateString('1 day');
+                    $begin = new DateTime($project->start_date);
+                 
+                    $project_duration =  $project->duration; //120
+                    $project_day_hours = $project->day_hours; // 10- sati u danu
+                    
+                    $days =   $project_duration / $project_day_hours; // 12 - trajanje dana           
+                    $calc_days = intval( $days /  $count_employees); 
                    
-                    $project_employee = new ProjectEmployee();
-                    $project_employee->saveProjectEmployee($data);
-                } else {
-                    session()->flash('error', "Nedovoljno podataka za snimanje.");
-                    return redirect()->back();
+                    if( ($project_duration % $project_day_hours) || ($days %  $count_employees) ) {
+                        $calc_days ++;
+                    }
+                 
+                    $date = new DateTime($project->start_date);
+                  
+                    for ($i=0; $i < $calc_days; $i++) {
+                        if( $project->saturday == 0 ) { 
+                            if( date_format($date,'N') <= 5) {
+                                foreach ( $request['employee_id'] as $employee_id) {
+                                    $data = array(
+                                        'project_id'    => $request['project_id'],
+                                        'employee_id'   => $employee_id,
+                                        'date'          => date_format($date,'Y-m-d') 
+                                    );
+                                    
+                                    $project_employee = new ProjectEmployee();
+                                    $project_employee->saveProjectEmployee($data);
+                                }
+                                $date->modify('+1 day');
+                            }  else if (date_format($date,'N') == 7 || date_format($date,'N') == 6) {
+                                $date->modify('+1 day');
+                                $i--;
+                            }   
+                        } else {
+                            if( date_format($date,'N') <= 6) {
+                                foreach ( $request['employee_id'] as $employee_id) {
+                                    $data = array(
+                                        'project_id'    => $request['project_id'],
+                                        'employee_id'   => $employee_id,
+                                        'date'          => date_format($date,'Y-m-d') 
+                                    );
+                                    
+                                    $project_employee = new ProjectEmployee();
+                                    $project_employee->saveProjectEmployee($data);
+                                }
+                                $date->modify('+1 day');
+                            } else if (date_format($date,'N') == 7 ) {
+                                $date->modify('+1 day');
+                                $i--;
+                            }                    
+                        }
+                    }
+        
+                } else { // snima za određeni dan određenog djelatnika
+                    if(isset($request['date'])) {
+                        $data = array(
+                            'project_id'    => $request['project_id'],
+                            'employee_id'   => $request['employee_id'],
+                            'date'          => $request['date']
+                        );
+                       
+                        $project_employee = new ProjectEmployee();
+                        $project_employee->saveProjectEmployee($data);
+                    } else {
+                        session()->flash('error', "Nedovoljno podataka za snimanje.");
+                        return redirect()->back();
+                    }
                 }
             }
         }

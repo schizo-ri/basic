@@ -21,7 +21,7 @@
       
         var resourceTitle = resources.map(function(resource) { return resource.title });
 
-    //  console.log(resources); 
+      /* console.log(events);  */
       
 
         // -----------------------------------------------------------------
@@ -265,13 +265,9 @@
                     },
                     error: function(jqXhr, json, errorThrown) {
                         alert("Dizajn nije spremljen, došlo je do greške!");
+                        console.log(jqXhr);
                         $(".btn-submit").prop("disabled", false);
-                        var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
-                                            'message':  jqXhr.responseJSON.message,
-                                            'file':  jqXhr.responseJSON.file,
-                                            'line':  jqXhr.responseJSON.line };
-        
-                        console.log(data_to_send); 
+                   
                    
                         if(url.includes("users") && errorThrown == 'Unprocessable Entity' ) {
                             alert(email_unique);
@@ -297,9 +293,14 @@
             eventMouseEnter: function( mouseEnterInfo ) {
                 hover_title_el = mouseEnterInfo.event.title;
                 var resource_text = '';
-                $.each(JSON.parse(mouseEnterInfo.event.extendedProps.resourceIds), function( index, value ) {
-                    resource_text += '<p>' + value + '</p>';
-                });
+                try {
+                    $.each(JSON.parse(mouseEnterInfo.event.extendedProps.resourceIds), function( index, value ) {
+                        resource_text += '<p>' + value + '</p>';
+                    });
+                } catch (error) {
+                    
+                }
+               
      
                 tooltip = '<div class="tooltiptopicevent" style="top:' + (mouseEnterInfo.jsEvent.y + 10) + 'px;left:' + ( mouseEnterInfo.jsEvent.x + 20) + 'px;">' + hover_title_el + '<br>' + resource_text + '</div>';
             
@@ -356,4 +357,3 @@
         $('.fc-scroller.fc-day-grid-container').css('overflow','hidden');
     });
  }
- console.log("fullcalendar");

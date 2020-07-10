@@ -26,12 +26,14 @@
 <div class="row calendar_main">
     @if (Sentinel::check())    
         <main class="col-lg-6 col-md-12" >
+            <a class='new_project' href="{{ route('projects.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" title="Dodaj novi projekt" /> Novi projekt</a>
+         
             <div id='calendar'></div>
-            <div>
+           {{--  <div>
                 <h2 class="toCanvas" style="display: none">To Canvas</h2>
                 <h2 class="toPic" style="display: none">To Image</h2>
                 <label for="imgW" style="display: none">Image Width:</label>
-            </div>   
+            </div>    --}}
             <div hidden class="dataArr">{!! json_encode($dataArr) !!}</div>
             <div hidden class="dataArrResource">{!! json_encode($dataArrResource) !!}</div>
         </main>    
@@ -44,25 +46,10 @@
                 var test = $("#calendar").get(0);
 
                 $( "span.publish_btn" ).click(function( event ) {
-                    html2canvas(test).then(function(canvas) {
-                        var canvasWidth = canvas.width;// canvas width
-                        var canvasHeight = canvas.height;  // canvas height
-                     //   $('.toCanvas').after(canvas);// render canvas
-                        var img = Canvas2Image.convertToImage(canvas, canvasWidth, canvasHeight);
-                     //   $(".toPic").after(img); // render image
-                        var d = new Date();
-
-                        let f = 'Raspored_' + d.getFullYear() + (d.getMonth() +1) + d.getDate() + d.getHours() + d.getMinutes();// file name
-                        // save as image
-                        Canvas2Image.saveAsImage(canvas, canvasWidth, canvasHeight, 'png', f);
-
-                        var dataURL = canvas.toDataURL(); 
-                        var imgdata = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-                        $.ajax({
-                            type: 'POST',
+                    $.ajax({
+                            type: 'post',
                             url: 'saveImg',
-                            data: {'imgCanvas':imgdata,
-                                    '_token':  $('meta[name="csrf-token"]').attr('content') },
+                            data: {'_token': $('meta[name="csrf-token"]').attr('content') },
                             beforeSend: function(){
                                 // Show image container
                                 $("#loader").show();
@@ -76,14 +63,29 @@
                                 $("#loader").hide();
                             }
                         });
-                    });
+                 /*    html2canvas(test).then(function(canvas) { */
+                 /*        var canvasWidth = canvas.width;// canvas width */
+                 /*        var canvasHeight = canvas.height;  // canvas height */
+                 /*     //   $('.toCanvas').after(canvas);// render canvas */
+                 /*        var img = Canvas2Image.convertToImage(canvas, canvasWidth, canvasHeight); */
+                 /*     //   $(".toPic").after(img); // render image */
+                 /*        var d = new Date(); */
+
+                 /*        let f = 'Raspored_' + d.getFullYear() + (d.getMonth() +1) + d.getDate() + d.getHours() + d .getMinutes();// file name*/
+                 /*        // save as image */
+                 /*        Canvas2Image.saveAsImage(canvas, canvasWidth, canvasHeight, 'png', f); */
+
+                 /*        var dataURL = canvas.toDataURL();  */
+                 /*        var imgdata = dataURL.replace(/^data:image\/(png|jpg);base64,/, ""); */
+                 /*         */
+                 /*    }); */
                 });
             </script>
             <div id='external-events' class="clear_r">
                 <div class="resource">
-                    <p>
+                  {{--   <p>
                         <a href="{{ route('employees.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" title="Dodaj novog djelatnika" /></a>
-                    </p>
+                    </p> --}}
                     @foreach ($categories as $category)
                         <div class="col-20">
                             <h4 title="{{  $category->description }}">{{  $category->mark . ' | ' }} <small> {{ $category->description }}</small></h4>

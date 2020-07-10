@@ -49,7 +49,7 @@
                                 mouse_is_inside = false;
                             }, 
                             error: function(jqXhr, json, errorThrown) {
-                                alert("Dizajn nije spremljen, došlo je do greške!");
+                                alert("Podaci nisu spremljeni, došlo je do greške!");
                                 $(".btn-submit").prop("disabled", false);
                                 var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
                                                     'message':  jqXhr.responseJSON.message,

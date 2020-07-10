@@ -57,7 +57,9 @@ body .row {
 .page-header {
     overflow: hidden;
 }
-
+.list {
+	height: 100%;
+}
 .modal.equipment_lists {
 	max-width: 100%;
     min-height: 100%;
@@ -81,12 +83,16 @@ body .row {
     padding: 30px 20px;
 }
 
-.calendar_main main, .calendar_main aside {
+.calendar_main main {
+	padding: 0 20px 0;
+	height: 100%;
+	overflow: auto;
+}
+ .calendar_main aside {
 	padding: 30px 20px 0;
 	height: 100%;
 	overflow: auto;
 }
-
 .calendar_main aside > section {
 	overflow: hidden;
 	height: auto;
@@ -150,6 +156,9 @@ span.td.align_left, span.td.align_left:first-child {
 aside {
 	float: left;
 /*	width: 25%;*/
+}
+.calendar_show aside {
+	float: none;
 }
 main {
 	float: left;
@@ -221,13 +230,14 @@ footer {
 #calendar {
 	max-width: 100%;
     margin: 20px auto;
-    max-height: max-content;
+	max-height: max-content;
+	clear: both;
 }
 
 .projects_list {
 	padding-left: 20px;
 	display: flex;
-    flex-wrap: wrap;
+	flex-wrap: wrap;
 }
 .projects_list >div {
 	width: 100%;
@@ -413,7 +423,7 @@ label.filter_empl > input {
 .clear_r {
 	clear: right;
 }
-.publish_btn {
+.publish_btn, .new_project {
 	border: 1px solid #337ab7;
     padding: 5px 15px;
     border-radius: 5px;
@@ -421,7 +431,11 @@ label.filter_empl > input {
 	box-shadow: 3px 3px 3px #337ab7;
 	cursor: pointer;
 }
-
+.new_project {
+	margin-top: 20px;
+    display: inline-block;
+    float: right;
+}
 .tooltiptopicevent {
 	width: auto;
     height: auto;
@@ -1183,4 +1197,46 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .ajax-loader1 {
 	background: url(../icons/ajax-loader1.gif) no-repeat center;
 	display: inline-block;
+}
+
+.table>tbody>tr.red_background >td {
+	background-color: rgba(256,0,0,1);
+    color: white;
+}
+
+.fc-event.red_background, .fc-event-dot.red_background {
+	background-color: rgba(256,0,0,1);
+	color: white;
+}
+
+.missing_main {
+
+}
+
+.missing_list >div {
+	overflow: hidden;
+    display: flex;
+    justify-content: space-around;
+}
+.not_delivered {
+    background-color: rgba(255,0,0,0.1);
+}
+.partial {
+    background-color: rgba(256,256,0,0.2);
+}
+.div_preparations {
+	/* background: red; */
+	padding: 10px;
+	display: flex;
+}
+.div_preparations>div {
+	background: white;
+    padding: 0 15px;
+}
+@-webkit-keyframes blink { 50% { border-color: #ff0000; }  }
+
+.red_border_prep {
+	border: 5px solid white  ;
+
+	-webkit-animation: blink .5s step-end infinite alternate; 
 }

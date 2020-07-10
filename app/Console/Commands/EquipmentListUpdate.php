@@ -192,8 +192,14 @@ class EquipmentListUpdate extends Command
 
                     }
                 }
-
-                $mails = array($preparation->manager->email, $preparation->designed->email,'jelena.juras@duplico.hr' );
+                $mails = array('jelena.juras@duplico.hr');
+                if($preparation->manager) {
+                    array_push($mails,$preparation->manager->email);
+                }
+                if($preparation->designed) {
+                    array_push($mails,$preparation->designed->email);
+                }
+              
                 foreach (array_unique($mails) as $email) {
                     Mail::to($email)->send(new EquipmentUpdateMail($preparation,$before_all, $after_all));
                 }

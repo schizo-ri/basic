@@ -139,19 +139,25 @@ class EquipmentListController extends Controller
         $preparation_id = Preparation::where('id',$equipment_list->preparation_id)->first()->id;
 
         $preparation = Preparation::find($preparation_id);
-        $send_to_mail = array();
-        if($preparation->manager) {
-            array_push( $send_to_mail, $preparation->manager->email);
-        }
-        if( $preparation->designed ) {
-            array_push( $send_to_mail, $preparation->designed->email);
-        }
+        $delivered = PreparationController::delivered( $preparation_id );
+        $data_preparation = array(
+            'delivered'  => $delivered,
+        );
+        $preparation->updatePreparation($data_preparation);
+ 
+    /*     $send_to_mail = array(); */
+    /*     if($preparation->manager) { */
+    /*         array_push( $send_to_mail, $preparation->manager->email); */
+    /*     } */
+    /*     if( $preparation->designed ) { */
+    /*         array_push( $send_to_mail, $preparation->designed->email); */
+    /*     } */
        // array_push( $send_to_mail, 'jelena.juras@duplico.hr');
         
      
-        foreach( array_unique($send_to_mail) as $email) {
-         /*    Mail::to($email)->send(new EquipmentMail($preparation, $before_all, $after_all )); */
-        }
+      /*   foreach( array_unique($send_to_mail) as $email) {
+            Mail::to($email)->send(new EquipmentMail($preparation, $before_all, $after_all )); 
+        } */
        
         session()->flash('success', "Podaci su upisani");
         
@@ -588,6 +594,7 @@ class EquipmentListController extends Controller
             $equipmentLists =  $equipmentLists->where('level1',1 );
         }
         $delivered = PreparationController::delivered( $id);
+        
         return ['equipmentLists' => json_encode($equipmentLists->toArray()), 'delivered' => $delivered, 'hasmark' => $hasmark ];
     }
 }

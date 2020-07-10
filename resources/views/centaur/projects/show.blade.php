@@ -39,12 +39,12 @@
 		@endphp
 			<div class="col-6">
 				@foreach ($employees->slice(0,$half_count1) as $employee)		
-					<p class="employee" title="{{  $employee->category['description'] }}"><input name="employee_id[]" type="checkbox" value="{{ $employee->id }}" {{ $projectEmployees->where('employee_id', $employee->id)->first() ? 'checked' : '' }} />{{ $employee->first_name . ' ' . $employee->last_name . ' [' . $employee->category['mark'] . ']' }}</p>
+					<p class="employee" title="{{  $employee->category['description'] }}"><input name="employee_id[]" type="checkbox" id="id{{ $employee->id }}" value="{{ $employee->id }}" {{ $projectEmployees->where('employee_id', $employee->id)->first() ? 'checked' : '' }} /><label for="id{{ $employee->id }}">{{ $employee->first_name . ' ' . $employee->last_name . ' [' . $employee->category['mark'] . ']' }}</label></p>
 				@endforeach
 			</div>
 			<div class="col-6">
 				@foreach ($employees->slice($half_count1,$half_count2) as $employee)		
-					<p class="employee" title="{{  $employee->category['description'] }}" ><input name="employee_id[]" type="checkbox" value="{{ $employee->id }}" {{ $projectEmployees->where('employee_id', $employee->id)->first() ? 'checked' : '' }} />{{ $employee->first_name . ' ' . $employee->last_name  . ' [' . $employee->category['mark'] . ']'  }}</p>
+					<p class="employee" title="{{  $employee->category['description'] }}" ><input name="employee_id[]" type="checkbox" id="id{{ $employee->id }}" value="{{ $employee->id }}" {{ $projectEmployees->where('employee_id', $employee->id)->first() ? 'checked' : '' }} /><label for="id{{ $employee->id }}">{{ $employee->first_name . ' ' . $employee->last_name . ' [' . $employee->category['mark'] . ']' }}</label></p>
 				@endforeach
 			</div>
 		<input name="project_id" value="{{ $project->id }}" hidden/>

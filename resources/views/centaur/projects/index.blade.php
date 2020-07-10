@@ -38,7 +38,7 @@
                                 @php
                                     $categories = explode(',', $project->categories);
                                 @endphp
-                                <tr class="{!! $project->active == 1 ? 'active' : 'inactive' !!}" id="project_{{ $project->id }}">
+                                <tr class="{!! $project->active == 1 ? 'active' : 'inactive' !!} {!! ! $project->start_date ? 'red_background' : '' !!}" id="project_{{ $project->id }}">
                                     <td>{{ $project->project_no }}</td>
                                     <td class="edit_name editable" ><span class="value" title="name">{{ $project->name }}</span></td>
                                     <td class="edit_start_date editable" ><span class="value" title="start_date">{{ $project->start_date }}</span></td>

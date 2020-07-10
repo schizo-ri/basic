@@ -99,13 +99,13 @@ class PublishController extends Controller
         $title = 'Raspored_' .  $date;
         $path = 'schedules/';
        
-        $imagedata = base64_decode($request['imgCanvas']);
+    /*     $imagedata = base64_decode($request['imgCanvas']);
         $filename = md5(uniqid(rand(), true));
         //path where you want to upload image
         $file = $_SERVER['DOCUMENT_ROOT'] . '/schedules/Raspored.png';
    //     $imageurl  = 'http://example.com/uploads/'.$filename.'.png';
         file_put_contents($file,$imagedata);
-
+ */
         $date = new DateTime();
         $date->modify('-14 days');
 
@@ -122,7 +122,7 @@ class PublishController extends Controller
                 $publish->delete();
             }
          }
-        foreach ($projects as $project) {           
+        foreach ($projects->where('duration','<>',null) as $project) {
             $project_employees_last = ProjectEmployee::where('project_id', $project->id)->orderBy('date','DESC')->first();            
           
             // snima projekt

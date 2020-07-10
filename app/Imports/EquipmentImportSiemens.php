@@ -34,12 +34,12 @@ class EquipmentImportSiemens implements ToModel, WithHeadingRow
             $stavka_id_level2 = null;
             $level1 = 1;
         } elseif( $stavka_level1 != '' &&  $stavka_level2 == '' ) {
-            $item_level1 = EquipmentList::where('preparation_id', $id)->where('product_number', $stavka_level1)->first();
+            $item_level1 = EquipmentList::where('preparation_id', $id)->where('product_number', $stavka_level1)->orderBy('created_at','DESC')->first();
             $stavka_id_level1 = $item_level1->id;
             $stavka_id_level2 = null;
             $level1 = null;
         } else if( $stavka_level1 == '' &&  $stavka_level2 != '' ) {
-            $item_level2 = EquipmentList::where('preparation_id', $id)->where('product_number', $row['stavka_id_level2'] )->first();
+            $item_level2 = EquipmentList::where('preparation_id', $id)->where('product_number', $row['stavka_id_level2'] )->orderBy('created_at','DESC')->first();
             $stavka_id_level2 = $item_level2->id;            
             $stavka_id_level1 = null;
             $level1 = null;
