@@ -39,15 +39,24 @@ class EventController extends Controller
     {
         $empl = Sentinel::getUser()->employee;
         $permission_dep = array();
-      
-        $dataArr = EventController::getDataArr();
+        if( isset($_GET['dan']) ) {
+            $dan = $_GET['dan'];
+        } else {
+            $dan = date('Y-m-d');
+        }
+        $month = date('m',strtotime($dan) );
+        $year = date('Y',strtotime($dan) );
+
+        
+        $dataArr = EventController::getDataArr($month, $year);
      
-        $tasks = Task::get();
-        $employees = Employee::where('checkout',null)->get();
-        $cars = Car::get();
+        $tasks = Task::whereMonth('date',$month )->get();
+        $employees = Employee::where('checkout',null)->get('id');
+       
+        $cars = Car::get('registration');
 
         if($empl) {
-            $events = Event::where('employee_id', $empl->id)->get();
+            $events = Event::whereMonth('date',$month)->where('employee_id', $empl->id)->get();
 
             if( $empl->work && $empl->work->department && $empl->work->department->departmentRole ) {
                 $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
@@ -339,7 +348,7 @@ class EventController extends Controller
     }
 
     /* Vraća događanje, zadatke, rođendane i izostanke */
-    public static function getDataArr () 
+    public static function getDataArr ($month, $year) 
     {
         $empl = Sentinel::getUser()->employee;
        
@@ -352,7 +361,7 @@ class EventController extends Controller
                 array_push($dataArr, ['name' => 'holiday', 'type' => __('basic.holidays'), 'date' => $date, 'title' => $holiday ]);
             }
         }
-        $tasks = Task::get();
+        $tasks = Task::whereMonth('date',$month)->whereYear('date',$year)->get();
         if(count($tasks) > 0) {
             foreach($tasks as $task) {
                 array_push($dataArr, ['name' => "task", 
@@ -368,7 +377,7 @@ class EventController extends Controller
             }
         }
 
-        $events = Event::where('employee_id', $empl->id)->get();
+        $events = Event::whereMonth('date',$month)->whereYear('date',$year)->where('employee_id', $empl->id)->get();
         if(count($events) > 0) {
             foreach($events as $event1) {
                 array_push($dataArr, ['name' => "event", 
@@ -381,12 +390,14 @@ class EventController extends Controller
             }
         }
         
-        $absences = Absence::where('approve',1)->get();
-        $today = date('Y-m-d');
-        $select_day = explode('-',$today);  //get from URL
+        $absences = Absence::whereMonth('start_date', $month)->whereYear('start_date', $year)->where('approve',1)->get();
+        $absences = $absences->merge(Absence::whereMonth('end_date', $month)->whereYear('end_date', $year)->where('approve',1)->get());
+
+       /*  $today = date('Y-m-d');
+        $select_day = explode('-',$today); 
         $dan_select = $select_day[2];
         $mj_select = $select_day[1];
-        $god_select = $select_day[0];
+        $god_select = $select_day[0]; */
 
         if (count($absences)>0) {
             foreach($absences as $absence) {
@@ -396,7 +407,7 @@ class EventController extends Controller
                 $interval = DateInterval::createFromDateString('1 day');
                 $period = new DatePeriod($begin, $interval, $end);
                 foreach ($period as $dan) {
-                    if(date_format($dan,'Y') == $god_select) {  // ako je trenutna godina
+                    if(date_format($dan,'Y') == $year) {  // ako je trenutna godina
                         array_push($dataArr, ['name' => $absence->absence['mark'],
                                               'type' => $absence->absence['name'], 
                                               'date' => date_format($dan,'Y-m-d'), 
@@ -409,10 +420,10 @@ class EventController extends Controller
             }
         }
 
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        $employees = Employee::whereMonth('b_day', $month)->where('id','<>',1)->where('checkout',null)->get();
         if(count($employees)>0) {
             foreach($employees as $employee) {
-                $dan = $god_select . '-' . date('m-d', strtotime($employee->b_day));
+                $dan = $year . '-' . date('m-d', strtotime($employee->b_day));
                 array_push($dataArr, ['name' => 'birthday',
                                       'type' => __('basic.birthday'), 
                                       'date' => $dan, 
@@ -420,7 +431,8 @@ class EventController extends Controller
                                       'employee_id' => $employee->id ]);
             }
         }
-        $loccos = Locco::get();
+        $loccos = Locco::whereMonth('date', $month)->whereYear('date', $year)->get();
+        $loccos = $loccos->merge(Locco::whereMonth('end_date', $month)->whereYear('end_date', $year)->get());
         if(count($loccos)>0) {
             foreach($loccos as $locco) {
                 array_push($dataArr, ['name' => 'locco',

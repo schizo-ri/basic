@@ -507,6 +507,7 @@ class AbsenceController extends BasicAbsenceController
 	}
 	public static function countRequest ()  
 	{
+	
 		$employee_id = Sentinel::getUser()->employee->id;
 		
 		$emailings_absence = Emailing::join('tables','tables.id','emailings.model')->select('emailings.*', 'tables.name')->where('tables.name', 'absences')->where('emailings.method', 'create')->first();
@@ -523,7 +524,7 @@ class AbsenceController extends BasicAbsenceController
 		return $count;
 	}
 
-	public static function dateDifference($date_1 , $date_2 , $differenceFormat = '%H:%i' )
+	public static function dateDifference($date_1 , $date_2 , $differenceFormat = '%h:%i' )
 	{
 		$datetime1 = date_create($date_1);
 		$datetime2 = date_create($date_2);

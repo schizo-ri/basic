@@ -1,4 +1,5 @@
 <?php
+
 return [
 
     /*
@@ -28,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'mail.duplico.hr'),
+    'host' => env('MAIL_HOST', 'mail.ru-ve.hr'),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +42,7 @@ return [
     |
     */
 
-    'port' => env('MAIL_PORT', 25),
+    'port' => env('MAIL_PORT', 465),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'jelena.juras@duplico.hr'),
-        'name' => env('MAIL_FROM_NAME', 'Jelena Juras'),
+        'address' => env('MAIL_FROM_ADDRESS', 'intranet@ru-ve.hr'),
+        'name' => env('MAIL_FROM_NAME', 'Ru-ve myIntranet'),
     ],
 
     /*
@@ -70,7 +71,7 @@ return [
     |
     */
 
-    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+    'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
 
     /*
     |--------------------------------------------------------------------------
@@ -83,9 +84,9 @@ return [
     |
     */
 
-    'username' => env('jelena.juras@duplico.hr'),
+    'username' => env('intranet@ru-ve.hr'),
 
-    'password' => env('jjas1!'),
+    'password' => env('tuCuS0TFkxOk'),
 
     /*
     |--------------------------------------------------------------------------

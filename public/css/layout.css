@@ -145,7 +145,8 @@ aside.side_nav {
 .header_nav img.img_button, .header_nav i, .header_nav svg {
 	max-width: 28px;
     margin-right: 25px;
-    font-size: 22px;
+	font-size: 22px;
+	margin: 0;
 }
 
 ul.nav_ul.float_right li {

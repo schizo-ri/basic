@@ -4,6 +4,11 @@
 <div class="modal-body">
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('cars.store') }}" >
 		<fieldset>
+			<div class="form-group {{ ($errors->has('car_index')) ? 'has-error' : '' }}">
+				<label for="">Index</label>
+				<input class="form-control" placeholder="Index" name="car_index" type="text" maxlength="5" value="{{ old('car_index') }}" required />
+				{!! ($errors->has('car_index') ? $errors->first('car_index', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
 			<div class="form-group {{ ($errors->has('manufacturer')) ? 'has-error' : '' }}">
 				<label for="">@lang('basic.manufacturer')</label>
 				<input class="form-control" placeholder="{{ __('basic.manufacturer')}}" name="manufacturer" type="text" maxlength="50" value="{{ old('manufacturer') }}" required />

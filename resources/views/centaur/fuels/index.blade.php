@@ -39,14 +39,14 @@
 				<tbody class="">
 					@foreach ($fuels as $fuel)
 						@php
-							$fuel_prev = $fuels->where('date','<', $fuel->date)->first();
+							$fuel_prev = $fuels->where('car_id',$fuel->car_id)->where('date','<', $fuel->date)->first();
 						@endphp
 						<tr class="panel">
 							<td>{{ date('Y-m-d', strtotime($fuel->date)) }} </td>
 							<td>{{ $fuel->car['registration'] }}</td>
 							<td>{{ $fuel->liters }}</td>
 							<td>{{ $fuel->km }}</td>
-							<td>{!! $fuel_prev ? round($fuel->liters / ($fuel->km - $fuel_prev->km)  * 100,2) : 0 !!}</td>
+							<td>{!! $fuel_prev ? round($fuel->liters / ($fuel->km - $fuel_prev->km)  * 100, 2) : 0 !!}</td>
 							<td>
 								@if(Sentinel::getUser()->hasAccess(['fuels.view']) || in_array('fuels.view', $permission_dep))
 									<a href="{{ route('fuels.edit',$fuel->id ) }}" class="edit_service btn-edit" title="{{ __('basic.fuel')}}" rel="modal:open">

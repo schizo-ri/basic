@@ -1,11 +1,11 @@
 $(function() {
     var day = $('.event_day .day').text();
     var month =   $('.event_day .month').text();
-    
+   
     var year =  $('.event_day .year').text();
-    /* var day_of_week = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
+    var day_of_week = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
     var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
- */
+
     var view;
     function daysInMonth (month, year) { 
         return new Date(year, month, 0).getDate(); 
@@ -23,39 +23,21 @@ $(function() {
     var days_in_month = daysInMonth(month, year);
     var days_in_prev_month = daysInPrevMonth(month,year);
 
+    view = $( ".change_view_calendar" ).val();
     day_after();
     day_before();
 
     function day_after() {
         $(document).on('click', '.arrow .day_after', function(e) {
             e.preventDefault(); 
-            day = $('.event_day .day').text();
-            month =   $('.event_day .month').text()
-            year =  $('.event_day .year').text();
-            currentDate_day = new Date(year + '-' + month + '-' + day);
-            currentDate_week = new Date(year + '-' + month + '-' + day);
-            currentDate_list = new Date(year + '-' + month + '-' + day);
-            currentDate_month = new Date(year + '-' + month + '-' + day);
-            days_in_month = daysInMonth(month, year);
-            days_in_prev_month = daysInPrevMonth(month,year);
-
             var date_after;
             var searchDate;
-            view = $( ".change_view_calendar" ).val();
             if(view == 'day') {
                 date_after = new Date(currentDate_day.setDate(currentDate_day.getDate() +1));
-                
                 searchDate = date_after.getFullYear() + '-' + ('0' + (date_after.getMonth() +1) ).slice(-2) + '-' + ('0' + ( date_after.getDate()) ).slice(-2);
-                if(month < date_after.getMonth() +1 ) {
-                    $('.pignose-calendar-top-nav.pignose-calendar-top-next').click();
-                }
             } else if(view == 'week') {
                 date_after =  new Date(currentDate_week.setDate(currentDate_week.getDate() +7));
-               
                 searchDate = date_after.getFullYear() + '-' + ('0' + (date_after.getMonth() +1) ).slice(-2) + '-' + ('0' + ( date_after.getDate ()) ).slice(-2);
-                if(month < date_after.getMonth() +1 ) {
-                    $('.pignose-calendar-top-nav.pignose-calendar-top-next').click();
-                }
             } else if(view == 'list') {
                 date_after = new Date(currentDate_list.setDate(currentDate_list.getDate() + days_in_month));
                 days_in_month = daysInMonth(date_after.getMonth() +1, date_after.getFullYear());
@@ -67,7 +49,7 @@ $(function() {
                 searchDate = date_after.getFullYear() + '-' + ('0' + (date_after.getMonth() +1) ).slice(-2) + '-' + ('0' + ( date_after.getDate()) ).slice(-2);
                 $('.pignose-calendar-top-nav.pignose-calendar-top-next').click();
             }
-            
+            console.log(searchDate);
             /* $('.event_day .day').text(('0' + ( date_after.getDate()) ).slice(-2));
             $('.event_day .week_day').text(day_of_week[date_after.getDay()]);
             $('.month_year').text(monthNames[date_after.getMonth()] + ' ' + date_after.getFullYear()); */
@@ -78,30 +60,15 @@ $(function() {
     function day_before() {
         $(document).on('click', '.arrow .day_before', function(e) {
             e.preventDefault(); 
-            day = $('.event_day .day').text();
-            month =   $('.event_day .month').text()
-            year =  $('.event_day .year').text();
-            currentDate_day = new Date(year + '-' + month + '-' + day);
-            currentDate_week = new Date(year + '-' + month + '-' + day);
-            currentDate_list = new Date(year + '-' + month + '-' + day);
-            currentDate_month = new Date(year + '-' + month + '-' + day);
-            days_in_month = daysInMonth(month, year);
-            days_in_prev_month = daysInPrevMonth(month,year);
+          
             var date_before;
             var searchDate_bef;
-            view = $( ".change_view_calendar" ).val();
             if(view == 'day') {
                 date_before = new Date(currentDate_day.setDate(currentDate_day.getDate() -1));
                 searchDate_bef = date_before.getFullYear() + '-' + ('0' + (date_before.getMonth() +1) ).slice(-2) + '-' + ('0' + ( date_before.getDate()) ).slice(-2);
-                if(month > date_before.getMonth() +1 ) {
-                    $('.pignose-calendar-top-nav.pignose-calendar-top-prev').click();
-                }
             } else if(view == 'week') {
                 date_before =  new Date(currentDate_week.setDate(currentDate_week.getDate() -7));
                 searchDate_bef = date_before.getFullYear() + '-' + ('0' + (date_before.getMonth() +1) ).slice(-2) + '-' + ('0' + ( date_before.getDate ()) ).slice(-2);
-                if(month > date_before.getMonth() +1 ) {
-                    $('.pignose-calendar-top-nav.pignose-calendar-top-prev').click();
-                }
             } else if(view == 'list') {
                 date_before = new Date(currentDate_month.setDate(currentDate_month.getDate() - days_in_prev_month));
                 days_in_prev_month = daysInPrevMonth(date_before.getMonth() +1, date_before.getFullYear());
@@ -113,7 +80,7 @@ $(function() {
                 searchDate_bef = date_before.getFullYear() + '-' + ('0' + (date_before.getMonth() +1) ).slice(-2) + '-' + ('0' + ( date_before.getDate()) ).slice(-2);
                 $('.pignose-calendar-top-nav.pignose-calendar-top-prev').click();
             }
-          
+            console.log(searchDate);
            /*  $('.event_day .day').text(('0' + ( date_before.getDate()) ).slice(-2)); */
            /*  $('.event_day .week_day').text(day_of_week[date_before.getDay()]); */
            /*  $('.month_year').text(monthNames[date_before.getMonth()] + ' ' +  date_before.getFullYear()); */

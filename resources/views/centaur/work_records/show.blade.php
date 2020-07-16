@@ -66,7 +66,7 @@
 											$work = $work_records->where('start','>', date('Y-m-d',strtotime($day2)) . ' 00:00:00')->where('start','<', date('Y-m-d',strtotime($day2)). ' 23:59:59')->first();
 											if($work) {
 												$start_time = strtotime($work->start);
-												if($start_time >= strtotime($day2 .' 07:30:00') && $start_time <= strtotime($day2 .' 08:15:00') ) {
+												if($start_time >= strtotime($day2 .' 07:00:00') && $start_time <= strtotime($day2 .' 08:15:00') ) {
 													$start = '08:00';
 												} else {
 													$start = date('H:i',$start_time );
@@ -130,30 +130,22 @@
 												}
 											}
 											if(date('N',strtotime($day2)) < 5 ) {
-												if( strtotime($interval) > strtotime('7:30') && strtotime($interval) < strtotime('8:45')) {
-													$interval = '08:25';
+												if( strtotime($interval) > strtotime('7:00') && strtotime($interval) < strtotime('8:45')) {
+													$interval = '8:15';
 												}
 											} else if(date('N',strtotime($day2) ) == 5) {
-												if( strtotime($interval) > strtotime('6:30') && strtotime($interval) < strtotime('7:45')) {
-													$interval = '07:00';
+												if( strtotime($interval) > strtotime('6:00') && strtotime($interval) < strtotime('7:45')) {
+													$interval = '7:00';
 												}
 											}
 											$minutes = 0;
 											$minutes += strstr($interval, ':', true) * 60; 
 											$minutes += intval(str_replace(':','',strstr($interval, ':'))); 
 											$sum[date('Y-m-d',strtotime($day2))] += $minutes;
-											
-											$minutes_row_3 += $minutes;
 										@endphp
-										<td class="">{{$interval}}</td>
+										<td class="sum_rr">{{$interval}}</td>
 									@endforeach
-									@php
-										if($minutes_row_3 > 0) {
-											$hours = floor($minutes_row_3 / 60);
-											$minutes_row_3 -= $hours * 60;
-										}
-									@endphp
-									<td >{{ sprintf('%02d:%02d', $hours, $minutes_row_3) }}</td>
+									<td class="total_rr total_sum"></td>
 								</tr>
 								<tr>{{-- Vrijeme sati zastoja,prekida rada --}}
 									<td>4</td>
@@ -198,27 +190,20 @@
 											$hol_hour = '';
 											if (in_array( $day2, $holidaysThisYear) ) {
 												if(date('N',strtotime($day2)) < 5 ) {
-													$hol_hour = '08:25';
+													$hol_hour = '8:15';
 												} else if(date('N',strtotime($day2) ) == 5) {
-													$hol_hour = '07:00';
+													$hol_hour = '7:00';
 												}
 												$minutes = 0;
 												$minutes += strstr($hol_hour, ':', true) * 60; 
 												$minutes += intval(str_replace(':','',strstr($hol_hour, ':'))); 
 												
 												$sum[date('Y-m-d',strtotime($day2))] += $minutes;
-												$minutes_row_8a += $minutes;
 											}
 										@endphp
-										<td class="">{{ $hol_hour }}</td>
+										<td class="sum_bl">{{ $hol_hour }}</td>
 									@endforeach
-									@php
-										if($minutes_row_8a > 0) {
-											$hours = floor($minutes_row_8a / 60);
-											$minutes_row_8a -= $hours * 60;
-										}
-									@endphp
-									<td >{!! $minutes_row_8a > 0 ? sprintf('%02d:%02d', $hours, $minutes_row_8a) : '' !!}</td>
+									<td class="total_bl total_sum" ></td>
 								</tr>
 								<tr> {{-- SATI RADA NEDJELJOM ILI NERADNIM DANIMA --}}
 									<td>9</td>
@@ -360,8 +345,28 @@
 												
 											});
 											$trav = $travelOrders->where('hasDate',true)->first();
+											
+											$minutes_locco = 0;
+											$sum_locco_day = 0;
+											if($loccos) {
+												$loccos->each(function ($locco, $key) use ($day2,$minutes_locco,$sum_locco_day  ) {
+													if(! $locco->travel) {
+														if(date('Y-m-d',strtotime($locco->date)) == $day2) {
+															$hasDate = true;
+															$minutes_locco += strstr($locco->interval, ':', true) * 60; 
+															$minutes_locco += intval(str_replace(':','',strstr($locco->interval, ':'))); 
+															$sum_locco_day += $minutes_locco;
+														} else {
+															$hasDate = false;
+														}
+														$locco->hasDate = $hasDate;
+														$locco->sum_day = $sum_locco_day;
+													}
+												});
+											}
+											$locco_day = $loccos->where('hasDate',true)->first();
 										@endphp
-										<td class="">{!! $trav ? $trav->interval : ''  !!}</td>
+										<td class="">{!! $trav ? $trav->interval : ''  !!} {!! $locco_day ?  $locco_day->interval : ''  !!}</td>
 									@endforeach
 									<td ></td>
 								</tr>
@@ -369,8 +374,72 @@
 									<td>12a</td>
 									<td>Putni nalog</td>
 									@foreach($list as $day2)
-										
-										<td class=""></td>
+										@php
+											$travelOrders->each(function ($travel, $key) use ($day2) {
+												$days = $travel->travelDays;
+												$count_days = count($days);
+												
+												if(in_array($day2, $days )) {
+													$hasDate = true;
+													$day_no = array_search ($day2, $days)  +1;  // broj datuma u arrayu
+													$start = date('H:i', strtotime($travel->start_date));
+													$end = date('H:i', strtotime($travel->end_date) );
+													if( $count_days > 1 ) {
+														if($day_no == 1) {
+															$end = '24:00';
+														} else if($day_no != $count_days ) {
+															$start = '00:00';
+															$end = '24:00';
+														} else if($day_no == $count_days) {
+															$start = '00:00';
+														}
+													}
+													
+													$datetime1 = new DateTime($start);
+													$datetime2 = new DateTime( $end );
+													$interval = $datetime1->diff($datetime2);
+													$interval_set = $interval->format("%H:%I");
+													if($start = '00:00' && $end = '24:00' && $interval_set == '00:00') {
+														$interval_set = '24:00';
+													}
+													
+												} else {
+													$start = null; 
+													$end = null; 
+													$hasDate = false;
+													$interval_set  = null;
+												}
+												$travel->hasDate = $hasDate;
+												$travel->start_time = $start;
+												$travel->end_time = $end;
+												if($interval_set)
+													$travel->interval = $interval_set;
+												
+											});
+											$trav = $travelOrders->where('hasDate',true)->first();
+											
+											$minutes_locco = 0;
+											$sum_locco_day = 0;
+											if($loccos) {
+												$loccos->each(function ($locco, $key) use ($day2,$minutes_locco,$sum_locco_day  ) {
+													if(! $locco->travel) {
+														if(date('Y-m-d',strtotime($locco->date)) == $day2) {
+														$hasDate = true;
+														$minutes_locco += strstr($locco->interval, ':', true) * 60; 
+														$minutes_locco += intval(str_replace(':','',strstr($locco->interval, ':'))); 
+														$sum_locco_day += $minutes_locco;
+														
+													} else {
+														$hasDate = false;
+													}
+													$locco->hasDate = $hasDate;
+													$locco->sum_day = $sum_locco_day;
+													}
+												});
+											}
+											$locco_day = $loccos->where('hasDate',true)->first();
+										@endphp
+										<td class="font_8">{!! $trav ? 'PN - ' . $trav->car->car_index : ''  !!} {!! $locco_day ? 'L - ' . $locco_day->car->car_index : ''  !!}</td>
 									@endforeach
 									<td ></td>
 								</tr>
@@ -397,7 +466,7 @@
 												$time = '';
 												if(in_array($day2, $days )) {
 													if(date('N',strtotime($day2)) < 5 ) {
-														$time = '8:25';
+														$time = '8:15';
 													} else if(date('N',strtotime($day2) ) == 5) {
 														$time = '7:00';
 													}  
@@ -417,18 +486,11 @@
 												$minutes += intval(str_replace(':','',strstr($abs->time, ':'))); 
 												
 												$sum[date('Y-m-d', strtotime($day2))] += $minutes;
-												$minutes_row_14 += $minutes;
-											}											
+											}
 										@endphp
-										<td class="">{!! $abs ? $abs->time : '' !!}</td>
+										<td class="sum_go">{!! $abs ? $abs->time : '' !!}</td>
 									@endforeach
-									@php
-										if($minutes_row_14 > 0) {
-											$hours = floor($minutes_row_14 / 60);
-											$minutes_row_14 -= $hours * 60;
-										}
-									@endphp
-									<td >{!! $minutes_row_14 > 0 ? sprintf('%02d:%02d', $hours, $minutes_row_14) : '' !!}</td>
+									<td class="total_go total_sum"></td>
 								</tr>
 								<tr > {{-- Privremena nesposobnost za rad (bolovanje) --}}
 									<td>15</td>
@@ -441,7 +503,7 @@
 												$time = '';
 												if(in_array($day2, $days )) {
 													if(date('N',strtotime($day2)) < 5 ) {
-														$time = '8:25';
+														$time = '8:15';
 													} else if(date('N',strtotime($day2) ) == 5) {
 														$time = '7:00';
 													}  
@@ -457,7 +519,7 @@
 										@endphp
 										<td class="">{!! $abs ? $abs->time : '' !!}</td>
 									@endforeach
-									<td ></td>
+									<td class=""></td>
 								</tr>
 								<tr class="bg_ccc">{{-- BOLOVANJE --}}
 									<td>16</td>
@@ -473,7 +535,7 @@
 												$time = '';
 												if(in_array($day2, $days )) {
 													if(date('N',strtotime($day2)) < 5 ) {
-														$time = '8:25';
+														$time = '8:15';
 													} else if(date('N',strtotime($day2) ) == 5) {
 														$time = '7:00';
 													}  
@@ -493,10 +555,9 @@
 												$minutes += intval(str_replace(':','',strstr($abs->time, ':'))); 
 												
 												$sum[date('Y-m-d', strtotime($day2))] += $minutes;
-												$minutes_row_16 += $minutes;
 											}
 										@endphp
-										<td class="">{!! $abs ? $abs->time : '' !!}</td>
+										<td class="sum_bol">{!! $abs ? $abs->time : '' !!}</td>
 									@endforeach
 									@php
 										if($minutes_row_16 > 0) {
@@ -504,7 +565,7 @@
 											$minutes_row_16 -= $hours * 60;
 										}
 									@endphp
-									<td >{!! $minutes_row_16 > 0 ? sprintf('%02d:%02d', $hours, $minutes_row_16) : '' !!}</td>
+									<td class="total_bol total_sum"></td>
 								</tr>
 								<tr> {{-- PORODILJNI --}}
 									<td>17</td>
@@ -517,7 +578,7 @@
 												$time = '';
 												if(in_array($day2, $days )) {
 													if(date('N',strtotime($day2)) < 5 ) {
-														$time = '8:25';
+														$time = '8:15';
 													} else if(date('N',strtotime($day2) ) == 5) {
 														$time = '7:00';
 													}  
@@ -546,7 +607,7 @@
 												$time = '';
 												if(in_array($day2, $days )) {
 													if(date('N',strtotime($day2)) < 5 ) {
-														$time = '8:25';
+														$time = '8:15';
 													} else if(date('N',strtotime($day2) ) == 5) {
 														$time = '7:00';
 													}  
@@ -575,7 +636,7 @@
 												$time = '';
 												if(in_array($day2, $days )) {
 													if(date('N',strtotime($day2)) < 5 ) {
-														$time = '8:25';
+														$time = '8:15';
 													} else if(date('N',strtotime($day2) ) == 5) {
 														$time = '7:00';
 													}  
@@ -637,15 +698,9 @@
 											}
 										@endphp
 										<td >{!! $hours ? sprintf('%02d:%02d', $hours, $minutes) : '' !!}</td>
-									
 									@endforeach
-									@php
-										if($sum_total > 0) {
-											$hours_total = floor($sum_total  / 60);
-											$sum_total -= $hours_total * 60;
-										}
-									@endphp
-										<td >{!! $sum_total ? sprintf('%02d:%02d', $hours_total, $sum_total) : '' !!}</td>
+									
+									<td class="total"></td>
 								</tr>
 							</tfoot>
 						</table>
@@ -655,7 +710,6 @@
 		</section>
 	</main>
 </div>
-
 <script>
 	$(function() {
 		$( ".td_izostanak:contains('GO')" ).each(function( index ) {
@@ -665,7 +719,134 @@
 			$( this ).addClass('abs_BOL');
 		});
 	});
+	sum_rr();
+	sum_bol();
+	sum_go();
+	sum_bl();
+	total_sum();
+
+	function sum_bol() {
+		var total_bol = 0;
+		var minutes_bol = 0;
+		var minutes = 0;
+		var hour = 0;
+		$( ".sum_bol" ).each(function( index ) {
+			var value = '';
+			if ( $( this ).val() != '') {
+				value = $( this ).val();
+			} else if ( $( this ).text() != '') {
+				value = $( this ).text();
+			}
+			minutes_bol += Number(value.substr(0, 1) * 60);
+			minutes_bol += Number(value.substr(2, 3));
+
+			hour = Math.floor(Number( minutes_bol )/60);
+			minutes = Number(minutes_bol) - Number(hour)*60;
+			total_bol = hour + ':' + ("0"+minutes).slice(-2);
+			
+		});
+		$('.total_bol').text(total_bol);
+	}
+	function sum_go() {
+		var total_go = 0;
+		var minutes_go = 0;
+		var minutes = 0;
+		var hour = 0;
+		$( ".sum_go" ).each(function( index ) {
+			var value = '';
+			if ( $( this ).val() != '') {
+				value = $( this ).val();
+			} else if ( $( this ).text() != '') {
+				value = $( this ).text();
+			}
+			minutes_go += Number(value.substr(0, 1) * 60);
+			minutes_go += Number(value.substr(2, 3));
+
+			hour = Math.floor(Number( minutes_go )/60);
+			minutes = Number(minutes_go) - Number(hour)*60;
+			total_go = hour + ':' + ("0"+minutes).slice(-2);
+			
+		});
+		$('.total_go').text(total_go);
+	}
+	function sum_bl() {
+		var total_bl = 0;
+		var minutes_bl = 0;
+		var minutes = 0;
+		var hour = 0;
+		$( ".sum_bl" ).each(function( index ) {
+			var value = '';
+			
+			if ( $( this ).val() != '') {
+				value = $( this ).val();
+			
+			} else if ( $( this ).text() != '') {
+				value = $( this ).text();
+				
+			}
+			minutes_bl += Number(value.substr(0, 1) * 60);
+			minutes_bl += Number(value.substr(2, 3));
+			hour = Math.floor(Number( minutes_bl )/60);
+			minutes = Number(minutes_bl) - Number(hour)*60;
+			total_bl = hour + ':' + ("0"+minutes).slice(-2);
+			
+		});
+		$('.total_bl').text(total_bl);
+	}
+	function sum_rr() {
+		var total_rr = 0;
+		var minutes_rr = 0;
+		var minutes = 0;
+		var hour = 0;
+		$( ".sum_rr" ).each(function( index ) {
+			var value = '';
+			
+			if ( $( this ).val() != '') {
+				value = $( this ).val();
+			
+			} else if ( $( this ).text() != '') {
+				value = $( this ).text();
+				
+			}
+			minutes_rr += Number(value.substr(0, 1) * 60);
+			minutes_rr += Number(value.substr(2, 3));
+			hour = Math.floor(Number( minutes_rr )/60);
+			minutes = Number(minutes_rr) - Number(hour)*60;
+			total_rr = hour + ':' + ("0"+minutes).slice(-2);
+			
+		});
+		$('.total_rr').text(total_rr);
+	}
+	function total_sum() {
+		var total_sum = 0;
+		var minutes_total = 0;
+		var minutes = 0;
+		var hour = 0;
+		$( ".total_sum" ).each(function( index ) {
+			var value = '';
+			
+			if ( $( this ).val() != '') {
+				value = $( this ).val();
+			
+			} else if ( $( this ).text() != '') {
+				value = $( this ).text();
+				
+			}
+			
+			if(value != '0:00') {
+				minutes_total += Number(value.substr(0, value.indexOf(":")) * 60);
+				minutes_total += Number(value.substr(value.indexOf(":")+1, value.indexOf(":")+2));
+			}
+			hour = Math.floor(Number( minutes_total )/60);
+			minutes = Number(minutes_total) - Number(hour)*60;
+			total_sum = hour + ':' + ("0"+minutes).slice(-2);
+			
+		});
+		$('.total').text(total_sum);
+	}
+
+	$('#index_table').css('width','100%');
 	$.getScript( '/../js/datatables_evidention.js');
-	
+
 </script>		
 @stop

@@ -148,7 +148,7 @@ class DocumentController extends Controller
         if ($request->hasFile('fileToUpload')) {
           $images = $request->file('fileToUpload');
           
-          if (is_array($images)) {
+        if (is_array($images)) {
             foreach ($images as $item) {
             //  Storage::putFileAs($path, new File($item), 'photo.jpg');  // snimi u storage folder
 

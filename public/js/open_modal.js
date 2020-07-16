@@ -156,7 +156,6 @@ $( document ).ready(function() {
 			fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
 		};
     });
-    
 
    /*  $('a.new_questionnaire[rel="modal:open"]').click(function(){
         $.modal.defaults = {
@@ -174,6 +173,4 @@ $( document ).ready(function() {
             modalClass: "modal",   
         };
     }); */
-
-   
 });

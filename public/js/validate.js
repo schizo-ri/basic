@@ -156,7 +156,7 @@ $('.btn-submit').click(function(event){
                     $.getScript( '/../restfulizer.js');
                 } else if (url_load.includes("/admin_panel")) {
                     if(url.includes("/work_records")) {
-                        $('tbody').load($(page).attr('href') + " tbody>tr:not(.second_view)",function(){
+                        $('.first_view tbody').load($(page).attr('href') + " .first_view tbody>tr",function(){
                             $.getScript( '/../restfulizer.js');
                         });
                     } else {

@@ -237,7 +237,6 @@ class EmailingController extends Controller
 
     public static function sendTo ($table, $method) 
     {
-
         $emailings = Emailing::get();
         $send_to = array();
         $departments = Department::get();

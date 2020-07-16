@@ -9,11 +9,13 @@ use App\Models\WorkRecord;
 use App\Models\Absence;
 use App\Models\Employee;
 use App\Models\TravelOrder;
+use App\Models\Locco;
 use Sentinel;
 use DB;
 use DateTime;
 use DateInterval;
 use DatePeriod;
+
 
 class WorkRecordController extends Controller
 {
@@ -265,6 +267,20 @@ class WorkRecordController extends Controller
                 }
             }
         }
+
+        $loccos = Locco::where('employee_id', $employee->id)->whereMonth('date', $mjesec )->whereYear('date', $godina )->get();
+        
+        foreach($loccos as $locco){
+            $time1 = date_create($locco->date);
+            if( $locco->end_date ) {
+                $time2 = date_create($locco->end_date);
+                $interval = date_diff($time1,$time2);
+                $locco->interval = date('H:i',strtotime( $interval->h .':'.$interval->i));
+            } else {
+                $locco->interval = null;
+            }
+        }
+      
         $empl = Sentinel::getUser()->employee;
         $permission_dep = array();
         if($empl) {
@@ -280,7 +296,7 @@ class WorkRecordController extends Controller
 			}
         }
       
-        return view('Centaur::work_records.show', ['employee' => $employee,'work_records' => $work_records, 'travelOrders' => $travelOrders,'permission_dep' => $permission_dep, 'list' => $list, 'sum' => $sum,'absences' => $absences,'holidaysThisYear' => $holidaysThisYear,'month' => $godina.'-'.$mjesec .'-1']);
+        return view('Centaur::work_records.show', ['employee' => $employee,'work_records' => $work_records, 'travelOrders' => $travelOrders,'loccos' => $loccos,'permission_dep' => $permission_dep, 'list' => $list, 'sum' => $sum,'absences' => $absences,'holidaysThisYear' => $holidaysThisYear,'month' => $godina.'-'.$mjesec .'-1']);
     }
 
     /**
@@ -358,4 +374,5 @@ class WorkRecordController extends Controller
         $months = array_unique($months);
         return $months;
     }
+
 }

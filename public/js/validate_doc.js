@@ -32,7 +32,6 @@ $('.btn-submit').click(function(event){
         if($(this).attr('required') == 'required' ) {      
         
             if( $(this).val().length == 0 || $(this).val() == '') {
-             //   console.log("input" + $(this).val() ); 
                 if( ! $( this ).parent().find('.modal_form_group_danger').length) {
                     $( this ).parent().append('<p class="modal_form_group_danger">' + validate_text + '</p>');
                 }
@@ -47,6 +46,4 @@ $('.btn-submit').click(function(event){
     if(validate == false) {
         event.preventDefault();
     } 
-    
-   
 });

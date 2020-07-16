@@ -139,21 +139,25 @@
 									}
 									if(count($absences ) >0) {
 										$absence_employee = $absences->where('employee_id',  $employee->id);
+									} else {
+										$absence_employee = null;
 									}
 								?>
 								<td class="td_izostanak {!! isset($work->interval) ? 'red_rad' : '' !!}">
-									@foreach ($absence_employee as $absence)
-										@if($absence->absence['mark']!= 'IZL')
-										
-											@if(in_array($dan2, $absence->days))
-												@php
-													$minutes += 8*60;
-												@endphp
-												<span>{{ $absence->absence['mark']}}</span>
-												{{ '08:00' }}
+									@if($absence_employee)
+										@foreach ($absence_employee as $absence)
+											@if($absence->absence['mark']!= 'IZL')
+											
+												@if(in_array($dan2, $absence->days))
+													@php
+														$minutes += 8*60;
+													@endphp
+													<span>{{ $absence->absence['mark']}}</span>
+													{{ '08:00' }}
+												@endif
 											@endif
-										@endif
-									@endforeach
+										@endforeach
+									@endif
 									@if ( isset($work->interval) && $work->interval )
 										<span>RR</span>
 										{{  $work->interval }}

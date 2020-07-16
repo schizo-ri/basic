@@ -51,15 +51,17 @@
 							<td class="center">
 								@if(Sentinel::getUser()->hasAccess(['travel_orders.update']))
 									@if ($travel->status == 0 || $travel->status == null)
-										<a href="{{ route('travel_orders.edit', $travel->id) }}" class="btn-edit" title="{{ __('basic.edit')}}" rel="modal:open">
-											<i class="far fa-edit"></i>
-										</a>
-										<a href="{{ action('TravelOrderController@close_travel', ['id' => $travel->id]) }}" class="btn-finish close_travel" title="{{ __('basic.finish')}}" >
-											<i class="fas fa-check"></i>
-										</a>
 										<a href="{{ route('travelShow', $travel->id) }}" class="btn-edit" title="{{ __('basic.show')}}" target="_blank" >
 											<i class="far fa-eye"></i>
 										</a>
+										
+										{{-- <a href="{{ route('travel_orders.edit', $travel->id) }}" class="btn-edit" title="{{ __('basic.edit')}}" rel="modal:open">
+												<i class="far fa-edit"></i>
+											</a> --}}
+										<a href="{{ action('TravelOrderController@close_travel', ['id' => $travel->id]) }}" class="btn-finish close_travel" title="{{ __('basic.finish')}}" >
+											<i class="fas fa-check"></i>
+										</a>
+										
 									@else
 										<a href="{{ action('TravelOrderController@close_travel',  ['id' => $travel->id]) }}" class="btn-edit close_travel" title="{{ __('basic.open_order')}}" >
 											<i class="fas fa-times"></i>

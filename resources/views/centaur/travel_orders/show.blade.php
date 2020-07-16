@@ -30,6 +30,9 @@
 								<a href="{{ route('travel_orders.edit', $travel->id) }}" class="btn-edit" title="{{ __('basic.edit')}}" rel="modal:open">
 									<i class="far fa-edit"></i>
 								</a>
+								<a href="{{ route('travelShow', $travel->id) }}" class="btn-edit" title="{{ __('basic.show')}}" >
+									<i class="far fa-eye"></i>
+								</a>
 							@endif								
 							@if(Sentinel::getUser()->hasAccess(['travel_orders.delete']))
 								<a href="{{ route('travel_orders.destroy', $travel->id) }}" class="action_confirm btn-delete danger" title="{{ __('basic.delete')}}" data-method="delete" data-token="{{ csrf_token() }}">

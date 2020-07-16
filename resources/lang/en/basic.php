@@ -347,6 +347,7 @@ return [
 	'private_car' 		=> 'Private car',
 	'edit_work_records' => 'Check-out',
 	'decree' 			=> 'Management decision',
-
+	'top_image' 		=> 'Top notice image',
+	
 ];	
 ?>

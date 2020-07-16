@@ -37,7 +37,7 @@
 		$events_day = $events->where('date', $dan);
 	}
 	$tasks_day = TaskController::task_for_selected_day( $dan );
-	
+
 ?>
 @section('content')
 <div class="index_page posts_index">

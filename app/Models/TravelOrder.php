@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TravelOrder extends Model
 {
-    protected $fillable = ['date','employee_id','car_id','destination','description','days','start_date','end_date','advance','advance_date','rest_payout','calculate_employee','locco_id','status'];
+    protected $fillable = ['date','employee_id','car_id','destination','description','days','start_date','end_date','advance','advance_date','rest_payout','calculate_employee','locco_id','daily_wage','status'];
     
     /*
 	* The Eloquent employee model name

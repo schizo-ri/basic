@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Car extends Model
 {
-    protected $fillable = ['manufacturer','model','registration','chassis','first_registration','last_registration','current_km','last_service','department_id','employee_id','enc','private_car'];
+    protected $fillable = ['car_index','manufacturer','model','registration','chassis','first_registration','last_registration','current_km','last_service','department_id','employee_id','enc','private_car'];
 
     /*
 	* The Eloquent employee model name

@@ -1,6 +1,4 @@
-@php
-	/* dd(get_defined_vars()); */
-@endphp
+<link rel="stylesheet" href="{{ URL::asset('/../css/travel_show.css') }}"/> 
 <div class="modal-header">
 	<h3 class="panel-title">@lang('basic.edit_travel')</h3>
 </div>
@@ -94,10 +92,51 @@
 				{!! ($errors->has('rest_payout') ? $errors->first('rest_payout', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 		@endif
+		<div class="form-group">
+			<h5>Ostali troškovi</h5>
+				<table class="table">
+					<thead class="thead">
+						<tr class="tr">
+							<th class="th col-2">Br.računa</th>
+							<th class="th col-5">Opis troška</th>
+							<th class="th col-2">Iznos</th>
+							{{-- <th class="th col-1">Valuta</th>
+							<th class="th col-2">Iznos</th> --}}
+						</tr>
+					</thead>
+					<tbody class="tbody">
+						@if($travel->expenses)
+							@php
+								$j = 0;
+							@endphp
+							@foreach ($travel->expenses as $expense)
+								<tr class="tr expences">
+									<input type="hidden" name="expence_id[{{ $j }}]" value="{{ $expense->id }}" >
+									<td class="td col-2"><input name="bill[{{ $j }}]" class="bill" type="text" value="{{ $expense->bill }}"></td>
+									<td class="td col-5"><input name="cost_description[{{ $j }}]" class="cost_description" type="text" value="{{ $expense->cost_description }}"></td>
+									<td class="td col-2 align_c"><input name="amount[{{ $j }}]" class="align_r amount" type="number" step="0.01" value="{{ $expense->amount }}"></td>
+								</tr>
+								@php
+									$j++;
+								@endphp
+							@endforeach
+						@endif
+						@for ($i = $j; $i < 6; $i++)
+							<tr class="tr expences">
+								<td class="td col-2"><input name="bill[{{ $i }}]" class="bill" type="text"></td>
+								<td class="td col-5"><input name="cost_description[{{ $i }}]" class="cost_description" type="text"></td>
+								<td class="td col-2 align_c"><input name="amount[{{ $i }}]" class="align_r amount" type="number" step="0.01" ></td>
+								{{-- <td class="td col-1 align_c"><input name="currency[{{ $i }}]" class="align_c currency" type="text"></td>
+								<td class="td col-2 align_r"><input name="total_amount[{{ $i }}]" class="align_r total_sum" type="number" step="0.01" ></td> --}}
+							</tr>
+						@endfor
+					</tbody>
+				</table>
+		</div>
 		{{ csrf_field() }}
 		{{ method_field('PUT') }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1">
-		<a href="" class="modal_close float_r" rel="modal:close">@lang('basic.cancel')</a>
+		<a href="" class="modal_close float_r margin_20" rel="modal:close">@lang('basic.cancel')</a>
 	</form>
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>

@@ -12,6 +12,7 @@ use App\Models\TravelOrder;
 use App\Models\TravelLocco;
 use App\Models\Department;
 use App\Mail\CarServiceMail;
+use App\Mail\TravelCreate;
 use Illuminate\Support\Facades\Mail;
 use Sentinel;
 use DateTime;
@@ -101,7 +102,6 @@ class LoccoController extends Controller
         $locco->saveLocco($data);
        
         if($request['end_km']) {
-
             $car = Car::find($request['car_id']);
             $data_car = array(
                 'current_km'  => $request['end_km']
@@ -116,10 +116,9 @@ class LoccoController extends Controller
                     'employee_id'  	    => $request['employee_id'],
                     'car_id'  		    => $request['car_id'],
                     'destination'  	    => $request['destination'],
-                    'description'  	    => $request['description'],
                     'days'  	        => 1,
                     'start_date'  	    => $request['date'],
-                    'end_date'  	    => $request['date'],
+                    'end_date'  	    => null,
                     'locco_id'  	    => $locco->id,
                 );
                
@@ -131,6 +130,14 @@ class LoccoController extends Controller
                 );
                 $locco->updateLocco($data_locco);
 
+                /* mail obavijest o novom putnom nalogu */
+                $send_to =  EmailingController::sendTo('travel_orders','create');
+               
+                foreach(array_unique($send_to) as $send_to_mail) { // mailovi upisani u mailing 
+                    if( $send_to_mail != null & $send_to_mail != '' ) {
+                        Mail::to($send_to_mail)->send(new TravelCreate($travelOrder));  
+                    }
+                }
             }
             
         } catch (\Throwable $th) {
@@ -138,8 +145,6 @@ class LoccoController extends Controller
             return redirect()->back();
         }
       
-       
-
         if($request['servis']){
 			if(! $request['comment'] ){
 				$message = session()->flash('error', __('ctrl.malfunction'));
@@ -177,8 +182,6 @@ class LoccoController extends Controller
             }
         }
         
-
-
         session()->flash('success',  __('ctrl.data_save'));
 		return redirect()->back();
     }

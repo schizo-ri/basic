@@ -49,6 +49,7 @@ class CheckOut extends Command
                 $workRecord->updateWorkRecords(['end' => $checkOut_time ]);
             }
         }
+        
         return "Odjavljeni su svi djelatnici";
     }
 }

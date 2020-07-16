@@ -179,6 +179,7 @@ $( document ).ready(function() {
 });
 
 $('.evidention_check .entry').click(function(){
+    $(this).hide();
     var url = location.origin + '/work_records';
 
     $.ajaxSetup({
@@ -197,6 +198,7 @@ $('.evidention_check .entry').click(function(){
         }, 
         error: function(jqXhr, json, errorThrown) {
             console.log(jqXhr.responseJSON);
+            $(this).show();
             var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
                                 'message':  jqXhr.responseJSON.message,
                                 'file':  jqXhr.responseJSON.file,
@@ -207,7 +209,9 @@ $('.evidention_check .entry').click(function(){
                 type: "get",
                 data: data_to_send,
                 success: function( response ) {
-                    $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+                   /*  $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal(); */
+                   $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + "Prijava nije uspjela, osvježi stranicuu i pokušaj ponovno" + '</div></div></div>').appendTo('body').modal();
+                   
                 }, 
                 error: function(jqXhr, json, errorThrown) {
                     console.log(jqXhr.responseJSON); 
@@ -226,7 +230,7 @@ $('.evidention_check .checkout').click(function(){
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-        });     
+        });
         $.ajax({
             url: url,
             type: "POST",

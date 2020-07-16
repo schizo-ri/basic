@@ -59,7 +59,7 @@
 </div>
 <div class="modal-body">
     @if($notice_img)
-    @php krsort($notice_img) @endphp
+    @php krsort($notice_img) dd(($notice_img)); @endphp
         <div class="image_notice">
             <img class="img_notice" src="{{ URL::asset('storage/notice/' . $notice->id . '/' . end($notice_img)) }}" alt="Notice image" title="Zoom"  />
         </div>

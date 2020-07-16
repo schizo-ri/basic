@@ -21,11 +21,12 @@
 					<p>Poduzeće: {{ $company->name }} </p>
 					<p>Vozilo: 
 						<select name="car_id" required>
-						<option selected disabled></option>
-						@foreach ($cars as $car)
-							<option value="{{ $car->id }}" {!! $travel->car_id == $car->id ? 'selected' : '' !!} >{{ $car->model . ' ' .  $car->registration }},  ENC: {{ $car->enc }} </option>
-						@endforeach
-						</select>, </p>
+							<option selected disabled></option>
+							@foreach ($cars as $car)
+								<option value="{{ $car->id }}" {!! $travel->car_id == $car->id ? 'selected' : '' !!} >{{ $car->model . ' ' .  $car->registration }} {!! $car->enc != null ? ', ENC: ' . $car->enc : '' !!}</option>
+							@endforeach
+						</select>
+					</p>
 				</header>
 				<main class="travel_main">
 					<div class="approval">
@@ -38,7 +39,7 @@
 						<p>službeno otputuje u <input name="destination" type="text" id="destination" class="form-control" value="{{ $travel->destination }}" required  > sa zadaćom <input name="description" type="text" class="form-control" value="{{ $travel->description }}" ></p> 
 						<p>Putovanje može trajati <input name="days" type="number" class="form-control" value="{{ $travel->days }}" required> dana.</p> 
 						<div class="aproveBy">
-						{{-- 	<p class="col-4 float_right">Odobrio: <img src="{{ URL::asset('img/signature.jpg')}}" alt="Potpis"/></p> --}}
+							<p class="col-4 float_right">Odobrio: <img src="{{ URL::asset('img/signature.jpg')}}" alt="Potpis"/></p>
 						</div>
 					</div>
 					<div class="calculation">
@@ -61,21 +62,29 @@
 									<div class="tr">
 										@php
 											$date1 = new DateTime($travel->start_date);
-											$date2 = new DateTime($travel->end_date);
-											$date_diff = $date2->diff($date1);
-											$sati = $date_diff->h + ($date_diff->d*24);
-											$dnevnice = $date_diff->d;
-											if($date_diff->h >= 12) {
-												$dnevnice ++;
+											
+											$sati = 0;
+											$dnevnice = 0;
+											if ($travel->end_date ) {
+												$date2 = new DateTime($travel->end_date);
+												$date_diff = $date2->diff($date1);
+												$sati = $date_diff->h + ($date_diff->d*24);
+												$dnevnice = $date_diff->d;
+												if($date_diff->h >= 12) {
+													$dnevnice ++;
+												}
 											}
-																		
 										@endphp
 										<span class="td col-2 align_c"><input name="start_date" type="datetime-local" class="form-control" value="{{ date('Y-m-d\TH:i', strtotime($travel->start_date )) }}" required></span>
-										<span class="td col-2 align_c"><input name="end_date" type="datetime-local" class="form-control" value="{{ date('Y-m-d\TH:i', strtotime($travel->end_date )) }}" required></span>
+										<span class="td col-2 align_c"><input name="end_date" type="datetime-local" class="form-control" value="{!! $travel->end_date ? date('Y-m-d\TH:i', strtotime($travel->end_date )) : '' !!}" required></span>
 										<span class="td col-2 align_c">{{ $sati }}</span>
-										<span class="td col-2 align_c">{{ $dnevnice }}</span>
-										<span class="td col-2 align_r">200.00</span>
-										<span class="td col-2 align_r total_sum">{{ number_format($dnevnice * 200, 2, '.', ' ') }}</span>
+										<span class="td col-2 align_c dnevnice">{{ $dnevnice }}</span>
+										<span class="td col-2 align_r">
+											@if($dnevnice > 0) 
+												<input name="daily_wage" type="number" class="align_r" step="0.01" value="{{ number_format( $travel->daily_wage, 2, '.', ' ') }}" >
+											@endif
+										</span>
+										<span class="td col-2 align_r total_sum sum_daily_wage">{{ number_format($dnevnice * $travel->daily_wage, 2, '.', ' ') }}</span>
 									</div>
 								</div>
 							</div>
@@ -91,6 +100,16 @@
 									</div>
 								</div>
 								<div class="tbody">
+									@if ($locco1)
+										<input type="hidden" name="locco_id" value="{{ $locco1->id }}">
+										<div class="tr">
+											<span class="td col-3">{{ $locco1->starting_point }}</span>
+											<span class="td col-3">{{ $locco1->destination }}</span>
+											<span class="td col-2 distance align_c">{{ $locco1->distance }}</span>
+											<span class="td col-2 km_price align_r">{!! $locco1->car['private_car'] == 1 ? 2.00 : '' !!}</span>
+											<span class="td col-2 summary align_r total_sum">{!! $locco1->car['private_car'] == 1 ? number_format($locco1->distance * 2, 2, '.', ' ') : '' !!}</span>
+										</div>
+									@endif
 									@if (count($loccos) > 0)
 										@php
 											$i = 0;
@@ -152,7 +171,7 @@
 											<span class="td col-5"><input name="cost_description[{{ $j }}]" type="text" value="{{ $expense->cost_description }}" class="cost_description" ></span>
 											<span class="td col-2 align_r"><input name="amount[{{ $j }}]" type="number" class="align_r amount" step="0.01" value="{{ number_format($expense->amount, 2, '.', ' ') }}"  ></span>
 											<span class="td col-1 align_c"><input name="currency[{{ $j }}]" type="text" class="align_c currency" value="{{ $expense->currency }}" ></span>
-											<span class="td col-2 align_r"><input name="total_amount[{{ $j }}]" type="text" class="align_r total_sum" type="number" step="0.01" value="{{ number_format($expense->total_amount, 2, '.', ' ') }}" ></span>
+											<span class="td col-2 align_r total_amount"><input name="total_amount[{{ $j }}]" type="text" class="align_r total_sum " type="number" step="0.01" value="{{ number_format($expense->total_amount, 2, '.', ' ') }}" ></span>
 										</div>
 										@php
 											$j++;
@@ -164,7 +183,7 @@
 											<span class="td col-5"><input name="cost_description[{{ $i }}]" class="cost_description" type="text"></span>
 											<span class="td col-2 align_c"><input name="amount[{{ $i }}]" class="align_r amount" type="number" step="0.01" ></span>
 											<span class="td col-1 align_c"><input name="currency[{{ $i }}]" class="align_c currency" type="text"></span>
-											<span class="td col-2 align_r"><input name="total_amount[{{ $i }}]" class="align_r total_sum" type="number" step="0.01" ></span>
+											<span class="td col-2 align_r total_amount"><input name="total_amount[{{ $i }}]" class="align_r total_sum " type="number" step="0.01" ></span>
 										</div>
 									@endfor
 								</div>
@@ -174,7 +193,7 @@
 					</div>
 				</main>
 				<footer>
-					<p>Primljen predujam dana <input name="advance_date" type="date" class="form-control align_c" value="{{ $travel->advance_date }}" > u iznosu <input name="advance" type="number" step="0.01" class="form-control align_c" value="{{ number_format( $travel->advance, 2, '.', ' ') }}" > Kn</p>
+					<p>Primljen predujam dana <input name="advance_date" type="date" class="form-control align_c" value="{!! $travel->advance_date ? $travel->advance_date : '' !!}" > u iznosu <input name="advance" type="number" step="0.01" class="form-control align_c" value="{{ number_format( $travel->advance, 2, '.', ' ') }}" > Kn</p>
 					<p>Ostaje za isplatu / povrat <input name="rest_payout" type="number" step="0.01" class="form-control align_c" value="{{ number_format( $travel->rest_payout, 2, '.', ' ')}}" > Kn</p>
 					<p>Podnositelj obračuna 
 						<select class="form-control" name="calculate_employee" >
@@ -183,10 +202,12 @@
 							<option value="{{ $employee->id }}" {!! $travel->calculate_employee == $employee->id ? 'selected' : '' !!}>{{ $employee->user['first_name'] . ' ' .  $employee->user['last_name'] }}</option>
 						@endforeach
 						</select>
-						, {{ $company->city }}, Direktor  {{ $company->director }} 
+						, {{ $company->city }}, Direktor  Zrinka Runje Klasan
 					</p>
 				</footer>
-				<input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1">
+				@if(Sentinel::getUser()->hasAccess(['travel_orders.update']))
+					<input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1">
+				@endif
 			</section>
 			{{ csrf_field() }}
 			{{ method_field('PUT') }}
@@ -211,7 +232,6 @@
 				}
 			});
 			$('input.bill').change(function(){
-				console.log($(this).val());
 				if($(this).val() != '') {
 					$(this).attr('required','required');
 					$(this).parent().siblings().find('input').attr('required','required');
@@ -221,7 +241,15 @@
 				}
 			});
 			$('input.cost_description').change(function(){
-				console.log($(this).val());
+				if($(this).val() != '') {
+					$(this).attr('required','required');
+					$(this).parent().siblings().find('input').attr('required','required');
+				} else {
+					$(this).removeAttr('required');
+					$(this).parent().siblings().find('input').removeAttr('required');
+				}
+			});
+			$('input.amount').change(function(){
 				if($(this).val() != '') {
 					$(this).attr('required','required');
 					$(this).parent().siblings().find('input').attr('required','required');
@@ -233,36 +261,53 @@
 			$('span.distance input').change(function(){
 				var km_price = $(this).parent().next('.km_price').text();
 				var distance = $(this).val();
-				console.log(km_price);
-
-				console.log(distance);
-
 				$(this).parent().siblings('.summary').text((km_price * distance).toFixed(2));
+				if($(this).val() != '') {
+					$(this).attr('required','required');
+					$(this).parent().siblings().find('input').attr('required','required');
+				} else {
+					$(this).removeAttr('required');
+					$(this).parent().siblings().find('input').removeAttr('required');
+				}
+				total_sum();
 			});
 			$('input[name=start_date]').change(function(){
 				var start_date = $(this).val();
-				console.log(start_date);
+			
 				$('input[name=start_date]').val(start_date);
 				$('input[name=end_date]').val(start_date);
 			});
-
-			var total = 0;
+			$('input[name=daily_wage]').change(function(){
+				var dnevnica = $(this).val();
+				var broj_dnevnica = $('.dnevnice').text();
 			
-			$( ".total_sum" ).each(function( index ) {
-				var value = '';
-				if ( $( this ).val() != '') {
-					value = $( this ).val();
-				} else if ( $( this ).text() != '') {
-					value = $( this ).text();
-				}
-				console.log( index + ": " + value );
-
-				if( $.isNumeric( value ) ) {
-					total += Number( value );
-					console.log(total );
-				}
+				$('.sum_daily_wage').text(dnevnica * broj_dnevnica);
+				total_sum();
 			});
-			$('#total_sum').text(total.toFixed(2));
+			$('input.amount').change(function(){
+				console.log($( this ).val());
+				$( this ).parent().siblings('.total_amount').find('input').val($( this ).val());
+				total_sum();
+			});
+			total_sum();
+
+			function total_sum() {
+				var total = 0;
+				$( ".total_sum" ).each(function( index ) {
+					var value = '';
+					if ( $( this ).val() != '') {
+						value = $( this ).val();
+					} else if ( $( this ).text() != '') {
+						value = $( this ).text();
+					}
+				
+					if( $.isNumeric( value ) ) {
+						total += Number( value );
+					}
+				});
+				$('#total_sum').text(total.toFixed(2));
+			}
+			
 		</script>
 	</body>
 </html>

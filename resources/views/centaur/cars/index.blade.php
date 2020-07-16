@@ -30,9 +30,9 @@
 				</thead>
 				<tbody>
 					@foreach ($cars as $car)
-						<tr>
+						<tr data-href="/cars/{{ $car->id }}" data-modal >
 							<td>{{ $car->manufacturer }}</td>
-							<td>{{ $car->model }}</td>
+							<td>{{ $car->model }} {!! $car->car_index ? ' ('. $car->car_index . ')' : '' !!}</td>
 							<td>{{ $car->registration }}</td>
 							<td>{{ $car->chassis }}</td>
 							<td>{{ $car->first_registration }}</td>
@@ -83,14 +83,28 @@
 			<p class="no_data">@lang('basic.no_data')</p>
 		@endif
 	</div>
+	<div id="login-modal" class="modal">
+	
+	</div>
 </main>
 <script>
 	$(function(){
 		$.getScript( '/../js/filter_table.js');
-		/* $('.collapsible').click(function(event){
-       		$(this).siblings().toggle();
-		}); */
+	
+		$('tr[data-modal] td:not(:last-child)').on("click", function(e) {
+			event.preventDefault();
+			var href = location.origin + $(this).parent().data('href');
+			console.log(href);
+			$.get(href, function(html) { 
+		 		$(html).appendTo('#login-modal');
+		 	}); 
+			$('#login-modal').modal();
+			$('a.close-modal').click(function(){
+				$( "#login-modal" ).empty();
+			});
+		}); 
 	});
+
 	$.getScript( '/../js/open_modal.js'); 
 	/* $('.open_car_modal').click(function(){
 		$.modal.defaults = {

@@ -5,6 +5,7 @@
 		<title>Putni nalog</title>
 		<style>@page { margin:20px; }</style>
 	</head>
+	
 	<body style="font-family: DejaVu Sans;">
 		<form accept-charset="UTF-8" role="form" method="post" action="{{ route('travel_orders.update', $travel->id) }}">
 			<table id="index_table" class="display table table-hover sort_1_desc">
@@ -15,15 +16,15 @@
 						<p>Vozilo: {{ $travel->car->model . ' ' .  $travel->car->registration }},  ENC: {{ $travel->car->enc }}
 						</p>
 					</header>
-					<main class="travel_main">
-						<div class="approval">
+					<main class="travel_main" >
+						<div class="approval" >
 							<h4 style="text-transform: uppercase;">Odobrenje</h4>
 							<p>Određujem da {{ $travel->employee->user['first_name'] . ' ' .  $travel->employee->user['last_name'] }}
 								zaposlenik našeg poduzeća, dana {{ date('d.m.Y H:i', strtotime($travel->start_date )) }}</p> 
 							<p>službeno otputuje u {{ $travel->destination }} sa zadaćom {{ $travel->description }}</p> 
 							<p>Putovanje može trajati {{ $travel->days }} dana.</p> 
-							<div class="aproveBy">
-							{{-- 	<p class="col-4 float_right">Odobrio: <img src="{{ URL::asset('img/signature.jpg')}}" alt="Potpis"/></p> --}}
+							<div class="aproveBy" style="width:100%, display:block; clear: right; " >
+								<p class="col-4" style="float: right;" >Odobrio: <img src="{{ public_path() . '\img\signature.jpg' }}" alt="Potpis" style="max-height: 40px;margin-left: 20px;" /></p> 
 							</div>
 						</div>
 						<div class="calculation" >
@@ -53,15 +54,19 @@
 												if($date_diff->h >= 12) {
 													$dnevnice ++;
 												}
+												$total_sum = 0.00;
 												$start = date('d.m.Y H:i', strtotime($travel->start_date ));
 												$end = date('d.m.Y H:i', strtotime($travel->end_date ));
+
+												$total_sum += $dnevnice * $travel->daily_wage;
+												
 											@endphp
 											<td class="td col-2 align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $start }}</td>
 											<td class="td col-2 align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $end }}</td>
 											<td class="td col-2 align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">{{ $sati }}</td>
 											<td class="td col-2 align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">{{ $dnevnice }}</td>
-											<td class="td col-2 align_r" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">200.00</td>
-											<td class="td col-2 align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;text-align:right;">{{ number_format($dnevnice * 200, 2, '.', ' ') }}</td>
+											<td class="td col-2 align_r" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{{ $travel->daily_wage }}</td>
+											<td class="td col-2 align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;text-align:right;">{{ number_format($dnevnice * $travel->daily_wage, 2, '.', ' ') }}</td>
 										</tr>
 									</tbody>
 								</table>
@@ -79,6 +84,11 @@
 									<tbody class="tbody" style="width:100%;max-width:100%;">
 										@if (count($travel->loccos) > 0)
 											@foreach ($travel->loccos as $locco1)
+											@php
+												if ($travel->car['private_car'] == 1) {
+													$total_sum += $locco1->distance * 2;
+												}
+											@endphp
 												<tr class="tr" style="width:100%;max-width:100%;">
 													<td class="td col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $locco1->starting_point }}</td>
 													<td class="td col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $locco1->destination }}</td>
@@ -116,6 +126,10 @@
 											$j = 0;
 										@endphp
 										@foreach ($travel->expenses as $expense)
+										@php
+											$total_sum += $expense->total_amount;
+										@endphp
+
 											<tr class="tr expences" style="width:100%;max-width:100%;">
 												<td class="td col-2" style="width: 15%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $expense->bill }}</td>
 												<td class="td col-5" style="width:45%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $expense->cost_description }}</td>
@@ -138,7 +152,7 @@
 										@endfor
 									</tbody>
 								</table>
-								<h5 class="align_r"  style="text-transform: uppercase;text-align=right"><span class="col-2 float_right display_inline_block" id="total_sum">0,00</span><span class="float_right">Sveukupno</span></h5>
+								<h5 class="align_r" style="text-transform: uppercase;float:right; margin-right: 15px;"><span class="float_right">Sveukupno</span><span class="col-2 float_right display_inline_block" id="total_sum" style="margin-left: 15px">{{ $total_sum }}</span></h5>
 							</section>
 						</div>
 					</main>
@@ -146,28 +160,29 @@
 						<p>Primljen predujam dana {{ date('d.m.Y', strtotime($travel->advance_date)) }} u iznosu {{ number_format( $travel->advance, 2, '.', ' ') }} Kn</p>
 						<p>Ostaje za isplatu / povrat {{ number_format( $travel->rest_payout, 2, '.', ' ')}} Kn</p>
 						<p>Podnositelj obračuna {{ $travel->employee->user['first_name'] . ' ' .  $travel->employee->user['last_name'] }}
-						
 						</p>
 					</footer>
 				</section>
 			</table>
 		</form>
 		<script>
-			$( ".total_sum" ).each(function( index ) {
-				var value = '';
-				if ( $( this ).val() != '') {
-					value = $( this ).val();
-				} else if ( $( this ).text() != '') {
-					value = $( this ).text();
-				}
-				console.log( index + ": " + value );
-
-				if( $.isNumeric( value ) ) {
-					total += Number( value );
-					console.log(total );
-				}
-			});
-			$('#total_sum').text(total.toFixed(2));
+			total_sum();
+			function total_sum() {
+				var total = 0;
+				$( ".total_sum" ).each(function( index ) {
+					var value = '';
+					if ( $( this ).val() != '') {
+						value = $( this ).val();
+					} else if ( $( this ).text() != '') {
+						value = $( this ).text();
+					}
+				
+					if( $.isNumeric( value ) ) {
+						total += Number( value );
+					}
+				});
+				$('#total_sum').text(total.toFixed(2));
+			}
 		</script>
 	</body>
 </html>

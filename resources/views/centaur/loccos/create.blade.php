@@ -59,7 +59,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('destination')) ? 'has-error' : '' }}">
 				<label>@lang('basic.destination')</label>
-				<input class="form-control" placeholder="{{ __('basic.destination') }}" name="destination" type="text" value="{{ old('destination') }}"  required />
+				<input class="form-control" placeholder="{{ __('basic.destination') }}" name="destination" type="text" value="{{ old('destination') }}"  />
 				{!! ($errors->has('destination') ? $errors->first('destination', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('start_km'))  ? 'has-error' : '' }}">

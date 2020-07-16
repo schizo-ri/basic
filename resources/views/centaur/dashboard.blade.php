@@ -16,7 +16,6 @@
 		<div class="user_header col-xs-12 col-sm-12 col-md-12 col-lg-8" >
 			<div class="info ">
 				<div class="col-md-3 float_left user_header_info">
-				
 					@if($profile_image && ! empty($profile_image))
 						<span class="image_prof">
 							<img class="" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image"  />
@@ -72,7 +71,7 @@
 							</button>
 						@endif
 						@if(in_array('Putni nalozi', $moduli))  
-							<button class="" ><a href="{{ route('travel_orders.show', $employee->id) }}" rel="modal:open">
+							<button class="" ><a href="{{ route('travel_orders.show', $employee->id) }}" class="travel_show" rel="modal:open">
 								<span>
 									<span class="img travel"></span>
 										<p>{{  __('basic.travel_orders') }}</p>
@@ -236,6 +235,7 @@
 <script>
 	$( function () {
 		$.getScript( '/../js/event_click.js');
+
 	});
 </script>
 @stop

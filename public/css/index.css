@@ -638,14 +638,6 @@ class="select-css"
     text-transform: capitalize;
 }
 
-.index_page .calender_view .pignose-calendar-top-nav pignose-calendar-top-prev {
-
-}
-
-.index_page .calender_view .pignose-calendar-top-nav pignose-calendar-top-next {
-
-}
-
 .pignose-calendar .pignose-calendar-body {
     padding: 0;
 }
@@ -663,8 +655,8 @@ class="select-css"
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-unit .pignose-calendar-button-schedule-container .pignose-calendar-button-schedule-pin {
-    width: 5px;
-    height: 5px;
+    width: 7px;
+    height: 7px;
     border: 1px solid #ffffff;
 }
 
@@ -4639,4 +4631,12 @@ a.modal_close {
 }
 .abs_BOL {
     background-color: #ffcce6;
+}
+
+@media print {
+    table tr td {
+        transform: scale(.7);
+        page-break-inside: avoid;
+        font-size: 8px;
+    }
 }

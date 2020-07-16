@@ -71,6 +71,11 @@ h4, h5 {
     line-height: 30px;
 
 }
+.aproveBy  {
+    clear: right;
+    overflow: visible;
+    margin-top: 20px;
+}
 
 .aproveBy p{
     position: relative;
@@ -145,4 +150,21 @@ input[name=description] {
     float: right;
     border: 1px solid #000000;
     cursor: pointer;
+}
+
+
+@media (max-width: 450px) {
+    .calculation .table{
+        display: block;
+    }
+    .travel_header h1 {
+        font-size: 16px;
+    }
+    .travel_header p {
+        font-size: 14px;
+    }
+    .aproveBy>p {
+        width: 50%;
+        max-width: 50%;
+    }
 }

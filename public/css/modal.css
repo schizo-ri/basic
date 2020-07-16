@@ -14,6 +14,10 @@
 	text-align: center;
 	padding: 20px 0;
 }
+
+.modal.modal_travel_show {
+	
+}
 .modal.modal_notice, .modal.modal_questionnaire, .modal_user  {
 	position: fixed;
     float: right;
@@ -28,7 +32,14 @@
 .modal .panel-title {
 	margin: 0.5rem;
 }
-
+.modal table input[type="text"], .modal table input[type="number"] {
+	padding: 5px;
+	line-height: 35px;
+	height: 35px;
+}
+.modal .table tbody td {
+	padding: 5px;
+}
 .modal.slide {
 	width: 1060px;
     height: 715px;

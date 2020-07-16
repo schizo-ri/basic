@@ -12,9 +12,12 @@ use App\Models\Locco;
 use App\Models\Company;
 use App\Models\TravelExpense;
 use App\Models\TravelLocco;
+use App\Http\Controllers\EmailingController;
 use Sentinel;
 use PDF;
 use App;
+use App\Mail\TravelClose;
+use Illuminate\Support\Facades\Mail;
 
 class TravelOrderController extends Controller
 {
@@ -122,7 +125,7 @@ class TravelOrderController extends Controller
      */
     public function show($id)
     {
-        $travel_orders = TravelOrder::where('employee_id', $id )->where('status',0)->get();
+        $travel_orders = TravelOrder::where('employee_id', $id )->where('status', 0)->orderBy('date','DESC')->get();
     
         return view('Centaur::travel_orders.show', ['travel_orders' => $travel_orders]);
     }
@@ -169,6 +172,7 @@ class TravelOrderController extends Controller
             'advance_date'      => $request['advance_date'],
             'rest_payout'  	    => $request['rest_payout'],
             'calculate_employee' => $request['calculate_employee'],
+            'daily_wage'        => $request['daily_wage'],
          /*    'locco_id'  	    => $request['locco_id'], */
         );
 
@@ -182,14 +186,21 @@ class TravelOrderController extends Controller
                 if( $bill != null ) {
                     $cost_description = $request['cost_description'][$key];
                     $amount = $request['amount'][$key];
-                    $currency = $request['currency'][$key];
+                    
                     $total_amount = $request['total_amount'][$key];
                     $travel_id = $travel->id;
                     $data_expenses += ['bill' => $bill];
                     $data_expenses += ['cost_description' => $cost_description];
                     $data_expenses += ['amount' => $amount];
-                    $data_expenses += ['currency' => $currency];
-                    $data_expenses += ['total_amount' => $total_amount];
+                    $data_expenses += ['total_amount' => $amount];
+                    if(isset( $request['currency'])) {
+                        $currency = $request['currency'][$key];
+                        $data_expenses += ['currency' => $currency];
+                    }
+                    if(isset( $request['total_amount'])) {
+                        $total_amount = $request['total_amount'][$key];
+                        $data_expenses += ['total_amount' => $total_amount];
+                    }
                     $data_expenses += ['travel_id' =>  $travel->id];
                     
                     if(isset($request['expence_id'][$key])) {
@@ -230,6 +241,17 @@ class TravelOrderController extends Controller
             }
         }
        
+        $locco = Locco::find($travel->locco_id);
+
+        if($locco) {
+            $data_locco = array(
+                'date'  		    => $travel->start_date,
+                'end_date'  		=> $travel->end_date,
+            );
+
+            $locco->updateLocco($data_locco);
+        } 
+
         session()->flash('success', __('ctrl.data_edit'));
         
         return redirect()->back();
@@ -262,7 +284,6 @@ class TravelOrderController extends Controller
         } else {
             $status = 0;
             $message = __('basic.order_open');
-          
         }
 
         $data = array(
@@ -270,9 +291,18 @@ class TravelOrderController extends Controller
         );
 
         $travel->saveTravelOrder($data);
-
-        $this->pdfTravel($travel->id);
         
+        /* mail obavijest o završenom putnom nalogu */
+        $send_to =  EmailingController::sendTo('travel_orders','confirm');
+       
+        foreach(array_unique($send_to) as $send_to_mail) { // mailovi upisani u mailing 
+            if( $send_to_mail != null & $send_to_mail != '' ) {
+                Mail::to($send_to_mail)->send(new TravelClose($travel));  
+               
+
+            }
+        }
+
         return $message;
     }
 
@@ -282,11 +312,11 @@ class TravelOrderController extends Controller
        $company = Company::first();
        $cars = Car::orderBy('registration','ASC')->get();
        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
-       $locco = $travel->locco; // locco prema zapisanom id u travel
+       $locco1 = $travel->locco; // locco prema zapisanom id u travel
      
-       $loccos = $travel->loccos; // locco prema zapisanom id u travel
-       
-       return view('Centaur::travel_orders.travelShow',['travel' => $travel, 'company' => $company, 'cars' => $cars, 'locco' => $locco,'loccos' => $loccos,'employees' => $employees ]);
+       $loccos = $travel->loccos; // locco iz travel_loccos
+      
+       return view('Centaur::travel_orders.travelShow',['travel' => $travel, 'company' => $company, 'cars' => $cars, 'locco1' => $locco1,'loccos' => $loccos,'employees' => $employees ]);
     }
 
      /**
@@ -311,7 +341,6 @@ class TravelOrderController extends Controller
         }
 
         $pdf->save($path.'Putni nalog_'.$travel->id.'.pdf');
-        //   return $pdf->download('Putni nalog.pdf');
 
         return true;
 

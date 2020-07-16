@@ -63,6 +63,7 @@ class CarController extends Controller
     public function store(Request $request)
     {
         $data = array(
+			'car_index'         => $request['car_index'],
 			'manufacturer'      => $request['manufacturer'],
 			'model'  	        => $request['model'],
 			'registration'  	=> $request['registration'],
@@ -92,7 +93,9 @@ class CarController extends Controller
      */
     public function show($id)
     {
-        //
+        $car = Car::find($id);
+        return view('Centaur::cars.show', ['car' => $car]);
+
     }
 
     /**
@@ -122,6 +125,7 @@ class CarController extends Controller
         $car = Car::find($id);
 
         $data = array(
+            'car_index'         => $request['car_index'],
 			'manufacturer'      => $request['manufacturer'],
 			'model'  	        => $request['model'],
 			'registration'  	=> $request['registration'],

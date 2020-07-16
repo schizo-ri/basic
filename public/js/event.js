@@ -54,11 +54,10 @@ $(function() {
                         var month = date[0]['_i'].split('-')[1]; // (from 0 to 11)
                         var year = date[0]['_i'].split('-')[0];
                         var datum = year + '-' + month + '-' + day;
-                        var url = url_basic + '?dan=' + datum;
                         var view = $('.change_view_calendar').val();
-                        console.log(date[0]['_i']); //2020-06-08
+                        var url = url_basic + '?dan=' + datum;
                        
-                        console.log(view);
+                        
                         // load side list
                         $('.index_aside .day_events').load(url + ' .index_aside .day_events >div');
                         // load main_calendar
@@ -66,7 +65,6 @@ $(function() {
                             $('.main_calendar_month tbody td').click(function(){
                                 var date = $(this).attr('data-date');
                                 $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
-                                
                             });
                             $( ".change_employee" ).change(function() {
                                 var value = $(this).val().toLowerCase();
@@ -129,7 +127,6 @@ $(function() {
                                     $('button.show_locco').show();
                                }
                             });
-                          
                             $('button.show_loccos').click(function(e){
                                 e.preventDefault();
                                 $('.main_calendar td>a').toggle();
@@ -142,6 +139,8 @@ $(function() {
                             });
                             $.getScript( '/../restfulizer.js');
                             select_view();
+                           
+                            
                         });
                         
                         if(body_width < 768) {
@@ -241,7 +240,6 @@ $(function() {
                     $.getScript( '/../restfulizer.js');
                    
                 });
-                console.log("prev");
             },
             next: function(info, context) {
                 /**

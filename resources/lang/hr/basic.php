@@ -330,6 +330,8 @@ return [
 	'holidays'			=> 'Praznici',
 	'travel_orders'		=> 'Putni nalozi',
 	'create_travel'		=> 'Kreiraj putni nalog',
+	'create_travel1'	=> 'Kreiran putni nalog',
+	'close_travel'	=> 'Zatvoren putni nalog',
 	'add_travel'		=> 'Dodaj putni nalog',
 	'edit_travel'		=> 'Ispravi putni nalog',
 	'days_no'			=> 'Putovanje može trajati',
@@ -349,7 +351,7 @@ return [
 	'edit_work_records' => 'Prijava odlaska s posla',
 	'private_car' 		=> 'Privatno vozilo',
 	'decree' 			=> 'Odluka uprave',
-	
+	'top_image' 		=> 'Slika obavijesti',
 		
 ];	
 

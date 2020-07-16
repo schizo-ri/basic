@@ -7,6 +7,7 @@ if(locale == 'en') {
     saved = "Podaci su spremljeni";
 }
 $('.close_travel').click(function(e){
+    console.log("close_travel");
     e.preventDefault();
     $.ajaxSetup({
         headers: {
@@ -14,7 +15,7 @@ $('.close_travel').click(function(e){
         }
     });
     var url = $(this).attr('href');
-
+    console.log(url);
     $.ajax({
         url: url,
         type: "get",
@@ -30,5 +31,5 @@ $('.close_travel').click(function(e){
             console.log(jqXhr.responseJSON); 
         }
 
-    }); 
+    });
 }); 

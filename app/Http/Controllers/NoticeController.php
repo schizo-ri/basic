@@ -157,13 +157,10 @@ class NoticeController extends Controller
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 
                         if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                            $prima = array();
                             $employees = Employee::where('id','<>',1)->where('checkout', null)->get();
                            
-                            $send_to = EmailingController::sendTo('notices','create');
-                            dd( $send_to );
-
-
+                            $prima = EmailingController::sendTo('notices','create');
+                          
                             foreach($request['to_department'] as $department_id) {
                                 $department = Department::where('id', $department_id)->first();
                                

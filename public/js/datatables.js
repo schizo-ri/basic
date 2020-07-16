@@ -17,19 +17,19 @@ $( function () {
 			"searchPlaceholder": "Search"
         },
 		"lengthMenu": [ 10, 25, 50, 75, 100 ],
-		"order": [[ kolona, sort ]],
 		"pageLength": 50,
 		"paging": false,
 		"searching": true,
 		"ordering": true,
+		"order": [[ kolona, sort ]],
 		"info":     true,
 		"bDestroy": true,
 		"lengthChange": true,
 		"fixedHeader": true,
 		"colReorder": true,
 		"columnDefs": [ {
-			"targets"  : 'no-sort',
-			"orderable": false,
+			"targets"  : 'sort',
+			"orderable": true,
 			"order": []
 		  }],
 		stateSave: true,

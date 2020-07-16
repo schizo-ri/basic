@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'MyIntranet'),
+    'name' => env('APP_NAME', 'myIntranet'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost:8000/'),
+    'url' => env('APP_URL', 'https://ru-ve.myintranet.io'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -164,8 +164,8 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 		Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class,
-        Centaur\CentaurServiceProvider::class, 
-        Barryvdh\DomPDF\ServiceProvider::class,
+		Centaur\CentaurServiceProvider::class, 
+ 	    Barryvdh\DomPDF\ServiceProvider::class,
         
         /*
          * Package Service Providers...
@@ -233,8 +233,9 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 		'Activation' => Cartalyst\Sentinel\Laravel\Facades\Activation::class,
 		'Reminder'   => Cartalyst\Sentinel\Laravel\Facades\Reminder::class,
-        'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class,
+		'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Pusher' => Pusher\Pusher::class,
     ],
 
 ];

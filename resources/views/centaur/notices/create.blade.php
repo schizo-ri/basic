@@ -36,8 +36,6 @@
 	<body>
         <form class="form_sequence" id="notice_form" accept-charset="UTF-8" role="form" method="post" action="{{ route('notices.store') }}" enctype="multipart/form-data" >
             <section class="header_campaign">
-               <!--  <textarea name="text_html" id="text_html" hidden ></textarea> -->
-               <!--  <textarea name="text_json" id="text_json" hidden ></textarea> -->
                 <header>
                     {{ csrf_field() }}
                     <div class="unlayer container">
@@ -101,8 +99,9 @@
                         </div>
                     </div>
                     <div class="form-group col-sm-12 col-md-6 float_left">
-                        <label class="label_file" for="file">Top notice image<span><img src="{{ URL::asset('icons/download.png') }}" />Upload image</span></label>
+                        <label class="label_file" for="file">@lang('basic.top_image') (jpg,png,gif)<span><img src="{{ URL::asset('icons/download.png') }}" />Upload image</span></label>
                         <input type='file' id="file" name="fileToUpload" >
+                        <span id="file_name"></span>
                     </div>
                     <div class="form-group col-sm-12 col-md-6 float_left {{ ($errors->has('schedule_date'))  ? 'has-error' : '' }}" >
                         <label class="label_schedule">@lang('basic.schedule')</label>
@@ -131,6 +130,7 @@
                     <div class="col-2" id="template-container"></div>
                 @endif
             </main>
+           
         </form>
         <span hidden class="locale" >{{ App::getLocale() }}</span>
         <span hidden class="dataArrTemplates">{{ ($templates) }}</span>
@@ -151,7 +151,9 @@
                         $('.btn-submit').val("Pošalji");
                     }
                 });
-
+                $('#file').change(function(){
+                    $('#file_name').text(  $('input[type=file]').val() );
+                });
                 $('.show_popUp').click(function(){  
                     $('.pop-up').toggle();
                 });

@@ -110,7 +110,7 @@
     margin-right: 10px;
 }
 
-.container .posts .all_post .count_coments {
+.container .posts .all_post .count_coments, .count_request {
     background: #1594F0;
     width: 18px;
     height: 18px;
@@ -122,7 +122,13 @@
     color: #FFFFFF;
     margin-top: 4px;
     margin-left: 15px;
+    display: inline-block;
 }
+.count_request {
+    position: absolute;
+    right: 5px;
+}
+
 
 .container .posts .all_post .post_empl>span, .container .posts .all_post .post_empl>img {
     float: left;

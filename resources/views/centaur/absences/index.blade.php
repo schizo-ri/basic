@@ -96,7 +96,7 @@
 								</label>
 							</div>
 							@if(count($absences)>0)
-								<table id="index_table" class="display table table-hover">
+								<table id="index_table" class="display table table-hover sort_1_desc">
 									<thead>
 										<tr>
 											@if( Sentinel::inRole('administrator') )<th>@lang('basic.fl_name')</th>@endif
@@ -204,9 +204,59 @@
 	});
 </script>
 <script>
-	$.getScript( 'js/datatables.js');
+	$(document).ready(function() {
+    $('#index_table').DataTable( {
+		"order": [[ 1, "desc" ]],
+		dom: 'Bfrtip',
+		"paging": false,
+		buttons: [
+			'copyHtml5',
+			{
+				extend: 'print',
+				customize: function ( win ) {
+					$(win.document.body).find('h1').addClass('title_print');
+					$(win.document.body).find('table').addClass('table_print');
+					$(win.document.body).find('table tr td').addClass('row_print');
+					$(win.document.body).addClass('body_print');
+					$(win.document.body).find('table tr th').addClass('hrow_print');
+					$(win.document.body).find('table tr th:last-child').addClass('not_print');
+					$(win.document.body).find('table tr td:last-child').addClass('not_print');
+				}
+			},
+			{
+                extend: 'pdfHtml5',
+                orientation: 'landscape',
+                pageSize: 'A4',
+				exportOptions: {
+					columns: 'th:not(.not-export-column)',
+					rows: ':visible'
+				}
+            },
+			{
+				extend: 'excelHtml5',
+				autoFilter: true,
+				exportOptions: {
+					columns: 'th:not(.not-export-column)',
+					rows: ':visible'
+				},
+				customize: function( xlsx ) {
+					var sheet = xlsx.xl.worksheets['sheet1.xml'];
+				/* 	$('row c', sheet).attr( 's', '25' );  borders */
+					$('row:first c', sheet).attr( 's', '27' );
+				}	
+			}
+		]
+	} );
+	if($(".index_table_filter .show_button").length == 0) {
+		$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+	}
+
+	$('.show_button').click(function () {
+		$('.index_page .dt-buttons').toggle();		
+	})
+	$('table.display').show();
+} );
 	$.getScript( 'js/filter_table.js');
 	$.getScript( 'js/absence.js');
-	/* $.getScript("js/collaps.js"); */
 </script>
 @stop

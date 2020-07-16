@@ -6,16 +6,16 @@
 	
     $permission_dep = DashboardController::getDepartmentPermission();
     $user_department = DashboardController::getUserDepartment();
-
-    $notices = NoticeController::getNotice('DESC');
-
-    $notices_user = collect();
   
+    $notices = NoticeController::getNotice('DESC');
+ 
+    $notices_user = collect();
+   
     foreach ($notices as $notice) {
         $notice_dep = explode(',', $notice->to_department);
 
         if(array_intersect($user_department, $notice_dep) ) {
-            $notices_user->prepend( $notice );
+            $notices_user->push( $notice );
         }
     }
 @endphp
@@ -33,11 +33,11 @@
     <div>        
         <div class="notices_list">
             @if(count($notices_user)>0)
-                @foreach ($notices_user->take(5) as $notice)
+                @foreach ($notices_user->take(10) as $notice)
                     <a class="notice_show"  href="{{ route('notices.show', $notice->id) }}" rel="modal:open">
                         <article class="notice">
                             <div class="col-2 float_left">
-                                <span class="notice_time">{{ date('H:i',strtotime($notice->created_at))}}<span>{{ date('l',strtotime($notice->created_at))}}</span></span>
+                                <span class="notice_time">{{ date('d.m.',strtotime($notice->created_at))}}<span>{{ date('l H:i',strtotime($notice->created_at))}}</span></span>
                                 <span class="notice_empl">
                                     @php
                                         $profile_image_notice = DashboardController::profile_image($notice->employee_id);

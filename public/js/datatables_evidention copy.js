@@ -26,14 +26,6 @@ $( function () {
 			'copyHtml5',
 			{
 				extend: 'print',
-				orientation: 'landscape',
-				pageSize: 'A3',
-				exportOptions: {
-					columns: 'th:not(.not-export-column)',
-					rows: ':visible',
-					orientation: 'landscape',
-					pageSize: 'A3',
-				},
 				customize: function ( win ) {
 					$(win.document.body).find('h1').addClass('title_print');
 					$(win.document.body).find('table').addClass('table_print');
@@ -55,28 +47,24 @@ $( function () {
             },
 			{
 				extend: 'excelHtml5',
-				autoFilter: true,
+				footer: true,
 				createEmptyCells: true, 
-				orientation: 'landscape',
-				pageSize: 'A2',
+				autoFilter: true,
 				exportOptions: {
 					columns: 'th:not(.not-export-column)',
-					rows: ':visible'
+					rows: ':visible',
 				},
-			
 				customize: function( xlsx ) {
 					var sheet = xlsx.xl.worksheets['sheet1.xml'];
 					$('row:first c', sheet).attr( 's', '2' );
-				
+					
 					var pageSet = sheet.createElement("pageSetup");
 					sheet.childNodes["0"].appendChild(pageSet);
 					var seiteneinstellung = sheet.getElementsByTagName("pageSetup")[0];
 					seiteneinstellung.setAttribute("paperSize", "8");
 					seiteneinstellung.setAttribute("orientation", "landscape");
 					seiteneinstellung.setAttribute("r:id", "rId1"); 
-					$('row c', sheet).each(function() {
-						$(this).attr('s', '25');
-					});
+ 		
 					var col = $('col', sheet);
 					//set the column width otherwise it will be the length of the line without the newlines
 					
@@ -86,7 +74,8 @@ $( function () {
 							//wrap text
 							$(this).attr('s', '55');
 						}
-					});
+					})
+					$('row c', sheet).attr('s', '25');
 				
 				}	
 			}
