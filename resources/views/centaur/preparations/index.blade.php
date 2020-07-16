@@ -109,7 +109,7 @@
             @csrf
         </form>
         @if( Sentinel::inRole('list_view') ||  Sentinel::inRole('administrator'))
-            <form class="upload_file_replace" action="{{ action('EquipmentListController@import_with_replace') }}" method="POST" enctype="multipart/form-data" title ="Multiple replace">
+            <form class="upload_file_replace" action="{{ action('EquipmentListController@import_with_replace') }}" method="POST" enctype="multipart/form-data" title ="Import with replace replace">
                 <div class="file-input-wrapper">
                     <button class="btn-file-input"><i class="fas fa-exchange-alt"></i> Upload sa zamjenom</button>
                     <input type="file" name="file" required />
@@ -118,8 +118,8 @@
                 @csrf
             </form>
         @endif
-        @if( Sentinel::inRole('administrator') || Sentinel::inRole('moderator') || Sentinel::inRole('upload_list'))
-            <form class="upload_file_replace" action="{{ action('EquipmentListController@importSiemens') }}" method="POST" enctype="multipart/form-data" title ="Multiple replace">
+        @if( Sentinel::inRole('administrator') || Sentinel::inRole('moderator') || Sentinel::inRole('upload_list')|| Sentinel::inRole('list_view'))
+            <form class="upload_file_replace" action="{{ action('EquipmentListController@importSiemens') }}" method="POST" enctype="multipart/form-data" title ="Import siemens">
                 <div class="file-input-wrapper">
                     <button class="btn-file-input"><i class="fas fa-upload"></i> Upload Siemens Linde (hierarhija)</button>
                     <input type="file" name="file" required />

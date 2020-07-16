@@ -61,7 +61,7 @@ class DashboardController extends Controller
                     array_push($dataArr, [ 'id'=>$proj_date->id ,
                                        'title' =>  $title, 
                                        'description' => $proj_date->name,
-                                       'start' => date('Y-m-d'),
+                                       'start' => date('Y-m-d',strtotime($proj_date->start_date )),
                                        'end' => $date, 
                                        'classNames' => 'red_background',
                                        'url' =>  $url, 
@@ -70,173 +70,173 @@ class DashboardController extends Controller
             } 
 
             foreach($project_2 as $project) {
-                    $count_people = 0;
-                    $unique_people = array();
-                    $projEmpls  = ProjectEmployee::where('project_id', $project->id)->orderBy('date','DESC')->get();
+                $count_people = 0;
+                $unique_people = array();
+                $projEmpls  = ProjectEmployee::where('project_id', $project->id)->orderBy('date','DESC')->get();
+                
+                if( $project->saturday == 1) {
+                    $weekdays = 1;
+                    $days = 6;
+                } else {
+                    $weekdays = 2;
+                    $days = 5;
+                }
+                
+                if($projEmpls->count() > 0) {
+                    $project_duration = $projEmpls->unique('date')->count(); // broji unique dane po projektu u project_employees
                     
-                    if( $project->saturday == 1) {
-                        $weekdays = 1;
-                        $days = 6;
-                    } else {
-                        $weekdays = 2;
-                        $days = 5;
+                    if($project_duration % $days) {
+                        //  $project_duration ++;
                     }
+                } else {
+                    $project_duration =intval($project->duration / $project->day_hours) ;  //12 dana    
                     
-                    if($projEmpls->count() > 0) {
-                        $project_duration = $projEmpls->unique('date')->count(); // broji unique dane po projektu u project_employees
-                       
-                        if($project_duration % $days) {
-                          //  $project_duration ++;
-                        }
-                    } else {
-                        $project_duration =intval($project->duration / $project->day_hours) ;  //12 dana    
-                        
-                        if($project->duration % $project->day_hours) {
-                            $project_duration ++;
-                        }
+                    if($project->duration % $project->day_hours) {
+                        $project_duration ++;
                     }
-                 
-                    for ($i=0; $i <= $project_duration; $i++) {
-                        if( $project_duration > 0) {
-                            if($i == 0) {
-                                $start_date =  $project->start_date;
-                                  switch (date( 'N',strtotime( $start_date)) ) {
-                                    case 1:
-                                        $days = $days;
-                                        break;
-                                    case 2:
-                                        $days = $days-1;
-                                        break;
-                                    case 3:
-                                        $days = $days-2;
-                                        break;
-                                    case 4:
-                                        $days = $days-3;
-                                        break;
-                                    case 5:
-                                        $days = $days-4;
-                                        break;
-                                    case 5:
-                                        $days = $days-5;
-                                        break;
-                                    case 6:
-                                        $days = $days-5;
-                                        break;
-                                }
-                              
-                                if($days == -1) {
-                                    if( $project->saturday == 1) {
-                                        $days = 6;
-                                    } else {
-                                        $days = 5;
-                                    }
-                                }
+                }
+                
+                for ($i=0; $i <= $project_duration; $i++) {
+                    if( $project_duration > 0) {
+                        if($i == 0) {
+                            $start_date =  $project->start_date;
+                                switch (date( 'N',strtotime( $start_date)) ) {
+                                case 1:
+                                    $days = $days;
+                                    break;
+                                case 2:
+                                    $days = $days-1;
+                                    break;
+                                case 3:
+                                    $days = $days-2;
+                                    break;
+                                case 4:
+                                    $days = $days-3;
+                                    break;
+                                case 5:
+                                    $days = $days-4;
+                                    break;
+                                case 5:
+                                    $days = $days-5;
+                                    break;
+                                case 6:
+                                    $days = $days-5;
+                                    break;
+                            }
                             
-                                if($project_duration <  $days) {
-                                    $days = $project_duration;
-                                }
-                                
-                                $end_date = date('Y-m-d',strtotime("+" .   $days . " day", strtotime($start_date)));   // *******************
-                                $project_duration = $project_duration - $days;
-                               
-                            } else {
-                               
+                            if($days == -1) {
                                 if( $project->saturday == 1) {
-                                    $weekdays = 1;
                                     $days = 6;
                                 } else {
-                                    $weekdays = 2;
                                     $days = 5;
                                 }
-                          
-                              $start_date =  date('Y-m-d',strtotime("+" .   $weekdays . " day", strtotime($end_date) ));
-                              
-                                switch (date( 'N',strtotime( $start_date)) ) {
-                                    case 1:
-                                        $days = $days;
-                                        break;
-                                    case 2:
-                                        $days = $days-1;
-                                        break;
-                                    case 3:
-                                        $days = $days-2;
-                                        break;
-                                    case 4:
-                                        $days = $days-3;
-                                        break;
-                                    case 5:
-                                        $days = $days-4;
-                                        break;
-                                    case 5:
-                                        $days = $days-5;
-                                        break;
-                                    case 6:
-                                        $days = $days-5;
-                                        break;                       
-                                }
-                                if($days == -1) {
-                                    if( $project->saturday == 1) {
-                                        $days = 6;
-                                    } else {
-                                        $days = 5;
-                                    }
-                                }
-                             
-                                if($project_duration <  $days) {                       
-                                    $days = $project_duration;
-                                }
-                               
-                                $end_date = date('Y-m-d',strtotime("+" .   $days . " day", strtotime($start_date)));  // *******************
-                                
-                                $project_duration = $project_duration - $days;
-                                $i--;                   
                             }
-        
-                            $url = "http://$_SERVER[HTTP_HOST]" . "/projects/" . $project->id;
-                            $count = count(ProjectEmployee::where('project_id', $project->id)->get()->unique('employee_id'));
-        
-                            $proj_categories = '';
-                            if($project->categories) {
-                                $proj_categories = explode(',', $project->categories);
+                        
+                            if($project_duration <  $days) {
+                                $days = $project_duration;
                             }
                             
-                            $category_list = '';
-                            if($proj_categories) {
-                                foreach ($proj_categories as $category) {
-                                    $category_list .= $categories->where('id', $category )->first()->mark . ' ';  
-                                }
-                            }
-                            if($count > 4) {
-                                $lj = ' lj';
+                            $end_date = date('Y-m-d',strtotime("+" .   $days . " day", strtotime($start_date)));   // *******************
+                            $project_duration = $project_duration - $days;
+                            
+                        } else {
+                            
+                            if( $project->saturday == 1) {
+                                $weekdays = 1;
+                                $days = 6;
                             } else {
-                                $lj = ' č';
+                                $weekdays = 2;
+                                $days = 5;
                             }
-                       
-                            $title = $project->project_no . ' | ' . $project->name . ' | ' . $count .  $lj  . ' | ' . 'kat: ' .   $category_list;
-                            $description = $project->name;
-                            $classNames = $project->project_no; 
-    
-                            $resourceIds = '"' . 'Rok: ' . date('d.m.Y',strtotime($project->end_date )) .'",';
-                            if($projEmpls->first()) {
-                                $resourceIds .= '"' . 'Završetak izvođenja: ' . date('d.m.Y', strtotime($projEmpls->first()->date)) . ' ",';
-    
-                                if( $projEmpls->first()->date > $project->end_date ) {
-                                    $classNames .= " red_border";
+                        
+                            $start_date =  date('Y-m-d',strtotime("+" .   $weekdays . " day", strtotime($end_date) ));
+                            
+                            switch (date( 'N',strtotime( $start_date)) ) {
+                                case 1:
+                                    $days = $days;
+                                    break;
+                                case 2:
+                                    $days = $days-1;
+                                    break;
+                                case 3:
+                                    $days = $days-2;
+                                    break;
+                                case 4:
+                                    $days = $days-3;
+                                    break;
+                                case 5:
+                                    $days = $days-4;
+                                    break;
+                                case 5:
+                                    $days = $days-5;
+                                    break;
+                                case 6:
+                                    $days = $days-5;
+                                    break;                       
+                            }
+                            if($days == -1) {
+                                if( $project->saturday == 1) {
+                                    $days = 6;
+                                } else {
+                                    $days = 5;
                                 }
                             }
-                            $resourceIds .= '"' . '~~~~~~~~~~~~~~~~~~~~~~~~~' .'",';
-                            foreach ($projEmpls->unique('employee_id') as $projEmpl) {
-                                $employee =  $employees->where('id',$projEmpl->employee_id )->first();
-                                $resourceIds .= '"' . $employee['first_name'] . ' ' . $employee['last_name'] .'",';
+                            
+                            if($project_duration <  $days) {                       
+                                $days = $project_duration;
                             }
-                          
-                            array_push($dataArr, ['id'=>$project->id ,'title' => $title , 'description' => $description , 'start' => $start_date, 'end' => $end_date, 'classNames' => $classNames, 'url' => $url, 'resourceIds' => '[' . substr($resourceIds, 0, -1) . ']' ]);
+                            
+                            $end_date = date('Y-m-d',strtotime("+" .   $days . " day", strtotime($start_date)));  // *******************
+                            
+                            $project_duration = $project_duration - $days;
+                            $i--;                   
                         }
-                    }
+    
+                        $url = "http://$_SERVER[HTTP_HOST]" . "/projects/" . $project->id;
+                        $count = count(ProjectEmployee::where('project_id', $project->id)->get()->unique('employee_id'));
+    
+                        $proj_categories = '';
+                        if($project->categories) {
+                            $proj_categories = explode(',', $project->categories);
+                        }
+                        
+                        $category_list = '';
+                        if($proj_categories) {
+                            foreach ($proj_categories as $category) {
+                                $category_list .= $categories->where('id', $category )->first()->mark . ' ';  
+                            }
+                        }
+                        if($count > 4) {
+                            $lj = ' lj';
+                        } else {
+                            $lj = ' č';
+                        }
                     
-                    foreach ($projEmpls as $projEmpl) {
-                        array_push($dataArrResource, ['id'=> $projEmpl->id ,'title' => $projEmpl->employee['first_name'] . ' ' . $projEmpl->employee['last_name'] ]);     
+                        $title = $project->project_no . ' | ' . $project->name . ' | ' . $count .  $lj  . ' | ' . 'kat: ' .   $category_list;
+                        $description = $project->name;
+                        $classNames = $project->project_no; 
+
+                        $resourceIds = '"' . 'Rok: ' . date('d.m.Y',strtotime($project->end_date )) .'",';
+                        if($projEmpls->first()) {
+                            $resourceIds .= '"' . 'Završetak izvođenja: ' . date('d.m.Y', strtotime($projEmpls->first()->date)) . ' ",';
+
+                            if( $projEmpls->first()->date > $project->end_date ) {
+                                $classNames .= " red_border";
+                            }
+                        }
+                        $resourceIds .= '"' . '~~~~~~~~~~~~~~~~~~~~~~~~~' .'",';
+                        foreach ($projEmpls->unique('employee_id') as $projEmpl) {
+                            $employee =  $employees->where('id',$projEmpl->employee_id )->first();
+                            $resourceIds .= '"' . $employee['first_name'] . ' ' . $employee['last_name'] .'",';
+                        }
+                        
+                        array_push($dataArr, ['id'=>$project->id ,'title' => $title , 'description' => $description , 'start' => $start_date, 'end' => $end_date, 'classNames' => $classNames, 'url' => $url, 'resourceIds' => '[' . substr($resourceIds, 0, -1) . ']' ]);
                     }
+                }
+                
+                foreach ($projEmpls as $projEmpl) {
+                    array_push($dataArrResource, ['id'=> $projEmpl->id ,'title' => $projEmpl->employee['first_name'] . ' ' . $projEmpl->employee['last_name'] ]);     
+                }
             }
 
             if(Sentinel::inRole('administrator')) {

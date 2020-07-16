@@ -356,8 +356,8 @@ class EquipmentListController extends Controller
     public function destroy($id)
     {
         $item_level1 = EquipmentList::find($id);
-        
-        $items_level2 = EquipmentList::where('stavka_id_level1', $item_level1->id)->get();
+     
+       /*  $items_level2 = EquipmentList::where('stavka_id_level1', $item_level1->id)->get();
         if(count($items_level2)>0) {
             foreach ($items_level2 as $item_level2) {
                 $items_level3 = EquipmentList::where('stavka_id_level2', $item_level2->id)->get();
@@ -368,10 +368,10 @@ class EquipmentListController extends Controller
                 }  
                 $item_level2->delete();              
             }
-        }
+        } */
         $item_level1->delete();
         
-        session()->flash('success', "Ormar je obrisan");
+        session()->flash('success', "Stavka je obrisana");
         
         return redirect()->back();
     }

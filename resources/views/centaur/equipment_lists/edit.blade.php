@@ -78,12 +78,11 @@
                                 <span class="td text_preparation"></span>
                                 <span class="td text_preparation"></span>
                               
-                                @if (Sentinel::inRole('administrator') || ($equipment_level1->preparation1->manager && $equipment_level1->preparation1->manager->id == Sentinel::getUser()->id) || 
-                                    ($equipment_level1->preparation1->designed &&  $equipment_level1->preparation1->designed->id == Sentinel::getUser()->id )) 
-                                   <!--  <a href="{{ route('equipment_lists.destroy', $equipment_level1->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši ormar">
+                              {{--   @if (Sentinel::inRole('administrator') ) 
+                                    <a href="{{ route('equipment_lists.destroy', $equipment_level1->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši stavku">
                                         <i class="fas fa-trash-alt"></i>
-                                    </a> -->
-                                @endif
+                                    </a> 
+                                @endif --}}
                             </p>
                             <span class="content">
                                 @foreach ($equipments->where('stavka_id_level1',$equipment_level1->id) as $equipment_level2)
@@ -144,11 +143,11 @@
                                                                     <span class="item_delivered">
                                                                         @if ($listUpdate->quantity)
                                                                             {{ date('d.m.Y H:i',strtotime($listUpdate->created_at)) . ' | ' . $listUpdate->quantity  . ' ' .  $equipment_level2->unit}}
-                                                                            @if (Sentinel::inRole('administrator'))
-                                                                               <!--  <a href="{{ route('list_updates.destroy', $listUpdate->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši update">
-                                                                                    <i class="fas fa-trash-alt"></i>
-                                                                                </a> -->
-                                                                            @endif
+                                                                            {{-- @if (Sentinel::inRole('administrator')) --}}
+                                                                            {{--    <a href="{{ route('list_updates.destroy', $listUpdate->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši update"> --}}
+                                                                            {{--         <i class="fas fa-trash-alt"></i> --}}
+                                                                            {{--     </a> --}}
+                                                                            {{-- @endif --}}
                                                                         @endif
                                                                     </span>
                                                                 @endforeach
@@ -168,6 +167,11 @@
                                                 <span class="td text_preparation"></span>
                                                 <span class="td text_preparation"></span>
                                                 <span class="td text_preparation"></span>
+                                            @endif
+                                            @if (Sentinel::inRole('administrator') ) 
+                                                <a href="{{ route('equipment_lists.destroy', $equipment_level2->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši stavku">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a> 
                                             @endif
                                         </p>
                                         <span class="content">
@@ -227,11 +231,11 @@
                                                                                     {{ date('d.m.Y H:i',strtotime($listUpdate->created_at)) . ' | ' . $listUpdate->quantity  . ' ' .  $equipment_level3->unit}}
                                                                                     @if ($listUpdate->quantity)
                                                                                     {{ date('d.m.Y H:i',strtotime($listUpdate->created_at)) . ' | ' . $listUpdate->quantity  . ' ' .  $equipment_level3->unit}}
-                                                                                    @if (Sentinel::inRole('administrator'))
-                                                                                       <!--  <a href="{{ route('list_updates.destroy', $listUpdate->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši update">
+                                                                                   {{--  @if (Sentinel::inRole('administrator'))
+                                                                                        <a href="{{ route('list_updates.destroy', $listUpdate->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši update">
                                                                                             <i class="fas fa-trash-alt"></i>
-                                                                                        </a> -->
-                                                                                    @endif
+                                                                                        </a>
+                                                                                    @endif --}}
                                                                                 @endif
                                                                                 @endif
                                                                             </span>
@@ -248,6 +252,11 @@
                                                             @endif                                                                  
                                                         </span>
                                                     </p>
+                                                    @if (Sentinel::inRole('administrator') ) 
+                                                        <a href="{{ route('equipment_lists.destroy', $equipment_level2->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši stavku">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a> 
+                                                    @endif
                                                 <!-- end stavka -->
                                             @endforeach
                                         </span> 
@@ -331,6 +340,11 @@
                                             @endif 
                                         @endif
                                     </span>
+                                    @if (Sentinel::inRole('administrator') ) 
+                                    <a href="{{ route('equipment_lists.destroy', $equipment_level1->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši stavku">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a> 
+                                @endif
                                 </p>
                             @endforeach
                         </div>
@@ -426,6 +440,29 @@
             }
         
         });
+        $('.btn-delete').click(function() {
+            e.preventDefault();
+            var r = confirm("Sigurno želiš obrisati stavku?");
+            if (r == true) {
+                $.ajax({
+                    url: $( this ).attr('href'), 
+                    type: 'post',
+                })
+                .done(function( msg ) {
+                   
+                    alert( "Stavka je obrisana!" );
+                })
+                .fail(function(data) {
+                    alert( "Brisanje nije uspjelo" );
+                    console.log(data);
+                })
+            } else {
+            //
+            }
+
+
+            
+        });
 
         $('.create_item_siemens').submit(function(e){
             e.preventDefault();
@@ -472,7 +509,7 @@
                     $('.modal').load( url_update );
                 }
              
-                Alert( "Stavka je spremljena!" );
+                alert( "Stavka je spremljena!" );
             })
             .fail(function(data) {
                 alert( "Spremanje nije uspjelo" );
