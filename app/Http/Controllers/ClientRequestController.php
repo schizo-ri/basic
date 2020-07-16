@@ -55,9 +55,7 @@ class ClientRequestController extends Controller
 			'last_name'  	=> $request['last_name'],
 			'email'  		=> trim($request['email']),
 			'phone'  		=> $request['phone'],
-			'price_per_user'=> $request['price_per_user'],
-			'no_users'  	=> $request['no_users'],
-			'calculate_method'=> $request['calculate_method']
+			
 		);
 		
 		$client = new Client();
@@ -69,7 +67,10 @@ class ClientRequestController extends Controller
 			'client_id'  	=> $client->id,
 			'modules'  		=> $modules,
 			'db'  	        =>  $request['db'],
-			'url'  	        =>  $request['url']
+            'url'  	        =>  $request['url'],
+            'price_per_user'=> $request['price_per_user'],
+			'no_users'  	=> $request['no_users'],
+			'calculate_method'=> $request['calculate_method']
 		);
 
 		$client_req = new ClientRequest();
