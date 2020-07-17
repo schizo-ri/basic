@@ -374,5 +374,4 @@ class WorkRecordController extends Controller
         $months = array_unique($months);
         return $months;
     }
-
 }
