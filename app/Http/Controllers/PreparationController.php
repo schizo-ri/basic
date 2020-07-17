@@ -324,14 +324,19 @@ class PreparationController extends Controller
 
         foreach ($equipmentLists as $item) {
             $delivered = 0;
-            $quantity = $item->quantity;  
+            $quantity = str_replace(",",".",$item->quantity);  
             $equipmentUpdates = ListUpdate::where('item_id',$item->id )->get();
 
             foreach ($equipmentUpdates as $delivery_update) {
                 $delivered += $delivery_update->quantity;
             }
             if($quantity != 0) {
-                $delivered_percentage += $delivered/$quantity*100;
+                try {
+                    $delivered_percentage += $delivered/$quantity*100;
+                } catch (\Throwable $th) {
+                    $delivered_percentage = 0;
+                }
+               
             }
         }
         if(count($equipmentLists) >0 ) {

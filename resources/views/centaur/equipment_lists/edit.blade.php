@@ -78,11 +78,11 @@
                                 <span class="td text_preparation"></span>
                                 <span class="td text_preparation"></span>
                               
-                              {{--   @if (Sentinel::inRole('administrator') ) 
+                                @if (Sentinel::inRole('administrator') ) 
                                     <a href="{{ route('equipment_lists.destroy', $equipment_level1->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši stavku">
                                         <i class="fas fa-trash-alt"></i>
                                     </a> 
-                                @endif --}}
+                                @endif
                             </p>
                             <span class="content">
                                 @foreach ($equipments->where('stavka_id_level1',$equipment_level1->id) as $equipment_level2)
