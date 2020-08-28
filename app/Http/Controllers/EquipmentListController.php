@@ -18,6 +18,7 @@ use App\Exports\EquipmentListExport;
 use App\Mail\ErrorMail;
 use Carbon;
 use Sentinel;
+use DB;
 
 class EquipmentListController extends Controller
 {
@@ -145,13 +146,13 @@ class EquipmentListController extends Controller
         );
         $preparation->updatePreparation($data_preparation);
  
-    /*     $send_to_mail = array(); */
-    /*     if($preparation->manager) { */
-    /*         array_push( $send_to_mail, $preparation->manager->email); */
-    /*     } */
-    /*     if( $preparation->designed ) { */
-    /*         array_push( $send_to_mail, $preparation->designed->email); */
-    /*     } */
+        /*     $send_to_mail = array(); */
+        /*     if($preparation->manager) { */
+        /*         array_push( $send_to_mail, $preparation->manager->email); */
+        /*     } */
+        /*     if( $preparation->designed ) { */
+        /*         array_push( $send_to_mail, $preparation->designed->email); */
+        /*     } */
        // array_push( $send_to_mail, 'jelena.juras@duplico.hr');
         
      
@@ -177,42 +178,63 @@ class EquipmentListController extends Controller
         $name = $request['name'];
         $mark = $request['mark'];
         $unit = $request['unit'];
-        $quantity = $request['quantity'];       
-
+        $quantity = $request['quantity'];
+        $stavka_id_level1 = null;
+        $stavka_id_level2 = null;
+        $level1 = null;
+        
         $data = array(
             "preparation_id"    => intval($preparation_id),
             "product_number"    => $product_number,            
             "name"              => $name,
             "unit"              => $unit,
             "quantity"          => $quantity,            
+            "level1"            => $level1,            
+            "stavka_id_level1"  => $stavka_id_level1,            
+            "stavka_id_level2"  => $stavka_id_level2,            
+            "quantity"          => $quantity,            
             'user_id'           => Sentinel::getUser()->id
         );
 
+        
         if(isset($request['replaced_item_id'])) {
-            $data += ['replaced_item_id'=> $request['replaced_item_id']];
-        }
-        if(isset($request['stavka_id_level1']) && $request['stavka_id_level1'] != '') {
-            $item_level1 = EquipmentList::where('preparation_id', $preparation_id)->where('product_number', $request['stavka_id_level1'])->first();
-            if( $item_level1 ) {
-                $data += ["stavka_id_level1"=> $item_level1->id];
+            if($request['replaced_item_id']) {
+                $data += ['replaced_item_id'=> $request['replaced_item_id']];
+                $equipment_item = EquipmentList::find($request['replaced_item_id']);
+                if( $equipment_item ) {
+                    $data1 = array(
+                        'replace_item'      => 1,
+                        'user_id'           => Sentinel::getUser()->id
+                    );
+        
+                    $equipment_item->updateEquipmentList($data1);
+                    $data += ["stavka_id_level1"=> $equipment_item->stavka_id_level1];
+                    $data += ["stavka_id_level2"=> $equipment_item->stavka_id_level2 ];
+                    $data += ["level1"=> $equipment_item->level1 ];
+                }
+            }
+        } else {
+            if(isset($request['stavka_id_level1'])) {
+                if( $request['stavka_id_level1'] != '' && $request['stavka_id_level1'] != null ) {
+                    $data += [ "stavka_id_level1"=> $request['stavka_id_level1'] ];
+                } elseif( $request['stavka_id_level2'] != '' && $request['stavka_id_level2'] != null ) {
+                    $data += [ "stavka_id_level2"=> $request['stavka_id_level2'] ];
+                } else {
+                    $level1 = 1;
+                }
             }
         }
-        if(isset($request['stavka_id_level2']) && $request['stavka_id_level2'] != '') {
-            $item_level2 = EquipmentList::where('preparation_id', $preparation_id)->where('product_number', $request['stavka_id_level2'])->first();
-            if( $item_level2 ) {
-                $data += ["stavka_id_level2"=> $item_level2->id ];
-            }
-        }
+        
         if(isset($request['mark']) && $request['mark'] != '' ) {
             $data += ["mark"=> $request['mark']];
         } else if(isset($request['mark']) && $request['mark'] == '' ) {
             $data += ["mark"=> null];
         }
-
+      
         $equipment_list = new EquipmentList();
         $equipment_list->saveEquipmentList($data);
         
-       exit;
+       return $data;
     }
 
     /**
@@ -234,24 +256,41 @@ class EquipmentListController extends Controller
      */
     public function edit($id)
     {   
-        $equipment_level1 = EquipmentList::find($id);
-        $preparation_id = $equipment_level1->preparation_id;
-        $equipments = EquipmentList::where('preparation_id',$preparation_id )->get();
+        $preparation =  Preparation::where('id', EquipmentList::find($id)->preparation_id)->with('equipment')->with('updates')->first();
+        $equipments = $preparation->equipment;
+        $listUpdates = $preparation->updates;
+     
+        $equipment_level1 = $equipments->where('id', $id)->first();
+        $preparation_id =  $preparation->id;
 
-        $listUpdates = collect();
-        foreach ($equipments as $equipment ) {
+        $equipments_dates = $equipments->unique('created_at'); 
+        $list_dates = collect();
+   
+        $list_dates = $equipments->unique('created_at')->map(function ($item, $key) {
+            return $item->created_at->toDateTimeString();
+        });
+     /* 
+       foreach ($equipments as $equipment ) {
             $listUpdates =  $listUpdates->merge(ListUpdate::where('item_id',$equipment->id)->orderBy('created_at', 'ASC')->get());
         }
-     //   $listUpdates = ListUpdate::orderBy('created_at', 'ASC')->get();  
-      
-        
-        $equipments_dates = $equipments->unique('created_at'); 
-        $list_dates = array();
+
+       /*  $list_dates = array();
         foreach ($equipments_dates as $date ) {
-           array_push($list_dates, $date->created_at->toDateTimeString());
-        }       
-     
-        return view('Centaur::equipment_lists.edit', ['equipments' => $equipments,'equipment_level1' => $equipment_level1, 'preparation_id' => $preparation_id, 'list_dates' => $list_dates, 'listUpdates' => $listUpdates]);
+            array_push($list_dates, $date->created_at->toDateTimeString());
+        }
+        $list_dates = $equipments->unique('created_at'); */
+
+       
+        try {
+            return view('Centaur::equipment_lists.edit', ['equipments' => $equipments,
+                                                          'equipment_level1' => $equipment_level1,
+                                                          'preparation_id' => $preparation_id, 
+                                                          'list_dates' => $list_dates, 
+                                                          'listUpdates' => $listUpdates]);
+        } catch (\Throwable $th) {
+            return redirect()->route('preparations.index');
+            
+        }
     }
 
     /**
@@ -357,7 +396,7 @@ class EquipmentListController extends Controller
     {
         $item_level1 = EquipmentList::find($id);
      
-       /*  $items_level2 = EquipmentList::where('stavka_id_level1', $item_level1->id)->get();
+        $items_level2 = EquipmentList::where('stavka_id_level1', $item_level1->id)->get();
         if(count($items_level2)>0) {
             foreach ($items_level2 as $item_level2) {
                 $items_level3 = EquipmentList::where('stavka_id_level2', $item_level2->id)->get();
@@ -368,7 +407,7 @@ class EquipmentListController extends Controller
                 }  
                 $item_level2->delete();              
             }
-        } */
+        }
         $item_level1->delete();
         
         session()->flash('success', "Stavka je obrisana");
@@ -511,7 +550,7 @@ class EquipmentListController extends Controller
     public function replaceItem (Request $request) 
     { 
         if($request['id']) {
-            $equipment_item = EquipmentList::where('id', $request['id'])->first();
+            $equipment_item = EquipmentList::find($request['id']);
 
             $data = array(
                 'replace_item'      => 1,
@@ -527,17 +566,23 @@ class EquipmentListController extends Controller
     public function multiReplaceItem ($id) 
     {
         $equipments = EquipmentList::where('preparation_id', $id)->get();
-        $listUpdates = ListUpdate::orderBy('created_at', 'ASC')->get();  
-
+    
         $equipments_dates = $equipments->unique('created_at'); 
         $list_dates = array();
+
+        $list_dates = $equipments->unique('created_at')->map(function ($item, $key) {
+            return $item->created_at->toDateTimeString();
+        });
+
+        /* 
         if($equipments_dates) {
             foreach ($equipments_dates as $date ) {
                 array_push($list_dates, $date->created_at->toDateTimeString());
             }
         }
-   
-        return view('Centaur::equipment_lists.multiReplaceItem', ['equipments' => $equipments, 'preparation_id' =>$id, 'list_dates' => $list_dates, 'listUpdates' => $listUpdates]);
+    */
+       /*  return view('Centaur::equipment_lists.multiReplaceItem', ['equipments' => $equipments, 'preparation_id' =>$id, 'list_dates' => $list_dates, 'listUpdates' => $listUpdates]); */
+       return view('Centaur::equipment_lists.multiReplaceItem', ['equipments' => $equipments, 'preparation_id' =>$id, 'list_dates' => $list_dates]);
     }
 
     public function multiReplaceStore (Request $request) {
@@ -581,21 +626,61 @@ class EquipmentListController extends Controller
 
     public function equipmentList($id) 
     {
-        $equipmentLists = EquipmentList::where('preparation_id', $id)->get(); 
 
-        $equipmentLists_withmark = $equipmentLists->where('mark', '<>',null)->first();
-        if($equipmentLists_withmark) {
+        $preparations = Preparation::where('project_no', $id)->with('equipment')->get();
+        foreach ($preparations as $preparation) {
+            if($preparation->equipment->where('mark', '<>',null)->first()) {
+                $hasmark = true;
+            } else {
+                $hasmark = false;
+            }
+            $preparation->hasMark = $hasmark;
+        }
+
+        return ['preparations' => $preparations];
+      
+
+        /* $procedure = DB::select('CALL procedure_equipmentList(?)',array($id));
+        $equipmentLists = DB::select('CALL level1_list(?)',array($id) );
+
+        if( ! empty($equipmentLists)) {
+            $equipmentLists = json_encode($equipmentLists);
+        } else {
+            $equipmentLists = EquipmentList::where('preparation_id', $id)->get(); 
+            $equipmentLists = json_encode($equipmentLists);
+        }
+        $delivered = $procedure[0]->Isporučeno;
+        if($procedure[0]->Oznaka == null) {
+            $hasmark = false;
+        } else {
+            $hasmark = true;
+        }
+    
+        return ['equipmentLists' => $equipmentLists, 'delivered' => $delivered, 'hasmark' => $hasmark ]; */
+
+       
+       
+      /*   $equipmentLists = EquipmentList::where('preparation_id', $id)->get(); 
+        
+        if($equipmentLists->where('mark', '<>',null)->first()) {
             $hasmark = true;
         } else {
             $hasmark = false;
         }
-
-        if( $equipmentLists->where('level1',1 )->first()) {
-            $equipmentLists =  $equipmentLists->where('level1',1 );
+        if(count($equipmentLists)> 0) {
+            if( $equipmentLists->where('level1',1 )->first()) {
+                $equipmentLists =  $equipmentLists->where('level1',1 );
+            }
+            if( $equipmentLists->first()->preparation1 && $equipmentLists->first()->preparation1->delivered != null) {
+                $delivered = $equipmentLists->first()->preparation->delivered;
+            } else {
+                $delivered = PreparationController::delivered( $id );
+            }
+        } else {
+            $delivered = 0;
+            $equipmentLists = array();
         }
-        $delivered = PreparationController::delivered( $id);
         
-        return ['equipmentLists' => json_encode($equipmentLists->toArray()), 'delivered' => $delivered, 'hasmark' => $hasmark ];
+        return ['equipmentLists' => json_encode($equipmentLists->toArray()), 'delivered' => $delivered, 'hasmark' => $hasmark ]; */
     }
 }
-   

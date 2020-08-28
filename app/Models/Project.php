@@ -10,11 +10,11 @@ class Project extends Model
     'name','project_no','duration','day_hours','saturday','start_date','end_date','categories','active','preparation_id'];
 
 	/*
-	* The Eloquent prepacation model name
+	* The Eloquent preparation model name
 	* 
 	* @var string
 	*/
-	protected static $prepacationModel = 'App\Models\Prepacation'; 
+	protected static $preparationModel = 'App\Models\Preparation'; 
 	
 	/*
 	* Returns the user relationship
@@ -22,9 +22,9 @@ class Project extends Model
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	*/
 	
-	public function prepacation()
+	public function preparation()
 	{
-		return $this->belongsTo(static::$prepacationModel,'preparation_id');
+		return $this->belongsTo(static::$preparationModel,'preparation_id');
 	}
 
     /*

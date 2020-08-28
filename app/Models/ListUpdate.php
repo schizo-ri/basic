@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 
 class ListUpdate extends Model
 {
@@ -17,6 +18,13 @@ class ListUpdate extends Model
 	*/
 	protected static $equipmentListModel = 'App\Models\EquipmentList'; 
 
+	 /*
+	* The Eloquent project model name
+	* 
+	* @var string
+	*/
+	protected static $userModel = 'App\User'; 
+
 	/*
 	* Returns the preparation relationship
 	* 
@@ -27,6 +35,16 @@ class ListUpdate extends Model
 		return $this->belongsTo(static::$equipmentListModel,'item_id');
     }
     
+	/*
+	* Returns the preparation relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	public function user()
+	{
+		return $this->belongsTo(static::$userModel,'user_id');
+	}
+	
     /*
 	* Save ListUpdate
 	* 

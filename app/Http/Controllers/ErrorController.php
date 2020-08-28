@@ -10,7 +10,6 @@ class ErrorController extends Controller
 {
     public function errorMessage (Request $request) 
     {
-      
         $email = 'jelena.juras@duplico.hr';
         Mail::to($email)->send(new ErrorMail($request)); 
 

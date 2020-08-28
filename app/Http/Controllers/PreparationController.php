@@ -8,12 +8,16 @@ use App\Models\Project;
 use App\Models\Preparation;
 use App\Models\EquipmentList;
 use App\User;
+use Cartalyst\Sentinel\Users\EloquentUser;
 use App\Models\PreparationRecord;
 use App\Models\ListUpdate;
 use App\Imports\EquipmentImport;
 use App\Imports\EquipmentImportSiemens;
 use Maatwebsite\Excel\Facades\Excel;
 use Sentinel;
+use DB;
+use Cartalyst\Sentinel\Roles\EloquentRole;
+
 
 class PreparationController extends Controller
 {
@@ -30,24 +34,30 @@ class PreparationController extends Controller
      */
     public function index()
     {
-        $preparations = Preparation::where('active', 1)->orderBy('project_no','ASC')->get();
-        $preparations = $preparations->groupBy('project_no');
+        $preparations = Preparation::where('active', 1)->orderBy('project_no','ASC')->with('employees')->get()->groupBy('project_no');
+       
+       /*  $users = EloquentUser::orderBy('first_name','ASC')->with('roles')->get(); */
+        $users = EloquentUser::whereHas('roles', function ($query) {
+            return $query->where('slug', 'subscriber')->orWhere('slug', 'priprema');
+        })->orderBy('first_name','ASC')->get();
+        $all_users = User::get();
 
-        $mehanicka = collect(['Obrađena ploča','Obrađen ormar','Postavljeni PF-ovi','Montirane kanalice','Montirane din šine','Postavljena oprema na vrata ormara']);
+      /*  $mehanicka = collect(['Obrađena ploča','Obrađen ormar','Postavljeni PF-ovi','Montirane kanalice','Montirane din šine','Postavljena oprema na vrata ormara']);
         $oznake = collect(['Pripremljene oznake za opremu','Pripremljene oznake za stezaljke','Pripremljene i postavljene oznake s nazivom ormara i QR pločica','Pripremljene opisne oznake','Napravljena izlazna dokumentacija i pripremljena shema']);
-        $priprema = collect(['Oprema preuzeta iz skladišta','Postavljene oznake na opremu','Oprema namontirana na ploču ormara','Periferna oprema postavljena (lampa, grijač, uvodnice...)','Postavljene i označene stezaljke']);
-        $roles = Sentinel::getUser()->roles->toArray();
+        $priprema = collect(['Oprema preuzeta iz skladišta','Postavljene oznake na opremu','Oprema namontirana na ploču ormara','Periferna oprema postavljena (lampa, grijač, uvodnice...)','Postavljene i označene stezaljke']);*/
+        /* $roles = Sentinel::getUser()->roles->toArray();
         $roles_text = '';
         foreach ($roles as $role) {
             $roles_text .=  $role['slug'] . ',';
-        }
+        } */
 
         //  $preparationRecords = PreparationRecord::orderBy('created_at','DESC')->get();
         //  $equipmentLists = EquipmentList::get();
-        $users = User::orderBy('first_name','ASC')->get();
-        
         //  return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations, 'preparationRecords' => $preparationRecords, 'equipmentLists' => $equipmentLists]);
-        return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'priprema' => $priprema, 'mehanicka' => $mehanicka,'oznake' => $oznake,'roles' => substr($roles_text, 0, -1) ]);
+      /*   return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'priprema' => $priprema, 'mehanicka' => $mehanicka,'oznake' => $oznake,'roles' => substr($roles_text, 0, -1) ]); */
+     
+      return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'all_users' => $all_users ]);
+
     }
 
     public function preparations_active (Request $request)
@@ -57,19 +67,26 @@ class PreparationController extends Controller
         } else {
             $active = 1;
         }
+
+        $preparations = Preparation::where('active',$active)->orderBy('project_no','ASC')->get()->groupBy('project_no');
+
         $users = User::orderBy('first_name','ASC')->get();
-        $mehanicka = collect(['Obrađena ploča','Obrađen ormar','Postavljeni PF-ovi','Montirane kanalice','Montirane din šine','Postavljena oprema na vrata ormara']);
+       
+        return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations, ]);
+
+        /*  $mehanicka = collect(['Obrađena ploča','Obrađen ormar','Postavljeni PF-ovi','Montirane kanalice','Montirane din šine','Postavljena oprema na vrata ormara']);
         $oznake = collect(['Pripremljene oznake za opremu','Pripremljene oznake za stezaljke','Pripremljene i postavljene oznake s nazivom ormara i QR pločica','Pripremljene opisne oznake','Napravljena izlazna dokumentacija i pripremljena shema']);
-        $priprema = collect(['Oprema preuzeta iz skladišta','Postavljene oznake na opremu','Oprema namontirana na ploču ormara','Periferna oprema postavljena (lampa, grijač, uvodnice...)','Postavljene i označene stezaljke']);
-        $preparations = Preparation::where('active',$active)->orderBy('project_no','ASC')->get();
-        $preparations = $preparations->groupBy('project_no');
+        $priprema = collect(['Oprema preuzeta iz skladišta','Postavljene oznake na opremu','Oprema namontirana na ploču ormara','Periferna oprema postavljena (lampa, grijač, uvodnice...)','Postavljene i označene stezaljke']); */
+       
+       /* 
         $roles = Sentinel::getUser()->roles->toArray();
         $roles_text = '';
         foreach ($roles as $role) {
             $roles_text .=  $role['slug'] . ',';
         }
-
-        return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'priprema' => $priprema, 'mehanicka' => $mehanicka,'oznake' => $oznake, 'roles' => substr($roles_text, 0, -1)]);
+        */
+        /* return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'priprema' => $priprema, 'mehanicka' => $mehanicka,'oznake' => $oznake, 'roles' => substr($roles_text, 0, -1)]); */
+     
         
     } 
 
@@ -171,7 +188,33 @@ class PreparationController extends Controller
      */
     public function show($id)
     {
-        //
+        $preparation = Preparation::find($id);
+        if( $preparation) {
+            $active = $preparation->active;
+            if($preparation) {
+                $preparations = Preparation::where('project_no', $preparation->project_no )->where('active', $active)->orderBy('project_no','ASC')->get();
+            } else {
+                $preparations = collect();
+            }
+           
+            $roles = Sentinel::getUser()->roles->toArray();
+            $roles_text = '';
+            foreach ($roles as $role) {
+                $roles_text .=  $role['slug'] . ',';
+            }
+            $mehanicka = collect(['Obrađena ploča','Obrađen ormar','Postavljeni PF-ovi','Montirane kanalice','Montirane din šine','Postavljena oprema na vrata ormara']);
+            $oznake = collect(['Pripremljene oznake za opremu','Pripremljene oznake za stezaljke','Pripremljene i postavljene oznake s nazivom ormara i QR pločica','Pripremljene opisne oznake','Napravljena izlazna dokumentacija i pripremljena shema']);
+            $priprema = collect(['Oprema preuzeta iz skladišta','Postavljene oznake na opremu','Oprema namontirana na ploču ormara','Periferna oprema postavljena (lampa, grijač, uvodnice...)','Postavljene i označene stezaljke']);
+    
+            $users = User::orderBy('first_name','ASC')->get(); 
+            $all_users = User::get();
+
+            return view('Centaur::preparations.show', ['preparations' => $preparations,'all_users' => $all_users,'users' => $users,'roles' => substr($roles_text, 0, -1), 'priprema' => $priprema, 'mehanicka' => $mehanicka,'oznake' => $oznake,]);
+        } else {
+            return redirect()->route('preparations.index');
+        }
+      
+
     }
 
     /**
@@ -206,7 +249,6 @@ class PreparationController extends Controller
                 }
             }
         }
-
         foreach ($request['mechanical_title'] as $key_title => $title) {
             foreach ($request['mechanical_processing'] as $key_value => $value) {
                 if($key_title == $key_value) {
@@ -221,7 +263,6 @@ class PreparationController extends Controller
                 }
             }
         }
-     
         $data = array(
             'name' => $request['name'],
             'project_no'  => str_replace(" ", "_",$request['project_no']),
@@ -235,26 +276,27 @@ class PreparationController extends Controller
     
         $preparation->updatePreparation($data);
 
-       /*   $today = date('Y-m-d');
+        /*   
+            $today = date('Y-m-d');
+            if( $request['preparation'] || $request['mechanical_processing'] || $request['marks_documentation']) {            
+                $data = array(
+                    'preparation_id' => $preparation->id,
+                    'preparation'  => json_encode($preparation_val ),
+                    'mechanical_processing'  =>  json_encode($mehan_val ),
+                    'marks_documentation'   => json_encode($marks_val ),
+                    'date'  => date('Y-m-d'),
+                );
+                
+                $preparationRecord = PreparationRecord::where('preparation_id', $preparation->id)->whereDate('created_at', $today)->first();
 
-        if( $request['preparation'] || $request['mechanical_processing'] || $request['marks_documentation']) {            
-            $data = array(
-                'preparation_id' => $preparation->id,
-                'preparation'  => json_encode($preparation_val ),
-                'mechanical_processing'  =>  json_encode($mehan_val ),
-                'marks_documentation'   => json_encode($marks_val ),
-                'date'  => date('Y-m-d'),
-            );
-            
-            $preparationRecord = PreparationRecord::where('preparation_id', $preparation->id)->whereDate('created_at', $today)->first();
-
-            if($preparationRecord ) {
-                $preparationRecord->updatePreparationRecord($data);
-            } else {
-                $preparationRecord = new PreparationRecord();
-                $preparationRecord->savePreparationRecord($data);
-            }           
-        } */
+                if($preparationRecord ) {
+                    $preparationRecord->updatePreparationRecord($data);
+                } else {
+                    $preparationRecord = new PreparationRecord();
+                    $preparationRecord->savePreparationRecord($data);
+                }           
+            }
+        */
 
         session()->flash('success', "Podaci su ispravljeni");
         
@@ -270,7 +312,9 @@ class PreparationController extends Controller
     public function destroy($id)
     {
         $preparation = Preparation::find($id);
-        $preparation->delete();
+        if($preparation) {
+            $preparation->delete();
+        }
 
         $preparationRecords = PreparationRecord::where('preparation_id', $preparation->id)->get();
         foreach ($preparationRecords as $preparationRecord ) {
@@ -283,6 +327,7 @@ class PreparationController extends Controller
 
         session()->flash('success', "Podaci su obrisani");
         
+      /*   return view('Centaur::preparations.show', $preparation->id); */
         return redirect()->back();
     }
 
@@ -336,12 +381,13 @@ class PreparationController extends Controller
                 } catch (\Throwable $th) {
                     $delivered_percentage = 0;
                 }
-               
             }
         }
+        
         if(count($equipmentLists) >0 ) {
             $delivered_percentage_avarage = $delivered_percentage / count($equipmentLists);
         }
+        
         return round($delivered_percentage_avarage,2,PHP_ROUND_HALF_UP);
     }
 }

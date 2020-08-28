@@ -6,8 +6,11 @@
     <div class="page-header">
         <div class='btn-toolbar pull-right'>
             <a href="{{ route('users.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" /></a>
+            <label class="filter_empl"><input type="text" class="mySearch" id="mySearch" placeholder="Search..." title="Type in..."></label>
         </div>
         <h1>Users</h1>
+        
+       
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -47,5 +50,15 @@
             @endforeach
         </div>
     </div>
-   
+    <script>
+        
+        $( document ).ready(function(){
+            $("#mySearch").keyup( function() {
+                var value = $(this).val().toLowerCase();
+                $(".panel").parent().filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+        </script>
 @stop

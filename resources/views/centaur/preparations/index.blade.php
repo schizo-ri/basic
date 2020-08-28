@@ -3,15 +3,15 @@
 @section('title', 'Priprema i mehanička obrada')
 
 @section('content')
-@php  
-    use App\Http\Controllers\PreparationController;
-    use App\Models\EquipmentList;
-@endphp
+
 <span hidden class="today">{{ date('Y-m-d') }}</span>
-<span hidden class="roles">{{ $roles }}</span>
+
 <div class="page-header">
-<div style="float:right"><span class="alert alert-danger" style="display: block; margin: 0;">Molim obrisati cache sa ctrl+f5 da se povuće novi dizajn</span></div>
-    <h1>Priprema i mehanička obrada</h1>
+    <div class="page_navigation pull-left">
+        <span class="pull-left" >Priprema i mehanička obrada</span>
+    </div>
+    <div style="float:right"><span class="alert alert-danger" style="display: block; margin: 0;">Molim obrisati cache sa ctrl+f5 da se povuće novi dizajn</span></div>
+ 
     <div class='btn-toolbar pull-right'>
         @if( isset($_GET["active"]) && $_GET["active"] == 1)
             <span class="show_inactive"><a href="{{ action('PreparationController@preparations_active', ['active' => 0]) }}">Prikaži neaktivne</a></span>
@@ -21,132 +21,128 @@
             <span class="show_inactive"><a href="{{ action('PreparationController@preparations_active', ['active' => 0]) }}">Prikaži neaktivne</a></span>
         @endif
         <label class="filter_empl">
+            <select class="select_employee" name="select_employee" >
+                <option value="all">Svi</option>
+                @foreach ($users as $user)
+                    <option value="{{ $user->first_name . ' ' . $user->last_name }}">{{ $user->first_name . ' ' . $user->last_name }}</option>
+                @endforeach
+            </select>
+        </label>
+        <label class="filter_empl">
             <input type="search" placeholder="Traži..." id="mySearch_preparation">
             <i class="clearable__clear">&times;</i>
         </label>
+        
          <!--  <a href="{{ route('preparations.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" /></a>-->
     </div>
 </div>
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="table-responsive">
-            <div class="table table-hover table_preparations" id="index_table">
-                <div class="thead">
+            <div class="table table-hover table_preparations preparation_list" id="index_table">
+                <div class="col-xs-12">
                     <p class="tr">
-                        <span class="th file_input"></span>
-                        <span class="th project_no_input">Broj</span>
-                        <span class="th name_input">Naziv</span>
-                        <span class="th delivery_input">Datum isporuke</span>
-                        <span class="th manager_input">Voditelj projekta</span>
-                        <span class="th designed_input">Projektirao</span>
-                        {{-- <span class="th date_input">Datum</span> --}}
-                        <span class="th preparation_input">Priprema</span>
-                        <span class="th mechanical_input">Mehanička obrada</span>
-                        <span class="th mechanical_input">Oznake i dokumentacija</span>
-                        <span class="th equipment_input">Oprema</span>
-                       {{--  <span class="th history_input">Povijest</span> --}}
-                       <span class="th option_input">Opcije</span>
+                        <span class="col-xs-10">
+                            <span class="col-md-1">Broj</span>
+                            <span class="col-md-5">Naziv</span>
+                            <span class="col-md-2">Voditelj projekta</span>
+                            <span class="col-md-2">Projektirao</span>
+                            <span class="col-md-2">Datum isporuke</span>
+                        </span>
+                        <span class="col-xs-2">
+                            <span class="col-md-12"> Zaduženi za pripremu i označavanje</span>
+                        </span>
                     </p>
                 </div>
-                <div class="tbody">
+                @php
+                    $j=0;
+                    $count = count($preparations) - 3;
+                @endphp
+                <div class="col-xs-12">
                     @foreach ($preparations as $proj_no => $preparation1)
-                        @if( $proj_no)<h4 class="collapsible_project" id="collaps_{{ $proj_no  }}">{{ $proj_no  }}</h4> @endif
-                        @foreach ($preparation1 as $preparation)
-                            @if (Sentinel::getUser()->id == $preparation->project_manager || 
-                            Sentinel::getUser()->id == $preparation->designed_by || 
-                            Sentinel::inRole('administrator') || 
-                            Sentinel::inRole('subscriber') || 
-                            Sentinel::inRole('priprema') || 
-                            Sentinel::inRole('list_view') || 
-                            Sentinel::inRole('upload_list') )
-                                <!-- Ispis pripreme -->  
-                                <p class="tr row_preparation_text {!! $preparation->active == 1 ? 'active' : 'inactive' !!} {{ str_replace(':','_', $proj_no)  }}" id="id_{{ $preparation->id }}">
-                                   <span class="td text_preparation option_input not_remove">
-                                        @if (! Sentinel::inRole('list_view'))
-                                            <a class="btn btn-edit" id="edit_{{ $preparation->id }}" ><span class="glyphicon glyphicon-edit not_remove" aria-hidden="true" title="Ispravi"  ></span></a>
-                                        @endif
-                                        @if ( Sentinel::inRole('administrator'))
-                                            <a href="{{ route('preparations.destroy', $preparation->id) }}"  class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="Obriši"><span class="glyphicon glyphicon-remove not_remove" aria-hidden="true"></span></a>
-                                            <a href="{{ action('PreparationController@close_preparation', $preparation->id) }}" class="btn" class="action_confirm"><i class="fas fa-check"></i>
-                                                @if ($preparation->active == 1)Završi @else Vrati @endif                                                       
-                                            </a>
-                                        @endif
+                        @php
+                            $preparation_name ='';
+                            foreach ($preparation1 as $preparation) {
+                                $preparation_name .= $preparation->name . ',';
+                            }
+                            $preparation_name = rtrim($preparation_name,",");
+                            $employees = $preparation1->first()->employees;
+                        @endphp
+                        @if( $proj_no )
+                            <div class="tr open_project col-xs-12 {!! $j>=$count ? 'align_top' : '' !!}">
+                                <a href="{{ route('preparations.show', $preparation1->first()->id) }}" class="show_preparations col-xs-10">
+                                    <span class="col-md-1">
+                                    {{ $proj_no  }}
                                     </span>
-                                    <span hidden class="equipmentLists_json not_remove"></span>
-                                    <span hidden class="preparation_json not_remove">{{ json_encode($preparation->toArray()) }}</span>
-                                </p>
-                                <form class="form_preparation edit_preparation {{ $preparation->id }}" id="form_{{ $preparation->id }}" accept-charset="UTF-8" role="form" method="post" action="{{ route('preparations.update', $preparation->id) }}" >
-                                    <span class="input_preparation option_input">
-                                        <input class="btn btn_spremi btn-preparation" type="submit" value="&#10004;" title="Ispravi">
-                                        <a class="btn btn-cancel" >
-                                            <span class="glyphicon glyphicon-remove" aria-hidden="true" title="Poništi"></span>
-                                        </a>
+                                    <span class="col-md-5">
+                                    {{$preparation_name }}
                                     </span>
-                                </form>
-                                <!-- Edit pripreme -->
-                                    {{-- @include('centaur.preparation_edit') --}}
-                            @endif
-                        @endforeach
+                                    <span class="col-md-2">{{ $preparation1->first()->manager['first_name'] . ' ' . $preparation1->first()->manager['last_name'] }}</span>
+                                    <span class="col-md-2">{{ $preparation1->first()->designed['first_name'] . ' ' . $preparation1->first()->designed['last_name'] }}</span>
+                                    
+                                    <span class="col-md-2">{{ date("d.m.Y",strtotime($preparation1->sortBy('delivery')->first()->delivery)) }}</span>
+                                </a>
+                                <div class="col-xs-2 td">
+                                    <form class="update_preparation_employee" accept-charset="UTF-8" role="form" method="post" action="{{ route('preparation_employees.update', $preparation1->first()->id) }}" id="{{ $preparation->id }}" >
+                                        <fieldset>
+                                            <div class="selectBox showCheckboxes" >
+                                                <label class="zaduzi_text">
+                                                    @if (count($employees) == 0 && Sentinel::inRole('administrator'))
+                                                        Zaduži za pripremu
+                                                    @else
+                                                        @foreach ( $employees as $key => $employee )
+                                                        {!! $key!=0?'| ':''!!}{{ $employee->user->first_name . ' ' . trim($employee->user->last_name) }}
+                                                        @endforeach
+                                                    @endif
+                                                    @if ( Sentinel::inRole('administrator'))
+                                                        <i class="fas fa-caret-down"></i>
+                                                    @endif
+                                                </label>
+                                                <div class="overSelect"></div>
+                                            </div>
+                                            @if ( Sentinel::inRole('administrator'))
+                                                <div class="checkboxes1" >
+                                                    {{-- <input type="search"  placeholder="{{ __('basic.search')}}"  id="mySearch1"> --}}
+                                                    @php
+                                                        $i = 0;
+                                                    @endphp
+                                                    @foreach ($users as $user)
+                                                        <label  class="col-12 float_left panel1" >
+                                                            <input name="user_id[]" type="checkbox" id="id_{{ $j }}_{{ $i }}_{{ $user->id }}" value="{{ $user->id }}" {!! $employees->where('user_id',  $user->id )->first() ? 'checked' : '' !!} />
+                                                            <label for="id_{{ $j }}_{{ $i }}_{{ $user->id }}">{{ $user->first_name . ' ' . $user->last_name }}</label>
+                                                        </label>
+                                                        @php
+                                                            $i++;
+                                                        @endphp
+                                                    @endforeach
+                                                    <input type="hidden" name="preparation_id" value="{{  $preparation1->first()->id }}">
+                                                    {{ csrf_field() }}
+                                                    {{ method_field('PUT') }}
+                                                    <input class="btn  btn_spremi store_preparation" type="submit" value="Spremi">
+                                                </div>
+                                            @endif
+                                        </fieldset>
+                                    </form>
+                                 </div>
+                            </div>
+                        @endif
+                        @php
+                            $j++;
+                        @endphp
                     @endforeach
-                    <!-- Novi unos -->
-                    @if( Sentinel::inRole('moderator') || Sentinel::inRole('voditelj') || Sentinel::inRole('administrator') || Sentinel::inRole('upload_list'))
-                        @include('centaur.preparation_create')
-                    @endif
+                   
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="upload_links" >
-    <h3>Upload</h3>
-    @if(! Sentinel::inRole('subscriber'))
-        <form class="upload_file" action="{{ action('EquipmentListController@import') }}" method="POST" enctype="multipart/form-data">
-            <div class="file-input-wrapper">
-                <button class="btn-file-input"><i class="fas fa-upload"></i> Upload</button>
-                <input type="file" name="file" required />
-                <input type="text" class="prep_id" name="preparation_id" hidden />
-            </div>
-            @csrf
-        </form>
-        @if( Sentinel::inRole('list_view') ||  Sentinel::inRole('administrator'))
-            <form class="upload_file_replace" action="{{ action('EquipmentListController@import_with_replace') }}" method="POST" enctype="multipart/form-data" title ="Import with replace replace">
-                <div class="file-input-wrapper">
-                    <button class="btn-file-input"><i class="fas fa-exchange-alt"></i> Upload sa zamjenom</button>
-                    <input type="file" name="file" required />
-                    <input type="text" class="prep_id" name="preparation_id" hidden />
-                </div>
-                @csrf
-            </form>
-        @endif
-        @if( Sentinel::inRole('administrator') || Sentinel::inRole('moderator') || Sentinel::inRole('upload_list')|| Sentinel::inRole('list_view'))
-            <form class="upload_file_replace" action="{{ action('EquipmentListController@importSiemens') }}" method="POST" enctype="multipart/form-data" title ="Import siemens">
-                <div class="file-input-wrapper">
-                    <button class="btn-file-input"><i class="fas fa-upload"></i> Upload Siemens Linde (hierarhija)</button>
-                    <input type="file" name="file" required />
-                    <input type="text" class="prep_id" name="preparation_id" hidden />
-                </div>
-                @csrf
-            </form>
-        @endif 
-    @endif           
+<div class="row">
+     <!-- Novi unos -->
+     @if( Sentinel::inRole('moderator') || Sentinel::inRole('voditelj') || Sentinel::inRole('administrator') || Sentinel::inRole('upload_list'))
+     @include('centaur.preparation_create')
+ @endif
 </div>
-<span hidden class="users_json">{{ json_encode($users->toArray()) }}</span>
-<span hidden class="priprema_json">{{ json_encode($priprema->toArray()) }}</span>
-<span hidden class="mehanicka_json">{{ json_encode( $mehanicka->toArray()) }}</span>
-<span hidden class="oznake_json">{{ json_encode( $oznake->toArray()) }}</span>
 <script>
     $.getScript('/../js/preparation.js');
-    $('.collapsible_project').click(function(){
-        var id = $(this).text();
-        id = id.replace(':','_');
-        if( $('.row_preparation_text.'+id).css('display') == 'flex' ) {
-            $('.row_preparation_text.'+id).css('display','none');
-            $('.row_preparation_text.'+id).find('span:not(.not_remove)').remove();
-        } else {
-            collapsProject (id);
-            
-            /* $('.row_preparation_text.'+id).next('.form_preparation').remove(); */
-        }
-    });
 </script>
 @stop

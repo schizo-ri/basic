@@ -19,6 +19,9 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-       'http://proizvodnja.duplico.hr/equipment_lists'
+       'http://proizvodnja.duplico.hr/equipment_lists',
+       'http://proizvodnja.duplico.hr/android',
+       'https://proizvodnja.duplico.hr/android',
+       'http://localhost:8000/android'
     ];
 }

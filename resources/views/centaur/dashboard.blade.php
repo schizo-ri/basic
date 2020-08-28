@@ -26,6 +26,11 @@
 <div class="row calendar_main">
     @if (Sentinel::check())    
         <main class="col-lg-6 col-md-12" >
+          {{-- 
+          
+            <a class="" href="{{ route('android.index') }}" ><span>android</span></a>
+             --}}
+
             <a class='new_project' href="{{ route('projects.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" title="Dodaj novi projekt" /> Novi projekt</a>
          
             <div id='calendar'></div>

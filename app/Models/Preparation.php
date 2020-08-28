@@ -31,6 +31,20 @@ class Preparation extends Model
 	protected static $equipmentModel = 'App\Models\EquipmentList'; 
 
 	/*
+	* The Eloquent project model name
+	* 
+	* @var string
+	*/
+	protected static $updatesModel = 'App\Models\ListUpdate'; 
+
+	/*
+	* The Eloquent preparation_employees model name
+	* 
+	* @var string
+	*/
+	protected static $preparationEmployeesModel = 'App\Models\PreparationEmployee'; 
+	
+	/*
 	* Returns the equipmentList relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\hasmany
@@ -39,6 +53,17 @@ class Preparation extends Model
 	public function equipment()
 	{
 		return $this->hasMany(static::$equipmentModel,'preparation_id');
+	}
+
+	/*
+	* Returns the equipmentList relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasmany
+	*/
+	
+	public function updates()
+	{
+		return $this->hasManyThrough(static::$updatesModel,static::$equipmentModel,'preparation_id','item_id');
 	}
 
 	/*
@@ -64,7 +89,18 @@ class Preparation extends Model
 	}
 
 	/*
-	* Returns the user relationship
+	* Returns the preparationEmployee relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasmany
+	*/
+	
+	public function employees()
+	{
+		return $this->hasMany(static::$preparationEmployeesModel,'preparation_id');
+	}
+
+	/*
+	* Returns the project relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	*/

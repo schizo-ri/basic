@@ -14,6 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/down', function(){
+    $exitCode = Artisan::call('down');
+});
 
 // Authorization
 Route::get('login', 'Auth\SessionController@getLogin')->name('auth.login.form');
@@ -63,6 +66,8 @@ Route::get('close_preparation/{preparation?}', ['as' => 'close_preparation', 'us
 Route::get('delivered/{id?}', ['as' => 'delivered', 'uses' => 'PreparationController@delivered']);
 Route::get('Centaur::preparations/index', ['as' => 'preparations_active', 'uses' => 'PreparationController@preparations_active']);
 
+// PreparationsEmployee
+Route::resource('preparation_employees', 'PreparationEmployeeController');
 
 // PreparationRecord
 Route::resource('preparation_records', 'PreparationRecordController');
@@ -106,3 +111,12 @@ Route::get('/clear-cache', function() {
 });
 
 Route::get('errorMessage', ['as' => 'errorMessage', 'uses' => 'ErrorController@errorMessage']);
+
+// Android
+Route::resource('android', 'ConnectController');
+
+// Designing
+Route::resource('designings', 'DesigningController');
+
+Route::get('delete_file', 'DesigningController@delete_file')->name('delete_file');
+ 

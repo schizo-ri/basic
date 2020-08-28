@@ -89,11 +89,15 @@ class DashboardController extends Controller
                         //  $project_duration ++;
                     }
                 } else {
-                    $project_duration =intval($project->duration / $project->day_hours) ;  //12 dana    
-                    
-                    if($project->duration % $project->day_hours) {
-                        $project_duration ++;
+                    if($project->day_hours != 0) {
+                        $project_duration =intval($project->duration / $project->day_hours) ;  //12 dana    
+                        
+                        if($project->duration % $project->day_hours) {
+                            $project_duration ++;
+                        }
                     }
+                    
+                    
                 }
                 
                 for ($i=0; $i <= $project_duration; $i++) {
@@ -434,14 +438,22 @@ class DashboardController extends Controller
     public function missing(Request $request)
     {
        /*  $project_employees  = Publish::get(); */
-        $projects = Project::where('active',1)->where('duration','<>',null)->whereDate('end_date','>=',date('Y-m-d'))->get();
-        $preparations = Preparation::where('active',1)->whereDate('delivery','>=',date('Y-m-d'))->get();
-        $preparations_list = collect();
+        $projects = Project::where('active',1)->where('preparation_id','<>',null)->where('duration','<>',null)->whereDate('end_date','>=',date('Y-m-d'))->get();
+        $preparations_list = Preparation::where('active',1)->whereDate('delivery','>=',date('Y-m-d'))->whereBetween('delivered',[60,100])->with('equipment')->with('updates')->get();
+    
+        foreach ($projects as $project) {
+            $preparation =  $project->preparation;
+            if($preparation &&  $preparation->delivered > 60 && $preparation->delivered < 100 ) {
+                $preparations_list = $preparations_list->push($preparation);
+            }
+        }
+ 
+        $preparations_list = $preparations_list->unique('id');
 
-        $equipments = collect();
+        /*  $equipments = collect();
         $listUpdates = collect();
-        
-        foreach ($preparations as $preparation) {
+         */
+      /*   foreach ($preparations as $preparation) {
             if($preparation->delivered) {
                 $delivered_perc = $preparation->delivered;
             } else {
@@ -451,21 +463,9 @@ class DashboardController extends Controller
             if($delivered_perc > 60 && $delivered_perc < 100) {
                 $preparations_list = $preparations_list->push($preparation);
             }
-        }
-        foreach ($projects as $project) {
-            if($project->preparation_id) {
-                $preparation = Preparation::find($project->preparation_id);
-                $delivered_perc = PreparationController::delivered( $preparation->id);
-
-                if($delivered_perc > 60 && $delivered_perc < 100) {
-                    $preparations_list = $preparations_list->push($preparation);
-                }
-            } 
-        }
- 
-        $preparations_list = $preparations_list->unique('id');
+        } */
         
-        if($preparations_list) {
+      /*   if(count($preparations_list)>0) {
             foreach ($preparations_list as $preparation) {
                 $prep_equipments = $preparation->equipment;
                 
@@ -486,10 +486,10 @@ class DashboardController extends Controller
                         $equipments = $equipments->push($equipment);
                     }
                 }
-            }
-        }
+            } 
+        } */
        
-        return view('Centaur::missing',['preparations' => $preparations_list,'equipments' => $equipments,'listUpdates' => $listUpdates]);
+        return view('Centaur::missing',['preparations' => $preparations_list]);
     }
 
 }

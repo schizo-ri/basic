@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class EquipmentList extends Model
 {
-    
     protected $fillable = [
         'preparation_id','product_number','mark', 'name', 'unit', 'quantity', 'delivered','replace_item','replaced_item_id','user_id','level1','stavka_id_level1', 'stavka_id_level2'];
     
@@ -23,7 +22,6 @@ class EquipmentList extends Model
 	* @var string
 	*/
 	protected static $updatesModel = 'App\Models\ListUpdate'; 
-
 	
 	/*
 	* Returns the listUpdate relationship
@@ -35,8 +33,6 @@ class EquipmentList extends Model
 	{
 		return $this->hasMany(static::$updatesModel,'item_id');
 	}
-
-
 
 	/*
 	* Returns the preparation relationship
@@ -70,6 +66,7 @@ class EquipmentList extends Model
 	{
 		return $this->update($equipmentList);
 	}	
+
 
 
 }

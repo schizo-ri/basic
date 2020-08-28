@@ -54,7 +54,7 @@ class SessionController extends Controller
 
         // Attempt the Login
         $result = $this->authManager->authenticate($credentials, $remember);
-
+       
         // Return the appropriate response
         $path = session()->pull('url.intended', route('dashboard'));
         return $result->dispatch($path);

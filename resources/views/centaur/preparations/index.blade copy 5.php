@@ -40,12 +40,10 @@
                         <span class="th delivery_input">Datum isporuke</span>
                         <span class="th manager_input">Voditelj projekta</span>
                         <span class="th designed_input">Projektirao</span>
-                        {{-- <span class="th date_input">Datum</span> --}}
                         <span class="th preparation_input">Priprema</span>
                         <span class="th mechanical_input">Mehanička obrada</span>
                         <span class="th mechanical_input">Oznake i dokumentacija</span>
                         <span class="th equipment_input">Oprema</span>
-                       {{--  <span class="th history_input">Povijest</span> --}}
                        <span class="th option_input">Opcije</span>
                     </p>
                 </div>
@@ -67,8 +65,7 @@
                                             <a class="open_upload_link"><i class="fas fa-upload"></i><span class="preparation_id" hidden>{{ $preparation->id }}</span></a>
                                         </span>
                                     @endif
-                                    <span class="td text_preparation file_input">
-                                    </span>
+                                    <span class="td text_preparation file_input"> </span>
                                     <span class="td text_preparation project_no_input">{{ $preparation->project_no  }}</span>
                                     <span class="td text_preparation name_input">{{ $preparation->name }}</span>
                                     <span class="td text_preparation delivery_input">{!! $preparation->delivery ? date('d.m.Y', strtotime($preparation->delivery)) : '' !!}</span>

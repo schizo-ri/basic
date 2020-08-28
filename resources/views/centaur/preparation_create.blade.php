@@ -1,5 +1,5 @@
 <form class="create_preparation" accept-charset="UTF-8" role="form" method="post" action="{{ route('preparations.store') }}" enctype="multipart/form-data">
-    <span class="input_preparation file_input"></span>
+   {{--  <span class="input_preparation file_input"></span> --}}
     <span class="input_preparation project_no_input">
         <input name="project_no" type="text" value="{{ old('project_no') }}" required placeholder="Broj" maxlength="30"  />
     </span>
@@ -13,7 +13,7 @@
         <span class="input_preparation manager_input">
             <select name="project_manager" class="project_manager" required>
                 <option disabled selected >Voditelj projekta</option>
-                @foreach ($users as $user)
+                @foreach ($all_users as $user)
                     @if ($user->first_name && $user->last_name)
                         <option value="{{ $user->id }}">{{ $user->first_name . ' ' .  $user->last_name}}</option>
                     @endif                    
@@ -23,30 +23,13 @@
         <span class="input_preparation designed_input">
             <select name="designed_by" class="designed_by" required>
                 <option disabled selected >Projektant</option>
-                @foreach ($users as $user)
+                @foreach ($all_users as $user)
                     @if ($user->first_name && $user->last_name)
                         <option value="{{ $user->id }}">{{ $user->first_name . ' ' .  $user->last_name}}</option>
                     @endif                    
                 @endforeach
             </select>
         </span>
-    @endif
-    @if (Sentinel::inRole('subscriber') || Sentinel::inRole('administrator') || Sentinel::inRole('upload_list'))
-    <!-- <span class="input_preparation preparation_input">
-        <span class="col-md-4"><input type="radio" name="preparation" value="DA" id="prep_da_{{ $preparation->id }}" /><label for="prep_da_{{ $preparation->id }}">DA</label></span>
-        <span class="col-md-4"><input type="radio" name="preparation" value="NE" id="prep_ne_{{ $preparation->id }}" /><label for="prep_ne_{{ $preparation->id }}">NE</label></span>
-        <span class="col-md-4"><input type="radio" name="preparation" value="N/A" checked id="prep_na_{{ $preparation->id }}" /><label for="prep_na_{{ $preparation->id }}">N/A</label></span>
-    </span>
-    <span class="input_preparation mechanical_input">
-        <span class="col-md-4"><input type="radio" name="mechanical_processing" value="DA" id="meh_da_{{ $preparation->id }}" /><label for="meh_da_{{ $preparation->id }}">DA</label></span>
-        <span class="col-md-4"><input type="radio" name="mechanical_processing" value="NE" id="meh_ne_{{ $preparation->id }}" /><label for="meh_ne_{{ $preparation->id }}">NE</label></span>
-        <span class="col-md-4"><input type="radio" name="mechanical_processing" value="N/A" checked id="meh_na_{{ $preparation->id }}" /><label for="meh_na_{{ $preparation->id }}">N/A</label></span>
-    </span>
-    <span class="input_preparation marks_input">
-        <span class="col-md-4"><input type="radio" name="marks_documentation" value="DA" id="mark_da_{{ $preparation->id }}" /><label for="mark_da_{{ $preparation->id }}">DA</label></span>
-        <span class="col-md-4"><input type="radio" name="marks_documentation" value="NE" id="mark_ne_{{ $preparation->id }}" /><label for="mark_ne_{{ $preparation->id }}">NE</label></span>
-        <span class="col-md-4"><input type="radio" name="marks_documentation" value="N/A" checked id="mark_na_{{ $preparation->id }}" /><label for="mark_na_{{ $preparation->id }}">N/A</label></span>
-    </span> -->
     @endif
     @if (Sentinel::inRole('moderator') || Sentinel::inRole('administrator') || Sentinel::inRole('upload_list'))
         <span class="input_preparation for_file">

@@ -52,7 +52,6 @@ class EquipmentImportSiemens implements ToModel, WithHeadingRow
             'mark' => $row['mark'], 
             'name'    => $row['name'], 
             'unit' => $row['unit'],
-            'unit' => $row['unit'],
             'quantity' => $row['quantity'],
             'level1' =>  $level1,
             'stavka_id_level1' =>  $stavka_id_level1,
