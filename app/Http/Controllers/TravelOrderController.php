@@ -47,11 +47,10 @@ class TravelOrderController extends Controller
             $travel_orders = $travel_orders->where('employee_id',$request['employee_id'] );
         } 
     
-        $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name', 'users.last_name')->where('employees.checkout',null)->where('employees.id','<>',1)->get();
-       
+        $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name', 'users.last_name')->where('employees.checkout',null)->where('employees.id','<>',1)->orderBy('users.first_name')->get();
         $dates = array();
         foreach (array_keys(  $travel_orders->groupBy('date')->toArray()) as $date) {
-            array_push($dates, date('Y-m',strtotime($date)) );
+            array_push($dates, date('m.Y',strtotime($date)) );
         }
         $dates = array_unique($dates);
 
@@ -192,7 +191,7 @@ class TravelOrderController extends Controller
                     $data_expenses += ['bill' => $bill];
                     $data_expenses += ['cost_description' => $cost_description];
                     $data_expenses += ['amount' => $amount];
-                    $data_expenses += ['total_amount' => $amount];
+                    $data_expenses += ['total_amount' => $total_amount];
                     if(isset( $request['currency'])) {
                         $currency = $request['currency'][$key];
                         $data_expenses += ['currency' => $currency];
@@ -328,9 +327,13 @@ class TravelOrderController extends Controller
     {
         $travel = TravelOrder::find($id);
         $company = Company::first();
-    
+        $locco = $travel->locco; // locco prema zapisanom id u travel
+        $loccos = $travel->loccos; // locco iz travel_loccos
+
         $data = [
             'travel' =>  $travel,
+            'locco' =>  $locco,
+            'loccos' =>  $loccos,
             'company' => $company
         ];
         $pdf = PDF::loadView('Centaur::travel_orders.travel_pdf', $data);  

@@ -16,7 +16,7 @@
 				@if($user->employee && is_array($image_employee))
 					<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_employee)) }}" alt="Profile image"  />
 				@else
-					<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+					<img class="radius50" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 				@endif
 			</span>
 			<span class="user_name">{{ $user->first_name . ' ' . $user->last_name  }}
@@ -98,7 +98,7 @@
 			@if($user->employee && is_array($image_employee))
 				<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_employee)) }}" alt="Profile image"  />
 			@else
-				<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+				<img class="radius50" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 			@endif
 		</span>
 		<span class="user_name">

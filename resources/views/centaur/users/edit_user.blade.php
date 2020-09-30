@@ -29,7 +29,7 @@ $i = 0;
 							@if( ! empty($profile_image) && $profile_image != ''  )
 								<img class="radius50 profile_user" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image" />
 							@else
-								<img class="radius50 profile_user" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+								<img class="radius50 profile_user" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 							@endif
 								<span class="photo_icon "></span>
 							
@@ -72,63 +72,63 @@ $i = 0;
 						<i class="fas fa-plus"></i>
 					</a>
 					<div>
-					<div class="profile_images">
-						@if(count($images_interest)>0)
-							<button id="left-button" class="scroll_left"></button>
-							@foreach ($images_interest as $image)
-								@php
-									$basename = str_replace('_small','',pathinfo($image)['basename']);
-									$document = Document::where('path', $path)->where('title',$basename)->first();
-									if($document) {
-										$document_id = $document->id;
-									} else {
-										$document_id = 0;
-									}
-								@endphp
-								@if(pathinfo($image)['extension'] == 'mp4')
+						<div class="profile_images">
+							@if(count($images_interest)>0)
+								<button id="left-button" class="scroll_left"></button>
+								@foreach ($images_interest as $image)
 									@php
-										$i++;
+										$basename = str_replace('_small','',pathinfo($image)['basename']);
+										$document = Document::where('path', $path)->where('title',$basename)->first();
+										if($document) {
+											$document_id = $document->id;
+										} else {
+											$document_id = 0;
+										}
 									@endphp
-									<span class="profile_img">
-										<a class="slide_show_open" href="{{ route('slide_show', $i) }}" rel="modal:open">
-											<video width="200"  height="200"  controls>
-												<source src="{{ URL::asset( $path . $image ) }}" type="video/mp4">
-												Your browser does not support the video tag.
-											</video>
-										</a>
-										<a href="{{ route('documents.destroy', $document_id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" hidden="true" >
-											<i class="far fa-trash-alt"></i>
-										</a>
-									</span>
-								@else
-									@if(strpos(pathinfo($image)['basename'], '_small'))
+									@if(pathinfo($image)['extension'] == 'mp4')
 										@php
 											$i++;
 										@endphp
 										<span class="profile_img">
 											<a class="slide_show_open" href="{{ route('slide_show', $i) }}" rel="modal:open">
-												<img src="{{ URL::asset( $path . $image ) }}" alt="image" />
+												<video width="200"  height="200"  controls>
+													<source src="{{ URL::asset( $path . $image ) }}" type="video/mp4">
+													Your browser does not support the video tag.
+												</video>
 											</a>
 											<a href="{{ route('documents.destroy', $document_id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" hidden="true" >
 												<i class="far fa-trash-alt"></i>
 											</a>
 										</span>
+									@else
+										@if(strpos(pathinfo($image)['basename'], '_small'))
+											@php
+												$i++;
+											@endphp
+											<span class="profile_img">
+												<a class="slide_show_open" href="{{ route('slide_show', $i) }}" rel="modal:open">
+													<img src="{{ URL::asset( $path . $image ) }}" alt="image" />
+												</a>
+												<a href="{{ route('documents.destroy', $document_id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" hidden="true" >
+													<i class="far fa-trash-alt"></i>
+												</a>
+											</span>
+										@endif
 									@endif
-								@endif
-							@endforeach
-							<button id="right-button" class="scroll_right"></button>
-						@else
-							<div class="placeholder">
-								<img class="" src="{{ URL::asset('icons/placeholder_user.png') }}" alt="Placeholder image" />
-								<p>@lang('basic.no_image')
-									<label type="text" class="add_new" rel="modal:open" >
-										<i style="font-size:11px" class="fa">&#xf067;</i>
-									</label>
-									
-								</p>
-							</div>
-						@endif
-					</div>
+								@endforeach
+								<button id="right-button" class="scroll_right"></button>
+							@else
+								<div class="placeholder">
+									<img class="" src="{{ URL::asset('icons/placeholder_user.png') }}" alt="Placeholder image" />
+									<p>@lang('basic.no_image')
+										<label type="text" class="add_new" rel="modal:open" >
+											<i style="font-size:11px" class="fa">&#xf067;</i>
+										</label>
+										
+									</p>
+								</div>
+							@endif
+						</div>
 					</div>
 					<p class="about_me float_l">{{ $interes_info }}
 						@if ($user_interes)
@@ -175,7 +175,7 @@ $i = 0;
 </div>
 <script>
 	$( function () {
-		$.getScript( '/../js/user_profile.js');
+	/* 	$.getScript( '/../js/user_profile.js'); */
 		$('.profile_img a.danger').removeAttr('hidden');
 	});
 	$('.chat').click(function(){

@@ -8,7 +8,7 @@
 			<select class="form-control" name="employee_id" value="{{ old('employee_id') }}" autofocus required >
 				<option value="" selected disabled></option>
 				@foreach ($employees as $employee)
-					<option name="employee_id" value="{{ $employee->id }}">{{ $employee->user['last_name']  . ' ' . $employee->user['first_name'] }}</option>
+					<option name="employee_id" value="{{ $employee->id }}">{{ $employee->first_name . ' ' . $employee->last_name }}</option>
 				@endforeach	
 			</select>
 			{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
@@ -23,7 +23,8 @@
 			<input name="end" id="end" class="form-control" type="datetime-local" value="{!!  old('end') ? old('end') : '' !!}" >
 			{!! ($errors->has('end') ? $errors->first('end', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-		<input type="hidden" name="entry" id="entry" value="entry">
+		
+
 		{{ csrf_field() }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">
 	</form>

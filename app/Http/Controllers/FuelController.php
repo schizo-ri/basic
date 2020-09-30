@@ -35,21 +35,19 @@ class FuelController extends Controller
 		if($empl) {
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
         } 
-    
-        $cars = array();
-        foreach (Car::get() as $car) {
-            array_push($cars, $car->registration);
-        }
+   
+        $cars = Car::get('registration');
 
-        $fuels = Fuel::orderBy('date','DESC')->get();
+        $fuels = Fuel::get();
 
         $dates = array();
         foreach (array_keys($fuels->groupBy('date')->toArray()) as $date) {
-            array_push($dates, date('Y-m',strtotime($date)) );
+            array_push($dates, date('m.Y',strtotime($date)) );
         }
+      
         $dates = array_unique($dates);
      
-        return view('Centaur::fuels.index', ['fuels' => $fuels,'cars' => $cars, 'dates' => $dates, 'permission_dep' => $permission_dep]);
+        return view('Centaur::fuels.index', ['fuels' => $fuels,'cars' => $cars, 'dates' => array_unique($dates), 'permission_dep' => $permission_dep]);
     
     }
 

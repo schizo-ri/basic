@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap');
+/* @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap'); */
 
 * {
 	padding: 0;
@@ -329,8 +329,20 @@ p.terms>span {
     max-height: 35.84%;
 }
 
-.btn-new {
-    display: inline-block;
+.btn-new, .topnav.nav_top a.btn-new {
+	width: auto;
+	height: 26px;
+	background: #1594F0;
+	border-radius: 5px;
+	color: #fff;
+	margin: auto;
+	padding: 0 10px;
+	float: right;
+	line-height: 26px;
+	position: static;
+	transform: none;
+	display: flex;
+	align-items: center;
 }
 
 .user_interest .btn-new {
@@ -339,7 +351,6 @@ p.terms>span {
     height: 26px;
     line-height: 26px;
     padding: 0 10px;
-    display: inline-block;
     margin-bottom: 3px;
 	margin-right: 20px;
 	position: relative;
@@ -352,21 +363,7 @@ p.terms>span {
     transform: translate(-50%, -50%);
     display: block;
 }
-.btn-new {
-	width: auto;
-    height: 26px;
-    background: #1594F0;
-    border-radius: 5px;
-    color: #fff;
-    margin: auto;
-    padding: 0 10px;
-    float: right;
-	line-height: 26px;
-    position: static;
-    transform: none;
-    display: flex;
-    align-items: center;
-}
+
 
 .btn-new svg, .btn-new i {
     position: static;
@@ -401,7 +398,7 @@ main:hover > ::-webkit-scrollbar-thumb, section:hover > ::-webkit-scrollbar-thum
 
 .container {
 	overflow: hidden;
-	padding: 0 20px 20px 30px;
+	padding: 0 20px 20px 20px;
 	height: calc(100% - 92px);
 	width: 100%;
 	background: linear-gradient(#071E57 35%, #ffffff 35%);
@@ -455,7 +452,7 @@ span.img-success {
 		font-size: 13px;
 	}
 	.container {
-        padding: 15px 0;
+        padding: 0 0 0 15px;
         height: calc(100% - 92px);
 		overflow: auto;
     }
@@ -464,18 +461,15 @@ span.img-success {
 	html, body{
 		font-size: 14px;
 	}
-	.user_header {
-		order: 1;
-		margin: 0;
-		margin-bottom: 10px;
-		padding: 0 10px;
-		overflow: visible;
-	}
+		
 	.container >section:first-child, .container >section:last-child{
 		height: auto;
 	}
 	.container >section:first-child {
 		padding-top: 10px;
+	}
+	.container .noticeboard, .container .posts .all_post {
+		min-height: 200px;
 	}
 	.container >section:last-child {
 		padding-bottom: 10px;
@@ -484,7 +478,7 @@ span.img-success {
 		padding: 0 10px;
 		order: 2;
 		margin: 0;
-		margin-bottom: 20px;
+		margin-bottom: 10px;
 	}
 	
 }
@@ -512,7 +506,6 @@ span.img-success {
 		left: 20%;
 		top: 15%;
 	}
-
 }
 
 @media (max-width: 600px) {

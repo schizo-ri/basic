@@ -10,7 +10,7 @@
 	<main class="col-xs-12 col-sm-12 col-md-12 index_main main_documents float_right">
 		<section>
 			<div class="page-header header_questionnaire">
-				<!-- <a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a> -->
+				<a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a>
 				@lang('questionnaire.questionnaires')
 				<span class="show float_r">@lang('basic.show')<i class="fas fa-caret-down"></i></span>
 				<span class="hide float_r">@lang('basic.hide')<i class="fas fa-caret-up"></i></span>

@@ -7,7 +7,6 @@ var status_requests;
 var all_requests;
 var done;
 var saved;
-
 if(locale == 'en') {
     validate_text = "Required field";
     email_unique = "Email must be unique";
@@ -42,13 +41,13 @@ if(locale == 'en') {
     validate_role = "Obavezna dodjela uloge";
 }
 
-$('.remove').click(function(){
+$('.remove').on('click',function(){
     $(this).parent().remove();
 });
 var page = $('.admin_pages li').find('a.active_admin');
 var modul_name = $('.admin_pages li').find('a.active_admin').attr('id');
 
-$('.btn-submit').click(function(event){
+$('.btn-submit').on('click',function(event){
     event.preventDefault();
     var form = $(this).parents('form:first');
     let url = $(this).parents('form:first').attr('action');
@@ -56,13 +55,12 @@ $('.btn-submit').click(function(event){
   
     var url_load = window.location.href;
     var pathname = window.location.pathname;
+    console.log("validate2");
+    console.log(url_load);
+    console.log(url); 
+    console.log(form_data);
 
     var validate = [];
-    console.log(form_data);
-    console.log("url " + url);
-    console.log("url_load " +url_load);
-    console.log("pathname " +pathname);
-    console.log("page href " + $(page).attr('href'));
 
     $( "textarea" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
@@ -80,7 +78,6 @@ $('.btn-submit').click(function(event){
     $( "input" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 || $(this).val() == '') {
-             //   console.log("input" + $(this).val() ); 
                 if( ! $( this ).parent().find('.modal_form_group_danger').length) {
                     $( this ).parent().append('<p class="modal_form_group_danger">' + validate_text + '</p>');
                 }
@@ -104,17 +101,46 @@ $('.btn-submit').click(function(event){
             }
         }
     });
-    if (tinyMCE.activeEditor) {
-        if(tinyMCE.activeEditor.getContent().length == 0) {
-            if( ! $('#mytextarea').parent().find('.modal_form_group_danger').length) {
-                $('#mytextarea').parent().append('<p class="modal_form_group_danger">' + validate_text + '</p>');
+ 
+    if($("#password").length >0) {
+        password = $("#password");
+        conf_password = $("#conf_password");    
+        
+        if(password.val().length > 0 ) {
+            if( password.val().length < 6) {
+                if( password.parent().find('.validate').length  == 0 ) {
+                    password.parent().append(' <p class="validate">' + validate_password_lenght + '</p>');
+                } else {
+                    password.parent().find('.validate').text(validate_password_lenght);  
+                }
+                validate.push("block");
+            } else {
+                password.parent().find('.validate').text("");     
+                if( ! conf_password.val() || (password.val() != conf_password.val()) ) {
+                if( conf_password.parent().find('.validate').length  == 0 ) {                
+                        conf_password.parent().append(' <p class="validate">' + validate_passwordconf + '</p>');
+                    }
+                    validate.push("block");
+                } else {
+                    conf_password.parent().find('.validate').text("");     
+                    validate.push(true);
+                }
             }
-            validate.push("block");
-            $('#mytextarea').parent().find('.modal_form_group_danger').remove();
-            validate.push(true);
         }
     }
-    console.log(validate);
+  
+ 
+    /*    if (tinyMCE.activeEditor) { */
+    /*        if(tinyMCE.activeEditor.getContent().length == 0) { */
+    /*            if( ! $('#mytextarea').parent().find('.modal_form_group_danger').length) { */
+    /*                $('#mytextarea').parent().append('<p class="modal_form_group_danger">' + validate_text + '</p>'); */
+    /*            } */
+    /*            validate.push("block"); */
+    /*            $('#mytextarea').parent().find('.modal_form_group_danger').remove(); */
+    /*            validate.push(true); */
+    /*        } */
+    /*    } */
+
     if(validate.includes("block") ) {
        event.preventDefault();
        validate = [];
@@ -131,6 +157,11 @@ $('.btn-submit').click(function(event){
             data: form_data,
             success: function( response ) {
                 $.modal.close();
+                /* console.log(url_load);
+                console.log(url); 
+                console.log(form_data);
+                console.log(response); 
+                console.log($(page).attr('href')); */
                 if(pathname == '/events' && url.includes("/events/")) {  //event edit
                     $('.modal-header').load(url + ' .modal-header h5');
                     $('.modal-body').load(url + ' .modal-body p');
@@ -154,16 +185,6 @@ $('.btn-submit').click(function(event){
                     url = window.location.origin + '/fuels';
                     $('.modal-body').load(url + " .modal-body table" );
                     $.getScript( '/../restfulizer.js');
-                } else if (url_load.includes("/admin_panel")) {
-                    if(url.includes("/work_records")) {
-                        $('.first_view tbody').load($(page).attr('href') + " .first_view tbody>tr",function(){
-                            $.getScript( '/../restfulizer.js');
-                        });
-                    } else {
-                        $('tbody').load($(page).attr('href') + " tbody>tr:not(.second_view tbody>tr)",function(){
-                            $.getScript( '/../restfulizer.js');
-                        });
-                    }
                 } else if (pathname.includes("/edit_user")) {
                     location.reload();
                 } else if (url.includes("/loccos") && pathname == '/dashboard' ) {
@@ -171,22 +192,56 @@ $('.btn-submit').click(function(event){
 
                 } else if (url.includes("/events") && pathname == '/dashboard' ) {
                     $('.all_agenda').load(url + " .all_agenda .agenda");
+                } else if ( pathname == '/dashboard' ) {
+                    $('.salary').load(url_load + " .salary>div");
+                } else if (url.includes("/posts") ) {
+                    if(pathname == '/dashboard') {
+                        $('.all_post').load(url_load + " .all_post>div");
+                    } else if (pathname == '/posts') {
+                        $('.container').load(url_load + ' .container .posts_index',function(){
+                            $('.tablink').first().trigger('click');
+                            $('.tabcontent').first().show();
+                            broadcastingPusher();
+                            refreshHeight(tab_id);
+                            setPostAsRead(post_id);
+                        });
+                    }
                 } else {
-                    $('.index_main').load(url + " .index_main>section",function(){
-                        if(url.includes("/absences")) {
-                            $('#index_table_filter').show();
-                            $('#index_table_filter').prepend('<a class="add_new" href="' + location.origin+'/absences/create' +'" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>Novi zahtjev</a>');
-                            $('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
-                            $.getScript( '/../restfulizer.js');
-                        } else if(url.includes("/employees")) {
-                            $.getScript( '/../js/users.js');
+                    if($('.index_admin').length > 0 ) {
+                        if(url.includes("/work_records")) {
+                          
+                            $('.first_view tbody').load($(page).attr('href') + " .first_view tbody>tr",function(){
+                                $.getScript( '/../restfulizer.js');
+                            });
+                        } else if(url_load.includes('/work_records_table')) {
+                            console.log("second");
+                            $('tbody.second').load(location.origin+'/work_records_table'+ " tbody.second>tr",function(){
+                                $.getScript( '/../restfulizer.js');
+                            });
+                        } else {
+                            $('tbody').load(location.href + " tbody>tr:not(.second_view tbody>tr)",function(){
+                                $.getScript( '/../restfulizer.js');
+                            });
                         }
-                        
-                    });
+                    } else {
+                        $('.index_main').load(url + " .index_main>section",function(){
+                            if(url.includes("/absences")) {
+                                $('#index_table_filter').show();
+                                $('#index_table_filter').prepend('<a class="add_new" href="' + location.origin+'/absences/create' +'" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>Novi zahtjev</a>');
+                                $('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+                                $('.index_page table.display.table').show();
+                                
+                                $.getScript( '/../restfulizer.js');
+                            } else if(url.includes("/employees")) {
+                                $.getScript( '/../js/users.js');
+                            }
+                        });
+                    }
+                   
                 }
                 if(url.includes("/absences")) {
                     $('<div><div class="modal-header"><span class="img-success"></span></div><div class="modal-body"><div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>success:</strong>' + request_send + '<p>' + status_requests + '</p></div></div><div class="modal-footer"><span><button class="btn_all" ><a href="' + location.origin + '/absences' + '" >' + all_requests + '</a></button></span><button class="done"><a href="#close" rel="modal:close" >' + done + '</a></button></div></div>').appendTo('body').modal();
-                } else if(! url.includes("/events/"))  {
+                } else if(! url.includes("/events/") && ! url.includes("/posts"))  {
                     $('<div><div class="modal-header"><span class="img-success"></span></div><div class="modal-body"><div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>success:</strong>' + saved + '</div></div></div>').appendTo('body').modal();
                 }
             }, 
@@ -215,25 +270,20 @@ $('.btn-submit').click(function(event){
             }
         });
         if($(page).length > 0) {
-            $(page).click();
+            $(page).trigger('click');
         } else {
-           $('.btn-submit').unbind();
+           $('.btn-submit').trigger('unbind');
         }
     }
 });
 
-$('.btn-next').click(function(event){  
+$('.btn-next').on('click',function(event){  
     f_name = $("#first_name");
     l_name = $("#last_name");
     email = $("#email");
     file = $("#file");        
     var validate2 = [];
-    //console.log(l_name.val());
-    console.log( f_name);
-    console.log(l_name);
-    console.log( email);
-    console.log(file);
-    console.log(validate2);
+
     if(! f_name.val()) {
         if( f_name.parent().find('.validate').length  == 0) {
             f_name.parent().append(' <p class="validate">' + validate_name + '</p>');               
@@ -261,8 +311,7 @@ $('.btn-next').click(function(event){
             }   
         }
     }
-  
-    //console.log(validate);
+
     if(! validate2.includes("block") ) {
         $('.first_tab').toggle();
         $('.second_tab').toggle();
@@ -278,7 +327,7 @@ $('.btn-next').click(function(event){
     }
 });
 
-$('.btn-back').click(function(){
+$('.btn-back').on('click',function(){
     $('.first_tab').toggle();
     $('.second_tab').toggle();
     if($('.first_tab').is(':visible')) {

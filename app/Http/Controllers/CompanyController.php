@@ -263,30 +263,66 @@ class CompanyController extends Controller
 		$company = Company::first();
 		if ($company) {
 			$company_oib = $company->oib;
+		
 			if($company_oib) {
 				//konektiranje na superadmin bazu
 				$db_ext = DB::connection('mysql_external'); 
 				//dohvaćanje iz tbl zahtjeva zahtjev korisnika
 				try {
-					$client_request = $db_ext->table('client_requests')->join('clients','client_requests.client_id','clients.id')->select('client_requests.modules','clients.*')->where('clients.oib',$company_oib)->orderBy('client_requests.updated_at','DESC')->first();
-					if($client_request) {
-						$modules = explode(',',$client_request->modules);
-						
+					/* $client_request = $db_ext->table('clients')->join('client_requests','clients.id','client_requests.client_id')->where('clients.oib', $company_oib)->select('clients.*','client_requests.modules')->orderBy('clients.updated_at','DESC')->first(); */
+					$client = $db_ext->table('clients')->where('clients.oib', $company_oib)->first();
+				
+					$client_request = $db_ext->table('client_requests')->where('client_id', $client->id)->first();
+					
+					/* 	$client_request = $db_ext->table('client_requests')->join('clients','client_requests.client_id','clients.id')->select('client_requests.modules','clients.*')->where('clients.oib',$company_oib)->orderBy('client_requests.updated_at','DESC')->first(); */
+					if($client_request) { 
+						$modules = explode(',', $client_request->modules);
+					
 						$moduli = $db_ext->table('modules')->get(); //dobvaćanje modula
 						
 						foreach($modules as $module){
-							array_push($moduli_company,$moduli->where('id',$module)->first()->name); // array sa nazivima  modulima korisnika
+							if($module == 11 ) {
+								array_push($moduli_company,'Putni nalozi');
+							} else if($module == 12)  {
+								array_push($moduli_company,'Evidencija rada');
+							} else {
+								array_push($moduli_company,$moduli->where('id', $module)->first()->name); // array sa nazivima  modulima korisnika
+							}
 						}
 					}
-				
 				} catch (Exception $e) {
 					echo 'Caught exception: ',  $e->getMessage(), "\n";
-					
 				}
-				
 			}
 		}
+	
+/* {#685 ▼
+  +"id": 19
+  +"name": "Sportkart d.o.o."
+  +"address": "Avenija Dubrovnik 15/33"
+  +"city": "Zagreb"
+  +"oib": "20156458678"
+  +"first_name": "Igor"
+  +"last_name": "Tabak"
+  +"email": "igor.tabak@karting-arena.com"
+  +"phone": "778 7534"
+  +"created_at": "2020-05-22 07:43:05"
+  +"updated_at": "2020-05-22 07:43:05"
+}*/
 
+/* {#202 ▼
+	+"id": 13
+	+"client_id": 19
+	+"modules": "1,2,3,4,5,6,7,8,9,10"
+	+"db": "myintran_sportkart"
+	+"url": "sportkart.myintranet.io"
+	+"price_per_user": null
+	+"no_users": 100
+	+"calculate_method": null
+	+"created_at": "2020-05-22 07:43:05"
+	+"updated_at": "2020-05-22 07:43:05"
+  }
+   */
 		return $moduli_company;
 	}
 

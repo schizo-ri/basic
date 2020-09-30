@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap');
-
-html {
+/* @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap');
+ */
+/* html {
     height: 100vh;
     width: 100vw;
     font-size: 16px;
@@ -8,19 +8,18 @@ html {
     overflow: auto;
 }
 body, form {
-    height: 100%;
+    height: auto;
     width: 100%;
     font-family: Montserrat, sans-serif;
-    background: #F8FAFF;
+    background: inherit;
 }
 header {
-   /*  height: 90px; */
-   height: auto;
+    height: auto;
     padding: 20px;
     text-align: center;
     background: #F8FAFF;
     overflow: hidden;
-}
+} */
 .form_template main {
     height: calc(100% - 81px);
 }

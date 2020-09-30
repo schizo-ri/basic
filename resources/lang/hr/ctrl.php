@@ -37,6 +37,7 @@ return [
 	'no_valid_email'     => 'E-mail adresa nije valjana.',
 	'not_allowed'     => 'Nije dozvoljeno unos exe, bin dokumenta',
 	'malfunction'     => 'Za prijavu kvara obavezan je unos napomene',
+	'wrong_km'     	=> 'Za prijavu pogrešnih kilometara obavezan je unos napomene',
 	'no_company'     => 'Nema unesene tvrtke!',
 	'no_oib'     	 => 'Tvrtka nema unesen OIB broj ili broj nije nađen!',
 	'retrieving_error' => 'Nažalost, došlo je do pogreške prilikom dohvačanja podataka.',

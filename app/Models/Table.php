@@ -11,7 +11,7 @@ class Table extends Model
 	* @var array
 	*/
 	protected $fillable = [
-		'name','emailing','description'
+		'name','emailing','description','shortcut_i','shortcut_c'
 	];
 	
 	/*

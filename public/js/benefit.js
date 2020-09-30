@@ -1,6 +1,6 @@
 $('.benefit_body').first().show();
 
-$('.benefit_title').click(function(){
+$('.benefit_title').on('click',function(){
 	$('.benefit_title').removeClass('active');
 	var id = $(this).attr('id');
 	console.log(id);
@@ -35,7 +35,7 @@ if(body_width > 450) {
 	}
 }
 	
-$('#right-button').click(function() {
+$('#right-button').on('click',function(event) {
 	event.preventDefault();
 	$('.main_benefits_head').animate({
 		scrollLeft: "+=203px"
@@ -44,7 +44,7 @@ $('#right-button').click(function() {
 	
 });
 
-$('#left-button').click(function() {
+$('#left-button').on('click',function(event) {
 	event.preventDefault();
 	$('.main_benefits_head').animate({
 		scrollLeft: "-=203px"
@@ -56,7 +56,7 @@ $('#left-button').click(function() {
 	}
 });
 
-$( window ).resize(function() {
+$( window ).on('resize',function() {
 	$( ".main_benefits_head > .benefit_title" ).each( (index, element) => {
 		all_width += 203;
 	});

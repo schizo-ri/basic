@@ -5,41 +5,45 @@ var json;
 var html; 
 var design;
 var temp;
-
-unlayer.init({
-    appearance: {
-        theme: 'light',
-        panels: {
-            tools: {
-                dock: 'left'
+try {
+    unlayer.init({
+        appearance: {
+            theme: 'light',
+            panels: {
+                tools: {
+                    dock: 'left'
+                }
             }
-        }
-    },
-    mergeTags: {
-        first_name: {
-          name: "First Name",
-          value: "Jelena"
         },
-        last_name: {
-          name: "Last Name",
-          value: "Juras"
-        }
-    },
-    id: 'editor-container',
-    projectId: 4441,
-    displayMode: 'email'
-})
-
-unlayer.addEventListener('design:updated', function(updates) {
-    unlayer.exportHtml(function(data) {
-        json = data.design; // design json
-        html = data.html; // design html
-        body = json.body;
-        design = data.design;
+        mergeTags: {
+            first_name: {
+              name: "First Name",
+              value: "Jelena"
+            },
+            last_name: {
+              name: "Last Name",
+              value: "Juras"
+            }
+        },
+        id: 'editor-container',
+        projectId: 4441,
+        displayMode: 'email'
     })
-})	
+    
+    unlayer.addEventListener('design:updated', function(updates) {
+        unlayer.exportHtml(function(data) {
+            json = data.design; // design json
+            html = data.html; // design html
+            body = json.body;
+            design = data.design;
+        })
+    })
+} catch (error) {
+    
+}
+	
 
-$('.btn-submit').click(function(e) {
+$('.form_template.template_create .btn-submit').on('click',function(e) {
     var validate = [];
     e.preventDefault();
     var form = $('#form_template')[0];
@@ -68,7 +72,7 @@ $('.btn-submit').click(function(e) {
     }
     console.log(validate);
     if(validate.includes("block") ) {
-        event.preventDefault();
+        e.preventDefault();
         alert("Nisu uneseni svi parametri, nemoguće spremiti predložak");
     } else { 
         $.ajax({
@@ -82,7 +86,6 @@ $('.btn-submit').click(function(e) {
             timeout: 600000,
             success: function (data) {
                 alert("Dizajn je spremljen!");
-              /*   console.log("SUCCESS : ", form_data_array); */
                 console.log("responce : ", data);
                 $(".btn-submit").prop("disabled", false);
                 location.reload();
@@ -115,7 +118,6 @@ $(function() {
     $('.active.nav-link').css('background-color','#1594F0 !important'); 
 });
 
-
 var dataArrTemplates;
 var htmlTemplates;
 var designTemplates;
@@ -130,7 +132,7 @@ if($('.dataArrTemplates').text()) {
     });
 }
   
-$('.template_button').click(function(){
+$('.template_button').on('click',function(){
     temp = $( this ).attr('id');
 
     designTemplates = JSON.parse( dataArrTemplates[temp].text_json); // template JSON */
@@ -138,13 +140,13 @@ $('.template_button').click(function(){
     unlayer.loadDesign(designTemplates);
     $('.show_temp#temp' + temp).remove();
 });
-$( ".template_button" ).mouseover( function(){
+$( ".template_button" ).on('mouseover', function(){
         temp = $( this ).attr('id');
         htmlTemplates = dataArrTemplates[temp].text; 
         $('body').append('<span class="show_temp" id="temp' + temp +'">'+htmlTemplates+'</span>');
         $('.show_temp#temp'+temp).show();
         
 });
-$( ".template_button" ).mouseout( function(){
+$( ".template_button" ).on('mouseout', function(){
     $('.show_temp#temp' + temp).remove();
 });

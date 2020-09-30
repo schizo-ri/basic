@@ -11,7 +11,8 @@ class Comment extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['employee_id','post_id','content','status'];
+	protected $fillable = ['employee_id','post_id','content','status','to_employee_id', 'to_department_id'];
+	//to_department - 1 ako je za odjel, default 0
 	
 	/*
 	* The Eloquent employee model names
@@ -38,6 +39,17 @@ class Comment extends Model
 		return $this->belongsTo(static::$employeeModel,'employee_id');
 	}
 	
+	/*
+	* Returns the users relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function toEmployee()
+	{
+		return $this->belongsTo(static::$employeeModel,'to_employee_id');
+	}
+
 	/*
 	* Returns the post  relationship
 	* 

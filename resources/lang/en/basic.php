@@ -116,6 +116,7 @@ return [
 	'add_ad'	=> 'Add Ad',
 	'edit_ad'	=> 'Edit Ad',
 	'price'		=> 'Price',
+	'amount'	=> 'Amount',
 	'search'	=> 'Search',
 	'posts'		=> 'Messeges',
 	'post'		=> 'Messege',
@@ -148,6 +149,8 @@ return [
 	'for'			=> 'for',
 	'view_all'		=> 'view all',
 	'all_cars'		=> 'All cars',
+	'all_month'		=> 'All months',
+	'all_years'		=> 'All years',
 	'all_employees'	=> 'All employees',
 	'notices'		=> 'Notices',
 	'notice'		=> 'Notice',
@@ -265,6 +268,7 @@ return [
 	'manufacturer'		=> 'Manufacturer',
 	'license_plate'		=> 'License plate',
 	'chassis'			=> 'Chassis',
+	'vehicle_registration'=> 'Vehicle registration',
 	'first_registration'=> 'First registration',
 	'last_registration' => 'Last registration',
 	'current_km' 		=> 'Current kilometri',
@@ -274,6 +278,7 @@ return [
 	'start_km' 			=> 'Initial kilometers',
 	'end_km' 			=> 'Final kilometers',
 	'malfunction' 		=> 'Report a malfunction',
+	'wrong_km' 			=> 'Reporting wrong kilometers',
 	'distance' 			=> 'Distance',
 	'fuel' 				=> 'Fuel',
 	'add_fuel' 			=> 'Add fuel',
@@ -295,6 +300,7 @@ return [
 	'value' 			=> 'value',	
 	'checkout' 			=> 'Checkout',	
 	'color' 			=> 'Color (background color in the calendar for tasks)',
+	'color_shortcuts' 	=> 'Color (button border color)',
 	'abs_days' 			=> 'Holiday days start',
 	'add'				=> 'Add',
 	'view_monthly'		=> 'Monthly',
@@ -348,6 +354,11 @@ return [
 	'edit_work_records' => 'Check-out',
 	'decree' 			=> 'Management decision',
 	'top_image' 		=> 'Top notice image',
+	'shortcut' 			=> 'Shortcut',
+	'shortcuts' 		=> 'Shortcuts',
+	'add_shortcut' 		=> 'Add shortcut',
+	'edit_shortcut' 	=> 'Edit shortcut',
+
 	
 ];	
 ?>

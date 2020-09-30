@@ -28,7 +28,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('km'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.current_km')</label>
-				<input class="form-control" name="km" type="number" id="start_km" required value="{{ old('km') }}"/>	
+				<input class="form-control" name="km" type="number" id="start_km" required value="{{ old('km') }}"  />	
 				{!! ($errors->has('km') ? $errors->first('km', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			

@@ -51,7 +51,7 @@
         @if($docs)
         <img class="notice_img radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($docs)) }}" alt="Profile image" title="{{ $notice->employee->user['first_name'] . ' ' . $notice->employee->user['last_name'] }}"  />
         @else
-        <img class="notice_img radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+        <img class="notice_img radius50" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
         @endif
         {{ $notice->employee->user['first_name'] . ' ' .  $notice->employee->user['last_name']}}
     </span>
@@ -59,7 +59,7 @@
 </div>
 <div class="modal-body">
     @if($notice_img)
-    @php krsort($notice_img) dd(($notice_img)); @endphp
+    @php krsort($notice_img); @endphp
         <div class="image_notice">
             <img class="img_notice" src="{{ URL::asset('storage/notice/' . $notice->id . '/' . end($notice_img)) }}" alt="Notice image" title="Zoom"  />
         </div>

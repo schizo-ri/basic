@@ -29,7 +29,7 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::orderBy('registration','ASC')->get();
+        $cars = Car::get();
         $loccos = Locco::get();
         $empl = Sentinel::getUser()->employee;
 		$permission_dep = array();

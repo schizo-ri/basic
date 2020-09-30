@@ -8,7 +8,7 @@
             case 'info':
             
 ?>
-            <div class="row notification {!! session()->has('evaluation') ? 'modal_questionnaire' : ''!!}">
+            <div class="row notification {!! session()->has('evaluation') ? 'modal_questionnaire' : '' !!}">
                 <div class="modal-header">
                     @if(!  session()->has('evaluation') )
                         <span class="img-{{ $key }}"></span>
@@ -89,6 +89,10 @@
 ?>
  <script>
      $(function(){          
-        $('.row.notification').modal();
+        $('.row.notification').modal({
+            modalClass: "modal", 
+            fadeDuration: 200, 
+            fadeDelay: 1.75 
+        });
      });
 </script>

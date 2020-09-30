@@ -1,5 +1,5 @@
 $( function () {
-    console.log("collaps");
+
     var body_width = $('body').width();
     var div_width = $( '.preview_doc').width();
     var all_width = 115;
@@ -14,7 +14,7 @@ $( function () {
     /* $('.collapsible').click(function(event){ 
         $(this).siblings().toggle();
     }); */
-    $('#right-button').click(function() {
+    $('#right-button').on('click',function(event) {
         event.preventDefault();
         $('.preview_doc').animate({
             scrollLeft: "+=115px"
@@ -28,7 +28,7 @@ $( function () {
     //	$( this ).find('.ajax-content').load(src);
     });
 
-    $('#left-button').click(function() {
+    $('#left-button').on('click',function(event) {
         event.preventDefault();
         $('.preview_doc').animate({
             scrollLeft: "-=115px"
@@ -53,7 +53,7 @@ $( function () {
 	 //   $('.all_documents').css('height','auto');
     } 
 
-	$('.show').click(function(){
+	$('.show').on('click',function(){
         $('.show').toggle();
         $('.hide').toggle();
         $('.preview_doc').show();
@@ -64,7 +64,7 @@ $( function () {
         $('.all_documents').height(body_height);
     });
     
-    $('.hide').click(function(){
+    $('.hide').on('click',function(){
         $('.show').toggle();
         $('.hide').toggle();
         $('.preview_doc').hide();

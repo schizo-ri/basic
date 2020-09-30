@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\AbsenceController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PostController;
 use App\Models\Post;
 use App\Models\Event;
 use App\Models\Task;
@@ -14,6 +17,7 @@ use App\Models\Company;
 use App\Models\Locco;
 use App\Models\Setting;
 use App\Models\WorkRecord;
+use App\Models\Shortcut;
 use App\Http\Controllers\BasicAbsenceController;
 use Sentinel;
 use DateTime;
@@ -28,48 +32,47 @@ class DashboardController extends Controller
      */
     public function index()
     {
-         //  $company = Company::where('url', CompanyController::getCompanyURL()['host'])->first()->db;
-
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
-        
             $moduli = CompanyController::getModules();  //dohvaća module firme
-      
-            $datum = new DateTime('now');    /* današnji dan */
-			$ova_godina = date_format($datum,'Y');
-			$prosla_godina = date_format($datum,'Y') - 1;
-			$mjesec_danas = date_format($datum,'m');
 
             if($employee) {
-                $datum = new DateTime('now');    /* današnji dan */
-			
                 $data_absence = BasicAbsenceController::zahtjevi( $employee ); 
-             
                 //dohvaća dopuštenja odjela za korisnika
-                if(isset($employee->work) && $employee->work->department->departmentRole->isNotEmpty()) {
-                    $permission_dep = explode(',', $employee->work->department->departmentRole->toArray()[0]['permissions']);
-                } else {
-                    $permission_dep = array();
-                }
+                $permission_dep = DashboardController::getDepartmentPermission();
 
-                $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id',$employee->id)->orderBy('updated_at','DESC')->get()->take(5);
+                $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id', $employee->id)->orWhere('to_department_id',$employee->work->department->id)->orderBy('updated_at','DESC')->with('comments')->get()->take(5);
+                
+                foreach ($posts as $post) {
+                    $profile = PostController::profile($post);
+                    $post->post_comment = $profile['post_comment'];//zadnji komentar na poruku
+                	$post->employee =  $post->employee;
+                    $post->user_name = $profile['user_name']; // ime djelatnika kojem je poslana poruka a nije user 
+                    $post->image_to_employee =  $profile['docs']; // profilna slika
+                    $post->countComment = PostController::countComment($post);
+                }
 
                 if(isset($_GET['active_date']) && $_GET['active_date']) {
                     $date = $_GET['active_date'];
-                   
                 } else {
                     $date = date('Y-m-d');
                 }
                 
                 $events = Event::where('employee_id',$employee->id)->where('date', $date)->orderBy('date','DESC')->get();
-                $tasks = Task::where('employee_id',$employee->id)->where('date', $date)->orderBy('date','DESC')->get();
+                $tasks = Task::where('employee_id', $employee->id)->where('date', $date)->orderBy('date','DESC')->get();
 
-                $profile_image = DashboardController::profile_image(Sentinel::getUser()->employee['id']);
-                $user_name =  DashboardController::user_name(Sentinel::getUser()->employee['id']);					
+                $profile_image = DashboardController::profile_image( $employee ->id );
+                $user_name =  DashboardController::user_name( $employee ->id );					
                         
                 $locco_active = Locco::where('employee_id', $employee->id)->where('status',0)->orderBy('date','ASC')->get();
-                
-                return view('Centaur::dashboard',['locco_active' => $locco_active, 'posts' => $posts, 'events' => $events,'tasks' => $tasks,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence, 'profile_image' => $profile_image, 'user_name' => $user_name]);
+                //Broj neodobrenih zahtjeva
+                $count_requests =  AbsenceController::countRequest();
+                //Broj nepročitanih poruka
+                $countComment_all = PostController::countComment_all();
+                $check = DashboardController::evidention_check();
+                $shortcuts = Shortcut::where('employee_id', $employee->id )->get();
+               
+                return view('Centaur::dashboard',['locco_active' => $locco_active, 'posts' => $posts, 'events' => $events,'tasks' => $tasks,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence, 'profile_image' => $profile_image, 'user_name' => $user_name, 'count_requests' => $count_requests, 'countComment_all' => $countComment_all, 'check' => $check, 'shortcuts' => $shortcuts]);
             } else {
                 return view('Centaur::dashboard',['moduli' => $moduli]);
             }
@@ -142,8 +145,14 @@ class DashboardController extends Controller
 
     public function openAdmin() 
     {    
-	    $moduli = CompanyController::getModules();
+        $moduli = CompanyController::getModules();
+        
         return view('Centaur::admin_panel',['moduli' => $moduli]);
+    }
+
+    public function openAdminNew() 
+    {    
+        return view('Centaur::admin');
     }
 
     public static function evidention_check() 

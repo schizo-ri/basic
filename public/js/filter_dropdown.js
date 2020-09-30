@@ -1,5 +1,5 @@
-$( document ).ready(function() {  // filter knowledge base
-	$('#filter').change(function() {
+$(function() { // filter knowledge base
+	$('#filter').on('change',function() {
 		var trazi = $('#filter').val().toLowerCase();
 		if(trazi == "all"){
 			$('.panel').show();
@@ -9,10 +9,10 @@ $( document ).ready(function() {  // filter knowledge base
 			});
 		}
 	});	
-	$('.filter_fuels').change(function() {
+	$('.filter_fuels').on('change',function() {
 		var date =  $('#filter_month').val().toLowerCase();
 		var car =  $('#filter_car').val().toLowerCase();
-	
+		console.log(date);
 		if(date == 'all' ) {
 			date = '';
 		} 
@@ -21,20 +21,36 @@ $( document ).ready(function() {  // filter knowledge base
 		}
 	
 		if(date == '' && car == ''){
-			$('.panel').show();
+			$('tbody tr').show();
 		} else {
-			$('.panel').filter(function() {
+			$('tbody tr').filter(function() {
 				$(this).toggle($(this).text().toLowerCase().indexOf(date) > -1 && $(this).text().toLowerCase().indexOf(car) > -1);
 			});
 		}
-	});	
 
-	$('.filter_travel').change(function() {
+	});	
+	$('.filter_loccos').on('change',function() {
+		var date =  $('#filter_month').val().toLowerCase();
+		console.log(date);
+		if(date == 'all' ) {
+			date = '';
+		} 
+		
+		if(date == ''){
+			$('tbody tr').show();
+		} else {
+			$('tbody tr').filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(date) > -1);
+			});
+		}
+		var title = $(document).prop('title'); 
+		title += ' - ' +date;
+		$(document).prop('title', title);
+	});	
+	$('.filter_travel').on('change',function() {
 		var employee_id = $('#filter_employee').val().toLowerCase();
 		var date = $('#filter_date').val().toLowerCase();
 		var url = location.origin + '/travel_orders';
-		console.log("employee_id " + employee_id);
-		console.log("date " + date);
 
 		if(employee_id == 'all' ) {
 			employee_id = '';

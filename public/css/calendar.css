@@ -9,6 +9,7 @@ div#calendar div.box{
     left:0px;
     width:100%;
     height:auto;
+    padding: 10px 0;
 }
  
 div#calendar div.header{
@@ -16,7 +17,7 @@ div#calendar div.header{
     vertical-align:middle;
     width:100%;
     height:auto;   
-    padding-top: 10px;
+   
 }
  
 div#calendar div.header a.prev,div#calendar div.header a.next{ 
@@ -144,23 +145,18 @@ div.clear{
 
 #calendar button.scroll_right_cal, #calendar button.scroll_left_cal, #calendar a.scroll_right_cal, #calendar a.scroll_left_cal  {
     width: 8.5px;
-    height: 14px;
+    height:  1.625rem;
     background-position: center;
     border-radius: 50%;
     float: right;
     border: none;
     line-height: 1rem;
     margin-right: 30px;
-    line-height: 1rem;
+    line-height: 1.625rem;
+    background-color: inherit;
+    outline: none;
 }
 
-#calendar button.scroll_left_cal, #calendar a.scroll_left_cal {
-    background: #ffffff url(/icons/arrow_left.png) no-repeat;
-}
-
-button.scroll_right_cal, a.scroll_right_cal  {
-    background: #ffffff url(/icons/arrow_right.png) no-repeat;
-}
 .dates::-webkit-scrollbar {
     display: none;
 }
@@ -172,37 +168,36 @@ div#calendar ul li.active_date {
     color:#ffffff;
 }
 
-.event_hidden {
+.event_hidden,.event_show  {
     display: none;
    
 }
 
-.event_show {
+.modal.event_show {
     background: #051847;
     padding: 30px 35px;
     margin: -25px -35px;
-    display: none;
 }
 
-.event_show>div:not(:nth-child(3)) {
+.modal.event_show>div:not(:nth-child(3)) {
     margin-bottom: 30px;
     border-bottom: 1px solid #53689B;
 }
 
-.event_show div h3 {
+.modal.event_show div h3 {
     font-weight: 600;
     font-size: 0.9375rem;
     color: #FFFFFF;
 }
 
-.event_show div p {
+.modal.event_show div p {
     font-weight: 500;
     font-size: 0.6875rem;
     color: #FFFFFF;
     padding-left: 37px;
 }
 
-.event_show span.blue, .event_show span.orange, .event_show span.green {
+.modal.event_show span.blue, .modal.event_show span.orange, .modal.event_show span.green {
     width: 17px;
     height: 17px;
     display: inline-block;
@@ -217,15 +212,15 @@ div#calendar ul li.active_date {
     color: #ccc;
 }
 
-.event_show span.blue {
+.modal.event_show span.blue {
     background: #1390EA;
 }
 
-.event_show span.orange {
+.modal.event_show span.orange {
     background: #EA9413;
 }
 
-.event_show span.green {
+.modal.event_show span.green {
     background: #13EA90;
 }
 

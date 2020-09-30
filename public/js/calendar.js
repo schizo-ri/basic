@@ -19,7 +19,7 @@ $( function () {
         dates.append('<li id="li-' + date_new + '" class=""><span class="month">' + monthNames[date_plus1.getMonth()] +  '</span><span class="day">' + date_plus1.getDate() +  '</span><span class="week_day">' + day_of_week[date_plus1.getDay()]  +  '</span><span class="display_none YYYY_mm">' + today.getFullYear()  + '-' + + ('0' + (today.getMonth()+1)).slice(-2)+ '</span></li>');
     }
 
-    $( window ).resize(function() {
+    $( window ).on('resize',function() {
         var div_width = $( '.dates').width();
         var broj_dana = div_width / all_width;
         
@@ -34,7 +34,7 @@ $( function () {
     });
    
     //prikaz evenata za selektirani dan
-    $('.dates li').click(function(){
+    $('.dates li').on('click',function(){
         var active_li =  $(this).attr('id');
         var active_date = active_li.replace('li-','');
 
@@ -78,15 +78,13 @@ $( function () {
     });
 
     setHeight();
-
     function setHeight() {
         if($('body').width() > 1000) {
             var div_height = $('section.calendar>div').height();
             var calendar_height = $('section.calendar #calendar').height();
            
-            $('.comming_agenda').height(div_height - calendar_height -30);
+           // $('.comming_agenda').height(div_height - calendar_height -30);
         }
-      
     }
     
     if(! $('.comming_agenda .all_agenda.show_agenda').length) {
@@ -99,7 +97,7 @@ $( function () {
         $('.comming_agenda .placeholder').hide();
     }
     
-    $('#left-button').click(function() {
+    $('#left-button').on('click',function() {
         var active_li = $('.dates').find('li.active_date');
 
         var first_li = $(dates).find('li').first();
@@ -121,12 +119,13 @@ $( function () {
         previous_li.addClass('active_date');
         active_li.removeClass('active_date');
         
-        previous_li.click();
+        previous_li.trigger('click');
         setHeight();
         $.getScript( '/../js/event_click.js');
     });
 
-    $('#right-button').click(function() {
+    $('#right-button').on('click',function() {
+        
         var active_li = $('.dates').find('li.active_date');
 
         var last_li = $(dates).find('li').last();
@@ -154,7 +153,7 @@ $( function () {
 
         next_li.addClass('active_date');
         active_li.removeClass('active_date');
-        next_li.click();        
+        next_li.trigger('click');        
         setHeight();
         $.getScript( '/../js/event_click.js');
     });

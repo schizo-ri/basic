@@ -88,12 +88,11 @@
 		$.getScript( '/../js/sequence_dragDrop.js');
 		$.getScript( '/../js/set_height_campaign.js');
 		
-		$('.link_back').click(function(e){
+		$('.main_noticeboard .header_document .link_back').click(function(e){
             e.preventDefault();
             var url = location['origin'] +'/campaigns';
             
             $('.container').load( url + ' .container > div', function() {
-               
                 $.getScript( '/../js/datatables.js');
                 $.getScript( '/../js/filter_table.js');                    
                 $.getScript( '/../restfulizer.js');

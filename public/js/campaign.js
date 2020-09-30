@@ -1,4 +1,4 @@
-$('.campaign_show').click(function(e){
+$('.campaign_show').on('click',function(e){
     window.history.replaceState({}, document.title, $(this).attr('href') ); 
  /*   location = $(this).attr('href'); */
     e.preventDefault();
@@ -16,7 +16,7 @@ $('.campaign_show').click(function(e){
            
         });  */
            /* Radi!!! Load back sa sekvence na kampanje*/
-           $('.link_back').click(function(e){
+           $('.main_noticeboard .header_document .link_back').on('click', function(e){
             e.preventDefault();
             var url = location['origin'] +'/campaigns';
             
@@ -35,7 +35,7 @@ $('.campaign_show').click(function(e){
             window.history.pushState( location.href, 'Title',  url);
 
          }); 
-        $('.campaign_mail').click(function(){
+        $('.campaign_mail').on('click', function(){
             $.modal.defaults = {
                 closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
                 escapeClose: true,      // Allows the user to close the modal by pressing `ESC`

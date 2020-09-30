@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\CampaignEmails::class,
         \App\Console\Commands\NoticeSchedule::class,
         \App\Console\Commands\CheckOut::class,
+        \App\Console\Commands\CarsRegistration::class,
     ];
 
     /**
@@ -39,7 +40,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('notice')
                   ->everyMinute()
                   ->evenInMaintenanceMode(); */
-        $schedule->command('check_out')
+       /*  $schedule->command('check_out')
+                  ->everyMinute()
+                  ->evenInMaintenanceMode(); */
+        $schedule->command('car_registration')
                   ->everyMinute()
                   ->evenInMaintenanceMode();
         

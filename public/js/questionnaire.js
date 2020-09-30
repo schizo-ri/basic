@@ -80,13 +80,13 @@ $(function() {
         $('.all_documents').height(body_height - 65);
     });
 
-    $( ".change_view" ).click(function() {
+    $( ".main_questionnaire .change_view" ).on('click', function() {
         $( ".change_view" ).toggle();
         $( ".change_view2" ).toggle();
         $('.table-responsive.first_view').toggle();
         $('.table-responsive.second_view').toggle();        
     });
-    $( ".change_view2" ).click(function() {
+    $( ".main_questionnaire .change_view2" ).on('click', function() {
         $( ".change_view" ).toggle();
         $( ".change_view2" ).toggle();
         $('.table-responsive.first_view').toggle();

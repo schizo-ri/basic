@@ -34,7 +34,7 @@
 		@stack('stylesheet')
 	</head>
 	<body>
-        <form class="form_sequence" id="notice_form" accept-charset="UTF-8" role="form" method="post" action="{{ route('notices.update', $notice->id ) }}" enctype="multipart/form-data" >
+        <form class="form_sequence notice_edit" id="notice_form" accept-charset="UTF-8" role="form" method="post" action="{{ route('notices.update', $notice->id ) }}" enctype="multipart/form-data" >
             <section class="header_campaign">
                 <!-- <textarea name="text_html" id="text_html" hidden >{{ $notice->notice }}</textarea>
                 <textarea name="text_json" id="text_json" hidden >{{ $notice->text_json }}</textarea> -->
@@ -187,7 +187,6 @@
             }
             $.getScript( '/../js/filter.js');  
 
-           /*  $.getScript( '/../js/validate2.js'); */
         </script>
 
 		<!--Awesome icons -->

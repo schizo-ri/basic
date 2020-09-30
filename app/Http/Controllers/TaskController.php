@@ -21,6 +21,7 @@ class TaskController extends Controller
         $employee = Sentinel::getUser()->employee;
         $date = date('Y-m-d');
         $tasks_group_date = Task::whereDate('date', '>=', $date)->orderBy('date','ASC')->get()->groupBy('date');
+        
         return view('Centaur::tasks.index', ['tasks_group_date' => $tasks_group_date]);
     }
 

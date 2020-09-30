@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\EmailingController;
 use App\Http\Controllers\CompanyController;
 use App\Models\Work;
 use App\Models\Employee;
@@ -57,7 +58,7 @@ class EmployeeController extends Controller
 		$users = User::get();
 		$works = Work::get();
 		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
-
+	
 		$campaigns = Campaign::where('type','evergreen')->get();
 		$moduli = CompanyController::getModules(); // provjera da li se koriste moduli kampanja
 
@@ -169,9 +170,11 @@ class EmployeeController extends Controller
 				$campaignRecipient->saveCampaignRecipient($data_campaign);
 			}
 		}
-
+		
 		/* mail obavijest o novoj poruci */
-		$emailings = Emailing::get();
+		$send_to = EmailingController::sendTo('employees', 'create');
+
+		/* $emailings = Emailing::get();
 		$send_to = array();
 		$departments = Department::get();
 		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
@@ -193,7 +196,7 @@ class EmployeeController extends Controller
 				}
 			}
 		}
-
+ 	*/
 		foreach(array_unique($send_to) as $send_to_mail) {
 			if( $send_to_mail != null & $send_to_mail != '' )
 			Mail::to($send_to_mail)->send(new EmployeeCreate($employee)); // mailovi upisani u mailing 
@@ -261,7 +264,6 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-		
 		$employee = Employee::find($id);
 		
 		$input = $request->except(['_token']);
@@ -329,6 +331,18 @@ class EmployeeController extends Controller
 		} 
 		
 		$employee->updateEmployee($data);
+	
+		// za odjavljenog djelatnika - korisnički kodaci deaktivirani
+		if($input['checkout'] != '') {
+			$user = Sentinel::findById($employee->user_id );
+
+			$credentials = [
+				'active' => 0,
+				'password' => 'otkaz123',
+			];
+
+			$user = Sentinel::update($user, $credentials);
+		}
 
 		if(isset($input['campaign_id']) && $input['campaign_id']) {
 			$campaignRecipients = CampaignRecipient::where('employee_id', $employee->id)->get();
@@ -348,8 +362,11 @@ class EmployeeController extends Controller
 				}
 			} 
 		}
-
+		
 		/* mail obavijest o novoj poruci */
+
+		$send_to = EmailingController::sendTo('employees', 'update');
+		/* 
 		$emailings = Emailing::get();
 		$send_to = array();
 		$departments = Department::get();
@@ -371,13 +388,13 @@ class EmployeeController extends Controller
 					}
 				}
 			}
-		}
-		/*
+		} */
+	
 		foreach($send_to as $send_to_mail) {
 			if( $send_to_mail != null & $send_to_mail != '' )
 			Mail::to($send_to_mail)->send(new EmployeeCreate($employee)); // mailovi upisani u mailing 
 		}
-		*/
+
 		session()->flash('success', __('ctrl.data_edit'));
 		return redirect()->back();
        // return redirect()->route('employees.index');

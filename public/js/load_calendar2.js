@@ -1,11 +1,8 @@
 $(function() {
     var day = $('.event_day .day').text();
     var month =   $('.event_day .month').text();
-    
     var year =  $('.event_day .year').text();
-    /* var day_of_week = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
-    var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
- */
+ 
     var view;
     function daysInMonth (month, year) { 
         return new Date(year, month, 0).getDate(); 
@@ -26,6 +23,9 @@ $(function() {
     day_after();
     day_before();
 
+    var position_selected_day = $('.selected_day').position().top;
+    $('.main_calendar_month').scrollTop(position_selected_day);
+   
     function day_after() {
         $(document).on('click', '.arrow .day_after', function(e) {
             e.preventDefault(); 
@@ -75,6 +75,7 @@ $(function() {
             $('.pignose-calendar-body').find('[data-date="' + searchDate + '"] > a' ).click();
         });
     }
+
     function day_before() {
         $(document).on('click', '.arrow .day_before', function(e) {
             e.preventDefault(); 
@@ -122,17 +123,23 @@ $(function() {
         });
     }
    
-    $( ".change_employee" ).change(function() {
+    $( ".change_employee" ).on('change',function() {
         var value = $(this).val().toLowerCase();
 		$(".show_event").filter(function() {
 			//$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
 			$(this).toggle($(this).hasClass(value));
         });
+        $(".month_event").filter(function() {
+			//$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+			$(this).toggle($(this).hasClass(value));
+        });
         if(value == '') {
             $(".show_event").show();
+            $(".month_event").show();
         }
     });
-    $( ".change_car" ).change(function() {
+    
+    $( ".change_car" ).on('change',function() {
         var value = $(this).val().toLowerCase();
         $(".show_locco").filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
@@ -143,18 +150,23 @@ $(function() {
         }
         
     });
-    $( ".change_view_calendar" ).change(function() {
+    
+    var scroll_day;
+    var scroll_week;
+    $( ".change_view_calendar" ).on('change',function() {
         view = $( this ).val();
-
+        
         if(view == 'day') {
-           $('.main_calendar_day').show();
-           $('.main_calendar_week').hide();
-           $('.main_calendar_month').hide();
-           $('.main_calendar_list').hide();
-           $('button.show_locco').show();
-         
-           var scroll = $('.hour_val.position_8').position().top;
-           $('.main_calendar_day').scrollTop(scroll);
+            $('.main_calendar_day').show();
+            $('.main_calendar_week').hide();
+            $('.main_calendar_month').hide();
+            $('.main_calendar_list').hide();
+            $('button.show_locco').show();
+            
+            scroll_day = $('.hour_val.position_8').position().top;
+            if(scroll_day != 0) {
+                $('.main_calendar_day').scrollTop(scroll_day);
+            }
         } 
         if(view == 'week') {
             $('.main_calendar_day').hide();
@@ -162,8 +174,10 @@ $(function() {
             $('.main_calendar_month').hide();
             $('.main_calendar_list').hide();
             $('button.show_locco').show();
-            var scroll = $('.main_calendar_week tr.position_8').position().top;
-            $('.main_calendar_week').scrollTop(scroll);
+            scroll_week = $('.main_calendar_week tr.position_8').position().top;
+            if(scroll_week != 0) {
+                $('.main_calendar_week').scrollTop(scroll_week);
+            }
         } 
         if(view == 'list') {
             $('.main_calendar_list').show();
@@ -181,11 +195,13 @@ $(function() {
             $('button.show_locco').show();
        }
     });
-    $('.main_calendar_month tbody td').click(function(){
+    
+    $('.main_calendar_month tbody td').on('click',function(){
         var date = $(this).attr('data-date');
         $('.pignose-calendar-body').find('[data-date="' + date + '"] > a' ).click();
     });
-    $('button.show_loccos').click(function(e){
+    
+    $('button.show_loccos').on('click',function(e){
         e.preventDefault();
         $('.main_calendar td>a').toggle();
         $('.main_calendar .show_event').toggle();
@@ -194,7 +210,8 @@ $(function() {
         $('.change_car').toggle();
 
     });
-   $('.selected_day a[rel="modal:open"]').click(function(){
+    
+    $('.selected_day a[rel="modal:open"]').on('click',function(){
         $.getScript( '/../restfulizer.js');
-   });
+    });
 });

@@ -123,7 +123,7 @@
 		});
 	});
 	
-	$.getScript( '/../restfulizer.js');	
+/* 	$.getScript( '/../restfulizer.js');	 */
 </script>
 <!-- @if( Sentinel::getUser()->hasAccess(['campaigns.delete']) || in_array('campaigns.delete', $permission_dep) && !$works->where('department_id',$department->id)->first())
 		<a href="{{ route('campaigns.destroy', $campaign->id) }}" class="action_confirm btn-delete modal_delete" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">

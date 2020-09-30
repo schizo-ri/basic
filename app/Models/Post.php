@@ -11,7 +11,7 @@ class Post extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['employee_id','to_employee_id','to_department_id','title','slug','content','status'];
+	protected $fillable = ['employee_id','to_employee_id','to_department_id','title','content','status'];
 	
 	/*
 	* The Eloquent employee model names
@@ -19,6 +19,13 @@ class Post extends Model
 	* @var string
 	*/
 	protected static $employeeModel = 'App\Models\Employee';
+	
+	/*
+	* The Eloquent comments model name
+	* 
+	* @var string
+	*/
+	protected static $commentsModel = 'App\Models\Comment'; 	
 	
 	/*
 	* The Eloquent deparment model names
@@ -61,13 +68,6 @@ class Post extends Model
 	}
 	
 	/*
-	* The Eloquent comments model name
-	* 
-	* @var string
-	*/
-	protected static $commentsModel = 'App\Models\Comment'; 	
-	
-	/*
 	* Returns the comments relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -75,7 +75,7 @@ class Post extends Model
 	
 	public function comments()
 	{
-		return $this->hasMany(static::$commentsModel,'post_id')->orderBy('created_at','DESC')->paginate(10);
+		return $this->hasMany(static::$commentsModel,'post_id')->orderBy('created_at','ASC');
 	}	
 	
 	/*

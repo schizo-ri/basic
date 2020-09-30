@@ -63,7 +63,7 @@
                                     @if(isset($profile_image))
                                         <img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image"  />
                                     @else
-                                        <img class="radius50 " src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+                                        <img class="radius50 " src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
                                     @endif
                                 </span>
                             </p>
@@ -78,14 +78,12 @@
                                     @if(isset($profile_image) && is_array(isset($profile_image)))
                                         <img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image"  />
                                     @else
-                                        <img class="radius50 " src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+                                        <img class="radius50 " src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
                                     @endif
                                 </span>
                             </p>
                         </div>
                     @endif
-                    
-                
             @endif
     @endforeach
 </div>

@@ -77,7 +77,8 @@ table.dataTable tbody tr.selected {
 }
 table.dataTable tbody th,
 table.dataTable tbody td {
-  padding: 8px 10px;
+  
+  vertical-align: middle;
 }
 table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
   border-top: 1px solid #ddd;
@@ -180,7 +181,7 @@ table.dataTable.display tbody tr:hover.selected > .sorting_3, table.dataTable.or
   background-color: #a5b2cb;
 }
 table.dataTable.no-footer {
-  border-bottom: 1px solid #111;
+  border-bottom: 1px solid rgba(154, 154, 154, 0.3);
 }
 table.dataTable.nowrap th, table.dataTable.nowrap td {
   white-space: nowrap;

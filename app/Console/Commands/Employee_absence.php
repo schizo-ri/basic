@@ -5,9 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Mail\AbsenceCronMail;
 use Illuminate\Support\Facades\Mail;
-use App\Models\Emailing;
-use App\Models\Department;
-use App\Models\Employee;
+use App\Http\Controllers\EmailingController;
 
 class Employee_absence extends Command
 {
@@ -42,29 +40,9 @@ class Employee_absence extends Command
      */
     public function handle(AbsenceCronMail $abs)
     {
-        $emailings = Emailing::get();
-		$send_to = array();
-		$departments = Department::get();
-		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
-
-		if(isset($emailings)) {
-			foreach($emailings as $emailing) {
-				if($emailing->table['name'] == 'absences' && $emailing->method == 'cron') {	
-					if($emailing->sent_to_dep) {
-						foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
-							array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
-						}
-					}
-					if($emailing->sent_to_empl) {
-						foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
-							array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
-						}
-					}
-				}
-			}
-        }
-        
-        foreach(array_unique($send_to) as $send_to_mail) {
+		$send_to = EmailingController::sendTo('absences','cron');
+		        
+        foreach($send_to as $send_to_mail) {
 			if( $send_to_mail != null & $send_to_mail != '' ) {
                 Mail::to($send_to_mail)->send(new AbsenceCronMail()); // mailovi upisani u mailing 
             }

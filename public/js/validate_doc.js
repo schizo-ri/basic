@@ -8,7 +8,7 @@ if(locale == 'hr') {
     validate_text = "Obavezno polje";
 }   
 
-$('.btn-submit').click(function(event){
+$('.form_doc .btn-submit').click(function(event){
   //  event.preventDefault();
     var form = $(this).parents('form:first');
     let url = $(this).parents('form:first').attr('action');

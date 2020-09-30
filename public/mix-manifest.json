@@ -1,5 +1,4 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
-    "/js/laravel-echo-setup.js": "/js/laravel-echo-setup.js"
+    "/css/all.css": "/css/all.css",
+    "/js/all.js": "/js/all.js"
 }

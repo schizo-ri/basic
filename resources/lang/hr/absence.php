@@ -7,6 +7,7 @@ return [
 	'edit_absence' 	=> 'Ispravi zahtjev',
 	'delete_absence' => 'Obriši zahtjev',
 	'request_type' 	=> 'Tip zahtjeva',
+	'request_types' => 'Tipovi zahtjeva',
 	'request_date' 	=> 'Datum zahtjeva',
 	'start_date' 	=> 'Početni datum',
     'end_date' 		=> 'Završni datum',

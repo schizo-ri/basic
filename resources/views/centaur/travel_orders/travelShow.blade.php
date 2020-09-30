@@ -31,11 +31,13 @@
 				<main class="travel_main">
 					<div class="approval">
 						<h4>Odobrenje</h4>
-						<p>Određujem da <select class="form-control" name="employee_id" required>
-							@foreach ($employees as $employee)
-								<option value="{{ $employee->id }}" {!! $travel->employee_id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['first_name'] . ' ' .  $employee->user['last_name'] }}</option>
-							@endforeach
-						</select> zaposlenik našeg poduzeća, dana <input name="start_date" type="datetime-local" class="form-control" value="{{ date('Y-m-d\TH:i', strtotime($travel->start_date )) }}" required></p> 
+						<p>Određujem da 
+							<select class="form-control" name="employee_id" required>
+								@foreach ($employees as $employee)
+									<option value="{{ $employee->id }}" {!! $travel->employee_id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['first_name'] . ' ' .  $employee->user['last_name'] }}</option>
+								@endforeach
+							</select> zaposlenik našeg poduzeća, dana <input name="start_date" type="datetime-local" class="form-control" value="{{ date('Y-m-d\TH:i', strtotime($travel->start_date )) }}" required>
+						</p> 
 						<p>službeno otputuje u <input name="destination" type="text" id="destination" class="form-control" value="{{ $travel->destination }}" required  > sa zadaćom <input name="description" type="text" class="form-control" value="{{ $travel->description }}" ></p> 
 						<p>Putovanje može trajati <input name="days" type="number" class="form-control" value="{{ $travel->days }}" required> dana.</p> 
 						<div class="aproveBy">
@@ -70,13 +72,25 @@
 												$date_diff = $date2->diff($date1);
 												$sati = $date_diff->h + ($date_diff->d*24);
 												$dnevnice = $date_diff->d;
-												if($date_diff->h >= 12) {
-													$dnevnice ++;
+												if($dnevnice == 0 && $date_diff->h != 0 ) {
+													if($date_diff->h >= 8 && $date_diff->h < 12) {
+														$dnevnice += 0.5; 
+													} else if ($date_diff->h >= 12) {
+														$dnevnice += 1; 
+													}
+												} else {
+													if($date_diff->h != 0) {
+														if($date_diff->h < 12) {
+															$dnevnice += 0.5; 
+														} else if ($date_diff->h >= 12) {
+															$dnevnice += 1; 
+														}
+													}
 												}
 											}
 										@endphp
 										<span class="td col-2 align_c"><input name="start_date" type="datetime-local" class="form-control" value="{{ date('Y-m-d\TH:i', strtotime($travel->start_date )) }}" required></span>
-										<span class="td col-2 align_c"><input name="end_date" type="datetime-local" class="form-control" value="{!! $travel->end_date ? date('Y-m-d\TH:i', strtotime($travel->end_date )) : '' !!}" required></span>
+										<span class="td col-2 align_c"><input name="end_date" type="datetime-local" class="form-control" value="{!! $travel->end_date ? date('Y-m-d\TH:i', strtotime($travel->end_date )) : '' !!}" ></span>
 										<span class="td col-2 align_c">{{ $sati }}</span>
 										<span class="td col-2 align_c dnevnice">{{ $dnevnice }}</span>
 										<span class="td col-2 align_r">
@@ -114,14 +128,14 @@
 										@php
 											$i = 0;
 										@endphp
-										@foreach ($loccos as $locco1)
-											<input type="hidden" name="locco_id[{{$i}}]" value="{{ $locco1->id }}">
+										@foreach ($loccos as $locco)
+											<input type="hidden" name="locco_id[{{$i}}]" value="{{ $locco->id }}">
 											<div class="tr">
-												<span class="td col-3"><input class="form-control starting_point" name="starting_point[{{$i}}]" type="text" value="{{ $locco1->starting_point }}"  /></span>
-												<span class="td col-3"><input class="form-control" name="km_destination[{{$i}}]" type="text" value="{{ $locco1->destination }}"  /></span>
-												<span class="td col-2 distance align_c"><input class="form-control align_c" name="distance[{{$i}}]" type="number" value="{{ $locco1->distance }}"  /></span>
+												<span class="td col-3"><input class="form-control starting_point" name="starting_point[{{$i}}]" type="text" value="{{ $locco->starting_point }}"  /></span>
+												<span class="td col-3"><input class="form-control" name="km_destination[{{$i}}]" type="text" value="{{ $locco->destination }}"  /></span>
+												<span class="td col-2 distance align_c"><input class="form-control align_c" name="distance[{{$i}}]" type="number" value="{{ $locco->distance }}"  /></span>
 												<span class="td col-2 km_price align_r">{!! $travel->car['private_car'] == 1 ? 2.00 : '' !!}</span>
-												<span class="td col-2 summary align_r total_sum">{!! $travel->car['private_car'] == 1 ? number_format($locco1->distance * 2, 2, '.', ' ') : '' !!}</span>
+												<span class="td col-2 summary align_r total_sum">{!! $travel->car['private_car'] == 1 ? number_format($locco->distance * 2, 2, '.', ' ') : '' !!}</span>
 											</div>
 											@php
 												$i++;
@@ -171,7 +185,7 @@
 											<span class="td col-5"><input name="cost_description[{{ $j }}]" type="text" value="{{ $expense->cost_description }}" class="cost_description" ></span>
 											<span class="td col-2 align_r"><input name="amount[{{ $j }}]" type="number" class="align_r amount" step="0.01" value="{{ number_format($expense->amount, 2, '.', ' ') }}"  ></span>
 											<span class="td col-1 align_c"><input name="currency[{{ $j }}]" type="text" class="align_c currency" value="{{ $expense->currency }}" ></span>
-											<span class="td col-2 align_r total_amount"><input name="total_amount[{{ $j }}]" type="text" class="align_r total_sum " type="number" step="0.01" value="{{ number_format($expense->total_amount, 2, '.', ' ') }}" ></span>
+											<span class="td col-2 align_r total_amount"><input name="total_amount[{{ $j }}]" type="text" class="align_r total_sum " type="number" step="0.01" value="{{ $expense->total_amount }}" ></span>
 										</div>
 										@php
 											$j++;
@@ -193,8 +207,13 @@
 					</div>
 				</main>
 				<footer>
-					<p>Primljen predujam dana <input name="advance_date" type="date" class="form-control align_c" value="{!! $travel->advance_date ? $travel->advance_date : '' !!}" > u iznosu <input name="advance" type="number" step="0.01" class="form-control align_c" value="{{ number_format( $travel->advance, 2, '.', ' ') }}" > Kn</p>
-					<p>Ostaje za isplatu / povrat <input name="rest_payout" type="number" step="0.01" class="form-control align_c" value="{{ number_format( $travel->rest_payout, 2, '.', ' ')}}" > Kn</p>
+					<p>Primljen predujam dana 
+						<input name="advance_date" type="date" class="form-control align_c" value="{!! $travel->advance_date ? $travel->advance_date : '' !!}" >
+						u iznosu 
+						<input name="advance" type="number" step="0.01" class="form-control align_c" value="{{ number_format( $travel->advance, 2, '.', ' ') }}" id="advance" /> Kn</p>
+					<p>Ostaje za isplatu / povrat <input name="rest_payout" id="rest_payout" type="number" step="0.01" class="form-control align_c" value="" > Kn</p>  
+					
+					{{--  {{ number_format( $travel->rest_payout, 2, '.', ' ')}} --}}
 					<p>Podnositelj obračuna 
 						<select class="form-control" name="calculate_employee" >
 						<option selected disabled></option>
@@ -293,6 +312,7 @@
 
 			function total_sum() {
 				var total = 0;
+				var advance = $('#advance').val();
 				$( ".total_sum" ).each(function( index ) {
 					var value = '';
 					if ( $( this ).val() != '') {
@@ -306,8 +326,14 @@
 					}
 				});
 				$('#total_sum').text(total.toFixed(2));
+				if(advance) {
+					total = total-advance;
+				}
+				$('#rest_payout').val(total.toFixed(2));
 			}
-			
+			$('#advance').change(function(){
+				total_sum();
+			});
 		</script>
 	</body>
 </html>

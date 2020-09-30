@@ -25,7 +25,7 @@
                                 @if($image)
                                     <img class="profile_img radius50 float_left" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image)) }}" alt="Profile image"  />
                                 @else
-                                    <img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+                                    <img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
                                 @endif
                             </span>
                             {{ $data_day['employee'] . ' - ' .  $data_day['type'] }}

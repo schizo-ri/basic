@@ -2,7 +2,7 @@
     <h3 class="panel-title">@lang('basic.add_document')</h3>
 </div>
 <div class="modal-body">
-    <form action="{{ route('documents.store') }}" method="post" enctype="multipart/form-data" style="text-align:left;">
+    <form class="form_doc" action="{{ route('documents.store') }}" method="post" enctype="multipart/form-data" style="text-align:left;">
         <div class="form-group ">
             <label class="padd_10">@lang('basic.to_employee') </label>
             <select class="djelatnik" name="employee_id" value="{{ old('employee_id') }}" required > 

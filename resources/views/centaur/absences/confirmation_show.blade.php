@@ -36,7 +36,7 @@
 				<input type="radio" name="email" value="1" id="send" checked><label for="send"> @lang('absence.send_email')</label><br>
 				<input type="radio" name="email" value="0" id="no_send" ><label for="no_send"> @lang('absence.dont_send_email')</label>
 			</div>
-			<input class="btn-submit" type="submit" value="{{ __('basic.send_mail') }}">
+			<input class="btn-submit" type="submit" value="{{ __('basic.confirm') }}">
 		</form>
 	</div>
 </div>
@@ -44,6 +44,5 @@
 	$('#da').click(function(){
 		$('.odobrenje').show();
 	});
-
 </script>
 

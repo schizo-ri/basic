@@ -7,7 +7,7 @@
 	<main class="col-md-12 index_main main_documents float_right">
 		<section>
 			<div class="page-header header_document">
-				<!-- <a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a> -->
+				<a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a>
 				@lang('basic.documents')
 				@if(count($documents)>0)
 					<span class="show float_r">@lang('basic.show')<i class="fas fa-caret-down"></i></span>

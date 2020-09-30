@@ -4,7 +4,7 @@ $(function(){
 	var prosla_godina = ova_godina - 1;
 	var year = '';
 
-	$('#year_vacation').change(function(){
+	$('#year_vacation').on('change',function(){
 		year = $(this).val();
 		
 		$('.info_abs>p>.go').hide();
@@ -22,8 +22,9 @@ $(function(){
 			url: url,
 			type: "GET",
 			success: function( response ) {
-				console.log("prošlo");
+				console.log(response);
 				$('table').load(url + ' table',function(){
+					$('table.display').show();
 					$.getScript( '/../restfulizer.js');
 				});
 			}, 
@@ -48,8 +49,7 @@ $(function(){
 			}
 		});
 	});
-	$('#year_sick').change(function(){
-		console.log($(this).val());
+	$('#year_sick').on('change',function(){
 		year = $(this).val();
 		$('.info_abs>p>.bol').hide();
 		$('.info_abs>p>.bol.bol_'+year).show();
@@ -65,8 +65,9 @@ $(function(){
 			url: url,
 			type: "GET",
 			success: function( response ) {
-				console.log("prošlo");
+				console.log(response);
 				$('table').load(url + ' table',function(){
+					$('table.display').show();
 					$.getScript( '/../restfulizer.js');
 				});
 			}, 
@@ -85,14 +86,12 @@ $(function(){
 					}, 
 					error: function(jqXhr, json, errorThrown) {
 						console.log(jqXhr.responseJSON); 
-						
 					}
 				});
 			}
 		});
-
 	});
-	$( "#request_type" ).change(function() {
+	$( "#request_type" ).on('change',function() {
 		if($(this).val() == 'IZL') {
 			$('.form-group.time').show();
 			$('.form-group.date2').hide();
@@ -104,7 +103,7 @@ $(function(){
 			$('.form-group.date2').show();
 		}
 	});
-	$( "#start_date" ).change(function() {
+	$( "#start_date" ).on('change',function() {
 		var start_date = $( this ).val();
 		var end_date = $( "#end_date" );
 		end_date.val(start_date);

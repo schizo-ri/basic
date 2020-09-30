@@ -33,7 +33,7 @@
 			<select class="form-control" name="locco_id" value="{{ old('locco_id') }}" >
 				<option selected disabled></option>
 				@foreach ($loccos as $locco)
-					<option value="{{ $locco->id }}">{{ $locco->date . ', ' .  $locco->employee->last_name  . ', ' . $locco->destination }}</option>
+					<option value="{{ $locco->id }}">{{ $locco->date }} {!! $locco->employee ? ', ' .  $locco->employee->last_name  . ', ' . $locco->destination : '' !!}</option>
 				@endforeach
 			</select>
 			{!! ($errors->has('locco_id') ? $errors->first('locco_id', '<p class="text-danger">:message</p>') : '') !!}

@@ -1,4 +1,4 @@
-$.getScript( '/../js/filter_table.js');    
+$.getScript( '/../js/filter_table.js');
 
 $('.more').click(function(){
     $( this ).siblings('.role').toggle();
@@ -14,7 +14,7 @@ $('.hide').click(function(){
     $( this ).hide();
 });
 
-$('.change_view').click(function(){
+$('.user_header .change_view').on('click', function(){
     $('.index_table_filter label #mySearchTbl').attr('id','mySearchElement');
     $('.index_table_filter label #mySearchElement').attr('onkeyup','mySearchElement()');
 
@@ -24,7 +24,7 @@ $('.change_view').click(function(){
     $('main.users_main .second_view').css('display','flex');
     $('.table-responsive').toggle();		
 });
-$( ".change_view2" ).click(function() {
+$( ".user_header .change_view2" ).on('click', function() {
     $('.index_table_filter label #mySearchElement').attr('id','mySearchTbl');
     $('.index_table_filter label #mySearchTbl').attr('onkeyup','mySearchTable()');
     $( ".change_view" ).toggle();
@@ -34,7 +34,7 @@ $( ".change_view2" ).click(function() {
    
     $('.table-responsive').toggle();
 });
-$("a.show_user").click(function(event) {
+$("a.show_user").on('click', function(event) {
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
         escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -51,7 +51,7 @@ $("a.show_user").click(function(event) {
         fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
     };
 });
-$("a.edit_user").click(function(event) {
+$("a.edit_user").on('click', function(event) {
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
         escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -68,7 +68,7 @@ $("a.edit_user").click(function(event) {
         fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
     };
 });
-$("a.create_user").click(function(event) {
+$("a.create_user").on('click', function(event) {
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
         escapeClose: true,      // Allows the user to close the modal by pressing `ESC`

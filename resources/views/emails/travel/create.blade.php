@@ -1,7 +1,10 @@
 @component('mail::message')
-# Putni nalog {{ $travel->destination }}
+# Putni nalog {!! $travel->destination !!}
 
-{!! $travel->employee->usee['first_name'] . ' ' . $travel->employee->usee['last_name'] !!}
+Djelatnik {!! $travel->employee->user['first_name'] . ' ' . $travel->employee->user['last_name'] !!}
 
+je otvorio putni nalog
+
+Odredište: {!! $travel->destination !!}
 
 @endcomponent

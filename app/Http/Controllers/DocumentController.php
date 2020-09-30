@@ -175,7 +175,7 @@ class DocumentController extends Controller
               $document = new Document();
               $document->saveDocument($data);
             }
-          } else {           
+        } else {           
             $docName = $request->file('fileToUpload')->getClientOriginalName();  //file name
             $docSize =  $request->file('fileToUpload')->getClientSize();         //file size 
             $target_file = $path . $docName;

@@ -34,7 +34,7 @@
 		@stack('stylesheet')
 	</head>
 	<body>
-        <form class="form_template" id="form_template" accept-charset="UTF-8" role="form" method="post" action="{{ route('templates.update', $template->id ) }}" enctype="multipart/form-data" >
+        <form class="form_template template_edit" id="form_template" accept-charset="UTF-8" role="form" method="post" action="{{ route('templates.update', $template->id ) }}" enctype="multipart/form-data" >
 			<header>
 				{{ csrf_field() }}
 				{{ method_field('PUT') }}

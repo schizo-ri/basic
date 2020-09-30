@@ -42,7 +42,7 @@ $('.first_tab').height(second_tab_height);
 
 roles = $('.roles');
 
-$('input[type="file"]').change(function(e){
+$('input[type="file"]').on('change',function(e){
     fileName = e.target.files[0].name;
     $('#file_name').text(fileName);
 });
@@ -53,7 +53,7 @@ if( roles.is(':checked')) {
     validate2.push("block");
 }
 
-$('.roles').change(function(event){
+$('.roles').on('change',function(event){
     if( roles.is(':checked')) {
         validate2.push(true);
     } else {
@@ -61,7 +61,13 @@ $('.roles').change(function(event){
     }
 });
 
-$('.btn-submit').click(function(event){   
+$('.btn-submit_user_edit').on('click',function(event){   
+    console.log("submit_user_create");
+    event.preventDefault();
+    var form = $(this).parents('form:first');
+    let url = $(this).parents('form:first').attr('action');
+    var form_data = form.serialize();
+
     password = $("#password");
     conf_password = $("#conf_password");    
     
@@ -89,16 +95,57 @@ $('.btn-submit').click(function(event){
 
     if( validate2.includes("block") ) {
         event.preventDefault();
-
+        validate = [];
         if( roles.parent().parent().find('.validate').length  == 0 ) {                
             roles.parent().parent().append(' <p class="validate">' + validate_role + '</p>');
         }
     } else {
-            roles.parent().find('.validate').text("");
+        roles.parent().find('.validate').text("");
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });     
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: form_data,
+            success: function( response ) {
+            }, 
+            error: function(jqXhr, json, errorThrown) {
+                console.log(jqXhr.responseJSON);
+                var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                    'message':  jqXhr.responseJSON.message,
+                                    'file':  jqXhr.responseJSON.file,
+                                    'line':  jqXhr.responseJSON.line };
+                if(url.includes("users") && errorThrown == 'Unprocessable Entity' ) {
+                    alert(email_unique);
+                }  else {
+                    $.modal.close();
+                    $.ajax({
+                        url: 'errorMessage',
+                        type: "get",
+                        data: data_to_send,
+                        success: function( response ) {
+                            $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+                        }, 
+                        error: function(jqXhr, json, errorThrown) {
+                            console.log(jqXhr.responseJSON); 
+                        }
+                    });
+                }
+            }
+        });
     }
+
+    console.log(validate2);
+    console.log(password);
+    console.log(conf_password);
+    console.log(url);
+    console.log(form_data);
 });
 
-$('.btn-next').click(function(event){  
+$('.btn-next').on('click',function(event){  
     f_name = $("#first_name");
     l_name = $("#last_name");
     email = $("#email");
@@ -150,7 +197,7 @@ $('.btn-next').click(function(event){
 
 });
 
-$('.btn-back').click(function(){
+$('.btn-back').on('click',function(){
     $('.first_tab').toggle();
     $('.second_tab').toggle();
     if($('.first_tab').is(':visible')) {

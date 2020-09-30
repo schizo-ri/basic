@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="index_page posts_index">   
+<div class="index_page posts_index">
 	@php
 		use App\Http\Controllers\PostController; 
 		use App\Http\Controllers\DashboardController; 
@@ -13,6 +13,7 @@
 	@endphp
 	<aside class="col-xs-12 col-sm-12 col-md-4 col-lg-4 latest_messages">
 		<div>
+			<a class="link_back" href="{{  url()->previous() }}"><span class="curve_arrow_left_grey"></span></a>
 			<h1>@lang('basic.latest_messages')
 				@if(Sentinel::getUser()->hasAccess(['posts.create']) || in_array('posts.create', $permission_dep))
 					<a class="btn btn-primary btn-lg btn-new" href="{{ route('posts.create') }}" rel="modal:open" title="{{ __('basic.new_post')}}">
@@ -26,23 +27,16 @@
 			</div>
 			<section class="col-md-12 posts">
 				<div class="all_post">
-					@if(count( $posts) >0)
+					@if(count( $posts ) > 0)
 						@foreach($posts as $post)
-							<?php
-								$post_comment = PostController::profile($post)['post_comment'];//zadnji komentar na poruku
-								$employee = PostController::profile($post)['employee'];
-								$user_name = PostController::profile($post)['user_name']; // ime djelatnika kojem je poslana poruka a nije user 
-								$image_to_employee =  PostController::profile($post)['docs']; // profilna slika
-							
-							?>
 							<article class="main_post panel">
 								<button class="tablink" id="{{ $post->id }}" type="button"> 
 									@if($post->to_employee_id != null)
 										<span class="profile_img">
-											@if( is_array($image_to_employee) && ! empty($image_to_employee) )
-												<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_to_employee)) }}" alt="Profile image"  />
+											@if( is_array($post['image_to_employee']) && ! empty($post['image_to_employee']) )
+												<img class="radius50" src="{{ URL::asset('storage/' . $post['user_name'] . '/profile_img/' . end($post['image_to_employee']['doc'])) }}" alt="Profile image"  />
 											@else
-												<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+												<img class="radius50" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 											@endif
 										</span>
 									@endif
@@ -62,14 +56,21 @@
 												{{ $post->to_department['name'] }}
 											@endif
 										</span>
-										@if(PostController::countComment($post->id) > 0)<span class="count_coments">{{ PostController::countComment($post->id) }}</span>@endif
-										<span class="post_time">{{ \Carbon\Carbon::createFromTimeStamp(strtotime($post->updated_at))->diffForHumans() }} </span>
-										<span class="post_text">
-												{{	$post_comment['content'] }}
+										@if( $post->countComment > 0)<span class="count_coments">{{ $post->countComment }}</span>@endif
+										<span class="post_time">{{ date('d.m. H:i',strtotime( $post->updated_at )) }}</span>
+										<span class="post_text">											
+												{{	$post['post_comment']->content }} {!! $post->to_employee_id && $post->post_comment->status == 1 ? '<i class="fas fa-check green"></i>' : '' !!}
 										</span>
+										@if ( $post->to_department_id != null && $post->employee_id == Sentinel::getUser()->employee->id  )
+											<span class="read_post">
+												@foreach ($post->comments->where('to_employee_id','<>',null) as $comment)
+													<span class="read_comment {!! $comment->status == 0? 'post_unread' : 'post_read' !!}" title="{!! $comment->status == 1 ? date('d.m.Y H:i',strtotime( $comment->updated_at )) : '' !!}" >{!! $comment->toEmployee ? substr($comment->toEmployee->user['first_name'],0,1) . substr($comment->toEmployee->user['last_name'],0,1) : $comment->id !!}</span>
+												@endforeach
+											</span>
+										@endif
 									</span>
+
 								</button>
-							
 							</article>
 						@endforeach
 					@else 
@@ -80,7 +81,6 @@
 									<i style="font-size:11px" class="fa">&#xf067;</i>
 								</label>
 								@lang('basic.on_button')</p>
-							
 						</div>
 					@endif
 				</div>
@@ -88,33 +88,27 @@
 		</div>
 	</aside>
 	<main class="col-xs-12 col-sm-12 col-md-8 col-lg-8 index_main">
-		<section>
-			@if(count( $posts)>0)
+		<section class="section_post">
+			@if(count( $posts ) > 0)
 				@foreach($posts as $post)
-					@php
-						$post_comment = PostController::profile($post)['post_comment'];
-						$employee = PostController::profile($post)['employee'];
-						$user_name = PostController::profile($post)['user_name'];
-						$image_employee = PostController::profile($post)['docs']; // profilna slika
-					@endphp
 					<section id="{{ '_' . $post->id }}" class="tabcontent" >
 						<header class="post_sent">
 							<span class="link_back"><span class="curve_arrow_left"></span></span>
 							@if($post->to_employee_id != null)
 								<span class="post_img_prof">
-									@if( is_array($image_employee) && ! empty($image_employee) )
-										<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_employee)) }}" alt="Profile image" />
+									@if( is_array($post['image_employee']['docs']) && ! empty($post['image_employee']['docs']) )
+										<img class="radius50" src="{{ URL::asset('storage/' . $post['user_name']['docs'] . '/profile_img/' . end($post['image_employee']['docs'])) }}" alt="Profile image" />
 									@else
-										<img class="radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+										<img class="radius50" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 									@endif
 								</span>
 								<span class="fl_name">
-									{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}
-									<span class="" >{{ $post->employee->work['name'] }}</span>
+									{{ $post['employee']->user['first_name'] . ' ' .  $post['employee']->user['last_name'] }}
+									<span class="" >{{  $post['employee']->work['name'] }}</span>
 								</span>
 								<span class="vacation">@lang('basic.vacation')<br><span class="" >...</span></span>
-								<span class="phone" >@lang('basic.phone')<br><span>{{ $employee->mobile }}</span></span>
-								<span class="e-mail" >E-mail<br><span>{{ $employee->email }}</span></span>
+								<span class="phone" >@lang('basic.phone')<br><span>{{  $post['employee']->mobile }}</span></span>
+								<span class="e-mail" >E-mail<br><span>{{  $post['employee']->email }}</span></span>
 							@endif
 							@if($post->to_department_id != null)
 								<span class="fl_name">
@@ -125,43 +119,94 @@
 						<main class="comments" >
 							<div class="mess_comm">
 								<div class="refresh {{ '_' . $post->id }}">
-									@if(count($post->comments()) > 0)
-										@foreach ($comments->where('post_id', $post->id) as $comment)
-											<div class="message">
-												<div class="{!! $comment->employee_id != Sentinel::getUser()->employee->id ? 'left' : 'right' !!}">
-													<p class="comment_empl">
-														@php
-															$next_comment = PostController::previous($comment->id, $post->id);
-															$next_empl = $next_comment['employee_id'];
-														@endphp
-														@if( $next_empl != $comment->employee_id && $comment->employee_id != Sentinel::getUser()->employee->id){{ $comment->employee->user['first_name'] }} | @endif 
-														<small>{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans()  }}</small>
-													</p>
-													<div class="content">
-														@if($comment->employee_id != Sentinel::getUser()->employee->id)
+									@if(count($post->comments ) > 0)
+										@php
+											$comments = $post->comments->unique(function ($item) {
+												return $item['content'].$item['created_at'];
+											});
+										@endphp
+										@if ($post->to_department_id != null )
+											@foreach ($comments as $comment)
+												<div class="message">
+													<div class="{!! $comment->employee_id != Sentinel::getUser()->employee->id ? 'left' : 'right' !!}">
+														<p class="comment_empl">
 															@php
-																$image_comment = DashboardController::profile_image($comment->employee_id);
-																$user_name_comment =  DashboardController::user_name($comment->employee_id);
+																$next_comment = PostController::previous($comment->id, $post->id);
+																$next_empl = $next_comment['employee_id'];
 															@endphp
-															<span class="profile_img">
-															@if($image_comment)
-																<img class="radius50 float_left" src="{{ URL::asset('storage/' . $user_name_comment . '/profile_img/' . end($image_comment)) }}" alt="Profile image"  />
+															@if ( $comment->employee_id == $post->employee_id && $next_empl != $comment->employee_id)
+																{{ $post->to_department->name }} |
 															@else
-																<img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+																@if( $next_empl != $comment->employee_id )
+																	{{ $comment->employee->user['first_name'] }} |
+																@endif
 															@endif
-															</span>
-														@endif
-														<p class="comment_content" id="{{ $comment->id }}">{{ $comment['content'] }}</p>
+															<small>{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans()  }}</small>
+														</p>
+														<div class="content">
+															@if( $comment->employee_id != Sentinel::getUser()->employee->id)
+																@php
+																	$image_comment = DashboardController::profile_image($comment->employee_id);
+																	$user_name_comment =  DashboardController::user_name($comment->employee_id);
+																@endphp
+																<span class="profile_img">
+																@if($image_comment)
+																	<img class="radius50 float_left" src="{{ URL::asset('storage/' . $user_name_comment . '/profile_img/' . end($image_comment)) }}" alt="Profile image"  />
+																@else
+																	<img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
+																@endif
+																</span>
+															@endif
+															
+															<pre class="comment_content" id="{{ $comment->id }}">{{ $comment['content'] }}</pre>
+															
+														</div>
 													</div>
 												</div>
-											</div>
-										@endforeach	
-									@endif
+											@endforeach
+										@else
+											@if( ($post->to_employee_id != null/*  && $comment->employee_id != Sentinel::getUser()->employee->id */ ) )
+												@foreach ($comments as $comment)
+													<div class="message">
+														<div class="{!! $comment->employee_id != Sentinel::getUser()->employee->id ? 'left' : 'right' !!}">
+															<p class="comment_empl">
+																@php
+																	$next_comment = PostController::previous($comment->id, $post->id);
+																	$next_empl = $next_comment['employee_id'];
+																@endphp
+																@if( $next_empl != $comment->employee_id && $comment->employee_id != Sentinel::getUser()->employee->id){{ $comment->employee->user['first_name'] }} | @endif 
+																<small>{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans()  }}</small>
+															</p>
+															<div class="content">
+																
+																@if( $comment->employee_id != Sentinel::getUser()->employee->id)
+																	@php
+																		$image_comment = DashboardController::profile_image($comment->employee_id);
+																		$user_name_comment =  DashboardController::user_name($comment->employee_id);
+																	@endphp
+																	<span class="profile_img">
+																	@if($image_comment)
+																		<img class="radius50 float_left" src="{{ URL::asset('storage/' . $user_name_comment . '/profile_img/' . end($image_comment)) }}" alt="Profile image"  />
+																	@else
+																		<img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
+																	@endif
+																	</span>
+																@endif
+																
+																<pre class="comment_content" id="{{ $comment->id }}">{{ $comment['content'] }}</pre>
+																
+															</div>
+														</div>
+													</div>
+												@endforeach
+											@endif
+										@endif
+									@endif 
 								</div>
 							</div>
 						</main>
 						<form accept-charset="UTF-8" role="form" method="post" class="form_post {{ ($errors->has('content')) ? 'has-error' : '' }}" id="form_{{ $post->id }}" action="{{ route('comment.store') }}"  >
-							<input name="content" type="text" class="form-control type_message post-content" id="post-content_{{ $post->id }}" placeholder="Type message..." autocomplete="off" value="{{ old('content')  }}"  />
+							<textarea name="content" id="post-content_{{ $post->id }}" type="text" class="form-control type_message post-content" rows="10" cols="30" placeholder="Type message..." autocomplete="off" onkeypress="onKeyClick();">{{ old('content')  }}</textarea>
 							<img class="smile" src="{{ URL::asset('icons/smile.png') }}" alt="Profile image"  />
 							<input type="hidden" name="post_id" value="{{ $post->id }}"  >
 							<input type="hidden" name="user_id"  value="{{ Sentinel::getUser()->employee->id }}"  >
@@ -186,17 +231,15 @@
 </div>
 <span hidden id="employee_id">{{ Sentinel::getUser()->employee->id }}</span>
 <script>
-	$.getScript( '/../js/posts.js');
 	$(function(){
 		$('.placeholder').show();
 	});
-	
 </script> 
-<!-- <script>
+{{--  <script>
    window.laravel_echo_port='{{env("LARAVEL_ECHO_PORT")}}';
 	</script> -->
-<!-- 	<script type="text/javascript" src="{{ url('/js/socket.io.js') }}"></script> -->
-    <!-- <script src="//{{ Request::getHost() }}:{{env('LARAVEL_ECHO_PORT')}}/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="{{ url('/js/socket.io.js') }}"></script> 
+    <script src="//{{ Request::getHost() }}:{{env('LARAVEL_ECHO_PORT')}}/socket.io/socket.io.js"></script>
     <script src="{{ url('/js/laravel-echo-setup.js') }}" type="text/javascript"></script>
       
     <script type="text/javascript">
@@ -206,5 +249,5 @@
             i++;
             $("#notification").append('<div class="alert alert-success">'+i+'.'+data.title+'</div>');
         });
-    </script> -->
+    </script> --}}
 @stop

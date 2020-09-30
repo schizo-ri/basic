@@ -34,7 +34,7 @@
 		@stack('stylesheet')
 	</head>
 	<body>
-        <form class="form_sequence" id="notice_form" accept-charset="UTF-8" role="form" method="post" action="{{ route('notices.store') }}" enctype="multipart/form-data" >
+        <form class="form_sequence notice_create" id="notice_form" accept-charset="UTF-8" role="form" method="post" action="{{ route('notices.store') }}" enctype="multipart/form-data" >
             <section class="header_campaign">
                 <header>
                     {{ csrf_field() }}
@@ -185,7 +185,6 @@
             }
             $.getScript( '/../js/filter.js');  
 
-           /*  $.getScript( '/../js/validate2.js'); */
         </script>
 
 		<!--Awesome icons -->

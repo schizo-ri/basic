@@ -79,10 +79,7 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-	console.log($('#request_type').val());
-	$('#request_type').val() == 'IZL' ? $('.form-group.time').removeAttr('hidden') : '';
-
-	$( document ).ready(function() {
+$( document ).ready(function() {
 		$( "#request_type" ).change(function() {
 			if($(this).val() == 'IZL') {
 				$('.form-group.time').show();
@@ -99,8 +96,7 @@
 			var start_date = $( this ).val();
 			var end_date = $( "#end_date" );
 			end_date.val(start_date);
-		
 		});
 	});
-	$.getScript( '/../js/vacation_req.js');
+	$.getScript( '/../js/validate.js');
 </script>

@@ -11,6 +11,12 @@
 .link_back {
     color: inherit;
     text-decoration: none;
+   
+}
+.posts_index .link_back, .calendar_aside .link_back{
+    position: absolute;
+    top: 5px;
+    left: 16px;
 }
 .link_back:hover {
     color: #ccc;
@@ -177,7 +183,7 @@
 .all_agenda {
     clear: left;
     display: block;
-    height: calc(100% - 24px);
+    height: 90%;
 }
 .index_page.ads_index .index_main  {
     overflow: auto;
@@ -306,7 +312,7 @@ img.doc_icons {
     max-height: 90%;
     max-width: 90%;
 }
-.form_post input.type_message {
+.form_post input.type_message, .form_post textarea.type_message  {
     background: #F8FAFF;
     height: 100%;
     border-radius: 0 0 5px 5px;
@@ -357,6 +363,7 @@ img.doc_icons {
 
 .index_main .post_sent img, .index_main .post_sent >span {
     float: left;
+    text-align: left;
 }
 .index_main header.post_sent .link_back {
     display: none;
@@ -458,6 +465,8 @@ img.doc_icons {
     margin-bottom: 0;
     min-width: 100px;
     width: auto;
+    font-family: Montserrat, sans-serif;
+    white-space: pre-wrap;
 }
 
 .tabcontent .comments .message >div.right  {
@@ -686,7 +695,9 @@ class="select-css"
     position: relative;
     overflow: visible;
 }
-
+.show_event a {
+    width: 100%;
+}
 .main_calendar_month .show_event, .main_calendar_month .show_holiday {
     padding: 0;
     overflow: hidden;
@@ -736,6 +747,7 @@ class="select-css"
 }
 .show_event div.event {
     cursor: pointer;
+    margin-bottom: 5px;
 }
 
 .show_event > .blue {
@@ -884,6 +896,9 @@ class="select-css"
     padding: 10px 0;
     border-bottom: 1px solid #ccc;
 }
+.main_calendar_month table thead tr {
+    padding: 0;
+} 
 .td_week {
     text-align: center;
 }
@@ -908,6 +923,10 @@ class="select-css"
 
 .main_calendar_month table th {
     text-align: center;
+    position: sticky;
+    top: -1px;
+    z-index: 1;
+    background: white;
 }
 
 .main_calendar_month table td {
@@ -916,6 +935,7 @@ class="select-css"
     padding: 5px;
     cursor: pointer;
 }
+
 .main_calendar_month table td a {
     display: block;
 }
@@ -934,7 +954,7 @@ class="select-css"
 }
 
 .main_calendar_month table td.selected_day {
-    border: 2px solid #1694f0;
+    border: 4px solid #1694f0;
 }
 
 .header_calendar>div:nth-child(2) >span {
@@ -990,7 +1010,15 @@ class="select-css"
     padding: 0;
     font-style: normal;
     font-size: 0.813rem;
-    color: #071E57;
+    margin-bottom: 7px;
+    color: white;
+}
+.month_event.week {
+    color: black;
+    border: none;
+    padding: 5px 20px;
+    margin: 0;
+    font-weight: 600;
 }
 .month_event >a {
     width: 100%;
@@ -1683,12 +1711,14 @@ footer.ad_footer {
 }
 
 .index_page table.dataTable.no-footer, .index_page table.display.table {
-    border-bottom: none;
-    display: none;
+   /*  border-bottom: none; */
+  /*   display: none; */
 }
-
+.employee_view table.dataTable {
+    border: 1px solid #ccc;
+}
 .index_page table.dataTable tbody tr {
-    height: fit-content;
+   /*  height: 80px; */
 }
 
 .index_page table.dataTable.stripe tbody tr.odd, .index_page table.dataTable.display tbody tr.odd, .index_page table.dataTable.stripe tbody tr.even, .index_page table.dataTable.display tbody tr.even,.index_page table.dataTable.display tbody tr.odd>.sorting_1, .index_page table.dataTable.order-column.stripe tbody tr.odd>.sorting_1, .index_page table.dataTable.display tbody tr.even>.sorting_1, .index_page table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
@@ -1808,6 +1838,7 @@ footer.ad_footer {
 
 .index_page table.dataTable  {
     font-size: 0.75rem;
+    position: relative;
 }
 
 .index_page table.dataTable thead {
@@ -2070,7 +2101,9 @@ footer.ad_footer {
 .second_view {
     display: none;
 }
-
+.main_work_records .second_view {
+    display: block;
+}
 main.users_main .second_view {
     position: relative;
     padding: 0 10px 35px 10px;
@@ -2099,6 +2132,9 @@ main.users_main .second_view {
 }
 .user_card a.show_user {
     width: 100%;
+}
+.show_user>svg.fa-eye  {
+    margin-left: 10px;
 }
 .second_view .user_card > div {
     background: inherit;
@@ -2406,11 +2442,10 @@ main.index_main.main_absence >section {
     margin-right: 20px;
 }
 .curve_arrow_left_grey {
-    background: url('../icons/curve_arrow_left_grey.png') no-repeat;
+    background: url(../icons/curve_arrow_left_grey.png) no-repeat;
     width: 22px;
     height: 14px;
     display: inline-block;
-    margin-right: 20px;
 }
 .back_to_prev {
     margin: 0;
@@ -2534,6 +2569,7 @@ main.all_absences >section {
     color: #FFFFFF;
     display: block;
     margin-bottom: 25px;
+    text-align: left;
 }
 
 .info_abs>p, .info_abs>p>.go, .info_abs>p>.go_pg, .info_abs>p>.bol, .info_abs>p>.bol_pg, .info_abs>p>.bol_om {
@@ -2796,7 +2832,7 @@ label.add_new {
     font-size: 0.75rem;
     line-height: 15px;
     color: #2B2B2B;
-    padding: 25px 10px;
+  /*   padding: 25px 10px; */
 }
 #index_table1.table_work_record {
     border: 1px solid #ccc;
@@ -2824,12 +2860,8 @@ label.add_new {
 .table tbody td a {
     font-size: 0.875rem;
 }
-table.dataTable#index_table tbody tr {
-    height: 80px;
-}
+
 table.dataTable#index_table tbody td:last-child {
-    padding: 0;
-    padding-top: 25px;
     min-width: 100px;
     text-align: left;
 }
@@ -2844,6 +2876,8 @@ table.dataTable#index_table tbody td:last-child > a {
     /* width: calc(100% - 25px); */
     /* float: left; */
     text-align: left;
+ /*    padding: 3px 0; */
+    padding-right: 5px;
 }
 .main_questionnaire table.dataTable td a.qname, .main_questionnaire table.dataTable td span.qname  {
     font-weight: 600;
@@ -2862,12 +2896,15 @@ table.dataTable#index_table tbody td:last-child > a {
 }
 .main_calendar_week table tbody td, .main_calendar_week table thead th {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    
+    vertical-align: top;
     padding: 10px;
     min-height: 90px;
     width: 12.5%;
-    
     text-align: center;
+}
+.main_calendar_week table tbody tr {
+    min-height: 90px;
+    height: 50px;
 }
 .main_calendar_week table tbody tr td:not(:last-child), .main_calendar_week table thead tr th:not(:last-child) {
     border-right: 1px solid rgba(0, 0, 0, 0.1);
@@ -2881,9 +2918,7 @@ table.dataTable#index_table tbody td:last-child > a {
     color: #071E57;
     text-align: center;
 }
-.main_calendar_week table tbody tr {
-    min-height: 90px;
-}
+
 .main_calendar_week table thead th {
     font-weight: 500;
     font-size: 0.813rem;
@@ -2923,6 +2958,9 @@ table.dataTable#index_table tbody td:last-child > a {
 .change_view2 {
     display: none;
     background: url(../icons/view2.png) no-repeat center;
+}
+.work_record_header .change_view2 {
+    display: block;
 }
 button.show_loccos {
     float: right;
@@ -2969,7 +3007,7 @@ button.show_loccos {
     color: #2B2B2B;
 }
 .evidention_employee .page-header {
-    padding: 0 20px;
+    padding: 10px 20px;
     overflow: hidden;
     margin-bottom: 0;
     border-bottom: 1px solid #e1e0e1;
@@ -2979,7 +3017,7 @@ main.index_main>section.section_evidention {
 }
 .section_evidention .index_table_filter {
     background: inherit;
-    padding: 0 0 20px;
+    padding: 0;
 }
 .section_evidention .index_table_filter p {
     margin: 0;
@@ -3163,7 +3201,7 @@ input[type="search"]::-webkit-search-cancel-button {
     margin-left: 2%;
 }
 
-.index_page.index_profile .user_interest .profile_images {
+.index_page.index_profile .user_interest .profile_images,.profile_images {
     height: 215px;
     width: auto;
     margin: 25px 0;
@@ -3361,7 +3399,9 @@ a.chat{
     width: fit-content;
     max-width: 100%;
 }
-
+.modal a.modal_close {
+    margin: 20px;
+}
 a.modal_close {
     line-height: 35px;
     font-weight: 500;
@@ -3492,7 +3532,6 @@ a.modal_close {
         padding: 0;
     }
     .index_page aside {
-        overflow: visible;
         scrollbar-width: thin;
         height: 100%;
     }
@@ -3863,15 +3902,7 @@ a.modal_close {
 }
 
 @media (max-width: 450px) {
-    header.header_nav {
-        height: 50px;
-		display: block;
-		z-index: 2;
-		min-height: auto;		
-        padding: 0 10px;
-        position: sticky;
-        top: 0;
-    }
+    
     main.main_campaign {
         height: auto;
         overflow: hidden;
@@ -3940,7 +3971,7 @@ a.modal_close {
     .container .posts .all_post {
         width: 100%;
         height: auto;
-        overflow: auto;
+        overflow: hidden;
         scrollbar-width: thin;
         padding: 0;
         margin: 0;
@@ -3984,7 +4015,6 @@ a.modal_close {
     }
    .container >section:first-child, .container >section:last-child {
         margin:0;
-        margin-bottom: 10px;
     }
     .container .noticeboard {
         padding: 10px;
@@ -4021,13 +4051,20 @@ a.modal_close {
         margin: auto;
         height: auto;
         margin-bottom: 20px;
-        padding: 0 20px;
-    }
-    .index_page aside {
         padding: 0;
+        height: 100%;
+        width: 100%;
+        max-width: 100%;
+        max-height: 100vh;
+        overflow: auto;
+        scrollbar-width: thin;   
     }
     .index_page aside:not(.calendar_aside):not(.latest_messages):not(.admin_aside) {
         display: none;
+    }
+    .index_page aside.latest_messages .posts {
+        box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
+        height: calc(100% - 60px);
     }
     .index_page {
         overflow: auto;
@@ -4044,25 +4081,12 @@ a.modal_close {
     .index_aside .day_events .day_events_data>span:first-child {
         width: 100%;
     }
-    .index_page aside {
-        margin: auto;
-        height: 100%;
-        margin-bottom: 20px;
-        width: 100%;
-        max-width: 100%;
-        padding: 0 10px;
-        max-height: 100vh;
-        overflow: auto;
-        scrollbar-width: thin;   
-    }
+   
     .latest_messages .search_input {
         margin: 10px 0;
         width: 100%;
     }
-    .index_page aside.latest_messages .posts {
-        box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
-        height: calc(100% - 60px);
-    }
+   
     .table-responsive .table thead th {
         min-width: 33%;
     }
@@ -4623,13 +4647,13 @@ a.modal_close {
     padding-left: 10px
 }
 
-.red_rad {
+#index_table1.table_work_record tr td.red_rad {
     background-color: #ccffb3;
 }
-.abs_GO {
+#index_table1.table_work_record tr td.abs_GO {
     background-color: #ffffb3;
 }
-.abs_BOL {
+#index_table1.table_work_record tr td.abs_BOL {
     background-color: #ffcce6;
 }
 

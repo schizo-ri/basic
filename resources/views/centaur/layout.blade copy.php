@@ -65,7 +65,7 @@
 						<ul class="nav_ul float_right">
 							@if (Sentinel::check())
 								@if(Sentinel::inRole('administrator'))
-									<li><a id="open-admin" href="{{ route('admin_panel') }}" title="{{ __('basic.open_admin')}}"  >
+									<li><a id="open-admin" href="{{ route('admin') }}" title="{{ __('basic.open_admin')}}"  >
 										<img class="img_button" src="{{ URL::asset('icons/flash.png') }}" alt="messages" title="{{ __('basic.open_admin')}}" /></a>
 									</li>
 								@endif

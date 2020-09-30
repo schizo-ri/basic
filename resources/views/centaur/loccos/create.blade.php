@@ -64,7 +64,8 @@
 			</div>
 			<div class="form-group {{ ($errors->has('start_km'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.start_km')</label>
-				<input class="form-control" name="start_km" type="number" id="start_km" required value="{!! $car_employee ? $car_employee->current_km : '' !!}"/>	
+				<input class="form-control" name="start_km" type="hidden" id="start_km" required value="{!! $car_employee ? $car_employee->current_km : '' !!}" />	
+				<p id="start_km_text">{!! $car_employee ? $car_employee->current_km : '' !!}</p>
 				{!! ($errors->has('start_km') ? $errors->first('start_km', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('end_km'))  ? 'has-error' : '' }}">
@@ -79,11 +80,11 @@
 			</div>
 			<div class="form-group">
 				<label>@lang('basic.comment')</label>
-				<textarea class="form-control" name="comment" >{{ old('comment') }}</textarea>
+				<textarea class="form-control" name="comment" id="comment">{{ old('comment') }}</textarea>
 			</div>
 			<div class="servis form-group">
-				<label for="servis">@lang('basic.malfunction')</label>
-				<input class="" type="checkbox" name="servis" value="servis" id="servis" value=""/>
+				<label for="wrong_km">@lang('basic.wrong_km')</label>
+				<input class="" type="checkbox" name="wrong_km"  id="wrong_km" value=""/>
 			</div>
 			<div class="servis form-group">
 				<label for="travel">@lang('basic.create_travel')</label>
@@ -96,44 +97,67 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-	$.getScript( '/../js/validate.js');
-	$('#end_km').change(function() {
-		var poc_km = $('#start_km').val();
-		var zav_km = $('#end_km').val();
-		var udaljenost = zav_km - poc_km;
-		console.log(udaljenost);
-		$('#distance').val(udaljenost);
-		if (udaljenost < 0 ) {
-			$('#distance').css('border','1px solid red');
-			$('.btn-submit').attr('disabled', 'disabled');
-		} else {
-			$('#distance').css('border','1px solid #F0F4FF');
-			$('.btn-submit').attr('disabled', 'false');
-		}
+	$(function() {
+		var current_km;
+
+		$('#end_km').change(function() {
+			var poc_km = $('#start_km').val();
+			var zav_km = $('#end_km').val();
+			var udaljenost = zav_km - poc_km;
+			$('#distance').val(udaljenost);
+			if (udaljenost < 0 ) {
+				$('#distance').css('border','1px solid red');
+				$('.btn-submit').attr('disabled', 'disabled');
+			} else {
+				$('#distance').css('border','1px solid #F0F4FF');
+				$('.btn-submit').attr('disabled', 'false');
+			}
+		});
+
+		$('#car_id').change(function(){
+			var car_id = $( this ).val();
+			try {
+				var token = $('meta[name="csrf-token"]').attr('content');
+				$.ajaxSetup({
+					headers: {
+						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+					}
+				});
+				$.ajax({
+					url:  "last_km", 
+					type: 'post',
+					data: {
+							'_token':  token,
+							'car_id': car_id,                   
+						}
+				})
+				.done(function( response ) {     
+					current_km = response;
+					$('#start_km').val(current_km);
+					$('#start_km_text').text(current_km);
+				})
+				.fail(function() {
+					alert( "Nije uspjelo" );
+				})
+			} catch (error) {
+				
+			}
+		});
+
+		$('#wrong_km').change(function(){
+			if ( $( this ).prop( "checked" ) ) {
+				$("#start_km_text").hide();
+				$("#start_km").attr('type','number');
+				$( '#comment').attr('required', 'true');
+			} else {
+				$("#start_km_text").show();
+				$("#start_km").val( current_km );
+				$("#start_km").attr('type','hidden');
+				$( '#comment').attr('required', 'false');
+			}
+		});
 	});
 
-	$('#car_id').change(function(){
-		var car_id = $( this ).val();
-		try {
-			var token = $('meta[name="csrf-token"]').attr('content');
-			$.ajax({
-				url:  "last_km", 
-				type: 'post',
-				data: {
-						'_token':  token,
-						'car_id': car_id,                   
-					}
-			})
-			.done(function( response ) {     
-				var current_km = response;
-				console.log(current_km);  
-				$('#start_km').val(current_km);
-			})
-			.fail(function() {
-				alert( "Nije uspjelo" );
-			})
-		} catch (error) {
-			
-		}
-	});
+	$.getScript( '/../js/validate.js');
+	
 </script>

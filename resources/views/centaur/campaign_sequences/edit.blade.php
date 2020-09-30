@@ -35,7 +35,7 @@
 		@stack('stylesheet')
 	</head>
 	<body>
-		<form class="form_sequence" accept-charset="UTF-8" role="form" method="post" action="{{ route('campaign_sequences.update', $campaign_sequence->id ) }}">
+		<form class="form_sequence edit" accept-charset="UTF-8" role="form" method="post" action="{{ route('campaign_sequences.update', $campaign_sequence->id ) }}">
 			<section class="header_campaign">
 				<input type="hidden" name="campaign_id" id="campaign_id" value="{{  $campaign_sequence->campaign_id }}">
 				<input type="hidden" name="id" id="id" value="{{  $campaign_sequence->id }}">

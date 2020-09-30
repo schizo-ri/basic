@@ -47,7 +47,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->get();
+        $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->where('active',1)->get();
         $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		$departmentRoles = DepartmentRole::get();
 		$works = Work::get();
@@ -134,7 +134,7 @@ class UserController extends Controller
         $employee->saveEmployee( $data_employee );
 
         $result->setMessage("User {$request->get('email')} has been created.");
-        return $result->dispatch(route('users.index'));
+        return redirect()->back();
    
         if ($request->hasFile('fileToUpload')) {
             $image = $request->file('fileToUpload');

@@ -53,12 +53,14 @@ class TableController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TableRequest $request)
+    public function store(Request $request)
     {
         $data = array(
 			'name'  		=> $request['name'],
 			'description'   => $request['description'],
-			'emailing'	 	=> $request['emailing']
+			'emailing'	 	=> $request['emailing'],
+			'shortcut_i'	=> $request['shortcut_i'],
+			'shortcut_c'	=> $request['shortcut_c'],
 		);
 		
 		$table = new Table();
@@ -100,14 +102,16 @@ class TableController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(TableRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $table = Table::find($id);
 		
 		$data = array(
 			'name'  		=> $request['name'],
 			'description'   => $request['description'],
-			'emailing'	 	=> $request['emailing']
+			'emailing'	 	=> $request['emailing'],
+			'shortcut_i'	 => $request['shortcut_i'],
+			'shortcut_c'	 => $request['shortcut_c'],
 		);
 		
 		$table->updateTable($data);

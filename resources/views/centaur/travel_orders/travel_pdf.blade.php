@@ -20,11 +20,11 @@
 						<div class="approval" >
 							<h4 style="text-transform: uppercase;">Odobrenje</h4>
 							<p>Određujem da {{ $travel->employee->user['first_name'] . ' ' .  $travel->employee->user['last_name'] }}
-								zaposlenik našeg poduzeća, dana {{ date('d.m.Y H:i', strtotime($travel->start_date )) }}</p> 
+								zaposlenik našeg poduzeća, dana {{ date('Y-m-d', strtotime($travel->start_date )) }}</p> 
 							<p>službeno otputuje u {{ $travel->destination }} sa zadaćom {{ $travel->description }}</p> 
 							<p>Putovanje može trajati {{ $travel->days }} dana.</p> 
 							<div class="aproveBy" style="width:100%, display:block; clear: right; " >
-								<p class="col-4" style="float: right;" >Odobrio: <img src="{{ public_path() . '\img\signature.jpg' }}" alt="Potpis" style="max-height: 40px;margin-left: 20px;" /></p> 
+								<p class="col-4" style="float: right;" >Odobrio: <img src="{{ public_path() . '/img/signature.jpg' }}" alt="Potpis" style="max-height: 40px;margin-left: 20px;" /></p> 
 							</div>
 						</div>
 						<div class="calculation" >
@@ -51,8 +51,21 @@
 												$date_diff = $date2->diff($date1);
 												$sati = $date_diff->h + ($date_diff->d*24);
 												$dnevnice = $date_diff->d;
-												if($date_diff->h >= 12) {
-													$dnevnice ++;
+												if($dnevnice == 0 && $date_diff->h != 0 ) {
+													if($date_diff->h >= 8 && $date_diff->h < 12) {
+														$dnevnice += 0.5; 
+													} else if ($date_diff->h >= 12) {
+														$dnevnice += 1; 
+													}
+												} else {
+													if($date_diff->h != 0) {
+														if($date_diff->h < 12) {
+															$dnevnice += 0.5; 
+														} else if ($date_diff->h >= 12) {
+															$dnevnice += 1; 
+														}
+													}
+													
 												}
 												$total_sum = 0.00;
 												$start = date('d.m.Y H:i', strtotime($travel->start_date ));
@@ -77,24 +90,34 @@
 											<th class="th col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">Od</th>
 											<th class="th col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">Do</th>
 											<th class="th col-2" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">km</th>
-											<th class="th col-2" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">Cijena / 1 km</th>
+											<th class="th col-2" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">Cijena / 1 km</th>
 											<th class="th col-2" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">Iznos</th>
 										</tr>
 									</thead>
 									<tbody class="tbody" style="width:100%;max-width:100%;">
-										@if (count($travel->loccos) > 0)
-											@foreach ($travel->loccos as $locco1)
-											@php
-												if ($travel->car['private_car'] == 1) {
-													$total_sum += $locco1->distance * 2;
-												}
-											@endphp
+										@if ( $locco )
+											<tr class="tr" style="width:100%;max-width:100%;">
+												<td class="td col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $locco->starting_point }}</td>
+												<td class="td col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $locco->destination }}</td>
+												<td class="td col-2 distance align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{strval( $locco->distance )}}</td>
+												<td class="td col-2 km_price align_r" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">{!! $travel->car['private_car'] == 1 ? 2.00 : '' !!}</td>
+												<td class="td col-2 summary align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{!! $travel->car['private_car'] == 1 ? number_format($locco->distance * 2, 2, '.', ' ') : '' !!}</td>
+											</tr>
+											
+										@endif
+										@if (count($loccos) > 0)
+											@foreach ($loccos as $locco1)
+												@php
+													if ($travel->car['private_car'] == 1) {
+														$total_sum += $locco1->distance * 2;
+													}
+												@endphp
 												<tr class="tr" style="width:100%;max-width:100%;">
 													<td class="td col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $locco1->starting_point }}</td>
 													<td class="td col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $locco1->destination }}</td>
 													<td class="td col-2 distance align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{strval( $locco1->distance )}}</td>
-													<td class="td col-2 km_price align_r" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{!! $travel->car['private_car'] == 1 ? 2.00 : '' !!}</td>
-													<td class="td col-2 summary align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{!! $travel->car['private_car'] == 1 ? number_format($locco1->distance * 2, 2, '.', ' ') : '' !!}</td>
+													<td class="td col-2 km_price align_r" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">{!! $travel->car['private_car'] == 1 ? 2.00 : '' !!}</td>
+													<td class="td col-2 summary align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{!! $travel->car['private_car'] == 1 ? number_format($locco1->distance * 2, 2, '.', ' ') : '' !!}</td>
 												</tr>
 											@endforeach
 										@else
@@ -129,7 +152,6 @@
 										@php
 											$total_sum += $expense->total_amount;
 										@endphp
-
 											<tr class="tr expences" style="width:100%;max-width:100%;">
 												<td class="td col-2" style="width: 15%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $expense->bill }}</td>
 												<td class="td col-5" style="width:45%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $expense->cost_description }}</td>
@@ -157,7 +179,7 @@
 						</div>
 					</main>
 					<footer>
-						<p>Primljen predujam dana {{ date('d.m.Y', strtotime($travel->advance_date)) }} u iznosu {{ number_format( $travel->advance, 2, '.', ' ') }} Kn</p>
+						<p>Primljen predujam dana {!! $travel->advance_date ? date('d.m.Y', strtotime($travel->advance_date)) : '________' !!} u iznosu {{ number_format( $travel->advance, 2, '.', ' ') }} Kn</p>
 						<p>Ostaje za isplatu / povrat {{ number_format( $travel->rest_payout, 2, '.', ' ')}} Kn</p>
 						<p>Podnositelj obračuna {{ $travel->employee->user['first_name'] . ' ' .  $travel->employee->user['last_name'] }}
 						</p>
@@ -169,6 +191,7 @@
 			total_sum();
 			function total_sum() {
 				var total = 0;
+				var advance = $('#advance').val();
 				$( ".total_sum" ).each(function( index ) {
 					var value = '';
 					if ( $( this ).val() != '') {
@@ -182,7 +205,12 @@
 					}
 				});
 				$('#total_sum').text(total.toFixed(2));
+				if(advance) {
+					total = total-advance;
+				}
+				$('#rest_payout').val(total.toFixed(2));
 			}
+
 		</script>
 	</body>
 </html>

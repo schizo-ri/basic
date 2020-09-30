@@ -19,7 +19,7 @@
 					@if($docs)
 						<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($docs)) }}"  alt="Profile image"  />
 					@else
-						<img class="radius50" src="{{ URL::asset('img/profile.png') }}"  alt="Profile image"  />
+						<img class="radius50" src="{{ URL::asset('img/profile.svg') }}"  alt="Profile image"  />
 					@endif
 					<form action="{{ route('documents.store') }}" method="post" enctype="multipart/form-data" style="text-align:left;">
 						<div class="inputWrapper">

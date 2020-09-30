@@ -7,7 +7,7 @@
 			<label>@lang('basic.employee')</label>
 			<select class="form-control" name="employee_id" value="{{ $work_record->employee_id }}" autofocus required >
 				@foreach ($employees as $employee)
-					<option value="{{$employee->id}}" {!! $work_record->employee_id == $employee->id ? 'selected' : '' !!}>{{ $employee->user['last_name']  . ' ' . $employee->user['first_name'] }}</option>
+					<option value="{{$employee->id}}" {!! $work_record->employee_id == $employee->id ? 'selected' : '' !!}>{{ $employee->first_name . ' ' . $employee->last_name }}</option>
 				@endforeach	
 			</select>
 			{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}

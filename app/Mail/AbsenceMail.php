@@ -52,6 +52,7 @@ class AbsenceMail extends Mailable
             $view = 'Centaur::email.absence';
             $subject =__('emailing.new_absence');
         }
+  
         return $this->view($view) 
                     ->subject( $subject . ' ' . $this->absence->absence['name'] . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])
                     ->with([

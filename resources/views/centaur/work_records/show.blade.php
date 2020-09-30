@@ -1,6 +1,6 @@
 @extends('Centaur::layout')
 
-@section('title', 'Evidencija o radnom vremenu_' . $employee->user['first_name'] .'_'. $employee->user['last_name'] .'_'. $month)
+@section('title', 'Evidencija ' . '_'. $employee->user['last_name'] .'_'. $month)
 @php
 	use App\Models\WorkRecord;
 	use App\Http\Controllers\AbsenceController;
@@ -12,7 +12,7 @@
 		<section class="section_evidention">
 			<div class="page-header">
 				<div class="index_table_filter">
-					<h5>Evidencija o radnom vremenu radnika</h5>
+					<h5><span class="link_back"><a href="{{ url()->previous() }}"><span class="curve_arrow_left_grey"></span></a></span> Evidencija o radnom vremenu radnika za {{ $month }}</h5>
 					<p>{{ $employee->user['last_name'] .' '. $employee->user['first_name'] }}</p>
 				</div>
 			</div>
@@ -23,7 +23,7 @@
 							<thead>	
 								<tr>
 									<th></th>
-									<th colspan="">{{ date('m-Y',strtotime($month))}}</th>
+									<th colspan=""></th>
 									@foreach($list as $day)
 									<?php 
 										$dan1 = date('D', strtotime($day));
@@ -66,7 +66,7 @@
 											$work = $work_records->where('start','>', date('Y-m-d',strtotime($day2)) . ' 00:00:00')->where('start','<', date('Y-m-d',strtotime($day2)). ' 23:59:59')->first();
 											if($work) {
 												$start_time = strtotime($work->start);
-												if($start_time >= strtotime($day2 .' 07:00:00') && $start_time <= strtotime($day2 .' 08:15:00') ) {
+												if($start_time >= strtotime($day2 .' 07:15:00') && $start_time <= strtotime($day2 .' 08:15:00') ) {
 													$start = '08:00';
 												} else {
 													$start = date('H:i',$start_time );
@@ -90,7 +90,7 @@
 												if($work->end) {
 													$end_time = strtotime($work->end);
 													if(date('N',strtotime($day2)) < 5 ) {
-														if($end_time >= strtotime($day2 .' 15:45:00') && $end_time <= strtotime($day2 .' 17:00:00') ) {
+														if($end_time >= strtotime($day2 .' 16:15:00') && $end_time <= strtotime($day2 .' 17:00:00') ) {
 															$end = '16:15';
 														} else {
 															$end = date('H:i',$end_time );
@@ -142,8 +142,10 @@
 											$minutes += strstr($interval, ':', true) * 60; 
 											$minutes += intval(str_replace(':','',strstr($interval, ':'))); 
 											$sum[date('Y-m-d',strtotime($day2))] += $minutes;
+											if($interval )
+												
 										@endphp
-										<td class="sum_rr">{{$interval}}</td>
+										<td class="sum_rr">{{ $interval }}</td>
 									@endforeach
 									<td class="total_rr total_sum"></td>
 								</tr>
@@ -439,7 +441,7 @@
 											}
 											$locco_day = $loccos->where('hasDate',true)->first();
 										@endphp
-										<td class="font_8">{!! $trav ? 'PN - ' . $trav->car->car_index : ''  !!} {!! $locco_day ? 'L - ' . $locco_day->car->car_index : ''  !!}</td>
+										<td class="font_8">{!! $trav ? 'PN - ' . $trav->car->car_index : '' !!} {!! $locco_day ? 'L - ' . $locco_day->car->car_index : ''  !!}</td>
 									@endforeach
 									<td ></td>
 								</tr>
@@ -808,11 +810,13 @@
 				value = $( this ).text();
 				
 			}
-			minutes_rr += Number(value.substr(0, 1) * 60);
-			minutes_rr += Number(value.substr(2, 3));
-			hour = Math.floor(Number( minutes_rr )/60);
-			minutes = Number(minutes_rr) - Number(hour)*60;
-			total_rr = hour + ':' + ("0"+minutes).slice(-2);
+			if(value) {
+				minutes_rr += Number(value.substr(0, value.search(':')) * 60);
+				minutes_rr += Number(value.substr(value.search(':')+1, 3));
+				hour = Math.floor(Number( minutes_rr )/60);
+				minutes = Number(minutes_rr) - Number(hour)*60;
+				total_rr = hour + ':' + ("0"+minutes).slice(-2);
+			}
 			
 		});
 		$('.total_rr').text(total_rr);

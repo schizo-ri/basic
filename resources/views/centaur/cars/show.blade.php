@@ -1,5 +1,5 @@
 <div class="modal-header">
-	<h3 class="panel-title">@lang('basic.add_car')</h3>
+	<h3 class="panel-title">@lang('basic.car')</h3>
 </div>
 <div class="modal-body">
 	<label for="">@lang('basic.manufacturer')</label>

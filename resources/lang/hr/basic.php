@@ -117,6 +117,7 @@ return [
 	'add_ad'	=> 'Dodaj oglas',
 	'edit_ad'	=> 'Ispravi oglas',
 	'price'	=> 'Cijena',
+	'amount'	=> 'Iznos',
 	'search'	=> 'Traži',
 	'posts'		=> 'Poruke',
 	'post'		=> 'Poruka',
@@ -150,6 +151,7 @@ return [
 	'view_all'		=> 'Vidi sve',
 	'all_cars'		=> 'Sva vozila',
 	'all_month'		=> 'Svi mjeseci',
+	'all_years'		=> 'Sve godine',
 	'all_employees'	=> 'Svi djelatnici',
 	'notices'		=> 'Obavijesti',
 	'notice'		=> 'Obavijest',
@@ -267,6 +269,7 @@ return [
 	'manufacturer'		=> 'Proizvođač',
 	'license_plate'		=> 'Registracija',
 	'chassis'			=> 'Šasija',
+	'vehicle_registration' => 'Registracija vozila',
 	'first_registration'=> 'Prva registracija',
 	'last_registration' => 'Zadnja registracija',
 	'current_km' 		=> 'Trenutni kilometri',
@@ -276,6 +279,7 @@ return [
 	'start_km' 			=> 'Početni kilometri',
 	'end_km' 			=> 'Završni kilometri',
 	'malfunction' 		=> 'Prijava kvara',
+	'wrong_km' 			=> 'Prijava krivih kilometara',
 	'distance' 			=> 'Udaljenost',
 	'fuel' 				=> 'Gorivo',
 	'add_fuel' 			=> 'Dodaj gorivo',
@@ -298,6 +302,7 @@ return [
 	'value' 			=> 'Vrijednost',
 	'checkout' 			=> 'Odjava',
 	'color' 			=> 'Boja (boja pozadine u kalendaru za zadatke)',
+	'color_shortcuts' 	=> 'Boja (boja okvira gumba)',
 	'abs_days' 			=> 'Početni dani godišnjeg odmora',
 	'add'				=> 'Dodaj',
 	'view_monthly'		=> 'Mjesečno',
@@ -352,7 +357,10 @@ return [
 	'private_car' 		=> 'Privatno vozilo',
 	'decree' 			=> 'Odluka uprave',
 	'top_image' 		=> 'Slika obavijesti',
-		
+	'shortcut' 			=> 'Prečac',
+	'shortcuts' 		=> 'Prečaci',
+	'add_shortcut' 		=> 'Dodaj prečac',
+	'edit_shortcut' 	=> 'Ispravi prečac',		
 ];	
 
 ?>

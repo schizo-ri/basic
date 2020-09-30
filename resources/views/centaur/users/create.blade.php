@@ -1,7 +1,3 @@
-<span class="mark_lines">
-    <span class="mark1"></span>
-    <span class="mark2"></span>
-</span>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <div class="modal-header">
     <h3 class="panel-title">@lang('basic.create_user')</h3>
@@ -78,5 +74,5 @@
     </form>
 </div>
 <script>
-    $.getScript('/js/validate_user.js');
+    $.getScript('/js/validate.js');
 </script>

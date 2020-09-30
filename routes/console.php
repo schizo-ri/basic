@@ -37,3 +37,7 @@ Artisan::command('email:campaign', function () {
 Artisan::command('check_out', function () {
     $this->comment(CheckOut::quote());
 })->describe('Display an workrecord quote');
+
+Artisan::command('car_registration', function () {
+    $this->info("Registracija vozila!");
+});

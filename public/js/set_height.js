@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+$(function() {
     var body_width = $('body').width();
     var body_height = $('body').height();
     var header_height = $('header.header_nav').height();
@@ -13,7 +13,7 @@ $( document ).ready(function() {
     }
 });
 
-$( window ).resize(function() {
+$( window ).on('resize',function() {
     var body_width = $('body').width();
     var body_height = $('body').height();
     var header_height = $('header.header_nav').height();

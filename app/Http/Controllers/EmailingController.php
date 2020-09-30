@@ -240,7 +240,8 @@ class EmailingController extends Controller
         $emailings = Emailing::get();
         $send_to = array();
         $departments = Department::get();
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+       /*  $employees = Employee::where('id','<>',1)->where('checkout',null)->get(); */
+        $employees = Employee::where('checkout',null)->get();
 
         if(isset($emailings)) {
             foreach($emailings as $emailing) {
@@ -260,6 +261,6 @@ class EmailingController extends Controller
             }
         }
 
-        return $send_to;
+        return array_unique($send_to);
     }
 }

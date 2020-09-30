@@ -8,6 +8,8 @@ return [
 	'email_send'			=> 'E-mail was sent',
 	'new_article'			=> 'New article',
 	'new_absence'			=> 'Absence request',
+	'edit_absence'			=> 'Update request ',
+
 	'new_article_publish'	=> 'A new educational article has been published on the portal',
 	'new_questinnaire_publish'=> 'A new questinnaire is published on the portal.',
 	'to_change_password'	=> 'To change your password',
@@ -16,12 +18,13 @@ return [
 	'thank_you'				=> 'Thank you!',
 	'new_notice'			=> 'New notice',
 	'new_notice_on_app'		=> 'A new announcement has been posted on the portal',
-	'click_to_see'				=> 'Click to see the notification',
-	'day_absence'				=> 'Employee absences for date ',
-	'not_send'					=> 'E-mail not sent, something went wrong!',
-	'no_mail'					=> 'E-mail not sent, no department email!',
-	'campaign_start'			=> 'Campaign is launched',
-	'campaign_error'			=> 'Unable to start campaign, no sequences entered',
-	
+	'click_to_see'			=> 'Click to see the notification',
+	'day_absence'			=> 'Employee absences for date ',
+	'not_send'				=> 'E-mail not sent, something went wrong!',
+	'no_mail'				=> 'E-mail not sent, no department email!',
+	'campaign_start'		=> 'Campaign is launched',
+	'campaign_error'		=> 'Unable to start campaign, no sequences entered',
+	'store'					=> 'Store',
+	'save_calendar'			=> 'Store to calendar'
 ];
 ?>

@@ -7,10 +7,10 @@ use App\Models\Ads;
 ?>
 @section('content')
 <div class="index_page ads_index">
-	
 	<main class="col-xs-12 col-sm-12 col-md-12 index_main float_right">
 		<section>
 			<div class="page-header header_document">
+				<a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a>
 				@lang('basic.ads')
 			</div>
 			<header class="header_ads">
@@ -96,7 +96,7 @@ use App\Models\Ads;
 												@if($profile_img)
 													<img class="radius50 " src="{{ URL::asset($path_profile . end($profile_img)) }}" alt="Profile image"  />
 												@else
-													<img class="radius50 profile_img" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+													<img class="radius50 profile_img" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 												@endif
 											</span>
 											<p class="employee">

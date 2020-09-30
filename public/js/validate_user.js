@@ -42,12 +42,12 @@ $('.second_tab').height(first_tab_height);
 
 roles = $('.roles');
 
-$('input[type="file"]').change(function(e){
+$('input[type="file"]').on('change',function(e){
     fileName = e.target.files[0].name;
     $('#file_name').text(fileName);
 });
 
-$('.roles').change(function(event){
+$('.roles').on('change',function(event){
     if( roles.is(':checked')) {
         validate2.push(true);
     } else {
@@ -55,47 +55,7 @@ $('.roles').change(function(event){
     }
 });
 
-console.log("validate2" + validate2);
-
-$('.btn-submit').click(function(event){
-    password = $("#password");
-    conf_password = $("#conf_password"); 
-
-    if(password.val().length > 0 ) {
-        if( password.val().length < 6) {
-            if( password.parent().find('.validate').length  == 0 ) {
-                password.parent().append(' <p class="validate">' + validate_password_lenght + '</p>');
-            } else {
-                password.parent().find('.validate').text(validate_password_lenght);  
-            }
-            validate2.push("block");
-        } else {
-            password.parent().find('.validate').text("");     
-            if( ! conf_password.val() || (password.val() != conf_password.val()) ) {
-            if( conf_password.parent().find('.validate').length  == 0 ) {                
-                    conf_password.parent().append(' <p class="validate">' + validate_passwordconf + '</p>');
-                }
-                validate2.push("block");
-            } else {
-                conf_password.parent().find('.validate').text("");     
-                validate2.push(true);
-            }
-        }
-    }
-
-
-    if( validate2.includes("block") ) {
-        event.preventDefault();
-
-        if( roles.parent().parent().find('.validate').length  == 0 ) {                
-            roles.parent().parent().append(' <p class="validate">' + validate_role + '</p>');
-        }
-    } else {
-            roles.parent().find('.validate').text("");
-    }
-});
-
-$('.btn-next').click(function(event){
+$('.btn-next').on('click',function(event){
     f_name = $("#first_name");
     l_name = $("#last_name");
     email = $("#email");
@@ -173,7 +133,7 @@ $('.btn-next').click(function(event){
 
 });
 
-$('.btn-back').click(function(){
+$('.btn-back').on('click',function(){
     $('.first_tab').toggle();
     $('.second_tab').toggle();
     if($('.first_tab').is(':visible')) {
@@ -187,3 +147,56 @@ $('.btn-back').click(function(){
 
     }
 });
+
+
+/* 
+$('.submit_user_create').on('click',function(event){
+    console.log("submit_user_create");
+    event.preventDefault();
+    var form = $(this).parents('form:first');
+    let url = $(this).parents('form:first').attr('action');
+    var form_data = form.serialize();
+
+    password = $("#password");
+    conf_password = $("#conf_password"); 
+
+    if(password.val().length > 0 ) {
+        if( password.val().length < 6) {
+            if( password.parent().find('.validate').length  == 0 ) {
+                password.parent().append(' <p class="validate">' + validate_password_lenght + '</p>');
+            } else {
+                password.parent().find('.validate').text(validate_password_lenght);  
+            }
+            validate2.push("block");
+        } else {
+            password.parent().find('.validate').text("");     
+            if( ! conf_password.val() || (password.val() != conf_password.val()) ) {
+            if( conf_password.parent().find('.validate').length  == 0 ) {                
+                    conf_password.parent().append(' <p class="validate">' + validate_passwordconf + '</p>');
+                }
+                validate2.push("block");
+            } else {
+                conf_password.parent().find('.validate').text("");     
+                validate2.push(true);
+            }
+        }
+    }
+
+    if( validate2.includes("block") ) {
+        event.preventDefault();
+
+        if( roles.parent().parent().find('.validate').length  == 0 ) {                
+            roles.parent().parent().append(' <p class="validate">' + validate_role + '</p>');
+        }
+    } else {
+            roles.parent().find('.validate').text("");
+    }
+
+    console.log(validate2);
+    console.log(password);
+    console.log(conf_password);
+    console.log(url);
+    console.log(form_data);
+});
+
+ */

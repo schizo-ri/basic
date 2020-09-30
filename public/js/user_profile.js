@@ -9,18 +9,18 @@ $( function () {
         $('.profile_images .scroll_right').show();
     }
 
-    $('#right-button').click(function() {
+    $('.profile_images #right-button').on('click',function(event) {
         event.preventDefault();
-        $('.profile_images').animate({
+        $(this).parent().animate({
             scrollLeft: "+=200px"
         }, "slow");
         $('.profile_images .scroll_left').show();
         
     });
 
-    $('#left-button').click(function() {
+    $('.profile_images #left-button').on('click',function(event) {
         event.preventDefault();
-        $('.profile_images').animate({
+        $(this).parent().animate({
             scrollLeft: "-=115px"
         }, "slow");
         if($('.profile_images').scrollLeft() < 115 ) {

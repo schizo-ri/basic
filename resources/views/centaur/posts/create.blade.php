@@ -61,6 +61,7 @@
 			$('.form-control.employee_id').attr('required',false);
 		}
 	});
+	$.getScript( '/../js/validate.js');
 </script>
 	
 	

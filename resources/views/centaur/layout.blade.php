@@ -16,10 +16,9 @@
             <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-		
+        <![endif]-->
 		<!--Awesome icons -->
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}"/>
-		
 		<!-- Datatables -->
 		<link rel="stylesheet" href="{{ URL::asset('/../dataTables/datatables.css') }}"/>
 		<!-- JS modal -->
@@ -27,54 +26,42 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/layout.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/welcome.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/basic.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/modal.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/dashboard.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/index.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/calendar.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all.css') }}"/>
+	
+		{{-- Material design --}}
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  
 		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/>
-		
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
-
 		<!--Jquery -->
 		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
-
 		<script src="{{ URL::asset('/../js/jquery-ui.js') }}"></script>
-		<script src="{{ URL::asset('/../node_modules/chart.js/dist/Chart.js') }}"></script>
-		
+		<script src="{{ URL::asset('/../node_modules/chart.js/dist/Chart.min.js') }}"></script>
 		<!-- Pusher -->
-		<script src="https://js.pusher.com/6.0/pusher.min.js"></script>
-
+		<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 		@stack('stylesheet')
     </head>
-    <body>
+    <body >
 		<?php 
-			use App\Http\Controllers\PostController;
-			use App\Http\Controllers\DashboardController;
+            use App\Http\Controllers\PostController;
+            use App\Http\Controllers\DashboardController;
 			use App\Http\Controllers\CompanyController;
-			$permission_dep = DashboardController::getDepartmentPermission();
-			$moduli = CompanyController::getModules();
-			$check = DashboardController::evidention_check();
-		
-		?>
+			use App\Models\Shortcut;
+            $permission_dep = DashboardController::getDepartmentPermission();
+            $moduli = CompanyController::getModules();
+            $check = DashboardController::evidention_check();
+			$countComment_all = PostController::countComment_all();
+			$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+        ?>
 		@if (Sentinel::check())
 			<section>
 				<header class="header_nav">
 					<nav class="nav_top col-md-12 topnav">
 						<span class="logo_icon" >
 							<i class="img_logo fas fa-bars"></i>
-							<p class="button_nav_text">
-								@if(file_exists('../public/storage/company_img/logo.png'))
-									<img src="{{ URL::asset('storage/company_img/logo.png')}}" alt="company_logo"/>
-								@else 
-									<img src="{{ URL::asset('icons/myIntranet.png')}}" alt="company_logo"/>
-								@endif
-							</p>
 						</span>
-						<a class="" href="{{ route('dashboard') }}">
+						<a  class="link_home" href="{{ route('dashboard') }}">
 							@if(file_exists('../public/storage/company_img/logo.png'))
 								<img src="{{ URL::asset('storage/company_img/logo.png')}}" alt="company_logo"/>
 							@else 
@@ -83,16 +70,37 @@
 						</a>
 						<ul class="nav_ul float_right">
 							@if (Sentinel::check())
-								<li class="evidention_check">
-									{{-- @if(! $check || $check->end != null ) --}} {{-- više prijava u istom danu --}}
-									@if(! $check )
-										<span class="entry" title="{{__('basic.entry') }}" ><i class="far fa-calendar-check"></i></span>
-									@elseif($check && $check->end == null)
-										<span class="checkout" title="{{__('basic.checkout') }}" ><i class="far fa-calendar-times"></i></span>
-									@endif
-								</li>
+								@if( $_SERVER['REQUEST_URI'] != '/dashboard')
+									<li>
+										@if (Shortcut::where('url', $url)->first() )
+											<a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i> <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
+										@else
+											<a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
+										@endif
+									</li>
+								@endif
+								@if(! $check )
+									<li class="evidention_check">
+										<form  title="{{__('basic.entry') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}" >
+											<input type="hidden" name="entry" value="entry">
+											<input type="hidden" name="checkout" value="false">
+											@csrf
+											<button class="entry" type="submit"><i class="far fa-clock" style="color: green"></i></button>
+										</form>
+									</li>
+								@elseif($check && $check->end == null)
+									<li class="evidention_check">
+										{{-- <span class="checkout" title="{{__('basic.checkout') }}" ><i class="far fa-calendar-times"></i></span> --}}
+										<form title="{{__('basic.checkout') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}"  >
+											<input type="hidden" name="checkout" value="checkout">
+											<input type="hidden" name="entry" value="false">
+											@csrf
+											<button class="checkout" type="submit"><i class="far fa-clock" style="color: red"></i></button>
+										</form>
+									</li>
+								@endif
 								@if(Sentinel::inRole('administrator'))
-									<li><a id="open-admin" href="{{ route('admin_panel') }}" title="{{ __('basic.open_admin')}}"  >
+									<li><a id="open-admin" href="{{ route('users.index') }}" title="{{ __('basic.open_admin')}}"  >
 										<img class="img_button" src="{{ URL::asset('icons/flash.png') }}" alt="messages" title="{{ __('basic.open_admin')}}" /></a>
 									</li>
 								@endif
@@ -105,7 +113,6 @@
 								<li class="icon"><a href="javascript:void(0);" class="icon" onclick="myTopNav()">
 									<i class="fa fa-bars" style="color: #A7BBEE"></i>
 								</a></li>
-								
 							@else
 								<li><a href="{{ route('auth.login.form') }}">@lang('welcome.login')</a></li>
 								<li><a href="{{ route('auth.register.form') }}">@lang('welcome.register')</a></li>
@@ -128,14 +135,13 @@
 									<p class="button_nav_text">@lang('welcome.home')</p>
 								</a>
 							</div>
-
 							@if(in_array('Poruke', $moduli))
 								@if(Sentinel::getUser()->hasAccess(['posts.view']) || in_array('posts.view', $permission_dep) )
 									<div class="div_posts">
 										<a class="button_nav load_button posts_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('posts.index') }}" title="{{ __('basic.posts') }}">
 											<span class="button_nav_img messages"><!-- <img class="" src="{{ URL::asset('../icons/messages_grey.png') }}" alt="Profile image"  /> -->
 												<span class="line_btn">
-													@if(PostController::countComment_all() >0)<span class="count_comment">{{ PostController::countComment_all() }}</span>@endif  
+													@if($countComment_all >0)<span class="count_comment">{{ $countComment_all }}</span>@endif  
 												</span>
 											</span>
 											<p class="button_nav_text">@lang('basic.posts')</p>
@@ -210,6 +216,7 @@
 				<div class="container col-sm-12 col-md-12 col-lg-12">
 					@if(Sentinel::check())				
 						@if(Sentinel::getUser()->employee)
+							
 							@yield('content')
 						@else
 							<section class="padd_20">
@@ -227,27 +234,28 @@
 		<!-- Scripts -->
 			<script>
 				// Enable pusher logging - don't include this in production
-				//Pusher.logToConsole = true;
+				/* Pusher.logToConsole = true; */
 				var employee_id = $('#employee_id').text();
-
-				var pusher = new Pusher('4a492cc413b6d538e6c2', {
-										cluster: 'eu'
-										});
+				var pusher = new Pusher('b07d5ace8e5b948bf9fc', {
+					cluster: 'eu'
+				});
 
 				var channel = pusher.subscribe('message_receive');
 				channel.bind('my-event', function(data) {
 					if(employee_id == data.show_alert_to_employee) {
 						if(location.pathname != "/posts") {
-						//	alert(JSON.stringify(data.message));
+						/* 	alert(JSON.stringify(data)); */
 						  	$('.all_post').load(location.origin + ' .all_post>div');
 						}
 					}
 				});
+
+				
+				
 			</script>
 			<!-- Latest compiled and minified Bootstrap JavaScript -->
 			<!-- Bootstrap js -->
 			<script src="{{ URL::asset('/../node_modules/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-			<script src="{{ URL::asset('/../node_modules/popper.js/dist/umd/popper.min.js') }}"></script>
 			<!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
 			<script src="{{ asset('/../restfulizer.js') }}"></script>
 			
@@ -258,15 +266,10 @@
 			<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
 
 			<!-- Scripts -->
-			<script src="{{URL::asset('/../js/nav_active.js') }}"></script>
-			<script src="{{URL::asset('/../js/open_admin.js') }}"></script>
-			<script src="{{URL::asset('/../js/efc_toggle.js') }}"></script>
-			<script src="{{URL::asset('/../js/set_height.js') }}"></script>
-			<script src="{{URL::asset('/../js/calendar.js') }}"></script>
+			<script src="{{URL::asset('/../js/all.js') }}"></script>
 
-			<!-- Pignoise calendar -->
-			<script src="{{ URL::asset('/../node_modules/moment/moment.js') }}"></script>
-			<script src="{{ URL::asset('/../node_modules/pg-calendar/dist/js/pignose.calendar.min.js') }}"></script>
+		 	<!-- moment -->
+			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
 
 			<!-- Datatables -->
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
@@ -282,8 +285,9 @@
 					$('.row.notification').modal();
 					$('#schedule_modal').modal();
 				</script>
+				
 			@endif
-
+			
 		<!-- End Scripts -->
 		@stack('script')		
     </body>

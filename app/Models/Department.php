@@ -22,6 +22,14 @@ class Department extends Model
 	* @var string
 	*/
 	protected static $companyModel = 'App\Models\Company'; 
+
+	/*
+	* The Eloquent work model name
+	* 
+	* @var string
+	*/
+	protected static $workModel = 'App\Models\Work';
+
 	
 	/*
 	* Returns the company relationship
@@ -32,6 +40,17 @@ class Department extends Model
 	public function company()
 	{
 		return $this->belongsTo(static::$companyModel,'company_id');
+	}
+	
+	/*
+	* Returns the company relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function hasWorks()
+	{
+		return $this->hasMany(static::$workModel,'department_id');
 	}
 	
 	/*

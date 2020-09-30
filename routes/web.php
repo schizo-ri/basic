@@ -11,6 +11,7 @@
 |
 */
 
+
 Route::get('/', function () {
     if(Sentinel::check()) {
         return redirect('dashboard');
@@ -57,6 +58,11 @@ Route::resource('department_roles', 'DepartmentRoleController');
 
 // Work
 Route::resource('works', 'WorkController');
+
+//WorkRecords
+Route::resource('work_records', 'WorkRecordController');
+Route::get('work_records_table', ['as' => 'work_records_table', 'uses' => 'WorkRecordController@workRecordsTable']);
+
 
 // Employee
 Route::resource('employees', 'EmployeeController');
@@ -113,6 +119,7 @@ Route::get('setCommentAsRead/{id}', ['as' => 'setCommentAsRead', 'uses' => 'Post
 
 // Event
 Route::resource('events', 'EventController');
+Route::get('store_event/{id}', ['as' => 'store_event', 'uses' => 'EventController@store_event']);
 
 // Table
 Route::resource('tables', 'TableController');
@@ -184,9 +191,8 @@ Route::get('pdfTravel/{id}',array('as'=>'pdfTravel','uses'=>'TravelOrderControll
 //TravelExpenses
 Route::resource('travel_expenses', 'TravelExpensesController');
 
-
-//WorkRecords
-Route::resource('work_records', 'WorkRecordController');
+//Shortcut
+Route::resource('shortcuts', 'ShortcutController');
 
 /*
 Route::get('dashboard', function () {
@@ -232,6 +238,7 @@ Route::get('side_calendar', ['as' => 'side_calendar', 'uses' => 'EventController
 
 // Admin panel
 Route::get('admin_panel', ['as' => 'admin_panel', 'uses' => 'DashboardController@openAdmin']);
+Route::get('admin', ['as' => 'admin', 'uses' => 'DashboardController@openAdminNew']);
 
 Route::get('all_event', ['as' => 'all_event', 'uses' => 'EventController@modal_event']);
 
@@ -260,4 +267,10 @@ Route::get('/clear-cache', function() {
     Artisan::call('cache:clear');
     return "Cache is cleared";
 });
-
+Route::get('/view_clear', function() {
+    Artisan::call('view:clear');
+    return "View is cleared";
+});
+Route::get('/down', function(){
+    $exitCode = Artisan::call('down');
+});

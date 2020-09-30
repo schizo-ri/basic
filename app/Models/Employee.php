@@ -23,11 +23,60 @@ class Employee extends Model
 	protected static $userModel = 'App\User'; 
 	
 	/*
+	* The Eloquent event model name
+	* 
+	* @var string
+	*/
+	protected static $eventModel = 'App\Models\Event'; 
+
+	/*
+	* The Eloquent task model name
+	* 
+	* @var string
+	*/
+	protected static $taskModel = 'App\Models\Task'; 
+
+	/*
 	* The Eloquent user model name
 	* 
 	* @var string
 	*/
+	protected static $loccoModel = 'App\Models\Locco'; 
+	
+	/*
+	* The Eloquent TravelOrder model name
+	* 
+	* @var string
+	*/
 	protected static $travelModel = 'App\Models\TravelOrder'; 
+
+	/*
+	* The Eloquent WorkRecord model name
+	* 
+	* @var string
+	*/
+	protected static $workRecordModel = 'App\Models\WorkRecord'; 
+
+	/*
+	* The Eloquent works model name
+	* 
+	* @var string
+	*/
+	protected static $workModel = 'App\Models\Work'; 
+
+	/*
+	* The Eloquent works model name
+	* 
+	* @var string
+	*/
+	protected static $absenceModel = 'App\Models\Absence'; 
+
+	/*
+	* The Eloquent shortcut model name
+	* 
+	* @var string
+	*/
+	protected static $shortcutModel = 'App\Models\Shortcut'; 
 
 	/*
 	* Returns the works relationship
@@ -41,9 +90,42 @@ class Employee extends Model
 	}
 	
 	/*
+	* Returns the Event relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasShortcuts()
+	{
+		return $this->hasMany(static::$shortcutModel,'employee_id');
+	}
+
+	/*
+	* Returns the Event relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasEvents()
+	{
+		return $this->hasMany(static::$eventModel,'employee_id');
+	}
+
+	/*
+	* Returns the Task relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasTasks()
+	{
+		return $this->hasMany(static::$taskModel,'employee_id');
+	}
+
+	/*
 	* Returns the TravelOrder relationship
 	* 
-	* @return \Illuminate\Database\Eloquent\Relations\hasMany
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
 	*/
 	
 	public function hasTravels()
@@ -52,12 +134,38 @@ class Employee extends Model
 	}
 
 	/*
-	* The Eloquent works model name
+	* Returns the TravelOrder relationship
 	* 
-	* @var string
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
 	*/
-	protected static $workModel = 'App\Models\Work'; 
 	
+	public function hasLocco()
+	{
+		return $this->hasMany(static::$loccoModel,'employee_id');
+	}
+
+	/*
+	* Returns the TravelOrder relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasAbsences()
+	{
+		return $this->hasMany(static::$absenceModel,'employee_id');
+	}
+
+	/*
+	* Returns the TravelOrder relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasWorkingRecord()
+	{
+		return $this->hasMany(static::$workRecordModel,'employee_id');
+	}
+
 	/*
 	* Returns the works relationship
 	* 

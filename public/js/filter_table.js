@@ -1,5 +1,5 @@
 function mySearchTable() {
-  $("#mySearchTbl").keyup(function() {
+  $("#mySearchTbl").on('keyup',function() {
     var value = $(this).val().toLowerCase();
     
     $("#index_table tbody tr").filter(function() {
@@ -12,7 +12,7 @@ function mySearchTable() {
 }
 
 function mySearchTableAbsence() {
-  $("#mySearchTbl").keyup(function() {
+  $("#mySearchTbl").on('keyup',function() {
     var value = $(this).val().toLowerCase();
     var godina = $('#year_vacation').val();
     $("#index_table tbody tr").filter(function() {
@@ -22,7 +22,7 @@ function mySearchTableAbsence() {
 }
 
 function mySearchDoc() {
-  $("#mySearch").keyup(function() {
+  $("#mySearch").on('keyup',function() {
     var value = $(this).val().toLowerCase();
     $("#index_table tbody tr").filter(function() {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
@@ -55,13 +55,10 @@ function mySearch_col1() {
 }
 
 function mySearchElement() {
-  $("#mySearchElement").keyup( function() {
+  $("#mySearchElement").on('keyup', function() {
 		var value = $(this).val().toLowerCase();
 		$(".user_card").filter(function() {
 			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
 		});
 	});
 }
-
-
-

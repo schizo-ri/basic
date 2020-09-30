@@ -166,7 +166,8 @@ return [
 		Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class,
 		Centaur\CentaurServiceProvider::class, 
  	    Barryvdh\DomPDF\ServiceProvider::class,
-        
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
         /*
          * Package Service Providers...
          */
@@ -236,6 +237,8 @@ return [
 		'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Pusher' => Pusher\Pusher::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+    
     ],
 
 ];

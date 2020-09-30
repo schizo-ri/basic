@@ -8,6 +8,7 @@ return [
 	'email_send'				=> 'E-mail je poslan',
 	'new_article'				=> 'Novi članak',
 	'new_absence'				=> 'Zahtjev za ',
+	'edit_absence'				=> 'Ispravak zahtjeva za ',
 	'new_article_publish'		=> 'Na portalu je objavljen novi članak edukacije',
 	'new_questinnaire_publish'	=> 'Na portalu je objavljena nova Anketa ',
 	'to_change_password'		=> 'Da biste promijenili lozinku',
@@ -22,6 +23,7 @@ return [
 	'no_mail'					=> 'E-mail nije poslan, nije upisan e-mail odjela!',
 	'campaign_start'			=> 'Kampanja je pokrenuta',
 	'campaign_error'			=> 'Nije moguće pokrenuti kampanju, nema upisanih sekvenci',
-	
+	'store'						=> 'Spremi',
+	'save_calendar'				=> 'Spremi događaj u kalendar'
 ];
 ?>

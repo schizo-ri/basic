@@ -27,13 +27,7 @@ class LayoutController extends Controller
      */
     public function index()
     {
-        dd("LayoutController!!!");
-		//dohvaća dopuštenja odjela za korisnika
-		$permission_dep = explode(',', Sentinel::getUser()->employee->work->department->departmentRole->toArray()[0]['permissions']);
-		//dohvaća module firme
-		$moduli = CompanyController::getModules();
-			
-		return view('layout',['moduli' => $moduli, 'permission_dep' => $permission_dep ]);
+		return view('layout');
     }
 
     /**

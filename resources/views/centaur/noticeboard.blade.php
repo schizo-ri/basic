@@ -90,7 +90,7 @@
 													@if($docs)
 														<img class="notice_img radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($docs)) }}" alt="Profile image" title="{{ $notice->employee->user['first_name'] . ' ' . $notice->employee->user['last_name'] }}"  />
 													@else
-														<img class="notice_img radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+														<img class="notice_img radius50" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 													@endif
 													<span>{{ $notice->employee->user['first_name'] . ' ' . $notice->employee->user['last_name'] }}</span>
 												</span>
@@ -137,7 +137,7 @@
 													@if($docs)
 														<img class="notice_img radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($docs)) }}" alt="Profile image" title="{{ $notice->employee->user['first_name'] . ' ' . $notice->employee->user['last_name'] }}" />
 													@else
-														<img class="notice_img radius50" src="{{ URL::asset('img/profile.png') }}" alt="Profile image"  />
+														<img class="notice_img radius50" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 													@endif
 													<span>{{ $notice->employee->user['first_name'] . ' ' . $notice->employee->user['last_name'] }}</span>
 												</span>

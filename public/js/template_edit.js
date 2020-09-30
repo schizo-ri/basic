@@ -4,52 +4,57 @@ var data_new = {};
 var json;
 var html; 
 var design;
-
-unlayer.init({
-    appearance: {
-        theme: 'light',
-        panels: {
-            tools: {
-                dock: 'left'
+try {
+    
+    unlayer.init({
+        appearance: {
+            theme: 'light',
+            panels: {
+                tools: {
+                    dock: 'left'
+                }
             }
-        }
-    },
-    id: 'editor-container',
-    projectId: 4441,
-    displayMode: 'email'
-})
-unlayer.setMergeTags({
-    first_name: {
-      name: "First Name",
-      value: "Jelena"
-    },
-    last_name: {
-      name: "Last Name",
-      value: "Juras"
-    }
-});
-  
-if($('.dataArr').text()) {
-    var design = JSON.parse( $('.dataArr').text()); // template JSON */
-    unlayer.loadDesign(design);
-}
-$('.template').change(function(){
-    var template_id = $(this).val();
-   
-    unlayer.loadTemplate(12187); 
-});
-
-unlayer.addEventListener('design:updated', function(updates) {
-    unlayer.exportHtml(function(data) {
-        json = data.design; // design json
-        html = data.html; // design html
-        design = data.design;
-        /* $('#text_html').text(html);
-        $('#text_json').text(JSON.stringify(json)); */
+        },
+        id: 'editor-container',
+        projectId: 4441,
+        displayMode: 'email'
     })
-})	
+    unlayer.setMergeTags({
+        first_name: {
+        name: "First Name",
+        value: "Jelena"
+        },
+        last_name: {
+        name: "Last Name",
+        value: "Juras"
+        }
+    });
+    
+    if($('.dataArr').text()) {
+        var design = JSON.parse( $('.dataArr').text()); // template JSON */
+        unlayer.loadDesign(design);
+    }
+    $('.template').on('change',function(){
+        var template_id = $(this).val();
+    
+        unlayer.loadTemplate(12187); 
+    });
 
-$('.btn-submit').click(function(e) {
+    unlayer.addEventListener('design:updated', function(updates) {
+        unlayer.exportHtml(function(data) {
+            json = data.design; // design json
+            html = data.html; // design html
+            design = data.design;
+            /* $('#text_html').text(html);
+            $('#text_json').text(JSON.stringify(json)); */
+        })
+    })	
+  
+} catch (error) {
+    
+}
+
+$('.form_template.template_edit .btn-submit').on('click', function(e) {
     var validate = [];
     e.preventDefault();
     var form = $('#form_template')[0];
@@ -71,7 +76,7 @@ $('.btn-submit').click(function(e) {
     });
     console.log(validate);
     if(validate.includes("block") ) {
-        event.preventDefault();
+        e.preventDefault();
         alert("Nisu uneseni svi parametri, nemoguće spremiti obavijest");
     } else { 
         $.ajax({
@@ -85,7 +90,6 @@ $('.btn-submit').click(function(e) {
             timeout: 600000,
             success: function (data) {
                 alert("Dizajn je spremljen!");
-              /*   console.log("SUCCESS : ", form_data_array); */
                 console.log("responce : ", data);
                 $(".btn-submit").prop("disabled", false);
             },
@@ -144,7 +148,7 @@ if($('.dataArrTemplates').text()) {
     });
 }
   
-$('.template_button').click(function(){
+$('.template_button').on('click',function(){
     temp = $( this ).attr('id');
 
     designTemplates = JSON.parse( dataArrTemplates[temp].text_json); // template JSON */
@@ -152,13 +156,13 @@ $('.template_button').click(function(){
     unlayer.loadDesign(designTemplates);
     $('.show_temp#temp' + temp).remove();
 });
-$( ".template_button" ).mouseover( function(){
+$( ".template_button" ).on('mouseover', function(){
         temp = $( this ).attr('id');
         htmlTemplates = dataArrTemplates[temp].text; 
         $('body').append('<span class="show_temp" id="temp' + temp +'">'+htmlTemplates+'</span>');
         $('.show_temp#temp'+temp).show();
         
 });
-$( ".template_button" ).mouseout( function(){
+$( ".template_button" ).on('mouseout', function(){
     $('.show_temp#temp' + temp).remove();
 });

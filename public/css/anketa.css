@@ -34,6 +34,7 @@ form {
 	display:block;
 	float:right;
 }
+
 .btn_align:hover {
 	background-color: #eee;
 }
@@ -43,6 +44,9 @@ form {
 	margin: 0;
 }
 
+a>.fa-edit  {
+	float: none;
+}
 .box{
 	padding: 20px 0;
 	text-align: left;
@@ -126,9 +130,6 @@ input[type="radio"]{
 	margin: 30px 0;
 }
 
-.tabcontent {
-	padding:30px !important;
-}
 
 .ocjene {
 	text-align:center;

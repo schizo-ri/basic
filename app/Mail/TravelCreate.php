@@ -30,7 +30,7 @@ class TravelCreate extends Mailable
     public function build()
     {
         return $this->markdown('emails.travel.create')
-                    ->subject(__('basic.create_travel1') . ' ' . $this->travel->employee->user['last_name'] )
+                    ->subject(__('basic.create_travel1') . ' - ' . $this->travel->employee->user['last_name'] )
                     ->with([
                         'travel' =>  $this->travel
                     ]);;

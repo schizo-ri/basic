@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\EmailingController;
 use App\Models\Car;
 use App\Models\Employee;
 use App\Models\Locco;
@@ -11,6 +12,7 @@ use App\Models\Emailing;
 use App\Models\TravelOrder;
 use App\Models\TravelLocco;
 use App\Models\Department;
+use App\Models\WorkRecord;
 use App\Mail\CarServiceMail;
 use App\Mail\TravelCreate;
 use Illuminate\Support\Facades\Mail;
@@ -57,7 +59,7 @@ class LoccoController extends Controller
     {
       
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->get();
 
         $reg = null;
         if( $request->get('reg')) {
@@ -101,6 +103,7 @@ class LoccoController extends Controller
 		$locco = new Locco();
         $locco->saveLocco($data);
        
+        /* Update Car - trenutni kilometri */
         if($request['end_km']) {
             $car = Car::find($request['car_id']);
             $data_car = array(
@@ -109,7 +112,7 @@ class LoccoController extends Controller
             $car->updateCar($data_car);
         }
         
-        try {
+     /*    try { */
             if( $request['travel']) {
                 $data_travel = array(
                     'date'  		    => $request['date'],
@@ -130,8 +133,28 @@ class LoccoController extends Controller
                 );
                 $locco->updateLocco($data_locco);
 
+                /* Upis u evidenciju rada ako je otvoren putni nalog prije 8:15 / 7:00 */
+                $now = new DateTime();
+                if( $now->format('N') < 5 ) {
+                    $time = '08:15';
+                } else if($now->format('N') == 5) {
+                    $time = '07:00';
+                }  
+                
+                $workRecord = WorkRecord::where('employee_id', $request['employee_id'])->whereDate('start', $now->format('Y-m-d'))->first();
+                if( ! $workRecord ) {
+                    if( $now->format('Y-m-d H:i') < $now->format('Y-m-d ' . $time )) {
+                        $data = array(
+                            'employee_id'  	 => $request['employee_id'],
+                            'start'  		=> $now->format('Y-m-d ' . $time ),
+                        );
+                        $workRecord = new WorkRecord();
+                        $workRecord->saveWorkRecords($data);
+                    }
+                }
+               
                 /* mail obavijest o novom putnom nalogu */
-                $send_to =  EmailingController::sendTo('travel_orders','create');
+                $send_to = EmailingController::sendTo('travel_orders','create');
                
                 foreach(array_unique($send_to) as $send_to_mail) { // mailovi upisani u mailing 
                     if( $send_to_mail != null & $send_to_mail != '' ) {
@@ -139,41 +162,18 @@ class LoccoController extends Controller
                     }
                 }
             }
-            
-        } catch (\Throwable $th) {
+    /*     } catch (\Throwable $th) {
             session()->flash('error',  __('ctrl.locco_error'));
             return redirect()->back();
-        }
+        } */
       
-        if($request['servis']){
+        if($request['wrong_km']){
 			if(! $request['comment'] ){
-				$message = session()->flash('error', __('ctrl.malfunction'));
+				$message = session()->flash('error', __('ctrl.wrong_km'));
 				return redirect()->back()->withFlashMessage($message);
 			} else {
-				/* mail obavijest o novoj poruci */
-                $emailings = Emailing::get();
-                $send_to = array();
-                $departments = Department::get();
-                $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
-
-                if(isset($emailings)) {
-                    foreach($emailings as $emailing) {
-                        if($emailing->table['name'] == 'loccos' && $emailing->method == 'create') {
-                            
-                            if($emailing->sent_to_dep) {
-                                foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
-                                    array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
-                                }
-                            }
-                            if($emailing->sent_to_empl) {
-                                foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
-                                    array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
-                                }
-                            }
-                        }
-                    }
-                }
-
+                $send_to = EmailingController::sendTo('loccos','create');
+                $send_to = arraay('jelena.juras@duplico.hr');
                 foreach(array_unique($send_to) as $send_to_mail) {
                     if( $send_to_mail != null & $send_to_mail != '' ) {
                         Mail::to($send_to_mail)->send(new CarServiceMail($locco)); // mailovi upisani u mailing 
@@ -194,7 +194,7 @@ class LoccoController extends Controller
      */
     public function show($id)
     {
-        $loccos = Locco::where('car_id', $id)->orderBy('date','DESC')->get();
+        $loccos = Locco::where('car_id', $id)->orderBy('date','ASC')->get();
 
         $empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
@@ -203,7 +203,14 @@ class LoccoController extends Controller
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
         } 
 
-        return view('Centaur::loccos.show', ['loccos' => $loccos, 'car_id' => $id, 'permission_dep' => $permission_dep]);
+        $dates = array();
+        foreach (array_keys($loccos->groupBy('date')->toArray()) as $date) {
+            array_push($dates, date('m.Y',strtotime($date)) );
+        }
+      
+        $dates = array_unique($dates);
+
+        return view('Centaur::loccos.show', ['loccos' => $loccos, 'car_id' => $id, 'dates' => $dates, 'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -218,7 +225,7 @@ class LoccoController extends Controller
         $travel = TravelOrder::find( $locco->travel_id );
     
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->get();
 
         return view('Centaur::loccos.edit', ['locco' => $locco, 'cars' => $cars, 'travel' => $travel, 'employees' => $employees]);
     }

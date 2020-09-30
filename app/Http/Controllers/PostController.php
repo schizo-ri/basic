@@ -34,33 +34,39 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {		
+    {
 		$empl = Sentinel::getUser()->employee;
-		$comments = Comment::orderBy('created_at','ASC')->get();
-	
-		if(isset($_GET['id'])) {
-			$post = Post::where('id',$_GET['id'])->first();
-			if($post) {
-				$comments_post = Comment::where('post_id',$post->id)->get();
-
-				if($post->employee_id != $empl->id) {
-					$post->updatePost(['status' => '1']);
-				}
-				if(count($comments_post) > 0){
-					foreach($comments_post as $comment) {
-						if($comment->employee_id != $empl->id ) {
-							$comment->updateComment(['status' => '1']);
-						}
-					}
-				}
-			}
-		}
-		$permission_dep = array();
+		$posts = Post::where('employee_id', $empl->id)->orWhere('to_employee_id', $empl->id)->orWhere('to_department_id',$empl->work->department->id)->orderBy('updated_at','DESC')->with('comments')->get();
 
 		if($empl) {
-			
-			$posts = Post::where('employee_id', $empl->id)->orWhere('to_employee_id', $empl->id)->orderBy('updated_at','DESC')->get();
-
+			if(isset($_GET['id'])) { 
+				$post = $posts->where('id', $_GET['id'])->first();
+				
+				if($post) {
+					$comments_post = $post->comments;
+					
+					if(count($comments_post) > 0){
+						foreach($comments_post as $comment) {
+							if( $comment->to_employee_id == $empl->id && $comment->status == 0 ) {
+								$comment->updateComment(['status' => '1']);
+							}
+						}
+						$show_alert_to_employee = $post->employee_id;	
+						event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
+					}
+				}
+			} else {
+				$post = $posts->first();
+			}
+			foreach ($posts as $post) {
+				$profile = PostController::profile($post);
+				$post->post_comment = $profile['post_comment'];//zadnji komentar na poruku
+				$post->employee = $profile['employee'];
+				$post->user_name = $profile['user_name']; // ime djelatnika kojem je poslana poruka a nije user 
+				$post->image_to_employee =  $profile['docs']; // profilna slika
+				$post->countComment = PostController::countComment($post);
+			}
+			$permission_dep = array();
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 			
 		} else {
@@ -68,7 +74,7 @@ class PostController extends Controller
 				return redirect()->back()->withFlashMessage($message);
 		}
 		
-		return view('Centaur::posts.index', ['posts' => $posts,'permission_dep' => $permission_dep,'comments' => $comments]);
+		return view('Centaur::posts.index', ['posts' => $posts,'selected_post' => $post,'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -78,7 +84,7 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.first_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
 		$departments = Department::orderBy('name','ASC')->get();
 		if(isset($request['employee_publish'])) {
 			$employee_publish = Employee::find($request['employee_publish']);
@@ -117,8 +123,18 @@ class PostController extends Controller
 				$post->savePost($data);
 			}
 
+			if($post->employee_id == $employee->id) {
+				$to_employee = $post->to_employee_id;
+			} else if( $post->to_employee_id == $employee->id ) {
+				$to_employee = $post->employee_id;
+			} else {
+				$to_employee = null;
+			}
+
 			$data1 = array(
 				'employee_id'   =>  $employee->id,
+				'to_department_id'  => $post->to_department_id != null ? $post->to_department_id : null,
+				'to_employee_id'  	=> $to_employee ,
 				'post_id'  		=>  $post->id,
 				'content'  		=>  $request['content'],
 				'status'  		=> '0',
@@ -127,44 +143,38 @@ class PostController extends Controller
 			$comment = new Comment();
 			$comment->saveComment($data1);
 
+			$show_alert_to_employee =  $to_employee;
+
+			event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
+
 		}
 		if($request['to_department_id'] != null) {
-			// šalje samo na voditelja odjela
-			/* $data += ['to_department_id'  => $request['to_department_id']];
+			$data = array(
+				'employee_id'  		=> $employee->id,
+				'to_department_id' 	=> $request['to_department_id'],
+				'content'  			=> $request['content']
+			);
 			$post = Post::find( $request['to_department_id']);
 			if($post) {
 				$post->updatePost($data);
 			} else {
 				$post = new Post();
 				$post->savePost($data);
-			} */
+			} 
 
-			// šalje na sve djelatnike odjela
-			$department = Department::find($request['to_department_id']);
-			$works = Work::where('department_id',$department->id)->get();
+			/* 	$department = Department::find($request['to_department_id']);
+			$works = Work::where('department_id',$department->id)->get(); */
 			
+			$department = Department::where('id', $post->to_department_id )->with('hasWorks')->first();
+			$works = $department->hasWorks;
+
 			foreach ($works as $work) {
 				$workers = $work->workers;
 				foreach ($workers as $worker) {
-					$data = array(
-						'employee_id'  		=> $employee->id,
-						'to_employee_id' => $worker->id,
-						'content'  			=> $request['content']
-					);
-
-					if($posts->where('to_employee_id', $worker->id)->first()) {
-						$post = $posts->where('to_employee_id', $worker->id)->first();
-						$post->updatePost($data);
-					} elseif($posts->where('employee_id', $worker->id)->first()) {
-						$post = $posts->where('employee_id', $worker->id)->first();
-						$post->updatePost($data);
-					} else {
-						$post = new Post();
-						$post->savePost($data);
-					}
-
+					
 					$data1 = array(
-						'employee_id'   =>  $employee->id,
+						'employee_id'    => $employee->id,
+						'to_employee_id' => $worker->id,
 						'post_id'  		=>  $post->id,
 						'content'  		=>  $request['content'],
 						'status'  		=> '0',
@@ -172,6 +182,11 @@ class PostController extends Controller
 					
 					$comment = new Comment();
 					$comment->saveComment($data1);
+
+					$show_alert_to_employee =  $comment->to_employee_id;
+
+					event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
+
 				}
 			}
 		}
@@ -201,7 +216,7 @@ class PostController extends Controller
 
 		if(count($comments) > 0){
 			foreach($comments as $comment) {
-				if($comment->employee_id != $employee->id ) {
+				if($comment->employee_id != $employee->id && $comment->status == 0) {
 					$comment->updateComment(['status' => '1']);
 				}
 			}
@@ -273,22 +288,45 @@ class PostController extends Controller
 	public function storeComment(Request $request)
 	{
 		$employee = Sentinel::getUser()->employee;
-		
+		$post = Post::find($request->get('post_id'));
+		$to_employees = array();
+		$to_employee = null;
+
+		if( $post->to_employee_id ) {
+			if($post->employee_id == $employee->id) { 
+				$to_employee = $post->to_employee_id;
+			} else if( $post->to_employee_id == $employee->id ) {
+				$to_employee = $post->employee_id;
+			}
+		} else if ( $post->to_department_id ) {
+			$department = Department::where('id',$post->to_department_id )->with('hasWorks')->first();
+			$works = $department->hasWorks;
+			
+			foreach ($works as $work) {
+				$workers = $work->workers;
+				foreach ($workers as $worker) {
+					array_push( $to_employees, $worker->employee_id);
+				}
+			}
+		}
+
 		$data = array(
-			'employee_id'  => $employee->id,       
-			'post_id'  =>  $request->get('post_id'),
-			'content'  =>  $request->get('content'),
-			'status'  	=> '0',
+			'employee_id'   => $employee->id,
+			'to_department_id'  => $post->to_department_id != null ? $post->to_department_id : null,
+			'to_employee_id'  	=> $to_employee ,
+			'post_id'  		=>  $request->get('post_id'),
+			'content'  		=>  $request->get('content'),
+			'status'  		=> '0',
 		);
-		
+	
 		$comment = new Comment();
 		$comment->saveComment($data);
-		
+	
 		$data1 = array('content'  => $request->get('content'));
 		$post = Post::find($request->get('post_id'));
 		
 		$post->updatePost($data1);
-	
+
 		if( $post->employee_id == $comment->employee_id) {
 			$show_alert_to_employee = $post->to_employee_id;
 		} else if ($post->to_employee_id == $comment->employee_id) {
@@ -297,7 +335,15 @@ class PostController extends Controller
 			$show_alert_to_employee = null;
 		}
 		
-		event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
+		if($post->to_employee_id) {
+			event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
+		} else if($post->to_department_id) {
+			foreach ($to_employees as $empl) {
+				event(new MessageSend( __('basic.new_message'), $comment, $empl ));
+			}
+			event(new MessageSend( __('basic.new_message'), $comment, $post->employee_id ));
+		}
+		
 
 		$message = session()->flash('success', __('basic.sent_message'));
 
@@ -305,37 +351,32 @@ class PostController extends Controller
 		//return redirect()->route('admin.posts.index')->withFlashMessage($message);
 	}
 	
-	static function countComment ($post_id) 
+	static function countComment ($post) 
 	{
 		$user = Sentinel::getUser();
-		$employee = Employee::where('user_id', $user->id)->first();
+		$employee = $user->employee;
+	
+		$comments = $post->comments;
 		
-		$post = Post::find( $post_id );
-		$comments =  Comment::where('post_id', $post->id)->get();
-
 		$comment_count = 0;
-		if($employee){
-			$comment_count = $comments->where('employee_id', '<>', $employee->id)->where('status', 0)->count();
+		if( $employee ){
+			$comment_count = $comments->where('to_employee_id', $employee->id)->where('status', 0)->count();
+			$comment_count += $comments->where('to_employee_id', null)->where('status', 0)->count();
 		}
-
+		
 		return $comment_count;
 	}
 	
 	static function countComment_all () 
 	{
-		$user = Sentinel::getUser();
-		if(isset($user)) {
-			$employee = Employee::where('user_id', $user->id)->first();
-		}
-	
-		$comments = Comment::get();
+		$employee = Sentinel::getUser()->employee;
+		
 		$comment_count = 0;
 	
-		if(isset($employee)){
-			
-			$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->get();
+		if( $employee ){
+			$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->orWhere('to_department_id',$employee->work->department->id)->get();
 			foreach($posts as $post) {
-				$count = $comments->where('post_id',$post->id)->where('employee_id','<>', $employee->id)->where('status',0)->count();
+				$count = $post->comments->where('to_employee_id', $employee->id)->where('status',0)->count();
 				$comment_count += $count;
 			}
 		} 
@@ -371,44 +412,36 @@ class PostController extends Controller
 		return $post_count;
 	}
 
-	public static function profile($post) {
+	public static function profile($post) 
+	{
 		$docs = '';
 		$user_name = '';
 		
-		$comments = Comment::orderBy('created_at','DESC')->get();
-		$post_comment = $comments->where('post_id',$post->id)->first(); //zadnji komentar na poruku
+		$comments = $post->comments;
+		$post_comment = $comments->where('post_id',$post->id)->sortByDesc('created_at')->first(); //zadnji komentar na poruku
 		$employee = Sentinel::getUser()->employee;  // prijavljeni djelatnik
 
 		if($post->to_employee_id != null) {
 			if( Sentinel::getUser()->employee->id == $post->to_employee_id ) {
 				$empl = $post->employee;
-				$user_name = explode('.',strstr($empl->email,'@',true));
 			} else {
 				$empl = $post->to_employee;
-				$user_name = explode('.',strstr($empl->email,'@',true));
 			}
-		
-			if(count($user_name) == 2) {
-				$user_name = $user_name[1] . '_' . $user_name[0];
-			} else {
-				$user_name = $user_name[0];
-			}
-	
-			$path = 'storage/' . $user_name . "/profile_img/";
-			if(file_exists($path)){
-				$docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
-			}
+			if($empl) {
+				$user_name = DashboardController::user_name($empl->id);
+				$docs = DashboardController::profile_image($empl->id);
+			} 
 		} else {
-			$empl = Employee::where('id', $post->employee_id)->first();
-			$user_name = Department::where('id', $post->to_department_id)->first()->name;
+			$empl = $post->employee;
+			$user_name = $post->to_department->name;
 		}
 		
-		if($docs) {
+		if( $docs ) {
 			$docs = end($docs);
 		}
 		
 		$podaci = array(
-			'employee'  	=>  $empl,  
+			'employee'  	=>  $empl,
 			'post_comment'  =>  $post_comment,  
 			'docs'  		=>  $docs,
 			'user_name'  	=>  $user_name,  
@@ -431,24 +464,35 @@ class PostController extends Controller
 		return 'false';
 	}
 
-	public static function setCommentAsRead ($id) 
+	public static function setCommentAsRead ( $id ) 
 	{
 		$empl = Sentinel::getUser()->employee;
-		$post = Post::where('id', $id)->first();
-		$comments_post = Comment::where('post_id', $post->id)->get();
+		$post = Post::where('id', $id)->with('comments')->first();
+		
 
-		if($post->employee_id != $empl->id) {
+		/* 	if( $post->to_department_id != null && $post->employee_id == $empl->id) {  // ako je poruka za odjel i pošiljatelj je prijavljen djelatnik -> poruka je pročitana
 			$post->updatePost(['status' => '1']);
+		} */
+		if( $post->to_department_id != null && $post->employee_id == $empl->id ) {
+			$comments_post = $post->comments->where('to_department_id', $post->to_department_id);
+		} else {
+			$comments_post = $post->comments->where('to_employee_id', $empl->id);
 		}
-
 		if(count($comments_post) > 0){
 			foreach($comments_post as $comment) {
-				if($comment->employee_id != $empl->id ) {
-					$comment->updateComment(['status' => '1']);
+				if($comment->to_employee_id == $empl->id || $post->to_department_id != null && $post->employee_id == $empl->id ) {
+					if($comment->status == 0) {
+						$comment->updateComment(['status' => '1']);
+						$show_alert_to_employee = $post->employee_id;
+	
+						event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
+					}
 				}
 			}
 		}
-		return $comments_post;
+		
+
+		return "comments_post:". $comments_post;
 	}
 
 	public static function previous($id, $post_id) {

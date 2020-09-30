@@ -34,11 +34,15 @@ class VehicalServiceController extends Controller
 		if($empl) {
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
         } 
+        $cars = Car::get('registration');
 
         $vehicalServices = VehicalService::orderBy('date','DESC')->get();
-        $title = 'vehicalServices';
-
-        return view('Centaur::vehical_services.index',compact('title'), ['vehicalServices' => $vehicalServices, 'permission_dep' => $permission_dep]);
+        $dates = array();
+        foreach (array_keys($vehicalServices->groupBy('date')->toArray()) as $date) {
+            array_push($dates, date('Y',strtotime($date)) );
+        }
+       
+        return view('Centaur::vehical_services.index', ['vehicalServices' => $vehicalServices, 'cars' => $cars,'dates' => array_unique($dates),'permission_dep' => $permission_dep]);
     }
 
     /**

@@ -493,6 +493,8 @@ class NoticeController extends Controller
     {
         $today = date('Y-m-d'); // 2019-10-16
         $time = date('H:i:s'); // 14:49:05
+        $month = date('m');
+        $year = date('Y');
         $departments = Department::get();
         $user_department = array();
         $permission_dep = array();
@@ -503,7 +505,7 @@ class NoticeController extends Controller
             $sort = 'DESC';	
         }
 
-        $dataArr = EventController::getDataArr();
+        $dataArr = EventController::getDataArr($month, $year);
 
         if(Sentinel::inRole('administrator')) {
             $notices = Notice::orderBy('created_at', $sort)->get();        
