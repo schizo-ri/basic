@@ -302,7 +302,7 @@
     color: #606060;
     float: right;
     text-transform: uppercase;
-    text-decoration-line: underline;
+    text-decoration-line: none;
     line-height: 26px;
     margin-right: 20px;
 }
@@ -378,8 +378,8 @@
 }
 
 .comming_agenda .agenda_title {
-	font-weight: 500;
-	font-size: 0.75rem;
+	font-weight: 600;
+    font-size: 0.9375rem;
 	color: #071E57;
 	width: 100%;
 	text-align: left;

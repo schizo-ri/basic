@@ -71,13 +71,13 @@
 						<ul class="nav_ul float_right">
 							@if (Sentinel::check())
 								@if( $_SERVER['REQUEST_URI'] != '/dashboard')
-									<li>
+									
 										@if (Shortcut::where('url', $url)->first() )
 											<a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i> <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
 										@else
 											<a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
 										@endif
-									</li>
+									
 								@endif
 								@if(! $check )
 									<li class="evidention_check">

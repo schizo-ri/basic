@@ -1910,7 +1910,7 @@ label.schedule_set {
     color: #606060;
     float: right;
     text-transform: uppercase;
-    text-decoration-line: underline;
+    text-decoration-line: none;
     line-height: 26px;
     margin-right: 20px;
 }
@@ -1986,8 +1986,8 @@ label.schedule_set {
 }
 
 .comming_agenda .agenda_title {
-	font-weight: 500;
-	font-size: 0.75rem;
+	font-weight: 600;
+    font-size: 0.9375rem;
 	color: #071E57;
 	width: 100%;
 	text-align: left;
@@ -2987,7 +2987,6 @@ class="select-css"
     border: none;
     display: flex;
     padding: 0;
-    
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-unit a {
@@ -3009,11 +3008,14 @@ class="select-css"
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-nav.pignose-calendar-top-prev {
     order: 2;
-  
     position: absolute;
-    right: 140px;
+    right: 45px;
     z-index: 1;
-    top: 5px;
+    height: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-date {
@@ -3031,9 +3033,13 @@ class="select-css"
 .index_page .calender_view  .pignose-calendar .pignose-calendar-top .pignose-calendar-top-nav.pignose-calendar-top-next {
     order: 3;
     position: absolute;
-    right: 90px;
+    right: 0;
     z-index: 1;
-    top: 5px;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .day_events h6, .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-year, .pignose-calendar .pignose-calendar-top .pignose-calendar-top-month , .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-month{
@@ -4225,6 +4231,7 @@ footer.ad_footer {
     bottom: 50%;
     transform: translateY(-50%);
     right: 20px;
+    text-decoration: none;
 }
 .index_page a.add_new i, .index_page a.add_new svg {
     margin-right: 20px;
@@ -7099,17 +7106,17 @@ table.dataTable thead th, table.dataTable thead td{
 	
 }
 .shortcuts_container .shortcut {
-	text-decoration: underline;
+	text-decoration: none;
     font-weight: 600;
-    font-size: 0.5rem;
+    font-size: 0.625rem;
     color: #606060;
     text-transform: uppercase;
-	text-decoration-line: underline;
 	line-height: 20px;
 	float: left;
 	cursor: pointer;
 	width: 100%;
 	text-decoration: none;
+	text-align: right;
 }
 .shortcuts_container .btn-new {
 	height: 20px;
@@ -7574,7 +7581,7 @@ ul.nav_ul.float_right li img {
 }
 
 .scroll_button button:first-child {
-	margin-right: 5%;
+	margin-right: 10%;
 }
 .shortcuts_container .shortcuts_all {
     height: 100%;
@@ -7633,14 +7640,22 @@ ul.nav_ul.float_right li img {
     vertical-align: middle;
     display: flex;
     justify-content: center;
-	align-items: center;
+    align-items: center;
+    color: inherit;
 }
 .shortcuts_container .profile_img >span>span:nth-child(2) {
 	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	height: 40%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    text-align: center;
+    font-size: 0.5625rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    overflow-wrap: break-word;
+    text-transform: inherit;
+    color: inherit;
 }
 .shortcut_box >a:not(.btn-delete) {
 	width: 100%;

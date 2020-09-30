@@ -35,17 +35,17 @@ table.dataTable thead th, table.dataTable thead td{
 	
 }
 .shortcuts_container .shortcut {
-	text-decoration: underline;
+	text-decoration: none;
     font-weight: 600;
-    font-size: 0.5rem;
+    font-size: 0.625rem;
     color: #606060;
     text-transform: uppercase;
-	text-decoration-line: underline;
 	line-height: 20px;
 	float: left;
 	cursor: pointer;
 	width: 100%;
 	text-decoration: none;
+	text-align: right;
 }
 .shortcuts_container .btn-new {
 	height: 20px;
@@ -510,7 +510,7 @@ ul.nav_ul.float_right li img {
 }
 
 .scroll_button button:first-child {
-	margin-right: 5%;
+	margin-right: 10%;
 }
 .shortcuts_container .shortcuts_all {
     height: 100%;
@@ -569,14 +569,22 @@ ul.nav_ul.float_right li img {
     vertical-align: middle;
     display: flex;
     justify-content: center;
-	align-items: center;
+    align-items: center;
+    color: inherit;
 }
 .shortcuts_container .profile_img >span>span:nth-child(2) {
 	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	height: 40%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    text-align: center;
+    font-size: 0.5625rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    overflow-wrap: break-word;
+    text-transform: inherit;
+    color: inherit;
 }
 .shortcut_box >a:not(.btn-delete) {
 	width: 100%;

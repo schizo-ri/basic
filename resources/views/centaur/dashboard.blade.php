@@ -109,14 +109,14 @@
 								</span></a>
 							</button>
 						@endif
-						@if(in_array('Putni nalozi', $moduli))  
+						{{-- @if(in_array('Putni nalozi', $moduli))   --}}
 							<button class="" ><a href="{{ route('travel_orders.show', $employee->id) }}" class="travel_show" rel="modal:open">
 								<span>
 									<span class="img travel"></span>
 										<p>{{  __('basic.travel_orders') }}</p>
 								</span></a>
 							</button>
-						@endif
+					{{-- 	@endif --}}
 						@if(in_array('Locco vožnja', $moduli))  
 							<button class="" ><a href="{{ route('fuels.create')}}" rel="modal:open">
 								<span>
@@ -174,7 +174,7 @@
 								<i style="font-size:11px" class="fa">&#xf067;</i>
 							</a>
 						@endif
-						<h3 class="agenda_title">@lang('calendar.your_agenda') </h3>
+						<h2 class="agenda_title">@lang('calendar.your_agenda') </h2>
 						<div class="all_agenda">
 							@if((isset($events) && count($events)>0) || ( isset($tasks) && count($tasks) > 0) )
 								@foreach($events->take(5) as $event)

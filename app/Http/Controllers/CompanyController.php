@@ -280,15 +280,16 @@ class CompanyController extends Controller
 					
 						$moduli = $db_ext->table('modules')->get(); //dobvaćanje modula
 						
-						foreach($modules as $module){
+						foreach( $modules as $module){
 							if($module == 11 ) {
-								array_push($moduli_company,'Putni nalozi');
+								array_push( $moduli_company,'Putni nalozi');
 							} else if($module == 12)  {
 								array_push($moduli_company,'Evidencija rada');
 							} else {
 								array_push($moduli_company,$moduli->where('id', $module)->first()->name); // array sa nazivima  modulima korisnika
 							}
 						}
+					
 					}
 				} catch (Exception $e) {
 					echo 'Caught exception: ',  $e->getMessage(), "\n";

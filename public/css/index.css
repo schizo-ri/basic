@@ -589,7 +589,6 @@ class="select-css"
     border: none;
     display: flex;
     padding: 0;
-    
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-unit a {
@@ -611,11 +610,14 @@ class="select-css"
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-nav.pignose-calendar-top-prev {
     order: 2;
-  
     position: absolute;
-    right: 140px;
+    right: 45px;
     z-index: 1;
-    top: 5px;
+    height: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-date {
@@ -633,9 +635,13 @@ class="select-css"
 .index_page .calender_view  .pignose-calendar .pignose-calendar-top .pignose-calendar-top-nav.pignose-calendar-top-next {
     order: 3;
     position: absolute;
-    right: 90px;
+    right: 0;
     z-index: 1;
-    top: 5px;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .day_events h6, .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-year, .pignose-calendar .pignose-calendar-top .pignose-calendar-top-month , .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-month{
@@ -1827,6 +1833,7 @@ footer.ad_footer {
     bottom: 50%;
     transform: translateY(-50%);
     right: 20px;
+    text-decoration: none;
 }
 .index_page a.add_new i, .index_page a.add_new svg {
     margin-right: 20px;

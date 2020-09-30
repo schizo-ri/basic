@@ -272,13 +272,14 @@
                                                 <span class="space" ></span>
                                                 <a href="{{ route('vehical_services.index') }}" class="line_height_45 admin_link {{ Request::is('vehical_services*') ? 'active_admin' : '' }}" id="vehical_services">@lang('basic.vehical_services')</a>
                                             </li>
+                                           {{--  @if(in_array('Putni nalozi', $moduli)) --}}
+                                                <li class="first_group car_links">
+                                                    <span class="space" ></span>
+                                                    <a href="{{ route('travel_orders.index') }}" class="line_height_45 admin_link {{ Request::is('travel_orders*') ? 'active_admin' : '' }}" id="travel_orders">@lang('basic.travel_orders')</a>
+                                                </li>
+                                           {{--  @endif --}}
                                         @endif
-                                        @if(in_array('Putni nalozi', $moduli))
-                                            <li class="first_group car_links">
-                                                <span class="space" ></span>
-                                                <a href="{{ route('travel_orders.index') }}" class="line_height_45 admin_link {{ Request::is('travel_orders*') ? 'active_admin' : '' }}" id="travel_orders">@lang('basic.travel_orders')</a>
-                                            </li>
-                                        @endif
+                                       
                                         <li class="">
                                             <span class="image_company" ></span> 
                                             <a href="{{ route('companies.index') }}" class="line_height_61 admin_link {{ Request::is('companies*') ? 'active_admin' : '' }}" id="companies">@lang('basic.company')</a>
