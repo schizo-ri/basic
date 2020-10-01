@@ -7525,10 +7525,7 @@ ul.nav_ul.float_right li img {
 	border-bottom: 1px solid #ccc;
     overflow: hidden;
 	height: 45%;
-	/* display: block; */
-   /*  display: flex;
-	justify-content: flex-start; */
-	/* overflow-x: auto; */
+
 }
 .salary>div.shortcuts_container {
 	float: left;
@@ -7543,13 +7540,14 @@ ul.nav_ul.float_right li img {
 	width: 15%;
 	height: 45%;
 	padding-bottom: 25px;
-	padding-left: 15px;
+	padding-left: 0;
 }
 .shortcuts_container:nth-child(2)>div:first-child {
 	height: 40%;
 }
 .shortcuts_container:nth-child(2)>div:nth-child(2) {
 	height: 60%;
+	padding-left: 15px;
 }
 .shortcuts_container>span,.shortcuts_container>a:not(.btn-delete) {
 	width: 100%;

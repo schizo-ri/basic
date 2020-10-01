@@ -63,7 +63,6 @@ class AdController extends Controller
 		} else {
 			return view('Centaur::ads.create',['categories' => $categories]);
 		}
-
     }
 
     /**

@@ -18,7 +18,8 @@
 			</a>
         </div>
         <h1>@lang('absence.absences') </h1>
-    </div>
+	</div>
+	
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="table-responsive">
 			@if(count($absences))

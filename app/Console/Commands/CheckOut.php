@@ -41,12 +41,23 @@ class CheckOut extends Command
     {
         $today_date = date('Y-m-d');
         $checkOut_time = $today_date . ' 16:15';
-      
         $workRecords = WorkRecord::whereDate('start',$today_date)->get();
-       
+        
         foreach ($workRecords as $workRecord) {
             if($workRecord->end == null) {
-                $workRecord->updateWorkRecords(['end' => $checkOut_time ]);
+                $checkOut = true;
+                $loccos = $workRecord->employee->hasLocco()->where('status',0);
+                if( count($loccos) > 0) {
+                    foreach ($loccos as $locco) {
+                        if( date('Y-m-d',strtotime($locco->date)) == $today_date ) {
+                            $checkOut = false;
+                        }
+                    }
+                }
+             
+                if ( $checkOut ) {
+                    $workRecord->updateWorkRecords(['end' => $checkOut_time ]);
+                } 
             }
         }
         

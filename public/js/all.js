@@ -1283,6 +1283,10 @@ $( function () {
 					extend: 'pdfHtml5',
 					orientation: 'landscape',
 					pageSize: 'A3',
+					defaultStyle: {
+						fontSize: 6,
+						color: 'black'
+					},
 					exportOptions: {
 						columns: 'th:not(.not-export-column)',
 						rows: ':visible'
@@ -1299,7 +1303,9 @@ $( function () {
 							background: 'grey',
 							alignment: 'center'
 						}
-
+						doc.defaultStyle = {
+							fontSize: 8
+						}
 						doc.styles = {
 							subheader: {
 								fontSize: 10,
@@ -1308,20 +1314,34 @@ $( function () {
 							},
 							tableHeader: {
 								bold: true,
-								fontSize: 10.5,
+								fontSize: 8,
 								color: 'black'
 							},
 							lastLine: {
 								bold: true,
-								fontSize: 11,
+								fontSize: 8,
 								color: 'blue'
 							},
 							defaultStyle: {
-								fontSize: 10,
+								fontSize: 8,
 								color: 'black'
 							}
 						}
-
+						var rowCount = doc.content[1].table.body.length;
+						for (i = 1; i < rowCount; i++) {
+							var columnsCount = doc.content[1].table.body[i].length;
+							var align;
+							for (j = 1; j < columnsCount; j++) {
+								if(j == 0 || j == columnsCount-1) {
+									align = 'right';
+								} else if (j == 1 ) {
+									align = 'left';
+								} else {
+									align = 'center';
+								}
+								doc.content[1].table.body[i][j].alignment = align;
+							}
+						}
 						var objLayout = {};
 						objLayout['hLineWidth'] = function(i) { return .8; };
 						objLayout['vLineWidth'] = function(i) { return .5; };

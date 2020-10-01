@@ -249,9 +249,6 @@
 						}
 					}
 				});
-
-				
-				
 			</script>
 			<!-- Latest compiled and minified Bootstrap JavaScript -->
 			<!-- Bootstrap js -->

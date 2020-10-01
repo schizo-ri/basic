@@ -103,6 +103,26 @@ class LoccoController extends Controller
 		$locco = new Locco();
         $locco->saveLocco($data);
        
+        /* Upis u evidenciju rada ako je otvoren putni nalog prije 8:15 / 7:00 */
+        $now = new DateTime();
+        if( $now->format('N') < 5 ) {
+            $time = '08:00';
+        } else if($now->format('N') == 5) {
+            $time = '07:00';
+        }  
+        
+        $workRecord = WorkRecord::where('employee_id', $request['employee_id'])->whereDate('start', $now->format('Y-m-d'))->first();
+        if( ! $workRecord ) {
+            if( $now->format('Y-m-d H:i') < $now->format('Y-m-d ' . $time )) {
+                $data = array(
+                    'employee_id'  	=> $request['employee_id'],
+                    'start'  		=>  $now->format('Y-m-d H:i'),
+                );
+                $workRecord = new WorkRecord();
+                $workRecord->saveWorkRecords($data);
+            }
+        }
+
         /* Update Car - trenutni kilometri */
         if($request['end_km']) {
             $car = Car::find($request['car_id']);
@@ -132,26 +152,6 @@ class LoccoController extends Controller
                     'travel_id'  => $travelOrder->id,
                 );
                 $locco->updateLocco($data_locco);
-
-                /* Upis u evidenciju rada ako je otvoren putni nalog prije 8:15 / 7:00 */
-                $now = new DateTime();
-                if( $now->format('N') < 5 ) {
-                    $time = '08:15';
-                } else if($now->format('N') == 5) {
-                    $time = '07:00';
-                }  
-                
-                $workRecord = WorkRecord::where('employee_id', $request['employee_id'])->whereDate('start', $now->format('Y-m-d'))->first();
-                if( ! $workRecord ) {
-                    if( $now->format('Y-m-d H:i') < $now->format('Y-m-d ' . $time )) {
-                        $data = array(
-                            'employee_id'  	 => $request['employee_id'],
-                            'start'  		=> $now->format('Y-m-d ' . $time ),
-                        );
-                        $workRecord = new WorkRecord();
-                        $workRecord->saveWorkRecords($data);
-                    }
-                }
                
                 /* mail obavijest o novom putnom nalogu */
                 $send_to = EmailingController::sendTo('travel_orders','create');
