@@ -39,6 +39,15 @@
 				</select>
 			</div>
 			@endif
+			<div class="form-group">
+				<label>@lang('basic.manager')</label>
+				<select class="form-control" name="employee_id" value="" id="select_level">
+					<option value="" selected>
+					@foreach($employees as  $employee)
+						<option value="{{ $employee->id }}" {!! $department->employee_id == $employee->id ? 'selected' : '' !!} >{{ $employee->user->first_name . ' ' . $employee->user->last_name }}</option>
+					@endforeach
+				</select>
+			</div>
 			{{ csrf_field() }}
 			{{ method_field('PUT') }}
 			<input class="btn-submit" type="submit" value="{{ __('basic.edit')}}">

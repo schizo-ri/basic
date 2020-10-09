@@ -13,6 +13,7 @@
     box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15); 
     border-radius: 5px;
     overflow: auto;
+    
 }
 .index_page.index_admin h1 {
     padding: 25px 15px 20px;
@@ -151,9 +152,7 @@ ul.admin_pages li >span.image_template{
 #admin_page table span.role {
     display: none;
 }
-#admin_page table span.role {
-    display: none;
-}
+
 #admin_page table span.role._1, #admin_page table span.role._0 {
     display: block;
 }
@@ -246,11 +245,14 @@ ul.admin_pages li >span.image_template{
 }
 
 @media (max-width: 450px) {
-    .index_page aside > .admin_panel {
-        
+    #admin_page {
+        overflow: auto;
     }
     .admin_main .link_back {
         padding: 10px;
+        top: 20px;
+        padding: 0;
+        margin: 0;
     }
     ul.admin_pages {
         padding: 0;

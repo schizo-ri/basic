@@ -54,7 +54,7 @@
 												<i class="far fa-edit"></i>
 										</a>
 									@endif
-									@if(Sentinel::getUser()->hasAccess(['works.delete']) || in_array('works.delete', $permission_dep) && !$employees->where('work_id',$work->id)->first())
+									@if(Sentinel::getUser()->hasAccess(['emailings.delete']) || in_array('emailings.delete', $permission_dep))
 										<a href="{{ route('emailings.destroy', $emailing->id) }}" title="{{ __('basic.delete')}}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
 											<i class="far fa-trash-alt"></i>
 										</a>

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\Work;
 use App\User;
+use App\Models\JobInterview;
 use App\Models\UserInteres;
 use App\Models\Department;
 use App\Models\DepartmentRole;
@@ -48,7 +49,7 @@ class UserController extends Controller
     public function index()
     {
         $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->where('active',1)->get();
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
 		$departmentRoles = DepartmentRole::get();
 		$works = Work::get();
 		$empl = Sentinel::getUser()->employee;
@@ -68,11 +69,15 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $roles = app()->make('sentinel.roles')->createModel()->all();
-
-        return view('Centaur::users.create', ['roles' => $roles]);
+        if(isset($request['job_interview_id'])) {
+            $job_interwiew = JobInterview::find($request['job_interview_id']);
+        } else {
+            $job_interwiew = null;
+        }
+        return view('Centaur::users.create', ['roles' => $roles, 'job_interwiew' => $job_interwiew]);
     }
 
     /**
@@ -130,6 +135,19 @@ class UserController extends Controller
             'reg_date' => date('Y-m-d'),
         ];
 
+        if(isset( $request['job_interwiew'])) {
+            $jobInterview = JobInterview::find( $request['job_interwiew']);
+            $data_employee += [
+                'oib'           =>  $jobInterview->oib,
+                'priv_email'    =>  $jobInterview->email,
+                'priv_mobile'   =>  $jobInterview->phone,
+                'title'         =>  $jobInterview->title,
+                'qualifications' =>  $jobInterview->qualifications,
+                'work_id'       =>  $jobInterview->work_id,
+                'comment'       =>  $jobInterview->comment,
+            ];
+
+        }
         $employee = new Employee();
         $employee->saveEmployee( $data_employee );
 
@@ -144,7 +162,15 @@ class UserController extends Controller
                 $user_name = $user_name[1] . '_' . $user_name[0];
             }
             
-            $path = 'storage/' . $user_name . '/profile_img/';
+            $path = 'storage/';
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $path = $path . $user_name;
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $path = $path  . '/profile_img/';
             if (!file_exists($path)) {
                 mkdir($path);
             }

@@ -59,9 +59,6 @@ class AbsenceController extends BasicAbsenceController
 		if( Sentinel::inRole('administrator') ) {
 			$absences = Absence::whereYear('start_date', $year)->get();
 			$absences = $absences->merge(Absence::whereYear('end_date', $year)->get());
-			
-			
-
 		} else {
 			$absences = Absence::where('employee_id',$empl->id)->whereYear('start_date', $year)->orderBy('start_date','ASC')->get();
 			$absences = $absences->merge(Absence::where('employee_id',$empl->id)->whereYear('end_date', $year)->orderBy('start_date','ASC')->get());
@@ -108,7 +105,7 @@ class AbsenceController extends BasicAbsenceController
 			$type = $request['type'];
 		}
 		
-		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
 		$absenceTypes = AbsenceType::get();
 		
 		$user = Sentinel::getUser();
@@ -243,7 +240,7 @@ class AbsenceController extends BasicAbsenceController
     public function edit($id)
     {
         $absence = Absence::find($id);
-		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
 		$absenceTypes = AbsenceType::get();
 		
 		$user = Sentinel::getUser();

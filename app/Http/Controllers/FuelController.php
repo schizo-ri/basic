@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DashboardController;
 use App\Models\Fuel;
 use App\Models\Car;
 use App\Models\Locco;
@@ -29,12 +30,7 @@ class FuelController extends Controller
      */
     public function index()
     {
-        $empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
+        $permission_dep = DashboardController::getDepartmentPermission();
    
         $cars = Car::get('registration');
 

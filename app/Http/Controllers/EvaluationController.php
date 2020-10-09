@@ -172,7 +172,7 @@ class EvaluationController extends Controller
 			
 			$employee = Employee::join('users','employees.user_id', '=', 'users.id')->select('employees.*','users.first_name','users.last_name')->where('first_name', $user->first_name)->where('last_name', $user->last_name)->first();
 			
-			$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+			$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
 			$questionnaire = Questionnaire::find($input['questionnaire_id']);
 			$evaluationCategory = EvaluationCategory::where('questionnaire_id', $questionnaire->id)->get();
 			$evaluatingQuestion = EvaluationQuestion::get();

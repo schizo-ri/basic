@@ -75,10 +75,10 @@
 	</main>
 	<script>
 		$(function(){
-			$.getScript( '/../js/filter_table.js');
+			/* $.getScript( '/../js/filter_table.js');
 			$.getScript( '/../js/filter_dropdown.js');
 			$.getScript( '/../js/open_modal.js'); 
-			$.getScript( '/../restfulizer.js');
+			$.getScript( '/../restfulizer.js'); */
 		});
 	</script>
 @stop

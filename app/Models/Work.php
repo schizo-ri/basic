@@ -12,7 +12,7 @@ class Work extends Model
 	* @var array
 	*/
 	protected $fillable = [
-		'department_id','name','job_description','employee_id'
+		'department_id','name','job_description','employee_id','first_superior'
 	];
 	
 	/*
@@ -33,6 +33,17 @@ class Work extends Model
 		return $this->belongsTo(static::$employeeModel,'employee_id');
 	}
 	
+	/*
+	* Returns the employee relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function firstSuperior()
+	{
+		return $this->belongsTo(static::$employeeModel,'employee_id');
+	}
+
 	/*
 	* Returns the TravelLocco relationship
 	* 

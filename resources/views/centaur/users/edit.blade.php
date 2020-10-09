@@ -3,7 +3,7 @@
     <h3 class="panel-title">@lang('basic.edit_user')</h3>
 </div>
 <div class="modal-body">
-    <form accept-charset="UTF-8" class="form_edit_user" role="form" method="post" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data" >
+    <form accept-charset="UTF-8" class="form_edit_user form_user" role="form" method="post" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data" >
         <div class="first_tab">
             <div class="form-group upload_user_photo">
                 <label class="label_file" for="file">@lang('basic.upload_photo')
@@ -28,10 +28,8 @@
                 <input class="form-control" name="email" id="email" type="text" maxlength="191" value="{{ $user->email}}" required >
                 {!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
             </div>
-            
             <button class="btn-next" type="button">@lang('basic.next')</button>
             <a class="btn-cancel" type="button" rel="modal:close">@lang('basic.cancel')</a>
-           
         </div>
         <div class="second_tab">
             <div class="form-group  {{ ($errors->has('password')) ? 'has-error' : '' }}">
@@ -45,26 +43,24 @@
             <div class="form-group" >
                 <label>{{ __('basic.roles')}}</label>
                 <div class="checkbox">
-                        @foreach ($roles as $role)
-                            <label>
-                                @if($role->slug != 'superadmin')
-                                    <input type="checkbox" class="roles" id="role{{ $role->id }}" name="roles[{{ $role->slug }}]" value="{{ $role->id }}" {!! $user->inRole($role) ? 'checked' : '' !!} />
-                                    {{ $role->name }}
-                                @endif
-                                @if(Sentinel::inRole('superadmin') && $role->slug == 'superadmin' )
-                                    <input type="checkbox" class="roles" id="role{{ $role->id }}" name="roles[{{ $role->slug }}]" value="{{ $role->id }}" {!! $user->inRole($role) ? 'checked' : '' !!} {!! (Sentinel::getUser()->id != $user->id || Sentinel::inRole('superadmin') ) ? 'disabled' : '' !!} />
-                                    {{ $role->name }}
-                                @endif
-                            </label>
-                        
-                        @endforeach
-                             
+                    @foreach ($roles as $role)
+                        <label>
+                            @if($role->slug != 'superadmin')
+                                <input type="checkbox" class="roles" id="role{{ $role->id }}" name="roles[{{ $role->slug }}]" value="{{ $role->id }}" {!! $user->inRole($role) ? 'checked' : '' !!} />
+                                {{ $role->name }}
+                            @endif
+                            @if(Sentinel::inRole('superadmin') && $role->slug == 'superadmin' )
+                                <input type="checkbox" class="roles" id="role{{ $role->id }}" name="roles[{{ $role->slug }}]" value="{{ $role->id }}" {!! $user->inRole($role) ? 'checked' : '' !!} {!! (Sentinel::getUser()->id != $user->id || Sentinel::inRole('superadmin') ) ? 'disabled' : '' !!} />
+                                {{ $role->name }}
+                            @endif
+                        </label>
+                    @endforeach
                 </div>
             </div>
-                {{ csrf_field() }}
-                {{ method_field('PUT') }}
-                <input class="btn-submit" type="submit" value="{{ __('basic.edit')}}">
-                <a class="btn-back" type="button">@lang('basic.back')</a>
+            {{ csrf_field() }}
+            {{ method_field('PUT') }}
+            <input class="btn-submit" type="submit" value="{{ __('basic.edit')}}">
+            <a class="btn-back" type="button">@lang('basic.back')</a>
         </div>
     </form>
 </div>

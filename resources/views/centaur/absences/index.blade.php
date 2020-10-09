@@ -5,6 +5,7 @@
 	use App\Http\Controllers\BasicAbsenceController;
 @endphp
 @section('content')
+<span id="user_admin">{{ Sentinel::inRole('superadmin') ? 'true' : '' }}</span>
 <div class="index_page index_absence">
 	<main class="col-lg-12 col-xl-12 index_main main_absence float_right">
 		<section>
@@ -191,106 +192,6 @@
 	</main>
 </div>
 <script>
-	$( function () {
-		jQuery.extend( jQuery.fn.dataTableExt.oSort, {
-			"date-eu-pre": function ( date ) {
-				date = date.replace(" ", "");
-					
-				if ( ! date ) {
-					return 0;
-				}
-			
-				var year;
-				var eu_date = date.split(/[\.\-\/]/);
-				/*year (optional)*/
-				if ( eu_date[2] ) {
-					year = eu_date[2];
-				}
-				else {
-					year = 0;
-				}
-			
-				/*month*/
-				var month = eu_date[1];
-				try {
-					
-					if ( month.length == 1 ) {
-						month = 0+month;
-					}
-			
-					/*day*/
-					var day = eu_date[0];
-					if ( day.length == 1 ) {
-						day = 0+day;
-					}
-			
-					return (year + month + day) * 1;
-				} catch (error) {
-					target = null;
-				}
-			},
-			
-			"date-eu-asc": function ( a, b ) {
-				return ((a < b) ? -1 : ((a > b) ? 1 : 0));
-			},
-			
-			"date-eu-desc": function ( a, b ) {
-				return ((a < b) ? 1 : ((a > b) ? -1 : 0));
-			}
-		} );
-		$('.all_absences #index_table').DataTable( {
-			"order": [[ 1, "desc" ]],
-			"fixedHeader": true,
-			"columnDefs": [ {
-				"targets"  :[1,3,4],
-				"type": 'date-eu'
-			}],
-			dom: 'Bfrtip',
-			"paging": false,
-			buttons: [
-				'copyHtml5',
-				{
-					extend: 'print',
-					customize: function ( win ) {
-						$(win.document.body).find('h1').addClass('title_print');
-						$(win.document.body).find('table').addClass('table_print');
-						$(win.document.body).find('table tr td').addClass('row_print');
-						$(win.document.body).addClass('body_print');
-						$(win.document.body).find('table tr th').addClass('hrow_print');
-						$(win.document.body).find('table tr th:last-child').addClass('not_print');
-						$(win.document.body).find('table tr td:last-child').addClass('not_print');
-					}
-				},
-				{
-					extend: 'pdfHtml5',
-					orientation: 'landscape',
-					pageSize: 'A4',
-					exportOptions: {
-						columns: 'th:not(.not-export-column)',
-						rows: ':visible'
-					}
-				},
-				{
-					extend: 'excelHtml5',
-					autoFilter: true,
-					exportOptions: {
-						columns: 'th:not(.not-export-column)',
-						rows: ':visible'
-					},
-					customize: function( xlsx ) {
-						var sheet = xlsx.xl.worksheets['sheet1.xml'];
-					/* 	$('row c', sheet).attr( 's', '25' );  borders */
-						$('row:first c', sheet).attr( 's', '27' );
-					}	
-				}
-			]
-		} );
-		$('#index_table_filter').prepend('<a class="add_new" href="{{ route('absences.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('absence.new_request')</a>');
-		if($(".all_absences #index_table_filter .show_button").length == 0) {
-			$('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
-		}
-		$('#index_table_filter').show();
-		$('table.display').show();
-	} );
+	
 </script>
 @stop

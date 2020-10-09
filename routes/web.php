@@ -177,6 +177,10 @@ Route::resource('templates', 'TemplateController');
 
 // Dashboard 
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
+/*
+Route::get('dashboard', function () {
+    return view('Centaur::dashboard');
+})->name('dashboard');*/
 
 // Layout 
 Route::get('layout', ['as' => 'layout', 'uses' => 'LayoutController@index']);
@@ -194,10 +198,25 @@ Route::resource('travel_expenses', 'TravelExpensesController');
 //Shortcut
 Route::resource('shortcuts', 'ShortcutController');
 
-/*
-Route::get('dashboard', function () {
-    return view('Centaur::dashboard');
-})->name('dashboard');*/
+// Terminations
+Route::resource('terminations', 'TerminationController');
+
+// EmployeeTermination
+Route::resource('employee_terminations', 'EmployeeTerminationController');
+
+// Project
+Route::resource('projects', 'ProjectController');
+
+// Customer
+Route::resource('customers', 'CustomerController');
+
+// Afterhour
+Route::resource('afterhours', 'AfterhourController');
+     
+// JobInterview
+Route::resource('job_interviews', 'JobInterviewController');
+
+
 
 // Oglasnik
 Route::get('oglasnik', ['as' => 'oglasnik', 'uses' => 'AdController@oglasnik']);

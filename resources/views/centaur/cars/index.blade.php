@@ -35,7 +35,7 @@
 					</thead>
 					<tbody>
 						@foreach ($cars as $car)
-							<tr data-href="/cars/{{ $car->id }}" data-modal >
+							<tr class="tr_open_link"  data-href="/cars/{{ $car->id }}" data-modal >
 								<td>{{ $car->manufacturer }}</td>
 								<td>{{ $car->model }} {!! $car->car_index ? ' ('. $car->car_index . ')' : '' !!}</td>
 								<td>{{ $car->registration }}</td>
@@ -90,22 +90,5 @@
 		
 		</div>
 	</main>
-	<script>
-		$(function(){
-		
-		
-			$('tr[data-modal] td:not(:last-child)').on("click", function(e) {
-				event.preventDefault();
-				var href = location.origin + $(this).parent().data('href');
-				console.log(href);
-				$.get(href, function(html) { 
-					$(html).appendTo('#login-modal');
-				}); 
-				$('#login-modal').modal();
-				$('a.close-modal').click(function(){
-					$( "#login-modal" ).empty();
-				});
-			}); 
-		});
-	</script>
+
 @stop

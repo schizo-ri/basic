@@ -43,6 +43,11 @@
 				<input class="form-control" name="mather_name" type="text" value="{{ old('mather_name') }}" maxlength="20" />
 				{!! ($errors->has('mather_name') ? $errors->first('mather_name', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<div class="form-group {{ ($errors->has('maiden_name')) ? 'has-error' : '' }}">
+				<label>@lang('basic.maiden_name')</label>
+				<input class="form-control" name="maiden_name" type="text" value="{{ old('maiden_name') }}" maxlength="20" />
+				{!! ($errors->has('maiden_name') ? $errors->first('maiden_name', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
 			<div class="form-group {{ ($errors->has('oib')) ? 'has-error' : '' }}">
 				<label>@lang('basic.oib')</label>
 				<input class="form-control" name="oib" type="number" step="1" maxlength="20" value="{{ old('oib') }}" required />
@@ -122,7 +127,7 @@
 				<select class="form-control" name="work_id" value="{{ old('work_id') }}" required >
 					<option selected="selected" disabled></option>
 					@foreach($works as $work)
-						<option name="work_id" value="{{ $work->id }}">{{ $work->department['name'] . ' - '. $work->name }}</option>
+						<option name="work_id" value="{{ $work->id }}">{{ $work->name . ' - '. $work->department['name'] }}</option>
 					@endforeach	
 				</select>
 				{!! ($errors->has('work_id') ? $errors->first('work_id', '<p class="text-danger">:message</p>') : '') !!}
@@ -177,6 +182,26 @@
 				<textarea class="form-control" maxlength="65535" name="comment"></textarea>
 				{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<div class="form-group {{ ($errors->has('lijecn_pregled')) ? 'has-error' : '' }}">
+				<label>@lang('basic.lijecn_pregled')</label>
+				<input class="form-control" placeholder="{{ __('basic.lijecn_pregled')}}" name="lijecn_pregled" type="date" value="{{ old('lijecn_pregled') }}" required />
+				{!! ($errors->has('lijecn_pregled') ? $errors->first('lijecn_pregled', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="form-group {{ ($errors->has('znr')) ? 'has-error' : '' }}">
+				<label>@lang('basic.znr')</label>
+				<input class="form-control" placeholder="{{ __('basic.znr')}}" name="znr" type="date" value="{{ old('znr') }}" required />
+				{!! ($errors->has('znr') ? $errors->first('znr', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="form-group {{ ($errors->has('size')) ? 'has-error' : '' }}">
+				<label>@lang('basic.size')</label>
+				<input name="size" type="text" class="form-control" maxlength="10" value="{{ old('size') }}"   >
+				{!! ($errors->has('size') ? $errors->first('size', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="form-group {{ ($errors->has('shoe_size')) ? 'has-error' : '' }}">
+				<label>@lang('basic.shoe_size')</label>
+				<input name="shoe_size" type="text" class="form-control" maxlength="10" value="{{ old('shoe_size') }}"   >
+				{!! ($errors->has('shoe_size') ? $errors->first('shoe_size', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
 			<div class="form-group group_abs_days{{ ($errors->has('abs_days'))  ? 'has-error' : '' }}" style="padding-top: 10px">
 				<label>@lang('basic.abs_days') <span class="add_new">@lang('basic.add')</span></label>
 				<div class="group_abs">
@@ -205,7 +230,6 @@
 	</form>
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
-
 <script>
 	$('.add_new').click(function(){
 		$('.group_abs_days').append('<div class="group_abs"><input class="form-control day_go" type="number" step="1" maxlength="2" name="abs_days[]" value="0" /><span class="float_l span_day_go">@lang('absence.days')  @lang('basic.for_year')</span><input class="form-control day_go" type="number" step="1" maxlength="4" placeholder="{{ __('basic.year') }}" name="abs_year[]" /><span class="remove"><i class="far fa-trash-alt"></i></span></div>');

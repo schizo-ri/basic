@@ -82,11 +82,11 @@
 </div>
 <script>
 	$( function () {
-		$.getScript( '/../js/filter.js');
+		/* $.getScript( '/../js/filter.js');
 		$.getScript( '/../js/open_modal.js');
 		$.getScript( '/../js/set_height_notice.js');
 		$.getScript( '/../js/sequence_dragDrop.js');
-		$.getScript( '/../js/set_height_campaign.js');
+		$.getScript( '/../js/set_height_campaign.js'); */
 		
 		$('.main_noticeboard .header_document .link_back').click(function(e){
             e.preventDefault();

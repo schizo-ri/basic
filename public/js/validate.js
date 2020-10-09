@@ -7,6 +7,8 @@ var status_requests;
 var all_requests;
 var done;
 var saved;
+var validate = [];
+
 if(locale == 'en') {
     validate_text = "Required field";
     email_unique = "Email must be unique";
@@ -47,21 +49,15 @@ $('.remove').on('click',function(){
 var page = $('.admin_pages li').find('a.active_admin');
 var modul_name = $('.admin_pages li').find('a.active_admin').attr('id');
 
-$('.btn-submit').on('click',function(event){
-    event.preventDefault();
-    var form = $(this).parents('form:first');
-    let url = $(this).parents('form:first').attr('action');
-    var form_data = form.serialize();
-  
-    var url_load = window.location.href;
-    var pathname = window.location.pathname;
-    console.log("validate2");
-    console.log(url_load);
-    console.log(url); 
-    console.log(form_data);
-
-    var validate = [];
-
+function validate_user_form () {
+    validate = [];
+    $('.roles').on('change',function(event){
+        if( roles.is(':checked')) {
+            validate.push(true);
+        } else {
+            validate.push("block");
+        }
+    });
     $( "textarea" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 ) {
@@ -101,7 +97,16 @@ $('.btn-submit').on('click',function(event){
             }
         }
     });
- 
+     /*    if (tinyMCE.activeEditor) { */
+    /*        if(tinyMCE.activeEditor.getContent().length == 0) { */
+    /*            if( ! $('#mytextarea').parent().find('.modal_form_group_danger').length) { */
+    /*                $('#mytextarea').parent().append('<p class="modal_form_group_danger">' + validate_text + '</p>'); */
+    /*            } */
+    /*            validate.push("block"); */
+    /*            $('#mytextarea').parent().find('.modal_form_group_danger').remove(); */
+    /*            validate.push(true); */
+    /*        } */
+    /*    } */
     if($("#password").length >0) {
         password = $("#password");
         conf_password = $("#conf_password");    
@@ -128,18 +133,26 @@ $('.btn-submit').on('click',function(event){
             }
         }
     }
+}
+$('input[type="file"]').on('change',function(e){
+    fileName = e.target.files[0].name;
+    $('#file_name').text(fileName);
+});
+
+$('.btn-submit').on('click',function(event){
+    event.preventDefault();
+    var form = $(this).parents('form:first');
+    let url = $(this).parents('form:first').attr('action');
+    var form_data = form.serialize();
   
- 
-    /*    if (tinyMCE.activeEditor) { */
-    /*        if(tinyMCE.activeEditor.getContent().length == 0) { */
-    /*            if( ! $('#mytextarea').parent().find('.modal_form_group_danger').length) { */
-    /*                $('#mytextarea').parent().append('<p class="modal_form_group_danger">' + validate_text + '</p>'); */
-    /*            } */
-    /*            validate.push("block"); */
-    /*            $('#mytextarea').parent().find('.modal_form_group_danger').remove(); */
-    /*            validate.push(true); */
-    /*        } */
-    /*    } */
+    var url_load = window.location.href;
+    var pathname = window.location.pathname;
+    validate_user_form ();
+
+    console.log(url_load);
+    console.log(url); 
+    console.log(form_data);
+    console.log(validate);
 
     if(validate.includes("block") ) {
        event.preventDefault();
@@ -277,42 +290,22 @@ $('.btn-submit').on('click',function(event){
     }
 });
 
-$('.btn-next').on('click',function(event){  
+$('.form_user .btn-next').on('click',function(event){
+    console.log("btn-next");
     f_name = $("#first_name");
     l_name = $("#last_name");
     email = $("#email");
+    password = $("#password");
+    conf_password = $("#conf_password");
     file = $("#file");        
-    var validate2 = [];
+    
+    validate = [];
 
-    if(! f_name.val()) {
-        if( f_name.parent().find('.validate').length  == 0) {
-            f_name.parent().append(' <p class="validate">' + validate_name + '</p>');               
-        }
-        validate2.push("block");
-    } else {
-        f_name.parent().find('.validate').text("");
-        validate2.push(true);
-        if(! l_name.val()) {
-            if( l_name.parent().find('.validate').length  == 0) {
-                l_name.parent().append(' <p class="validate">' + validate_lastname + '</p>');
-            }            
-            validate2.push("block");
-        } else {
-            l_name.parent().find('.validate').text("");
-            validate2.push(true);
-            if(! email.val()) {
-                if( email.parent().find('.validate').length  == 0) {
-                    email.parent().append(' <p class="validate">' + validate_email + '</p>');
-                }
-                validate2.push("block");
-            } else {
-                email.parent().find('.validate').text("");  
-                validate2.push(true); 
-            }   
-        }
-    }
-
-    if(! validate2.includes("block") ) {
+    validate_user_form ();
+    console.log(validate);
+    if(validate.includes("block") ) {
+        //
+    } else  {
         $('.first_tab').toggle();
         $('.second_tab').toggle();
         if($('.first_tab').is(':visible')) {
@@ -327,7 +320,7 @@ $('.btn-next').on('click',function(event){
     }
 });
 
-$('.btn-back').on('click',function(){
+$('.form_user .btn-back').on('click',function(){
     $('.first_tab').toggle();
     $('.second_tab').toggle();
     if($('.first_tab').is(':visible')) {

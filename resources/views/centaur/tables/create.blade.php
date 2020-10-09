@@ -22,16 +22,7 @@
 				</select>
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('shortcut_i')) ? 'has-error' : '' }}">
-				<label for="shortcut_i">@lang('basic.shortcut')- index</label>
-				<input name="shortcut_i" type="checkbox" id="shortcut_i" value="1" >
-				{!! ($errors->has('shortcut_i') ? $errors->first('shortcut_i', '<p class="text-danger">:message</p>') : '') !!}
-			</div>
-			<div class="form-group {{ ($errors->has('shortcut_c')) ? 'has-error' : '' }}">
-				<label for="shortcut_c">@lang('basic.shortcut') - create</label>
-				<input name="shortcut_c" type="checkbox" id="shortcut_c" value="1"  >
-				{!! ($errors->has('shortcut_c') ? $errors->first('shortcut_c', '<p class="text-danger">:message</p>') : '') !!}
-			</div>
+			
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">
 		</fieldset>

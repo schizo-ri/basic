@@ -28,7 +28,7 @@
 		<link rel="stylesheet" href="{{ URL::asset('/../css/basic.css') }}"/>
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
-		<script src="//editor.unlayer.com/embed.js"></script>
+		<script src="https://editor.unlayer.com/embed.js"></script>
 		<!--Jquery -->
 		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
 		@stack('stylesheet')
@@ -197,7 +197,8 @@
 		{{-- <script src="{{ URL::asset('/../node_modules/react-email-editor/umd/react-email-editor.min.js') }}"></script> --}}
 
 		<!-- Scripts -->
-		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
+        {{-- <script src="{{URL::asset('/../js/all.js') }}"></script> --}}
+        <script src="{{URL::asset('/../js/open_modal.js') }}"></script>
 		<script src="{{URL::asset('/../js/notice_create.js') }}"></script>
 	
 		@if(session()->has('modal'))

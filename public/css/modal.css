@@ -197,6 +197,16 @@ span.work {
 	float: left;
     width: 50%;
 }
+.modal_user.modal_employee main  {
+	display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
+    font-size: 0.75rem;
+}
+.modal_user.modal_employee main .basic_info {
+	width: 30%;
+    margin-right: 3%;
+}
 
 .modal_user main >div {
 	padding: 20px;
@@ -1427,6 +1437,7 @@ option::selection {
 
 .modal.modal_notice.notice_show .modal-body {
 	overflow: auto;
+	height: 100;
 	scrollbar-width: thin;
 	padding: 25px 50px 40px 40px;	
 }

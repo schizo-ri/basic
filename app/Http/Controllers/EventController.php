@@ -89,7 +89,7 @@ class EventController extends Controller
             $task->week = date('W',strtotime($task->date));
         }
     
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
        
         $cars = Car::get('registration');
 
@@ -346,7 +346,7 @@ class EventController extends Controller
             }
         }
 
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->with('hasEvents')->with('hasLocco')->with('hasAbsences')->with('hasTasks')->get();
+        $employees = Employee::where('id','<>',0)->where('checkout',null)->with('hasEvents')->with('hasLocco')->with('hasAbsences')->with('hasTasks')->get();
            
         $select_day = explode('-', $date);  //get from URL
         $dan_select = $select_day[2];
@@ -425,7 +425,7 @@ class EventController extends Controller
             }
         }
     
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->with('hasEvents')->with('hasLocco')->with('hasAbsences')->with('hasTasks')->get();
+        $employees = Employee::where('id','<>',0)->where('checkout',null)->with('hasEvents')->with('hasLocco')->with('hasAbsences')->with('hasTasks')->get();
         //$employees = Employee::whereMonth('b_day', $month)->where('id','<>',1)->where('checkout',null)->get();
         if(count($employees)>0) {
             foreach($employees as $employee) {

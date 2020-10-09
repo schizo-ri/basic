@@ -175,14 +175,14 @@ $i = 0;
 </div>
 <script>
 	$( function () {
-	/* 	$.getScript( '/../js/user_profile.js'); */
+	/* 	$.getScript( '/../js/user_profile.js');  */
 		$('.profile_img a.danger').removeAttr('hidden');
 	});
 	$('.chat').click(function(){
-		$.getScript( '/../js/open_modal.js');
+	/* 	$.getScript( '/../js/open_modal.js'); */
 	});
 	$('.slide_show_open').click(function(){
-		$.getScript( '/../js/open_modal.js');
+		/* $.getScript( '/../js/open_modal.js'); */
 	});
 </script>
 @stop

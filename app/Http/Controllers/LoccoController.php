@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\EmailingController;
+use App\Http\Controllers\DashboardController;
 use App\Models\Car;
 use App\Models\Employee;
 use App\Models\Locco;
@@ -38,14 +39,10 @@ class LoccoController extends Controller
      */
     public function index()
     {
+        
         $cars = Car::orderBy('registration','ASC')->get();
 
-        $empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
+        $permission_dep = DashboardController::getDepartmentPermission();
 
         return view('Centaur::loccos.index', ['cars' => $cars, 'permission_dep' => $permission_dep]);
     }
@@ -82,17 +79,18 @@ class LoccoController extends Controller
     public function store(Request $request)
     {
         $data = array(
-			'car_id'        => $request['car_id'],
-			'travel_id'     => $request['travel_id'] ? $request['travel_id'] : null,
-			'employee_id'   => $request['employee_id'],
-			'date'  	    => $request['date'],
-            'end_date'  	=> $request['end_date'] ? $request['end_date'] : null,
+			'car_id'         => $request['car_id'],
+			'project_id'     => $request['project_id'],
+			'travel_id'      => $request['travel_id'] ? $request['travel_id'] : null,
+			'employee_id'    => $request['employee_id'],
+			'date'  	     => $request['date'],
+            'end_date'  	 => $request['end_date'] ? $request['end_date'] : null,
             'starting_point' => $request['starting_point'],
-			'destination'   => $request['destination'],
-			'start_km'  	=> $request['start_km'],
-			'end_km'        => $request['end_km'] ? $request['end_km'] : null,
-			'distance'      => $request['distance'] ? $request['distance'] : null,
-			'comment'       => $request['comment']
+			'destination'    => $request['destination'],
+			'start_km'  	 => $request['start_km'],
+			'end_km'         => $request['end_km'] ? $request['end_km'] : null,
+			'distance'       => $request['distance'] ? $request['distance'] : null,
+			'comment'        => $request['comment']
 		);
         if($request['end_km'] && $request['distance'] && $request['end_date']) {
             $data += ['status'  => 1];
@@ -162,7 +160,7 @@ class LoccoController extends Controller
                     }
                 }
             }
-    /*     } catch (\Throwable $th) {
+        /*     } catch (\Throwable $th) {
             session()->flash('error',  __('ctrl.locco_error'));
             return redirect()->back();
         } */
@@ -192,24 +190,34 @@ class LoccoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        $loccos = Locco::where('car_id', $id)->orderBy('date','ASC')->get();
-
-        $empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
-
+        if(isset( $request['date'])) {
+            $date = $request['date'];
+        } else {
+            $date = date('Y-m');
+        }
+     
+        $loccos = Locco::where('car_id', $id)->whereYear('date', '>=', date('Y')-1)->get();
+        $permission_dep = DashboardController::getDepartmentPermission();
+      
         $dates = array();
-        foreach (array_keys($loccos->groupBy('date')->toArray()) as $date) {
-            array_push($dates, date('m.Y',strtotime($date)) );
+        foreach (array_keys($loccos->groupBy('date')->toArray()) as $locco_date) {
+            array_push($dates, date('Y-m',strtotime($locco_date)) );
         }
       
         $dates = array_unique($dates);
+        rsort($dates);
 
+         /* $loccos = Locco::where('car_id', $id)->whereYear('date', $year )->whereMonth('date',$month)->orderBy('date','ASC')->get(); */
+
+        $loccos = $loccos->filter(function ($locco, $key) use ($request, $id) {
+            return date('Y-m',strtotime( $locco->date)) == $request['date'] && $locco->car_id == $id;
+        });
+        if( ! in_array($date, $dates)) {
+            array_unshift($dates, $date);
+        }
+        
         return view('Centaur::loccos.show', ['loccos' => $loccos, 'car_id' => $id, 'dates' => $dates, 'permission_dep' => $permission_dep]);
     }
 
@@ -242,7 +250,8 @@ class LoccoController extends Controller
         $locco = Locco::find($id);
 
         $data = array(
-			'car_id'        => $request['car_id'],
+            'car_id'        => $request['car_id'],
+            'project_id'     => $request['project_id'],
 			'travel_id'     => $request['travel_id'] ? $request['travel_id'] : null,
 			'employee_id'   => $request['employee_id'],
 			'date'  	    => $request['date'],
@@ -253,7 +262,6 @@ class LoccoController extends Controller
 			'end_km'        => $request['end_km'] ? $request['end_km'] : null,
 			'distance'      => $request['distance'] ? $request['distance'] : null,
 			'comment'       => $request['comment']
-            
 		);
      
         if($request['end_km'] && $request['distance'] && $request['end_date']) {

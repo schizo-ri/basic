@@ -16,6 +16,7 @@ return [
 	'time' 			=> 'Vrijeme',
 	'approved_by' 	=> 'Odobrio',
 	'approved' 		=> 'Odobreno',
+	'approve_h' 	=> 'Odobreno sati',
 	'reason' 		=> 'Razlog',
 	'aprove_date'   => 'Datum odobrenja',
 	'abs_types'  	=> 'Vrste zahtjeva',

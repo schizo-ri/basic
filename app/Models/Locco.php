@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Locco extends Model
 {
-    protected $fillable = ['car_id','date','end_date','travel_id','employee_id','starting_point','destination','start_km','end_km','distance','comment','status'];
+    protected $fillable = ['car_id','date','end_date','travel_id','project_id','employee_id','starting_point','destination','start_km','end_km','distance','comment','status'];
 
     /*
 	* The Eloquent employee model name

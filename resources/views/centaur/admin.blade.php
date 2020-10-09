@@ -29,14 +29,6 @@
 
 		<!-- CSS -->
 		<link rel="stylesheet" href="{{ URL::asset('/../css/all.css') }}"/>
-		{{-- <link rel="stylesheet" href="{{ URL::asset('/../css/layout.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/welcome.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/basic.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/modal.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/dashboard.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/index.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/calendar.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/> --}}
 		
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
@@ -83,24 +75,26 @@
                             @else
                                 <a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
                             @endif
-                            @if(! $check )
-                                <li class="evidention_check">
-                                    <form  title="{{__('basic.entry') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}" >
-                                        <input type="hidden" name="entry" value="entry">
-                                        <input type="hidden" name="checkout" value="false">
-                                        @csrf
-                                        <button class="entry" type="submit"><i class="far fa-clock" style="color: green"></i></button>
-                                    </form>
-                                </li>
-                            @elseif($check && $check->end == null)
-                                <li class="evidention_check">
-                                    <form title="{{__('basic.checkout') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}"  >
-                                        <input type="hidden" name="checkout" value="checkout">
-                                        <input type="hidden" name="entry" value="false">
-                                        @csrf
-                                        <button class="checkout" type="submit"><i class="far fa-clock" style="color: red"></i></button>
-                                    </form>
-                                </li>
+                            @if(in_array('Evidencija', $moduli))  
+                                @if(! $check )
+                                    <li class="evidention_check">
+                                        <form  title="{{__('basic.entry') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}" >
+                                            <input type="hidden" name="entry" value="entry">
+                                            <input type="hidden" name="checkout" value="false">
+                                            @csrf
+                                            <button class="entry" type="submit"><i class="far fa-clock" style="color: green"></i></button>
+                                        </form>
+                                    </li>
+                                @elseif($check && $check->end == null)
+                                    <li class="evidention_check">
+                                        <form title="{{__('basic.checkout') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}"  >
+                                            <input type="hidden" name="checkout" value="checkout">
+                                            <input type="hidden" name="entry" value="false">
+                                            @csrf
+                                            <button class="checkout" type="submit"><i class="far fa-clock" style="color: red"></i></button>
+                                        </form>
+                                    </li>
+                                @endif
                             @endif
                             @if(Sentinel::inRole('administrator'))
                                 <li><a id="open-admin" href="{{ route('users.index') }}" title="{{ __('basic.open_admin')}}"  >
@@ -235,8 +229,24 @@
                                             <a href="{{ route('employees.index') }}" class="line_height_45 admin_link {{ Request::is('employees*') ? 'active_admin' : '' }}" id="employees">@lang('basic.employees')</a>
                                         </li>
                                         <li class="first_group"><span class="space" ></span>
-                                            <a href="{{ route('work_records.index') }}" class="line_height_45 admin_link {{ Request::is('work_records*') ? 'active_admin' : '' }}" id="work_records">@lang('basic.work_records')</a>
+                                            <a href="{{ route('job_interviews.index') }}" class="line_height_45 admin_link {{ Request::is('job_interviews*') ? 'active_admin' : '' }}" id="employees">@lang('basic.job_interviews')</a>
                                         </li>
+                                        @if(in_array('Prekovremeni', $moduli))  
+                                            <li class="first_group"><span class="space" ></span>
+                                                <a href="{{ route('afterhours.index') }}" class="line_height_45 admin_link {{ Request::is('afterhours*') ? 'active_admin' : '' }}" id="afterhours">@lang('basic.afterhours')</a>
+                                            </li>
+                                        @endif
+                                        <li class="first_group"><span class="space" ></span>
+                                            <a href="{{ route('employee_terminations.index') }}" class="line_height_45 admin_link {{ Request::is('employee_terminations*') ? 'active_admin' : '' }}" id="employees">@lang('basic.employee_terminations')</a>
+                                        </li>
+                                        <li class="first_group"><span class="space" ></span>
+                                            <a href="{{ route('terminations.index') }}"  class="line_height_45 admin_link {{ Request::is('terminations*') ? 'active_admin' : '' }}" id="works">@lang('basic.termination_types')</a>
+                                        </li>
+                                        @if(in_array('Evidencija', $moduli))
+                                            <li class="first_group"><span class="space" ></span>
+                                                <a href="{{ route('work_records.index') }}" class="line_height_45 admin_link {{ Request::is('work_records*') ? 'active_admin' : '' }}" id="work_records">@lang('basic.work_records')</a>
+                                            </li>
+                                        @endif
                                         <li class="first_group"><span class="space" ></span> 
                                             <a href="{{ route('departments.index') }}" class="line_height_45 admin_link {{ Request::is('departments*') ? 'active_admin' : '' }}" id="departments">@lang('basic.departments')</a>
                                         </li>
@@ -245,6 +255,12 @@
                                         </li>
                                         <li class="first_group"><span class="space" ></span>
                                             <a href="{{ route('works.index') }}"  class="line_height_45 admin_link {{ Request::is('works*') ? 'active_admin' : '' }}" id="works">@lang('basic.works')</a>
+                                        </li>
+                                        <li class="first_group"><span class="space" ></span> 
+                                            <a href="{{ route('projects.index') }}" class="line_height_45 admin_link {{ Request::is('projects*') ? 'active_admin' : '' }}" id="department_roles">@lang('basic.projects')</a>
+                                        </li>
+                                        <li class="first_group"><span class="space" ></span> 
+                                            <a href="{{ route('customers.index') }}" class="line_height_45 admin_link {{ Request::is('customers*') ? 'active_admin' : '' }}" id="department_roles">@lang('basic.customers')</a>
                                         </li>
                                         @if(in_array('Oglasnik',$moduli))
                                             <li class="first_group"><span class="space" ></span>
@@ -272,14 +288,13 @@
                                                 <span class="space" ></span>
                                                 <a href="{{ route('vehical_services.index') }}" class="line_height_45 admin_link {{ Request::is('vehical_services*') ? 'active_admin' : '' }}" id="vehical_services">@lang('basic.vehical_services')</a>
                                             </li>
-                                           {{--  @if(in_array('Putni nalozi', $moduli)) --}}
+                                            @if(in_array('Putni nalozi', $moduli))
                                                 <li class="first_group car_links">
                                                     <span class="space" ></span>
                                                     <a href="{{ route('travel_orders.index') }}" class="line_height_45 admin_link {{ Request::is('travel_orders*') ? 'active_admin' : '' }}" id="travel_orders">@lang('basic.travel_orders')</a>
                                                 </li>
-                                           {{--  @endif --}}
+                                            @endif
                                         @endif
-                                       
                                         <li class="">
                                             <span class="image_company" ></span> 
                                             <a href="{{ route('companies.index') }}" class="line_height_61 admin_link {{ Request::is('companies*') ? 'active_admin' : '' }}" id="companies">@lang('basic.company')</a>
@@ -329,7 +344,7 @@
 				//Pusher.logToConsole = true;
 				var employee_id = $('#employee_id').text();
 
-				var pusher = new Pusher('b07d5ace8e5b948bf9fc', {
+				var pusher = new Pusher('4a492cc413b6d538e6c2', {
 										cluster: 'eu'
 										});
 
@@ -342,8 +357,6 @@
 						}
 					}
                 });
-                
-             
 			</script>
 			<!-- Latest compiled and minified Bootstrap JavaScript -->
 			<!-- Bootstrap js -->
@@ -360,13 +373,7 @@
            
             <!-- Scripts -->
 			<script src="{{URL::asset('/../js/all.js') }}"></script>
-		{{-- 	<script src="{{URL::asset('/../js/nav_active.js') }}"></script>
-			<script src="{{URL::asset('/../js/set_height.js') }}"></script>
-            <script src="{{URL::asset('/../js/collaps.js') }}"></script>
-            <script src="{{URL::asset('/../js/filter_table.js') }}"></script>
-            <script src="{{URL::asset('/../js/open_admin.js') }}"></script> 
-            <script src="{{URL::asset('/../js/datatables.js') }}"></script> --}}
-
+	
 			<!-- Datatables -->
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>

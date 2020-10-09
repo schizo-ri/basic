@@ -51,11 +51,10 @@
 					</thead>
 					<tbody>
 						@foreach ($work_records as $record)
-						@php
-							$trav = $record->employee->hasTravels->whereBetween('start_date', [ date('Y-m-d',strtotime($record->start)) . ' 00:00:00', date('Y-m-d',strtotime($record->start))  . ' 23:59:59' ] );
-							$locco_day = $record->employee->hasLocco->whereBetween('date', [ date('Y-m-d',strtotime($record->start))  . ' 00:00:00', date('Y-m-d',strtotime($record->start)) . ' 23:59:59' ] );
-							
-						@endphp
+							@php
+								$trav = $record->employee->hasTravels->whereBetween('start_date', [ date('Y-m-d',strtotime($record->start)) . ' 00:00:00', date('Y-m-d',strtotime($record->start))  . ' 23:59:59' ] );
+								$locco_day = $record->employee->hasLocco->whereBetween('date', [ date('Y-m-d',strtotime($record->start))  . ' 00:00:00', date('Y-m-d',strtotime($record->start)) . ' 23:59:59' ] );
+							@endphp
 							<tr class="empl_{{ $record->employee_id }}">
 								<td>
 									<a href="{{ route('work_records.show', ['id'=>$record->employee->id, 'date' => $request_date ]) }}">
@@ -65,17 +64,16 @@
 								<td>{{ date('d.m.Y. H:i',strtotime($record->start)) }}</td>
 								<td>{!! $record->end ? date('d.m.Y. H:i',strtotime($record->end)) : '' !!}</td>
 								<td>
-									@if(count($trav) > 0)
+									@if( $trav )
 										@foreach ($trav as $put)
 										{{'PN - ' . $put->car->car_index }} <br>
 										@endforeach
 									@endif
-									@if(count($locco_day) > 0)
+									@if($locco_day)
 										@foreach ($locco_day as $locco)
 											{{'L - ' . $locco->car->car_index }}<br>
 										@endforeach
 									@endif
-								
 								</td>
 								<td>{{ $record->interval  }}</td>
 								<td class="center">

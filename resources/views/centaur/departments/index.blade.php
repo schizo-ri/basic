@@ -26,6 +26,7 @@
 							<th>@lang('basic.level')</th>
 							<th>@lang('basic.roof')</th>
 							<th>e-mail</th>
+							<th>@lang('basic.manager')</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 					</thead>
 					<tbody>
@@ -38,6 +39,7 @@
 									{!! $department->level2 ? $departments->where('id', $department->level2)->first()->name : '' !!}
 								</td>
 								<td>{{ $department->email }}</td>
+								<td>{!! $department->employee ? $department->employee->user->first_name . ' ' .  $department->employee->user->last_name : '' !!}</td>
 								<td class="center">
 									<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['departments.update']) || in_array('departments.update', $permission_dep))

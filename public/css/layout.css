@@ -554,7 +554,9 @@ ul.nav_ul.float_right li img {
 	width: 100%;
 	height: 100%;
 	display: block;
+	overflow: hidden;
 	position: relative;
+	padding: 10px;
 }
 .shortcuts_container .profile_img >span>span {
 	display: block;
@@ -1543,6 +1545,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	font-size: 0.6875rem;
 	cursor: pointer;
 	padding-right: 15px;
+	
 }
 
 .slide_show_open {
@@ -1745,7 +1748,16 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
         padding: 0 10px;
         position: sticky;
         top: 0;
-    }
+	}
+	.salary>div.shortcuts_container {
+		float: none;
+    	width: 100%;
+		overflow: hidden;
+		padding: 10px 0;
+	}
+	.shortcuts_container .profile_img >span>span:nth-child(2) {
+		position: relative;
+	}
 	.logo_icon {
 		display: none;
 	}
@@ -1826,6 +1838,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.user_header .info>div {
 		padding: 10px 0;
 		margin-bottom: 10px;
+		height: 100%;
 	}
 	.info .salary p {
 		width:100%;
@@ -1851,9 +1864,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.salary p.agenda>span {
 		white-space: initial;
 	}
-	.user_header .info>div {
-		height: 100%;
-	}
+	
 	.user_header .info .salary .event {
 		padding-top: 0;
 	}
@@ -1932,6 +1943,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		margin: auto;
 		height: auto;
 		margin: auto;
+		padding: 10px;
 	}
 	.user_header .info>div:first-child {
 		width: 100% !important;
@@ -2011,6 +2023,10 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	  right: 0;
 	  top: 0;
 	}
+	.shortcuts_container:nth-child(2)>div:first-child {
+		margin-bottom: 10px;
+		overflow: hidden;
+	}
 	.topnav.responsive >div {
 	  /*float: none;*/
 	  display: block;
@@ -2071,7 +2087,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		padding-bottom: 10px;
 	}
 	.user_header .info>div {
-		padding: 10px 20px 10px;
+		padding: 10px;
 	}
 	.salary p>span {
 		font-size: 1.25rem;
@@ -2144,6 +2160,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		max-width: 100%;
 		padding: 20px 0;
 	}	
+	
     .index_page .index_main  {
         float: none;
         position: static;

@@ -78,6 +78,6 @@
         $('.placeholder').show();        
     });
     
-    $.getScript( '/../js/open_modal.js');
+  /*   $.getScript( '/../js/open_modal.js'); */
     
 </script>

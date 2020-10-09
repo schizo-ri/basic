@@ -1,8 +1,7 @@
 $("a[rel='modal:open']").addClass('disable');
-
+console.log("Open modal");
 $(function() {
     $("a[rel='modal:open']").removeClass('disable');
-    
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
         escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -122,6 +121,23 @@ $(function() {
             fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
         };
     });
+    $('.user_show.tr_open_link').on('click',function(){
+        $.modal.defaults = {
+            closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+            escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            closeText: 'Close',     // Text content for the close <a> tag.
+            closeClass: '',         // Add additional class(es) to the close <a> tag.
+            showClose: true,        // Shows a (X) icon/link in the top-right corner
+            modalClass: "modal modal_user",    // CSS class added to the element being displayed in the modal.
+            // HTML appended to the default spinner during AJAX requests.
+            spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+
+            showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+            fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+            fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+        };
+    });
     $('a.campaign_show[rel="modal:open"]').on('click',function(){  
         $.modal.defaults = { 
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
@@ -173,21 +189,37 @@ $(function() {
 			fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
 		};
     });
-
-   /*  $('a.new_questionnaire[rel="modal:open"]').on('click',function(){
+    $('tr[data-modal] td:not(:last-child)').on("click", function(e) {
+      
+        e.preventDefault();
+        var href = location.origin + $(this).parent().data('href');
+        
         $.modal.defaults = {
-            modalClass: "modal modal_questionnaire"
-        };
-    }); */
-      /*   $('.oglasnik_button, .posts_button, .doc_button, .events_button').click(function(){
-        $.modal.defaults = {
+            closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+            escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            closeText: 'Close',     // Text content for the close <a> tag.
+            closeClass: '',         // Add additional class(es) to the close <a> tag.
+            showClose: true,        // Shows a (X) icon/link in the top-right corner
             modalClass: "modal",    // CSS class added to the element being displayed in the modal.
-        };
-    }); */
+            // HTML appended to the default spinner during AJAX requests.
+            spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
     
-    /* $('#add_event[rel="modal:open"]').click(function(){       
-        $.modal.defaults = {           
-            modalClass: "modal",   
+            showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+            fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+            fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
         };
-    }); */
+        $.get(href, function(html) { 
+            $(html).appendTo('#login-modal');
+        }); 
+        $('#login-modal').modal();
+        $('#login-modal').on($.modal.CLOSE, function(event, modal) {
+            $( "#login-modal" ).empty();
+        });
+
+        $('a.close-modal').on('click',function(){
+            $( "#login-modal" ).empty();
+        });
+    }); 
+
 });

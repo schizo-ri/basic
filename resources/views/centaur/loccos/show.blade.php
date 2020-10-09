@@ -15,7 +15,7 @@
 				</a>
 			@endif 
 			<select id="filter_month" class="select_filter filter_loccos" >
-				<option value="all">@lang('basic.all_month')</option>
+				{{-- <option value="all">@lang('basic.all_month')</option> --}}
 				@foreach ($dates as $date)
 					<option value="{{ $date }}">{{ $date }}</option>
 				@endforeach
@@ -24,13 +24,14 @@
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="table-responsive">
-			@if(count($loccos))
+			
 				<table id="index_table" class="display table table-hover sort_1_desc">
 					<thead>
 						<tr>
 							<th class="sort_date" >@lang('basic.date')</th>
 							<th>@lang('basic.car')</th>
 							<th>@lang('basic.employee')</th>
+							<th>@lang('basic.starting_point')</th>
 							<th>@lang('basic.destination')</th>
 							<th>@lang('basic.start_km')</th>
 							<th>@lang('basic.end_km')</th>
@@ -41,10 +42,11 @@
 					</thead>
 					<tbody>
 						@foreach ($loccos as $locco)
-							<tr>
+							<tr >
 								<td >{{ date('d.m.Y.', strtotime($locco->date)) }}</td>
 								<td>{{ $locco->car['registration'] }}</td>
 								<td>{!! $locco->employee ? $locco->employee->user['first_name'] . ' ' . $locco->employee->user['last_name'] : '' !!}</td>
+								<td>{{ $locco->starting_point }}</td>
 								<td>{{ $locco->destination }}</td>
 								<td>{{ $locco->start_km }}</td>
 								<td>{{ $locco->end_km }}</td>
@@ -67,9 +69,7 @@
 						@endforeach
 					</tbody>
 				</table>
-			@else
-				<p class="no_data">@lang('basic.no_data')</p>
-			@endif
+			
 		</div>
 	</main>
 	<script>

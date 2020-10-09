@@ -32,6 +32,7 @@ return [
 	'days_left' 	=> 'Days left',
 	'days_used' 	=> 'Days used',
 	'approved'  	=> 'Approved',
+	'approve_h' 	=> 'Approved hours',
 	'not_approved'  => 'Denied',
 	'is_approved'  	=> 'is approved',
 	'is_not_approved' => 'is not approved',

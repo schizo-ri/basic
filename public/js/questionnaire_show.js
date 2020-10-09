@@ -5,7 +5,7 @@
 		var body_width = $('body').width();
 		var body_height =  modal_height - header_height - 80;
 		if(body_width > 450) {
-			$('.modal-body').height(body_height);
+			$('.modal.modal_questionnaire .modal-body').height(body_height);
 		}
 		
 		var countElement = 0;
@@ -41,17 +41,17 @@
 		$( "input[type=checkbox]" ).on( "click", countChecked );
 		$( "textarea" ).on( "change", countChecked );
 	});
-	$( window ).resize(function() {
+	$( window ).on('resize',function() {
 		var modal_height = $('.modal.modal_questionnaire').height();
 		var header_height =  $('.modal-header').height();
 		var body_height =  modal_height - header_height - 80;
-		$('.modal-body').height(body_height);
+		$('.modal.modal_questionnaire .modal-body').height(body_height);
 		
 	});
-	$('.btn-statistic').click(function(){
+	$('.btn-statistic').on('click',function(){
 		$('.statistic').toggle();
 		var modal_height = $('.modal.modal_questionnaire').height();
 		var header_height =  $('.modal-header').height();
 		var body_height =  modal_height - header_height - 80;
-		$('.modal-body').height(body_height);
+		$('.modal.modal_questionnaire .modal-body').height(body_height);
 	});

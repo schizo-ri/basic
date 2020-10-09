@@ -24,7 +24,7 @@
 			{!! ($errors->has('job_description') ? $errors->first('job_description', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
-			<label>@lang('basic.director')</label>
+			<label>@lang('basic.department_manager')</label>
 			<select class="form-control" name="employee_id">
 				<option value="" disabled selected ></option>
 				@foreach($employees as $employee)
@@ -33,7 +33,16 @@
 			</select>
 			{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-
+		<div class="form-group {{ ($errors->has('first_superior')) ? 'has-error' : '' }}">
+			<label>@lang('basic.department_first')</label>
+			<select class="form-control" name="first_superior">
+				<option value="" disabled selected ></option>
+				@foreach($employees as $employee)
+					<option value="{{ $employee->id}}" >{{ $employee->first_name . ' ' .  $employee->last_name }}</option>
+				@endforeach
+			</select>
+			{!! ($errors->has('first_superior') ? $errors->first('first_superior', '<p class="text-danger">:message</p>') : '') !!}
+		</div>
 		{{ csrf_field() }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">
 	</form>

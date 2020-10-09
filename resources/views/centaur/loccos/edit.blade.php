@@ -65,18 +65,18 @@
 				<label>@lang('basic.comment')</label>
 				<textarea class="form-control" name="comment" id="comment" >{{ $locco->comment }}</textarea>
 			</div>
-			<div class="servis form-group">
+			{{-- <div class="servis form-group">
 				<label for="wrong_km">@lang('basic.wrong_km')</label>
 				<input class="" type="checkbox" name="wrong_km" id="wrong_km" value=""/>
-			</div>
-			@if ( $travel )
+			</div> --}}
+			{{-- @if ( $travel )
 				<input type="hidden" name="travel_id" value="{{ $locco->travel_id }}"/>
 			@else
 				<div class="servis form-group">
 					<label for="travel">@lang('basic.create_travel')</label>
 					<input class="" type="checkbox" name="travel" value="travel" id="travel" {!! $locco->travel_id ? 'checked' : '' !!} />
 				</div>
-			@endif
+			@endif --}}
 			@method('PUT')
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" id="submit" value="{{ __('basic.save')}}">

@@ -82,14 +82,14 @@
 				<label>@lang('basic.comment')</label>
 				<textarea class="form-control" name="comment" id="comment">{{ old('comment') }}</textarea>
 			</div>
-			<div class="servis form-group">
+			{{-- <div class="servis form-group">
 				<label for="wrong_km">@lang('basic.wrong_km')</label>
 				<input class="" type="checkbox" name="wrong_km"  id="wrong_km" value=""/>
-			</div>
-			<div class="servis form-group">
+			</div> --}}
+			{{-- <div class="servis form-group">
 				<label for="travel">@lang('basic.create_travel')</label>
 				<input class="" type="checkbox" name="travel" value="travel" id="travel" value=""/>
-			</div>
+			</div> --}}
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" id="submit" value="{{ __('basic.save')}}">
 		</fieldset>

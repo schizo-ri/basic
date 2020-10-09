@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\AbsenceController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PostController;
 use App\Models\Post;
 use App\Models\Event;
@@ -22,6 +21,7 @@ use App\Http\Controllers\BasicAbsenceController;
 use Sentinel;
 use DateTime;
 use DB;
+use Artisan;
 
 class DashboardController extends Controller
 {
@@ -32,6 +32,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        Artisan::call('cache:clear');
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
             $moduli = CompanyController::getModules();  //dohvaća module firme
@@ -159,17 +160,23 @@ class DashboardController extends Controller
     {
         $employee = Sentinel::getUser()->employee;
 
-        $record_yesterday = WorkRecord::where('employee_id', $employee->id)->whereDate('start', '<', date('Y-m-d'))->orderBy('start','DESC')->first();
-        if( $record_yesterday && $record_yesterday['end'] == null ) {
-            $start = $record_yesterday->start;
-            $end = date('Y-m-d', strtotime( $start )) . ' 16:00:00';
-            $data = array(
-                'end'  =>   $end,
-            );
-            $record_yesterday->updateWorkRecords($data);
+        if($employee) {
+            $record_yesterday = WorkRecord::where('employee_id', $employee->id)->whereDate('start', '<', date('Y-m-d'))->orderBy('start','DESC')->first();
+            if( $record_yesterday && $record_yesterday['end'] == null ) {
+                $start = $record_yesterday->start;
+                $end = date('Y-m-d', strtotime( $start )) . ' 16:00:00';
+                $data = array(
+                    'end'  =>   $end,
+                );
+                $record_yesterday->updateWorkRecords($data);
+            }
+            $record = WorkRecord::where('employee_id', $employee->id)->whereDate('start', date('Y-m-d'))->first();
+        } else {
+            $record = null;
         }
+      
 
-        $record = WorkRecord::where('employee_id', $employee->id)->whereDate('start', date('Y-m-d'))->first();
+       
     
         return $record;
     }

@@ -7,6 +7,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
+
+		<meta http-equiv="cache-control" content="max-age=0" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="expires" content="0" />
+		<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+		<meta http-equiv="pragma" content="no-cache" />
+
+
 		<title>@yield('title')</title>
         <!-- Bootstrap - Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/bootstrap/dist/css/bootstrap.min.css') }}"/>
@@ -24,12 +32,9 @@
 		<!-- JS modal -->
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-
+		<script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all.css') }}"/>
-	
-		{{-- Material design --}}
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all.css?random=@dt') }}"/>
 	  
 		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/>
 		<!-- ICON -->
@@ -71,7 +76,6 @@
 						<ul class="nav_ul float_right">
 							@if (Sentinel::check())
 								@if( $_SERVER['REQUEST_URI'] != '/dashboard')
-									
 										@if (Shortcut::where('url', $url)->first() )
 											<a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i> <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
 										@else
@@ -79,25 +83,27 @@
 										@endif
 									
 								@endif
-								@if(! $check )
-									<li class="evidention_check">
-										<form  title="{{__('basic.entry') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}" >
-											<input type="hidden" name="entry" value="entry">
-											<input type="hidden" name="checkout" value="false">
-											@csrf
-											<button class="entry" type="submit"><i class="far fa-clock" style="color: green"></i></button>
-										</form>
-									</li>
-								@elseif($check && $check->end == null)
-									<li class="evidention_check">
-										{{-- <span class="checkout" title="{{__('basic.checkout') }}" ><i class="far fa-calendar-times"></i></span> --}}
-										<form title="{{__('basic.checkout') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}"  >
-											<input type="hidden" name="checkout" value="checkout">
-											<input type="hidden" name="entry" value="false">
-											@csrf
-											<button class="checkout" type="submit"><i class="far fa-clock" style="color: red"></i></button>
-										</form>
-									</li>
+								@if(in_array('Evidencija', $moduli))  
+									@if(! $check )
+										<li class="evidention_check">
+											<form  title="{{__('basic.entry') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}" >
+												<input type="hidden" name="entry" value="entry">
+												<input type="hidden" name="checkout" value="false">
+												@csrf
+												<button class="entry" type="submit"><i class="far fa-clock" style="color: green"></i></button>
+											</form>
+										</li>
+									@elseif($check && $check->end == null)
+										<li class="evidention_check">
+											{{-- <span class="checkout" title="{{__('basic.checkout') }}" ><i class="far fa-calendar-times"></i></span> --}}
+											<form title="{{__('basic.checkout') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}"  >
+												<input type="hidden" name="checkout" value="checkout">
+												<input type="hidden" name="entry" value="false">
+												@csrf
+												<button class="checkout" type="submit"><i class="far fa-clock" style="color: red"></i></button>
+											</form>
+										</li>
+									@endif
 								@endif
 								@if(Sentinel::inRole('administrator'))
 									<li><a id="open-admin" href="{{ route('users.index') }}" title="{{ __('basic.open_admin')}}"  >
@@ -236,7 +242,7 @@
 				// Enable pusher logging - don't include this in production
 				/* Pusher.logToConsole = true; */
 				var employee_id = $('#employee_id').text();
-				var pusher = new Pusher('b07d5ace8e5b948bf9fc', {
+				var pusher = new Pusher('4a492cc413b6d538e6c2', {
 					cluster: 'eu'
 				});
 
@@ -263,8 +269,26 @@
 			<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
 
 			<!-- Scripts -->
-			<script src="{{URL::asset('/../js/all.js') }}"></script>
-
+			<script>
+				// Check if a new cache is available on page load.
+				/* window.addEventListener('load', function(e) {
+				window.applicationCache.addEventListener('updateready', function(e) {
+					if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+					// Browser downloaded a new app cache.
+					// Swap it in and reload the page to get the new hotness.
+					window.applicationCache.swapCache();
+					if (confirm('A new version of this site is available. Load it?')) {
+						window.location.reload();
+					}
+					} else {
+					// Manifest didn't changed. Nothing new to server.
+					}
+				}, false);
+				}, false);
+				 */
+				
+			</script>
+			<script src="{{URL::asset('/../js/all.js?random=@dt') }}"></script>
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
 
@@ -282,9 +306,7 @@
 					$('.row.notification').modal();
 					$('#schedule_modal').modal();
 				</script>
-				
 			@endif
-			
 		<!-- End Scripts -->
 		@stack('script')		
     </body>

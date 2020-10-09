@@ -1,4 +1,4 @@
-var f_name;
+/* var f_name;
 var l_name;
 var email;
 var file;
@@ -13,8 +13,7 @@ var validate_password_lenght = '';
 var validate_passwordconf = '';
 var roles;
 var fileName;
-var validate = false;
-var validate2 = [];
+var validate = [];
 
 var locale = $('.locale').text();
 
@@ -40,60 +39,97 @@ if(locale == 'hr') {
 var second_tab_height = $('.second_tab').height();
 $('.first_tab').height(second_tab_height);
 
-roles = $('.roles');
-
 $('input[type="file"]').on('change',function(e){
     fileName = e.target.files[0].name;
     $('#file_name').text(fileName);
 });
 
-if( roles.is(':checked')) {
-    validate2.push(true);
-} else {
-    validate2.push("block");
+function validate_user_form () {
+    validate = [];
+    $('.roles').on('change',function(event){
+        if( roles.is(':checked')) {
+            validate.push(true);
+        } else {
+            validate.push("block");
+        }
+    });
+    $( "textarea" ).each(function( index ) {
+        if($(this).attr('required') == 'required' ) {
+            if( $(this).val().length == 0 ) {
+                if( !$( this ).parent().find('.modal_form_group_danger').length) {
+                    $( this ).parent().append('<p class="modal_form_group_danger">' + validate_text + '</p>');
+                }
+                validate.push("block");
+            } else {
+                $( this ).parent().find('.modal_form_group_danger').remove();
+                validate.push(true);
+            }
+        }
+    });
+    $( "input" ).each(function( index ) {
+        if($(this).attr('required') == 'required' ) {
+            if( $(this).val().length == 0 || $(this).val() == '') {
+                if( ! $( this ).parent().find('.modal_form_group_danger').length) {
+                    $( this ).parent().append('<p class="modal_form_group_danger">' + validate_text + '</p>');
+                }
+                validate.push("block");
+            } else {
+                $( this ).parent().find('.modal_form_group_danger').remove();
+                validate.push(true);
+            }
+        }      
+    });
+    $( "select" ).each(function( index ) {
+        if($(this).attr('required') == 'required' ) {
+            if( $(this).val() == null || $(this).val() == '' || $(this).val() == '') {
+                if( ! $( this ).parent().find('.modal_form_group_danger').length) {
+                    $( this ).parent().append('<p class="modal_form_group_danger">' + validate_text + '</p>');
+                }
+                validate.push("block");
+            } else {
+                $( this ).parent().find('.modal_form_group_danger').remove();
+                validate.push(true);
+            }
+        }
+    });
+    if($("#password").length >0) {
+        password = $("#password");
+        conf_password = $("#conf_password");    
+        
+        if(password.val().length > 0 ) {
+            if( password.val().length < 6) {
+                if( password.parent().find('.validate').length  == 0 ) {
+                    password.parent().append(' <p class="validate">' + validate_password_lenght + '</p>');
+                } else {
+                    password.parent().find('.validate').text(validate_password_lenght);  
+                }
+                validate.push("block");
+            } else {
+                password.parent().find('.validate').text("");     
+                if( ! conf_password.val() || (password.val() != conf_password.val()) ) {
+                if( conf_password.parent().find('.validate').length  == 0 ) {                
+                        conf_password.parent().append(' <p class="validate">' + validate_passwordconf + '</p>');
+                    }
+                    validate.push("block");
+                } else {
+                    conf_password.parent().find('.validate').text("");     
+                    validate.push(true);
+                }
+            }
+        }
+    }
 }
 
-$('.roles').on('change',function(event){
-    if( roles.is(':checked')) {
-        validate2.push(true);
-    } else {
-        validate2.push("block");
-    }
-});
-
-$('.btn-submit_user_edit').on('click',function(event){   
-    console.log("submit_user_create");
+$('.form_edit_user').on('submit',function(event){   
+    console.log("form_edit_user");
     event.preventDefault();
     var form = $(this).parents('form:first');
     let url = $(this).parents('form:first').attr('action');
     var form_data = form.serialize();
-
-    password = $("#password");
-    conf_password = $("#conf_password");    
     
-    if(password.val().length > 0 ) {
-        if( password.val().length < 6) {
-            if( password.parent().find('.validate').length  == 0 ) {
-                password.parent().append(' <p class="validate">' + validate_password_lenght + '</p>');
-            } else {
-                password.parent().find('.validate').text(validate_password_lenght);  
-            }
-            validate2.push("block");
-        } else {
-            password.parent().find('.validate').text("");     
-            if( ! conf_password.val() || (password.val() != conf_password.val()) ) {
-            if( conf_password.parent().find('.validate').length  == 0 ) {                
-                    conf_password.parent().append(' <p class="validate">' + validate_passwordconf + '</p>');
-                }
-                validate2.push("block");
-            } else {
-                conf_password.parent().find('.validate').text("");     
-                validate2.push(true);
-            }
-        }
-    }
+    validate_user_form ();
 
-    if( validate2.includes("block") ) {
+    if( validate.includes("block") ) {
         event.preventDefault();
         validate = [];
         if( roles.parent().parent().find('.validate').length  == 0 ) {                
@@ -138,50 +174,24 @@ $('.btn-submit_user_edit').on('click',function(event){
         });
     }
 
-    console.log(validate2);
+    console.log(validate);
     console.log(password);
     console.log(conf_password);
     console.log(url);
     console.log(form_data);
 });
 
-$('.btn-next').on('click',function(event){  
+$('.form_edit_user .btn-next').on('click',function(event){  
     f_name = $("#first_name");
     l_name = $("#last_name");
     email = $("#email");
     file = $("#file");        
-    validate = false;
-    //console.log(l_name.val());
-    if(! f_name.val()) {
-        if( f_name.parent().find('.validate').length  == 0) {
-            f_name.parent().append(' <p class="validate">' + validate_name + '</p>');               
-        }
-        validate = false;
-    } else {
-        f_name.parent().find('.validate').text("");  
-        validate = true;
-        if(! l_name.val()) {
-            if( l_name.parent().find('.validate').length  == 0) {
-                l_name.parent().append(' <p class="validate">' + validate_lastname + '</p>');
-            }            
-            validate = false;
-        } else {
-            l_name.parent().find('.validate').text("");
-            validate = true;
-            if(! email.val()) {
-                if( email.parent().find('.validate').length  == 0) {
-                    email.parent().append(' <p class="validate">' + valiate_email + '</p>');
-                }
-                validate = false;
-            } else {
-                email.parent().find('.validate').text("");  
-                validate = true;     
-            }   
-        }
-    }
+    validate_user_form ();
   
     //console.log(validate);
-    if(validate == true ) {
+    if( validate.includes("block") ) {
+        validate = [];
+    } else {
         $('.first_tab').toggle();
         $('.second_tab').toggle();
         if($('.first_tab').is(':visible')) {
@@ -194,10 +204,10 @@ $('.btn-next').on('click',function(event){
             $('.mark2').css('background','#1594F0');
         }
     }
-
+    console.log(validate);
 });
 
-$('.btn-back').on('click',function(){
+$('.form_edit_user .btn-back').on('click',function(){
     $('.first_tab').toggle();
     $('.second_tab').toggle();
     if($('.first_tab').is(':visible')) {
@@ -209,4 +219,4 @@ $('.btn-back').on('click',function(){
         $('.mark1').css('background','rgba(21, 148, 240, 0.4)');
         $('.mark2').css('background','#1594F0');
     }
-});
+}); */

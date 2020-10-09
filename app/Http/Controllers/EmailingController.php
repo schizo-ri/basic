@@ -240,7 +240,7 @@ class EmailingController extends Controller
         $emailings = Emailing::get();
         $send_to = array();
         $departments = Department::get();
-       /*  $employees = Employee::where('id','<>',1)->where('checkout',null)->get(); */
+       /*  $employees = Employee::where('id','<>',0)->where('checkout',null)->get(); */
         $employees = Employee::where('checkout',null)->get();
 
         if(isset($emailings)) {

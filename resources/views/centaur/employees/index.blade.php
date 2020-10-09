@@ -1,7 +1,6 @@
 @extends('Centaur::admin')
 
 @section('title', __('basic.employees'))
-
 	@section('content')
 	<header class="page-header">
 		<div class="index_table_filter">
@@ -31,7 +30,7 @@
 					</thead>
 					<tbody>
 						@foreach ($employees as $employee)
-							<tr>
+							<tr class="tr_open_link "  data-href="/employees/{{ $employee->id }}" data-modal >
 								<td>{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}
 									<span class="employee_color" {!! $employee->color ? 'style="background-color:' . $employee->color . '"' : '' !!}>
 									</span>
@@ -46,7 +45,7 @@
 											<i class="fas fa-user-cog"></i>
 										</a>
 									@endif
-									@if(Sentinel::getUser()->hasAccess(['users.update']))
+									@if(Sentinel::getUser()->hasAccess(['users.update']) &&  $employee->user_id)
 										<a href="{{ route('users.edit', $employee->user_id) }}" class="" title="{{ __('basic.edit_user') }}" rel="modal:open">
 											<i class="far fa-edit"></i>
 										</a>
@@ -66,5 +65,7 @@
 			@endif
 		</div>
 	</main>
-	
+	<div id="login-modal" class="modal modal_user modal_employee">
+		
+	</div>
 @stop

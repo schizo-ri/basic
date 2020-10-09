@@ -203,7 +203,7 @@ class WorkRecordController extends Controller
             $workRecord = new WorkRecord();
             $workRecord->saveWorkRecords($data);
             
-            session()->flash('success',  "Prijavljeni ste za dan " . date('d.m.Y') . ' u ' . date('H:i'));
+           // session()->flash('success',  "Prijavljeni ste za dan " . date('d.m.Y') . ' u ' . date('H:i'));
 
             return "Prijavljeni ste za dan " . date('d.m.Y') . ' u ' . date('H:i');
 
@@ -228,9 +228,19 @@ class WorkRecordController extends Controller
               /*   session()->flash('error',  __('ctrl.data_error')); */
                 return  __('ctrl.data_error');
             }
+        } else {
+            $data = array(
+                'employee_id'  	=> $employee_id,
+                'start'  		=> $request['start'],
+                'end'  			=>  $request['end'],
+            );
+            $workRecord = new WorkRecord();
+            $workRecord->saveWorkRecords($data);
+
+            session()->flash('success',  __('ctrl.data_save'));
+		
+            return redirect()->back();
         }
-	
-        // return redirect()->back();	
     }
 
     /**

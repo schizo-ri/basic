@@ -37,7 +37,7 @@
 							<td>{{ $role->slug }}</td>
 							<td>
 								@for ($i = 0; $i < count($role_permissions); $i++)
-									<span class="role _{{ $i }}">{{ $role_permissions[$i] }}, </span>
+									<span class="role _{{ $i }}">{{ $role_permissions[$i] }} </span>
 								@endfor
 								<span class="more">+ {{ count($role_permissions)-2 }} @lang('basic.more')</span>
 								<span class="hide">@lang('basic.hide')</span>						
@@ -65,11 +65,6 @@
 	</main>
 	<script>
 		$(function(){
-			$.getScript( '/../js/filter_table.js');
-			
-			/* $('.collapsible').click(function(event){        
-				$(this).siblings().toggle();
-			}); */
 			
 			$('.more').click(function(){
 				$( this ).siblings('.role').toggle();

@@ -32,7 +32,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
         $cars = Car::orderBy('registration','ASC')->get();
 
         return view('Centaur::tasks.create', ['employees' => $employees, 'cars' => $cars]);
@@ -92,7 +92,7 @@ class TaskController extends Controller
     public function edit($id)
     {
         $task = Task::find($id);
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
         $cars = Car::orderBy('registration','ASC')->get();
 
          return view('Centaur::tasks.edit', ['task' => $task,'employees' => $employees, 'cars' => $cars]);

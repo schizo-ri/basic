@@ -58,9 +58,7 @@ class TableController extends Controller
         $data = array(
 			'name'  		=> $request['name'],
 			'description'   => $request['description'],
-			'emailing'	 	=> $request['emailing'],
-			'shortcut_i'	=> $request['shortcut_i'],
-			'shortcut_c'	=> $request['shortcut_c'],
+			'emailing'	 	=> $request['emailing']
 		);
 		
 		$table = new Table();
@@ -110,8 +108,6 @@ class TableController extends Controller
 			'name'  		=> $request['name'],
 			'description'   => $request['description'],
 			'emailing'	 	=> $request['emailing'],
-			'shortcut_i'	 => $request['shortcut_i'],
-			'shortcut_c'	 => $request['shortcut_c'],
 		);
 		
 		$table->updateTable($data);

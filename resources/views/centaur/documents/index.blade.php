@@ -125,7 +125,7 @@
 <script>
 	$.getScript( '/../js/datatables.js');
 	$.getScript( '/../js/documents.js');
-	$.getScript( '/../js/filter_table.js');
+	$.getScript( '/../js/filter_table.js'); 
 	$.getScript( '/../js/open_modal.js');
 </script>
 @stop

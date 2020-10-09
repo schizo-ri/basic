@@ -19,12 +19,12 @@
 				<input class="form-control" name="url" type="url" value="{{ $url }}" readonly/>
 				{!! ($errors->has('url') ? $errors->first('url', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('icon'))  ? 'has-error' : '' }}">
+			{{-- <div class="form-group {{ ($errors->has('icon'))  ? 'has-error' : '' }}">
 				<button data-selected="graduation-cap" type="button" class="icp icp-dd btn btn-default dropdown-toggle iconpicker-component iconpicker-element" data-toggle="dropdown">
 					Dropdown <i class="fa fa-fw iconpicker-component"></i>
 					<span class="caret"></span>
 				</button>
-			</div>
+			</div> --}}
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" id="submit" value="{{ __('basic.save')}}">
 		</fieldset>

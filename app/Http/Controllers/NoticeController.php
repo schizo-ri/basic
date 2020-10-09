@@ -157,7 +157,7 @@ class NoticeController extends Controller
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 
                         if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                            $employees = Employee::where('id','<>',1)->where('checkout', null)->get();
+                            $employees = Employee::where('id','<>',0)->where('checkout', null)->get();
                            
                             $prima = EmailingController::sendTo('notices','create');
                           
@@ -207,7 +207,7 @@ class NoticeController extends Controller
      
             if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
               /*   $prima = array(); */
-                $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+                $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
 
                 $prima = EmailingController::sendTo('notices','create');
              
@@ -285,7 +285,7 @@ class NoticeController extends Controller
                 $statistic->saveStatistic($data);
             }
             $notice_statistic = NoticeStatistic::where('notice_id', $notice->id)->get();
-            $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+            $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
             $count_statistic = count( $notice_statistic);
             $count_employees = count($employees);
             $statistic = $count_statistic /  $count_employees *100 ;
@@ -415,7 +415,7 @@ class NoticeController extends Controller
      
             if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
                 $prima = array();
-                $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+                $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
 
                 foreach($request['to_department'] as $department_id) {
                     $department = Department::where('id', $department_id)->first();

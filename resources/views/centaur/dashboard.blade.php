@@ -19,7 +19,7 @@
 		<div class="user_header col-xs-12 col-sm-12 col-md-12 col-lg-8" >
 			<div class="info ">
 				<div class="col-md-3 float_left user_header_info">
-					@if($profile_image && ! empty($profile_image))
+					@if(isset($profile_image) && ! empty($profile_image))
 						<span class="image_prof">
 							<img class="" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image" />
 						</span>
@@ -70,7 +70,7 @@
 								@for ($i =  $key; $i < 10; $i++)
 									<span class="profile_img new_open">
 										<span>
-											<span class="material-icons">add</span>
+											<span><i class="fas fa-plus"></i></span>
 											<span class="shortcut">@lang('basic.add_shortcut')</span> 
 										</span>
 									</span>
@@ -95,6 +95,14 @@
 								<p>@lang('absence.request_vacation')</p>
 							</span></a>
 						</button>
+						@if(in_array('Prekovremeni', $moduli))  
+							<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
+								<span>
+									<span class="img "></span>
+									<p>@lang('basic.add_afterhour')</p>
+								</span></a>
+							</button>
+						@endif
 						<button class="" ><a href="{{ route('tasks.index') }}" rel="modal:open">
 							<span>
 								<span class="img task"></span>
@@ -109,14 +117,14 @@
 								</span></a>
 							</button>
 						@endif
-						{{-- @if(in_array('Putni nalozi', $moduli))   --}}
+						@if(in_array('Putni nalozi', $moduli))  
 							<button class="" ><a href="{{ route('travel_orders.show', $employee->id) }}" class="travel_show" rel="modal:open">
 								<span>
 									<span class="img travel"></span>
 										<p>{{  __('basic.travel_orders') }}</p>
 								</span></a>
 							</button>
-					{{-- 	@endif --}}
+							@endif
 						@if(in_array('Locco vožnja', $moduli))  
 							<button class="" ><a href="{{ route('fuels.create')}}" rel="modal:open">
 								<span>
@@ -208,7 +216,7 @@
 				<div>
 					<h2>
 						@lang('basic.posts')
-						@if( $countComment_all > 0)
+						@if( isset($countComment_all) && $countComment_all > 0)
 							<span class="count_coments">{{ $countComment_all }}</span>
 						@endif   
 						@if(Sentinel::getUser()->hasAccess(['posts.create']) || in_array('posts.create', $permission_dep))

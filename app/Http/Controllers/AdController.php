@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\AdRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DashboardController;
 use App\Models\Ad;
 use App\Models\AdCategory;
 use App\Models\Employee;
@@ -31,13 +32,8 @@ class AdController extends Controller
      */
     public function index(Request $request)
     {
-        $empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
-		
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-		} 
-		
+		$permission_dep = DashboardController::getDepartmentPermission();
+	
 		if(isset($request->category_id)) {
 			$category = AdCategory::where('id',$request->category_id)->first();
 			$ads = Ad::where('category_id',$category->id )->get();

@@ -37,7 +37,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+		$employees = Employee::where('id','<>',0)->where('checkout',null)->where('user_id','<>',null)->get();
 		$empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
         
@@ -56,8 +56,8 @@ class EmployeeController extends Controller
     public function create(Request $request)
     {
 		$users = User::get();
-		$works = Work::get();
-		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+		$works = Work::orderBy('name','ASC')->get();
+		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
 	
 		$campaigns = Campaign::where('type','evergreen')->get();
 		$moduli = CompanyController::getModules(); // provjera da li se koriste moduli kampanja
@@ -144,7 +144,15 @@ class EmployeeController extends Controller
 			'first_job' 			=> $first_job,
 			'comment' 	   		    => $input['comment'],
 			'color' 	   		    => $input['color'],
-			'abs_days' 	    		=> count($abs_days) > 0 ? serialize($abs_days) : null
+			'abs_days' 	    		=> count($abs_days) > 0 ? serialize($abs_days) : null,
+			'maiden_name' 	    	=> $input['maiden_name'],
+			'lijecn_pregled' 	    => $input['lijecn_pregled'],
+			'znr' 	    			=> $input['znr'],
+			'size' 	    			=> $input['size'],
+			'shoe_size' 	    	=> $input['shoe_size'],
+			'days_off' 	    		=> $input['days_off'],
+			'stranger' 	    		=> $input['stranger'],
+			'permission_date' 	    => $input['permission_date'],
 		);
 		
 		if( $input['superior_id'] != 0 ) {
@@ -177,7 +185,7 @@ class EmployeeController extends Controller
 		/* $emailings = Emailing::get();
 		$send_to = array();
 		$departments = Department::get();
-		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
 
 		if(isset($emailings)) {
 			foreach($emailings as $emailing) {
@@ -244,8 +252,8 @@ class EmployeeController extends Controller
     {
 		$employee = Employee::find($id);
 		$users = User::get();
-		$works = Work:: get();
-		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+		$works = Work::orderBy('name','ASC')->get();
+		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
 		$campaigns = Campaign::where('type','evergreen')->get();
 		$campaignRecipients = CampaignRecipient::where('employee_id',$employee->id )->get();
 
@@ -317,7 +325,15 @@ class EmployeeController extends Controller
 			'first_job' 			=> $first_job,
 			'comment' 	   		    => $input['comment'] == '' ? null : $input['comment'],
 			'color' 	   		    => $input['color'],
-			'abs_days' 	    		=> count($abs_days) > 0 ? serialize($abs_days) : null
+			'abs_days' 	    		=> count($abs_days) > 0 ? serialize($abs_days) : null,
+			'maiden_name' 	    	=> $input['maiden_name'],
+			'lijecn_pregled' 	    => $input['lijecn_pregled'],
+			'znr' 	    			=> $input['znr'],
+			'size' 	    			=> $input['size'],
+			'shoe_size' 	    	=> $input['shoe_size'],
+			'days_off' 	    		=> $input['days_off'],
+			'stranger' 	    		=> $input['stranger'],
+			'permission_date' 	    => $input['permission_date'],
 		);
 		
 		if( $input['superior_id'] != 0 ) {
@@ -370,7 +386,7 @@ class EmployeeController extends Controller
 		$emailings = Emailing::get();
 		$send_to = array();
 		$departments = Department::get();
-		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
 
 		if(isset($emailings)) {
 			foreach($emailings as $emailing) {

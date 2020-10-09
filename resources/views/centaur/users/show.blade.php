@@ -174,7 +174,7 @@
 	</div>
 </main>
 <script>
-	$.getScript( '/../js/open_modal.js'); 
+	/* $.getScript( '/../js/open_modal.js');  */
 	$('#year_vacation').change(function(){
 		year = $(this).val();
 		

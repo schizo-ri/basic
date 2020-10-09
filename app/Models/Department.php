@@ -13,7 +13,7 @@ class Department extends Model
 	* @var array
 	*/
 	protected $fillable = [
-		'company_id','name','level1','level2','email'
+		'company_id','name','level1','level2','email','employee_id'
 	];
 	
 	/*
@@ -30,6 +30,23 @@ class Department extends Model
 	*/
 	protected static $workModel = 'App\Models\Work';
 
+	/*
+	* The Eloquent employee model name
+	* 
+	* @var string
+	*/
+	protected static $employeeModel = 'App\Models\Employee';
+	
+	/*
+	* Returns the company relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function employee()
+	{
+		return $this->belongsTo(static::$employeeModel,'employee_id');
+	}
 	
 	/*
 	* Returns the company relationship

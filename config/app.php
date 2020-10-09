@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://ru-ve.myintranet.io'),
+    'url' => env('APP_URL', 'https://duplico.myintranet.io'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -164,9 +164,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 		Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class,
-		Centaur\CentaurServiceProvider::class, 
- 	    Barryvdh\DomPDF\ServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class,
+		Centaur\CentaurServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -237,7 +235,6 @@ return [
 		'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Pusher' => Pusher\Pusher::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     
     ],
 

@@ -3,8 +3,11 @@
     <h3 class="panel-title">@lang('basic.create_user')</h3>
 </div>
 <div class="modal-body">
-    <form class="form_create_user" accept-charset="UTF-8" role="form" method="post" action="{{ route('users.store') }}" enctype="multipart/form-data" >
+    <form class="form_create_user form_user" accept-charset="UTF-8" role="form" method="post" action="{{ route('users.store') }}" enctype="multipart/form-data" >
         <div class="first_tab">
+            @if ( $job_interwiew )
+                <input type="hidden" name="job_interwiew" value="{{ $job_interwiew->id }}" >
+            @endif
             <div class="form-group upload_user_photo">
                 <label class="label_file" for="file">@lang('basic.upload_photo')
                     <span>
@@ -15,17 +18,17 @@
             </div>
             <div class="form-group user_name {{ ($errors->has('first_name')) ? 'has-error' : '' }}">
                 <label for="first_name">@lang('basic.f_name')</label>
-                <input class="form-control" id="first_name" name="first_name" maxlength="191" type="text" value="{{ old('first_name') }}" required />
+                <input class="form-control" id="first_name" name="first_name" maxlength="191" type="text" value="{!! $job_interwiew ? $job_interwiew->first_name : old('first_name') !!}" required />
                 {!! ($errors->has('first_name') ? $errors->first('first_name', '<p class="text-danger">:message</p>') : '') !!}
             </div>
             <div class="form-group user_name {{ ($errors->has('last_name')) ? 'has-error' : '' }}">
                 <label for="last_name">@lang('basic.l_name')</label>
-                <input class="form-control" name="last_name" maxlength="191" id="last_name" type="text" value="{{ old('last_name') }}" required />
+                <input class="form-control" name="last_name" maxlength="191" id="last_name" type="text" value="{!! $job_interwiew ? $job_interwiew->last_name : old('last_name') !!}" required />
                 {!! ($errors->has('last_name') ? $errors->first('last_name', '<p class="text-danger">:message</p>') : '') !!}
             </div>
             <div class="form-group email {{ ($errors->has('email')) ? 'has-error' : '' }}">
                 <label for="email">E-mail</label>
-                <input class="form-control" name="email" id="email" type="text" maxlength="191" value="{{ old('email') }}" required >
+                <input class="form-control" name="email" id="email" type="text" maxlength="191" value="{!! $job_interwiew ? $job_interwiew->email : old('email') !!}" required >
                 {!! ($errors->has('email') ? $errors->first('email', '<p class="text-danger">:message</p>') : '') !!}
             </div>
             <div class="form-group  {{ ($errors->has('password')) ? 'has-error' : '' }}">
@@ -62,7 +65,7 @@
             <div class="form-group checkbox">
                 <p>
                     <label for="activate">@lang('basic.activate')</label>
-                    <input name="activate" type="checkbox" id="activate" value="true" {{ old('activate') == 'true' ? 'checked' : ''}}> 
+                    <input name="activate" type="checkbox" id="activate" value="true" 'checked' > 
                 </p>
             </div>
             {{ csrf_field() }}

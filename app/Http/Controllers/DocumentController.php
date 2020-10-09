@@ -47,7 +47,7 @@ class DocumentController extends Controller
         }
         $documents = Document::where('path','like','%'.$user_name .'/documents/%')->orWhere('path','like','%svi/documents/%')->get();
      
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
         
         $path = 'storage/' . $user_name . '/documents/';
         

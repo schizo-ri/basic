@@ -78,7 +78,7 @@ class TravelOrderController extends Controller
     public function create()
     {
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
         $loccos = Locco::orderBy('date','DESC')->get();
 
         return view('Centaur::travel_orders.create', ['cars' => $cars, 'loccos' => $loccos,'employees' => $employees]);
@@ -140,7 +140,7 @@ class TravelOrderController extends Controller
         $travel = TravelOrder::find($id);
 
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
         $loccos = Locco::orderBy('date','DESC')->get();
 
         return view('Centaur::travel_orders.edit', ['travel' => $travel, 'cars' => $cars, 'loccos' => $loccos,'employees' => $employees]);
@@ -310,7 +310,7 @@ class TravelOrderController extends Controller
        $travel = TravelOrder::find($id);
        $company = Company::first();
        $cars = Car::orderBy('registration','ASC')->get();
-       $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+       $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
        $locco1 = $travel->locco; // locco prema zapisanom id u travel
      
        $loccos = $travel->loccos; // locco iz travel_loccos

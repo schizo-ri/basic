@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\DepartmentRole;
 use App\Models\Company;
+use App\Models\Employee;
 use App\Models\Work;
 use Sentinel;
 
@@ -52,8 +53,9 @@ class DepartmentController extends Controller
     {
         $companies = Company::get();
 		$departments = Department::where('level1', 1)->orWhere('level1', 0)->orderBy('name','ASC')->get();
-		
-		return view('Centaur::departments.create', ['companies' => $companies, 'departments' => $departments]);
+        $employees = Employee::where('checkout',null)->get();
+        
+		return view('Centaur::departments.create', ['companies' => $companies, 'departments' => $departments, 'employees' => $employees]);
     }
 
     /**
@@ -69,7 +71,8 @@ class DepartmentController extends Controller
 			'name'  			=> $request['name'],
 			'email'     		=> $request['email'],
 			'level1'	 		=> $request['level1'],
-			'level2'	 		=> $request['level2']
+			'level2'	 		=> $request['level2'],
+			'employee_id'	 	=> $request['employee_id']
 		);
 		
 		$department = new Department();
@@ -100,10 +103,11 @@ class DepartmentController extends Controller
     public function edit($id)
     {
         $department = Department::find($id);
-		$companies = Company::get();
+        $companies = Company::get();
+        $employees = Employee::where('checkout',null)->get();
 		$departments = Department::where('level2','<>', $department->id )->where('level1', 1)->orWhere('level1', 0)->orderBy('name','ASC')->get();
 		
-		return view('Centaur::departments.edit', ['department' => $department,'companies' => $companies,'departments' => $departments]);
+		return view('Centaur::departments.edit', ['department' => $department,'companies' => $companies,'departments' => $departments, 'employees' => $employees]);
     }
 
     /**
@@ -122,7 +126,8 @@ class DepartmentController extends Controller
 			'name'  			=> $request['name'],
 			'email'     		=> $request['email'],
 			'level1'	 		=> $request['level1'],
-			'level2'	 		=> $request['level2']
+			'level2'	 		=> $request['level2'],
+			'employee_id'	 	=> $request['employee_id']
 		);
 		
 		$department->updateDepartment($data);
