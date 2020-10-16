@@ -57,7 +57,6 @@ class LoccoController extends Controller
      */
     public function create(Request $request)
     {
-      
         $cars = Car::orderBy('registration','ASC')->get();
         $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->get();
 
@@ -131,41 +130,40 @@ class LoccoController extends Controller
             );
             $car->updateCar($data_car);
         }
-        
-     /*    try { */
-            if( $request['travel']) {
-                $data_travel = array(
-                    'date'  		    => $request['date'],
-                    'employee_id'  	    => $request['employee_id'],
-                    'car_id'  		    => $request['car_id'],
-                    'destination'  	    => $request['destination'],
-                    'days'  	        => 1,
-                    'start_date'  	    => $request['date'],
-                    'end_date'  	    => null,
-                    'locco_id'  	    => $locco->id,
-                );
-               
-                $travelOrder = new TravelOrder();
-                $travelOrder->saveTravelOrder($data_travel);
+   
+        if( $request['travel']) {
+            $data_travel = array(
+                'date'  		    => $request['date'],
+                'employee_id'  	    => $request['employee_id'],
+                'car_id'  		    => $request['car_id'],
+                'destination'  	    => $request['destination'],
+                'days'  	        => 1,
+                'start_date'  	    => $request['date'],
+                'end_date'  	    => null,
+                'locco_id'  	    => $locco->id,
+            );
+            
+            $travelOrder = new TravelOrder();
+            $travelOrder->saveTravelOrder($data_travel);
 
-                $data_locco = array(
-                    'travel_id'  => $travelOrder->id,
-                );
-                $locco->updateLocco($data_locco);
-               
-                /* mail obavijest o novom putnom nalogu */
-                $send_to = EmailingController::sendTo('travel_orders','create');
-               
+            $data_locco = array(
+                'travel_id'  => $travelOrder->id,
+            );
+            $locco->updateLocco($data_locco);
+            
+            /* mail obavijest o novom putnom nalogu */
+            $send_to = EmailingController::sendTo('travel_orders','create');
+            try {
                 foreach(array_unique($send_to) as $send_to_mail) { // mailovi upisani u mailing 
                     if( $send_to_mail != null & $send_to_mail != '' ) {
                         Mail::to($send_to_mail)->send(new TravelCreate($travelOrder));  
                     }
                 }
+            } catch (\Throwable $th) {
+                session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+                return redirect()->back();
             }
-    /*     } catch (\Throwable $th) {
-            session()->flash('error',  __('ctrl.locco_error'));
-            return redirect()->back();
-        } */
+        }
       
         if($request['wrong_km']){
 			if(! $request['comment'] ){
@@ -173,11 +171,15 @@ class LoccoController extends Controller
 				return redirect()->back()->withFlashMessage($message);
 			} else {
                 $send_to = EmailingController::sendTo('loccos','create');
-                $send_to = arraay('jelena.juras@duplico.hr');
-                foreach(array_unique($send_to) as $send_to_mail) {
-                    if( $send_to_mail != null & $send_to_mail != '' ) {
-                        Mail::to($send_to_mail)->send(new CarServiceMail($locco)); // mailovi upisani u mailing 
+                try {
+                    foreach(array_unique($send_to) as $send_to_mail) {
+                        if( $send_to_mail != null & $send_to_mail != '' ) {
+                            Mail::to($send_to_mail)->send(new CarServiceMail($locco)); // mailovi upisani u mailing 
+                        }
                     }
+                } catch (\Throwable $th) {
+                    session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+                    return redirect()->back();
                 }
             }
         }

@@ -82,7 +82,9 @@ class AbsenceController extends BasicAbsenceController
 				'razmjeranGO'  	 => BasicAbsenceController::razmjeranGO( $empl ),  //razmjeran go ova godina
 				'zahtjevi' 		 => BasicAbsenceController::requestAllYear( $empl ), 
 				'bolovanje' 	 => BasicAbsenceController::bolovanje( $empl ), 
-				'docs' 		 	 => DashboardController::profile_image( $empl ), 
+				'docs' 		 	 => DashboardController::profile_image( $empl->id ), 
+				'user_name' 	 => DashboardController::user_name( $empl->id ), 
+
 			);
 			
 			/* dd($data_absence); */
@@ -164,12 +166,17 @@ class AbsenceController extends BasicAbsenceController
 						array_push($send_to, $absence->employee->email );
 					} 
 					$send_to = array_merge($send_to, EmailingController::sendTo('absences','create') );
-
-					foreach(array_unique($send_to) as $send_to_mail) {
-						if( $send_to_mail != null & $send_to_mail != '' ) {
-							Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
-						}
-					} 
+					try {
+						foreach(array_unique($send_to) as $send_to_mail) {
+							if( $send_to_mail != null & $send_to_mail != '' ) {
+								Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
+							}
+						} 
+					} catch (\Throwable $th) {
+						session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+						return redirect()->back();
+					}
+					
 			   } 
 			}
 	   } else {
@@ -196,11 +203,15 @@ class AbsenceController extends BasicAbsenceController
 				
 				$send_to = EmailingController::sendTo('absences','confirm');
 				$send_to = array_merge($send_to, EmailingController::sendTo('absences','create') );
-	
-				foreach(array_unique($send_to) as $send_to_mail) {
-					if( $send_to_mail != null & $send_to_mail != '' ) {
-						Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
+				try {
+					foreach(array_unique($send_to) as $send_to_mail) {
+						if( $send_to_mail != null & $send_to_mail != '' ) {
+							Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
+						}
 					}
+				} catch (\Throwable $th) {
+					session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+					return redirect()->back();
 				}
 		   } 
 	   }
@@ -299,12 +310,17 @@ class AbsenceController extends BasicAbsenceController
 				array_push($send_to, $absence->employee->email );
 			} 
 			$send_to = array_merge($send_to, EmailingController::sendTo('absences','create') );
+			try {
+				foreach(array_unique($send_to) as $send_to_mail) {
+					if( $send_to_mail != null & $send_to_mail != '' ) {
+						Mail::to($send_to_mail)->send(new AbsenceUpdateMail($absence)); // mailovi upisani u mailing 
+					}
+				} 
+			} catch (\Throwable $th) {
+				session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+				return redirect()->back();
+			}
 			
-			foreach(array_unique($send_to) as $send_to_mail) {
-				if( $send_to_mail != null & $send_to_mail != '' ) {
-					Mail::to($send_to_mail)->send(new AbsenceUpdateMail($absence)); // mailovi upisani u mailing 
-				}
-			} 
 	   } 
 
 		session()->flash('success', __('ctrl.data_edit'));
@@ -351,36 +367,27 @@ class AbsenceController extends BasicAbsenceController
 
 		/* mail obavijest o novoj poruci */
 		$emailings = Emailing::get();
-		$send_to = array('jjuras72@gmail.com');
+		
 
 		$departments = Department::get();
 		$employees = Employee::where('checkout',null)->get();
 
 		$employee_mail = $absence->employee->email;
+		
+		$send_to = EmailingController::sendTo('absences','confirm');
 		array_push($send_to, $employee_mail ); // mail zaposlenika
 
-		if(isset($emailings)) {
-			foreach($emailings as $emailing) {
-				if($emailing->table['name'] == 'absences' && $emailing->method == 'confirm') {
-					if($emailing->sent_to_dep) {
-						foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
-							array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
-						}
-					}
-					if($emailing->sent_to_empl) {
-						foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
-							array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
-						}
-					}
+		try {
+			foreach(array_unique($send_to) as $send_to_mail) {
+				if( $send_to_mail != null & $send_to_mail != '' ) {
+					Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
 				}
 			}
+		} catch (\Throwable $th) {
+			session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+			return redirect()->back();
 		}
-
-		foreach(array_unique($send_to) as $send_to_mail) {
-			if( $send_to_mail != null & $send_to_mail != '' ) {
-				Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
-			}
-		}
+		
 		
 		
 		$message = session()->flash('success', __('absence.approved'));
@@ -410,12 +417,17 @@ class AbsenceController extends BasicAbsenceController
 
 			$send_to = EmailingController::sendTo('absences','confirm');
 			array_push($send_to, $absence->employee->email );
-			
-			foreach(array_unique($send_to) as $send_to_mail) {
-				if( $send_to_mail != null & $send_to_mail != '' ) {
-					Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
+			try {
+				foreach(array_unique($send_to) as $send_to_mail) {
+					if( $send_to_mail != null & $send_to_mail != '' ) {
+						Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
+					}
 				}
+			} catch (\Throwable $th) {
+				session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+				return redirect()->back();
 			}
+			
 		}
 		
 		$message = session()->flash('success',  $absence->approve == 1 ? __('absence.approved') :  __('absence.not_approved') );

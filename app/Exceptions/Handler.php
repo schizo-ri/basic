@@ -52,7 +52,13 @@ class Handler extends ExceptionHandler
         if (Sentinel::check()) {
             $email = 'jelena.juras@duplico.hr';
             $url = $_SERVER['REQUEST_URI'];
-            Mail::to($email)->send(new ErrorMail( $exception, $url)); 
+            try {
+                Mail::to($email)->send(new ErrorMail( $exception, $url)); 
+            } catch (\Throwable $th) {
+                session()->flash('error', __('ctrl.email_error'));
+				return redirect()->back();
+            }
+           
         }
         return parent::render($request, $exception);
     }

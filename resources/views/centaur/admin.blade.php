@@ -28,7 +28,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all_new.css') }}"/>
 		{{-- <link rel="stylesheet" href="{{ URL::asset('/../css/layout.css') }}"/>
 		<link rel="stylesheet" href="{{ URL::asset('/../css/welcome.css') }}"/>
 		<link rel="stylesheet" href="{{ URL::asset('/../css/basic.css') }}"/>
@@ -359,7 +359,7 @@
             <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
            
             <!-- Scripts -->
-			<script src="{{URL::asset('/../js/all.js') }}"></script>
+			<script src="{{URL::asset('/../js/all_new.js') }}"></script>
 		{{-- 	<script src="{{URL::asset('/../js/nav_active.js') }}"></script>
 			<script src="{{URL::asset('/../js/set_height.js') }}"></script>
             <script src="{{URL::asset('/../js/collaps.js') }}"></script>

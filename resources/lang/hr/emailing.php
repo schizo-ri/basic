@@ -5,6 +5,7 @@ return [
 	'with_day'					=> 'Sa danom',
 	'employed_worker' 			=> 'zaposlen je radnik',
 	'in_the_workplace'			=> 'na radnom mjestu ',
+	'in_progress'				=> 'U tijeku je zapošljavanje djelatnika ',
 	'email_send'				=> 'E-mail je poslan',
 	'new_article'				=> 'Novi članak',
 	'new_absence'				=> 'Zahtjev za ',

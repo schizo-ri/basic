@@ -73,7 +73,7 @@ class EventController extends Controller
         //	$days_in_month = cal_days_in_month(CAL_GREGORIAN, $selected['mj_select'],$selected['god_select']);  // broj dana u mjesecu
         if ($selected['god_select']%4 == 0) {
             $daysInMonth = array(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-        }else{
+        } else{
             $daysInMonth = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
         }
         $days_in_month = $daysInMonth[intval($selected['mj_select'])-1];
@@ -463,7 +463,7 @@ class EventController extends Controller
                     return date('m',strtotime($event->date)) == $month && date('Y',strtotime($event->date)) == $year;
                 });
         
-             /*    $events = Event::whereMonth('date',$month)->whereYear('date',$year)->where('employee_id', $empl->id)->get(); */
+              /* $events = Event::whereMonth('date',$month)->whereYear('date',$year)->where('employee_id', $empl->id)->get(); */
                 if(count($events) > 0) {
                     foreach($events as $event1) {
                         array_push($dataArr, ['name' => "event", 
@@ -482,10 +482,10 @@ class EventController extends Controller
                 $absences = $absences->filter(function ($absence, $key) use ( $month, $year ) {
                     return (date('m',strtotime($absence->start_date)) == $month && date('Y',strtotime($absence->start_date)) == $year) || (date('m',strtotime($absence->end_date)) == $month && date('Y',strtotime($absence->end_date)) );
                 });
-               /*  $absences = Absence::whereMonth('start_date', $month)->whereYear('start_date', $year)->where('approve',1)->get();
+                /*  $absences = Absence::whereMonth('start_date', $month)->whereYear('start_date', $year)->where('approve',1)->get();
                 $absences = $absences->merge(Absence::whereMonth('end_date', $month)->whereYear('end_date', $year)->where('approve',1)->get());
                 */
-               /*  $today = date('Y-m-d');
+                /*  $today = date('Y-m-d');
                 $select_day = explode('-',$today); 
                 $dan_select = $select_day[2];
                 $mj_select = $select_day[1];

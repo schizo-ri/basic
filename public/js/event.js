@@ -129,7 +129,6 @@ $(function() {
    }
     
    $('.index_aside .day_events').show();
-    $.getScript( '/../js/open_modal.js'); 
 
     function get_url(url, datum ) {
         $.get(url, { dan: datum }, function(data, status){

@@ -348,29 +348,10 @@ class QuestionnaireController extends Controller
 	public function sendEmail(Request $request) 
 	{
 		/* mail obavijest o novoj poruci */
-		//$emailings = Emailing::get();
 		$send_to = array();
-		//$departments = Department::get();
+		
 		$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
 		$questionnaire = Questionnaire::find($request['id']);
-		
-		/* if(isset($emailings)) {
-			foreach($emailings as $emailing) {
-				if($emailing->table['name'] == 'questionnaires' && $emailing->method == 'create') {
-					
-					if($emailing->sent_to_dep) {
-						foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
-							array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
-						}
-					}
-					if($emailing->sent_to_empl) {
-						foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
-							array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
-						}
-					}
-				}
-			}
-		} */
 		
 		foreach ($employees as $employee) {
 			if( $employee->email ) {
@@ -379,11 +360,17 @@ class QuestionnaireController extends Controller
 		}           
 
 		if($send_to) {
-			foreach(array_unique($send_to) as $send_to_mail) {
-				if( $send_to_mail != null & $send_to_mail != '' ) {
-					Mail::to($send_to_mail)->send(new QuestionnaireSend($questionnaire)); // mailovi upisani u mailing 
+			try {
+				foreach(array_unique($send_to) as $send_to_mail) {
+					if( $send_to_mail != null & $send_to_mail != '' ) {
+						Mail::to($send_to_mail)->send(new QuestionnaireSend($questionnaire)); // mailovi upisani u mailing 
+					}
 				}
+			} catch (\Throwable $th) {
+				$message = session()->flash('error', __('emailing.not_send'));
+		        return redirect()->back()->withFlashMessage($message);
 			}
+			
 		}
 		$message = session()->flash('success', __('emailing.email_send'));
 		

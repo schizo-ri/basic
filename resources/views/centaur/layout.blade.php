@@ -7,7 +7,15 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
+		
+		<meta http-equiv="cache-control" content="max-age=0" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="expires" content="0" />
+		<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+		<meta http-equiv="pragma" content="no-cache" />
+		
 		<title>@yield('title')</title>
+
         <!-- Bootstrap - Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/bootstrap/dist/css/bootstrap.min.css') }}"/>
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -26,7 +34,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all_new.css') }}"/>
 	
 		{{-- Material design --}}
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -263,13 +271,15 @@
 			<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
 
 			<!-- Scripts -->
-			<script src="{{URL::asset('/../js/all.js') }}"></script>
+			<script src="{{URL::asset('/../js/all_new.js') }}"></script>
 
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
 
 			<!-- Datatables -->
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
+			<script src="{{ URL::asset('/../dataTables/Buttons-1.6.2/js/buttons.flash.js') }}"></script>
+			<script src="{{ URL::asset('/../dataTables/Buttons-1.6.2/js/buttons.html5.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>

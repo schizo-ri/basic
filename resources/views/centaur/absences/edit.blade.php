@@ -98,5 +98,5 @@ $( document ).ready(function() {
 			end_date.val(start_date);
 		});
 	});
-	$.getScript( '/../js/validate.js');
+/* 	$.getScript( '/../js/validate.js'); */
 </script>

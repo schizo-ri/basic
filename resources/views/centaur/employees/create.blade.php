@@ -214,5 +214,5 @@
 			console.log("remove");
 		});
 	});
-    $.getScript( '/../js/validate.js'); 
+/*     $.getScript( '/../js/validate.js');  */
 </script>

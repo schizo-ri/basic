@@ -61,8 +61,8 @@ class DashboardController extends Controller
                 $events = Event::where('employee_id',$employee->id)->where('date', $date)->orderBy('date','DESC')->get();
                 $tasks = Task::where('employee_id', $employee->id)->where('date', $date)->orderBy('date','DESC')->get();
 
-                $profile_image = DashboardController::profile_image( $employee ->id );
-                $user_name =  DashboardController::user_name( $employee ->id );					
+                $profile_image = DashboardController::profile_image( $employee->id );
+                $user_name =  DashboardController::user_name( $employee->id );					
                         
                 $locco_active = Locco::where('employee_id', $employee->id)->where('status',0)->orderBy('date','ASC')->get();
                 //Broj neodobrenih zahtjeva
@@ -162,7 +162,7 @@ class DashboardController extends Controller
         $record_yesterday = WorkRecord::where('employee_id', $employee->id)->whereDate('start', '<', date('Y-m-d'))->orderBy('start','DESC')->first();
         if( $record_yesterday && $record_yesterday['end'] == null ) {
             $start = $record_yesterday->start;
-            $end = date('Y-m-d', strtotime( $start )) . ' 16:00:00';
+            $end = date('Y-m-d', strtotime( $start )) . ' 16:15:00';
             $data = array(
                 'end'  =>   $end,
             );

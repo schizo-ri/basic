@@ -1,4 +1,4 @@
-var f_name;
+/* var f_name;
 var l_name;
 var email;
 var file;
@@ -55,7 +55,7 @@ $('.roles').on('change',function(event){
     }
 });
 
-$('.btn-next').on('click',function(event){
+$('.form_create_user .btn-next').on('click',function(event){
     f_name = $("#first_name");
     l_name = $("#last_name");
     email = $("#email");
@@ -133,7 +133,7 @@ $('.btn-next').on('click',function(event){
 
 });
 
-$('.btn-back').on('click',function(){
+$('.form_create_user .btn-back').on('click',function(){
     $('.first_tab').toggle();
     $('.second_tab').toggle();
     if($('.first_tab').is(':visible')) {
@@ -147,7 +147,6 @@ $('.btn-back').on('click',function(){
 
     }
 });
-
 
 /* 
 $('.submit_user_create').on('click',function(event){

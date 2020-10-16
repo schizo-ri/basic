@@ -102,15 +102,3 @@ $(function() {
         $( this ).addClass('abs_BOL');
     });
 });
-$( ".change_employee_work" ).on('change',function() {
-    var value = $(this).val().toLowerCase();
-    console.log(value);
-    
-    $("tbody tr").filter(function() {
-        //$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        $(this).toggle($(this).hasClass(value));
-    });
-    if(value == '') {
-        $("tbody tr").show();
-    }
-});

@@ -1225,14 +1225,20 @@ div#calendar ul li.active_date {
     
 /* @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap');
  */
-/* html {
+html {
     height: 100vh;
     width: 100vw;
     font-size: 16px;
     font-family: Montserrat, sans-serif;
     overflow: auto;
 }
-body, form {
+body {
+    height: 100vh;
+    width: 100%;
+    font-family: Montserrat, sans-serif;
+    background: inherit;
+}
+form {
     height: auto;
     width: 100%;
     font-family: Montserrat, sans-serif;
@@ -1244,7 +1250,7 @@ header {
     text-align: center;
     background: #F8FAFF;
     overflow: hidden;
-} */
+}
 .form_template main {
     height: calc(100% - 81px);
 }

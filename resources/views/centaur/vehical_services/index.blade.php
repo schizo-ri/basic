@@ -38,7 +38,7 @@
 							<th>@lang('basic.amount')</th>
 							<th>@lang('basic.current_km')</th>
 							<th>@lang('basic.employee')</th>
-							<th>@lang('basic.comment')</th>
+							<th class="wrap_col">@lang('basic.comment')</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
 					</thead>
@@ -49,8 +49,8 @@
 								<td>{{ $service->car->registration }}</td>
 								<td>{{ number_format($service->price, 2, ',', '.') }}</td>
 								<td>{{ $service->km }}</td>
-								<td>{{ $service->employee->user['last_name'] }}</td>
-								<td>{{ $service->comment }}</td>
+								<td>{{ $service->employee->user['first_name'] . ' ' .  $service->employee->user['last_name']  }}</td>
+								<td class="wrap_col">{{ $service->comment }}</td>
 								<td>
 									@if(Sentinel::getUser()->hasAccess(['vehical_services.view']) || in_array('vehical_services.view', $permission_dep))
 										<a href="{{ route('vehical_services.edit',$service->id ) }}" class="edit_service btn-edit" title="{{ __('basic.vehical_services')}}" rel="modal:open">

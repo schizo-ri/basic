@@ -29,6 +29,8 @@ class Employee extends Model
 	*/
 	protected static $eventModel = 'App\Models\Event'; 
 
+	
+
 	/*
 	* The Eloquent task model name
 	* 
@@ -37,7 +39,7 @@ class Employee extends Model
 	protected static $taskModel = 'App\Models\Task'; 
 
 	/*
-	* The Eloquent user model name
+	* The Eloquent Locco model name
 	* 
 	* @var string
 	*/
@@ -65,7 +67,7 @@ class Employee extends Model
 	protected static $workModel = 'App\Models\Work'; 
 
 	/*
-	* The Eloquent works model name
+	* The Eloquent Absence model name
 	* 
 	* @var string
 	*/
@@ -79,7 +81,7 @@ class Employee extends Model
 	protected static $shortcutModel = 'App\Models\Shortcut'; 
 
 	/*
-	* Returns the works relationship
+	* Returns the user relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	*/
@@ -90,7 +92,7 @@ class Employee extends Model
 	}
 	
 	/*
-	* Returns the Event relationship
+	* Returns the shortcut relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
 	*/
@@ -145,7 +147,7 @@ class Employee extends Model
 	}
 
 	/*
-	* Returns the TravelOrder relationship
+	* Returns the absence relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
 	*/
@@ -156,7 +158,7 @@ class Employee extends Model
 	}
 
 	/*
-	* Returns the TravelOrder relationship
+	* Returns the workRecord relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
 	*/
@@ -175,8 +177,8 @@ class Employee extends Model
 	public function work()
 	{
 		return $this->belongsTo(static::$workModel,'work_id');
-	}
-	
+	}	
+
 	/*
 	* Save Employee
 	* 

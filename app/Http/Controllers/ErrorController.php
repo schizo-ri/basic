@@ -12,7 +12,12 @@ class ErrorController extends Controller
     {
         $email = 'jelena.juras@duplico.hr';
         $url = $_SERVER['REQUEST_URI'];
-        Mail::to($email)->send(new ErrorMail( $request, $url)); 
+        try {
+            Mail::to($email)->send(new ErrorMail( $request, $url)); 
+        } catch (\Throwable $th) {
+            session()->flash('error',  __('ctrl.email_error'));
+			return redirect()->back();
+        }
    
         return "Došlo je do problema, poslana je mail obavijest administratoru!";
     }

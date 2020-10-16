@@ -15,7 +15,7 @@
 				<header class="main_header">
 					<div class="col-3 info_abs">
 						@if($data_absence['docs'])
-							<img class="radius50" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($data_absence['docs'])) }}" alt="Profile image"  />
+							<img class="radius50" src="{{ URL::asset('storage/' . $data_absence['user_name'] . '/profile_img/' . end($data_absence['docs'])) }}" alt="Profile image"  />
 						@else
 							<img class="radius50" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 						@endif

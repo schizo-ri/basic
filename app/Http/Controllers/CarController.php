@@ -167,7 +167,7 @@ class CarController extends Controller
         $car = Car::find($request['car_id']);
         $current_km = $car->current_km;
 
-        return $current_km;
+        return $car;
     }
     
 }

@@ -31,7 +31,7 @@ mix.styles([
     'public/css/travel_show.css',
     'public/css/welcome.css',
     
-], 'public/css/all.css');
+], 'public/css/all_new.css');
 mix.scripts([
     'public/js/absence.js',
     'public/js/ads.js',
@@ -50,17 +50,17 @@ mix.scripts([
     'public/js/efc_toggle.js',
     'public/js/event.js',
     'public/js/event_click.js',
-    'public/js/event create_show.js',
+    'public/js/event_create_show.js',
     'public/js/filter.js',
-    'public/js/filterdropdown.js',
-    'public/js/filter table.js',
-    'public/js/go value.js',
+    'public/js/filter_dropdown.js',
+    'public/js/filter_table.js',
+    'public/js/go_value.js',
     'public/js/load_calendar.js',
     'public/js/nav.js',
     'public/js/nav_active.js',
-    'public/js/nav button_color.js',
+    'public/js/nav_button_color.js',
     'public/js/notice_create.js',
-    'public/js/notice edit.js',
+    'public/js/notice_edit.js',
     'public/js/open_admin.js',
     'public/js/open_modal.js',
     'public/js/posts.js',
@@ -86,6 +86,6 @@ mix.scripts([
     'public/js/validate_user.js',
     'public/js/validate_user_edit.js',
     'public/js/work_records.js',
-], 'public/js/all.js');
+], 'public/js/all_new.js');
 
 /* mix.js('resources/assets/laravel-echo-setup.js', 'public/js'); */

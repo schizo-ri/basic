@@ -112,7 +112,8 @@ class UserController extends Controller
             try {
                 Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code));
             } catch (\Throwable $th) {
-                return redirect()->back()->with('error',  __('ctrl.no_valid_email')); 
+                $message = session()->flash('error', __('emailing.not_send'));
+                return redirect()->back()->withFlashMessage($message);
             }            
         }
         // Assign User Roles
@@ -132,10 +133,7 @@ class UserController extends Controller
 
         $employee = new Employee();
         $employee->saveEmployee( $data_employee );
-
-        $result->setMessage("User {$request->get('email')} has been created.");
-        return redirect()->back();
-   
+        
         if ($request->hasFile('fileToUpload')) {
             $image = $request->file('fileToUpload');
             $user_name = $request['last_name'] . '_' . $request['first_name'];
@@ -291,6 +289,42 @@ class UserController extends Controller
         $roleIds = array_values($request->get('roles', []));
         $user->roles()->sync($roleIds);
 
+        if ($request->hasFile('fileToUpload')) {
+            $image = $request->file('fileToUpload');
+            $user_name = $request['last_name'] . '_' . $request['first_name'];
+            if(isset($request['email'])) {
+                $user_name = explode('.',strstr($request['email'],'@',true));
+                $user_name = $user_name[1] . '_' . $user_name[0];
+            }
+            
+            $path = 'storage/';
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $path = $path . $user_name;
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $path = $path  . '/profile_img/';
+            if (!file_exists($path)) {
+                mkdir($path);
+            } else {
+                array_map('unlink', glob("$path/*.*"));
+            }
+            $docName = $request->file('fileToUpload')->getClientOriginalName();  //file name
+            
+            
+            try {
+                $request->file('fileToUpload')->move($path, $docName);
+                DocumentController::createResizedImage($path . $docName, $path . pathinfo($docName)['filename'] . '_small.' . pathinfo($docName)['extension'], 200, 250);
+
+            /*     return redirect()->back()->with('success', __('ctrl.uploaded')); */
+  
+              } catch (\Throwable $th) {
+                return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
+              }
+        }
+        
         // All done
         if ($request->expectsJson()) {
             return response()->json(['user' => $user], 200);

@@ -296,9 +296,12 @@ class TravelOrderController extends Controller
        
         foreach(array_unique($send_to) as $send_to_mail) { // mailovi upisani u mailing 
             if( $send_to_mail != null & $send_to_mail != '' ) {
-                Mail::to($send_to_mail)->send(new TravelClose($travel));  
-               
-
+                try {
+                    Mail::to($send_to_mail)->send(new TravelClose($travel));  
+                } catch (\Throwable $th) {
+                    $message = session()->flash('error', __('emailing.not_send'));
+                    return redirect()->back()->withFlashMessage($message);
+                }
             }
         }
 

@@ -47,8 +47,8 @@
 			</div>
 			<div class="form-group {{ ($errors->has('start_km'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.start_km')</label>
-				<input class="form-control" name="start_km" type="hidden" id="start_km" required value="{{ $locco->start_km }}" />	
-				<p id="start_km_text">{{ $locco->start_km }}</p>
+				<input class="form-control" name="start_km" type="{!! $locco->car->private_car == 1 ? 'text' : 'hidden' !!}" id="start_km" required value="{{ $locco->start_km }}" />	
+				<p id="start_km_text" style="display:{!! $locco->car->private_car != 1 ? 'block' : 'none' !!}">{{ $locco->start_km }}</p>
 				{!! ($errors->has('start_km') ? $errors->first('start_km', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('end_km'))  ? 'has-error' : '' }}">
@@ -109,7 +109,7 @@
 				
 			}
 		});
-
+		
 		$('#car_id').change(function(){
 			var car_id = $( this ).val();
 			try {
@@ -127,10 +127,18 @@
 							'car_id': car_id,                   
 						}
 				})
-				.done(function( response ) {     
-					current_km = response;
+				.done(function( car ) {     
+					current_km = car.current_km;
 					$('#start_km').val(current_km);
 					$('#start_km_text').text(current_km);
+					if(car.private_car == 1) {
+						$("#start_km_text").hide();						
+						$("#start_km").attr('type','number');
+
+					} else {
+						$("#start_km_text").show();						
+						$("#start_km").attr('type','hidden');
+					}
 				})
 				.fail(function() {
 					alert( "Nije uspjelo" );

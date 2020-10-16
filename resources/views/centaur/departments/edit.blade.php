@@ -47,7 +47,7 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-$.getScript( '/../js/validate.js');
+/* $.getScript( '/../js/validate.js'); */
 $(document).ready(function(){
     var val_level = $("#level").val();
 	if(val_level == 1 ){

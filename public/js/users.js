@@ -1,11 +1,11 @@
 $.getScript( '/../js/filter_table.js');
 
-$('.more').click(function(){
+$('.more').on('click',function(){
     $( this ).siblings('.role').toggle();
     $( this ).hide();
     $( this ).siblings('.hide').show();
 });
-$('.hide').click(function(){
+$('.hide').on('click',function(){
     $( this ).siblings('.role').hide();
     $( this ).siblings('.role._0').show();
     $( this ).siblings('.role._1').show();

@@ -45,19 +45,20 @@ class CheckOut extends Command
         
         foreach ($workRecords as $workRecord) {
             if($workRecord->end == null) {
-                $checkOut = true;
-                $loccos = $workRecord->employee->hasLocco()->where('status',0);
+                $workRecord->updateWorkRecords(['end' => $checkOut_time ]);
+               /*  $checkOut = true; */
+                /* $loccos = $workRecord->employee->hasLocco()->where('status',0);
                 if( count($loccos) > 0) {
                     foreach ($loccos as $locco) {
                         if( date('Y-m-d',strtotime($locco->date)) == $today_date ) {
                             $checkOut = false;
                         }
                     }
-                }
+                } */
              
-                if ( $checkOut ) {
-                    $workRecord->updateWorkRecords(['end' => $checkOut_time ]);
-                } 
+               /*  if ( $checkOut ) */ {
+              
+                }  
             }
         }
         

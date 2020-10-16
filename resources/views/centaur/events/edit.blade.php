@@ -44,7 +44,7 @@
 	</form>
 </div>
 <script>
-$.getScript( '/../js/validate.js');
+/* $.getScript( '/../js/validate.js'); */
 
 	/* $( "form" ).validate({
 		rules: {

@@ -110,31 +110,15 @@ class EducationArticleController extends Controller
 		
 		if($educationArticle->status == 'aktivan') {
 			/* mail obavijest o novoj poruci */
-			$emailings = Emailing::get();
-			$send_to = array();
-			$departments = Department::get();
-			$employees = Employee::where('id','<>',1)->where('checkout',null)->get();
-
-			if(isset($emailings)) {
-				foreach($emailings as $emailing) {
-					if($emailing->table['name'] == 'education_articles' && $emailing->method == 'create') {
-						if($emailing->sent_to_dep) {
-							foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
-								array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
-							}
-						}
-						if($emailing->sent_to_empl) {
-							foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
-								array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
-							}
-						}
-					}
+			$send_to = EmailingController::sendTo('education_articles','create');
+			try {
+				foreach($send_to as $send_to_mail) {
+					if( $send_to_mail != null & $send_to_mail != '' )
+					Mail::to($send_to_mail)->send(new EducationArticleMail($educationArticle)); // mailovi upisani u mailing 
 				}
-			}
-
-			foreach($send_to as $send_to_mail) {
-				if( $send_to_mail != null & $send_to_mail != '' )
-				Mail::to($send_to_mail)->send(new EducationArticleMail($educationArticle)); // mailovi upisani u mailing 
+			} catch (\Throwable $th) {
+				session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+				return redirect()->back();
 			}
 		}
 		

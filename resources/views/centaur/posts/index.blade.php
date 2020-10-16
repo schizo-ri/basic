@@ -141,7 +141,7 @@
 																	{{ $comment->employee->user['first_name'] }} |
 																@endif
 															@endif
-															<small>{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans()  }}</small>
+															<small>{{ date('d.m.Y H:i', strtotime($comment->created_at )) }}</small>
 														</p>
 														<div class="content">
 															@if( $comment->employee_id != Sentinel::getUser()->employee->id)

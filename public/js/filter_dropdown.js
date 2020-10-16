@@ -12,7 +12,6 @@ $(function() { // filter knowledge base
 	$('.filter_fuels').on('change',function() {
 		var date =  $('#filter_month').val().toLowerCase();
 		var car =  $('#filter_car').val().toLowerCase();
-		console.log(date);
 		if(date == 'all' ) {
 			date = '';
 		} 
@@ -27,7 +26,6 @@ $(function() { // filter knowledge base
 				$(this).toggle($(this).text().toLowerCase().indexOf(date) > -1 && $(this).text().toLowerCase().indexOf(car) > -1);
 			});
 		}
-
 	});	
 	$('.filter_loccos').on('change',function() {
 		var date =  $('#filter_month').val().toLowerCase();

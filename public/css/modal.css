@@ -1014,6 +1014,7 @@ option::selection {
 	text-align: center;
 	text-decoration-line: underline;
 	color: #2B2B2B;
+	margin: 20px;
 }
 
 .modal.modal_questionnaire .ev_employee_id  {
@@ -2583,5 +2584,5 @@ span.file_name {
     padding: 5px 10px;
     border-radius: 3px;
 	display: inline-block;
-	color: #000000;
+	color: #ffffff;
 }

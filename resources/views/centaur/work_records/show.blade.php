@@ -1,6 +1,6 @@
 @extends('Centaur::layout')
 
-@section('title', 'Evidencija ' . '_'. $employee->user['last_name'] .'_'. $month)
+@section('title', 'Evidencija ' . $employee->user['first_name'] . ' '. $employee->user['last_name'] .'_'. $month)
 @php
 	use App\Models\WorkRecord;
 	use App\Http\Controllers\AbsenceController;
@@ -110,7 +110,7 @@
 									@endforeach
 									<td ></td>
 								</tr>
-								<tr class="bg_ccc" > {{-- UKUPNO RADNIH SATI DNEVNO --}}
+								<tr class="bg_ccc export_color" > {{-- UKUPNO RADNIH SATI DNEVNO --}}
 									<td>3</td>
 									<td>UKUPNO RADNIH SATI DNEVNO</td>
 									@php
@@ -181,7 +181,7 @@
 									@endforeach
 									<td ></td>
 								</tr>
-								<tr class="bg_ccc"> {{-- DRŽAVNI BLAGDAN --}}
+								<tr class="bg_ccc export_color"> {{-- DRŽAVNI BLAGDAN --}}
 									<td>8a</td>
 									<td>DRŽAVNI BLAGDAN</td> 
 									@php
@@ -453,7 +453,7 @@
 									@endforeach
 									<td ></td>
 								</tr>
-								<tr class="bg_ccc">{{-- GODIŠNJI ODMOR --}}
+								<tr class="bg_ccc export_color">{{-- GODIŠNJI ODMOR --}}
 									<td>14</td> 
 									<td>GODIŠNJI ODMOR U SATIMA</td>
 									@php
@@ -523,7 +523,7 @@
 									@endforeach
 									<td class=""></td>
 								</tr>
-								<tr class="bg_ccc">{{-- BOLOVANJE --}}
+								<tr class="bg_ccc export_color">{{-- BOLOVANJE --}}
 									<td>16</td>
 									<td>UKUPNO BOLOVANJE SATI</td> 
 									@php
@@ -850,7 +850,7 @@
 	}
 
 	$('#index_table').css('width','100%');
-	$.getScript( '/../js/datatables_evidention.js');
+
 
 </script>		
 @stop

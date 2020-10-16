@@ -29,5 +29,5 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-$.getScript( '/../js/validate.js');
+/* $.getScript( '/../js/validate.js'); */
 </script>

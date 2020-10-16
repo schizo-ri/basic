@@ -70,7 +70,7 @@
 								@for ($i =  $key; $i < 10; $i++)
 									<span class="profile_img new_open">
 										<span>
-											<span class="material-icons">add</span>
+											<span><i class="fas fa-plus"></i></span>
 											<span class="shortcut">@lang('basic.add_shortcut')</span> 
 										</span>
 									</span>

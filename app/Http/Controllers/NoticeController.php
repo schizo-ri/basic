@@ -554,7 +554,6 @@ class NoticeController extends Controller
         $notice = Notice::find($request['notice_id']);
 
         if( $send_to != null ) {
-            Mail::to($send_to)->send(new NoticeMail($notice)); 
             try {
                 Mail::to($send_to)->send(new NoticeMail($notice)); 
             } catch (\Throwable $th) {

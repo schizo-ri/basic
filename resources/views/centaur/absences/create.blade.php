@@ -49,7 +49,7 @@
             </div>
             <div class="form-group time {{ ($errors->has('end_time')) ? 'has-error' : '' }}"  >
                 <label>@lang('absence.end_time')</label>
-                <input name="end_time" class="form-control" type="time" value="{!!  old('end_time') ? old('end_time') : '16:00' !!}"required>
+                <input name="end_time" class="form-control" type="time" value="{!!  old('end_time') ? old('end_time') : '16:15' !!}"required>
                 {!! ($errors->has('end_time') ? $errors->first('end_time', '<p class="text-danger">:message</p>') : '') !!}
             </div>
         </div>
@@ -100,5 +100,5 @@
 			end_date.val(start_date);
 		});
 	});
-	$.getScript( '/../js/validate.js');
+	/* $.getScript( '/../js/validate.js'); */
 </script>
