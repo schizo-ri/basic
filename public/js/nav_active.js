@@ -145,10 +145,11 @@ $('.form_evidention').on('submit',function(e){
         }
     });
 });
-
+/* 
 document.addEventListener("visibilitychange", function() {
     if (document.hidden){
     } else {
         location.reload();
     }
 });
+ */

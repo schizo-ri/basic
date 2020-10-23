@@ -65,7 +65,7 @@
             <div class="form-group checkbox">
                 <p>
                     <label for="activate">@lang('basic.activate')</label>
-                    <input name="activate" type="checkbox" id="activate" value="true" 'checked' > 
+                    <input name="activate" type="checkbox" id="activate" value="true" checked > 
                 </p>
             </div>
             {{ csrf_field() }}
@@ -77,5 +77,5 @@
     </form>
 </div>
 <script>
-    $.getScript('/js/validate.js');
+     $.getScript('/js/validate.js'); 
 </script>

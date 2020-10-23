@@ -52,6 +52,9 @@
 			@if($absence->absence['mark'] == "GO")
 				<p>@lang('absence.unused') {{ $neiskoristeno_GO }} @lang('absence.vacation_days') </p>
 			@endif
+			@if($absence->absence['mark'] == "SLD")
+				<p>@lang('absence.unused') {{ $slobodni_dani }} @lang('absence.days_off')</p>
+			@endif
 		</div>
 		<form name="contactform" method="get" target="_blank" action="{{ route('confirmation') }}">
 			<input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="approve_reason" value=""><br>

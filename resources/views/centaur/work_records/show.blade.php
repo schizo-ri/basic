@@ -1,6 +1,6 @@
 @extends('Centaur::layout')
 
-@section('title', 'Evidencija ' . '_'. $employee->user['last_name'] .'_'. $month)
+@section('title', 'Evidencija ' . $employee->user['first_name'] . ' '. $employee->user['last_name'] .'_'. $month)
 @php
 	use App\Models\WorkRecord;
 	use App\Http\Controllers\AbsenceController;
@@ -142,7 +142,7 @@
 											$minutes += strstr($interval, ':', true) * 60; 
 											$minutes += intval(str_replace(':','',strstr($interval, ':'))); 
 											$sum[date('Y-m-d',strtotime($day2))] += $minutes;
-											if($interval )
+											if( $interval )
 												
 										@endphp
 										<td class="sum_rr">{{ $interval }}</td>

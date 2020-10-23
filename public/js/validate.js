@@ -140,7 +140,7 @@ $('input[type="file"]').on('change',function(e){
 });
 
 $('.btn-submit').on('click',function(event){
-    event.preventDefault();
+    /* event.preventDefault(); */
     var form = $(this).parents('form:first');
     let url = $(this).parents('form:first').attr('action');
     var form_data = form.serialize();
@@ -159,7 +159,7 @@ $('.btn-submit').on('click',function(event){
        validate = [];
     } else {
         $('.roles_form .checkbox').show();
-        $.ajaxSetup({
+       /*  $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
@@ -170,11 +170,6 @@ $('.btn-submit').on('click',function(event){
             data: form_data,
             success: function( response ) {
                 $.modal.close();
-                /* console.log(url_load);
-                console.log(url); 
-                console.log(form_data);
-                console.log(response); 
-                console.log($(page).attr('href')); */
                 if(pathname == '/events' && url.includes("/events/")) {  //event edit
                     $('.modal-header').load(url + ' .modal-header h5');
                     $('.modal-body').load(url + ' .modal-body p');
@@ -282,6 +277,7 @@ $('.btn-submit').on('click',function(event){
                 }
             }
         });
+         */
         if($(page).length > 0) {
             $(page).trigger('click');
         } else {

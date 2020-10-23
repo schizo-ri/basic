@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\Absence;
 use App\Models\AbsenceType;
+use App\Models\AfterHour;
 use DateTime;
 use DateInterval;
 use DatePeriod;
@@ -198,7 +199,7 @@ class BasicAbsenceController extends Controller
 					$mjesec +=1;
 				}
 				if($prijavaGodina < $ova_godina){
-																															/***  dani go iz $user->abs_days ****/
+					/***  dani go iz $user->abs_days ****/
 					$razmjeranGO = round($GO/12 * $ovaj_mjesec, 0, PHP_ROUND_HALF_UP);
 				} else {
 					if($user->prekidStaza == 'DA' || $user->prvoZaposlenje == 'DA'){
@@ -413,6 +414,27 @@ class BasicAbsenceController extends Controller
 			
 			return $razmjeranGO_PG;
 		}
+
+		/* Računa dane GO za djecu*/	
+		public function kids($user){
+			$kids = Kid::where('employee_id', $user->id)->get();
+			$datum = new DateTime('now');  
+			$day = 0;
+			$kid_age;
+			$count_kids = 0;
+			foreach($kids as $kid){
+				$b_day = new DateTime($kid->b_day);  /* datum rođenja djeteta */
+				$kid_age = $b_day->diff($datum); 
+				if((int)$kid_age->y < 7){
+					$count_kids += 1;
+				}
+			}
+			if($count_kids >= 2) {
+				$day = 1;
+			}
+			return $day;
+		}
+
 	/* ########################      DANI GODIŠENJEG ODMORA  kraj  ######################## */	
 
 	/* ########################      ZAHTJEVI    ######################## */	
@@ -686,10 +708,11 @@ class BasicAbsenceController extends Controller
 		}
 
 		/* godine zahtjeva */
-		public static function yearsRequests ($user) 
+		public static function yearsRequests ( $user) 
 		{
 			$date = new DateTime('now');    /* današnji dan */
 			$this_year = date_format($date,'Y');
+		
 			$requests = Absence::join('absence_types', 'absence_types.id', 'absences.type')->select('absences.*', 'absence_types.mark' )->where('employee_id', $user->id)->orderBy('start_date','ASC')->get();
 		
 			$years = array();
@@ -835,109 +858,305 @@ class BasicAbsenceController extends Controller
 			
 			return $requestsArray;
 		}
+
+		/*  Vraća sate jednog izlaska
+		 	u requestu vrijeme od i vrijeme do 
+				vraća sate i minute kao time - h:i 
+		*/
+		public static function izlazak($request)  // 
+		{
+			$vrijeme_1 = new DateTime($request['od']);  /* vrijeme od */
+			$vrijeme_2 = new DateTime($request['do']);  /* vrijeme do */
+			$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
+			
+			$razlika_h = (int)$razlika_vremena->h;
+			$razlika_m = (int)$razlika_vremena->i;
+			
+			if($razlika_m == 0){
+				$razlika_m = '00';
+			}
+			$razlika = $razlika_h . ':' . $razlika_m ;
+
+			return $razlika;
+		}
+
+		/*  Vraća sve sate izlazaka 
+			vraća sate i minute kao time - h:i 			 
+		*/ 
+		public static function izlasci_ukupno($user)  //user = registration!!!
+		{
+			$absences = Absence::AllAbsenceUser( $user->id, 'IZL');
+			$absences = $absences->where('approve',1);
+			
+			$razlika_h = 0;
+			$razlika_m = 0;
+			
+			foreach($absences as $absence){
+				$vrijeme_1 = new DateTime($absence->start_time);  /* vrijeme od */
+				$vrijeme_2 = new DateTime($absence->end_time);  /* vrijeme do */
+				$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
+				
+				$razlika_h += (int)$razlika_vremena->h;
+				$razlika_m += (int)$razlika_vremena->i;
+				if($razlika_m >= 60){
+					$razlika_h += round($razlika_m / 60, 0, PHP_ROUND_HALF_DOWN);
+					$razlika_m = ($razlika_m - round($razlika_m / 60, 0, PHP_ROUND_HALF_DOWN) *60);
+				}
+			}
+			$razlika = $razlika_h . ':' . $razlika_m ;
+			
+			return $razlika;
+		}
+
+		/*  Vraća sate izlazaka u zadanom mjesecu
+			vraća sate i minute kao time - h:i 			 
+		*/ 
+		public static function izlasci_MY($user, $mjesec, $godina )  //user = registration!!!
+		{
+			$absences = Absence::AllAbsenceUser( $user->id, 'IZL', $month, $year);
+			$absences = $absences->where('approve',1);
+						
+			$razlika_h =0;
+			$razlika_m =0;
+			
+			foreach($absences as $absence){
+				$vrijeme_1 = new DateTime($absence->start_time);  /* vrijeme od */
+				$vrijeme_2 = new DateTime($absence->end_time);  /* vrijeme do */
+				$razlika_vremena = $vrijeme_2->diff($vrijeme_1);  /* razlika_vremena*/
+				
+				$razlika_h += (int)$razlika_vremena->h;
+				$razlika_m += (int)$razlika_vremena->i;
+				if($razlika_m >= 60){
+					$razlika_h += round($razlika_m / 60, 0, PHP_ROUND_HALF_DOWN);
+					$razlika_m = ($razlika_m - round($razlika_m / 60, 0, PHP_ROUND_HALF_DOWN) *60);
+				}
+			}
+			$razlika = $razlika_h . ':' . $razlika_m ;
+			
+			return $razlika;
+		}
+		
+		/*
+			* Vraća broj iskorištenih slobodnih dana
+		*/
+		public static function days_offUsed($user)
+		{
+			$days_off = Absence::AllAbsenceUser($user->id,'SLD');
+			$count_days = 0;
+			$holidays = BasicAbsenceController::holidays();
+		
+			foreach($days_off as $request ){
+				$begin = new DateTime($request->start_date);
+				$end = new DateTime($request->end_date);
+				$end->setTime(0,0,1);
+				$interval = DateInterval::createFromDateString('1 day');
+				$period = new DatePeriod($begin, $interval, $end);
+				foreach ($period as $day) {
+					if(! in_array(date_format($day,'Y-m-d'), $holidays) && date_format($day,'N') < 6) {
+						$count_days += 1;
+					}
+				}
+			}
+			return $count_days;
+		}
+
 	/* ########################      ZAHTJEVI  kraj  ######################## */	
 
-	public static function holidays ()
-	{
-		$holidays = array();
+	/* ########################      SLOBODNI DANI     ######################## */
+		/* 
+			Vraća broj odobrenih prekovremenih sati za djelatnika 
+			vraća zbroj sati kao decimalan broj 
+		*/
+		public static function afterHours($user) 
+		{
+			$afterHours = AfterHour::where('employee_id', $user->id)->where('approve',1)->get();
 
-		//2018
-		array_push($holidays,
-		'2018-01-01','2018-01-06','2018-04-01','2018-04-02','2018-05-01','2018-05-31','2018-06-22','2018-06-25','2018-08-05','2018-08-15','2018-10-08','2018-11-01','2018-12-25','2018-12-26');
-		//2019
-		array_push($holidays,
-		'2019-01-01','2019-01-06','2019-04-21','2019-04-22','2019-05-01','2019-06-20','2019-06-22','2019-06-25','2019-08-05','2019-08-15','2019-10-08','2019-11-01','2019-12-25','2019-12-26');
-		//2020
-		array_push($holidays,
-		'2020-01-01','2020-01-06','2020-04-12','2020-04-13','2020-05-01','2020-05-30','2020-06-11','2020-06-22','2020-08-05','2020-08-15','2020-11-01','2020-11-18','2020-12-25','2020-12-26');
-		//2021
-		array_push($holidays,
-		'2021-01-01','2021-01-06','2021-04-04','2021-04-05','2021-05-01','2021-05-30','2021-06-03','2021-06-22','2021-08-05','2021-08-15','2021-11-01','2021-11-18','2021-12-25','2021-12-26');
-		//2022
-		array_push($holidays,
-		'2022-01-01','2022-01-06','2022-04-17','2022-04-18','2022-05-01','2022-05-30','2022-06-16','2022-06-22','2022-08-05','2022-08-15','2022-11-01','2022-11-18','2022-12-25','2022-12-26');
+			$hours = 0;
+			foreach ($afterHours as $afterHour) {
+				$hm = explode(":",  $afterHour->approve_h);
+				$odobreni_sati = $hm[0] + ($hm[1]/60);
+				$dan_prekovremeni = new DateTime($afterHour->date);
 
-		return $holidays;
-	}
+				if(date_format($dan_prekovremeni,'N') == 6) {
+					$odobreni_sati = $odobreni_sati * 1.3;
+				} elseif (date_format($dan_prekovremeni,'N') == 7) {
+					$odobreni_sati = $odobreni_sati * 1.4;
+				} else {
+					$odobreni_sati = $odobreni_sati;
+				}
 
-	public static function holidaysThisYear ( $year )
-	{
-		$holidays = BasicAbsenceController::holidays();
+				$hours += $odobreni_sati;
+			}
+			return $hours;
+		}	
+
+		/*
+			Vraća broj odobrenih prekovremenih sati za djelatnika u zadanom mjesecu 
+			vraća zbroj sati kao decimalan broj 
+		*/
+		public static function afterHours_MY($user, $month, $year) 
+		{
+			$afterHours = AfterHour::where('employee_id', $user->id)->where('approve',1)->whereMonth('date', $month)->whereYear('date', $year)->get();
+
+			$hours = 0;
+			foreach ($afterHours as $afterHour) {
+				$hm = explode(":",  $afterHour->approve_h);
+				$odobreni_sati = $hm[0] + ($hm[1]/60);
+				$dan_prekovremeni = new DateTime($afterHour->date);
+
+				if(date_format($dan_prekovremeni,'N') == 6) {
+					$odobreni_sati = $odobreni_sati * 1.3;
+				} elseif (date_format($dan_prekovremeni,'N') == 7) {
+					$odobreni_sati = $odobreni_sati * 1.4;
+				} else {
+					$odobreni_sati = $odobreni_sati;
+				}
+				
+				$hours += $odobreni_sati;
+			}
+			return $hours;
+		}
+
+		/* 
+			Vraća sate prekovremeni sati - izlasci 
+			računa slobodne dane  
+		*/ 
+		public static function afterHours_withoutOuts($user)
+		{
+			$afterHours = BasicAbsenceController::afterHours( $user );
+			$sati_izlazaka = (int) substr(BasicAbsenceController::izlasci_ukupno($user),0,-2);
 		
-		$search_text = $year;
+			$razlika = $afterHours - $sati_izlazaka;
+			
+			if($razlika >= 8){
+				$razlika = round($razlika / 8, 0, PHP_ROUND_HALF_DOWN);
+			} else {
+				$razlika =0;
+			}
+			return $razlika;
+		}
 
-		$holidaysThisYear = array_filter($holidays, function($el) use ($search_text) {
-				return ( strpos($el, $search_text) !== false );
-		});
-		return $holidaysThisYear;
-	}
+		/* 
+			Vraća broj slobodnih dana prema prekovremenim satima (bez izlazaka)
+		*/ 
 
+		public static function days_off($user) 
+		{
+			$afterHours = BasicAbsenceController::days_off_withoutOuts( $user );
+		
+			$razlika = 0;
+			
+			if($afterHours >= 8){
+				$razlika = round($afterHours / 8, 0, PHP_ROUND_HALF_DOWN);
+			} 
+	
+			return $razlika;
+		}
+		
+	/* ########################      SLOBODNI DANI kraj   ######################## */
 
-	public static function holidays_with_names () 
-	{
-		$holidays = array(
-			"2019-01-01"	=>	"Nova godina",
-			"2019-01-06"	=>	"Sveta tri kralja",
-			"2019-04-21"	=>	"Uskrs",
-			"2019-04-22"	=>	"Uskrsni ponedjeljak",
-			"2019-05-01"	=>	"Praznik rada",
-			"2019-06-20"	=>	"Tijelovo",
-			"2019-06-22"	=>	"Dan antifašističke borbe",
-			"2019-06-25"	=>	"Dan državnosti",
-			"2019-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
-			"2019-08-15"	=>	"Velika Gospa",
-			"2019-10-08"	=>	"Dan neovisnosti",
-			"2019-11-01"	=>	"Dan svih svetih",
-			"2019-12-25"	=>	"Božić",
-			"2019-12-26"	=>	"Sveti Stjepan",
+	/* ########################      PRAZNICI    ######################## */	
+		public static function holidays ()
+		{
+			$holidays = array();
 
-			"2020-01-01"	=>	"Nova godina",
-			"2020-01-06"	=>	"Sveta tri kralja",
-			"2020-04-12"	=>	"Uskrs",
-			"2020-04-13"	=>	"Uskrsni ponedjeljak",
-			"2020-05-01"	=>	"Praznik rada",
-			"2020-05-30"	=>	"Dan državnosti",
-			"2020-06-11"	=>	"Tijelovo",
-			"2020-06-22"	=>	"Dan antifašističke borbe",
-			"2020-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
-			"2020-08-15"	=>	"Velika Gospa",
-			"2020-11-01"	=>	"Dan svih svetih",
-			"2020-11-18"	=>	"Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje",
-			"2020-12-25"	=>	"Božić",
-			"2020-12-26"	=>	"Sveti Stjepan ",
+			//2018
+			array_push($holidays,
+			'2018-01-01','2018-01-06','2018-04-01','2018-04-02','2018-05-01','2018-05-31','2018-06-22','2018-06-25','2018-08-05','2018-08-15','2018-10-08','2018-11-01','2018-12-25','2018-12-26');
+			//2019
+			array_push($holidays,
+			'2019-01-01','2019-01-06','2019-04-21','2019-04-22','2019-05-01','2019-06-20','2019-06-22','2019-06-25','2019-08-05','2019-08-15','2019-10-08','2019-11-01','2019-12-25','2019-12-26');
+			//2020
+			array_push($holidays,
+			'2020-01-01','2020-01-06','2020-04-12','2020-04-13','2020-05-01','2020-05-30','2020-06-11','2020-06-22','2020-08-05','2020-08-15','2020-11-01','2020-11-18','2020-12-25','2020-12-26');
+			//2021
+			array_push($holidays,
+			'2021-01-01','2021-01-06','2021-04-04','2021-04-05','2021-05-01','2021-05-30','2021-06-03','2021-06-22','2021-08-05','2021-08-15','2021-11-01','2021-11-18','2021-12-25','2021-12-26');
+			//2022
+			array_push($holidays,
+			'2022-01-01','2022-01-06','2022-04-17','2022-04-18','2022-05-01','2022-05-30','2022-06-16','2022-06-22','2022-08-05','2022-08-15','2022-11-01','2022-11-18','2022-12-25','2022-12-26');
 
-			"2021-01-01"	=>	"Nova godina",
-			"2021-01-06"	=>	"Sveta tri kralja",
-			"2021-04-04"	=>	"Uskrs",
-			"2021-04-05"	=>	"Uskrsni ponedjeljak",
-			"2021-05-01"	=>	"Praznik rada",
-			"2021-05-30"	=>	"Dan državnosti",
-			"2021-06-03"	=>	"Tijelovo",
-			"2021-06-22"	=>	"Dan antifašističke borbe",
-			"2021-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
-			"2021-08-15"	=>	"Velika Gospa",
-			"2021-11-01"	=>	"Dan svih svetih",
-			"2021-11-18"	=>	"Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje",
-			"2021-12-25"	=>	"Božić",
-			"2021-12-26"	=>	"Sveti Stjepan",
+			return $holidays;
+		}
 
-			"2022-01-01"	=>	"Nova godina",
-			"2022-01-06"	=>	"Sveta tri kralja",
-			"2022-04-17"	=>	"Uskrs",
-			"2022-04-18"	=>	"Uskršnji ponedjeljak",
-			"2022-05-01"	=>	"Praznik rada",
-			"2022-05-30"	=>	"Dan državnosti",
-			"2022-06-16"	=>	"Tijelovo",
-			"2022-06-22"	=>	"Dan antifašističke borbe",
-			"2022-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
-			"2022-08-15"	=>	"Velika Gospa",
-			"2022-11-01"	=>	"Dan svih svetih",
-			"2022-11-18"	=>	"Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje",
-			"2022-12-25"	=>	"Božić",
-			"2022-12-26"	=>	"Sveti Stjepan",
-		);
+		public static function holidaysThisYear ( $year )
+		{
+			$holidays = BasicAbsenceController::holidays();
+			
+			$search_text = $year;
+
+			$holidaysThisYear = array_filter($holidays, function($el) use ($search_text) {
+					return ( strpos($el, $search_text) !== false );
+			});
+			return $holidaysThisYear;
+		}
 
 
-		return $holidays;
-	}
+		public static function holidays_with_names () 
+		{
+			$holidays = array(
+				"2019-01-01"	=>	"Nova godina",
+				"2019-01-06"	=>	"Sveta tri kralja",
+				"2019-04-21"	=>	"Uskrs",
+				"2019-04-22"	=>	"Uskrsni ponedjeljak",
+				"2019-05-01"	=>	"Praznik rada",
+				"2019-06-20"	=>	"Tijelovo",
+				"2019-06-22"	=>	"Dan antifašističke borbe",
+				"2019-06-25"	=>	"Dan državnosti",
+				"2019-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
+				"2019-08-15"	=>	"Velika Gospa",
+				"2019-10-08"	=>	"Dan neovisnosti",
+				"2019-11-01"	=>	"Dan svih svetih",
+				"2019-12-25"	=>	"Božić",
+				"2019-12-26"	=>	"Sveti Stjepan",
+
+				"2020-01-01"	=>	"Nova godina",
+				"2020-01-06"	=>	"Sveta tri kralja",
+				"2020-04-12"	=>	"Uskrs",
+				"2020-04-13"	=>	"Uskrsni ponedjeljak",
+				"2020-05-01"	=>	"Praznik rada",
+				"2020-05-30"	=>	"Dan državnosti",
+				"2020-06-11"	=>	"Tijelovo",
+				"2020-06-22"	=>	"Dan antifašističke borbe",
+				"2020-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
+				"2020-08-15"	=>	"Velika Gospa",
+				"2020-11-01"	=>	"Dan svih svetih",
+				"2020-11-18"	=>	"Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje",
+				"2020-12-25"	=>	"Božić",
+				"2020-12-26"	=>	"Sveti Stjepan ",
+
+				"2021-01-01"	=>	"Nova godina",
+				"2021-01-06"	=>	"Sveta tri kralja",
+				"2021-04-04"	=>	"Uskrs",
+				"2021-04-05"	=>	"Uskrsni ponedjeljak",
+				"2021-05-01"	=>	"Praznik rada",
+				"2021-05-30"	=>	"Dan državnosti",
+				"2021-06-03"	=>	"Tijelovo",
+				"2021-06-22"	=>	"Dan antifašističke borbe",
+				"2021-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
+				"2021-08-15"	=>	"Velika Gospa",
+				"2021-11-01"	=>	"Dan svih svetih",
+				"2021-11-18"	=>	"Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje",
+				"2021-12-25"	=>	"Božić",
+				"2021-12-26"	=>	"Sveti Stjepan",
+
+				"2022-01-01"	=>	"Nova godina",
+				"2022-01-06"	=>	"Sveta tri kralja",
+				"2022-04-17"	=>	"Uskrs",
+				"2022-04-18"	=>	"Uskršnji ponedjeljak",
+				"2022-05-01"	=>	"Praznik rada",
+				"2022-05-30"	=>	"Dan državnosti",
+				"2022-06-16"	=>	"Tijelovo",
+				"2022-06-22"	=>	"Dan antifašističke borbe",
+				"2022-08-05"	=>	"Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja",
+				"2022-08-15"	=>	"Velika Gospa",
+				"2022-11-01"	=>	"Dan svih svetih",
+				"2022-11-18"	=>	"Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje",
+				"2022-12-25"	=>	"Božić",
+				"2022-12-26"	=>	"Sveti Stjepan",
+			);
+
+			return $holidays;
+		}
+	/* ########################      PRAZNICI  kraj  ######################## */	
 }

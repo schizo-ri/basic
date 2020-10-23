@@ -30,7 +30,7 @@ class CampaignRecipientController extends Controller
     public function create(Request $request)
     {
         $campaign = Campaign::find($request['campaign_id']);  
-        $employees = Employee::where('checkout', null)->get();
+        $employees = Employee::employees_firstNameASC();
         $departments0 = Department::where('level1',0)->orderBy('name','ASC')->get();
 		$departments1 = Department::where('level1',1)->orderBy('name','ASC')->get();
         $departments2 = Department::where('level1',2)->orderBy('name','ASC')->get();

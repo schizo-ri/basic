@@ -53,7 +53,7 @@ class DepartmentController extends Controller
     {
         $companies = Company::get();
 		$departments = Department::where('level1', 1)->orWhere('level1', 0)->orderBy('name','ASC')->get();
-        $employees = Employee::where('checkout',null)->get();
+        $employees = Employee::employees_firstNameASC();
         
 		return view('Centaur::departments.create', ['companies' => $companies, 'departments' => $departments, 'employees' => $employees]);
     }
@@ -104,7 +104,7 @@ class DepartmentController extends Controller
     {
         $department = Department::find($id);
         $companies = Company::get();
-        $employees = Employee::where('checkout',null)->get();
+        $employees = Employee::employees_firstNameASC();
 		$departments = Department::where('level2','<>', $department->id )->where('level1', 1)->orWhere('level1', 0)->orderBy('name','ASC')->get();
 		
 		return view('Centaur::departments.edit', ['department' => $department,'companies' => $companies,'departments' => $departments, 'employees' => $employees]);

@@ -42,14 +42,11 @@ class QuestionnaireController extends Controller
     {
 		$questionnaires = Questionnaire::get();
 		$empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
-		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+		$employees = Employee::employees_firstNameASC();
 		$evaluations = Evaluation::get();
 		$results = QuestionnaireResult::get();
 		
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-		} 
+		$permission_dep = DashboardController::getDepartmentPermission();
 		
 		return view('Centaur::questionnaires.index', ['questionnaires' => $questionnaires, 'permission_dep' => $permission_dep, 'employees' => $employees, 'results' => $results]);
     }
@@ -182,7 +179,7 @@ class QuestionnaireController extends Controller
 		$danas = new DateTime('now');
 		$mjesec_godina = date_format($danas,'Y-m');
 		$evaluationRatings = EvaluationRating::get();
-		$employees = Employee::where('id','<>',0)->where('checkout',null)->get(); //svi djelatnici
+		$employees = Employee::employees_firstNameASC(); //svi djelatnici
 		
 		$employee = Employee::where('user_id', $user->id)->first();
 		if($employee) {
@@ -350,27 +347,8 @@ class QuestionnaireController extends Controller
 		/* mail obavijest o novoj poruci */
 		//$emailings = Emailing::get();
 		$send_to = array();
-		//$departments = Department::get();
-		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+		$employees = Employee::employees_firstNameASC();
 		$questionnaire = Questionnaire::find($request['id']);
-		
-		/* if(isset($emailings)) {
-			foreach($emailings as $emailing) {
-				if($emailing->table['name'] == 'questionnaires' && $emailing->method == 'create') {
-					
-					if($emailing->sent_to_dep) {
-						foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
-							array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
-						}
-					}
-					if($emailing->sent_to_empl) {
-						foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
-							array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
-						}
-					}
-				}
-			}
-		} */
 		
 		foreach ($employees as $employee) {
 			if( $employee->email ) {
@@ -379,11 +357,17 @@ class QuestionnaireController extends Controller
 		}           
 
 		if($send_to) {
-			foreach(array_unique($send_to) as $send_to_mail) {
-				if( $send_to_mail != null & $send_to_mail != '' ) {
-					Mail::to($send_to_mail)->send(new QuestionnaireSend($questionnaire)); // mailovi upisani u mailing 
+			try {
+				foreach(array_unique($send_to) as $send_to_mail) {
+					if( $send_to_mail != null & $send_to_mail != '' ) {
+						Mail::to($send_to_mail)->send(new QuestionnaireSend($questionnaire)); // mailovi upisani u mailing 
+					}
 				}
+			} catch (\Throwable $th) {
+				session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+				return redirect()->back();
 			}
+			
 		}
 		$message = session()->flash('success', __('emailing.email_send'));
 		
@@ -409,7 +393,7 @@ class QuestionnaireController extends Controller
 
 	public static function progress_perc ($id) {
 
-		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+		$employees = Employee::employees_firstNameASC();
 		
 		return QuestionnaireController::progress_count( $id ) / count($employees) * 100;
 	}

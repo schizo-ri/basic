@@ -1,5 +1,3 @@
-<span hidden class="locale" >{{ App::getLocale() }}</span>
-
 <div class="modal-header">
 	<h3 class="panel-title">@lang('basic.add_employee')</h3>
 </div>
@@ -20,7 +18,7 @@
 			</div>
 			<div class="form-group  {{ ($errors->has('color'))  ? 'has-error' : '' }}" style="padding-top: 10px">
 				<label>@lang('basic.color') </label>
-				<input class="form-control color" type="color" name="color" value="{{ old('color')}}" >
+				<input class="form-control color" type="color" name="color" value="{!! old('color') ? old('color') : '#ffffff'  !!}" >
 				{!! ($errors->has('color') ? $errors->first('color', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('b_day')) ? 'has-error' : '' }}">
@@ -132,6 +130,16 @@
 				</select>
 				{!! ($errors->has('work_id') ? $errors->first('work_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<div class="form-group {{ ($errors->has('department_id'))  ? 'has-error' : '' }}">
+				<label>@lang('basic.department')</label>
+				<select class="form-control" name="department_id[]" value="{{ old('department_id') }}" rows="6" required multiple >
+					<option selected="selected" disabled></option>
+					@foreach($departments as $department)
+						<option name="department_id" value="{{ $department->id }}">{{ $department->name }}</option>
+					@endforeach	
+				</select>
+				{!! ($errors->has('department_id') ? $errors->first('department_id', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
 			<div class="form-group {{ ($errors->has('superior_id'))  ? 'has-error' : '' }}">
 				<span><b>Nadređeni djelatnik:</b></span>
 				<select class="form-control" name="superior_id" >
@@ -156,7 +164,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('reg_date')) ? 'has-error' : '' }}">
 				<label>@lang('basic.reg_date')</label>
-				<input class="form-control" placeholder="{{ __('basic.reg_date')}}" name="reg_date" type="date" value="{{ old('reg_date') }}" required />
+				<input class="form-control" placeholder="{{ __('basic.reg_date')}}" name="reg_date" type="date" value="{{ old('reg_date') }}" />
 				{!! ($errors->has('reg_date') ? $errors->first('reg_date', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('probation')) ? 'has-error' : '' }}">
@@ -202,6 +210,20 @@
 				<input name="shoe_size" type="text" class="form-control" maxlength="10" value="{{ old('shoe_size') }}"   >
 				{!! ($errors->has('shoe_size') ? $errors->first('shoe_size', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<div class="form-group {{ ($errors->has('days_off')) ? 'has-error' : '' }}">
+				<label>Obračun prekovremenih kao: </label>
+				<select class="form-control" name="days_off" value="{{ old('days_off')}}">
+					<option value="1" selected >Slobodni dani</option>
+					<option value="0">Isplata</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<input type="checkbox" name="stranger" value="1" id="stranger" > <label for="stranger">Djelatnik je stranac</label>
+			</div>
+			<div class="form-group" hidden id="dozvola">
+				<label>Datum isteka dozvole boravka u RH: </label>
+				<input name="permission_date" class="form-control" type="date">
+			</div>
 			<div class="form-group group_abs_days{{ ($errors->has('abs_days'))  ? 'has-error' : '' }}" style="padding-top: 10px">
 				<label>@lang('basic.abs_days') <span class="add_new">@lang('basic.add')</span></label>
 				<div class="group_abs">
@@ -212,7 +234,7 @@
 				</div>
 				{!! ($errors->has('abs_days') ? $errors->first('abs_days', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			@if(in_array('Kampanje', $moduli))
+			@if(in_array('Kampanje', $moduli) && count($campaigns)>0)
 				<div class="form-group {{ ($errors->has('campaign_id')) ? 'has-error' : '' }}">
 					<label>@lang('basic.campaigns')</label>
 					<select class="form-control" name="campaign_id[]" multiple >
@@ -224,6 +246,11 @@
 					{!! ($errors->has('campaign_id') ? $errors->first('campaign_id', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
 			@endif
+			<div class="form-group">
+				<label >@lang('absence.email_send')</label>
+				<span><input type="radio" name="send_email" value="DA" checked /> @lang('basic.send_mail') </span>
+				<span><input type="radio" name="send_email" value="NE" /> @lang('basic.dont_send_mail')</span>
+			</div>
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">
 		</fieldset>

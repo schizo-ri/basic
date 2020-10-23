@@ -80,6 +80,7 @@
     padding-top: 0;
     padding-right: 10px;
     overflow: auto;
+    position: relative;
 }
 
 .container .posts .all_post > div {
@@ -375,6 +376,7 @@
     padding: 20px 30px 0;
     position: relative;
     overflow: auto;
+    max-height: 60%;
 }
 
 .comming_agenda .agenda_title {
@@ -563,8 +565,17 @@
     transform: none;
 }
 
+@media (max-width: 1500px) {
+    .comming_agenda .placeholder img {
+        max-height: 100px;
+    }    
+}
+
+
 @media (max-width: 1024px) {
-   
+    .container .noticeboard>div {
+        min-height: 150px;
+    }
    .container .calendar{
         height: auto;
         margin: 0;
@@ -582,10 +593,7 @@
     }
     .placeholder >img {
        max-width: 60%;
-      /*   position: absolute;
-        left: 50%;
-        top: 10%;
-        transform: translate(-50%, -90%); */
+       max-height: 100px;
     }
     .day_events .placeholder >img {
         max-width: initial;
@@ -599,10 +607,10 @@
         font-size: 0.75rem;
     }
     .index_page.ads_index .placeholder {
-        position: absolute;
+     /*    position: absolute;
         top: 40%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%); */
     }
     .index_page.ads_index  .placeholder >img {
         position: static;
@@ -610,9 +618,10 @@
         transform: none;
     }
     .index_page.ads_index .placeholder {
-        position: static    ;
-        transform: none;
+     /*    position: static    ; */
+     /*    transform: none; */
     }
+   
 
 }
 @media (max-width: 768px) {
@@ -786,5 +795,13 @@
     .container .posts .all_post .count_coments, .count_request {
         right: -15px;
         top: -15px;
+    }
+    .notices_list {
+        height: 150px;
+        overflow: hidden;
+    }
+    .placeholder {
+        max-height: 150px;
+      
     }
 }

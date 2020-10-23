@@ -86,4 +86,9 @@ class EvaluationEmployee extends Model
 	{
 		return $this->update($evaluatingEmployee);
 	}	
+
+	public static function EvaluationEmployeeForQuestionnaire ($questionnaire_id, $employee_id) 
+	{
+		return EvaluationEmployee::where('employee_id', $employee_id)->where('questionnaire_id', $questionnaire_id)->get();
+	}
 }

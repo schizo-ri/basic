@@ -22,7 +22,7 @@
                         <div class="alert alert-{{ ($key == 'error') ? 'danger' : $key }} alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             <strong>{{ ucfirst($key) }}:</strong> {!! $value !!}
-                            @if(session()->has('absence'))
+                            @if(session()->has('absence') && Sentinel::getUser()->employee)
                                 <p>@lang('ctrl.status_requests')<br>@lang('ctrl.all_requests_page'). </p>
                             @endif
                             @if(session()->has('evaluation'))
@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        @if(session()->has('absence'))
+                        @if(session()->has('absence')&& Sentinel::getUser()->employee)
                             <span>
                                 <button class="btn_all" ><a href="{{ route('absences.index') }}" >@lang('absence.all_requests')</a></button>
                             </span>

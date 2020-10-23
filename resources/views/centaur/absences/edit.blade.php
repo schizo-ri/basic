@@ -2,7 +2,7 @@
 	<h3 class="panel-title">@lang('absence.edit_absence')</h3>
 </div>
 <div class="modal-body">
-	<form role="form" method="post" name="myForm" accept-charset="UTF-8" action="{{ route('absences.update', $absence->id ) }}">
+	<form class="absence" role="form" method="post" name="myForm" accept-charset="UTF-8" action="{{ route('absences.update', $absence->id ) }}">
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.employee')</label>
@@ -40,12 +40,12 @@
 			{!! ($errors->has('end_date') ? $errors->first('end_date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="col-md-12 clear_l overflow_hidd padd_0" >
-			<div class="form-group time col-md-6 {{ ($errors->has('start_time')) ? 'has-error' : '' }}" hidden>
+			<div class="form-group time col-md-6 {{ ($errors->has('start_time')) ? 'has-error' : '' }}" >
 				<label>@lang('absence.start_time')</label>
 				<input name="start_time" class="form-control" type="time" value="{{ $absence->start_time }}" required>
 				{!! ($errors->has('start_time') ? $errors->first('start_time', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group time col-md-6 {{ ($errors->has('end_time')) ? 'has-error' : '' }}" hidden >
+			<div class="form-group time col-md-6 {{ ($errors->has('end_time')) ? 'has-error' : '' }}"  >
 				<label>@lang('absence.end_time')</label>
 				<input name="end_time" class="form-control" type="time" value="{{ $absence->end_time }}"required>
 				{!! ($errors->has('end_time') ? $errors->first('end_time', '<p class="text-danger">:message</p>') : '') !!}
@@ -80,23 +80,26 @@
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
 $( document ).ready(function() {
-		$( "#request_type" ).change(function() {
-			if($(this).val() == 'IZL') {
-				$('.form-group.time').show();
-				$('.form-group.date2').hide();
-				var start_date = $( "#start_date" ).val();
-				var end_date = $( "#end_date" );
-				end_date.val(start_date);
-			} else {
-				$('.form-group.time').hide();
-				$('.form-group.date2').show();
-			}
-		});
-		$( "#start_date" ).change(function() {
-			var start_date = $( this ).val();
+	console.log($( "#request_type" ).val());
+	if($( "#request_type" ).val() == 'IZL') {
+		$('.modal form .form-group.time').show();
+	}
+	$( "#request_type" ).change(function() {
+		if($(this).val() == 'IZL') {
+			$('.form-group.time').show();
+			$('.form-group.date2').hide();
+			var start_date = $( "#start_date" ).val();
 			var end_date = $( "#end_date" );
 			end_date.val(start_date);
-		});
+		} else {
+			$('.form-group.time').hide();
+			$('.form-group.date2').show();
+		}
 	});
-	$.getScript( '/../js/validate.js');
+	$( "#start_date" ).change(function() {
+		var start_date = $( this ).val();
+		var end_date = $( "#end_date" );
+		end_date.val(start_date);
+	});
+});
 </script>

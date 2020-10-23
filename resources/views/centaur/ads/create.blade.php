@@ -44,5 +44,4 @@
         $('#file_name').text( $('input[type=file]').val());
 	});
 
-/* 	$.getScript( '/../js/validate.js'); */
 </script>

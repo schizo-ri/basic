@@ -50,6 +50,7 @@ $( function () {
 					{
 						extend: 'pdfHtml5',
 						orientation: 'landscape',
+						footer: true,
 						pageSize: 'A3',
 						defaultStyle: {
 							fontSize: 6,
@@ -108,6 +109,14 @@ $( function () {
 										align = 'center';
 									}
 									doc.content[1].table.body[i][j].alignment = align;
+									if( i == 3 || i == 8 || i == 15 || i == 17) {
+										doc.content[1].table.body[i][j].fillColor = 'lightgrey';
+									}
+									if( i == 24 ) {
+										doc.content[1].table.body[i][j].bold = true;
+										doc.content[1].table.body[i][j].fontSize = 10;
+										doc.content[1].table.body[i][j].fillColor = 'lightgrey';
+									}
 								}
 							}
 							var objLayout = {};
@@ -122,6 +131,7 @@ $( function () {
 					},
 					{
 						extend: 'excelHtml5',
+						footer: true,
 						autoFilter: false,
 						createEmptyCells: true, 
 						orientation: 'landscape',

@@ -16,6 +16,13 @@ class Project extends Model
 	protected static $customerModel = 'App\Models\Customer';
 	
 	/*
+	* The Eloquent afterhour model name
+	* 
+	* @var string
+	*/
+	protected static $afterhourModel = 'App\Models\Afterhour';
+
+	/*
 	* The Eloquent investitor model name
 	* 
 	* @var string
@@ -44,7 +51,18 @@ class Project extends Model
 	
 	public function locco()
 	{
-		return $this->hasMany(static::$loccoModel,'projekt_id')->orderBy('created_at','DESC');
+		return $this->hasMany(static::$loccoModel,'project_id')->orderBy('created_at','DESC');
+	}	
+	
+	/*
+	* Returns the locco relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function afterhour()
+	{
+		return $this->hasMany(static::$afterhourModel,'project_id')->orderBy('created_at','DESC');
 	}	
 	
 	/*

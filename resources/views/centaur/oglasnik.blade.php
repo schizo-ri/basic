@@ -49,6 +49,8 @@ use App\Models\Ads;
 				</div>
 			</header>
 			<main class="main_ads">
+				
+
 				@if(isset($ads) && count($ads) >0)
 					@foreach($ads as $ad)
 						<?php

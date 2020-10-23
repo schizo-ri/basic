@@ -19,7 +19,6 @@
 		
 		<!--Awesome icons -->
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}"/>
-
 		<!-- JS modal -->
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
 
@@ -130,7 +129,7 @@
                     <div class="col-2" id="template-container"></div>
                 @endif
             </main>
-           
+        
         </form>
         <span hidden class="locale" >{{ App::getLocale() }}</span>
         <span hidden class="dataArrTemplates">{{ ($templates) }}</span>

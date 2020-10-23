@@ -11,6 +11,7 @@ use App\Models\Work;
 use App\Models\Employee;
 use App\Models\Campaign;
 use App\Models\CampaignRecipient;
+use App\Models\EmployeeDepartment;
 use App\User;
 use Sentinel;
 use App\Mail\EmployeeCreate;
@@ -37,7 +38,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-		$employees = Employee::where('id','<>',0)->where('checkout',null)->where('user_id','<>',null)->get();
+		$employees = Employee::employees_firstNameASC();
 		$empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
         
@@ -56,17 +57,18 @@ class EmployeeController extends Controller
     public function create(Request $request)
     {
 		$users = User::get();
-		$works = Work::orderBy('name','ASC')->get();
-		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+		$departments = Department::orderBy('name','ASC')->get();
+	 	$works = Work::orderBy('name','ASC')->get();
+		$employees = Employee::employees_firstNameASC();
 	
 		$campaigns = Campaign::where('type','evergreen')->get();
 		$moduli = CompanyController::getModules(); // provjera da li se koriste moduli kampanja
 
 		if(isset($request['user_id'])) {
 			$user1 = User::find($request->user_id);
-			return view('Centaur::employees.create', ['works' => $works,'employees' => $employees, 'campaigns' => $campaigns,'moduli' => $moduli,'user1' => $user1, 'users' => $users]);
+			return view('Centaur::employees.create', ['works' => $works,'departments' => $departments,'employees' => $employees, 'campaigns' => $campaigns,'moduli' => $moduli,'user1' => $user1, 'users' => $users]);
 		} else {
-			return view('Centaur::employees.create', ['works' => $works, 'employees' => $employees,'campaigns' => $campaigns,'moduli' => $moduli,'users' => $users]);
+			return view('Centaur::employees.create', ['works' => $works,'departments' => $departments, 'employees' => $employees,'campaigns' => $campaigns,'moduli' => $moduli,'users' => $users]);
 		}
     }
 
@@ -80,33 +82,20 @@ class EmployeeController extends Controller
     {
         $input = $request->except(['_token']);
 		
+		$stazY = 0;
+		$stazM = 0;
+		$stazD = 0;
+
 		if( $input['stazY'] ){
 			$stazY = $input['stazY'];
-		} else {
-			$stazY = 0;
-		}
+		} 
 		if( $input['stazM'] ){
 			$stazM = $input['stazM'];
-		} else {
-			$stazM = 0;
 		}
 		if( $input['stazD'] ){
 			$stazD = $input['stazD'];
-		} else {
-			$stazD = 0;
 		}
 		$staz =$stazY.'-'.$stazM.'-'.$stazD;
-		
-		if(!isset($input['termination_service'])) {
-			$termination_service = null;
-		} else {
-			$termination_service = $input['termination_service'];
-		}
-		if(!isset($input['first_job'])) {
-			$first_job = null;
-		} else {
-			$first_job = $input['first_job'];
-		}
 		
 		$abs_days = array();
 		if( $request['abs_days'] ) {
@@ -139,9 +128,9 @@ class EmployeeController extends Controller
 			'work_id'  	    		=> $input['work_id'],
 			'reg_date' 	    		=> $input['reg_date'],
 			'probation' 	   		=> $input['probation'],
-			'years_service' 	   	=> $staz,
-			'termination_service' 	=> $termination_service,
-			'first_job' 			=> $first_job,
+			'years_service' 	   	=> $input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'],
+			'termination_service' 	=> isset($input['termination_service']) ? $input['termination_service'] : null,
+			'first_job' 			=> isset($input['first_job']) ? $input['first_job'] : null,
 			'comment' 	   		    => $input['comment'],
 			'color' 	   		    => $input['color'],
 			'abs_days' 	    		=> count($abs_days) > 0 ? serialize($abs_days) : null,
@@ -150,21 +139,14 @@ class EmployeeController extends Controller
 			'znr' 	    			=> $input['znr'],
 			'size' 	    			=> $input['size'],
 			'shoe_size' 	    	=> $input['shoe_size'],
-			'days_off' 	    		=> $input['days_off'],
-			'stranger' 	    		=> $input['stranger'],
+			'days_off' 	    		=> $input['days_off'] ? $input['days_off'] : null,
+			'stranger' 	    		=> $input['stranger'] ? $input['stranger'] : null,
 			'permission_date' 	    => $input['permission_date'],
+			'superior_id' 	    	=> $input['superior_id'] != 0 ?  $input['superior_id'] : null,
+			'effective_cost' 	    => $input['effective_cost'] ? str_replace(',','.', $input['effective_cost']) : null,
+			'brutto' 	    		=> $input['brutto'] ? str_replace(',','.', $input['brutto']) : null,
 		);
-		
-		if( $input['superior_id'] != 0 ) {
-			$data += ['superior_id'  => $input['superior_id']];
-		} 
-		if( $request ['effective_cost']) {
-			$data += ['effective_cost'  => str_replace(',','.', $input['effective_cost'])];
-		} 
-		if( $request ['brutto']) {
-			$data += ['brutto'  => str_replace(',','.', $input['brutto'])];
-		} 
-		
+	
 		$employee = new Employee();
 		$employee->saveEmployee($data);
 		
@@ -178,36 +160,29 @@ class EmployeeController extends Controller
 				$campaignRecipient->saveCampaignRecipient($data_campaign);
 			}
 		}
-		
-		/* mail obavijest o novoj poruci */
-		$send_to = EmailingController::sendTo('employees', 'create');
-
-		/* $emailings = Emailing::get();
-		$send_to = array();
-		$departments = Department::get();
-		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
-
-		if(isset($emailings)) {
-			foreach($emailings as $emailing) {
-				if($emailing->table['name'] == 'employees' && $emailing->method == 'create') {
-					
-					if($emailing->sent_to_dep) {
-						foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
-							array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
-						}
-					}
-					if($emailing->sent_to_empl) {
-						foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
-							array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
-						}
-					}
-				}
+		if(isset( $input['department_id']) && count($input['department_id']) > 0) {
+			foreach ($input['department_id'] as $department_id) {
+				$data_department = array(
+					'department_id' => $department_id,
+					'employee_id' => $employee->id,
+				);
+				$employeeDepartment = new EmployeeDepartment();
+				$employeeDepartment->saveEmployeeDepartment($data_department);
 			}
 		}
- 	*/
-		foreach(array_unique($send_to) as $send_to_mail) {
-			if( $send_to_mail != null & $send_to_mail != '' )
-			Mail::to($send_to_mail)->send(new EmployeeCreate($employee)); // mailovi upisani u mailing 
+		
+		/* mail obavijest o novoj poruci */
+		if($request['send_email'] == 'DA') {
+			$send_to = EmailingController::sendTo('employees', 'create');
+			try {
+				foreach(array_unique($send_to) as $send_to_mail) {
+					if( $send_to_mail != null & $send_to_mail != '' )
+					Mail::to($send_to_mail)->send(new EmployeeCreate($employee)); 
+				}
+			} catch (\Throwable $th) {
+				session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+				return redirect()->back();
+			}
 		}
 		
 		session()->flash('success',  __('ctrl.data_save'));
@@ -253,13 +228,14 @@ class EmployeeController extends Controller
 		$employee = Employee::find($id);
 		$users = User::get();
 		$works = Work::orderBy('name','ASC')->get();
-		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+		$departments = Department::orderBy('name','ASC')->get();
+		$employees = Employee::employees_firstNameASC();
 		$campaigns = Campaign::where('type','evergreen')->get();
 		$campaignRecipients = CampaignRecipient::where('employee_id',$employee->id )->get();
 
 		$moduli = CompanyController::getModules(); // provjera da li se koriste moduli kampanja
 
-		return view('Centaur::employees.edit', ['works' => $works, 'users' => $users,'moduli' => $moduli, 'employee' => $employee, 'employees' => $employees,'campaigns' => $campaigns,'campaignRecipients' => $campaignRecipients]);
+		return view('Centaur::employees.edit', ['works' => $works, 'departments' => $departments,'users' => $users,'moduli' => $moduli, 'employee' => $employee, 'employees' => $employees,'campaigns' => $campaigns,'campaignRecipients' => $campaignRecipients]);
 		
     }
 
@@ -273,20 +249,7 @@ class EmployeeController extends Controller
     public function update(Request $request, $id)
     {
 		$employee = Employee::find($id);
-		
 		$input = $request->except(['_token']);
-		
-		$staz = $input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'];
-		if(!isset($input['termination_service']) || $input['termination_service'] == '') {
-			$termination_service = null;
-		} else {
-			$termination_service = $input['termination_service'];
-		}
-		if(! isset($input['first_job']) || $input['first_job'] == '' ) {
-			$first_job = null;
-		} else {
-			$first_job = $input['first_job'];
-		}
 	
 		$abs_days = array();
 		if( $request['abs_days']) {
@@ -297,33 +260,32 @@ class EmployeeController extends Controller
 		}
 	
 		$data = array(
-			'user_id'  				=> intval($input['user_id']),
-			'father_name'     		=> $input['father_name'] == '' ? null : $input['father_name'],
-			'mather_name'     		=> $input['mather_name'] == '' ? null : $input['mather_name'],
-			'oib'           		=> $input['oib'] == '' ? null : $input['oib'],
-			'oi'           			=> $input['oi'] == '' ? null : $input['oi'],
-			'oi_expiry'           	=> $input['oi_expiry'] == '' ? null : $input['oi_expiry'],
-			'b_day'					=> $input['b_day'] == '' ? null : $input['b_day'],
-			'b_place'       		=> $input['b_place'] == '' ? null : $input['b_place'],
-			'mobile'  				=> $input['mobile'] == '' ? null : $input['mobile'],
-			'priv_mobile'  			=> $input['priv_mobile'] == '' ? null : $input['priv_mobile'],
-			'email'  				=> $input['email'] == '' ? null : $input['email'],
-			'priv_email'  			=> $input['priv_email'] == '' ? null : $input['priv_email'],
-			'prebiv_adresa'   		=> $input['prebiv_adresa'] == '' ? null : $input['prebiv_adresa'],
-			'prebiv_grad'     		=> $input['prebiv_grad'] == '' ? null : $input['prebiv_grad'],
-			'borav_adresa'      	=> $input['borav_adresa'] == '' ? null : $input['borav_adresa'],
-			'borav_grad'        	=> $input['borav_grad'] == '' ? null : $input['borav_grad'],
-			'title'  			    => $input['title'] == '' ? null : $input['title'],
-			'qualifications'  		=> $input['qualifications'] == '' ? null : $input['qualifications'],
-			'marital'  	    		=> $input['marital'] == '' ? null : $input['marital'],
-			'work_id'  	    		=> $input['work_id'] == '' ? null : intval($input['work_id']),
-			'reg_date' 	    		=> $input['reg_date'] == '' ? null : $input['reg_date'],
-			'checkout' 	    		=> $input['checkout'] == '' ? null : $input['checkout'],
-			'probation' 	   		=> $input['probation'] == '' ? null : intval($input['probation']),
-			'years_service' 	   	=> $staz,
-			'termination_service' 	=> $termination_service,
-			'first_job' 			=> $first_job,
-			'comment' 	   		    => $input['comment'] == '' ? null : $input['comment'],
+			'user_id'  				=> $input['user_id'],
+			'father_name'     		=> $input['father_name'],
+			'mather_name'     		=> $input['mather_name'],
+			'oib'           		=> $input['oib'],
+			'oi'           			=> $input['oi'],
+			'oi_expiry'           	=> $input['oi_expiry'],
+			'b_day'					=> $input['b_day'],
+			'b_place'       		=> $input['b_place'],
+			'mobile'  				=> $input['mobile'],
+			'priv_mobile'  			=> $input['priv_mobile'],
+			'email'  				=> $input['email'],
+			'priv_email'  			=> $input['priv_email'],
+			'prebiv_adresa'   		=> $input['prebiv_adresa'],
+			'prebiv_grad'     		=> $input['prebiv_grad'],
+			'borav_adresa'      	=> $input['borav_adresa'],
+			'borav_grad'        	=> $input['borav_grad'],
+			'title'  			    => $input['title'],
+			'qualifications'  		=> $input['qualifications'],
+			'marital'  	    		=> $input['marital'],
+			'work_id'  	    		=> $input['work_id'],
+			'reg_date' 	    		=> $input['reg_date'],
+			'probation' 	   		=> $input['probation'],
+			'years_service' 	   	=> $input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'],
+			'termination_service' 	=> isset($input['termination_service']) ? $input['termination_service'] : null,
+			'first_job' 			=> isset($input['first_job']) ? $input['first_job'] : null,
+			'comment' 	   		    => $input['comment'],
 			'color' 	   		    => $input['color'],
 			'abs_days' 	    		=> count($abs_days) > 0 ? serialize($abs_days) : null,
 			'maiden_name' 	    	=> $input['maiden_name'],
@@ -331,25 +293,18 @@ class EmployeeController extends Controller
 			'znr' 	    			=> $input['znr'],
 			'size' 	    			=> $input['size'],
 			'shoe_size' 	    	=> $input['shoe_size'],
-			'days_off' 	    		=> $input['days_off'],
-			'stranger' 	    		=> $input['stranger'],
-			'permission_date' 	    => $input['permission_date'],
+			'days_off' 	    		=> $input['days_off'] ? $input['days_off'] : 0,
+			'stranger' 	    		=> isset( $input['stranger']) ? $input['stranger'] : 0,
+			'permission_date' 	    => isset($input['permission_date']) ? $input['permission_date'] : null,
+			'superior_id' 	    	=> isset($input['superior_id']) && $input['superior_id'] != 0 ?  $input['superior_id'] : null,
+			'effective_cost' 	    => $input['effective_cost'] ? str_replace(',','.', $input['effective_cost']) : null,
+			'brutto' 	    		=> $input['brutto'] ? str_replace(',','.', $input['brutto']) : null,
 		);
-		
-		if( $input['superior_id'] != 0 ) {
-			$data += ['superior_id'  => $input['b_day'] == '' ? null : intval($input['superior_id'])];
-		} 
-		if( $request ['effective_cost']) {
-			$data += ['effective_cost'  => str_replace(',','.', $input['effective_cost'])];
-		} 
-		if( $request ['brutto']) {
-			$data += ['brutto'  => str_replace(',','.', $input['brutto'])];
-		} 
 		
 		$employee->updateEmployee($data);
 	
 		// za odjavljenog djelatnika - korisnički kodaci deaktivirani
-		if($input['checkout'] != '') {
+		if( $input['checkout'] != '' ) {
 			$user = Sentinel::findById($employee->user_id );
 
 			$credentials = [
@@ -379,42 +334,44 @@ class EmployeeController extends Controller
 			} 
 		}
 		
-		/* mail obavijest o novoj poruci */
-
-		$send_to = EmailingController::sendTo('employees', 'update');
-		/* 
-		$emailings = Emailing::get();
-		$send_to = array();
-		$departments = Department::get();
-		$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
-
-		if(isset($emailings)) {
-			foreach($emailings as $emailing) {
-				if($emailing->table['name'] == 'employees' && $emailing->method == 'create') {
-					
-					if($emailing->sent_to_dep) {
-						foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
-							array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
-						}
-					}
-					if($emailing->sent_to_empl) {
-						foreach(explode(",", $emailing->sent_to_empl) as $prima_empl) {
-							array_push($send_to, $employees->where('id', $prima_empl)->first()->email );
-						}
-					}
+		if(isset( $input['department_id']) && count($input['department_id']) > 0) {
+			$employeeDepartments = EmployeeDepartment::where('employee_id', $employee->id)->get();
+			foreach ($input['department_id'] as $department_id) {
+				if( ! $employeeDepartments->where('department_id', $department_id)->first() ) {
+					$data_department = array(
+						'department_id' => $department_id,
+						'employee_id' => $employee->id,
+					);
+					$employeeDepartment = new EmployeeDepartment();
+					$employeeDepartment->saveEmployeeDepartment($data_department);
 				}
 			}
-		} */
-	
-		foreach($send_to as $send_to_mail) {
-			if( $send_to_mail != null & $send_to_mail != '' )
-			Mail::to($send_to_mail)->send(new EmployeeCreate($employee)); // mailovi upisani u mailing 
+			foreach ($employeeDepartments as $employeeDepartment) {
+				if( ! in_array( $employeeDepartment->department_id , $input['department_id'] )) {
+					$employeeDepartment->delete();
+				}
+			}
+		}
+
+		/* mail obavijest o novoj poruci */
+
+		if($request['send_email'] == 'DA') {
+			$send_to = EmailingController::sendTo('employees', 'update');
+			try {
+				foreach($send_to as $send_to_mail) {
+					if( $send_to_mail != null & $send_to_mail != '' ) {
+						Mail::to($send_to_mail)->send(new EmployeeCreate($employee)); // mailovi upisani u mailing 
+					}
+				}
+			} catch (\Throwable $th) {
+				session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+				return redirect()->back();
+			}
+			
 		}
 
 		session()->flash('success', __('ctrl.data_edit'));
 		return redirect()->back();
-       // return redirect()->route('employees.index');
-		
     }
 
     /**

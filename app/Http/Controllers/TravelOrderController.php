@@ -78,7 +78,7 @@ class TravelOrderController extends Controller
     public function create()
     {
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+        $employees = Employee::employees_firstNameASC();
         $loccos = Locco::orderBy('date','DESC')->get();
 
         return view('Centaur::travel_orders.create', ['cars' => $cars, 'loccos' => $loccos,'employees' => $employees]);
@@ -140,7 +140,7 @@ class TravelOrderController extends Controller
         $travel = TravelOrder::find($id);
 
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+        $employees = Employee::employees_firstNameASC();
         $loccos = Locco::orderBy('date','DESC')->get();
 
         return view('Centaur::travel_orders.edit', ['travel' => $travel, 'cars' => $cars, 'loccos' => $loccos,'employees' => $employees]);
@@ -293,13 +293,15 @@ class TravelOrderController extends Controller
         
         /* mail obavijest o završenom putnom nalogu */
         $send_to =  EmailingController::sendTo('travel_orders','confirm');
-       
-        foreach(array_unique($send_to) as $send_to_mail) { // mailovi upisani u mailing 
-            if( $send_to_mail != null & $send_to_mail != '' ) {
-                Mail::to($send_to_mail)->send(new TravelClose($travel));  
-               
-
+        try {
+            foreach(array_unique($send_to) as $send_to_mail) { // mailovi upisani u mailing 
+                if( $send_to_mail != null & $send_to_mail != '' ) {
+                    Mail::to($send_to_mail)->send(new TravelClose($travel));  
+                }
             }
+        } catch (\Throwable $th) {
+            session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+			return redirect()->back();
         }
 
         return $message;
@@ -310,7 +312,7 @@ class TravelOrderController extends Controller
        $travel = TravelOrder::find($id);
        $company = Company::first();
        $cars = Car::orderBy('registration','ASC')->get();
-       $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+       $employees = Employee::employees_firstNameASC();
        $locco1 = $travel->locco; // locco prema zapisanom id u travel
      
        $loccos = $travel->loccos; // locco iz travel_loccos

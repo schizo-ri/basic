@@ -149,11 +149,11 @@ $( function () {
 							doc.defaultStyle.fontSize = 8;
 							var count_col = table.columns(':not(.not-export-column)').count();
 							/* 	console.log(doc); */
-							var width = (100/count_col) + '%';
+						/* 	var width = (100/count_col) + '%';
 							for (let index = 0; index < th_length.length; index++) {
 								widths.push(width);
 							}
-							doc.content[1].table.widths = widths;
+							doc.content[1].table.widths = widths; */
 							doc.styles.tableHeader = {
 								color: 'black',
 								background: 'grey',

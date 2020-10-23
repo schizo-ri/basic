@@ -48,7 +48,7 @@
 												<i class="far fa-edit"></i>
 										</a>
 									@endif
-									@if(Sentinel::getUser()->hasAccess(['projects.delete']) || in_array('projects.delete', $permission_dep) )
+									@if( count($project->locco) == 0 && count($project->afterhour) == 0 && (Sentinel::getUser()->hasAccess(['projects.delete']) || in_array('projects.delete', $permission_dep)) )
 										<a href="{{ route('projects.destroy', $project->id) }}" class="action_confirm btn-delete danger" data-method="delete" title="{{ __('basic.delete')}}" data-token="{{ csrf_token() }}">
 											<i class="far fa-trash-alt"></i>
 										</a>

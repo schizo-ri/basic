@@ -39,11 +39,10 @@ class AbsenceConfirmMail extends Mailable
      */
     public function build()
     {
-        $odobrio_user = Sentinel::getUser()->employee;
-		$odobrio = $odobrio_user->user['first_name'] . ' ' . $odobrio_user->user['last_name'] ;
+        $odobrio_user = Sentinel::getUser();
+		$odobrio = $odobrio_user->first_name . ' ' . $odobrio_user->last_name;
 
-		$employee = Employee::where('id',  $this->absence->employee_id)->first();
-		$ime = $employee->first_name . ' ' . $employee->last_name;
+        $employee = Employee::find($this->absence->employee_id);
         
         if( $this->absence->approve == '1'){
             $odobrenje = __('absence.is_approved');

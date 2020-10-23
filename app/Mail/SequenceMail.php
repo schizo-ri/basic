@@ -12,9 +12,8 @@ class SequenceMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    
     /**
-     * The emplyee instance.
+     * The sequence instance.
      *
      * @var vacationRequest
      */

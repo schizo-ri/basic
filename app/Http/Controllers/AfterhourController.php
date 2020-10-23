@@ -8,6 +8,12 @@ use App\Http\Controllers\DashboardController;
 use App\Models\Afterhour;
 use App\Models\Employee;
 use App\Models\Project;
+use App\Mail\AfterHourCreateMail;
+use App\Mail\AfterHourApproveMail;
+use App\Mail\AfterHourInfoMail;
+use App\Mail\AfterHourSendMail;
+use Illuminate\Support\Facades\Mail;
+use Sentinel;
 
 class AfterhourController extends Controller
 {
@@ -29,18 +35,28 @@ class AfterhourController extends Controller
     public function index( Request $request)
     {
         $permission_dep = DashboardController::getDepartmentPermission();
-        if( isset($_GET['date'])) {
-            $date = explode('-', $_GET['date']);
+        if( isset($request['date'])) {
+            $date = explode('-', $request['date']);
             $month = $date[1];
             $year = $date[0];
         } else {
             $month = date('m');
             $year = date('Y');
         }
-    
+     
+        if( isset($request['employee_id']) && $request['employee_id'] ) {
+            $employee_id = $request['employee_id'];
+           
+        } else {
+            $employee_id = null;
+        }
+
         $employees = array();
         
         $afterhours = Afterhour::get();
+        if(  $employee_id != null) {
+            $afterhours = $afterhours->where('employee_id', $employee_id);
+        }
        
         $dates = array();
         foreach (array_keys($afterhours->groupBy('date')->toArray()) as $date) {
@@ -67,7 +83,7 @@ class AfterhourController extends Controller
      */
     public function create()
     {
-        $employees = Employee::where('id','<>',0)->where('checkout',null)->where('user_id','<>',null)->get();
+        $employees = Employee::employees_firstNameASC();
         $projects = Project::where('active',1)->get();
 
         return view('Centaur::afterhours.create',['employees' => $employees,'projects' => $projects]);
@@ -81,7 +97,6 @@ class AfterhourController extends Controller
      */
     public function store(Request $request)
     {
-        
         if(is_array($request['employee_id']) && count($request['employee_id'])>0) {
 			foreach($request['employee_id'] as $employee_id){
                 $data = array(
@@ -109,7 +124,20 @@ class AfterhourController extends Controller
             $afterHour = new Afterhour();
             $afterHour->saveAfterhour($data);
         }
-      
+
+        Mail::to($afterHour->employee->email)->send(new AfterHourSendMail($afterHour)); 
+
+        $send_to = EmailingController::sendTo('afterhours', 'create');
+        foreach(array_unique($send_to) as $send_to_mail) {
+            if( $send_to_mail != null & $send_to_mail != '' )
+                Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterHour)); 
+        }
+           
+        $superior = $afterHour->employee->work->firstSuperior;
+        if($superior) {
+            Mail::to($send_to_mail)->send(new AfterHourInfoMail($afterHour)); 
+        }
+
         session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->back();
@@ -135,7 +163,7 @@ class AfterhourController extends Controller
     public function edit($id)
     {
         $afterhour = Afterhour::find($id);
-        $employees = Employee::where('id','<>',0)->where('checkout',null)->where('user_id','<>',null)->get();
+        $employees = Employee::employees_firstNameASC();
         $projects = Project::where('active',1)->get();
 
         return view('Centaur::afterhours.edit',['afterhour' => $afterhour,'employees' => $employees,'projects' => $projects]);
@@ -183,4 +211,38 @@ class AfterhourController extends Controller
 		
 		return redirect()->back();
     }
+
+    public function storeConf(Request $request)
+    {
+        $afterHour = Afterhour::find($request['id']);
+        
+		if($afterHour) {
+			$employee = $afterHour->employee;
+			$mail = $employee->email;
+			
+            $approve_employee = Sentinel::getUser()->employee;
+	
+			$data = array(
+				'approve'  		    =>  $request['odobreno'],
+				'approve_h'  		=>  $request['odobreno_h'],
+				'approved_id'    	=>  $approve_employee ? $approve_employee->id : null,
+				'approved_date'	    =>  date("Y-m-d")
+			);
+			
+			$afterHour->updateAfterHour($data);
+            
+            $send_to = EmailingController::sendTo('afterhours', 'create');
+
+            foreach(array_unique($send_to) as $send_to_mail) {
+                if( $send_to_mail != null & $send_to_mail != '' )
+                    Mail::to($send_to_mail)->send(new AfterHourApproveMail($afterHour)); 
+            }
+            
+			$message = session()->flash('success', 'Zahtjev je potvrđen');
+		} else {
+			$message = session()->flash('error', 'Zahtjev nije nađen');
+		}
+		return redirect()->route('dashboard')->withFlashMessage($message);
+    }
+
 }

@@ -13,6 +13,14 @@ class TravelCreate extends Mailable
     use Queueable, SerializesModels;
 
     /**
+     * The travel instance.
+     *
+     * @var vacationRequest
+     */
+    public $travel;
+    
+
+    /**
      * Create a new message instance.
      *
      * @return void

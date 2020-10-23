@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DashboardController;
 use App\Models\Document;
 use App\Models\Employee;
 use Sentinel;
@@ -29,26 +30,15 @@ class DocumentController extends Controller
      */
     public function index()
     {
-      $user = Employee::where('user_id',Sentinel::getUser()->id)->first();
+     /*  $user = Employee::where('user_id',Sentinel::getUser()->id)->first(); */
       $empl = Sentinel::getUser()->employee;
-      $permission_dep = array();
 
-      if($empl) {
-        $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-      }
-      
-      if(isset($user)) {
-        
-        $user_name = explode('.',strstr($user->email,'@',true));
-        if(count($user_name) == 2) {
-          $user_name = $user_name[1] . '_' . $user_name[0];
-        }else {
-          $user_name = $user_name[0];
-        }
+      if(isset($empl)) {
+        $user_name = DashboardController::user_name( $empl->id );
         $documents = Document::where('path','like','%'.$user_name .'/documents/%')->orWhere('path','like','%svi/documents/%')->get();
-     
-        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
-        
+        $permission_dep = DashboardController::getDepartmentPermission();
+        $employees = Employee::employees_firstNameASC();
+       
         $path = 'storage/' . $user_name . '/documents/';
         
         if(file_exists($path)){
@@ -79,7 +69,7 @@ class DocumentController extends Controller
      */
     public function create()
     {
-		  $employees = Employee::where('employees.id','<>',1)->where('checkout',null)->get();
+		  $employees = Employee::employees_firstNameASC();
 		
 		  return view('Centaur::documents.create',['employees' => $employees]);
     }

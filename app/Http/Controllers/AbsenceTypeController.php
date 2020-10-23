@@ -60,6 +60,7 @@ class AbsenceTypeController extends Controller
     {
         $data = array(
 			'name'  	=> $request['name'],
+			'temp'  	=> $request['temp'], // za privremene djelatnike
 			'mark'  	=> str_replace(" ","_",trim(strtoupper($request['mark'])))
 		);
 		
@@ -113,7 +114,8 @@ class AbsenceTypeController extends Controller
          $absenceType = AbsenceType::find($id);
 		
 		 $data = array(
-			'name'  	=> $request['name'],
+            'name'  	=> $request['name'],
+            'temp'  	=> $request['temp'], // za privremene djelatnike
 			'mark'  	=> str_replace(" ","_",trim(strtoupper($request['mark'])))
 		);
 		if( $request['min_days']) {

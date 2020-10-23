@@ -71,5 +71,10 @@ class EmployeeTermination extends Model
 	public function updateEmployeeTermination($employee_termination=array())
 	{
 		return $this->update($employee_termination);
-	}	
+	}
+
+	public static function EmployeeTerminationToday()
+	{
+		return EmployeeTermination::whereYear('check_out_date', date('Y'))->whereMonth('check_out_date', date('m'))->whereDay('check_out_date', date('d'))->get();
+	}
 }

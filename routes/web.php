@@ -53,6 +53,9 @@ Route::resource('companies', 'CompanyController');
 // Department
 Route::resource('departments', 'DepartmentController');
 
+// EmployeeDepartment
+Route::resource('employee_departments', 'EmployeeDepartmentController');
+
 // Department_role
 Route::resource('department_roles', 'DepartmentRoleController');
 
@@ -212,11 +215,27 @@ Route::resource('customers', 'CustomerController');
 
 // Afterhour
 Route::resource('afterhours', 'AfterhourController');
-     
+Route::get('confirmationAfterHours', ['as' => 'confirmationAfterHours', 'uses' => 'AfterhourController@storeConf']);
+
+
 // JobInterview
 Route::resource('job_interviews', 'JobInterviewController');
 
+// Training
+Route::resource('trainings', 'TrainingController');
 
+// EmployeeTraining
+Route::resource('employee_trainings', 'EmployeeTrainingController');
+
+// TemporaryEmployee
+Route::resource('temporary_employees', 'TemporaryEmployeeController');
+
+// TemporaryEmployeeRequest
+Route::resource('temporary_employee_requests', 'TemporaryEmployeeRequestController');
+Route::get('confirmationTemp', ['as' => 'confirmationTemp', 'uses' => 'TemporaryEmployeeRequestController@storeConf']);
+
+// Kid
+Route::resource('kids', 'KidController');
 
 // Oglasnik
 Route::get('oglasnik', ['as' => 'oglasnik', 'uses' => 'AdController@oglasnik']);

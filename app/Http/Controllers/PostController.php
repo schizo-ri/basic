@@ -36,7 +36,13 @@ class PostController extends Controller
     public function index(Request $request)
     {
 		$empl = Sentinel::getUser()->employee;
-		$posts = Post::where('employee_id', $empl->id)->orWhere('to_employee_id', $empl->id)->orWhere('to_department_id',$empl->work->department->id)->orderBy('updated_at','DESC')->with('comments')->get();
+
+		$permission_dep = array();
+		if($empl->work) {
+			$posts = Post::PostToEmployee($empl);
+		} else {
+			$posts = Post::where('employee_id', $empl->id)->orWhere('to_employee_id', $empl->id)->orderBy('updated_at','DESC')->with('comments')->get();
+		}
 
 		if($empl) {
 			if(isset($_GET['id'])) { 
@@ -66,8 +72,7 @@ class PostController extends Controller
 				$post->image_to_employee =  $profile['docs']; // profilna slika
 				$post->countComment = PostController::countComment($post);
 			}
-			$permission_dep = array();
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+			
 			
 		} else {
 				$message = session()->flash('error',  __('ctrl.path_not_allow'));
@@ -162,16 +167,27 @@ class PostController extends Controller
 				$post->savePost($data);
 			} 
 
-			/* 	$department = Department::find($request['to_department_id']);
-			$works = Work::where('department_id',$department->id)->get(); */
-			
-			$department = Department::where('id', $post->to_department_id )->with('hasWorks')->first();
-			$works = $department->hasWorks;
+			$departments = Department::get();
+			$department = $departments->where('id', $post->to_department_id )->first();
 
+			$works = $department->hasWorks;
+			
+			if( $department->level1 == 0) {
+				foreach ($departments->where('level2', $department->id) as $department_1) {
+					$works = $works->merge($department_1->hasWorks);
+					foreach ($departments->where('level2', $department_1->id) as $department_2) {
+						$works = $works->merge($department_2->hasWorks);
+					}
+				}
+			} elseif ($department->level1 == 1) {
+				foreach ($departments->where('level2', $department->id) as $department_2) {
+					$works = $works->merge($department_2->hasWorks);
+				}
+			} 
+				
 			foreach ($works as $work) {
 				$workers = $work->workers;
 				foreach ($workers as $worker) {
-					
 					$data1 = array(
 						'employee_id'    => $employee->id,
 						'to_employee_id' => $worker->id,
@@ -207,7 +223,7 @@ class PostController extends Controller
 		$post = Post::find($id);
 
 		$user = Sentinel::getUser();
-		$employee = Employee::where('user_id', $user->id)->first();
+		$employee = $user->employee;
 		$comments = Comment::where('post_id',$post->id)->orderBy('created_at','DESC')->get();
 		
 		if($post->employee_id != $employee->id) {
@@ -252,7 +268,7 @@ class PostController extends Controller
         $post = Post::find($id);
 		
 		$user = Sentinel::getUser();
-		$employee = Employee::where('user_id', $user->id)->first();
+		$employee = $user->employee;
 		
 		$data = array(
 			'employee_id'  		=> $employee->id,
@@ -374,7 +390,12 @@ class PostController extends Controller
 		$comment_count = 0;
 	
 		if( $employee ){
-			$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->orWhere('to_department_id',$employee->work->department->id)->get();
+			if($employee->work) {
+				$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->orWhere('to_department_id',$employee->work->department->id)->get();
+			} else {
+				$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->get();
+
+			}
 			foreach($posts as $post) {
 				$count = $post->comments->where('to_employee_id', $employee->id)->where('status',0)->count();
 				$comment_count += $count;
@@ -388,7 +409,7 @@ class PostController extends Controller
 	{
 		$user = Sentinel::getUser();
 		$post_count = 0;
-		$employee = Employee::where('user_id', $user->id)->first();
+		$employee = $user->employee;
 		if($employee){
 			$post_count = Post::where('id',$post_id)->where('to_employee_id', $employee->id)->where('status',0)->count();
 		}
@@ -400,7 +421,7 @@ class PostController extends Controller
 	{
 		$user = Sentinel::getUser();
 		if(isset($user)) {
-			$employee = Employee::where('user_id', $user->id)->first();
+			$employee = $user->employee;
 		}
 
 		if(isset($employee)){

@@ -89,8 +89,7 @@ class EventController extends Controller
             $task->week = date('W',strtotime($task->date));
         }
     
-        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
-       
+        $employees = Employee::employees_firstNameASC();
         $cars = Car::get('registration');
 
         if($empl) {

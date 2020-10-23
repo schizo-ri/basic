@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Mail;
+
 use Sentinel;
 use App\Http\Requests;
 use Centaur\AuthManager;
@@ -14,10 +14,12 @@ use App\Models\JobInterview;
 use App\Models\UserInteres;
 use App\Models\Department;
 use App\Models\DepartmentRole;
-use Centaur\Mail\CentaurWelcomeEmail;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use App\Http\Controllers\CompanyController; 
 use App\Http\Controllers\BasicAbsenceController; 
+use Illuminate\Support\Facades\Mail;
+use Centaur\Mail\CentaurWelcomeEmail;
+use App\Mail\UserCreateMail;
 
 class UserController extends Controller
 {
@@ -49,7 +51,7 @@ class UserController extends Controller
     public function index()
     {
         $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->where('active',1)->get();
-        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+        $employees = Employee::employees_firstNameASC();
 		$departmentRoles = DepartmentRole::get();
 		$works = Work::get();
 		$empl = Sentinel::getUser()->employee;
@@ -128,11 +130,10 @@ class UserController extends Controller
             }
         }
 
+        $user = User::orderBy('id','DESC')->first();
         $data_employee = [
-            'user_id' => User::orderBy('id','DESC')->first()->id,
-            'email'   => User::orderBy('id','DESC')->first()->email,
-            'work_id' => Work::orderBy('id','ASC')->first()->id,
-            'reg_date' => date('Y-m-d'),
+            'user_id' => $user->id,
+            'email'   => $user->email,
         ];
 
         if(isset( $request['job_interwiew'])) {
@@ -148,12 +149,10 @@ class UserController extends Controller
             ];
 
         }
+
         $employee = new Employee();
         $employee->saveEmployee( $data_employee );
 
-        $result->setMessage("User {$request->get('email')} has been created.");
-        return redirect()->back();
-   
         if ($request->hasFile('fileToUpload')) {
             $image = $request->file('fileToUpload');
             $user_name = $request['last_name'] . '_' . $request['first_name'];
@@ -186,7 +185,18 @@ class UserController extends Controller
                 return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
               }
         }
-       
+        
+        /* Poruku korisniku */
+        Mail::to( $user->email )->send(new UserCreateMail($user, $request->get('password'))); // mailovi upisani u mailing 
+
+		/* Poruku IT odjelu */
+		$send_to = EmailingController::sendTo('users', 'create');
+		foreach(array_unique($send_to) as $send_to_mail) {
+			if( $send_to_mail != null & $send_to_mail != '' ) {
+                Mail::to($send_to_mail)->send(new UserCreateMail($user, $request->get('password'))); // mailovi upisani u mailing 
+            }
+        }
+        
         session()->flash('success',"User {$request->get('email')} has been created.");
         return redirect()->back();
     }
@@ -316,6 +326,42 @@ class UserController extends Controller
         // Update role assignments
         $roleIds = array_values($request->get('roles', []));
         $user->roles()->sync($roleIds);
+
+        if ($request->hasFile('fileToUpload')) {
+            $image = $request->file('fileToUpload');
+            $user_name = $request['last_name'] . '_' . $request['first_name'];
+            if(isset($request['email'])) {
+                $user_name = explode('.',strstr($request['email'],'@',true));
+                $user_name = $user_name[1] . '_' . $user_name[0];
+            }
+            
+            $path = 'storage/';
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $path = $path . $user_name;
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+            $path = $path  . '/profile_img/';
+            if (!file_exists($path)) {
+                mkdir($path);
+            } else {
+                array_map('unlink', glob("$path/*.*"));
+            }
+            $docName = $request->file('fileToUpload')->getClientOriginalName();  //file name
+            
+            
+            try {
+                $request->file('fileToUpload')->move($path, $docName);
+                DocumentController::createResizedImage($path . $docName, $path . pathinfo($docName)['filename'] . '_small.' . pathinfo($docName)['extension'], 200, 250);
+
+            /*     return redirect()->back()->with('success', __('ctrl.uploaded')); */
+  
+              } catch (\Throwable $th) {
+                return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
+              }
+        }
 
         // All done
         if ($request->expectsJson()) {

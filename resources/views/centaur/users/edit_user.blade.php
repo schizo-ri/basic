@@ -45,7 +45,7 @@ $i = 0;
 					</span>
 					<div class="user_info">	
 						<p class="label_name">@lang('basic.department')</p>
-						<p  class="label_value">{{ $employee->work->department['name'] }}</p>
+						<p  class="label_value">{!! $employee->work ? $employee->work->department['name'] : 'Djelatnik nema upisano radno mjesto' !!}</p>
 						<p class="label_name">@lang('basic.vacation')</p>
 						<p  class="label_value"></p>
 						<p class="label_name">@lang('basic.phone')</p>

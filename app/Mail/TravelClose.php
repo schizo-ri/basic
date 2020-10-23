@@ -11,7 +11,13 @@ use App\Models\TravelOrder;
 class TravelClose extends Mailable
 {
     use Queueable, SerializesModels;
-
+    /**
+     * The travel instance.
+     *
+     * @var vacationRequest
+     */
+    public $travel;
+    
     /**
      * Create a new message instance.
      *
@@ -34,6 +40,6 @@ class TravelClose extends Mailable
                     ->attach('travelOrder/Putni nalog_' . $this->travel->id .'.pdf')
                     ->with([
                         'travel' =>  $this->travel
-                    ]);;
+                    ]);
     }
 }

@@ -39,7 +39,7 @@ class AbsenceUpdateMail extends Mailable
      */
     public function build()
     {
-        $employee = Employee::where('id',$this->absence->employee_id)->first();
+        $employee = Employee::find($this->absence->employee_id);
         $zahtjev = array('start_date' => $this->absence['start_date'], 'end_date' => $this->absence['end_date']);
         $dani_zahtjev = BasicAbsenceController::daniGO($zahtjev);
         $zahtjevi = BasicAbsenceController::zahtjevi($employee);

@@ -10,6 +10,7 @@ use App\Models\Absence;
 use App\Models\Emailing;
 use App\Models\Department;
 use App\Models\Employee;
+use App\Models\TemporaryEmployeeRequest;
 use DateTime;
 use DateInterval;
 use DatePeriod;
@@ -53,7 +54,6 @@ class AbsenceCronMail extends Mailable
             $period = new DatePeriod($begin, $interval, $end);
             
             $zahtjevi = BasicAbsenceController::zahtjevi($absence->employee); 
-
             $dani_GO = $zahtjevi['ukupnoPreostalo'];
 
             foreach ($period as $dan) {  //ako je dan  GO !!!
@@ -70,6 +70,44 @@ class AbsenceCronMail extends Mailable
                 }
             }
         }
+
+        $izostanci_priv = TemporaryEmployeeRequest::TemporaryEmployeeSortApproved();
+
+        if(count($izostanci_priv) >0) {
+			foreach($izostanci_priv as $izostanak_priv){
+                $begin2 = new DateTime($izostanak_priv->start_date);
+                $end2 = new DateTime($izostanak_priv->end_date);
+                $end2->setTime(0,0,1);
+                $interval2 = DateInterval::createFromDateString('1 day');
+                $period2 = new DatePeriod($begin2, $interval2, $end2);
+
+                $begin_dan = date_format($begin2,'d');
+                $begin_mjesec = date_format($begin2,'m');			
+                $begin_godina = date_format($begin2,'Y');
+                
+                foreach ($period2 as $dan2) {  //ako je dan  GO !!!
+                    $period_day = date_format($dan2,'d');
+                    $period_month = date_format($dan2,'m');
+                    $period_year = date_format($dan2,'Y');
+                    if($begin2 == $end2 && $begin_dan == $dan && $begin_mjesec == $mjesec){
+                        array_push($day_absences,array('ime' => $izostanak_priv->first_name . ' ' . $izostanak_priv->last_name, 
+                                                        'zahtjev' =>  $izostanak_priv->absence['name'], 
+                                                        'period' => date('d.m.Y', strtotime( $izostanak_priv->start_date)), 
+                                                        'vrijeme' => $izostanak_priv->start_time . ' - ' .  $izostanak_priv->end_time, 
+                                                        'dani_GO' => '', 
+                                                        'napomena' =>  $izostanak_priv->comment ));
+                    } else if($period_day == $dan && $period_month == $mjesec && $period_year == $ova_godina || $begin2 == $end2 ){
+                        array_push($day_absences,array('ime' => $izostanak_priv->first_name . ' ' . $izostanak_priv->last_name, 
+                                                        'zahtjev' =>  $izostanak_priv->absence['name'], 
+                                                        'period' => date('d.m.Y', strtotime( $izostanak_priv->start_date)) . ' - ' .  date('d.m.Y', strtotime($izostanak_priv->end_date)), 
+                                                        'vrijeme' => $izostanak_priv->start_time . ' - ' .  $izostanak_priv->end_time, 
+                                                        'napomena' =>  $izostanak_priv->comment, 
+                                                        'dani_GO' => '-'));
+                    }
+                }
+			}
+        }
+        
         if(count($day_absences)>0) {
             return $this->view('Centaur::email.absence_day')
                     ->subject( __('emailing.day_absence') . ' ' . date_format($datum,'d.m.Y'))

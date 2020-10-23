@@ -41,7 +41,7 @@ class Work extends Model
 	
 	public function firstSuperior()
 	{
-		return $this->belongsTo(static::$employeeModel,'employee_id');
+		return $this->belongsTo(static::$employeeModel,'first_superior');
 	}
 
 	/*

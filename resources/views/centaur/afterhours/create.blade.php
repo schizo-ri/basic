@@ -16,10 +16,10 @@
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 		@else
-			<p class="padd_10">Ja, {{ $user->first_name  . ' ' . $user->last_name }} 
+			<p class="padd_10">Ja, {{ Sentinel::getUser()->first_name  . ' ' . Sentinel::getUser()->last_name }} 
 				<span class="">@lang('absence.please_approve') @lang('basic.afterhours')</span>
 			</p>
-			<input name="employee_id" type="hidden" value="{{ $user->employee->id }}" />
+			<input name="employee_id" type="hidden" value="{{  Sentinel::getUser()->employee->id }}" />
 		@endif
 		<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
 			<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{ old('project_id') }}" id="sel1" required>

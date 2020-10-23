@@ -2,6 +2,7 @@
 
 return [
     'questionnaire' 		=> 'Anketa',
+    'questionnaire_day' 	=> 'Anketa na dan',
     'questionnaires' 		=> 'Ankete',
     'add_questionnaire' 	=> 'Dodaj anketu',
     'edit_questionnaire'	=> 'Ispravi anketu',

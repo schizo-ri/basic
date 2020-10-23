@@ -127,7 +127,6 @@
 					</nav>
 					<section class="section_top_nav" id="section_top_nav">
 						<span class="close_topnav">
-							
 							@if(file_exists('../public/storage/company_img/logo.png'))
 								<img src="{{ URL::asset('storage/company_img/logo.png')}}" alt="company_logo"/>
 							@else 
@@ -221,7 +220,7 @@
 				</header>
 				<div class="container col-sm-12 col-md-12 col-lg-12">
 					@if(Sentinel::check())				
-						@if(Sentinel::getUser()->employee)
+						@if(Sentinel::getUser()->employee || Sentinel::getUser()->temporaryEmployee )
 							
 							@yield('content')
 						@else
@@ -242,7 +241,7 @@
 				// Enable pusher logging - don't include this in production
 				/* Pusher.logToConsole = true; */
 				var employee_id = $('#employee_id').text();
-				var pusher = new Pusher('4a492cc413b6d538e6c2', {
+				var pusher = new Pusher('d2b66edfe7f581348bcc', {
 					cluster: 'eu'
 				});
 

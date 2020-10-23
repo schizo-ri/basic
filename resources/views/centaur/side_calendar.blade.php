@@ -48,7 +48,7 @@
                         @if (isset($dataArr_day) && count($dataArr_day) >0 )
                             @foreach ($dataArr_day as $data_day)
                                 @if ( $data_day['name'] != 'holiday')
-                                    @if ($data_day['type'] == $type && $x < 3 )
+                                    @if ($data_day['type'] == $type )
                                         @php
                                             $image = '';
                                             $user_name = '';

@@ -33,11 +33,38 @@ Artisan::command('email:campaign', function () {
     $this->comment(campaign::quote());
 })->describe('Display an campaign quote');
 
-
 Artisan::command('check_out', function () {
     $this->comment(CheckOut::quote());
 })->describe('Display an workrecord quote');
 
 Artisan::command('car_registration', function () {
     $this->info("Registracija vozila!");
+});
+
+Artisan::command('anniversary', function () {
+    $this->info("Godišnjica!");
+});
+
+Artisan::command('medicalExamination', function () {
+    $this->info("Liječnički pregled!");
+});
+
+Artisan::command('checkout_employee', function () {
+    $this->info("Odjava radnika!");
+});
+
+Artisan::command('employeeTraining', function () {
+    $this->info("Istek potvrde o osposobljavanju!");
+});
+
+Artisan::command('probation', function () {
+    $this->info("Istek potvrde o osposobljavanju!");
+});
+
+Artisan::command('birthday', function () {
+    $this->info("Rođendan djelatnika!");
+});
+
+Artisan::command('stranger', function () {
+    $this->info("Istek dozvole za boravak!");
 });

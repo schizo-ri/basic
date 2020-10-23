@@ -18,6 +18,13 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\NoticeSchedule::class,
         \App\Console\Commands\CheckOut::class,
         \App\Console\Commands\CarsRegistration::class,
+        \App\Console\Commands\AnniversaryCommand::class,
+        \App\Console\Commands\MedicalExaminationCommand::class,
+        \App\Console\Commands\TerminationCommand::class,
+        \App\Console\Commands\EmployeeTrainingCommand::class,
+        \App\Console\Commands\ProbationCommand::class,
+        \App\Console\Commands\BirthdayCommand::class,
+        \App\Console\Commands\StrangerCommand::class,
     ];
 
     /**
@@ -43,10 +50,30 @@ class Kernel extends ConsoleKernel
        /*  $schedule->command('check_out')
                   ->everyMinute()
                   ->evenInMaintenanceMode(); */
-        $schedule->command('car_registration')
+      /*   $schedule->command('car_registration')
+                  ->everyMinute()
+                  ->evenInMaintenanceMode(); */
+       /*  $schedule->command('anniversary')
+                  ->everyMinute()
+                  ->evenInMaintenanceMode(); */
+       /*  $schedule->command('medicalExamination')
+                  ->everyMinute()
+                  ->evenInMaintenanceMode(); */
+      /*   $schedule->command('checkout_employee')
+                  ->everyMinute()
+                  ->evenInMaintenanceMode(); */
+       /*  $schedule->command('employeeTraining')
+                  ->everyMinute()
+                  ->evenInMaintenanceMode(); */
+       /*  $schedule->command('probation')
+                  ->everyMinute()
+                  ->evenInMaintenanceMode(); */
+        /* $schedule->command('birthday')
+                  ->everyMinute()
+                  ->evenInMaintenanceMode(); */
+        $schedule->command('stranger')
                   ->everyMinute()
                   ->evenInMaintenanceMode();
-        
     }
 
     /**

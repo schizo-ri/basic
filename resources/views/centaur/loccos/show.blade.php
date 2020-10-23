@@ -1,16 +1,16 @@
 @extends('Centaur::admin')
 
-@section('title', __('basic.loccos') . ' ' .count($loccos)>0 ? $loccos->first()->car->registration : '')
+@section('title', __('basic.loccos') . ' ' . $car->registration )
 
 @section('content')
 	<header class="page-header">
 		<div class="index_table_filter fuel_header">
-			<span class="back_to_prev"><span class="curve_arrow_left_grey"></span></span>
+		{{-- 	<span class="back_to_prev"><span class="curve_arrow_left_grey"></span></span> --}}
 			<label>
 				<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 			</label>
 			@if(Sentinel::getUser()->hasAccess(['loccos.create']) || in_array('loccos.create', $permission_dep))
-				<a class="btn-new" href="{{ route('loccos.create', ['car_id' => $car_id]) }}" rel="modal:open">
+				<a class="btn-new" href="{{ route('loccos.create', ['car_id' => $car->id]) }}" rel="modal:open">
 					<i class="fas fa-plus"></i>
 				</a>
 			@endif 
@@ -72,10 +72,5 @@
 			
 		</div>
 	</main>
-	<script>
-		$(function(){
-			$.getScript( '/../js/filter_dropdown.js');
-		
-		});
-	</script>
+
 @stop

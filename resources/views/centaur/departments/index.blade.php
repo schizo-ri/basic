@@ -18,7 +18,7 @@
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">	
 		<div class="table-responsive">
 			@if(count($departments))
-				<table id="index_table" class="display table table-hover">
+				<table id="index_table" class="display table table-hover sort_1_asc">
 					<thead>
 						<tr>
 							<th>@lang('basic.company')</th>
@@ -39,7 +39,7 @@
 									{!! $department->level2 ? $departments->where('id', $department->level2)->first()->name : '' !!}
 								</td>
 								<td>{{ $department->email }}</td>
-								<td>{!! $department->employee ? $department->employee->user->first_name . ' ' .  $department->employee->user->last_name : '' !!}</td>
+								<td>{!! $department->employee && $department->employee->user ? $department->employee->user->first_name . ' ' .  $department->employee->user->last_name : '' !!}</td>
 								<td class="center">
 									<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['departments.update']) || in_array('departments.update', $permission_dep))
@@ -65,6 +65,15 @@
 											<i class="fas fa-plus"></i>
 										</a>
 									@endif
+									@if(Sentinel::getUser()->hasAccess(['employee_departments.create']) || in_array('employee_departments.create', $permission_dep))
+										<a href="{{ route('employee_departments.create',['department_id' => $department->id]) }}" class="btn-edit" title="{{ __('basic.add_employee_department')}}" rel="modal:open">
+											<i class="fas fa-user-plus"></i>
+										</a>
+									@endif
+									{{-- <a class="btn btn-primary btn-lg" href="{{ route('admin.employee_departments.edit', $department->id) }}" id="stil1">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        Snimi djelatnike na odjel
+                                    </a> --}}
 									@if(!$works->where('department_id',$department->id)->first() && Sentinel::getUser()->hasAccess(['departments.delete']) || in_array('departments.delete', $permission_dep))
 									<a href="{{ route('departments.destroy', $department->id) }}" class="action_confirm btn-delete danger" style="display:none" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
 										<i class="far fa-trash-alt"></i>

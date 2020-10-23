@@ -54,7 +54,7 @@ class CampaignEmails extends Command
         $campaigns = Campaign::where('active',1)->get();
         $campaign_sequences_all = CampaignSequence::orderBy('order','ASC')->get();
 
-        $employees = Employee::where('checkout', null)->get();  //where('id','<>',1)->
+        $employees = Employee::employees_lastNameASC();
         // kampanje koje idu na određeni datum
         foreach ($campaigns->where('type','one_time') as $campaign) {
             $campaign_start = new DateTime($campaign->start_date);

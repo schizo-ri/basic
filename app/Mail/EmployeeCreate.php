@@ -37,7 +37,15 @@ class EmployeeCreate extends Mailable
      */
     public function build()
     {
-        return $this->view('Centaur::email.employee_add')
-					->subject( __('emailing.new_employee') );
+        if( $this->employee->reg_date) {
+            $view = 'emails.employees.create';
+        } else {
+            $view = 'emails.employees.in_progress';
+        }
+        return $this->view( $view )
+                    ->subject( __('emailing.new_employee') )
+                    ->with([
+						'employee' => $this->employee
+					]);
     }
 }

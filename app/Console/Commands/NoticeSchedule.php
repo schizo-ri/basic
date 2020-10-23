@@ -54,7 +54,7 @@ class NoticeSchedule extends Command
         
          if(count($notices) > 0) {
             $prima = array();
-            $employees = Employee::where('id','<>',0)->where('checkout', null)->get();
+            $employees = Employee::employees_lastNameASC();
     
             foreach ($notices as $notice) {
                 if( date('Y-m-d', strtotime($notice->schedule_date)) == date('Y-m-d') ) {

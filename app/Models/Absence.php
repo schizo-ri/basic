@@ -79,4 +79,27 @@ class Absence extends Model
 	{
 		return $this->update($absence);
 	}	
+
+	/*
+		* Absence IZL
+		* 
+		* @param $user_id, $type
+		* @return - zahtjevi Izlasci za djelatnika
+	*/
+	public static function AllAbsenceUser($user_id, $type)
+	{
+		return Absence::where('employee_id',$user_id)->where('type', AbsenceType::where('mark',$type)->first()->id )->get();
+	}
+
+	/*
+		* Absence IZL - za traženi mjesec
+		* 
+		* @param $user_id, $type, mjesec
+		* @return - zahtjevi Izlasci za djelatnika
+	*/
+	public static function AllAbsenceUserMY($user_id, $type, $month, $year)
+	{
+		return Absence::where('employee_id',$user_id)->where('type', AbsenceType::where('mark',$type)->first()->id )->whereMonth('start_date',month)->whereYear('start_date',$year)->get();
+	}
+
 }

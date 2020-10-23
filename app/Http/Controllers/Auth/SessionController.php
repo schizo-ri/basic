@@ -59,9 +59,14 @@ class SessionController extends Controller
 
         // Attempt the Login
         $result = $this->authManager->authenticate($credentials, $remember);
-
+    
         // Return the appropriate response
         if(Sentinel::check()) {
+            if(Sentinel::getUser()->active == 0) {
+                session()->flash('error', 'Nisi aktivan djelatnik. Prijava nije moguća.');
+		
+                return redirect()->back();
+            }
             $path = session()->pull('url.intended', route('dashboard'));
            // Session::flash('success', "Prijavljen si");
             return $result->dispatch($path);

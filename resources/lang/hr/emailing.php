@@ -4,7 +4,9 @@ return [
     'new_employee' 				=> 'Novi djelatnik - prijava',
 	'with_day'					=> 'Sa danom',
 	'employed_worker' 			=> 'zaposlen je radnik',
+	'employed_temp_worker' 		=> 's privremenim radom započeo je',
 	'in_the_workplace'			=> 'na radnom mjestu ',
+	'in_progress'				=> 'U tijeku je zapošljavanje djelatnika ',
 	'email_send'				=> 'E-mail je poslan',
 	'new_article'				=> 'Novi članak',
 	'new_absence'				=> 'Zahtjev za ',
@@ -24,6 +26,11 @@ return [
 	'campaign_start'			=> 'Kampanja je pokrenuta',
 	'campaign_error'			=> 'Nije moguće pokrenuti kampanju, nema upisanih sekvenci',
 	'store'						=> 'Spremi',
-	'save_calendar'				=> 'Spremi događaj u kalendar'
+	'save_calendar'				=> 'Spremi događaj u kalendar',
+	'new_add'					=> 'MyIntranet - objavljen je novi oglas',
+	'afterhour'					=> 'Zahtjev za odobrenje prekovremenog rada ',
+	'new_temporary_employee'	=> 'Privremeni djelatnik - obavijest ' . ' o ' . ' početku ' . ' rada',
+	'expiry_training'			=> 'Istek ' . ' osposobljavanja ',
+	
 ];
 ?>

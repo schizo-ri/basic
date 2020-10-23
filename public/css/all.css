@@ -64,12 +64,11 @@ ul.admin_pages li >span.arrow_down {
     overflow: auto;
     height: 100%;
 }
-.car_links {
+.car_links, .basic_links, .hr_links, .abs_links, .project_links {
     display: none;
-}
-.car_links .admin_link {
     padding-left: 20px;
 }
+
 ul.admin_pages li >span.image_settings {
     background-color: #ebebeb;
     position: relative;
@@ -147,7 +146,7 @@ ul.admin_pages li >span.image_template{
     position: absolute;
     top: 29px;
     left: 10px;
-    z-index: 1;
+    z-index:30;
 }
 #admin_page table span.role {
     display: none;
@@ -974,6 +973,8 @@ summary {
 div#calendar{
     padding: 0 30px;
     width: 100%;
+    max-height: 40%;
+    overflow: hidden;
 }
  
 div#calendar div.box{
@@ -1023,6 +1024,7 @@ div#calendar div.box-content{
     border-top:none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    max-height: 80%;
 }
 
 div#calendar ul.label{
@@ -1052,6 +1054,7 @@ div#calendar ul li{
  
 div#calendar ul.dates{
     height: 92px;
+    max-height: 100%;
     width: 100%;
     background: inherit;
     color: white;
@@ -1067,6 +1070,7 @@ div#calendar ul.dates li{
     /*float: left;*/
     flex: 0 0 64px;
     height: 89px;
+    max-height: 100%;
     background: #F8FAFF;
     margin-right: 5px;
     padding: 10px;
@@ -1307,6 +1311,7 @@ div#calendar ul li.active_date {
     padding-top: 0;
     padding-right: 10px;
     overflow: auto;
+    position: relative;
 }
 
 .container .posts .all_post > div {
@@ -1602,6 +1607,7 @@ div#calendar ul li.active_date {
     padding: 20px 30px 0;
     position: relative;
     overflow: auto;
+    max-height: 60%;
 }
 
 .comming_agenda .agenda_title {
@@ -1790,8 +1796,17 @@ div#calendar ul li.active_date {
     transform: none;
 }
 
+@media (max-width: 1500px) {
+    .comming_agenda .placeholder img {
+        max-height: 100px;
+    }    
+}
+
+
 @media (max-width: 1024px) {
-   
+    .container .noticeboard>div {
+        min-height: 150px;
+    }
    .container .calendar{
         height: auto;
         margin: 0;
@@ -1809,10 +1824,7 @@ div#calendar ul li.active_date {
     }
     .placeholder >img {
        max-width: 60%;
-      /*   position: absolute;
-        left: 50%;
-        top: 10%;
-        transform: translate(-50%, -90%); */
+       max-height: 100px;
     }
     .day_events .placeholder >img {
         max-width: initial;
@@ -1826,10 +1838,10 @@ div#calendar ul li.active_date {
         font-size: 0.75rem;
     }
     .index_page.ads_index .placeholder {
-        position: absolute;
+     /*    position: absolute;
         top: 40%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%); */
     }
     .index_page.ads_index  .placeholder >img {
         position: static;
@@ -1837,9 +1849,10 @@ div#calendar ul li.active_date {
         transform: none;
     }
     .index_page.ads_index .placeholder {
-        position: static    ;
-        transform: none;
+     /*    position: static    ; */
+     /*    transform: none; */
     }
+   
 
 }
 @media (max-width: 768px) {
@@ -2014,6 +2027,14 @@ div#calendar ul li.active_date {
         right: -15px;
         top: -15px;
     }
+    .notices_list {
+        height: 150px;
+        overflow: hidden;
+    }
+    .placeholder {
+        max-height: 150px;
+      
+    }
 }
 .index_page {
     height: 100%;
@@ -2068,7 +2089,15 @@ div#calendar ul li.active_date {
 .clickable-row {
     cursor: pointer;
 }
-   
+.checkbox_span {
+    display: inline-block;
+    display: flex;
+    align-items: center;
+    margin: 3px 0;
+}
+.checkbox_span>label {
+    margin: 0;
+}
 .posts_index .posts .all_post {
     box-shadow: none;
     padding: 0;
@@ -3729,8 +3758,11 @@ footer.ad_footer {
     position: absolute;
     transform: translateY(-50%);*/
     right: 0;
-    height: 35px;
+    height: 100%;
+    padding: 6px 0 6px 40px;
     padding-left: 40px;
+    line-height: 35px;
+    vertical-align: middle;
 }
 
 .index_page table.dataTable.no-footer, .index_page table.display.table {
@@ -3827,7 +3859,7 @@ footer.ad_footer {
     float: right;
     line-height: 35px;
 }
-.header_benefits .index_table_filter span.show_button, .noticeboard_index .index_table_filter span.show_button, .main_campaign .index_table_filter span.show_button {
+.header_benefits .index_table_filter span.show_button, .noticeboard_index .index_table_filter span.show_button, .main_campaign .index_table_filter span.show_button, .all_notices span.show_button {
     display: none;
 }
 .all_documents span.show_button, .header_ads span.show_button  {
@@ -4909,6 +4941,7 @@ table.dataTable#index_table tbody td:last-child > a {
     text-align: left;
  /*    padding: 3px 0; */
     padding-right: 5px;
+    margin-bottom: 5px;
 }
 .main_questionnaire table.dataTable td a.qname, .main_questionnaire table.dataTable td span.qname  {
     font-weight: 600;
@@ -5003,7 +5036,7 @@ button.show_loccos {
     margin-right: 15px;
     padding: 0 10px;
 }
- .change_view_calendar, .change_employee, .change_employee_work, .change_car, .change_month, .change_month_afterhour{
+ .change_view_calendar, .change_employee, .change_employee_work, .change_employee_afterhour, .change_car, .change_month, .change_month_afterhour{
     font-family: Montserrat;
     font-style: normal;
     font-weight: 600;
@@ -5028,7 +5061,7 @@ button.show_loccos {
 .change_employee,.change_car {
     margin-right: 15px;
 }
-.change_employee_work {
+.change_employee_work, .change_employee_afterhour {
     margin: 0 0 0 15px;
 }
 .q_progress {
@@ -5724,6 +5757,9 @@ a.modal_close {
     .main_benefits_body {
         margin-top: 0;
     }
+    main.main_ads {
+        padding: 0;
+    }
 }
 @media (max-width: 768px) {
     .index_page .index_main, .index_page.posts_index .index_main {
@@ -5733,8 +5769,15 @@ a.modal_close {
         margin: auto;
         height: 100%;
     }
+    .posts_index .link_back, .calendar_aside .link_back {
+        top: 10px;
+        left: 5px;
+    }
+    .index_page h1 {
+        padding-left: 50px;
+    }
     .index_page aside.latest_messages>div {
-        box-shadow: none;
+      /*   box-shadow: none; */
     }
     .index_page.posts_index .index_main  {
         display: none;
@@ -5774,11 +5817,12 @@ a.modal_close {
         box-shadow: none;
     }
     main.index_main>section {
-        padding: 10px;
+     /*    padding: 10px; */
     }
     .header_document, .header_questionnaire {
-        background: inherit;
-        color: black;
+       /*  background: inherit; */
+       /*  color: black; */
+       padding: 0;
     }
     .index_page aside {
         width: 100%;
@@ -5814,6 +5858,9 @@ a.modal_close {
     .index_page aside >section{
         flex: 0 0 100%;
         max-width: 100%;
+    }
+    .index_table_filter {
+        padding:0 ;
     }
     .index_page aside:not(.latest_messages, .calendar_aside), .index_page.index_documents {
         display: none;
@@ -5864,9 +5911,17 @@ a.modal_close {
         height: auto;
         overflow: hidden;
     }
-    main.main_ads, .index_page.ads_index .index_main {
-        height: auto;
+    main.main_ads {
+        height: calc(100% - 45px);
         overflow: hidden;
+        padding: 0;
+        margin-bottom: 0;
+    }
+    .index_page.ads_index .index_main {
+        height: 100%;
+        overflow: hidden;
+        padding: 0;
+        margin-bottom: 0;
     }
     .index_main header.post_sent {
         height: auto;
@@ -6730,6 +6785,19 @@ table.dataTable thead th, table.dataTable thead td{
 	height: auto;
 	
 }
+#admin_page a.shortcut,#admin_page span.shortcut {
+    float: left;
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: #98acdf;
+    padding: 0;
+    width: auto;
+	height: auto;
+	position: absolute;
+	right: 30px;
+	top: 5px;
+	z-index: 1;
+}
 .shortcuts_container .shortcut {
 	text-decoration: none;
     font-weight: 600;
@@ -6920,13 +6988,12 @@ ul.nav_ul.float_right li img {
 	height: 100%;
     line-height: 32px;
 	display: block;
-	/* padding: 5px 0; */
 	padding: 35px 0;
 	
 }
 .logo_icon>svg.svg-inline--fa.fa-w-14 {
 	color: #fff;
-	width: 30px;
+	width: auto;
 	float: left;
 	margin: 0;
 }
@@ -6958,8 +7025,8 @@ ul.nav_ul.float_right li img {
 	  transition: display 0.5s;
 	  transition-delay: 5s;
 	  height: calc(100% - 92px);
-	  margin-top: 50%;
-	  margin-bottom: 50%;
+	  margin-top: 30%;
+	  margin-bottom: 30%;
 }
   
 .section_top_nav .close_topnav {
@@ -7752,8 +7819,9 @@ span.count_post {
 
 .info .layout_button >button {
 	height: 100%;
-	width: 16%;
-	min-width: 120px;
+	max-width: calc((100% / 6) - 15px);
+	width: calc((100% / 6) - 15px);
+	min-width: calc((100% / 6) - 15px);
     background: #F4F7FF;
     border: none;
     border-radius: 3px;
@@ -7764,6 +7832,8 @@ span.count_post {
     padding: 0;
 	color: #071E57;
 	margin-bottom: 15px;
+	
+	padding: 0 5px;
 }
 
 .info .layout_button >button>a {
@@ -8248,6 +8318,90 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	display: inline-block;
 }
 
+
+.selectBox {
+	position: relative;
+}
+  
+.modal .selectBox select {
+	width: 100%;
+	font-weight: bold;
+	font-weight: 500;
+	font-size: 0.625rem;
+	color: #2B2B2B;
+	padding: 0;
+	margin: 0;
+	height: auto;
+	background: inherit;
+	border: inherit;
+}
+
+.overSelect {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	cursor: pointer;
+}
+
+#checkboxes, #checkboxes1 {
+	display: none;
+/* 	border: 1px #dadada solid; */
+   /*  position: absolute;
+    left: 0px;
+    right: 0px;
+    background: rgb(255, 255, 255);
+    z-index: 1; */
+}
+
+#checkboxes > input[type=search], #checkboxes1 > input[type=search] {
+	width: 100%;
+    padding: 5px;
+	border-radius: 5px;
+	margin-bottom: 10px;
+}
+#checkboxes label, #checkboxes1 label {
+	display: flex;
+    height: 20px;
+    line-height: 20px;
+    align-items: center;
+}
+
+#checkboxes label:hover, #checkboxes1 label:hover {
+	background-color: #1e90ff;
+}
+
+.col-offset-1 {
+    margin-left: 8.3333333333%;
+}
+.col-offset-2 {
+	margin-left: 16.6666666667%;
+}
+.evidention_check {
+	color: #98acdf;
+}
+.evidention_check .checkout, .evidention_check .entry {
+	height: 100%;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+	align-items: center;
+	border: none;
+    background: inherit;
+	font-size: 28px;
+	outline: none;
+	font-size: 1.25rem;
+}
+
+.evidention_check .entry {
+	color: green;
+}
+
+.evidention_check .checkout {
+	color: red;
+}
+
 @media screen and (min-width: 1500px){
 	.input_search, .filter select{
 		width: 20%;
@@ -8292,11 +8446,22 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		flex-wrap: wrap;
 		padding: 20px 0 0;
 		overflow: auto;
-		
+		flex-wrap: nowrap; 
+   		display: block;
 	}
 	.info .layout_button >button {
 		font-size: 0.75rem;
 		height: auto;
+		
+		float: left;
+		margin: 0;
+		min-width: auto;
+		height: 100%;
+	}
+	.layout_button span.img {
+		width: 35px; 
+		height: 35px;
+    	background-size: 35px 35px;
 	}
 	.layout_button span.img.all_req {
 		width: 70px;
@@ -8337,7 +8502,26 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		top: 5px;
 	}
 }
-
+@media (max-width: 1200px) {
+	header.header_nav {
+		padding: 0 20px;
+	}
+	header.header_nav, .nav_top.topnav{
+		height: 52px;
+		line-height: initial;
+	}
+	.logo_icon {
+		padding: 19px 0;
+		line-height:  initial;
+	}
+	.topnav.nav_top a {
+		line-height:  52px;
+	}
+	ul.nav_ul.float_right {
+		padding: 10px 0;
+	}
+	
+}
 @media (max-width: 1024px) {
 	body>section {
 		height: auto;
@@ -8345,6 +8529,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 }
 
 @media (max-width: 992px) {
+	
 	.layout_button span.img.all_req {
 		background: inherit;
 	}
@@ -8358,9 +8543,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		display: none;
 	}
 	.info .layout_button >button {
-		width: 21%;
+/* 		width: 21%;
 		max-width: 21%;
-		margin: 5px;
+		margin: 5px; */
 	}
 	.layout_button span.img {
 		background-size: 45px 45px;
@@ -8390,7 +8575,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		margin: 0;
 		margin-top: 20px;
         padding: 10px 10px;
-        float: none;
+		float: none;
+		overflow: hidden;
+		height: auto;
 	}
 	
 	.user_header .info>div:first-child {
@@ -8436,6 +8623,53 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 }
 
 @media (max-width: 450px) {
+	.container .posts .all_post {
+		float: none;
+		height: auto;
+    }
+    .container .calendar>div {
+        height: auto;
+    }
+	html {
+		height: auto;
+        overflow: auto;
+        scrollbar-width: thin;   
+	}
+	.user_header {
+		position: static;
+        float: none;
+		margin: 20px auto;
+	}
+	div.topnav {
+		float: none;
+		margin: auto;
+	}
+	.container .calendar, container .noticeboard, .container .posts {
+		float: none;
+		height: auto;
+		margin: auto;
+		width: 100%;
+		max-width: 100%;
+		padding: 20px 0;
+	}	
+	
+    .index_page .index_main  {
+        float: none;
+        position: static;
+        margin: auto;
+        width: 100%;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    .index_page.profile_main  {
+        float: none;
+        position: static;
+        margin: auto;
+        width: 100%;
+	}   
+	ul.nav_ul.float_right li {
+		margin-left: 5px;
+	}
 	header.header_nav {
         height: 50px;
 		display: block;
@@ -8528,7 +8762,6 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	body section {
         height: auto;
-		
 	}
 	
 	.user_header .info>div {
@@ -8732,15 +8965,25 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.header_nav {
 	  height: auto;
 	}
-  }
-  @media (max-width: 768px) {
-	.topnav {
-	  width: 100%;
-	  max-width: 100%;
-	}
-  }
+}
 
+@media (max-width: 768px) {
+	.topnav {
+		width: 100%;
+		max-width: 100%;
+	}
+}
   
+@media (max-height: 1000px) {
+	.user_header .info>div:first-child {
+		padding: 5px 0;
+		
+	}
+	.header_user_go p>span:last-child {
+		font-size: 0.625rem;
+
+	}
+} 
 @media (max-height: 950px) and (min-width: 450px)  {
     .user_header,.container .posts, .container .calendar {
 		height: 50%;
@@ -8748,11 +8991,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
     .user_header .info>div:first-child {
         padding: 20px;
     }
-    .layout_button span.img {
-        width: 55px;
-        height: 55px;
-        background-size: 55px 55px;
-    }
+  
     .user_header .info .header_user_go p:first-child {
         padding:0;
         margin: 0;
@@ -8764,9 +9003,11 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
   
     .user_header .info>div {
         padding: 25px 40px 25px;
-    }    
+	}    
+	.header_user_go p>span:last-child {
+		font-size: 0.625rem;
+	}
 }
-
 
 @media (max-height: 800px) {
 	
@@ -8811,9 +9052,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		padding: 10px 30px;
 	}
 	.nav_top.topnav  {
-		padding:  0;
+	/* 	padding:  0;
 		line-height: 32px;
-	
+	 */
 	}
 	ul.nav_ul.float_right {
 		margin-bottom: 0;
@@ -8824,55 +9065,6 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		border-radius: 5px;
 		/* border: 1px solid; */
 		margin: 5px 0;
-	}
-}
-@media (max-height: 450px)  {
-	.container .posts .all_post {
-		float: none;
-		height: auto;
-    }
-    .container .calendar>div {
-        height: auto;
-    }
-	html {
-		height: auto;
-        overflow: auto;
-        scrollbar-width: thin;   
-	}
-	.user_header {
-		position: static;
-        float: none;
-		margin: 20px auto;
-	}
-	div.topnav {
-		float: none;
-		margin: auto;
-	}
-	.container .calendar, container .noticeboard, .container .posts {
-		float: none;
-		height: auto;
-		margin: auto;
-		width: 100%;
-		max-width: 100%;
-		padding: 20px 0;
-	}	
-	
-    .index_page .index_main  {
-        float: none;
-        position: static;
-        margin: auto;
-        width: 100%;
-        overflow: hidden;
-        margin-bottom: 20px;
-    }
-    .index_page.profile_main  {
-        float: none;
-        position: static;
-        margin: auto;
-        width: 100%;
-	}   
-	ul.nav_ul.float_right li {
-		margin-left: 5px;
 	}
 }
 
@@ -8915,88 +9107,6 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
     }
 }
 
-.selectBox {
-	position: relative;
-}
-  
-.modal .selectBox select {
-	width: 100%;
-	font-weight: bold;
-	font-weight: 500;
-	font-size: 0.625rem;
-	color: #2B2B2B;
-	padding: 0;
-	margin: 0;
-	height: auto;
-	background: inherit;
-	border: inherit;
-}
-
-.overSelect {
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	cursor: pointer;
-}
-
-#checkboxes, #checkboxes1 {
-	display: none;
-/* 	border: 1px #dadada solid; */
-   /*  position: absolute;
-    left: 0px;
-    right: 0px;
-    background: rgb(255, 255, 255);
-    z-index: 1; */
-}
-
-#checkboxes > input[type=search], #checkboxes1 > input[type=search] {
-	width: 100%;
-    padding: 5px;
-	border-radius: 5px;
-	margin-bottom: 10px;
-}
-#checkboxes label, #checkboxes1 label {
-	display: flex;
-    height: 20px;
-    line-height: 20px;
-    align-items: center;
-}
-
-#checkboxes label:hover, #checkboxes1 label:hover {
-	background-color: #1e90ff;
-}
-
-.col-offset-1 {
-    margin-left: 8.3333333333%;
-}
-.col-offset-2 {
-	margin-left: 16.6666666667%;
-}
-.evidention_check {
-	color: #98acdf;
-}
-.evidention_check .checkout, .evidention_check .entry {
-	height: 100%;
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-	align-items: center;
-	border: none;
-    background: inherit;
-	font-size: 28px;
-	outline: none;
-	font-size: 1.25rem;
-}
-
-.evidention_check .entry {
-	color: green;
-}
-
-.evidention_check .checkout {
-	color: red;
-}
 .modal-open{overflow:hidden}
 /* Jquery modal */
 
@@ -9078,7 +9188,8 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 }
 
 .modal.modal_user>main {
-    padding: 45px 50px;
+	padding: 45px 50px;
+	margin-bottom: 20px;
 }
 
 .modal.modal_user>header .user_data {
@@ -9191,7 +9302,9 @@ span.work {
 	width: auto;
     height: 108px;
 }
-
+.modal.modal_notice.notice_show.modal_user {
+	overflow: auto;
+}
 .modal_user main .basic_info, .modal_user main .permissions {
 	float: left;
     width: 50%;
@@ -9201,12 +9314,22 @@ span.work {
     flex-wrap: wrap;
     overflow: auto;
     font-size: 0.75rem;
+    padding: 25px 50px;
+    padding-right: 20px;
 }
 .modal_user.modal_employee main .basic_info {
-	width: 30%;
-    margin-right: 3%;
+	width: calc(50% - 20px);
+    margin-right: 20px;
+    margin-top: 20px;
+    padding: 0 20px;
 }
-
+.modal_employee .show_empl_label {
+	font-size: 0.625rem;
+	font-weight: 600;
+}
+.modal_employee .show_empl_p {
+	padding-left: 20px;
+}
 .modal_user main >div {
 	padding: 20px;
 }
@@ -10023,6 +10146,7 @@ option::selection {
 	text-align: center;
 	text-decoration-line: underline;
 	color: #2B2B2B;
+	margin: 20px;
 }
 
 .modal.modal_questionnaire .ev_employee_id  {
@@ -11091,12 +11215,14 @@ input.form-control.date {
 	width: auto;
 }
 @media (max-width:1300px) { 
-	.modal.modal_user>header, .modal.modal_user>main {
+	.modal.modal_user>header {
 		padding: 20px;
 		
 	}
 	.modal.modal_user>main {
 		overflow: auto;
+		padding: 0 20px;
+		padding-right: 0;
 	}
 	.modal.modal_user>header .user_data {
 		padding-top: 20px;
@@ -12212,6 +12338,10 @@ span.img-success {
 	html, body{
 		font-size: 14px;
 	}
+	
+	.container {
+		height: calc(100% - 52px);
+	}
 }
 
 @media (max-width: 1024px) {
@@ -12219,16 +12349,34 @@ span.img-success {
 		font-size: 13px;
 	}
 	.container {
-        padding: 0 0 0 15px;
-        height: calc(100% - 92px);
+        padding:0;
+        /* height: calc(100% - 92px); */
 		overflow: auto;
-    }
+		
+	}
+	.container >section {
+		padding-bottom: 10px;
+	}
+	.user_header {
+		padding-right: 10px;
+	}
+	
 }
-@media (max-width: 990px) {
+@media (max-width: 992px) {
 	html, body{
 		font-size: 14px;
 	}
-		
+	.container >section {
+		position: static;
+		width: 100%;
+		max-width: 100%;
+		margin: 0;
+		margin-top: 20px;
+        padding: 10px 10px;
+		float: none;
+		overflow: hidden;
+		height: auto;
+	}
 	.container >section:first-child, .container >section:last-child{
 		height: auto;
 	}
@@ -12336,14 +12484,5 @@ span.img-success {
 		}
 		.container {
 			padding: 0 20px 15px 15px;
-		}
-	}
-
-	@media (max-height: 800px) { 
-		html {
-			font-size: 14px;
-		}
-		.container {
-			height: calc(100% - 52px);
 		}
 	}

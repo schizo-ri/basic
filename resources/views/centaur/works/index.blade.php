@@ -25,7 +25,8 @@
 							<th>@lang('basic.department')</th>
 							<th>@lang('basic.name')</th>
 							<th>@lang('basic.job_description')</th>
-							<th>@lang('basic.director')</th>
+							<th>@lang('basic.manager')</th>
+							<th>@lang('basic.superior')</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
 					</thead>
@@ -35,7 +36,8 @@
 								<td>{{ $work->department['name'] }}</td>
 								<td>{{ $work->name }}</td>
 								<td>{{ $work->job_description }}</td>
-								<td>{!!  $work->employee ? $work->employee['first_name'] . ' ' . $work->employee['last_name'] : '' !!}</td>
+								<td>{!! $work->employee ? $work->employee->user->first_name . ' ' . $work->employee->user->last_name : '' !!}</td>
+								<td>{!! $work->firstSuperior ? $work->firstSuperior->user->first_name . ' ' . $work->firstSuperior->user->last_name : '' !!}</td>
 								<td class="center">
 									<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['works.update']) || in_array('works.update', $permission_dep))
@@ -43,7 +45,7 @@
 												<i class="far fa-edit"></i>
 										</a>
 									@endif
-									@if( !$employees->where('work_id',$work->id)->first() && Sentinel::getUser()->hasAccess(['works.delete']) || in_array('works.delete', $permission_dep))
+									@if( count($work->workers) == 0 && Sentinel::getUser()->hasAccess(['works.delete']) || in_array('works.delete', $permission_dep))
 										<a href="{{ route('works.destroy', $work->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" >
 											<i class="far fa-trash-alt"></i>
 										</a>

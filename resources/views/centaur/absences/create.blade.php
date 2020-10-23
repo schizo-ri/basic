@@ -8,6 +8,7 @@
 				<label>@lang('basic.employee')</label>
 				<select class="form-control" name="employee_id[]" value="{{ old('employee_id') }}" size="10" autofocus multiple required >
 					<option value="" disabled></option>
+					<option value="all" >@lang('basic.all_employees')</option>
 					@foreach ($employees as $employee)
 						<option name="employee_id" value="{{ $employee->id }}">{{ $employee->user['last_name']  . ' ' . $employee->user['first_name'] }}</option>
 					@endforeach	
@@ -44,12 +45,12 @@
 		<div class="col-md-12 clear_l overflow_hidd padd_0" >
             <div class="form-group time {{ ($errors->has('start_time')) ? 'has-error' : '' }}" >
                 <label>@lang('absence.start_time')</label>
-                <input name="start_time" class="form-control" type="time" value="{!!  old('start_time') ? old('start_time') : '08:00' !!}"required>
+                <input name="start_time" class="form-control" type="time" value="{!!  old('start_time') ? old('start_time') : '08:00' !!}" required>
                 {!! ($errors->has('start_time') ? $errors->first('start_time', '<p class="text-danger">:message</p>') : '') !!}
             </div>
             <div class="form-group time {{ ($errors->has('end_time')) ? 'has-error' : '' }}"  >
                 <label>@lang('absence.end_time')</label>
-                <input name="end_time" class="form-control" type="time" value="{!!  old('end_time') ? old('end_time') : '16:00' !!}"required>
+                <input name="end_time" class="form-control" type="time" value="{!!  old('end_time') ? old('end_time') : '16:00' !!}" required>
                 {!! ($errors->has('end_time') ? $errors->first('end_time', '<p class="text-danger">:message</p>') : '') !!}
             </div>
         </div>
@@ -100,5 +101,4 @@
 			end_date.val(start_date);
 		});
 	});
-	$.getScript( '/../js/validate.js');
 </script>

@@ -64,12 +64,11 @@ ul.admin_pages li >span.arrow_down {
     overflow: auto;
     height: 100%;
 }
-.car_links {
+.car_links, .basic_links, .hr_links, .abs_links, .project_links {
     display: none;
-}
-.car_links .admin_link {
     padding-left: 20px;
 }
+
 ul.admin_pages li >span.image_settings {
     background-color: #ebebeb;
     position: relative;
@@ -147,7 +146,7 @@ ul.admin_pages li >span.image_template{
     position: absolute;
     top: 29px;
     left: 10px;
-    z-index: 1;
+    z-index:30;
 }
 #admin_page table span.role {
     display: none;

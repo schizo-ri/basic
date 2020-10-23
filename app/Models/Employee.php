@@ -25,6 +25,13 @@ class Employee extends Model
 	protected static $userModel = 'App\User'; 
 	
 	/*
+	* The Eloquent EmployeeDepartment model name
+	* 
+	* @var string
+	*/
+	protected static $employeeDepartmentModel = 'App\Models\EmployeeDepartment'; 
+
+	/*
 	* The Eloquent event model name
 	* 
 	* @var string
@@ -39,7 +46,7 @@ class Employee extends Model
 	protected static $taskModel = 'App\Models\Task'; 
 
 	/*
-	* The Eloquent user model name
+	* The Eloquent locco model name
 	* 
 	* @var string
 	*/
@@ -65,6 +72,13 @@ class Employee extends Model
 	* @var string
 	*/
 	protected static $workModel = 'App\Models\Work'; 
+
+	/*
+	* The Eloquent kid model name
+	* 
+	* @var string
+	*/
+	protected static $kidModel = 'App\Models\Kid'; 
 
 	/*
 	* The Eloquent works model name
@@ -100,6 +114,17 @@ class Employee extends Model
 	public function hasShortcuts()
 	{
 		return $this->hasMany(static::$shortcutModel,'employee_id');
+	}
+
+	/*
+	* Returns the Event relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasKids()
+	{
+		return $this->hasMany(static::$kidModel,'employee_id');
 	}
 
 	/*
@@ -180,6 +205,17 @@ class Employee extends Model
 	}
 	
 	/*
+	* Returns the employeeDepartment relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function hasEmployeeDepartmen()
+	{
+		return $this->hasMany(static::$employeeDepartmentModel,'employee_id');
+	}
+
+	/*
 	* Save Employee
 	* 
 	* @param array $employee
@@ -200,5 +236,60 @@ class Employee extends Model
 	public function updateEmployee($employee=array())
 	{
 		return $this->update($employee);
-	}	
+	}
+
+	/*
+	* get emails from Employee
+	* 
+	* @return void
+	*/
+	public static function getEmails()
+	{
+		return Employee::where('id','<>',0)->where('checkout',null)->where('user_id','<>',null)->get()->pluck('email')->toArray();
+	}
+
+	/*
+	* get employees join users order by firstName ASC from Employee
+	* 
+	* @return void
+	*/
+	public static function employees_firstNameASC()
+	{
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->orderBy('users.first_name','ASC')->get();
+	}
+
+	/*
+	* get employees join users order by lastName ASC from Employee
+	* 
+	* @return void
+	*/
+	public static function employees_lastNameASC()
+	{
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->orderBy('users.last_name','ASC')->get();
+	}
+
+	public static function employeesAnniversary( $date )
+	{
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereMonth('employees.reg_date', date_format($date,'m'))->whereDay('employees.reg_date', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
+	}
+
+	public static function employeesBday( $date )
+	{
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereMonth('employees.b_day', date_format($date,'m'))->whereDay('employees.b_day', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
+	}
+
+	public static function employeesProbation( $date )
+	{
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.reg_date', date_format($date,'Y'))->whereMonth('employees.reg_date', date_format($date,'m'))->whereDay('employees.reg_date', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
+	}
+
+	public static function employeesMedicalExamination( $date )
+	{
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.lijecn_pregled', date_format($date,'Y'))->whereMonth('employees.lijecn_pregled', date_format($date,'m'))->whereDay('employees.lijecn_pregled', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
+	}
+
+	public static function employeeStranger( $date )
+	{
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.permission_date', date_format($date,'Y'))->whereMonth('employees.permission_date', date_format($date,'m'))->whereDay('employees.permission_date', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
+	}
 }

@@ -18,11 +18,5 @@ $(function() {
         $(this).hide();
     });
 
-    $('ul.admin_pages li >span.arrow_down ').on('click',function(event){ 
-        if($(this).parent().siblings('.car_links').is(":visible")){ 
-            $(this).parent().siblings('.car_links').css('display','none');
-         } else {
-            $(this).parent().siblings('.car_links').css('display','block');
-         }
-     });
+   
 });

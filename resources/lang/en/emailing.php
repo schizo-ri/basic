@@ -5,6 +5,7 @@ return [
 	'with_day'				=> 'With day',
 	'employed_worker' 		=> 'employed is',
 	'in_the_workplace'		=> 'in the workplace',
+	'in_progress'			=> 'Employee registration is in progress ',
 	'email_send'			=> 'E-mail was sent',
 	'new_article'			=> 'New article',
 	'new_absence'			=> 'Absence request',
@@ -25,6 +26,8 @@ return [
 	'campaign_start'		=> 'Campaign is launched',
 	'campaign_error'		=> 'Unable to start campaign, no sequences entered',
 	'store'					=> 'Store',
-	'save_calendar'			=> 'Store to calendar'
+	'save_calendar'			=> 'Store to calendar',
+	'new_add'				=> 'MyIntranet - a new ad has been published',
+
 ];
 ?>

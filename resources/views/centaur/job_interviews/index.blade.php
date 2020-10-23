@@ -46,11 +46,11 @@
 										@endif
 									@endif
 									@if(Sentinel::getUser()->hasAccess(['job_interviews.update']) || in_array('job_interviews.update', $permission_dep))
-										<a href="{{ route('job_interviews.edit',$job_interview->id ) }}" class="edit_service btn-edit" title="{{ __('basic.job_interview')}}" rel="modal:open">
+										<a href="{{ route('job_interviews.edit',$job_interview->id ) }}" class="edit_service btn-edit" title="{{ __('basic.edit_job_interview')}}" rel="modal:open">
 											<i class="far fa-edit"></i>
 										</a>
 									@endif
-									@if( Sentinel::getUser()->hasAccess(['job_interviews.delete']) || in_array('job_interviews.delete', $permission_dep))
+									@if( ! $job_interview->employee && Sentinel::getUser()->hasAccess(['job_interviews.delete']) || in_array('job_interviews.delete', $permission_dep))
 										<a href="{{ route('job_interviews.destroy', $job_interview->id) }}" class="action_confirm btn-delete danger edit_service " data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
 											<i class="far fa-trash-alt"></i>
 										</a>

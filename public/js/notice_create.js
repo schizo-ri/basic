@@ -13,7 +13,6 @@ var html;
 var design;
 var temp;
 try {
-    
     unlayer.init({
         appearance: {
             theme: 'light',
@@ -54,6 +53,9 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
  
     form_data = $('.form_sequence').serialize();
     form_data_array = $('.form_sequence').serializeArray();
+    console.log(form_data);
+    console.log(form_data_array);
+    console.log(data);
 
     jQuery.each( form_data_array, function( i, field ) {
         if(field.value == "" ) {  //$(field).attr('required') && 
@@ -67,10 +69,11 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
     } else {
         validate.push(true);
     }
-    if(validate.includes("block") ) {
-        e.preventDefault();
+   if(validate.includes("block") ) {
         alert("Nisu uneseni svi parametri, nemoguće spremiti obavijest");
+        $(".btn-submit").prop("disabled", false);
     } else { 
+      
         $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
@@ -106,6 +109,7 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
         });
     }
 });
+
 $('.main_noticeboard .header_document .link_back').on('click',function(e){
     e.preventDefault();
     var url = location['origin'] +'/campaigns';

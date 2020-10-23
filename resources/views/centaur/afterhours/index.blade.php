@@ -5,21 +5,6 @@
 @section('content')
 	<header class="page-header">
 		<div class="index_table_filter">
-			<select id="filter_month" class="select_filter change_month_afterhour" >
-				{{-- <option value="all">@lang('basic.all_month')</option> --}}
-			
-					@foreach ($dates as $date)
-						<option value="{{ $date }}">{{ $date }}</option>
-					@endforeach
-			
-			</select>
-			<select class="change_employee_work select_filter ">
-				<option value="" selected>{{ __('basic.view_all')}} </option>
-				
-					@foreach ($employees as $employee)
-						<option value="empl_{{ $employee->id }}">{{ $employee->user->first_name . ' ' . $employee->user->last_name }}</option>
-					@endforeach
-			</select>
 			<label>
 				<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 			</label>
@@ -28,6 +13,18 @@
 					<i class="fas fa-plus"></i>
 				</a>
 			@endif
+			<select id="filter_month" class="select_filter change_month_afterhour" >
+				{{-- <option value="all">@lang('basic.all_month')</option> --}}
+					@foreach ($dates as $date)
+						<option value="{{ $date }}">{{ $date }}</option>
+					@endforeach
+			</select>
+			<select class="change_employee_afterhour select_filter ">
+				<option value="" selected>{{ __('basic.view_all')}} </option>
+					@foreach ($employees as $employee)
+						<option value="empl_{{ $employee->id }}">{{ $employee->user->first_name . ' ' . $employee->user->last_name }}</option>
+					@endforeach
+			</select>
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

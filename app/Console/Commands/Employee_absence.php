@@ -47,6 +47,5 @@ class Employee_absence extends Command
                 Mail::to($send_to_mail)->send(new AbsenceCronMail()); // mailovi upisani u mailing 
             }
 		}
-
     }
 }

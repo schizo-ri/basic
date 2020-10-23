@@ -23,11 +23,13 @@
 			<input name="max_days" type="text" class="form-control" maxlength="2" value="{{ old('max_days') }}">
 			{!! ($errors->has('max_days') ? $errors->first('max_days', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
+		<div class="form-group {{ ($errors->has('temp'))  ? 'has-error' : '' }}">
+			<label>Zahtjev - privremeni djelatnici </label>
+			<input name="temp" type="checkbox" value="1">
+			{!! ($errors->has('temp') ? $errors->first('temp', '<p class="text-danger">:message</p>') : '') !!}
+		</div>
 		{{ csrf_field() }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1">
 	</form>
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
-<script>
-$.getScript( '/../js/validate.js');
-</script>

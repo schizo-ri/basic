@@ -43,115 +43,123 @@
 					</div>
 					@endif
 				</div>
-				@if(isset($employee))
-				<div class="col-md-9 padd_0 float_left salary ">
-					{{-- <span class="efc_hide">@lang('basic.hide_salery')<img class="radius50" src="{{ URL::asset('icons/arrow_up.png') }}" alt="arrow" /></span>
-					<span class="efc_show">@lang('basic.show_salery')<img class="radius50" src="{{ URL::asset('icons/arrow_down.png') }}" alt="arrow" /></span> --}}
-					{{-- <div class="efc col-md-12">
-						<p class="col-4"><span class="salery_show" >{{ number_format($employee->brutto, 2, ',', '.') }} kn</span><span class="salery_hidden">- Kn</span>@lang('basic.yearly_salary')</p>
-						<p class="col-4"><span class="salery_show">{{ number_format($employee->brutto /12, 2, ',', '.') }}  kn</span><span class="salery_hidden">- Kn</span>@lang('basic.monthly_cost')</p>
-						<p class="col-4"><span class="salery_show">{{ number_format($employee->effective_cost, 2, ',', '.')}}  kn</span><span class="salery_hidden">- Kn</span>@lang('basic.hourly_rate')</p>
-					</div> --}}
-					<div class="shortcuts_container">
-						<div>
-							<div class="profile_images">
-								@if (count($shortcuts) > 0 )
-									@foreach ($shortcuts as $key => $shortcut)
-										<span class="shortcut_box hasShortcut" >
-											<a href="{{ route('shortcuts.destroy', $shortcut->id) }}" class="action_confirm btn-delete danger icon_delete" title="{{ __('basic.delete')}}" data-method="delete" data-token="{{ csrf_token() }}">
-												<i class="fas fa-minus-square "></i>
-											</a>
-											<a class="" href="{{ $shortcut->url }}"  title="{{ __('basic.new_post')}}">
-												{{ $shortcut->title }}
-											</a>
+				@if(isset($employee) || isset($temporaryEmployee))
+					<div class="col-md-9 padd_0 float_left salary ">
+						{{-- <span class="efc_hide">@lang('basic.hide_salery')<img class="radius50" src="{{ URL::asset('icons/arrow_up.png') }}" alt="arrow" /></span>
+						<span class="efc_show">@lang('basic.show_salery')<img class="radius50" src="{{ URL::asset('icons/arrow_down.png') }}" alt="arrow" /></span> --}}
+						{{-- <div class="efc col-md-12">
+							<p class="col-4"><span class="salery_show" >{{ number_format($employee->brutto, 2, ',', '.') }} kn</span><span class="salery_hidden">- Kn</span>@lang('basic.yearly_salary')</p>
+							<p class="col-4"><span class="salery_show">{{ number_format($employee->brutto /12, 2, ',', '.') }}  kn</span><span class="salery_hidden">- Kn</span>@lang('basic.monthly_cost')</p>
+							<p class="col-4"><span class="salery_show">{{ number_format($employee->effective_cost, 2, ',', '.')}}  kn</span><span class="salery_hidden">- Kn</span>@lang('basic.hourly_rate')</p>
+						</div> --}}
+						<div class="shortcuts_container">
+							<div>
+								<div class="profile_images">
+									@if (isset($employee) && count($shortcuts) > 0 )
+										@foreach ($shortcuts as $key => $shortcut)
+											<span class="shortcut_box hasShortcut" >
+												<a href="{{ route('shortcuts.destroy', $shortcut->id) }}" class="action_confirm btn-delete danger icon_delete" title="{{ __('basic.delete')}}" data-method="delete" data-token="{{ csrf_token() }}">
+													<i class="fas fa-minus-square "></i>
+												</a>
+												<a class="" href="{{ $shortcut->url }}"  title="{{ __('basic.new_post')}}">
+													{{ $shortcut->title }}
+												</a>
+											</span>
+										@endforeach
+									@endif
+									@for ($i =  $key; $i < 10; $i++)
+										<span class="profile_img new_open">
+											<span>
+												<span><i class="fas fa-plus"></i></span>
+												<span class="shortcut">@lang('basic.add_shortcut')</span> 
+											</span>
 										</span>
-									@endforeach
-								@endif
-								@for ($i =  $key; $i < 10; $i++)
-									<span class="profile_img new_open">
-										<span>
-											<span><i class="fas fa-plus"></i></span>
-											<span class="shortcut">@lang('basic.add_shortcut')</span> 
-										</span>
-									</span>
-								@endfor
+									@endfor
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="shortcuts_container">
-						<div class="" >
-							<span class="shortcut">@lang('basic.edit_shortcut') <span class="btn-new"><i class="fas fa-pen"></i></span></span> 
+						<div class="shortcuts_container">
+							<div class="" >
+								<span class="shortcut">@lang('basic.edit_shortcut') <span class="btn-new"><i class="fas fa-pen"></i></span></span> 
+							</div>
+							<div class="scroll_button">
+								<button id="left-button-scroll" class=""><i class="fas fa-chevron-left"></i></button>
+								<button id="right-button-scroll" class=""><i class="fas fa-chevron-right"></i></button>
+							</div>
 						</div>
-						<div class="scroll_button">
-							<button id="left-button-scroll" class=""><i class="fas fa-chevron-left"></i></button>
-							<button id="right-button-scroll" class=""><i class="fas fa-chevron-right"></i></button>
-						</div>
-						
-					</div>
-					<div class="col-md-12 padd_0 float_left layout_button ">
-						<button class=""><a href="{{ route('absences.create') }}" rel="modal:open">
-							<span>
-								<span class="img beach"></span>
-								<p>@lang('absence.request_vacation')</p>
-							</span></a>
-						</button>
-						@if(in_array('Prekovremeni', $moduli))  
-							<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
-								<span>
-									<span class="img "></span>
-									<p>@lang('basic.add_afterhour')</p>
-								</span></a>
-							</button>
-						@endif
-						<button class="" ><a href="{{ route('tasks.index') }}" rel="modal:open">
-							<span>
-								<span class="img task"></span>
-								<p>@lang('calendar.tasks')</p>
-							</span></a>
-						</button>
-						@if(in_array('Locco vožnja', $moduli))  
-							<button class="{!! $locco_active->first() ? 'background_red' : '' !!}"><a href="{!! $locco_active->first() ? route('loccos.edit', $locco_active->first()->id ) : route('loccos.create') !!}" rel="modal:open">
-								<span>
-									<span class="img car "></span>
-										<p>{!! $locco_active->first()  ? __('basic.edit_locco') : __('basic.add_locco') !!}</p>
-								</span></a>
-							</button>
-						@endif
-						@if(in_array('Putni nalozi', $moduli))  
-							<button class="" ><a href="{{ route('travel_orders.show', $employee->id) }}" class="travel_show" rel="modal:open">
-								<span>
-									<span class="img travel"></span>
-										<p>{{  __('basic.travel_orders') }}</p>
-								</span></a>
-							</button>
+						<div class="col-md-12 padd_0 float_left layout_button ">
+							@if(isset($employee) )
+								<button class=""><a href="{{ route('absences.create') }}" rel="modal:open">
+									<span>
+										<span class="img beach"></span>
+										<p>@lang('absence.request_vacation')</p>
+									</span></a>
+								</button>
+								@if(in_array('Prekovremeni', $moduli))  
+									<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
+										<span>
+											<span class="img "></span>
+											<p>@lang('basic.add_afterhour')</p>
+										</span></a>
+									</button>
+								@endif
+								<button class="" ><a href="{{ route('tasks.index') }}" rel="modal:open">
+									<span>
+										<span class="img task"></span>
+										<p>@lang('calendar.tasks')</p>
+									</span></a>
+								</button>
+								@if(in_array('Locco vožnja', $moduli))  
+									<button class="{!! $locco_active->first() ? 'background_red' : '' !!}"><a href="{!! $locco_active->first() ? route('loccos.edit', $locco_active->first()->id ) : route('loccos.create') !!}" rel="modal:open">
+										<span>
+											<span class="img car "></span>
+												<p>{!! $locco_active->first()  ? __('basic.edit_locco') : __('basic.add_locco') !!}</p>
+										</span></a>
+									</button>
+								@endif
+								@if(in_array('Putni nalozi', $moduli))  
+									<button class="" ><a href="{{ route('travel_orders.show', $employee->id) }}" class="travel_show" rel="modal:open">
+										<span>
+											<span class="img travel"></span>
+												<p>{{  __('basic.travel_orders') }}</p>
+										</span></a>
+									</button>
+									@endif
+								@if(in_array('Locco vožnja', $moduli))  
+									<button class="" ><a href="{{ route('fuels.create')}}" rel="modal:open">
+										<span>
+											<span class="img fuel"></span>
+												<p>{{  __('basic.fuel') }}</p>
+											</span>
+												
+										</span></a>
+									</button>
+								@endif
+								<button class="button_absence" >
+									<a href="{{ route('absences.index') }}" >
+										<span>
+											<span class="img all_req"></span>
+												<p>{{  __('absence.view_all_request') }}</p>
+											</span>
+										{{-- 	<span class="img all_req">
+												<p>@lang('absence.view_all_request')</p>
+												@if($count_requests >0)
+													<span class="count_request">{{ $count_requests }}</span>
+												@endif
+											</span> --}}
+										</span>
+									</a>
+								</button>
+							@elseif(in_array('Privremeni', $moduli) && isset($temporaryEmployee))
+								<button class=""><a href="{{ route('temporary_employee_requests.create') }}" rel="modal:open">
+									<span>
+										<span class="img beach"></span>
+										<p>@lang('absence.request_vacation')</p>
+									</span></a>
+								</button>
 							@endif
-						@if(in_array('Locco vožnja', $moduli))  
-							<button class="" ><a href="{{ route('fuels.create')}}" rel="modal:open">
-								<span>
-									<span class="img fuel"></span>
-										<p>{{  __('basic.fuel') }}</p>
-									</span>
-										
-								</span></a>
-							</button>
-						@endif
-						<button class="button_absence" >
-							<a href="{{ route('absences.index') }}" >
-								<span>
-									<span class="img all_req"></span>
-										<p>{{  __('absence.view_all_request') }}</p>
-									</span>
-								{{-- 	<span class="img all_req">
-										<p>@lang('absence.view_all_request')</p>
-										@if($count_requests >0)
-											<span class="count_request">{{ $count_requests }}</span>
-										@endif
-									</span> --}}
-								</span>
-							</a>
-						</button>
+						</div>
 					</div>
-				</div>
 				@endif
 			</div>
 		</div>
@@ -161,7 +169,7 @@
 					<div class="box">
 						<div class="header">
 							<h2>@lang("calendar.calendar")
-								@if(in_array('Kalendar', $moduli) )
+								@if( isset($employee) && in_array('Kalendar', $moduli) )
 									<a class="view_all" href="{{ route('events.index') }}" >@lang("basic.view_all")</a>
 								@endif
 								<button id="right-button" class="scroll_right_cal"><img src="{{ URL::asset('icons/arrow_right.png') }}" alt=""></button>
@@ -184,7 +192,7 @@
 						@endif
 						<h2 class="agenda_title">@lang('calendar.your_agenda') </h2>
 						<div class="all_agenda">
-							@if((isset($events) && count($events)>0) || ( isset($tasks) && count($tasks) > 0) )
+							@if( isset($employee) && (isset($events) && count($events)>0) || ( isset($tasks) && count($tasks) > 0) )
 								@foreach($events->take(5) as $event)
 									<p class="agenda" id="{{ $event->date }}">
 										<span class="agenda_mark"><span class="green"></span></span>
@@ -224,7 +232,9 @@
 								<i style="font-size:12px" class="fa">&#xf067;</i>
 							</a>
 						@endif
-						<a class="view_all" href="{{ route('posts.index') }}" >@lang('basic.view_all')</a>
+						@if(Sentinel::getUser()->hasAccess(['posts.view']) || in_array('posts.view', $permission_dep) )
+							<a class="view_all" href="{{ route('posts.index') }}" >@lang('basic.view_all')</a>
+						@endif
 					</h2>
 					@if( in_array('Poruke',$moduli) && isset($posts) && count( $posts ) > 0)
 						@foreach($posts as $post)
@@ -293,9 +303,4 @@
 			</div>
 		</div>
 	@endif
-<script>
-	$( function () {
-		/* $.getScript( '/../js/event_click.js'); */
-	});
-</script>
 @stop

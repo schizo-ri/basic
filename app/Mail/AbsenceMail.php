@@ -8,7 +8,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Absence; 
 use App\Models\Employee; 
-use App\Models\Template; 
 use App\Http\Controllers\BasicAbsenceController;
 
 class AbsenceMail extends Mailable
@@ -16,7 +15,7 @@ class AbsenceMail extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * The emplyee instance.
+     * The absence instance.
      *
      * @var vacationRequest
      */
@@ -39,26 +38,31 @@ class AbsenceMail extends Mailable
      */
     public function build()
     {
-        $employee = Employee::where('id',$this->absence->employee_id)->first();
+        $employee = $this->absence->employee;
         $zahtjev = array('start_date' => $this->absence['start_date'], 'end_date' => $this->absence['end_date']);
         $dani_zahtjev = BasicAbsenceController::daniGO($zahtjev);
         $zahtjevi = BasicAbsenceController::zahtjevi($employee);
+        $slobodni_dani = BasicAbsenceController::days_off($employee);
+
         $neiskoristeno_GO = $zahtjevi['ukupnoPreostalo']; //vraća neiskorištene dane 
-        $template = Template::where('module','absence')->first();
         if($this->absence->decree == 1) {
             $view = 'Centaur::email.absence_decree';
             $subject = 'Odluka uprave - ';
         } else {
+            if($this->absence->absence['mark'] == "BOL") {
+                $subject = __('emailing.sickne_info');
+            } else {
+                $subject =__('emailing.new_absence');
+            }
             $view = 'Centaur::email.absence';
-            $subject =__('emailing.new_absence');
         }
-  
+        
         return $this->view($view) 
                     ->subject( $subject . ' ' . $this->absence->absence['name'] . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])
                     ->with([
-                        'template' => $template,
                         'absence' => $this->absence,
                         'dani_zahtjev' => $dani_zahtjev,
+                        'slobodni_dani' => $slobodni_dani,
                         'neiskoristeno_GO' => $neiskoristeno_GO
                     ]);
     }

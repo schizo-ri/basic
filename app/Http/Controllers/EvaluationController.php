@@ -77,7 +77,7 @@ class EvaluationController extends Controller
     {
 		$datum = new DateTime('now');
 		$mjesec_godina = date_format($datum,'Y-m');
-		$emp = Employee::where('id', $request['employee_id'])->first(); // djelatnik koji ocjenjuje
+		$emp = Employee::find( $request['employee_id']); // djelatnik koji ocjenjuje
 
 		if(!$request['rating']) {
 				$message = session()->flash('error', __('basic.survey_without_rating'));
@@ -172,7 +172,7 @@ class EvaluationController extends Controller
 			
 			$employee = Employee::join('users','employees.user_id', '=', 'users.id')->select('employees.*','users.first_name','users.last_name')->where('first_name', $user->first_name)->where('last_name', $user->last_name)->first();
 			
-			$employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+			$employees = Employee::employees_firstNameASC();
 			$questionnaire = Questionnaire::find($input['questionnaire_id']);
 			$evaluationCategory = EvaluationCategory::where('questionnaire_id', $questionnaire->id)->get();
 			$evaluatingQuestion = EvaluationQuestion::get();
@@ -193,7 +193,7 @@ class EvaluationController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $employee = Employee::where('id',$id)->first();
+        $employee = Employee::find($id);
 		
 		$evaluations = Evaluation::where('employee_id',$id)->where('date', 'LIKE' ,$request['mjesec_godina'].'%')->where('questionnaire_id',$request['questionnaire_id'])->get();
 		$evaluationEmployees = EvaluationEmployee::where('ev_employee_id',$employee->id)->get();

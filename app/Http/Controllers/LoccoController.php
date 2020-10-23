@@ -153,11 +153,15 @@ class LoccoController extends Controller
                
                 /* mail obavijest o novom putnom nalogu */
                 $send_to = EmailingController::sendTo('travel_orders','create');
-               
-                foreach(array_unique($send_to) as $send_to_mail) { // mailovi upisani u mailing 
-                    if( $send_to_mail != null & $send_to_mail != '' ) {
-                        Mail::to($send_to_mail)->send(new TravelCreate($travelOrder));  
+                try {
+                    foreach(array_unique($send_to) as $send_to_mail) { // mailovi upisani u mailing 
+                        if( $send_to_mail != null & $send_to_mail != '' ) {
+                            Mail::to($send_to_mail)->send(new TravelCreate($travelOrder));  
+                        }
                     }
+                } catch (\Throwable $th) {
+                    session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+			        return redirect()->back();
                 }
             }
         /*     } catch (\Throwable $th) {
@@ -171,12 +175,18 @@ class LoccoController extends Controller
 				return redirect()->back()->withFlashMessage($message);
 			} else {
                 $send_to = EmailingController::sendTo('loccos','create');
-                $send_to = arraay('jelena.juras@duplico.hr');
-                foreach(array_unique($send_to) as $send_to_mail) {
-                    if( $send_to_mail != null & $send_to_mail != '' ) {
-                        Mail::to($send_to_mail)->send(new CarServiceMail($locco)); // mailovi upisani u mailing 
+              
+                try {
+                    foreach(array_unique($send_to) as $send_to_mail) {
+                        if( $send_to_mail != null & $send_to_mail != '' ) {
+                            Mail::to($send_to_mail)->send(new CarServiceMail($locco)); // mailovi upisani u mailing 
+                        }
                     }
+                } catch (\Throwable $th) {
+                    session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+			        return redirect()->back();
                 }
+                
             }
         }
         
@@ -192,33 +202,36 @@ class LoccoController extends Controller
      */
     public function show($id, Request $request)
     {
+        $car = Car::find($id);
+        
         if(isset( $request['date'])) {
             $date = $request['date'];
         } else {
             $date = date('Y-m');
         }
-     
+        
         $loccos = Locco::where('car_id', $id)->whereYear('date', '>=', date('Y')-1)->get();
         $permission_dep = DashboardController::getDepartmentPermission();
-      
+       
         $dates = array();
         foreach (array_keys($loccos->groupBy('date')->toArray()) as $locco_date) {
             array_push($dates, date('Y-m',strtotime($locco_date)) );
         }
-      
+     
         $dates = array_unique($dates);
         rsort($dates);
 
-         /* $loccos = Locco::where('car_id', $id)->whereYear('date', $year )->whereMonth('date',$month)->orderBy('date','ASC')->get(); */
+        /* $loccos = Locco::where('car_id', $id)->whereYear('date', $year )->whereMonth('date',$month)->orderBy('date','ASC')->get(); */
 
-        $loccos = $loccos->filter(function ($locco, $key) use ($request, $id) {
-            return date('Y-m',strtotime( $locco->date)) == $request['date'] && $locco->car_id == $id;
+        $loccos = $loccos->filter(function ($locco, $key) use ($date, $id) {
+            return date('Y-m',strtotime( $locco->date)) == $date /* && $locco->car_id == $id */;
         });
+       
         if( ! in_array($date, $dates)) {
             array_unshift($dates, $date);
         }
-        
-        return view('Centaur::loccos.show', ['loccos' => $loccos, 'car_id' => $id, 'dates' => $dates, 'permission_dep' => $permission_dep]);
+      
+        return view('Centaur::loccos.show', ['loccos' => $loccos, 'car' =>  $car, 'dates' => $dates, 'permission_dep' => $permission_dep]);
     }
 
     /**

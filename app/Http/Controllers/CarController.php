@@ -49,7 +49,7 @@ class CarController extends Controller
     public function create()
     {
         $departments = Department::orderBy('name','ASC')->get();
-        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+        $employees = Employee::employees_firstNameASC();
 
         return view('Centaur::cars.create',['departments' => $departments, 'employees' => $employees  ]);
     }
@@ -108,7 +108,7 @@ class CarController extends Controller
     {
         $car = Car::find($id);
         $departments = Department::orderBy('name','ASC')->get();
-        $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
+        $employees = Employee::employees_firstNameASC();
 
         return view('Centaur::cars.edit', ['car' => $car, 'departments' => $departments, 'employees' => $employees  ]);
     }

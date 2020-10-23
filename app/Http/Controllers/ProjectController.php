@@ -45,7 +45,7 @@ class ProjectController extends Controller
     public function create()
     {
         $customers = Customer::orderBy('name','ASC')->get();
-        $employees = Employee::where('checkout',null)->get();
+        $employees = Employee::employees_firstNameASC();
 
         return view('Centaur::projects.create',['customers' =>  $customers, 'employees' =>  $employees]);
     }
@@ -96,7 +96,7 @@ class ProjectController extends Controller
         $project = Project::find( $id );
 
         $customers = Customer::orderBy('name','ASC')->get();
-        $employees = Employee::where('checkout',null)->get();
+        $employees = Employee::employees_firstNameASC();
 
         return view('Centaur::projects.edit',['project' =>  $project, 'customers' =>  $customers, 'employees' =>  $employees]);
     }

@@ -51,7 +51,15 @@
 .clickable-row {
     cursor: pointer;
 }
-   
+.checkbox_span {
+    display: inline-block;
+    display: flex;
+    align-items: center;
+    margin: 3px 0;
+}
+.checkbox_span>label {
+    margin: 0;
+}
 .posts_index .posts .all_post {
     box-shadow: none;
     padding: 0;
@@ -1712,8 +1720,11 @@ footer.ad_footer {
     position: absolute;
     transform: translateY(-50%);*/
     right: 0;
-    height: 35px;
+    height: 100%;
+    padding: 6px 0 6px 40px;
     padding-left: 40px;
+    line-height: 35px;
+    vertical-align: middle;
 }
 
 .index_page table.dataTable.no-footer, .index_page table.display.table {
@@ -1810,7 +1821,7 @@ footer.ad_footer {
     float: right;
     line-height: 35px;
 }
-.header_benefits .index_table_filter span.show_button, .noticeboard_index .index_table_filter span.show_button, .main_campaign .index_table_filter span.show_button {
+.header_benefits .index_table_filter span.show_button, .noticeboard_index .index_table_filter span.show_button, .main_campaign .index_table_filter span.show_button, .all_notices span.show_button {
     display: none;
 }
 .all_documents span.show_button, .header_ads span.show_button  {
@@ -2892,6 +2903,7 @@ table.dataTable#index_table tbody td:last-child > a {
     text-align: left;
  /*    padding: 3px 0; */
     padding-right: 5px;
+    margin-bottom: 5px;
 }
 .main_questionnaire table.dataTable td a.qname, .main_questionnaire table.dataTable td span.qname  {
     font-weight: 600;
@@ -2986,7 +2998,7 @@ button.show_loccos {
     margin-right: 15px;
     padding: 0 10px;
 }
- .change_view_calendar, .change_employee, .change_employee_work, .change_car, .change_month, .change_month_afterhour{
+ .change_view_calendar, .change_employee, .change_employee_work, .change_employee_afterhour, .change_car, .change_month, .change_month_afterhour{
     font-family: Montserrat;
     font-style: normal;
     font-weight: 600;
@@ -3011,7 +3023,7 @@ button.show_loccos {
 .change_employee,.change_car {
     margin-right: 15px;
 }
-.change_employee_work {
+.change_employee_work, .change_employee_afterhour {
     margin: 0 0 0 15px;
 }
 .q_progress {
@@ -3707,6 +3719,9 @@ a.modal_close {
     .main_benefits_body {
         margin-top: 0;
     }
+    main.main_ads {
+        padding: 0;
+    }
 }
 @media (max-width: 768px) {
     .index_page .index_main, .index_page.posts_index .index_main {
@@ -3716,8 +3731,15 @@ a.modal_close {
         margin: auto;
         height: 100%;
     }
+    .posts_index .link_back, .calendar_aside .link_back {
+        top: 10px;
+        left: 5px;
+    }
+    .index_page h1 {
+        padding-left: 50px;
+    }
     .index_page aside.latest_messages>div {
-        box-shadow: none;
+      /*   box-shadow: none; */
     }
     .index_page.posts_index .index_main  {
         display: none;
@@ -3757,11 +3779,12 @@ a.modal_close {
         box-shadow: none;
     }
     main.index_main>section {
-        padding: 10px;
+     /*    padding: 10px; */
     }
     .header_document, .header_questionnaire {
-        background: inherit;
-        color: black;
+       /*  background: inherit; */
+       /*  color: black; */
+       padding: 0;
     }
     .index_page aside {
         width: 100%;
@@ -3797,6 +3820,9 @@ a.modal_close {
     .index_page aside >section{
         flex: 0 0 100%;
         max-width: 100%;
+    }
+    .index_table_filter {
+        padding:0 ;
     }
     .index_page aside:not(.latest_messages, .calendar_aside), .index_page.index_documents {
         display: none;
@@ -3847,9 +3873,17 @@ a.modal_close {
         height: auto;
         overflow: hidden;
     }
-    main.main_ads, .index_page.ads_index .index_main {
-        height: auto;
+    main.main_ads {
+        height: calc(100% - 45px);
         overflow: hidden;
+        padding: 0;
+        margin-bottom: 0;
+    }
+    .index_page.ads_index .index_main {
+        height: 100%;
+        overflow: hidden;
+        padding: 0;
+        margin-bottom: 0;
     }
     .index_main header.post_sent {
         height: auto;

@@ -445,6 +445,10 @@ span.img-success {
 	html, body{
 		font-size: 14px;
 	}
+	
+	.container {
+		height: calc(100% - 52px);
+	}
 }
 
 @media (max-width: 1024px) {
@@ -452,16 +456,34 @@ span.img-success {
 		font-size: 13px;
 	}
 	.container {
-        padding: 0 0 0 15px;
-        height: calc(100% - 92px);
+        padding:0;
+        /* height: calc(100% - 92px); */
 		overflow: auto;
-    }
+		
+	}
+	.container >section {
+		padding-bottom: 10px;
+	}
+	.user_header {
+		padding-right: 10px;
+	}
+	
 }
-@media (max-width: 990px) {
+@media (max-width: 992px) {
 	html, body{
 		font-size: 14px;
 	}
-		
+	.container >section {
+		position: static;
+		width: 100%;
+		max-width: 100%;
+		margin: 0;
+		margin-top: 20px;
+        padding: 10px 10px;
+		float: none;
+		overflow: hidden;
+		height: auto;
+	}
 	.container >section:first-child, .container >section:last-child{
 		height: auto;
 	}
@@ -569,14 +591,5 @@ span.img-success {
 		}
 		.container {
 			padding: 0 20px 15px 15px;
-		}
-	}
-
-	@media (max-height: 800px) { 
-		html {
-			font-size: 14px;
-		}
-		.container {
-			height: calc(100% - 52px);
 		}
 	}

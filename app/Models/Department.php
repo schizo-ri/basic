@@ -24,11 +24,29 @@ class Department extends Model
 	protected static $companyModel = 'App\Models\Company'; 
 
 	/*
+	* The Eloquent EmployeeDepartment model name
+	* 
+	* @var string
+	*/
+	protected static $employeeDepartmentModel = 'App\Models\EmployeeDepartment'; 
+
+	/*
 	* The Eloquent work model name
 	* 
 	* @var string
 	*/
 	protected static $workModel = 'App\Models\Work';
+
+	/*
+	* Returns the employeeDepartment relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function hasEmployeeDepartment()
+	{
+		return $this->hasMany(static::$employeeDepartmentModel,'department_id');
+	}
 
 	/*
 	* The Eloquent employee model name
@@ -107,4 +125,6 @@ class Department extends Model
 	{
 		return $this->update($department);
 	}	
+
+	
 }

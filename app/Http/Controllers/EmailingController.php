@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmailingRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DashboardController;
 use App\Models\Emailing;
 use App\Models\Table;
 use App\Models\Department;
@@ -30,12 +31,7 @@ class EmailingController extends Controller
      */
     public function index()
     {
-        $empl = Sentinel::getUser()->employee;
-        $permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
+        $permission_dep = DashboardController::getDepartmentPermission();
 		
 		$emailings = Emailing::join('tables','emailings.model','tables.id')->select('emailings.*','tables.name')->orderBy('tables.name','ASC')->get();
 		$departments = Department::orderBy('name', 'ASC')->get();
@@ -93,7 +89,7 @@ class EmailingController extends Controller
 
 
         $departments = Department::where('email','<>', null)->orderBy('name', 'ASC')->get();
-        $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+        $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->where('employees.id','<>',0)->where('employees.checkout',null)->get();
 		return view('Centaur::emailings.create', ['models' => $models, 'departments' => $departments, 'employees' => $employees, 'methods' => $methods]);
 		
     }
@@ -106,8 +102,8 @@ class EmailingController extends Controller
      */
     public function store(EmailingRequest $request)
     {
-        if(Emailing::where('model', $request['model'] )->where('method', $request['method'] )->first()) {
-            session()->flash('success',  __('ctrl.method_exist'));
+        if( Emailing::where('model', $request['model'] )->where('method', $request['method'] )->first()) {
+            session()->flash('error',  __('ctrl.method_exist'));
             
             return redirect()->back();
         } else {
@@ -131,7 +127,7 @@ class EmailingController extends Controller
             $emailing = new Emailing();
             $emailing->saveEmailing($data);
             
-            session()->flash('error',  __('ctrl.data_save'));
+            session()->flash('success',  __('ctrl.data_save'));
             return redirect()->back();
            // return redirect()->route('emailings.index');
         }        
@@ -159,7 +155,7 @@ class EmailingController extends Controller
         $emailing = Emailing::find($id);
         $departments = Department::where('email','<>', null)->orderBy('name', 'ASC')->get();
       
-        $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+        $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->where('employees.id','<>',0)->where('employees.checkout',null)->get();
         $tables1 = Table::get();
 		$models = array();
 		
@@ -240,13 +236,11 @@ class EmailingController extends Controller
         $emailings = Emailing::get();
         $send_to = array();
         $departments = Department::get();
-       /*  $employees = Employee::where('id','<>',0)->where('checkout',null)->get(); */
-        $employees = Employee::where('checkout',null)->get();
+        $employees = Employee::get();
 
         if(isset($emailings)) {
             foreach($emailings as $emailing) {
                 if($emailing->table['name'] == $table && $emailing->method == $method) {
-                    
                     if($emailing->sent_to_dep) {
                         foreach(explode(",", $emailing->sent_to_dep) as $prima_dep) {
                             array_push($send_to, $departments->where('id', $prima_dep)->first()->email );
@@ -260,7 +254,7 @@ class EmailingController extends Controller
                 }
             }
         }
-
+        
         return array_unique($send_to);
     }
 }

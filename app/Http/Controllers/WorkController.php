@@ -35,14 +35,13 @@ class WorkController extends Controller
         $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
       } 
 		
-		if(isset($request->department_id)) {
-			$works = Work::where('department_id',$request->department_id)->orderBy('name')->get();
-		} else {
-			$works = Work::orderBy('name')->get();
-		}
-    $employees = Employee::where('id','<>',)->where('checkout',null)->get();
-
-		return view('Centaur::works.index', ['works' => $works, 'employees' => $employees,'permission_dep' => $permission_dep]);
+      if(isset($request->department_id)) {
+        $works = Work::where('department_id',$request->department_id)->orderBy('name')->get();
+      } else {
+        $works = Work::orderBy('name')->get();
+      }
+     
+		  return view('Centaur::works.index', ['works' => $works, 'permission_dep' => $permission_dep]);
     }
 
     /**

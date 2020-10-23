@@ -58,8 +58,8 @@
 										</span>
 										@if( $post->countComment > 0)<span class="count_coments">{{ $post->countComment }}</span>@endif
 										<span class="post_time">{{ date('d.m. H:i',strtotime( $post->updated_at )) }}</span>
-										<span class="post_text">											
-												{{	$post['post_comment']->content }} {!! $post->to_employee_id && $post->post_comment->status == 1 ? '<i class="fas fa-check green"></i>' : '' !!}
+										<span class="post_text">	
+											{!!	$post['post_comment'] ? $post['post_comment']->content : '' !!} {!! $post['post_comment'] && $post['post_comment']->to_employee_id && $post['post_comment']->status == 1 ? '<i class="fas fa-check green"></i>' : '' !!}										
 										</span>
 										@if ( $post->to_department_id != null && $post->employee_id == Sentinel::getUser()->employee->id  )
 											<span class="read_post">

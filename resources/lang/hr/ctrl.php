@@ -44,7 +44,7 @@ return [
 	'max_user' => 'Iskorišten je maximalan broj korisnika.',
 	'call_duplico' => 'Za više korisnika kontaktirajte Duplico d.o.o.',
 	'locco_error'	=> 'Greška kod otvaranja putnog naloga, nalog nije otvoren.',
-	'data_error'	=> 'Došlo je do greške, podaci nisu spremljeni.'
-			
+	'data_error'	=> 'Došlo je do greške, podaci nisu spremljeni.',
+	'email_error'	=> 'E-mail nije poslan, došlo je do greške.'
 ];
 ?>

@@ -79,7 +79,8 @@
 }
 
 .modal.modal_user>main {
-    padding: 45px 50px;
+	padding: 45px 50px;
+	margin-bottom: 20px;
 }
 
 .modal.modal_user>header .user_data {
@@ -192,7 +193,9 @@ span.work {
 	width: auto;
     height: 108px;
 }
-
+.modal.modal_notice.notice_show.modal_user {
+	overflow: auto;
+}
 .modal_user main .basic_info, .modal_user main .permissions {
 	float: left;
     width: 50%;
@@ -202,12 +205,22 @@ span.work {
     flex-wrap: wrap;
     overflow: auto;
     font-size: 0.75rem;
+    padding: 25px 50px;
+    padding-right: 20px;
 }
 .modal_user.modal_employee main .basic_info {
-	width: 30%;
-    margin-right: 3%;
+	width: calc(50% - 20px);
+    margin-right: 20px;
+    margin-top: 20px;
+    padding: 0 20px;
 }
-
+.modal_employee .show_empl_label {
+	font-size: 0.625rem;
+	font-weight: 600;
+}
+.modal_employee .show_empl_p {
+	padding-left: 20px;
+}
 .modal_user main >div {
 	padding: 20px;
 }
@@ -1024,6 +1037,7 @@ option::selection {
 	text-align: center;
 	text-decoration-line: underline;
 	color: #2B2B2B;
+	margin: 20px;
 }
 
 .modal.modal_questionnaire .ev_employee_id  {
@@ -2092,12 +2106,14 @@ input.form-control.date {
 	width: auto;
 }
 @media (max-width:1300px) { 
-	.modal.modal_user>header, .modal.modal_user>main {
+	.modal.modal_user>header {
 		padding: 20px;
 		
 	}
 	.modal.modal_user>main {
 		overflow: auto;
+		padding: 0 20px;
+		padding-right: 0;
 	}
 	.modal.modal_user>header .user_data {
 		padding-top: 20px;

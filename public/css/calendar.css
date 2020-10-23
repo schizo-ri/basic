@@ -1,6 +1,8 @@
 div#calendar{
     padding: 0 30px;
     width: 100%;
+    max-height: 40%;
+    overflow: hidden;
 }
  
 div#calendar div.box{
@@ -50,6 +52,7 @@ div#calendar div.box-content{
     border-top:none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    max-height: 80%;
 }
 
 div#calendar ul.label{
@@ -79,6 +82,7 @@ div#calendar ul li{
  
 div#calendar ul.dates{
     height: 92px;
+    max-height: 100%;
     width: 100%;
     background: inherit;
     color: white;
@@ -94,6 +98,7 @@ div#calendar ul.dates li{
     /*float: left;*/
     flex: 0 0 64px;
     height: 89px;
+    max-height: 100%;
     background: #F8FAFF;
     margin-right: 5px;
     padding: 10px;

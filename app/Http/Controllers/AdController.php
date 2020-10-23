@@ -11,6 +11,8 @@ use App\Models\AdCategory;
 use App\Models\Employee;
 use App\Models\Notice;
 use App\Models\Department;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AdCreateMail;
 use Sentinel;
 
 class AdController extends Controller
@@ -33,7 +35,7 @@ class AdController extends Controller
     public function index(Request $request)
     {
 		$permission_dep = DashboardController::getDepartmentPermission();
-	
+		
 		if(isset($request->category_id)) {
 			$category = AdCategory::where('id',$request->category_id)->first();
 			$ads = Ad::where('category_id',$category->id )->get();
@@ -70,10 +72,9 @@ class AdController extends Controller
     public function store(AdRequest $request)
     {
         $user = Sentinel::getUser();
-		$employee = Employee::where('user_id', $user->id)->first();
 		
 		$data = array(
-			'employee_id'  	=> $employee->id,
+			'employee_id'  	=> $user->employee->id,
 			'category_id'  	=> $request['category_id'],
 			'subject'  		=> $request['subject'],
 			'description'  	=> $request['description'],
@@ -83,10 +84,29 @@ class AdController extends Controller
 		$ad = new Ad();
 		$ad->saveAd($data);
 
-        if(isset($request['fileToUpload'])) {
-			$target_dir = 'storage/ads/' . $ad->id . '/';  //specifies the directory where the file is going to be placed	
+		$send_to_email = array();
 
-			// Create directory
+		/* Email adrese svim zaposlenika */
+		$send_to_email = Employee::getEmails();
+		try {
+			foreach ($send_to_email as $email) {
+				Mail::to($email)->send(new AdCreateMail($ad));
+			}
+		} catch (\Throwable $th) {
+			session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+			return redirect()->back();
+		}
+
+        if(isset($request['fileToUpload'])) {
+			$target_dir = 'storage/';
+			if(!file_exists($target_dir)){
+				mkdir($target_dir);
+            }
+			$target_dir = $target_dir.'ads/';
+			if(!file_exists($target_dir)){
+				mkdir($target_dir);
+            }
+			$target_dir = $target_dir. $ad->id . '/';
 			if(!file_exists($target_dir)){
 				mkdir($target_dir);
             }
@@ -134,8 +154,8 @@ class AdController extends Controller
 					return redirect()->route('oglasnik')->with('error', __('basic.file_error')); 
 				}
 			}
-        }
-
+		}
+		
         session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('oglasnik');
@@ -180,10 +200,9 @@ class AdController extends Controller
         $ad = Ad::find($id);
 		
 		$user = Sentinel::getUser();
-		$employee = Employee::where('user_id', $user->id)->first();
 		
 		$data = array(
-			'employee_id'  	=> $employee->id,
+			'employee_id'  	=> $user->employee->id,
 			'category_id'  	=> $request['category_id'],
 			'subject'  		=> $request['subject'],
 			'description'  	=> $request['description'],
@@ -257,9 +276,19 @@ class AdController extends Controller
      */
     public function destroy($id)
     {
-        $ad = Ad::find($id);
-		$ad->delete();
-		
+		$ad = Ad::find($id);
+		if($ad) {
+			$ad->delete();
+		}
+
+		$target_dir = 'storage/ads/' . $ad->id . '/';
+			
+			if(file_exists($target_dir)){
+				array_map('unlink', glob("$target_dir/*.*"));
+			}
+			if(file_exists($target_dir)){
+				rmdir($target_dir);
+			}
 		$message = session()->flash('success', __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
@@ -273,7 +302,7 @@ class AdController extends Controller
     public function oglasnik(Request $request)
     {
 		$user = Sentinel::getUser()->employee;
-
+	
 		if($user) {
 			if(isset($request['sort'])) {
 				$ads = Ad::orderBy('created_at', $request['sort'])->get();
@@ -281,13 +310,13 @@ class AdController extends Controller
 				$ads = Ad::orderBy('created_at','DESC')->get();
 			}
 			$user_department = array();
-			$permission_dep = array();
-			$departments = Department::get();
+			$permission_dep = DashboardController::getDepartmentPermission();
 			
-			$user_department = $user->work->department->id;
-			$permission_dep = explode(',', count($user->work->department->departmentRole) > 0 ? $user->work->department->departmentRole->toArray()[0]['permissions'] : '');
+			if( $user->work){
+				$user_department = $user->work->department->id;
+			}
 			
-			return view('Centaur::oglasnik',['ads'=> $ads,'user_department'=> $user_department,'permission_dep'=> $permission_dep, 'departments' => $departments]);
+			return view('Centaur::oglasnik',['ads'=> $ads,'user_department'=> $user_department,'permission_dep'=> $permission_dep]);
 
 		} else {
 			$message = session()->flash('error', __('ctrl.path_not_allow'));

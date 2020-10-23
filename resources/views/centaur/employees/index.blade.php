@@ -24,6 +24,7 @@
 							<th>@lang('basic.fl_name')</th>
 							<th class="sort_date">@lang('basic.b_day')</th>
 							<th>@lang('basic.work')</th>
+							<th>@lang('basic.department')</th>
 							<th class="sort_date">@lang('basic.reg_date')</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
@@ -37,6 +38,13 @@
 								</td>
 								<td>{!! $employee->b_day ? date("d.m.Y",strtotime($employee->b_day)) : '' !!}</td>
 								<td>{{ $employee->work['name'] }}</td>
+								<td>
+									@if($employee->hasEmployeeDepartmen && count($employee->hasEmployeeDepartmen)>0)
+										@foreach ( $employee->hasEmployeeDepartmen as $empl_department )
+											{{ $empl_department->department->name }} <br>
+										@endforeach
+									@endif
+								</td>
 								<td>{!! $employee->reg_date ? date("d.m.Y",strtotime($employee->reg_date)) : '' !!}</td>
 								<td class="center">
 									<!-- <button class="collapsible option_dots float_r"></button> -->

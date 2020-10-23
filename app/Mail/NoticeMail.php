@@ -40,7 +40,6 @@ class NoticeMail extends Mailable
                     ->subject( __('emailing.new_notice') . ' - ' . $this->notice->title )
                     ->with(['notice'    => $this->notice,
                             'url'       => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']  . '/dashboard'
-                         //   'url'       => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . 'http://localhost:8000/dashboard'
                     ]);
     }
 }
