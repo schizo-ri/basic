@@ -36,8 +36,9 @@ class PostController extends Controller
     public function index(Request $request)
     {
 		$empl = Sentinel::getUser()->employee;
-		$posts = Post::where('employee_id', $empl->id)->orWhere('to_employee_id', $empl->id)->orWhere('to_department_id',$empl->work->department->id)->orderBy('updated_at','DESC')->with('comments')->get();
-
+				
+		$posts = Post::PostToEmployee($empl);
+	
 		if($empl) {
 			if(isset($_GET['id'])) { 
 				$post = $posts->where('id', $_GET['id'])->first();
@@ -155,6 +156,7 @@ class PostController extends Controller
 				'content'  			=> $request['content']
 			);
 			$post = Post::find( $request['to_department_id']);
+
 			if($post) {
 				$post->updatePost($data);
 			} else {
@@ -162,16 +164,27 @@ class PostController extends Controller
 				$post->savePost($data);
 			} 
 
-			/* 	$department = Department::find($request['to_department_id']);
-			$works = Work::where('department_id',$department->id)->get(); */
-			
-			$department = Department::where('id', $post->to_department_id )->with('hasWorks')->first();
-			$works = $department->hasWorks;
+			$departments = Department::get();
+			$department = $departments->where('id', $post->to_department_id )->first();
 
+			$works = $department->hasWorks;
+			
+			if( $department->level1 == 0) {
+				foreach ($departments->where('level2', $department->id) as $department_1) {
+					$works = $works->merge($department_1->hasWorks);
+					foreach ($departments->where('level2', $department_1->id) as $department_2) {
+						$works = $works->merge($department_2->hasWorks);
+					}
+				}
+			} elseif ($department->level1 == 1) {
+				foreach ($departments->where('level2', $department->id) as $department_2) {
+					$works = $works->merge($department_2->hasWorks);
+				}
+			} 
+				
 			foreach ($works as $work) {
 				$workers = $work->workers;
 				foreach ($workers as $worker) {
-					
 					$data1 = array(
 						'employee_id'    => $employee->id,
 						'to_employee_id' => $worker->id,

@@ -49,4 +49,17 @@ class Notice extends Model
 	{
 		return $this->update($notice);
 	}
+
+	public static function getNotice ($sort) 
+	{
+		$today = date('Y-m-d'); // 2019-10-16
+        $time = date('H:i:s'); // 14:49:05
+
+		$notices1 = Notice::whereDate('schedule_date','<=', $today )->whereTime('schedule_date','<',  $time )->orderBy('schedule_date',$sort)->get();
+        $notices2 = Notice::whereDate('schedule_date','<', $today )->orderBy('schedule_date',$sort)->get();
+        $notices3 = Notice::where('schedule_date', null)->orderBy('schedule_date',$sort)->get();
+		$notices = $notices1->merge( $notices2, $notices3 );
+
+		return $notices;
+	}
 }

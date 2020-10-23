@@ -1,10 +1,16 @@
 $('.shortcuts_container .shortcut').on('click',function(){
     $('.icon_delete').toggle();
+    if($('.shortcuts_container .profile_images .profile_img.new_open').length ==0) {
+        $('.shortcuts_container .profile_images').append('<span class="profile_img new_open"><span><span><i class="fas fa-plus"></i></span><span class="shortcut">Dodaj prečac</span></span></span>');
+        $('.shortcuts_container .new_open').on('click',function(){
+            $('<div><div class="modal-header">Novi prečac</div><div class="modal-body" style="padding-top: 20px"><p>Da biste dodali prečac otvorite stranicu koju želite i u gornjem desnom kutu pronađite link za spremanje "Prečaca"</p><p>Ukoliko Prečac već postoji na stranici imate mogućnost promijeniti naslov prečaca</p></div></div>').modal();
+        });
+    } else {
+        $('.shortcuts_container .profile_images .profile_img.new_open').remove();
+    }
+    
 });
 
-$('.shortcuts_container .new_open').on('click',function(){
-    $('<div><div class="modal-header">Novi prečac</div><div class="modal-body" style="padding-top: 20px"><p>Da biste dodali prečac otvorite stranicu koju želite i u gornjem desnom kutu pronađite link za spremanje "Prečaca"</p><p>Ukoliko Prečac već postoji na stranici imate mogućnost promijeniti naslov prečaca</p></div></div>').modal();
-});
 $('.shortcuts_container .open_new_shortcut').on('click',function(){
     $('<div><div class="modal-header">Novi prečac</div><div class="modal-body" style="padding-top: 20px"><p>Da biste dodali prečac otvorite stranicu koju želite i u gornjem desnom kutu pronađite link za spremanje "Prečaca"</p><p>Ukoliko Prečac već postoji na stranici imate mogućnost promijeniti naslov prečaca</p></div></div>').modal();
 });

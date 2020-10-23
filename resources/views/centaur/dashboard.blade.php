@@ -67,14 +67,14 @@
 										</span>
 									@endforeach
 								@endif
-								@for ($i =  $key; $i < 10; $i++)
+								{{-- @for ($i =  $key; $i < 10; $i++)
 									<span class="profile_img new_open">
 										<span>
 											<span><i class="fas fa-plus"></i></span>
 											<span class="shortcut">@lang('basic.add_shortcut')</span> 
 										</span>
 									</span>
-								@endfor
+								@endfor --}}
 							</div>
 						</div>
 					</div>
@@ -253,14 +253,14 @@
 									<span class="post_time">{{ date('d.m. H:i',strtotime( $post->updated_at )) }}</span>
 									</span>
 									<span class="post_text">
-										{!! $post->post_comment->to_employee_id == Sentinel::getUser()->employee->id || $post->to_department_id == Sentinel::getUser()->employee->work->department->id ? '<i class="fas fa-long-arrow-alt-left red"></i>' : '<i class="fas fa-long-arrow-alt-right green"></i>' !!} 
-										{{$post->post_comment->content }}	
+										{!! $post->post_comment && $post->post_comment->to_employee_id == Sentinel::getUser()->employee->id || $post->to_department_id == Sentinel::getUser()->employee->work->department->id ? '<i class="fas fa-long-arrow-alt-left red"></i>' : '<i class="fas fa-long-arrow-alt-right green"></i>' !!} 
+										{!!  $post->post_comment ? $post->post_comment->content : '' !!}	
 										{!! $post->to_employee_id && $post->post_comment->status == 1 ? '<i class="fas fa-check green"></i>' : '' !!}
 									</span>
 									@if ($post->to_department_id != null && $post->employee_id == Sentinel::getUser()->employee->id  )
 										<span class="read_post">
 											@foreach ($post->comments->where('to_employee_id','<>',null) as $comment)
-												<span class="read_comment {!! $comment->status == 0? 'post_unread' : 'post_read'!!}">{!! $comment->toEmployee ? substr($comment->toEmployee->user['first_name'],0,1) . substr($comment->toEmployee->user['last_name'],0,1) : $comment->id !!}</span>
+												<span class="read_comment {!! $comment->status == 0? 'post_unread' : 'post_read'!!}">{!! $comment->toEmployee ? utf8_encode(substr($comment->toEmployee->user['first_name'],0,1)) .  utf8_encode(substr($comment->toEmployee->user['last_name'],0,1)) : $comment->id !!}</span>
 											@endforeach
 										</span>
 									@endif

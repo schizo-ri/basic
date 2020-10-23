@@ -36,17 +36,28 @@ class WorkRecordController extends Controller
      */
     public function index(Request $request)
     {
-        if(isset($_GET['date']) ) {
-            $mjesec = date('m',strtotime( $_GET['date'] . '-1'));
-            $godina = date('Y',strtotime( $_GET['date']));
+        if(isset($request['date']) ) {
+            $mjesec = date('m',strtotime( $request['date'] . '-1'));
+            $godina = date('Y',strtotime( $request['date']));
         } else {
             $mjesec = date('m');
             $godina = date('Y');
         }
-   
-        $work_records = WorkRecord::whereMonth('start', $mjesec )->whereYear('start', $godina )->get();
+
+        if( isset($request['employee_id']) && $request['employee_id'] ) {
+            $employee_id = $request['employee_id'];
+        } else {
+            $employee_id = null;
+        }
+
+        $work_records = WorkRecord::WorkRecordsDate( $mjesec, $godina);
+
         $months = $this->months_workingHours();
 
+        if(  $employee_id != null) {
+            $work_records = $work_records->where('employee_id', $employee_id);
+        }
+        
         foreach($work_records as $record){
             $time1 = date_create($record->start);
             if( $record->end ) {
@@ -77,18 +88,20 @@ class WorkRecordController extends Controller
 
     public function workRecordsTable(Request $request) 
     {
-        if(isset( $_GET['date']) ) {
-            $mjesec = date('m',strtotime( $_GET['date'] . '-1'));
-            $godina = date('Y',strtotime( $_GET['date']));
-
-            $prev_month = new DateTime($_GET['date'] . '-1');
+        
+        if(isset( $request['date']) ) {
+            
+            $mjesec = date('m',strtotime( $request['date'] . '-1'));
+            $godina = date('Y',strtotime( $request['date']));
+           
+            $prev_month = new DateTime($request['date'] . '-1');
             $prev_month->modify('-1 month');
             $date_before = date_format($prev_month,'Y-m-' . '01');
             $month_before = date_format($prev_month,'m');
             $year_before = date_format($prev_month,'Y');
             $date_before = date_format($prev_month,'Y-m-d');
 
-            $next_month = new DateTime($_GET['date'] . '-1');
+            $next_month = new DateTime($request['date'] . '-1');
             $next_month->modify('+1 month');
             $date_after = date_format($next_month,'Y-m-' . '01');
     
@@ -106,10 +119,16 @@ class WorkRecordController extends Controller
             $next_month->modify('+1 month');
             $date_after = date_format($next_month,'Y-m-' . '01');
         }
-    
-        $work_records = WorkRecord::whereMonth('start', $mjesec )->whereYear('start', $godina )->get();
-        $months = $this->months_workingHours();
 
+        if( isset($request['employee_id']) && $request['employee_id'] ) {
+            $employee_id = $_GET['employee_id'];
+        } else {
+            $employee_id = null;
+        }
+
+        $work_records = WorkRecord::WorkRecordsDate( $mjesec, $godina);
+        $months = $this->months_workingHours();
+       
         foreach($work_records as $record){
             $time1 = date_create($record->start);
             if( $record->end ) {
@@ -155,6 +174,10 @@ class WorkRecordController extends Controller
         }
 
         $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->with('hasWorkingRecord')->with('hasAbsences')->get();
+        if(  $employee_id != null) {
+            $employees = $employees->where('id', $employee_id);
+        }
+       
         
         return view('Centaur::work_records.work_records_table', ['work_records' => $work_records, 'permission_dep' => $permission_dep, 'list' => $list,'employees' => $employees,'months' => $months,'absences' => $absences]);
     }

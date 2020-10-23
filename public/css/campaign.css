@@ -14,7 +14,7 @@ body {
     background: inherit;
 }
 form {
-    height: auto;
+    height: 100vh;
     width: 100%;
     font-family: Montserrat, sans-serif;
     background: inherit;
@@ -32,12 +32,17 @@ header {
 main {
   /*   height: calc(100% - 90px); */
   position: relative;
+  height: 100%;
+  overflow: hidden;
+  min-height: 100%;
 }
 p.modal_form_group_danger {
 	margin: 5px;
     color: #e3342f!important;
 }
-
+.header_campaign {
+    height: 100%;
+}
 #editor-container {
     height: 100%;
     

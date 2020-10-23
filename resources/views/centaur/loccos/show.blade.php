@@ -1,21 +1,21 @@
 @extends('Centaur::admin')
 
-@section('title', __('basic.loccos') . ' ' . $loccos->first()->car->registration )
+@section('title', __('basic.loccos') . ' ' . (isset($loccos) && $loccos->first() ? $loccos->first()->car->manufacturer . ' ' . $loccos->first()->car->model . ' ' . $loccos->first()->car->registration : '') . ', ' . date('m-Y',strtotime($dates[0])))
 
 @section('content')
 	<header class="page-header">
 		<div class="index_table_filter fuel_header">
-			<span class="back_to_prev"><span class="curve_arrow_left_grey"></span></span>
+			{{-- <span class="back_to_prev"><span class="curve_arrow_left_grey"></span></span> --}}
 			<label>
 				<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 			</label>
 			@if(Sentinel::getUser()->hasAccess(['loccos.create']) || in_array('loccos.create', $permission_dep))
-				<a class="btn-new" href="{{ route('loccos.create', ['car_id' => $car_id]) }}" rel="modal:open">
+				<a class="btn-new" href="{{ route('loccos.create', isset($loccos) && $loccos->first() ? ['car_id' => $car->id] : '' ) }}" rel="modal:open">
 					<i class="fas fa-plus"></i>
 				</a>
 			@endif 
 			<select id="filter_month" class="select_filter filter_loccos" >
-				<option value="all">@lang('basic.all_month')</option>
+				<{{-- option value="all">@lang('basic.all_month')</option> --}}
 				@foreach ($dates as $date)
 					<option value="{{ $date }}">{{ $date }}</option>
 				@endforeach
@@ -72,10 +72,4 @@
 			@endif
 		</div>
 	</main>
-	<script>
-		$(function(){
-			$.getScript( '/../js/filter_dropdown.js');
-		
-		});
-	</script>
 @stop

@@ -102,4 +102,36 @@ class Post extends Model
 		return $this->update($post);
 	}	
 	
+	public static function PostToEmployee($employee)
+	{
+	
+		$employee_work = $employee->work;
+		$employee_department = $employee_work->department;
+			
+		if($employee_department->level1 == 0 ) {
+			$posts = Post::where('employee_id', $employee->id)
+				->orWhere('to_employee_id', $employee->id)
+				->orWhere('to_department_id', $employee_department->id)
+				->orderBy('updated_at','DESC')->with('comments')->get();
+		} else {
+			$department_l1 = Department::find($employee_department->level2);
+			if($department_l1->level1 == 0 ) {
+				$posts = Post::where('employee_id', $employee->id)
+				->orWhere('to_employee_id', $employee->id)
+				->orWhere('to_department_id', $employee_department->id)
+				->orWhere('to_department_id', $department_l1->id)
+				->orderBy('updated_at','DESC')->with('comments')->get();
+			} else {
+				$department_l0 = Department::find($department_l1->level2);
+				$posts = Post::where('employee_id', $employee->id)
+					->orWhere('to_employee_id', $employee->id)
+					->orWhere('to_department_id', $employee_department->id)
+					->orWhere('to_department_id', $department_l1->id)
+					->orWhere('to_department_id', $department_l0->id)
+					->orderBy('updated_at','DESC')->with('comments')->get();
+			}
+		}
+			
+		return $posts;
+	}	
 }

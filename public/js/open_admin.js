@@ -6,7 +6,6 @@ var active_link;
 var url_modul = location.pathname;
 url_modul = url_modul.replace("/","");
 url_modul = url_modul.split('/')[0];
-console.log("open admin");
 $(function(){
     if($('.car_links').find('.admin_link').hasClass('active_admin')) {
         $('.car_links').show();
@@ -18,7 +17,7 @@ $(function(){
             $('.admin_pages>li>a#emailings').trigger('click');
         
         } else {
-            $('.admin_pages>li>a').first().trigger('click');
+         /*    $('.admin_pages>li>a').first().trigger('click'); */
         }
     }
     $(".admin_pages a.admin_link").removeClass('disable');
@@ -29,19 +28,17 @@ if($(".index_table_filter .show_button").length == 0) {
 } 
 
 var click_element;
-/* 
+
 $('.admin_pages>li>a').on('click',function(e) {
     click_element = $(this);
     var title = click_element.text();
     $("title").text( title ); 
     var url = $(this).attr('href');
-
+    
     $('.admin_pages>li>a').removeClass('active_admin');
     $(this).addClass('active_admin');
     active_link = $('.admin_link.active_admin').attr('id');
-
     $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
-       
         window.history.replaceState({}, document.title, url);
         if ( status == "error" ) {
             var msg = "Sorry but there was an error: ";
@@ -49,9 +46,11 @@ $('.admin_pages>li>a').on('click',function(e) {
         }
         $.getScript( 'js/datatables.js');
         $.getScript( 'js/filter_table.js');
+        $.getScript( 'restfulizer.js');
+        $.getScript( '/../js/filter_dropdown.js');
     });
     return false;
-}); */
+});
 
 if(body_width < 992) {
     $('.admin_pages>li>a').on('click',function(e) {

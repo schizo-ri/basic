@@ -201,4 +201,10 @@ class Employee extends Model
 	{
 		return $this->update($employee);
 	}	
+	
+	
+	public static function employees_firstNameASC()
+	{
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->orderBy('users.first_name','ASC')->get();
+	}
 }

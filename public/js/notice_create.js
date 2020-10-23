@@ -24,7 +24,7 @@ try {
             }
         },
         id: 'editor-container',
-        projectId: 4441,
+        projectId: 4895,
         displayMode: 'email'
     })
 
@@ -54,7 +54,9 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
  
     form_data = $('.form_sequence').serialize();
     form_data_array = $('.form_sequence').serializeArray();
-
+  
+    console.log(form_data);
+    console.log(form_data_array);
     jQuery.each( form_data_array, function( i, field ) {
         if(field.value == "" ) {  //$(field).attr('required') && 
             validate.push("block");
@@ -67,10 +69,11 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
     } else {
         validate.push(true);
     }
-    if(validate.includes("block") ) {
-        e.preventDefault();
+   if(validate.includes("block") ) {
         alert("Nisu uneseni svi parametri, nemoguće spremiti obavijest");
+        $(".btn-submit").prop("disabled", false);
     } else { 
+      
         $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
@@ -81,8 +84,8 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
             cache: false,
             timeout: 600000,
             success: function (data) {
-                alert("Dizajn je spremljen!");
-                console.log("SUCCESS : ", form_data_array);
+                alert("Obavijest je spremljena!");
+                location.reload();
                 $(".btn-submit").prop("disabled", false);
             },
             error: function(jqXhr, json, errorThrown) {
@@ -99,7 +102,6 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
 					}, 
 					error: function(jqXhr, json, errorThrown) {
 						console.log(jqXhr.responseJSON); 
-						
 					}
 				});
 			}

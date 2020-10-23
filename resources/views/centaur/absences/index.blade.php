@@ -285,12 +285,12 @@
 				}
 			]
 		} );
-		$('#index_table_filter').prepend('<a class="add_new" href="{{ route('absences.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('absence.new_request')</a>');
+	/* 	$('#index_table_filter').prepend('<a class="add_new" href="{{ route('absences.create') }}" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('absence.new_request')</a>');
 		if($(".all_absences #index_table_filter .show_button").length == 0) {
 			$('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 		}
 		$('#index_table_filter').show();
-		$('table.display').show();
+		$('table.display').show(); */
 	} );
 </script>
 @stop

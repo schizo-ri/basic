@@ -19,7 +19,6 @@
 				<input class="form-control" name="url" type="url" value="{{ $url }}" readonly/>
 				{!! ($errors->has('url') ? $errors->first('url', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-		
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" id="submit" value="{{ __('basic.save')}}">
 		</fieldset>

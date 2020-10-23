@@ -1239,7 +1239,7 @@ body {
     background: inherit;
 }
 form {
-    height: auto;
+    height: 100vh;
     width: 100%;
     font-family: Montserrat, sans-serif;
     background: inherit;
@@ -1257,12 +1257,17 @@ header {
 main {
   /*   height: calc(100% - 90px); */
   position: relative;
+  height: 100%;
+  overflow: hidden;
+  min-height: 100%;
 }
 p.modal_form_group_danger {
 	margin: 5px;
     color: #e3342f!important;
 }
-
+.header_campaign {
+    height: 100%;
+}
 #editor-container {
     height: 100%;
     
@@ -1744,7 +1749,9 @@ label.schedule_set {
 .container .posts .all_post .post_empl>span, .container .posts .all_post .post_empl>img {
     float: left;
 }
-
+span.read_post {
+    text-align: left;
+}
 .container .posts .all_post .post_empl .post_send {
     font-weight: 700;
     font-size: 0.875rem;
@@ -1811,6 +1818,7 @@ label.schedule_set {
     border-radius: 50%;
     padding: 3px 0px;
     margin-right: 2px;
+    margin-bottom: 2px;
     width: 23px;
     height: 23px;
     display: inline-block;
@@ -4211,6 +4219,9 @@ footer.ad_footer {
     line-height: 35px;
 }
 .all_documents span.show_button, .header_ads span.show_button  {
+    display: none;
+}
+.header_benefits .index_table_filter span.show_button, .noticeboard_index .index_table_filter span.show_button, .main_campaign .index_table_filter span.show_button, .all_notices span.show_button {
     display: none;
 }
 .index_page a.add_new {
@@ -7111,6 +7122,19 @@ table.dataTable thead th, table.dataTable thead td{
 	height: auto;
 	
 }
+#admin_page a.shortcut,#admin_page span.shortcut {
+    float: left;
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: #98acdf;
+    padding: 0;
+    width: auto;
+	height: auto;
+	position: absolute;
+	right: 30px;
+	top: 5px;
+	z-index: 1;
+}
 .shortcuts_container .shortcut {
 	text-decoration: none;
     font-weight: 600;
@@ -7291,7 +7315,7 @@ ul.nav_ul.float_right li img {
     color: #071E57;
 	text-align: center;
 	padding: 0;
-    z-index: 2;
+    z-index: 0;
     float: left;
 }
 

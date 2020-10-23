@@ -59,12 +59,12 @@
 										@if( $post->countComment > 0)<span class="count_coments">{{ $post->countComment }}</span>@endif
 										<span class="post_time">{{ date('d.m. H:i',strtotime( $post->updated_at )) }}</span>
 										<span class="post_text">											
-												{{	$post['post_comment']->content }} {!! $post->to_employee_id && $post->post_comment->status == 1 ? '<i class="fas fa-check green"></i>' : '' !!}
+												{!!	$post['post_comment'] ? $post['post_comment']->content : '' !!} {!! $post['post_comment'] && $post['post_comment']->to_employee_id && $post['post_comment']->status == 1 ? '<i class="fas fa-check green"></i>' : '' !!}
 										</span>
 										@if ( $post->to_department_id != null && $post->employee_id == Sentinel::getUser()->employee->id  )
 											<span class="read_post">
 												@foreach ($post->comments->where('to_employee_id','<>',null) as $comment)
-													<span class="read_comment {!! $comment->status == 0? 'post_unread' : 'post_read' !!}" title="{!! $comment->status == 1 ? date('d.m.Y H:i',strtotime( $comment->updated_at )) : '' !!}" >{!! $comment->toEmployee ? substr($comment->toEmployee->user['first_name'],0,1) . substr($comment->toEmployee->user['last_name'],0,1) : $comment->id !!}</span>
+													<span class="read_comment {!! $comment->status == 0? 'post_unread' : 'post_read' !!}" title="{!! $comment->status == 1 ? date('d.m.Y H:i',strtotime( $comment->updated_at )) : '' !!}" >{!! $comment->toEmployee ? utf8_encode(substr($comment->toEmployee->user['first_name'],0,1)) . utf8_encode(substr($comment->toEmployee->user['last_name'],0,1)) : $comment->id !!}</span>
 												@endforeach
 											</span>
 										@endif

@@ -72,188 +72,195 @@ class NoticeController extends Controller
      */
     public function store(Request $request)
     {
-       
+       /*  dd($request); */
+        if( ! isset($request['to_department'])) {
+            $to_department_id = array( Department::where('level',0)->first()->id );
+        }
+   
         if(Sentinel::getUser()->employee) {
            
             $employee_id = Sentinel::getUser()->employee->id;
-            $to_department_id = implode(',', $request['to_department']);
-            if(isset($request['schedule_date'])) {
-                if($request['schedule_time'] != null) {
-                    $shedule = $request['schedule_date'] . ' ' . $request['schedule_time'];
-                } else {
-                    $shedule = $request['schedule_date'] . ' 08:00';
-                }
-            } else {
-                $shedule = date('Y-m-d') . ' 08:00';
-            }
-           
-
-            $data1 = array(
-                'employee_id'   	=> $employee_id,
-                'to_department'     => $to_department_id,
-                'schedule_date'     => $shedule,
-                'title'  			=> $request['title'],
-                'notice'  			=> $request['text_html'],
-                'text_json'  		=> $request['text_json']
-            );
-           
-            $notice1 = new Notice();
-            $notice1->saveNotice($data1);
-            
-            $now = date('Y-m-d H:i');
-
-            /* ***************************  posebna slika  ******************************** */
-
-            if(isset($request['fileToUpload'])) {
-                $target_dir = 'storage/notice/'; 
                 
-                // Create directory
-                if(!file_exists($target_dir)){
-                    mkdir($target_dir);
-                }
-                $target_dir = 'storage/notice/' . $notice1->id . '/';
-                // Create directory
-                if(!file_exists($target_dir)){
-                    mkdir($target_dir);
-                }
-
-                $target_file = $target_dir . '/' . basename($_FILES["fileToUpload"]["name"]); //$target_file specifies the path of the file to be uploaded
-                if(isset($request['fileToUpload']) && file_exists($target_file)){
-                    array_map('unlink', glob($target_file)); // ako postoji file - briše ga
-                    $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]); 
-                } 
-    
-                $uploadOk = 1;
-                $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));  //holds the file extension of the file (in lower case)
-                // Check if image file is a actual image or fake image
-
-                // Check if file already exists
-                if (file_exists($target_file)) {
-                    return redirect()->back()->with('error',  __('ctrl.file_exists'));  
-                    $uploadOk = 0;
-                }
-                
-                /* Check file size*/
-                if ($_FILES["fileToUpload"]["size"] > 5000000) {
-                    $uploadOk = 0;
-                    return redirect()->back()->with('error',  __('ctrl.file_toolarge'));  
-                }
-                /* Allow certain file formats */
-                if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif") {
-                    $uploadOk = 1;
-                } else {
-                    $uploadOk = 0;
-                    return redirect()->back()->with('error', __('ctrl.allow') . ' jpg, png, pdf, gif');  
-                }
-                if($imageFileType == "exe" || $imageFileType == "bin") {
-                    $uploadOk = 0;
-                    return redirect()->back()->with('error',  __('ctrl.not_allow'));  
-                }
-                // Check if $uploadOk is set to 0 by an error
-                if ($uploadOk == 0) {
-                    return redirect()->back()->with('error', __('ctrl.not_uploaded')); 
-                // if everything is ok, try to upload file
-                } else {
-                    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-
-                        if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                            $employees = Employee::where('id','<>',1)->where('checkout', null)->get();
-                           
-                            $prima = EmailingController::sendTo('notices','create');
-                          
-                            foreach($request['to_department'] as $department_id) {
-                                $department = Department::where('id', $department_id)->first();
-                               
-                                foreach ($employees as $employee) {
-                                    if( $employee->email ) {
-                                        if( $department->level1 == 0 ) {
-                                            array_push($prima, $employee->email );                                                                                
-                                        } else if( $department->level1 == 1 ) {                                        
-                                            $department_level2 = Department::where('id', $department->level2)->get();
-                                            foreach ($department_level2 as $department2) {
-                                                if ( $employee->work && $employee->work->department_id == $department2->id) {
-                                                   array_push($prima, $employee->email );
-                                                } 
-                                            }                                        
-                                        } else if( $department->level1 == 2 ) {
-                                            if ( $employee->work && $employee->work->department_id == $department->id) {
-                                                array_push($prima, $employee->email );
-                                            } 
-                                        }
-                                    }                                   
-                                }           
-                            }
-                            try {
-                                foreach (array_unique($prima) as $mail) {
-                                    Mail::to($mail)->send(new NoticeMail($notice1));
-                                }                    
-                            } catch (\Throwable $th) {
-                                $message = session()->flash('success',  __('emailing.not_send'));
-                                return redirect()->back()->withFlashMessage($message);
-                            }
-                        }
-                     
-                        return redirect()->back()->with('success', __('ctrl.notice_saved'));
-                      //  return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
+            if($request['to_department']) {
+                $to_department_id = implode(',', $request['to_department']);
+                if(isset($request['schedule_date'])) {
+                    if($request['schedule_time'] != null) {
+                        $shedule = $request['schedule_date'] . ' ' . $request['schedule_time'];
                     } else {
-                        return redirect()->route('notices.index')->with('error', __('ctrl.notice_error')); 
+                        $shedule = $request['schedule_date'] . ' 8:00';
                     }
+                } else {
+                    $shedule = date('Y-m-d') . ' 08:00';
                 }
-            } else {
+                
+                $data1 = array(
+                    'employee_id'   	=> $employee_id,
+                    'to_department'     => $to_department_id,
+                    'schedule_date'     => $shedule,
+                    'title'  			=> $request['title'],
+                    'notice'  			=> $request['text_html'],
+                    'text_json'  		=> $request['text_json']
+                );
+            
+                $notice1 = new Notice();
+                $notice1->saveNotice($data1);
+                
+                $now = date('Y-m-d H:i');
 
-            }
+                /* ***************************  posebna slika  ******************************** */
 
-           /* ************************* SEND MAIL *********************************** */
-     
-            if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-              /*   $prima = array(); */
-                $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+                if(isset($request['fileToUpload'])) {
+                    $target_dir = 'storage/notice/'; 
+                    
+                    // Create directory
+                    if(!file_exists($target_dir)){
+                        mkdir($target_dir);
+                    }
+                    $target_dir = 'storage/notice/' . $notice1->id . '/';
+                    // Create directory
+                    if(!file_exists($target_dir)){
+                        mkdir($target_dir);
+                    }
 
-                $prima = EmailingController::sendTo('notices','create');
-             
+                    $target_file = $target_dir . '/' . basename($_FILES["fileToUpload"]["name"]); //$target_file specifies the path of the file to be uploaded
+                    if(isset($request['fileToUpload']) && file_exists($target_file)){
+                        array_map('unlink', glob($target_file)); // ako postoji file - briše ga
+                        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]); 
+                    } 
+        
+                    $uploadOk = 1;
+                    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));  //holds the file extension of the file (in lower case)
+                    // Check if image file is a actual image or fake image
 
-                foreach($request['to_department'] as $department_id) {
-                    $department = Department::where('id', $department_id)->first();
-                    if($department->level1 == 0) {
-                        foreach ($employees as $employee) {
-                            array_push($prima, $employee->email );
+                    // Check if file already exists
+                    if (file_exists($target_file)) {
+                        return redirect()->back()->with('error',  __('ctrl.file_exists'));  
+                        $uploadOk = 0;
+                    }
+                    
+                    /* Check file size*/
+                    if ($_FILES["fileToUpload"]["size"] > 5000000) {
+                        $uploadOk = 0;
+                        return redirect()->back()->with('error',  __('ctrl.file_toolarge'));  
+                    }
+                    /* Allow certain file formats */
+                    if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif") {
+                        $uploadOk = 1;
+                    } else {
+                        $uploadOk = 0;
+                        return redirect()->back()->with('error', __('ctrl.allow') . ' jpg, png, pdf, gif');  
+                    }
+                    if($imageFileType == "exe" || $imageFileType == "bin") {
+                        $uploadOk = 0;
+                        return redirect()->back()->with('error',  __('ctrl.not_allow'));  
+                    }
+                    // Check if $uploadOk is set to 0 by an error
+                    if ($uploadOk == 0) {
+                        return redirect()->back()->with('error', __('ctrl.not_uploaded')); 
+                    // if everything is ok, try to upload file
+                    } else {
+                        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+
+                            if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
+                                $employees = Employee::employees_firstNameASC();
+                            
+                                $prima = EmailingController::sendTo('notices','create');
+                            
+                                foreach($request['to_department'] as $department_id) {
+                                    $department = Department::where('id', $department_id)->first();
+                                
+                                    foreach ($employees as $employee) {
+                                        if( $employee->email ) {
+                                            if( $department->level1 == 0 ) {
+                                                array_push($prima, $employee->email );                                                                                
+                                            } else if( $department->level1 == 1 ) {                                        
+                                                $department_level2 = Department::where('id', $department->level2)->get();
+                                                foreach ($department_level2 as $department2) {
+                                                    if ( $employee->work && $employee->work->department_id == $department2->id) {
+                                                        array_push($prima, $employee->email );
+                                                    } 
+                                                }                                        
+                                            } else if( $department->level1 == 2 ) {
+                                                if ( $employee->work && $employee->work->department_id == $department->id) {
+                                                    array_push($prima, $employee->email );
+                                                } 
+                                            }
+                                        }                                   
+                                    }
+                                }
+                                try {
+                                    foreach (array_unique($prima) as $mail) {
+                                    //    Mail::to($mail)->send(new NoticeMail($notice1));
+                                    }                    
+                                } catch (\Throwable $th) {
+                                    $message = session()->flash('success',  __('emailing.not_send'));
+                                    return redirect()->back()->withFlashMessage($message);
+                                }
+                            }
+                        
+                            return redirect()->back()->with('success', __('ctrl.notice_saved'));
+                        //  return redirect()->back()->with('success',"The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.");
+                        } else {
+                            return redirect()->route('notices.index')->with('error', __('ctrl.notice_error')); 
                         }
                     }
-                    if($department->level1 == 1) {
-                        foreach ($employees as $employee) {
-                            if ( $employee->work->department_id == $department->id) {
+                } else {
+
+                }
+
+            /* ************************* SEND MAIL *********************************** */
+        
+                if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
+                /*   $prima = array(); */
+                $employees = Employee::employees_firstNameASC();
+
+                    $prima = EmailingController::sendTo('notices','create');
+
+                    foreach($request['to_department'] as $department_id) {
+                        $department = Department::where('id', $department_id)->first();
+                        if($department->level1 == 0) {
+                            foreach ($employees as $employee) {
                                 array_push($prima, $employee->email );
                             }
                         }
-                        $departments2 = Department::where('level2', $department->id)->get();
-                        foreach ($departments2 as $department2) {
+                        if($department->level1 == 1) {
                             foreach ($employees as $employee) {
-                                if ( $employee->work->department_id == $department2->id) {
+                                if ( $employee->work->department_id == $department->id) {
+                                    array_push($prima, $employee->email );
+                                }
+                            }
+                            $departments2 = Department::where('level2', $department->id)->get();
+                            foreach ($departments2 as $department2) {
+                                foreach ($employees as $employee) {
+                                    if ( $employee->work->department_id == $department2->id) {
+                                        array_push($prima, $employee->email );
+                                    }
+                                }
+                            }
+                        }
+                        if($department->level1 == 2) {
+                            foreach ($employees as $employee) {
+                                if ( $employee->work->department_id == $department->id) {
                                     array_push($prima, $employee->email );
                                 }
                             }
                         }
                     }
-                    if($department->level1 == 2) {
-                        foreach ($employees as $employee) {
-                            if ( $employee->work->department_id == $department->id) {
-                                array_push($prima, $employee->email );
-                            }
-                        }
+                    try {
+                        foreach (array_unique($prima) as $mail) {
+                        //    Mail::to($mail)->send(new NoticeMail($notice1));
+                        }                    
+                    } catch (\Throwable $th) {
+                        $message = session()->flash('success',  __('emailing.not_send'));
+                        return redirect()->back()->withFlashMessage($message);
                     }
                 }
-                try {
-                    foreach (array_unique($prima) as $mail) {
-                        Mail::to($mail)->send(new NoticeMail($notice1));
-                    }                    
-                } catch (\Throwable $th) {
-                    $message = session()->flash('success',  __('emailing.not_send'));
-                    return redirect()->back()->withFlashMessage($message);
-                }
+                $message = session()->flash('success', __('ctrl.notice_saved'));
+                return redirect()->back()->withFlashMessage($message);
+            } else {
+                $message = session()->flash('error', "Nije dodijeljen odjel");
+                return redirect()->back()->withFlashMessage($message);
             }
-            $message = session()->flash('success', __('ctrl.notice_saved'));
-            return redirect()->back()->withFlashMessage($message);
-            
         } else {
             $message = session()->flash('error', __('ctrl.path_not_allow') . ', ' .  __('ctrl.notice_only_employee'));
             return redirect()->back()->withFlashMessage($message);
@@ -449,7 +456,7 @@ class NoticeController extends Controller
                 }
                 try {
                     foreach (array_unique($prima) as $mail) {
-                        Mail::to($mail)->send(new NoticeMail($notice1));
+                     //   Mail::to($mail)->send(new NoticeMail($notice1));
                     }                    
                 } catch (\Throwable $th) {
                     $message = session()->flash('success',  __('emailing.not_send'));
@@ -530,14 +537,10 @@ class NoticeController extends Controller
         return view('Centaur::notices.schedule');
     }
 
-    public static function getNotice ($sort) {
-        $today = date('Y-m-d'); // 2019-10-16
-        $time = date('H:i:s'); // 14:49:05
+    public static function getNotice ($sort) 
+    {
+        $notices = Notice::getNotice($sort);
        
-        $notices1 = Notice::whereDate('schedule_date','=', $today )->whereTime('schedule_date','<',  $time )->orderBy('schedule_date',$sort)->get();
-        $notices2 = Notice::whereDate('schedule_date','<', $today )->orderBy('schedule_date',$sort)->get();
-        $notices3 = Notice::where('schedule_date', null)->orderBy('schedule_date',$sort)->get();
-        $notices = $notices1->merge( $notices2, $notices3 );
 
         return $notices;
     }

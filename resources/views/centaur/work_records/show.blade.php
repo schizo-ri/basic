@@ -103,7 +103,6 @@
 														}
 													}
 												}
-												
 											}
 										@endphp
 										<td class="">{{ $end }}</td>
@@ -122,13 +121,32 @@
 										@php
 											$interval = '';
 											$work = $work_records->where('start','>', date('Y-m-d',strtotime($day2)) . ' 00:00:00')->where('start','<', date('Y-m-d',strtotime($day2)). ' 23:59:59')->first();
-											if($work) {
-												if($work->end) {
-													$interval = AbsenceController::dateDifference($work->start, $work->end);
+											if($work && $work->end) {
+												$start_time = strtotime($work->start);
+												if($start_time >= strtotime($day2 .' 07:15:00') && $start_time <= strtotime($day2 .' 08:15:00') ) {
+													$start = date('Y-m-d H:i', strtotime($day2 .' 08:00:00'));
 												} else {
-													$interval = '';
+													$start = date('Y-m-d H:i', $start_time );
 												}
+												$end_time = strtotime($work->end);
+												if(date('N',strtotime($day2)) < 5 ) {
+													if($end_time >= strtotime($day2 .' 16:15:00') && $end_time <= strtotime($day2 .' 17:00:00') ) {
+														$end = date('Y-m-d H:i', strtotime($day2 .' 16:15:00'));
+													} else {
+														$end = date('Y-m-d H:i', $end_time );
+													}
+												} else if(date('N',strtotime($day2) ) == 5) {
+													if($end_time >= strtotime($day2 .' 14:45:00') && $end_time <= strtotime($day2 .' 16:00:00') ) {
+														$end = date('Y-m-d H:i', strtotime($day2 .' 15:00:00'));
+													} else {
+														$end = date('Y-m-d H:i',$end_time );
+													}
+												}
+												$interval = AbsenceController::dateDifference($start, $end);
+											} else {
+												$interval = '';
 											}
+
 											if(date('N',strtotime($day2)) < 5 ) {
 												if( strtotime($interval) > strtotime('7:00') && strtotime($interval) < strtotime('8:45')) {
 													$interval = '8:15';
@@ -141,10 +159,10 @@
 											$minutes = 0;
 											$minutes += strstr($interval, ':', true) * 60; 
 											$minutes += intval(str_replace(':','',strstr($interval, ':'))); 
+											
 											$sum[date('Y-m-d',strtotime($day2))] += $minutes;
-											if($interval )
-												
 										@endphp
+										
 										<td class="sum_rr">{{ $interval }}</td>
 									@endforeach
 									<td class="total_rr total_sum"></td>

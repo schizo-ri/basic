@@ -130,7 +130,9 @@
 .container .posts .all_post .post_empl>span, .container .posts .all_post .post_empl>img {
     float: left;
 }
-
+span.read_post {
+    text-align: left;
+}
 .container .posts .all_post .post_empl .post_send {
     font-weight: 700;
     font-size: 0.875rem;
@@ -197,6 +199,7 @@
     border-radius: 50%;
     padding: 3px 0px;
     margin-right: 2px;
+    margin-bottom: 2px;
     width: 23px;
     height: 23px;
     display: inline-block;

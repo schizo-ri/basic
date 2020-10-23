@@ -63,7 +63,6 @@
 								@endphp
 								@if(Sentinel::inRole('administrator'))
 									<article class="col-xs-12 col-sm-49 col-md-32 col-lg-24 col-xl-19 noticeboard_notice_body">
-										
 										<a href="{{ route('notices.show', $notice->id) }}" class="notice_link panel notice_show" rel="modal:open">    
 											<header class="ad_header">
 												@if($notice_img)
@@ -168,10 +167,11 @@
 </div>
 <script>
 	$( function () {
-		$.getScript( '/../js/filter.js');
+		/* $.getScript( '/../js/filter.js');
 		$.getScript( '/../js/open_modal.js');
 		$.getScript( '/../js/filter_dropdown.js');
-		$.getScript( '/../js/set_height_notice.js');
+		$.getScript( '/../js/set_height_notice.js'); */
+		
 		$('.select_filter.sort').change(function () {
 			console.log($(this).val());
 			$('.section_notice .notices').load($(this).val() + ' .section_notice .notices .noticeboard_notice_body');

@@ -58,7 +58,6 @@ class Handler extends ExceptionHandler
                 session()->flash('error', __('ctrl.email_error'));
 				return redirect()->back();
             }
-           
         }
         return parent::render($request, $exception);
     }

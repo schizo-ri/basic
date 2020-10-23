@@ -18,19 +18,20 @@
         <![endif]-->
 		
 		<!--Awesome icons -->
-		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}"/>
-
+			<link rel="stylesheet" href="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}"/>
 		<!-- JS modal -->
-		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
-
+			<link rel="stylesheet" href="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/campaign.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/basic.css') }}"/>
+			<link rel="stylesheet" href="{{ URL::asset('/../css/campaign.css') }}"/>
+			<link rel="stylesheet" href="{{ URL::asset('/../css/modal.css') }}"/>
+			<link rel="stylesheet" href="{{ URL::asset('/../css/basic.css') }}"/>
 		<!-- ICON -->
-		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
-		<script src="//editor.unlayer.com/embed.js"></script>
+			<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
+		<!--Unlayer -->
+			<script src="https://editor.unlayer.com/embed.js"></script>
 		<!--Jquery -->
-		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
+			<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
+		
 		@stack('stylesheet')
 	</head>
 	<body>
@@ -130,7 +131,7 @@
                     <div class="col-2" id="template-container"></div>
                 @endif
             </main>
-           
+        
         </form>
         <span hidden class="locale" >{{ App::getLocale() }}</span>
         <span hidden class="dataArrTemplates">{{ ($templates) }}</span>
@@ -186,21 +187,21 @@
             $.getScript( '/../js/filter.js');  
 
         </script>
-
 		<!--Awesome icons -->
 		<script src="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/js/all.min.js') }}"></script>
 	
 		<!-- Jquery modal -->
 		<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
-		
-		<!--Unlayer modal -->
-		{{-- <script src="{{ URL::asset('/../node_modules/react-email-editor/umd/react-email-editor.min.js') }}"></script> --}}
 
 		<!-- Scripts -->
 		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
+		{{-- <script src="{{URL::asset('/../js/template_create.js') }}"></script> --}}
 		<script src="{{URL::asset('/../js/notice_create.js') }}"></script>
-	
-		@if(session()->has('modal'))
+
+		<script>
+			
+		</script>
+        @if(session()->has('modal'))
 			<script>
 				$('.row.notification').modal();
 			</script>

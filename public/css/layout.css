@@ -34,6 +34,19 @@ table.dataTable thead th, table.dataTable thead td{
 	height: auto;
 	
 }
+#admin_page a.shortcut,#admin_page span.shortcut {
+    float: left;
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: #98acdf;
+    padding: 0;
+    width: auto;
+	height: auto;
+	position: absolute;
+	right: 30px;
+	top: 5px;
+	z-index: 1;
+}
 .shortcuts_container .shortcut {
 	text-decoration: none;
     font-weight: 600;
@@ -214,7 +227,7 @@ ul.nav_ul.float_right li img {
     color: #071E57;
 	text-align: center;
 	padding: 0;
-    z-index: 2;
+    z-index: 0;
     float: left;
 }
 

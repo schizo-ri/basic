@@ -26,17 +26,11 @@
 		<!-- JS modal -->
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-
+        
+        <script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all_new.css') }}"/>
-		{{-- <link rel="stylesheet" href="{{ URL::asset('/../css/layout.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/welcome.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/basic.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/modal.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/dashboard.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/index.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/calendar.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/> --}}
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all_new.css?random=@dt') }}"/>
+	  
 		
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
@@ -78,11 +72,11 @@
                     </a>
                     <ul class="nav_ul float_right">
                         @if (Sentinel::check())
-                            @if (Shortcut::where('url', $url)->first() )
+                           {{--  @if (Shortcut::where('url', $url)->first() )
                                 <a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i>  <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
                             @else
                                 <a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
-                            @endif
+                            @endif --}}
                             @if(! $check )
                                 <li class="evidention_check">
                                     <form  title="{{__('basic.entry') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}" >
@@ -309,6 +303,11 @@
                         <main class="col-md-12 col-lg-8 col-xl-8 index_main float_right admin_main">
                             <section>
                                 <div id="admin_page">
+                                    @if (Shortcut::where('url', $url)->first() )
+                                        <a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i>  <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
+                                    @else
+                                        <a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
+                                    @endif
                                     <a class="link_back" href="{{  url()->previous() }}"><span class="curve_arrow_left_grey"></span></a>
                                     @yield('content')
                                 </div>
@@ -359,13 +358,7 @@
             <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
            
             <!-- Scripts -->
-			<script src="{{URL::asset('/../js/all_new.js') }}"></script>
-		{{-- 	<script src="{{URL::asset('/../js/nav_active.js') }}"></script>
-			<script src="{{URL::asset('/../js/set_height.js') }}"></script>
-            <script src="{{URL::asset('/../js/collaps.js') }}"></script>
-            <script src="{{URL::asset('/../js/filter_table.js') }}"></script>
-            <script src="{{URL::asset('/../js/open_admin.js') }}"></script> 
-            <script src="{{URL::asset('/../js/datatables.js') }}"></script> --}}
+			<script src="{{URL::asset('/../js/all_new.js?random=@dt') }}"></script>
 
 			<!-- Datatables -->
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>

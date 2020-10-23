@@ -194,25 +194,38 @@ class LoccoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        $loccos = Locco::where('car_id', $id)->orderBy('date','ASC')->get();
-
-        $empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
+        $car = Car::find($id);
         
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
-
+        if(isset( $request['date'])) {
+            $date = $request['date'];
+        } else {
+            $date = date('Y-m');
+        }
+        
+        $loccos = Locco::where('car_id', $id)->whereYear('date', '>=', date('Y')-1)->get();
+        $permission_dep = DashboardController::getDepartmentPermission();
+       
         $dates = array();
-        foreach (array_keys($loccos->groupBy('date')->toArray()) as $date) {
-            array_push($dates, date('m.Y',strtotime($date)) );
+        foreach (array_keys($loccos->groupBy('date')->toArray()) as $locco_date) {
+            array_push($dates, date('Y-m',strtotime($locco_date)) );
+        }
+     
+        $dates = array_unique($dates);
+        rsort($dates);
+
+        /* $loccos = Locco::where('car_id', $id)->whereYear('date', $year )->whereMonth('date',$month)->orderBy('date','ASC')->get(); */
+
+        $loccos = $loccos->filter(function ($locco, $key) use ($date, $id) {
+            return date('Y-m',strtotime( $locco->date)) == $date /* && $locco->car_id == $id */;
+        });
+       
+        if( ! in_array($date, $dates)) {
+            array_unshift($dates, $date);
         }
       
-        $dates = array_unique($dates);
-
-        return view('Centaur::loccos.show', ['loccos' => $loccos, 'car_id' => $id, 'dates' => $dates, 'permission_dep' => $permission_dep]);
+        return view('Centaur::loccos.show', ['loccos' => $loccos, 'car' =>  $car, 'dates' => $dates, 'permission_dep' => $permission_dep]);
     }
 
     /**

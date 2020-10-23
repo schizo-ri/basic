@@ -54,4 +54,10 @@ class WorkRecord extends Model
 	{
 		return $this->update($workRecords);
 	}	
+
+	public static function WorkRecordsDate($mjesec, $godina)
+	{
+		return WorkRecord::whereMonth('start', $mjesec )->whereYear('start', $godina )->orderBy('start','DESC')->get();
+	}
+
 }

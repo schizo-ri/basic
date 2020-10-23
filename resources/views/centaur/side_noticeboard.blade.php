@@ -7,7 +7,7 @@
     $permission_dep = DashboardController::getDepartmentPermission();
     $user_department = DashboardController::getUserDepartment();
   
-    $notices = NoticeController::getNotice('DESC');
+    $notices = Notice::getNotice('DESC');
  
     $notices_user = collect();
    

@@ -38,7 +38,7 @@
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="table-responsive first_view">
 			@if(count($work_records))
-				<table id="index_table" class="display table table-hover ">
+				<table id="index_table" class="display table table-hover sort_1_desc">
 					<thead>
 						<tr>
 							<th>@lang('basic.employee')</th>
@@ -54,7 +54,6 @@
 						@php
 							$trav = $record->employee->hasTravels->whereBetween('start_date', [ date('Y-m-d',strtotime($record->start)) . ' 00:00:00', date('Y-m-d',strtotime($record->start))  . ' 23:59:59' ] );
 							$locco_day = $record->employee->hasLocco->whereBetween('date', [ date('Y-m-d',strtotime($record->start))  . ' 00:00:00', date('Y-m-d',strtotime($record->start)) . ' 23:59:59' ] );
-							
 						@endphp
 							<tr class="empl_{{ $record->employee_id }}">
 								<td>

@@ -20,6 +20,10 @@ $( function () {
 			kolona = 1;
 			sort = 'desc';
 		}	
+		if ($('#index_table').hasClass('sort_2_desc')) {
+			kolona = 2;
+			sort = 'desc';
+		}	
 		var th_length = $('table.display thead th').not('.not-export-column');
 		var target = [];
 		var widths = [];

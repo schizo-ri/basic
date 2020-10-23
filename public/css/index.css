@@ -1809,6 +1809,9 @@ footer.ad_footer {
 .all_documents span.show_button, .header_ads span.show_button  {
     display: none;
 }
+.header_benefits .index_table_filter span.show_button, .noticeboard_index .index_table_filter span.show_button, .main_campaign .index_table_filter span.show_button, .all_notices span.show_button {
+    display: none;
+}
 .index_page a.add_new {
     width: auto;
     height: 35px;

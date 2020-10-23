@@ -40,7 +40,12 @@ class CheckOut extends Command
     public function handle()
     {
         $today_date = date('Y-m-d');
-        $checkOut_time = $today_date . ' 16:15';
+        if( date('N') < 5) {
+            $checkOut_time = $today_date . ' 16:15';
+        } else {
+            $checkOut_time = $today_date . ' 15:00';
+        }
+       
         $workRecords = WorkRecord::whereDate('start',$today_date)->get();
         
         foreach ($workRecords as $workRecord) {

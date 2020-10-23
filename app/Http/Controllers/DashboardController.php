@@ -41,8 +41,7 @@ class DashboardController extends Controller
                 //dohvaća dopuštenja odjela za korisnika
                 $permission_dep = DashboardController::getDepartmentPermission();
 
-                $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id', $employee->id)->orWhere('to_department_id',$employee->work->department->id)->orderBy('updated_at','DESC')->with('comments')->get()->take(5);
-                
+                $posts = Post::PostToEmployee($employee)->take(5);
                 foreach ($posts as $post) {
                     $profile = PostController::profile($post);
                     $post->post_comment = $profile['post_comment'];//zadnji komentar na poruku

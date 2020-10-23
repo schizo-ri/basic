@@ -1,5 +1,4 @@
 $("a[rel='modal:open']").addClass('disable');
-console.log("Open modal");
 $(function() {
     $("a[rel='modal:open']").removeClass('disable');
     $.modal.defaults = {
