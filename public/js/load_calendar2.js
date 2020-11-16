@@ -148,7 +148,6 @@ $(function() {
         if(value == '') {
             $(".show_locco").show();
         }
-        
     });
     
     var scroll_day;

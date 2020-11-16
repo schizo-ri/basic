@@ -17,7 +17,7 @@
 			</div>			
 			<div class="form-group {{ ($errors->has('description')) ? 'has-error' : '' }}">
 				<label>@lang('basic.description')</label>
-				<textarea name="description" id="mytextarea"  maxlength="16777215"  >{{ old('description') }}</textarea>
+				<textarea name="description" id="tinymce_textarea" maxlength="16777215"  >{{ old('description') }}</textarea>
 				{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('contact'))  ? 'has-error' : '' }}">
@@ -47,42 +47,46 @@
 	</form>
 </div>
 <script>
-	//$.getScript( '/../js/validate.js');
-	tinymce.init({
-    selector: '#mytextarea',
-    height : 300,	
-    plugins: "image",
-    menubar: 'file edit insert view format table tools help',
-    toolbar: [
-        {
-        name: 'history', items: [ 'undo', 'redo' ]
-        },
-        {
-        name: 'formatting', items: [ 'bold', 'italic', 'forecolor', 'backcolor' ]
-        },
-        {
-        name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
-        },
-        {
-        name: 'indentation', items: [ 'outdent', 'indent' ]
-        },
-        {
-        name: 'image', items: [ 'image','url' ]
-        },
-        {
-        name: 'styles', items: [ 'styleselect' ]
-        },
-    ],
+	if( $('#tinymce_textarea').length >0 ) {
+		tinymce.init({
+			selector: '#tinymce_textarea',
+			height : 300,	
+			plugins: "image",
+			menubar: 'file edit insert view format table tools help',
+			toolbar: [
+				{
+				name: 'history', items: [ 'undo', 'redo' ]
+				},
+				{
+				name: 'formatting', items: [ 'bold', 'italic', 'forecolor', 'backcolor' ]
+				},
+				{
+				name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
+				},
+				{
+				name: 'indentation', items: [ 'outdent', 'indent' ]
+				},
+				{
+				name: 'image', items: [ 'image','url' ]
+				},
+				{
+				name: 'styles', items: [ 'styleselect' ]
+				},
+			],
 
-    image_list: [
-        {title: 'My image 1', value: 'https://www.example.com/my1.gif'},
-        {title: 'My image 2', value: 'http://www.moxiecode.com/my2.gif'}
-    ]		
+			image_list: [
+				{title: 'My image 1', value: 'https://www.example.com/my1.gif'},
+				{title: 'My image 2', value: 'http://www.moxiecode.com/my2.gif'}
+			]		
+		});
+		$('body').on($.modal.CLOSE, function(event, modal) {
+			$.getScript('/../node_modules/tinymce/tinymce.min.js');
+		});
+	}
+	//$.getScript( '/../js/validate.js');
+	
+
+$('#file').change(function(){
+	$('#file_name').text( $('input[type=file]').val());
 });
-	$('body').on($.modal.CLOSE, function(event, modal) {
-		$.getScript('/../node_modules/tinymce/tinymce.min.js');
-	});
-	$('#file').change(function(){
-        $('#file_name').text( $('input[type=file]').val());
-	});
 </script>

@@ -37,11 +37,11 @@
 									</span>
 								</td>
 								<td>{!! $employee->b_day ? date("d.m.Y",strtotime($employee->b_day)) : '' !!}</td>
-								<td>{{ $employee->work['name'] }}</td>
+								<td>{!! $employee->work ? $employee->work['name'] : '' !!}</td>
 								<td>
 									@if($employee->hasEmployeeDepartmen && count($employee->hasEmployeeDepartmen)>0)
 										@foreach ( $employee->hasEmployeeDepartmen as $empl_department )
-											{{ $empl_department->department->name }} <br>
+											{!! $empl_department->department ? $empl_department->department->name  : '' !!} <br>
 										@endforeach
 									@endif
 								</td>

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\AnniversaryMail;
 use DateTIme;
 use App\Http\Controllers\EmailingController;
+use Log;
 
 class AnniversaryCommand extends Command
 {
@@ -42,8 +43,11 @@ class AnniversaryCommand extends Command
      */
     public function handle()
     {
-        $send_to = EmailingController::sendTo('employees','cron');
+        Log::info('AnniversaryCommand');
 
+        $send_to = EmailingController::sendTo('employees','cron');
+        array_push($send_to , 'jelena.juras@duplico.hr');
+        
         // godišnjica na današnji dan
         $datum = new DateTime('now');
        

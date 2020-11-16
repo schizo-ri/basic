@@ -53,7 +53,7 @@
 					</tbody>
 				</table>
 			@else
-				p class="no_data">@lang('basic.no_data')</p>
+				<p class="no_data">@lang('basic.no_data')</p>
 			@endif
 		</div>
 	</main>

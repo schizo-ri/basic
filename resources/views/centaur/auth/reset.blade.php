@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h3 class="panel-title">Reset Your Password</h3>
+    <h3 class="panel-title">@lang('ctrl.reset')</h3>
 </div>
 <div class="modal-body">
     <form accept-charset="UTF-8" role="form" method="post" action="{{ route('auth.password.request.attempt') }}">

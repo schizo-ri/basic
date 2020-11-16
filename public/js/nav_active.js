@@ -43,7 +43,7 @@ function myTopNav() {
     } 
 }
 
-$('.logo_icon').on('click',function(){
+$('span.logo_icon').on('click',function(){
     $('.section_top_nav').css('width','250px');
     $('#myTopnav:not(".responsive")').css('display','block');
     $('#myTopnav:not(".responsive")').css('width','250px');
@@ -145,11 +145,12 @@ $('.form_evidention').on('submit',function(e){
         }
     });
 });
-/* 
-document.addEventListener("visibilitychange", function() {
-    if (document.hidden){
-    } else {
-        location.reload();
-    }
-});
- */
+
+if(body_width < 450) {
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden){
+        } else {
+            location.reload();
+        }
+    });
+}

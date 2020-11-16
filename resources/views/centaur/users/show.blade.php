@@ -44,16 +44,19 @@
 			@endif
 		</div>
 		<div class="col-3 info_abs">
+			@php
+				rsort($requests['years']);
+			@endphp
 			@if($user->employee)
 				<span class="title">@lang('absence.vacat_days')
 					<select id="year_vacation" class="year_select">
-						@foreach ($requests[ 'years'] as $year)
+						@foreach ($requests['years'] as $year)
 							<option >{{ $year }}</option>
 						@endforeach
 					</select>
 				</span>
 				<p class="col-6 float_l">
-					@foreach ($requests[ 'years'] as $year)
+					@foreach ($requests['years'] as $year)
 						<span class="go go_{{ $year }}">{!! BasicAbsenceController::godisnjiGodina($user->employee, $year) ? BasicAbsenceController::godisnjiGodina($user->employee, $year) : '0'!!} ( {!! BasicAbsenceController::razmjeranGO_Godina($user->employee, $year) ? BasicAbsenceController::razmjeranGO_Godina($user->employee, $year) : '0' !!} )
 						</span>
 					@endforeach	
@@ -134,7 +137,7 @@
 				<label for="bday">@lang('basic.birthday')</label>
 				<span id="bday">{{ date('d.m.Y',strtotime($user->employee->b_day)) }}</span>
 				<label for="work_place">@lang('basic.work')</label>
-				<span id="work_place">{{ $user->employee->work->name }}</span>
+				<span id="work_place">{!!  $user->employee->work ? $user->employee->work->name : '' !!}</span>
 				<label for="reg_date">@lang('basic.reg_date')</label>
 				<span id="reg_date">{{ date('d.m.Y',strtotime($user->employee->reg_date))}} </span>
 				<label for="phone">@lang('basic.phone')</label>
@@ -169,8 +172,6 @@
 				<em>No Assigned Role</em>
 			@endif
 		</div>
-
-		
 	</div>
 </main>
 <script>
@@ -181,14 +182,11 @@
 		$('.info_abs>p>.go').hide();
 		$('.info_abs>p>.go.go_'+year).show();
 		$('#mySearchTbl').val("");
-
-
 	});
 	$('#year_sick').change(function(){
 		console.log($(this).val());
 		year = $(this).val();
 		$('.info_abs>p>.bol').hide();
 		$('.info_abs>p>.bol.bol_'+year).show();
-
-		}); 
+	}); 
 </script>

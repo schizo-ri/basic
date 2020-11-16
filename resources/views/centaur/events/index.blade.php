@@ -14,7 +14,6 @@
 ?>
 @section('content')
 <div class="index_page posts_index">
-	
 	<aside class="col-xs-12 col-sm-12 col-md-4 col-lg-4 index_aside calendar_aside">
 		
 		<div>

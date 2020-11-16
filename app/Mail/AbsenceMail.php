@@ -17,7 +17,7 @@ class AbsenceMail extends Mailable
     /**
      * The absence instance.
      *
-     * @var vacationRequest
+     * @var absence
      */
     public $absence;
     

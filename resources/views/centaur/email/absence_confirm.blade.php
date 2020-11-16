@@ -31,19 +31,17 @@
         }
     </style>
 	<body>
-		@if($absence->absence['mark'] == "VIK")
-			<h4>@lang('absence.req_received') </h4>
-		@else
-			<h4>@lang('absence.request') {{ $absence->absence['name'] }}  @lang('basic.for')
-			@if($absence->absence['mark'] != "IZL")
-				{{ date("d.m.Y", strtotime($absence->start_date)) . ' do ' . date("d.m.Y", strtotime($absence->end_date)) }} 
-			@else
-				{{ date("d.m.Y", strtotime($absence->start_date)) . ' od ' . $absence->start_time . ' do ' . $absence->end_time }}</h4>
-			@endif
-		@endif
-		<br/> 
-		<div><b>{{ $odobrenje }}</b></div>
-		<div><b>{{ $absence->approve_reason }}</b></div>
+        <h4>@lang('absence.request') {{ $absence->absence['name'] }}  @lang('basic.for')
+        @if($absence->absence['mark'] != "IZL")
+            {{ date("d.m.Y", strtotime($absence->start_date)) . ' do ' . date("d.m.Y", strtotime($absence->end_date)) }} 
+        @else
+            {{ date("d.m.Y", strtotime($absence->start_date)) . ' od ' . $absence->start_time . ' do ' . $absence->end_time }}</h4>
+        @endif
+        <div><b>{{ $odobrenje }}</b></div>
+        <div><b>{{ $absence->approve_reason }}</b></div>
+		
+        <br/> 
+		
 		<div><b>{{ 'Odobrio: ' . $odobrio }}</b></div>
 	</body>
 </html>

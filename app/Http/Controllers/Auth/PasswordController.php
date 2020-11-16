@@ -35,9 +35,10 @@ class PasswordController extends Controller
      */
     public function getRequest()
     {
-        return view('auth.reset');
+        return view('Centaur::auth.reset');
     }
 
+    
     /**
      * Send a password reset link
      * @return Response|Redirect
@@ -63,7 +64,7 @@ class PasswordController extends Controller
             Mail::to($email)->queue(new CentaurPasswordReset($code));
         }
 
-        $message = 'Instructions for changing your password will be sent to your email address if it is associated with a valid account.';
+        $message = __('ctrl.pass_reset');
 
         if ($request->expectsJson()) {
             return response()->json(['message' => $message, 'code' => $code], 200);
@@ -83,15 +84,14 @@ class PasswordController extends Controller
     public function getReset(Request $request, $code)
     {
         // Is this a valid code?
-        if (!$this->validatePasswordResetCode($code)) {
+        if (! $this->validatePasswordResetCode($code)) {
             // This route will not be accessed via ajax;
             // no need for a json response
-            Session::flash('error', 'Invalid or expired password reset code; please request a new link.');
+            Session::flash('error',__('ctrl.invalid_code'));
             return redirect()->route('dashboard');
         }
 
-        return view('auth.password')
-            ->with('code', $code);
+        return view('Centaur::auth.password')->with('code', $code);
     }
 
     /**

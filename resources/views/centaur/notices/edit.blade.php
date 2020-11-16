@@ -73,29 +73,16 @@
                                         <input name="to_department[]" type="checkbox" id="{{ '0_'.$department0->id }}" value="{{ $department0->id }}" {!! in_array( $department0->id, $departments) ? 'checked' : '' !!} />
                                         <span>{{ $department0->name }}</span>
                                     </label>
-                                    @foreach($departments2 as $department2)
-                                        @if ($department2->level2 == $department0->id )
+                                    @foreach($departments1->where('level2', $department0->id ) as $department1)
+                                        <label for="{{  '1_'.$department1->id }}" class="col-12 float_left panel1" >
+                                            <input name="to_department[]" type="checkbox" id="{{ '1_'.$department1->id }}"  value="{{ $department1->id }}" {!! in_array( $department1->id,$departments) ? 'checked' : '' !!}  />
+                                            <span>{{ $department1->name }}</span>
+                                        </label>
+                                        @foreach( $departments2->where('level2', $department1->id)  as $department2)
                                             <label for="{{  '2_'.$department2->id }}" class="col-offset-1 col-md-10 float_left panel1" >
-                                                <input name="to_department[]" type="checkbox" id="{{ '1_'.$department2->id }}"  value="{{ $department2->id }}" {!! in_array( $department2->id,$departments) ? 'checked' : '' !!}  />
+                                                <input name="to_department[]" type="checkbox" id="{{ '2_'.$department2->id }}" value="{{ $department2->id }}" {!! in_array( $department2->id,$departments) ? 'checked' : '' !!}  />
                                                 <span>{{ $department2->name }}</span>
                                             </label>
-                                        @endif
-                                    @endforeach
-                                    @foreach($departments1 as $department1)
-                                        @if ($department1->level2 == $department0->id )
-                                            <label for="{{  '1_'.$department1->id }}" class="col-12 float_left panel1" >
-                                                <input name="to_department[]" type="checkbox" id="{{ '1_'.$department1->id }}"  value="{{ $department1->id }}" {!! in_array( $department1->id,$departments) ? 'checked' : '' !!}  />
-                                                <span>{{ $department1->name }}</span>
-                                            </label>
-                                        @endif
-                                        @foreach($departments2 as $department2)
-                                            
-                                            @if ($department2->level2 == $department1->id )
-                                                <label for="{{  '2_'.$department2->id }}" class="col-offset-1 col-md-10 float_left panel1" >
-                                                    <input name="to_department[]" type="checkbox" id="{{ '2_'.$department2->id }}" value="{{ $department2->id }}" {!! in_array( $department2->id,$departments) ? 'checked' : '' !!}  />
-                                                    <span>{{ $department2->name }}</span>
-                                                </label>
-                                            @endif
                                         @endforeach
                                     @endforeach
                                 </div>

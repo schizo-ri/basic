@@ -71,7 +71,7 @@ Route::get('work_records_table', ['as' => 'work_records_table', 'uses' => 'WorkR
 Route::resource('employees', 'EmployeeController');
 
 // Education
-Route::resource('education', 'EducationController');
+Route::resource('educations', 'EducationController');
 
 // Education theme
 Route::resource('education_themes', 'EducationThemeController');
@@ -135,6 +135,11 @@ Route::resource('absence_types', 'AbsenceTypeController');
 
 // Absences
 Route::resource('absences', 'AbsenceController');
+Route::get('confirmation', ['as' => 'confirmation', 'uses' => 'AbsenceController@storeConf']); // Send absence confirmation mail
+Route::get('confirmation_update/{id}', ['as' => 'confirmation_update', 'uses' => 'AbsenceController@storeConf_update']);
+Route::get('absence/confirmation_show', ['as' => 'confirmation_show', 'uses' => 'AbsenceController@confirmation_show']);// Open absence confirmation page
+Route::get('absence/absences_table', ['as' => 'absences_table', 'uses' => 'AbsenceController@absences_table']);
+Route::get('absence/absences_requests', ['as' => 'absences_requests', 'uses' => 'AbsenceController@absences_requests']);
 
 // Notices
 Route::resource('notices', 'NoticeController');
@@ -165,6 +170,7 @@ Route::resource('fuels', 'FuelController');
 
 // Locco
 Route::resource('loccos', 'LoccoController');
+Route::get('loccos_qr/create_qr', ['as' => 'loccos_qr.create_qr', 'uses' => 'LoccoController@create_qr']);
 
 // Task
 Route::resource('tasks', 'TaskController');
@@ -177,6 +183,9 @@ Route::resource('vehical_services', 'VehicalServiceController');
 
 // Template
 Route::resource('templates', 'TemplateController');
+
+// DayOff
+Route::resource('day_offs', 'DayOffController');
 
 // Dashboard 
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
@@ -216,7 +225,10 @@ Route::resource('customers', 'CustomerController');
 // Afterhour
 Route::resource('afterhours', 'AfterhourController');
 Route::get('confirmationAfterHours', ['as' => 'confirmationAfterHours', 'uses' => 'AfterhourController@storeConf']);
-
+Route::post('confirmationAfterHoursMultiple', ['as' => 'confirmationAfterHoursMultiple', 'uses' => 'AfterhourController@storeConfMulti']);
+Route::get('afterhours_approve', ['as' => 'afterhours_approve', 'uses' => 'AfterhourController@afterhours_approve']);
+Route::get('afterhours/confirmation_show_after/{id}', ['as' => 'confirmation_show_after', 'uses' => 'AfterhourController@confirmation_show_after']);
+Route::get('confirmation_update_after/{id}', ['as' => 'confirmation_update_after', 'uses' => 'AfterhourController@storeConf_update']);
 
 // JobInterview
 Route::resource('job_interviews', 'JobInterviewController');
@@ -237,6 +249,10 @@ Route::get('confirmationTemp', ['as' => 'confirmationTemp', 'uses' => 'Temporary
 // Kid
 Route::resource('kids', 'KidController');
 
+// Instruction
+Route::resource('instructions', 'InstructionController');
+Route::get('radne_upute', ['as' => 'radne_upute', 'uses' => 'InstructionController@radne_upute']);
+
 // Oglasnik
 Route::get('oglasnik', ['as' => 'oglasnik', 'uses' => 'AdController@oglasnik']);
 Route::get('sort', ['as' => 'sort', 'uses' => 'AdController@sort']);
@@ -249,12 +265,6 @@ Route::post('sendTestEmail', ['as' => 'sendTestEmail', 'uses' => 'NoticeControll
 
 // Send mail questionnaire
 Route::get('sendEmail', ['as' => 'sendEmail', 'uses' => 'QuestionnaireController@sendEmail']);
-
-// Send absence confirmation mail
-Route::get('confirmation', ['as' => 'confirmation', 'uses' => 'AbsenceController@storeConf']);
-Route::get('confirmation_update', ['as' => 'confirmation_update', 'uses' => 'AbsenceController@storeConf_update']);
-// Open absence confirmation page
-Route::get('absence/confirmation_show', ['as' => 'confirmation_show', 'uses' => 'AbsenceController@confirmation_show']);
 
 // User edit 
 Route::get('user/edit_user/{id}', ['as' => 'user.edit', 'uses' => 'UserController@edit_user']);
@@ -294,6 +304,9 @@ Route::post('setOrder', ['as' => 'setOrder', 'uses' => 'CampaignSequenceControll
 Route::post('last_km', 'CarController@last_km');
 Route::post('getMailSettings', 'SettingController@getMailSettings');
 
+Route::get('getDays/{id}', 'AbsenceController@getDays');
+Route::get('days_offUnused/{id}', 'BasicAbsenceController@days_offUnused');
+
 Route::get('/t', function () {
     event(new \App\Events\MessageSendEvent());
     dd('Event Run Successfully.');
@@ -312,3 +325,5 @@ Route::get('/view_clear', function() {
 Route::get('/down', function(){
     $exitCode = Artisan::call('down');
 });
+
+Route::get('contacts', ['as' => 'contacts', 'uses' => 'EmployeeController@contacts']);

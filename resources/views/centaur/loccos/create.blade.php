@@ -29,7 +29,7 @@
 					@endforeach
 					@endif
 				</select>
-				{!! ($errors->has('vozilo_id') ? $errors->first('vozilo_id', '<p class="text-danger">:message</p>') : '') !!}
+				{!! ($errors->has('car_id') ? $errors->first('car_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.employee')</label>
@@ -40,7 +40,7 @@
 						<option value="{{ $employee->id }}" {!! Sentinel::getUser()->employee->id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['first_name'] . ' ' .  $employee->user['last_name'] }}</option>
 					@endforeach
 				</select>
-				{!! ($errors->has('department_id') ? $errors->first('department_id', '<p class="text-danger">:message</p>') : '') !!}
+				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('date')) ? 'has-error' : '' }}">
 				<label for="">@lang('basic.date')</label>
@@ -50,7 +50,7 @@
 			<div class="form-group {{ ($errors->has('end_date')) ? 'has-error' : '' }}">
 				<label for="">@lang('absence.end_date')</label>
 				<input class="form-control" name="end_date" type="datetime-local" value="{{ old('end_date') }}" />
-				{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
+				{!! ($errors->has('end_date') ? $errors->first('end_date', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('starting_point')) ? 'has-error' : '' }}">
 				<label>@lang('basic.starting_point')</label>
@@ -64,8 +64,8 @@
 			</div>
 			<div class="form-group {{ ($errors->has('start_km'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.start_km')</label>
-				<input class="form-control" name="start_km" type="{!! $car_employee && $car_employee->car->private_car == 1 ? 'text' : 'hidden' !!}" id="start_km" required value="{!! $car_employee ? $car_employee->current_km : '' !!}" />	
-				<p id="start_km_text" style="display:{!! $car_employee && $car_employee->private_car != 1 ? 'block' : 'none' !!}"">{!! $car_employee ? $car_employee->current_km : '' !!}</p>
+				<input class="form-control" name="start_km" type="number" id="start_km" required value="{!! $car_employee ? $car_employee->current_km : '' !!}" />	
+			{{-- 	<p id="start_km_text" style="display:{!! $car_employee  && $car_employee->car && $car_employee->car->private_car != 1 ? 'block' : 'none' !!}"">{!! $car_employee ? $car_employee->current_km : '' !!}</p> --}}
 				{!! ($errors->has('start_km') ? $errors->first('start_km', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('end_km'))  ? 'has-error' : '' }}">
@@ -82,10 +82,10 @@
 				<label>@lang('basic.comment')</label>
 				<textarea class="form-control" name="comment" id="comment">{{ old('comment') }}</textarea>
 			</div>
-			{{-- <div class="servis form-group">
-				<label for="wrong_km">@lang('basic.wrong_km')</label>
-				<input class="" type="checkbox" name="wrong_km"  id="wrong_km" value=""/>
-			</div> --}}
+			<div class="servis form-group">
+				<label for="servis">@lang('basic.malfunction')</label>
+				<input class="" type="checkbox" name="servis"  id="servis" value=""/>
+			</div>
 			{{-- <div class="servis form-group">
 				<label for="travel">@lang('basic.create_travel')</label>
 				<input class="" type="checkbox" name="travel" value="travel" id="travel" value=""/>
@@ -105,12 +105,15 @@
 			var zav_km = $('#end_km').val();
 			var udaljenost = zav_km - poc_km;
 			$('#distance').val(udaljenost);
-			if (udaljenost < 0 ) {
+		
+			if ( udaljenost < 0 ) {
+				
 				$('#distance').css('border','1px solid red');
 				$('.btn-submit').attr('disabled', 'disabled');
 			} else {
+				console.log("udaljenost > 0" );
 				$('#distance').css('border','1px solid #F0F4FF');
-				$('.btn-submit').attr('disabled', 'false');
+				$('.btn-submit').attr('disabled', false);
 			}
 		});
 
@@ -131,18 +134,17 @@
 							'car_id': car_id,                   
 						}
 				})
-				.done(function( response ) {     
-					current_km = car.current_km;
+				.done(function( current_km ) {     
 					$('#start_km').val(current_km);
 					$('#start_km_text').text(current_km);
-					if(car.private_car == 1) {
+				/* 	if(car.private_car == 1) {
 						$("#start_km_text").hide();						
 						$("#start_km").attr('type','number');
 
 					} else {
 						$("#start_km_text").show();						
 						$("#start_km").attr('type','hidden');
-					}
+					} */
 				})
 				.fail(function() {
 					alert( "Nije uspjelo" );

@@ -33,10 +33,10 @@ class UserController extends Controller
     {
         // Middleware
         $this->middleware('sentinel.auth');
-        $this->middleware('sentinel.access:users.create', ['only' => ['create', 'store']]);
+    /*     $this->middleware('sentinel.access:users.create', ['only' => ['create', 'store']]);
         $this->middleware('sentinel.access:users.view', ['only' => ['index', 'show']]);
         $this->middleware('sentinel.access:users.update', ['only' => ['edit', 'update']]);
-        $this->middleware('sentinel.access:users.destroy', ['only' => ['destroy']]);
+        $this->middleware('sentinel.access:users.destroy', ['only' => ['destroy']]); */
 
         // Dependency Injection
         $this->userRepository = app()->make('sentinel.users');
@@ -100,8 +100,8 @@ class UserController extends Controller
         $credentials = [
             'email' => trim($request->get('email')),
             'password' => $request->get('password'),
-            'first_name' => $request->get('first_name', null),
-            'last_name' => $request->get('last_name', null)
+            'first_name' => trim($request->get('first_name', null)),
+            'last_name' => trim($request->get('last_name', null))
         ];
         $activate = (bool)$request->get('activate', false);
 
@@ -187,7 +187,7 @@ class UserController extends Controller
         }
         
         /* Poruku korisniku */
-        Mail::to( $user->email )->send(new UserCreateMail($user, $request->get('password'))); // mailovi upisani u mailing 
+        Mail::to( $user->email )->send(new UserCreateMail($user, $request->get('password'))); //
 
 		/* Poruku IT odjelu */
 		$send_to = EmailingController::sendTo('users', 'create');
@@ -251,6 +251,7 @@ class UserController extends Controller
                 $years = BasicAbsenceController::yearsRequests($user->employee); // sve godine zahtjeva
             }
         }
+        rsort($years);
 
         return view('Centaur::users.show', ['user' => $user, 'departmentRoles' => $departmentRoles, 'permission_dep' => $permission_dep, 'image_employee' => $image_employee,'years' => $years, 'user_name' => $user_name, 'data_absence' => $data_absence, 'work' => $work, 'dep_roles' => $dep_roles,'requests' => $requests,'yearsRequests' => $yearsRequests,'bolovanje' => $bolovanje]);
     }
@@ -437,17 +438,11 @@ class UserController extends Controller
         // Fetch the user object
         // $id = $this->decode($hash);
         $user = $this->userRepository->findById($id);
-		
         $employee =  $user->employee;
-
-		$departments = Department::orderBy('name','ASC')->get();
-		
-        // Fetch the available roles
-        $roles = app()->make('sentinel.roles')->createModel()->all();
         
-        if ($user) {
+        if ( $user ) {
             if(isset($employee)) {
-                $user_interes = UserInteres::where('employee_id',$employee->id)->first();
+                $user_interes = UserInteres::where('employee_id', $employee->id)->first();
                 if( $user_interes ) {
                     if($user_interes->category != null) {
                         $interes_tags = explode(',', $user_interes->category);
@@ -506,8 +501,6 @@ class UserController extends Controller
                 return view('Centaur::users.edit_user', [
                     'user' => $user,
                     'employee' => $employee,
-                    'departments' => $departments,
-                    'roles' => $roles,
                     'path' => $path,
                     'path2' => $path2,
                     'images_interest' => $images_interest,

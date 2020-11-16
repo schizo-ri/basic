@@ -87,7 +87,7 @@ $( function () {
 		$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 	}
 
-	$('.show_button').click(function () {
+	$('.show_button').on('click',function () {
 		$('.index_page .dt-buttons').toggle();		
 	})
 

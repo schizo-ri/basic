@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\EmailingController;
 use App\Models\Car;
 use DateTime;
+use Log;
 
 class CarsRegistration extends Command
 {
@@ -47,6 +48,8 @@ class CarsRegistration extends Command
         $today->modify('-1 years');
         $today->modify('-14 days');
       
+        Log::info('CarsRegistration' . ' | '.$today->format('Y-m-d') );
+
         $cars = Car::where('last_registration',$today->format('Y-m-d') )->get();
         if( count($cars) > 0) {
             foreach($send_to as $send_to_mail) {

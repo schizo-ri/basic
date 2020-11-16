@@ -20,12 +20,15 @@
 					@endforeach
 			</select>
 			<select class="change_employee_afterhour select_filter ">
-				<option value="" selected>{{ __('basic.view_all')}} </option>
+				<option value="all" selected>{{ __('basic.view_all')}} </option>
 					@foreach ($employees as $employee)
-						<option value="empl_{{ $employee->id }}">{{ $employee->user->first_name . ' ' . $employee->user->last_name }}</option>
+						<option value="empl_{{ $employee->id }}">{{ $employee->last_name . ' ' . $employee->first_name }}</option>
 					@endforeach
 			</select>
 		</div>
+	{{-- 	<a class="btn-new" href="{{ route('afterhours_approve') }}" >
+			<i class="far fa-calendar-check"></i>
+		</a> --}}
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="table-responsive">
@@ -46,10 +49,10 @@
 					<tbody>
 						@foreach ($afterhours as $afterhour)
 							<tr class="empl_{{ $afterhour->employee_id }}">
-								<td>{{ $afterhour->employee->user->first_name . ' ' . $afterhour->employee->user->last_name }}</td>
+								<td>{!!  $afterhour->employee->user ? $afterhour->employee->user->first_name . ' ' . $afterhour->employee->user->last_name : $afterhour->employee->email !!}</td>
 								<td>{!! $afterhour->date ? date('d.m.Y', strtotime($afterhour->date)) : '' !!}</td>
-								<td>{!! $afterhour->start_time ? date('H:s', strtotime($afterhour->start_time))  : '' !!} - {!! $afterhour->end_time ? date('H:s', strtotime($afterhour->end_time)) : '' !!}</td>
-								<td>{!! $afterhour->approve_h ? date('H:s', strtotime($afterhour->approve_h))  : '' !!}</td>
+								<td>{!! $afterhour->start_time ? date('H:i', strtotime($afterhour->start_time))  : '' !!} - {!! $afterhour->end_time ? date('H:i', strtotime($afterhour->end_time)) : '' !!}</td>
+								<td>{!! $afterhour->approve_h ? date('H:i', strtotime($afterhour->approve_h))  : '' !!}</td>
 								<td>{{ $afterhour->project->id }}</td>
 								<td>{{ $afterhour->comment }}</td>
 								<td>{!! $afterhour->approve == 1 ? 'odobreno' : '' !!}{!! $afterhour->approve == 0 ? ' nije odobreno' : '' !!}</td>

@@ -56,8 +56,9 @@ return [
 	'manager'		=> 'Voditelj',
 	'department_manager' => 'Voditelj odjela',
 	'department_first' 	=> 'Prvi nadređeni',
-	'superior' 	=> 'Nadređeni djelatnik',
+	'superior' 		=> 'Nadređeni djelatnik',
 	'fl_name'		=> 'Ime i prezime',
+	'lf_name'		=> 'Prezime i ime',
 	'f_name'		=> 'Ime',
 	'l_name'		=> 'Prezime',
 	'b_day'			=> 'Datum rođenja',
@@ -275,6 +276,7 @@ return [
 	'locco'				=> 'Locco vožnja',
 	'add_locco'			=> 'Dodaj vožnju',
 	'edit_locco'		=> 'Ispravi vožnju',
+	'finish_locco'		=> 'Završi vožnju',
 	'manufacturer'		=> 'Proizvođač',
 	'license_plate'		=> 'Registracija',
 	'chassis'			=> 'Šasija',
@@ -427,8 +429,17 @@ return [
 	'probation'	=> 'Probni ' . ' ' . ' rok ',	
 	'b_day_employee'	=> 'Rođendan ' . ' ' . ' djelatnika ',	
 	'stranger'	=> 'Istek ' . ' ' . ' dozvole ' . ' ' . ' za ' . ' ' . ' boravak',	
-	
-	
+	'instructions'	=> 'Radne upute',
+	'instruction'	=> 'Radna uputa',
+	'add_instruction'	=> 'Dodaj radnu uputu',
+	'edit_instruction'	=> 'Ispravi radnu uputu',
+	'contacts'			=> 'Kontakti',
+	'days_off'			=> 'Slobodni dani',
+	'day_off'			=> 'Slobodan dan',
+	'add_day_off'		=> 'Dodaj slobodan dan',
+	'edit_day_off'		=> 'Ispravi slobodan dan',
+	'no_days'			=> 'Broj dana',
+	'add_by_user'		=> 'Dodao djelatnik'
 ];	
 
 ?>

@@ -69,6 +69,9 @@ table.dataTable thead .sorting_asc_disabled {
 table.dataTable thead .sorting_desc_disabled {
   background-image: url("DataTables-1.10.21/images/sort_desc_disabled.png");
 }
+.all_absences .table-hover tbody tr:hover {
+  background-color: inherit;
+}
 table.dataTable tbody tr {
   background-color: #ffffff;
 }
@@ -106,7 +109,7 @@ table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd {
 table.dataTable.stripe tbody tr.odd.selected, table.dataTable.display tbody tr.odd.selected {
   background-color: #acbad4;
 }
-table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
+table.dataTable.hover tbody tr:not(.tr_placeholder):hover, table.dataTable.display tbody tr:not(.tr_placeholder):hover {
   background-color: #f6f6f6;
 }
 table.dataTable.hover tbody tr:hover.selected, table.dataTable.display tbody tr:hover.selected {

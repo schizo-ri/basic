@@ -292,4 +292,52 @@ class Employee extends Model
 	{
 		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.permission_date', date_format($date,'Y'))->whereMonth('employees.permission_date', date_format($date,'m'))->whereDay('employees.permission_date', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
 	}
+
+	/*
+	* get employees join users order by lastName ASC from Employee
+	* 	employee with termination this month
+	* @return void
+	*/
+	public static function employees_lastNameASCMonth($month, $year)
+	{
+		$employees = Employee::join('users','users.id','employees.user_id')
+						->select('employees.*','users.first_name','users.last_name')
+						->where('employees.id','<>',0)
+						->whereYear('employees.checkout', $year)
+						->whereMonth('employees.checkout', $month)
+						->whereYear('employees.checkout', $year)
+						->orWhere('employees.checkout', null)
+						->where('employees.user_id','<>',null) 
+						->orderBy('users.last_name','ASC')->get();
+	
+		$employees_filteres = $employees->filter(function ($employee, $key) use($month, $year) {
+            return strtotime($employee->reg_Date) <= strtotime($year .'-'.$month.'-'.'01' );
+        });
+
+		return $employees_filteres;
+	}
+	/*
+	 * Svi odjeli djelatnika prema Employee Department uključujući krovne odjele
+	*/
+	public static function employeesDepartment ( $employee ) 
+	{
+		$employee_departments = $employee->hasEmployeeDepartmen;
+		$departments = array();
+		foreach ($employee_departments as $employee_department) {
+			array_push($departments, $employee_department->department_id);
+			if( $employee_department->department->level1 == 2 ) {
+				array_push($departments,$employee_department->department->level2); // u array nadređeni odjel-  level 1
+				$department_level_1 = Department::find($employee_department->department->level2);
+				if( $department_level_1->level1 == 1) {
+					array_push($departments,$department_level_1->level2); // u array krovni odjel-  level 0
+				}
+			} else if( $employee_department->department->level1 == 1 ) {
+				array_push($departments,$employee_department->department->level2); // u array nadređeni odjel-  level 0
+			}
+		}
+		$departments = array_unique($departments);
+		sort($departments);
+
+		return array_unique($departments);
+	}
 }

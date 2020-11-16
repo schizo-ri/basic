@@ -10,7 +10,7 @@
 				<a class="link_back" href="{{ url()->previous() }}"><i class="fas fa-chevron-left"></i> @lang('basic.campaigns')</a> | {{ $campaign->name }}
 				<div class="campaign_start_date"><i class="far fa-calendar-alt"></i>@lang('absence.start_date'): {!! ' ' . $campaign->start_date ? date('d.m.Y', strtotime($campaign->start_date)) : '' !!}</div>
 			</div>
-			<main class="all_notices">
+			<main class="all_notices all_sequences">
 				<header class="page-header">
 					<div class="index_table_filter">
 						<label>

@@ -126,5 +126,51 @@ class Department extends Model
 		return $this->update($department);
 	}	
 
-	
+	public static function allDepartmentsEmployeesEmail ( $department_id ) 
+	{
+		$employees = Employee::employees_firstNameASC();
+		$employeesEmail = array();
+
+		$department = Department::where('id', $department_id)->first();
+		if($department->level1 == 0) {
+			foreach ($employees as $employee) {
+				array_push($employeesEmail, $employee->email );
+			}
+		}
+		if($department->level1 == 1) {
+			foreach ($employees as $employee) {
+				if(  $employee->hasEmployeeDepartmen && count( $employee->hasEmployeeDepartmen) > 0) {
+					if(  $employee->hasEmployeeDepartmen->where('department_id',$department->id)->first()) {
+						array_push($employeesEmail, $employee->email );
+					}
+				}
+			/* 	if ( $employee && $employee->work && $employee->work->department_id == $department->id) {
+					array_push($employeesEmail, $employee->email );
+				} */
+			}
+			$departments2 = Department::where('level2', $department->id)->get();
+			foreach ($departments2 as $department2) {
+				foreach ($employees as $employee) {
+					if(  $employee->hasEmployeeDepartmen && count( $employee->hasEmployeeDepartmen) > 0) {
+						if(  $employee->hasEmployeeDepartmen->where('department_id',$department2->id )->first()) {
+							array_push($employeesEmail, $employee->email );
+						}
+					}
+				/* 	if ( $employee && $employee->work && $employee->work->department_id == $department2->id) {
+						array_push($employeesEmail, $employee->email );
+					} */
+				}
+			}
+		}
+		if($department->level1 == 2) {
+			foreach ($employees as $employee) {
+				if(  $employee->hasEmployeeDepartmen && count( $employee->hasEmployeeDepartmen) > 0) {
+					if(  $employee->hasEmployeeDepartmen->where('department_id', $department_id )->first()) {
+						array_push($employeesEmail, $employee->email );
+					}
+				}
+			}
+		}
+		return $employeesEmail;
+	}
 }

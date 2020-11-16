@@ -79,7 +79,7 @@
 											<td class="td col-2 align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">{{ $sati }}</td>
 											<td class="td col-2 align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">{{ $dnevnice }}</td>
 											<td class="td col-2 align_r" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{{ $travel->daily_wage }}</td>
-											<td class="td col-2 align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;text-align:right;">{{ number_format($dnevnice * $travel->daily_wage, 2, '.', ' ') }}</td>
+											<td class="td col-2 align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;text-align:right;">{{ number_format($dnevnice * $travel->daily_wage, 2, '.', '') }}</td>
 										</tr>
 									</tbody>
 								</table>
@@ -101,7 +101,7 @@
 												<td class="td col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $locco->destination }}</td>
 												<td class="td col-2 distance align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{strval( $locco->distance )}}</td>
 												<td class="td col-2 km_price align_r" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">{!! $travel->car['private_car'] == 1 ? 2.00 : '' !!}</td>
-												<td class="td col-2 summary align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{!! $travel->car['private_car'] == 1 ? number_format($locco->distance * 2, 2, '.', ' ') : '' !!}</td>
+												<td class="td col-2 summary align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{!! $travel->car['private_car'] == 1 ? number_format($locco->distance * 2, 2, '.', '') : '' !!}</td>
 											</tr>
 											
 										@endif
@@ -117,7 +117,7 @@
 													<td class="td col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $locco1->destination }}</td>
 													<td class="td col-2 distance align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{strval( $locco1->distance )}}</td>
 													<td class="td col-2 km_price align_r" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">{!! $travel->car['private_car'] == 1 ? 2.00 : '' !!}</td>
-													<td class="td col-2 summary align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{!! $travel->car['private_car'] == 1 ? number_format($locco1->distance * 2, 2, '.', ' ') : '' !!}</td>
+													<td class="td col-2 summary align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{!! $travel->car['private_car'] == 1 ? number_format($locco1->distance * 2, 2, '.', '') : '' !!}</td>
 												</tr>
 											@endforeach
 										@else
@@ -155,9 +155,9 @@
 											<tr class="tr expences" style="width:100%;max-width:100%;">
 												<td class="td col-2" style="width: 15%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $expense->bill }}</td>
 												<td class="td col-5" style="width:45%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $expense->cost_description }}</td>
-												<td class="td col-2 align_r" style="width: 15%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{{ number_format($expense->amount, 2, '.', ' ') }}</td>
+												<td class="td col-2 align_r" style="width: 15%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{{ number_format($expense->amount, 2, '.', '') }}</td>
 												<td class="td col-1 align_c" style="width:10%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">{{ $expense->currency }}</td>
-												<td class="td col-2 align_r" style="width: 15%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{{ number_format($expense->total_amount, 2, '.', ' ') }}</td>
+												<td class="td col-2 align_r" style="width: 15%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{{ number_format($expense->total_amount, 2, '.', '') }}</td>
 											</tr>
 											@php
 												$j++;
@@ -179,8 +179,8 @@
 						</div>
 					</main>
 					<footer>
-						<p>Primljen predujam dana {!! $travel->advance_date ? date('d.m.Y', strtotime($travel->advance_date)) : '________' !!} u iznosu {{ number_format( $travel->advance, 2, '.', ' ') }} Kn</p>
-						<p>Ostaje za isplatu / povrat {{ number_format( $travel->rest_payout, 2, '.', ' ')}} Kn</p>
+						<p>Primljen predujam dana {!! $travel->advance_date ? date('d.m.Y', strtotime($travel->advance_date)) : '________' !!} u iznosu {{ number_format( $travel->advance, 2, '.', '') }} Kn</p>
+						<p>Ostaje za isplatu / povrat {{ number_format( $travel->rest_payout, 2, '.', '')}} Kn</p>
 						<p>Podnositelj obračuna {{ $travel->employee->user['first_name'] . ' ' .  $travel->employee->user['last_name'] }}
 						</p>
 					</footer>

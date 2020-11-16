@@ -65,10 +65,11 @@
 				<label>@lang('basic.comment')</label>
 				<textarea class="form-control" name="comment" id="comment" >{{ $locco->comment }}</textarea>
 			</div>
-			{{-- <div class="servis form-group">
-				<label for="wrong_km">@lang('basic.wrong_km')</label>
-				<input class="" type="checkbox" name="wrong_km" id="wrong_km" value=""/>
-			</div> --}}
+			<div class="servis form-group">
+				<label for="servis">@lang('basic.malfunction')</label>
+				<input class="" type="checkbox" name="servis" id="servis" value=""/>
+			</div>
+			
 			{{-- @if ( $travel )
 				<input type="hidden" name="travel_id" value="{{ $locco->travel_id }}"/>
 			@else

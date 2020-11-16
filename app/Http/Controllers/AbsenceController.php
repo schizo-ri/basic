@@ -9,6 +9,7 @@ use App\Http\Controllers\EmailingController;
 use App\Models\Absence;
 use App\Models\AbsenceType;
 use App\Models\Employee;
+use App\Models\Afterhour;
 use Sentinel;
 use App\Mail\AbsenceMail;
 use App\Mail\AbsenceUpdateMail;
@@ -21,9 +22,9 @@ use DateTime;
 class AbsenceController extends BasicAbsenceController
 {
     /**
-	*
-	* Set middleware to quard controller.
-	* @return void
+		*
+		* Set middleware to quard controller.
+		* @return void
 	*/
     public function __construct()
     {
@@ -37,39 +38,110 @@ class AbsenceController extends BasicAbsenceController
      */
     public function index(Request $request)
     {
-        $empl = Sentinel::getUser()->employee;
-		
-		$permission_dep = array();
+        $permission_dep = array();
 		$data_absence = array();
 		$bolovanje = array();
 		$docs = '';
 		$ova_godina = date('Y');
 		$prosla_godina = $ova_godina - 1;
 		$type = null;
-
+		
 		if(isset($_GET['year']) && $_GET['year']) {
 			$year = $_GET['year'];
 		} else {
-			$year = $ova_godina;
+			$year =  date('Y');
 		}
-		if(isset($_GET['type']) && $_GET['type']) {
-			$type = AbsenceType::where( 'mark', $_GET['type'] )->first();
-		} 
 
-		if( Sentinel::inRole('administrator') ) {
-			$absences = Absence::whereYear('start_date', $year)->get();
-			$absences = $absences->merge(Absence::whereYear('end_date', $year)->get());
+		if(isset($_GET['month']) && $_GET['month']) {
+			$YY_mm = explode('-',$_GET['month']);
+			$month = $YY_mm[1];
+			$year = $YY_mm[0];
 		} else {
-			$absences = Absence::where('employee_id',$empl->id)->whereYear('start_date', $year)->orderBy('start_date','ASC')->get();
-			$absences = $absences->merge(Absence::where('employee_id',$empl->id)->whereYear('end_date', $year)->orderBy('start_date','ASC')->get());
+			$month = date('m');
+			$year = date('Y');
 		}
-		if($type) {
-			$absences = $absences->where('type', $type->id);
-		}
-		if($empl) {
-			$years = BasicAbsenceController::yearsRequests($empl); // sve godine zahtjeva
-			arsort($years);
+		$afterhours = collect();
 
+		$types = AbsenceType::get();
+		if( isset($_GET['employee_id']) && $_GET['employee_id'] && $_GET['employee_id'] != 'all' ) {
+			$employee_id = $_GET['employee_id'];
+			$empl = Employee::find($employee_id);
+		} else {
+			$empl = Sentinel::getUser()->employee;
+		}
+	
+		if( $empl ) { 
+			if( ! isset($_GET['type']) || ( isset($_GET['type']) && $_GET['type'] != 'afterhour')) {
+				if( (isset($_GET['employee_id']) && $_GET['employee_id'] == 'all') || (Sentinel::inRole('administrator') && ! isset($_GET['employee_id'])) ) {
+					$absences = Absence::whereMonth('start_date', $month)
+										->whereYear('start_date', $year)
+										->orderBy('start_date','DESC')->get();
+					$absences = $absences->merge(Absence::whereMonth('end_date', $month)
+														->whereYear('end_date', $year)
+														->orderBy('start_date','DESC')->get());
+				} else {
+					$absences = Absence::where('employee_id',$empl->id)
+									->whereMonth('start_date', $month)
+									->whereYear('start_date', $year)
+									->orderBy('start_date','DESC')->get();
+					$absences = $absences->merge(Absence::where('employee_id',$empl->id)
+									->whereMonth('end_date', $month)
+									->whereYear('end_date', $year)
+									->orderBy('start_date','DESC')->get());
+				}
+			} 
+			
+			$employees = Employee::employees_lastNameASC();
+			
+			if(isset($_GET['type']) && $_GET['type'] && $_GET['type'] != 'all' ) {
+				if( $_GET['type'] == 'afterhour') {
+					$afterhours = Afterhour::whereMonth('date', $month)
+											->whereYear('date', $year)
+											->orderBy('date','DESC')->get();
+
+					if(isset($_GET['employee_id']) && $_GET['employee_id'] != 'all'	) {
+						$afterhours = $afterhours->where('employee_id',$_GET['employee_id']  );
+					}
+					$absences = collect();
+				} else {
+					$type = $types->where('id', $_GET['type'])->first();			 
+					$absences = $absences->where('type', $type->id); 
+				}
+			}
+			
+			if(isset($_GET['approve']) && $_GET['approve'] != 'all' ) {
+				if( $_GET['approve'] == 'approved' ) {
+					$approve = 1;
+				} elseif( $_GET['approve'] == 'refused' ) {
+					$approve = '0';
+				} elseif( $_GET['approve'] == 'not_approved' ) {
+					$approve = NULL;
+				}
+				if($approve != NULL) {
+					if( count($absences)>0) {
+						$absences = $absences->where('approve', $approve );
+					}
+					if( count($afterhours)>0) {
+						$afterhours = $afterhours->where('approve', $approve );
+					}
+				} else {
+					if( count($absences)>0) {
+						$absences = $absences->where('approve', NULL)->where('approve','<>', '0');
+					}
+					if( count($afterhours)>0) {
+						$afterhours = $afterhours->where('approve', NULL)->where('approve','<>', '0');
+					}
+				}
+				
+			}
+			
+			if(isset($_GET['type_bol']) && $_GET['type_bol']) {
+				$type = $types->where('mark', $_GET['type_bol'])->first();			 
+				$absences = $absences->where('type', $type->id); 
+			}
+
+			$years = BasicAbsenceController::yearsRequests($empl); // sve godine zahtjeva
+			rsort($years);
 			$data_absence = array(
 				'years'  		 => $years,  
 				'years_service'  => BasicAbsenceController::yearsServiceCompany( $empl ),  
@@ -82,17 +154,53 @@ class AbsenceController extends BasicAbsenceController
 				'user_name' 	 => DashboardController::user_name( $empl->id ), 
 			);
 			
-			/* dd($data_absence); */
 			if($empl->work) {
 				$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 			}
-		/* 	$data_absence = BasicAbsenceController::zahtjevi( $empl ); */
+			
+			$years_all = Absence::getYearsMonth();
+			rsort($years_all);	
+
+			return view('Centaur::absences.index', ['afterhours' => $afterhours,'absences' => $absences,'employees' => $employees, 'data_absence' => $data_absence, 'types' => $types , 'ova_godina' => $ova_godina,'years' => $years, 'years_all' => $years_all,'employee' => $empl, 'permission_dep' => $permission_dep]);
 		} else {
-			$empl = array();
+			$message = session()->flash('error',  __('ctrl.path_not_allow'));
+			return redirect()->back()->withFlashMessage($message);
 		}
-		
-		return view('Centaur::absences.index', ['absences' => $absences, 'data_absence' => $data_absence, 'ova_godina' => $ova_godina,'prosla_godina' => $prosla_godina,'bolovanje' => $bolovanje, 'years' => $years, 'employee' => $empl, 'permission_dep' => $permission_dep, 'docs' => $docs]);
     }
+
+	public function absences_table(Request $request)
+    {
+		$employees = Employee::employees_lastNameASC();
+		$employees = $employees->where('work_id','<>',null);
+		
+		$years = Absence::getYears(); // sve godine zahtjeva
+		
+		return view('Centaur::absences.absences_table',['employees'=> $employees, 'years' => $years] );
+	}
+
+	public function absences_requests(Request $request)
+    {
+		if(isset($_GET['month']) && $_GET['month']) {
+			$YY_mm = explode('-',$_GET['month']);
+			$month = $YY_mm[1];
+			$year = $YY_mm[0];
+		} else {
+			$month = date('m');
+			$year = date('Y');
+		}
+
+		$years = Absence::getYearsMonth(); // sve godine zahtjeva
+		rsort($years);	
+		
+		$types = AbsenceType::get();
+		
+		$absences = Absence::AbsencesForMonth( $month, $year);
+		if(isset($_GET['type']) && $_GET['type'] && $_GET['type'] != 'all') {
+			$absences = $absences->where('type', $_GET['type']);
+		}
+	
+		return view('Centaur::absences.absences_requests',['absences'=> $absences, 'years'=> $years,'types'=> $types,  'month' => $year . '-'. $month ] );
+	}
 
     /**
      * Show the form for creating a new resource.
@@ -101,8 +209,10 @@ class AbsenceController extends BasicAbsenceController
      */
     public function create(Request $request)
     {
+		$empl = Sentinel::getUser()->employee;
+		$zahtjevi = BasicAbsenceController::zahtjevi( $empl );
+		$preostali_dani  = $zahtjevi['ukupnoPreostalo'];
 		
-		dd(BasicAbsenceController::days_offUsed(Employee::find(115)) );
 		$type = '';
 
 		if($request['type']) {
@@ -111,11 +221,22 @@ class AbsenceController extends BasicAbsenceController
 		
 		$employees = Employee::employees_lastNameASC();
 		$absenceTypes = AbsenceType::get();
-		
+	
 		$user = Sentinel::getUser();
 		
-		return view('Centaur::absences.create', ['employees' => $employees, 'type' => $type, 'absenceTypes' => $absenceTypes, 'user' => $user]);
+		return view('Centaur::absences.create', ['employees' => $employees, 'type' => $type, 'absenceTypes' => $absenceTypes, 'user' => $user,  'preostali_dani' => $preostali_dani ]);
     }
+
+	public function getDays ( $employee_id )
+	{
+		$employee = Employee::find( $employee_id);
+		if( $employee ) {
+			$zahtjevi = BasicAbsenceController::zahtjevi( $employee );
+			$dani  = $zahtjevi['ukupnoPreostalo'];
+		}
+		
+		return $dani;
+	}
 
     /**
      * Store a newly created resource in storage.
@@ -137,7 +258,7 @@ class AbsenceController extends BasicAbsenceController
 		} else {
 				$decree = 0;
 		}
-		if($input['employee_id'] == 'svi') {
+		if($request['employee_id'] == 'svi') {
 			$employees = Employee::employees_firstNameASC();
 			foreach($employees as $employee ) {
 				$data = array(
@@ -160,7 +281,7 @@ class AbsenceController extends BasicAbsenceController
 			}
 		} elseif(is_array($request['employee_id'])  && count($request['employee_id']) > 0) {
 		   	foreach($request['employee_id'] as $employee_id) {
-				if( $input['zahtjev'] == 'SLD' && Employee::find($employee_id)->slDani == 0 ) {
+				if( $request['zahtjev'] == 'SLD' && Employee::find($employee_id)->slDani == 0 ) {
 					$employee_sld = Employee::find($employee_id);
 					$message .= 'Za djelatnika '. $employee_sld->user->first_name .' ' . $employee_sld->user->last_name . ' nije moguće poslati zahtjev za slobodan dan.\n ';
 				} else {
@@ -174,18 +295,18 @@ class AbsenceController extends BasicAbsenceController
 						'comment'  			=> $request['comment'],
 						'decree'  			=> $decree,
 					);
-					if( (isset($request['decree']) && $request['decree'] == 1) || $request['type'] == 'BOL') {
+					if( $request['type'] == 'BOL' || (isset($request['decree']) && $request['decree'] == 1 ) ) {
 						$data += ['approve'=>1];
 						$data += ['approved_date'=>date('Y-m-d')];
-						$data += ['approved_id'=>Sentinel::getUser()->employee['id']];
+						$data += ['approved_id'=>Sentinel::getUser()->employee['id'] ];
 					}
 					
 					$absence = new Absence();
 					$absence->saveAbsence($data);
 	
-					if($request['email'] == 'DA') {
-						$send_to = EmailingController::sendTo('absences','confirm');
-						$send_to = array_merge($send_to, EmailingController::sendTo('absences','create') );
+					if($request['email'] == 'DA' ) {
+						$send_to = EmailingController::sendTo('absences','create');
+					
 						// mail voditelja - prvog nadređenog
 						$voditelj_mail = $absence->employee->work->firstSuperior ? $absence->employee->work->firstSuperior->email : null;
 						if($voditelj_mail) {
@@ -195,64 +316,71 @@ class AbsenceController extends BasicAbsenceController
 						if(isset($request['decree']) && $request['decree'] == 1 ) {
 							array_push($send_to, $absence->employee->email );
 						} 
-						try {
+					/* 	try { */
 							foreach(array_unique($send_to) as $send_to_mail) {
 								if( $send_to_mail != null & $send_to_mail != '' ) {
 									Mail::to($send_to_mail)->send(new AbsenceMail($absence));  
 								}
 							} 
-						} catch (\Throwable $th) {
+					/* 	} catch (\Throwable $th) {
 							session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 							return redirect()->back();
-						}
+						} */
 				   }
 				}
 			}
-	   } else {
-			$data = array(
-				'type'  			=> $absenceType,
-				'employee_id'  		=> $request['employee_id'],
-				'start_date'    	=> date("Y-m-d", strtotime($request['start_date'])),
-				'end_date'			=> date("Y-m-d", strtotime($request['end_date'])),
-				'start_time'  		=> $request['start_time'],
-				'end_time'  		=> $request['end_time'],
-				'comment'  			=> $request['comment'],
-				'decree'  			=> $decree,
-			);
-			if(isset($request['decree']) && $request['decree'] == 1) {
-				$data += ['approve'=>1];
-				$data += ['approved_date'=>date('Y-m-d')];
-				$data += ['approved_id'=>Sentinel::getUser()->employee['id']];
-			}
-			$absence = new Absence();
-			$absence->saveAbsence($data);
-
-			if($request['email'] == 'DA') {
-				/* mail obavijest o novoj poruci */
-				$send_to = EmailingController::sendTo('absences','confirm');
-				$send_to = array_merge($send_to, EmailingController::sendTo('absences','create') );
-
-				$firstSuperior = $absence->employee->work->firstSuperior; // prvi nadređeni
-				if($firstSuperior) {
-					$mail_firstSuperior = $firstSuperior->email;
-					array_push($send_to, $mail_firstSuperior);
-				} else {
-					$manager = $absence->employee->work->employee; // voditelj odjela
-					$mail_manager = $manager->email;
-					array_push($send_to, $mail_manager);
+	    } else {
+			$request_exist = BasicAbsenceController::absenceForDay($request['employee_id'], $request['start_date'], $request['start_time'], $request['end_time'] );
+           
+            if( $request_exist == false ) {
+				$data = array(
+					'type'  			=> $absenceType,
+					'employee_id'  		=> $request['employee_id'],
+					'start_date'    	=> date("Y-m-d", strtotime($request['start_date'])),
+					'end_date'			=> date("Y-m-d", strtotime($request['end_date'])),
+					'start_time'  		=> $request['start_time'],
+					'end_time'  		=> $request['end_time'],
+					'comment'  			=> $request['comment'],
+					'decree'  			=> $decree,
+				);
+				if( $request['type'] == 'BOL' || (isset($request['decree']) && $request['decree'] == 1 ) ) {
+					$data += ['approve'			=>1];
+					$data += ['approved_date'	=>date('Y-m-d')];
+					$data += ['approved_id' 	=> null];
 				}
-				try {
-					foreach(array_unique($send_to) as $send_to_mail) {
-						if( $send_to_mail != null & $send_to_mail != '' ) {
-							Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
-						}
+				$absence = new Absence();
+				$absence->saveAbsence($data);
+
+				if($request['email'] == 'DA' && $request['type'] != 'BOL') {
+					/* mail obavijest o novoj poruci */
+					$send_to = EmailingController::sendTo('absences','confirm');
+					$send_to = array_merge($send_to, EmailingController::sendTo('absences','create') );
+
+					$firstSuperior = $absence->employee->work->firstSuperior; // prvi nadređeni
+					if($firstSuperior) {
+						$mail_firstSuperior = $firstSuperior->email;
+						array_push($send_to, $mail_firstSuperior);
+					} else {
+						$manager = $absence->employee->work->employee; // voditelj odjela
+						$mail_manager = $manager->email;
+						array_push($send_to, $mail_manager);
 					}
-				} catch (\Throwable $th) {
-					session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
-					return redirect()->back();
+					/* try { */
+						foreach(array_unique($send_to) as $send_to_mail) {
+							if( $send_to_mail != null & $send_to_mail != '' ) {
+								Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
+							}
+						}
+					/* 	} catch (\Throwable $th) {
+						session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+						return redirect()->back();
+					} */
 				}
-		   } 
-	   }
+		    } else {
+				session()->flash('error',  __('ctrl.request_exist'));
+				return redirect()->back();
+			}
+	    }
 	 
 	   	$message = session()->flash('success', __('ctrl.request_sent'));
 		
@@ -269,18 +397,31 @@ class AbsenceController extends BasicAbsenceController
     public function show($id)
     {
         $empl = Employee::find($id);
-
 		if($empl) {
-			$permission_dep = explode(',', $empl->work->department->departmentRole->toArray()[0]['permissions']);
 			$absences = Absence::where('employee_id',$empl->id)->get();
+			$afterhours = Afterhour::where('employee_id',$empl->id)->get();
 		} else {
-			 $permission_dep = array();
-			 $empl = array();
-			 $absences = array();
+			$absences = array();
+			$afterhours = array();
+		}
+		$types = AbsenceType::get();
+		
+		if(isset($_GET['type']) && $_GET['type'] && $_GET['type'] != 'all' ) {
+			if( $_GET['type'] == 'afterhour') {
+				
+				$absences = collect();
+			} else {
+				$type = $types->where('id', $_GET['type'])->first();			 
+				$absences = $absences->where('type', $type->id); 
+				$afterhours = collect();
+			}
 		}
 		
-		return view('Centaur::absences.show', ['absences' => $absences, 'permission_dep' => $permission_dep]);
-		
+		$data_absence = array(
+			'zahtjevi' 		 => BasicAbsenceController::requestAllYear( $empl ), 
+		);
+
+		return view('Centaur::absences.show', ['absences' => $absences,'afterhours' => $afterhours,'types' => $types,'data_absence' => $data_absence]);
     }
 
     /**
@@ -343,9 +484,9 @@ class AbsenceController extends BasicAbsenceController
 			/* mail obavijest o novoj poruci */
 			
 			/* Ako je djelatnik radione poruka ide na g.Peklića */
-			if( Sentinel::getUser()->employee->hasEmployeeDepartmen->where('department_id', Department::where('name','Radiona')->first()->id )->first()) {
+			/* if( Sentinel::getUser()->employee->hasEmployeeDepartmen->where('department_id', Department::where('name','Radiona')->first()->id )->first()) {
 				$send_to = array('borislav.peklic@duplico.hr');
-			} else {
+			} else { */
 				$send_to = EmailingController::sendTo('absences','confirm');
 				$send_to = array_merge($send_to, EmailingController::sendTo('absences','create') );
 
@@ -358,8 +499,7 @@ class AbsenceController extends BasicAbsenceController
 					$mail_manager = $manager->email;
 					array_push($send_to, $mail_manager);
 				}
-			}
-
+			/* } */
 			try {
 				foreach(array_unique($send_to) as $send_to_mail) {
 					if( $send_to_mail != null & $send_to_mail != '' ) {
@@ -403,13 +543,11 @@ class AbsenceController extends BasicAbsenceController
 
 		$odobrio_user = Sentinel::getUser()->employee;
 
-		$datum = new DateTime('now');
-
 		$data = array(
 			'approve'  			=>  $_GET['approve'],
 			'approved_id'    	=>  $odobrio_user->id,
 			'approve_reason'  	=>  $_GET['approve_reason'],
-			'approved_date'		=>  date_format($datum,'Y-m-d')
+			'approved_date'		=>  date('Y-m-d')
 		);
 				
 		$absence->updateAbsence($data);
@@ -447,26 +585,24 @@ class AbsenceController extends BasicAbsenceController
 		return redirect()->route('dashboard')->withFlashMessage($message);
 	}
 
-	public function storeConf_update(Request $request)
+	public function storeConf_update( Request $request, $id)
     {
-		$absence = Absence::find($request['id']);
+		$absence = Absence::find( $id );
 	
 		$odobrio_user = Sentinel::getUser()->employee;
 
 		$datum = new DateTime('now');
 
 		$data = array(
-			'approve'  			=>  $_GET['approve'],
+			'approve'  			=>  $request['approve'],
 			'approved_id'    	=>  $odobrio_user->id,
-			'approve_reason'  	=>  $_GET['approve_reason'],
+			'approve_reason'  	=>  $request['approve_reason'],
 			'approved_date'		=>  date_format($datum,'Y-m-d')
 		);
 				
 		$absence->updateAbsence($data);
 
 		if($request['email'] == 1 ){ 
-			/* mail obavijest o novoj poruci */
-
 			$send_to = EmailingController::sendTo('absences','confirm');
 			array_push($send_to, $absence->employee->email );
 			try {
@@ -481,10 +617,13 @@ class AbsenceController extends BasicAbsenceController
 			}
 		}
 		
-		$message = session()->flash('success',  $absence->approve == 1 ? __('absence.approved') :  __('absence.not_approved') );
-		
+	/* 	$message = session()->flash('success',  $absence->approve == 1 ? __('absence.approved') :  __('absence.refused') ); */
 		/* return redirect()->route('dashboard')->withFlashMessage($message); */
-		return redirect()->back()->withFlashMessage($message);
+		/* return redirect()->back()->withFlashMessage($message); */
+
+		$message = $absence->approve == 1 ? __('absence.changed_approval') . ': ' .  __('absence.approved') : __('absence.changed_approval') . ': ' .   __('absence.refused');
+		return $message;
+
 	}
 
 	public function confirmation_show(Request $request)

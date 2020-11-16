@@ -113,13 +113,14 @@ use App\Models\Ads;
 								</div>
 							</a>
 							<div class="notice_links">
-								
-								@if(Sentinel::getUser()->hasAccess(['ads.delete']) || in_array('ads.delete', $permission_dep))
+								{{-- @if(Sentinel::getUser()->hasAccess(['ads.delete']) || in_array('ads.delete', $permission_dep)) --}}
+								@if ($ad->employee->id == Sentinel::getUser()->employee->id  )
 									<a href="{{ route('ads.destroy', $ad->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
 										<i class="far fa-trash-alt"></i>
 									</a>
 								@endif
-								@if(Sentinel::getUser()->hasAccess(['ads.update']) || in_array('ads.update', $permission_dep) )
+								{{-- @if(Sentinel::getUser()->hasAccess(['ads.update']) || in_array('ads.update', $permission_dep) ) --}}
+								@if ($ad->employee->id == Sentinel::getUser()->employee->id)
 									<a href="{{ route('ads.edit', $ad->id) }}" class="btn-edit" rel="modal:open">
 											<i class="far fa-edit"></i>
 									</a>

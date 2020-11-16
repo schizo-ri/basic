@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\EmployeeTermination;
+use Log;
 
 class TermintionMail extends Mailable
 {
@@ -37,6 +38,8 @@ class TermintionMail extends Mailable
      */
     public function build()
     {
+        Log::info('TermintionMail');
+
         return $this->markdown('emails.employee_terminations.termination')
                     ->subject( __('basic.employee_termination') )
                     ->with([

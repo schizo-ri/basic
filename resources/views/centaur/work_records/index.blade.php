@@ -3,15 +3,7 @@
 @section('title', __('basic.work_records'))
 
 @section('content')
-	@php
-		use App\Models\WorkRecord;
-		if(isset($_GET['date'])) {
-			$request_date = $_GET['date'];
-		} else {
-			$request_date = date('Y-m-d');
-		}
-	@endphp
-	<header class="page-header work_record_header first_view_header">
+	<header class="page-header work_record_header second_view_header">
 		<div class="index_table_filter">
 			<label>
 				<input type="search" placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
@@ -21,80 +13,94 @@
 					<i class="fas fa-plus"></i>
 				</a>
 			@endif
-			<a class="change_view" href="{{ route('work_records_table') }}"></a>
-			<select class="change_month select_filter ">
+		{{-- 	<a class="change_view2" href="{{ route('work_records.index') }}" ></a> --}}
+			<select class="change_month select_filter">
 				@foreach ($months as $month)
 					<option value="{{ $month }}">{{ date('Y m',strtotime($month))}}</option>
 				@endforeach
 			</select>
-			<select class="change_employee_work select_filter ">
+		{{-- 	<select class="change_employee_work select_filter ">
 				<option value="" selected>{{ __('basic.view_all')}} </option>
 				@foreach ($employees as $employee)
 					<option value="empl_{{ $employee->id }}">{{ $employee->first_name . ' ' . $employee->last_name }}</option>
 				@endforeach
-			</select>
+			</select> --}}
 		</div>
 	</header>
-	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<div class="table-responsive first_view">
-			@if(count($work_records))
-				<table id="index_table" class="display table table-hover ">
-					<thead>
+	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12 main_work_records">
+		<div class="second_view">
+			<div class="table-responsive1">
+				<table id="index_table" class="display table table_work_record" style="width: 100%;">
+					<thead>	
 						<tr>
-							<th>@lang('basic.employee')</th>
-							<th class="sort_date">@lang('absence.start_time')</th>
-							<th class="sort_date">@lang('absence.end_time')</th>
-							<th>@lang('basic.travel_orders')</th>
-							<th>@lang('absence.time')</th>
-							<th class="not-export-column">@lang('basic.options')</th>
+							<th class="ime">Prezime i ime</th>
+							@foreach($list as $day)
+							<?php 
+								$dan1 = date('D', strtotime($day));
+							switch ($dan1) {
+								case 'Mon':
+									$dan = 'P';
+									break;
+								case 'Tue':
+									$dan = 'U';
+									break;
+								case 'Wed':
+									$dan = 'S';
+									break;
+								case 'Thu':
+									$dan = 'Č';
+									break;
+								case 'Fri':
+									$dan = 'P';
+									break;
+								case 'Sat':
+									$dan = 'S';
+									break;	
+								case 'Sun':
+									$dan = 'N';
+									break;	
+							}
+							?>
+								<th >{{ date('d', strtotime($day)) .' '. $dan }}</th>
+							@endforeach
+						
 						</tr>
 					</thead>
-					<tbody>
-						@foreach ($work_records as $record)
+					<tbody class="second">
+						@foreach($employees as $employee)
 							@php
-								$trav = $record->employee->hasTravels->whereBetween('start_date', [ date('Y-m-d',strtotime($record->start)) . ' 00:00:00', date('Y-m-d',strtotime($record->start))  . ' 23:59:59' ] );
-								$locco_day = $record->employee->hasLocco->whereBetween('date', [ date('Y-m-d',strtotime($record->start))  . ' 00:00:00', date('Y-m-d',strtotime($record->start)) . ' 23:59:59' ] );
+								$absence_employee = $absences->where('employee_id', $employee->id)
 							@endphp
-							<tr class="empl_{{ $record->employee_id }}">
-								<td>
-									<a href="{{ route('work_records.show', ['id'=>$record->employee->id, 'date' => $request_date ]) }}">
-										{{ $record->employee->user['first_name'] . ' ' . $record->employee->user['last_name'] }}
-									</a>
-								</td>
-								<td>{{ date('d.m.Y. H:i',strtotime($record->start)) }}</td>
-								<td>{!! $record->end ? date('d.m.Y. H:i',strtotime($record->end)) : '' !!}</td>
-								<td>
-									@if( $trav )
-										@foreach ($trav as $put)
-										{{'PN - ' . $put->car->car_index }} <br>
-										@endforeach
-									@endif
-									@if($locco_day)
-										@foreach ($locco_day as $locco)
-											{{'L - ' . $locco->car->car_index }}<br>
-										@endforeach
-									@endif
-								</td>
-								<td>{{ $record->interval  }}</td>
-								<td class="center">
-									@if(Sentinel::getUser()->hasAccess(['work_records.update']) || in_array('work_records.update', $permission_dep))
-										<a href="{{ route('work_records.edit', $record->id) }}" class="btn-edit" rel="modal:open" >
-												<i class="far fa-edit"></i>
-										</a>
-									@endif
-									@if(  Sentinel::getUser()->hasAccess(['work_records.delete']) || in_array('work_records.delete', $permission_dep))
-										<a href="{{ route('work_records.destroy', $record->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" >
-											<i class="far fa-trash-alt"></i>
-										</a>
-									@endif
-								</td>
+							<tr class="second empl_{{ $employee->id }}">
+								<td>{{ $employee->last_name . ' ' . $employee->first_name }}</td>
+								@foreach($list as $day2)
+									<?php 
+										$dan2 = date('Y-m-d', strtotime($day2)); 
+										$hasAbsence = false;
+										foreach ($absence_employee as $absence) {
+											if (in_array($dan2, $absence->days) ) {
+												$abs = $absence->absence['mark'];
+												$hasAbsence = true;
+											}
+										}												
+									?>
+									<td class="td_izostanak">
+										@if( $hasAbsence )
+											<span>{{ $abs }}</span>
+										@else 
+											@if ( date('N', strtotime($dan2) ) < 6)
+													@if( ( $employee->checkout == null && strtotime($dan2) >= strtotime($employee->reg_date) ) || ($employee->checkout != null && strtotime($dan2) < strtotime($employee->checkout) )  )
+													<span>RR</span>
+												@endif
+											@endif
+										@endif
+									</td>
+								@endforeach
 							</tr>
 						@endforeach
 					</tbody>
 				</table>
-			@else
-				<p class="no_data">@lang('basic.no_data')</p>
-			@endif
-		</div>		
+			</div>	
+		</div>
 	</main>
 @stop

@@ -68,29 +68,16 @@
                                         <input name="to_department[]" type="checkbox" id="{{ '0_'.$department0->id }}" value="{{ $department0->id }}" />
                                         <span>{{ $department0->name }}</span>
                                     </label>
-                                    @foreach($departments2 as $department2)
-                                        @if ($department2->level2 == $department0->id )
-                                            <label for="{{  '2_'.$department2->id }}" class="col-offset-1 col-md-10 float_left panel1" >
-                                                <input name="to_department[]" type="checkbox" id="{{ '1_'.$department2->id }}"  value="{{ $department2->id }}"  />
-                                                <span>{{ $department2->name }}</span>
-                                            </label>
-                                        @endif
-                                    @endforeach
-                                    @foreach($departments1 as $department1)
-                                        @if ($department1->level2 == $department0->id )
-                                            <label for="{{  '1_'.$department1->id }}" class="col-12 float_left panel1" >
+                                    @foreach($departments1->where('level2', $department0->id ) as $department1)
+                                            <label for="{{  '1_'.$department1->id }}" class="col-12 col-offset-1 float_left panel1" >
                                                 <input name="to_department[]" type="checkbox" id="{{ '1_'.$department1->id }}"  value="{{ $department1->id }}"  />
                                                 <span>{{ $department1->name }}</span>
                                             </label>
-                                        @endif
-                                        @foreach($departments2 as $department2)
-                                            
-                                            @if ($department2->level2 == $department1->id )
-                                                <label for="{{  '2_'.$department2->id }}" class="col-offset-1 col-md-10 float_left panel1" >
+                                        @foreach($departments2->where('level2', $department1->id) as $department2)
+                                                <label for="{{  '2_'.$department2->id }}" class="col-offset-2 col-md-10 float_left panel1" >
                                                     <input name="to_department[]" type="checkbox" id="{{ '2_'.$department2->id }}" value="{{ $department2->id }}"  />
                                                     <span>{{ $department2->name }}</span>
                                                 </label>
-                                            @endif
                                         @endforeach
                                     @endforeach
                                 </div>
@@ -185,16 +172,12 @@
             $.getScript( '/../js/filter.js');  
 
         </script>
-
 		<!--Awesome icons -->
 		<script src="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/js/all.min.js') }}"></script>
-	
 		<!-- Jquery modal -->
 		<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
-		
 		<!--Unlayer modal -->
 		{{-- <script src="{{ URL::asset('/../node_modules/react-email-editor/umd/react-email-editor.min.js') }}"></script> --}}
-
 		<!-- Scripts -->
         {{-- <script src="{{URL::asset('/../js/all.js') }}"></script> --}}
         <script src="{{URL::asset('/../js/open_modal.js') }}"></script>

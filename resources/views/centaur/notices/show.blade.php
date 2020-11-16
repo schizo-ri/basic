@@ -65,7 +65,11 @@
         </div>
     @endif
     <div class="notice_content" >
-        {!! $notice->notice !!}
+        @if ( $notice->old_text)
+            {!!  $notice->old_text !!}
+        @else
+            {!! $notice->notice !!}
+        @endif
     </div>
 </div>
 <script>

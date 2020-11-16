@@ -8,6 +8,7 @@ use App\Mail\StrangerMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\EmailingController;
 use DateTime;
+use Log;
 
 class StrangerCommand extends Command
 {
@@ -46,6 +47,7 @@ class StrangerCommand extends Command
 
         $datum = new DateTime('now');
         $datum->modify('+75 days');
+        Log::info('ProbationCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
         
         $employees = Employee::employeeStranger($datum);
         foreach ($employees as $employee) {

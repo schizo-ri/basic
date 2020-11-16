@@ -50,5 +50,10 @@ class Campaign extends Model
 	public function updateCampaign($campaign=array())
 	{
 		return $this->update($campaign);
-    }
+	}
+	
+	public static function countCampaign()
+	{
+		return count( Campaign::where('active', 1)->get() );
+	}
 }

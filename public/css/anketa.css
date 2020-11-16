@@ -238,7 +238,7 @@ details .ocj {
 
 th {
 	text-align: center !important;
-	font-size: 12px;
+	font-size: 0.75rem;
 }
 
 #myTable1 tr:hover{
@@ -291,7 +291,7 @@ th {
 	details {
 		padding:0 !important;
 		margin:0 !important;
-		font-size: 12px;
+		font-size: 0.75rem;
 	}
 	summary {
 		font-size: 16px !important;

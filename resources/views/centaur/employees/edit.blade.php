@@ -25,7 +25,7 @@
 			
 			<div class="form-group  {{ ($errors->has('color'))  ? 'has-error' : '' }}" style="padding-top: 10px">
 				<label>@lang('basic.color') </label>
-				<input class="form-control color"  type="color" name="color" value="{{ $employee->color}}" >
+				<input class="form-control color"  type="color" name="color" value="{!! $employee->color ? $employee->color : '#ffffff' !!}" >
 				{!! ($errors->has('color') ? $errors->first('color', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('b_day')) ? 'has-error' : '' }}">
@@ -299,6 +299,6 @@
 		});
 	});
 	
-     $.getScript( '/../js/validate.js'); 
+    $.getScript( '/../js/validate.js'); 
 </script>
 

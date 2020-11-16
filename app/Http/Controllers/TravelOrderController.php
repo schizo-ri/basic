@@ -300,8 +300,7 @@ class TravelOrderController extends Controller
                 }
             }
         } catch (\Throwable $th) {
-            session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
-			return redirect()->back();
+            $message = "Mail nije poslan, moguće da je onemogućeno spajanje na mail server.";
         }
 
         return $message;

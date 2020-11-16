@@ -4,7 +4,7 @@
 <div class="modal-body modal_body_task">
 	<p><b>@lang('basic.employee'): </b>{{ $task->employee->user['first_name'] . ' ' . $task->employee->user['last_name'] }}</p>
 	<p><b>@lang('calendar.task'): </b>{{ $task->title }}</p>
-	<p><b>@lang('basic.date'): </b>{{ $task->date . ' ' . $task->time1 . ' - ' . $task->time2  }}</p>
+	<p><b>@lang('basic.date'): </b>{{ date('d.m.Y', strtotime($task->date)) . ' ' . $task->time1 . ' - ' . $task->time2  }}</p>
 	<p><b>@lang('basic.car'): </b>{{ $task->car['model'] . ' ' . $task->car['registration'] }}</p>
 	<p><b>@lang('basic.description'): </b>{{ $task->description }}</p>
 </div>

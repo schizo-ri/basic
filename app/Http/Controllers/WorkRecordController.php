@@ -36,6 +36,71 @@ class WorkRecordController extends Controller
      */
     public function index(Request $request)
     {
+        if(isset( $_GET['date']) ) {
+            $mjesec = date('m',strtotime( $_GET['date'] . '-1'));
+            $godina = date('Y',strtotime( $_GET['date'] . '-1'));
+
+            $prev_month = new DateTime($_GET['date'] . '-1');
+            $prev_month->modify('-1 month');
+            $date_before = date_format($prev_month,'Y-m-' . '01');
+            $month_before = date_format($prev_month,'m');
+            $year_before = date_format($prev_month,'Y');
+            $date_before = date_format($prev_month,'Y-m-d');
+
+            $next_month = new DateTime($_GET['date'] . '-1');
+            $next_month->modify('+1 month');
+            $date_after = date_format($next_month,'Y-m-' . '01');
+    
+        } else {
+            $mjesec = date('m');
+            $godina = date('Y');
+           
+            $prev_month = new DateTime(date('Y-m-d'));
+            $prev_month->modify('-1 month');
+            $date_before = date_format($prev_month,'Y-m-' . '01');
+            
+            $month_before = date_format($prev_month,'m');
+            $year_before = date_format($prev_month,'Y');
+            $next_month = new DateTime(date('Y-m-d'));
+            $next_month->modify('+1 month');
+            $date_after = date_format($next_month,'Y-m-' . '01');
+        }
+
+        $absences = Absence::whereBetween('start_date', [$date_before, $date_after])->where('approve','<>',null)->get();
+        foreach ($absences as $absence) {
+            $absence->days = array();
+            $begin = new DateTime($absence['start_date']);
+            $end = new DateTime($absence['end_date']);
+            $end->setTime(0,0,1);
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
+            $i = 0;
+            $holidays = BasicAbsenceController::holidays();
+            foreach ($period as $dan) {
+                if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
+                    $absence->days += [$i => date_format($dan,'Y-m-d')];
+                    $i++;
+                }
+            }
+        }
+       
+        $months = Absence::getYearsMonth();
+        rsort($months);
+
+        for($d=1; $d<=31; $d++){
+			$time=mktime(12, 0, 0, $mjesec, $d, $godina);  
+			if (date('m', $time)==$mjesec){   
+					$list[]=date('Y-m-d D', $time);
+			}
+        }
+
+        $employees = Employee::employees_lastNameASCMonth( $mjesec, $godina);
+        
+        return view('Centaur::work_records.index', ['list' => $list,'employees' => $employees,'absences' => $absences,'months' => $months]);
+    }
+
+    public function workRecordsTable(Request $request) 
+    {
         if(isset($_GET['date']) ) {
             $mjesec = date('m',strtotime( $_GET['date'] . '-1'));
             $godina = date('Y',strtotime( $_GET['date']));
@@ -74,92 +139,7 @@ class WorkRecordController extends Controller
 
         return view('Centaur::work_records.index', ['work_records' => $work_records, 'permission_dep' => $permission_dep, 'list' => $list,'employees' => $employees,'months' => $months]);
     }
-
-    public function workRecordsTable(Request $request) 
-    {
-        if(isset( $_GET['date']) ) {
-            $mjesec = date('m',strtotime( $_GET['date'] . '-1'));
-            $godina = date('Y',strtotime( $_GET['date']));
-
-            $prev_month = new DateTime($_GET['date'] . '-1');
-            $prev_month->modify('-1 month');
-            $date_before = date_format($prev_month,'Y-m-' . '01');
-            $month_before = date_format($prev_month,'m');
-            $year_before = date_format($prev_month,'Y');
-            $date_before = date_format($prev_month,'Y-m-d');
-
-            $next_month = new DateTime($_GET['date'] . '-1');
-            $next_month->modify('+1 month');
-            $date_after = date_format($next_month,'Y-m-' . '01');
     
-        } else {
-            $mjesec = date('m');
-            $godina = date('Y');
-           
-            $prev_month = new DateTime(date('Y-m-d'));
-            $prev_month->modify('-1 month');
-            $date_before = date_format($prev_month,'Y-m-' . '01');
-            
-            $month_before = date_format($prev_month,'m');
-            $year_before = date_format($prev_month,'Y');
-            $next_month = new DateTime(date('Y-m-d'));
-            $next_month->modify('+1 month');
-            $date_after = date_format($next_month,'Y-m-' . '01');
-        }
-    
-        $work_records = WorkRecord::whereMonth('start', $mjesec )->whereYear('start', $godina )->get();
-        $months = $this->months_workingHours();
-
-        foreach($work_records as $record){
-            $time1 = date_create($record->start);
-            if( $record->end ) {
-                $time2 = date_create($record->end);
-                $interval = date_diff($time1,$time2);
-                $record->interval = date('H:i',strtotime( $interval->h .':'.$interval->i));
-            } else {
-                $record->interval = null;
-            }
-        }
-        // zahtjevi za izostanak
-        $absences = Absence::whereBetween('start_date', [$date_before, $date_after])->where('approve','<>',null)->get();
-
-        $holidays = BasicAbsenceController::holidays();
-       
-        foreach ($absences as $absence) {
-            $absence->days = array();
-            $begin = new DateTime($absence['start_date']);
-            $end = new DateTime($absence['end_date']);
-            $end->setTime(0,0,1);
-            $interval = DateInterval::createFromDateString('1 day');
-            $period = new DatePeriod($begin, $interval, $end);
-            $i = 0;
-            foreach ($period as $dan) {
-                if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
-                    $absence->days += [$i => date_format($dan,'Y-m-d')];
-                    $i++;
-                }
-            }
-        }
-
-        $empl = Sentinel::getUser()->employee;
-        $permission_dep = array();
-        if($empl) {
-            $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        }
-       
-        for($d=1; $d<=31; $d++){
-			$time=mktime(12, 0, 0, $mjesec, $d, $godina);  
-			if (date('m', $time)==$mjesec){   
-					$list[]=date('Y-m-d D', $time);
-			}
-        }
-
-        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->with('hasWorkingRecord')->with('hasAbsences')->get();
-        
-        return view('Centaur::work_records.work_records_table', ['work_records' => $work_records, 'permission_dep' => $permission_dep, 'list' => $list,'employees' => $employees,'months' => $months,'absences' => $absences]);
-    }
-    
-
     /**
      * Show the form for creating a new resource.
      *
@@ -288,9 +268,9 @@ class WorkRecordController extends Controller
             $record->interval = date('H:i',strtotime( $interval->h .':'.$interval->i));
         }
         // zahtjevi za izostanak
-        $absences = Absence::where('employee_id', $employee->id)->whereMonth('start_date', $mjesec )->whereYear('start_date', $godina )->where('approve','<>',null)->get();
-        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_before )->whereYear('start_date', $year_before )->where('approve','<>',null)->get());
-        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_after )->whereYear('start_date', $year_after )->where('approve','<>',null)->get());
+        $absences = Absence::where('employee_id', $employee->id)->whereMonth('start_date', $mjesec )->whereYear('start_date', $godina )->where('approve',1)->get();
+        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_before )->whereYear('start_date', $year_before )->where('approve',1)->get());
+        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_after )->whereYear('start_date', $year_after )->where('approve',1)->get());
      
         $holidays = BasicAbsenceController::holidays();
         $holidaysThisYear = BasicAbsenceController::holidaysThisYear($godina);
@@ -441,4 +421,6 @@ class WorkRecordController extends Controller
 
         return $months;
     }
+
+ 
 }

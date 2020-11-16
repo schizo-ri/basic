@@ -54,7 +54,6 @@ class LoccoController extends Controller
      */
     public function create(Request $request)
     {
-      
         $cars = Car::orderBy('registration','ASC')->get();
         $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->get();
 
@@ -68,6 +67,25 @@ class LoccoController extends Controller
             $car_id = null;
         }
         return view('Centaur::loccos.create', ['cars' => $cars, 'employees' => $employees, 'registracija' => $reg, 'car_id' => $car_id]);
+    }
+
+     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create_qr(Request $request)
+    {
+        $cars = Car::orderBy('registration','ASC')->get();
+        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->get();
+
+        $reg = null;
+        if( $_GET['reg'] ) {
+            $reg = $_GET['reg'];
+        }      
+        $car = $cars->where('registration',$reg )->first();
+
+        return view('Centaur::loccos_qr.create_qr', ['cars' => $cars, 'employees' => $employees, 'this_car' => $car ]);
     }
 
     /**
@@ -101,13 +119,18 @@ class LoccoController extends Controller
 		$locco = new Locco();
         $locco->saveLocco($data);
        
+      /* Update Car - trenutni kilometri */
+        if($request['end_km']) {
+            $car = Car::find($request['car_id']);
+            $data_car = array(
+                'current_km'  => $request['end_km']
+            );
+            $car->updateCar($data_car);
+        }
+
         /* Upis u evidenciju rada ako je otvoren putni nalog prije 8:15 / 7:00 */
         $now = new DateTime();
-        if( $now->format('N') < 5 ) {
-            $time = '08:00';
-        } else if($now->format('N') == 5) {
-            $time = '07:00';
-        }  
+        $time = '08:00';
         
         $workRecord = WorkRecord::where('employee_id', $request['employee_id'])->whereDate('start', $now->format('Y-m-d'))->first();
         if( ! $workRecord ) {
@@ -120,23 +143,15 @@ class LoccoController extends Controller
                 $workRecord->saveWorkRecords($data);
             }
         }
-
-        /* Update Car - trenutni kilometri */
-        if($request['end_km']) {
-            $car = Car::find($request['car_id']);
-            $data_car = array(
-                'current_km'  => $request['end_km']
-            );
-            $car->updateCar($data_car);
-        }
         
-     /*    try { */
+        /* try { */
             if( $request['travel']) {
                 $data_travel = array(
                     'date'  		    => $request['date'],
                     'employee_id'  	    => $request['employee_id'],
                     'car_id'  		    => $request['car_id'],
                     'destination'  	    => $request['destination'],
+                    'description'  	    => $request['comment'],
                     'days'  	        => 1,
                     'start_date'  	    => $request['date'],
                     'end_date'  	    => null,
@@ -169,9 +184,9 @@ class LoccoController extends Controller
             return redirect()->back();
         } */
       
-        if($request['wrong_km']){
+        if($request['servis']){
 			if(! $request['comment'] ){
-				$message = session()->flash('error', __('ctrl.wrong_km'));
+				$message = session()->flash('error', __('ctrl.malfunction'));
 				return redirect()->back()->withFlashMessage($message);
 			} else {
                 $send_to = EmailingController::sendTo('loccos','create');
@@ -190,8 +205,14 @@ class LoccoController extends Controller
             }
         }
         
-        session()->flash('success',  __('ctrl.data_save'));
-		return redirect()->back();
+        if(isset($request['create_qr'])) {
+            session()->flash('success',  __('ctrl.data_save'));
+            return redirect()->route('dashboard');
+        } else {
+            session()->flash('success',  __('ctrl.data_save'));
+            return redirect()->back();
+        }
+       
     }
 
     /**
@@ -323,7 +344,7 @@ class LoccoController extends Controller
                 );
                 $locco->updateLocco($data_locco);
 
-                $data_loccoTravel = array(
+              /*   $data_loccoTravel = array(
                     'travel_id'  => $travelOrder->id,
                     'starting_point'  =>  $request['starting_point'],
                     'destination'  =>  $request['km_destination'],
@@ -331,7 +352,7 @@ class LoccoController extends Controller
                 );
 
                 $travelLocco = new TravelLocco();
-                $travelLocco->saveTravelLocco( $data_loccoTravel );
+                $travelLocco->saveTravelLocco( $data_loccoTravel ); */
 
             }
         } else if( $request['travel']) {
@@ -343,7 +364,7 @@ class LoccoController extends Controller
             );
             $locco->updateLocco($data_locco);
 
-            $data_loccoTravel = array(
+          /*   $data_loccoTravel = array(
                 'travel_id'  => $travelOrder->id,
                 'starting_point'  =>  $request['starting_point'],
                 'destination'  =>  $request['km_destination'],
@@ -351,10 +372,30 @@ class LoccoController extends Controller
             );
 
             $travelLocco = new TravelLocco();
-            $travelLocco->saveTravelLocco( $data_loccoTravel );
+            $travelLocco->saveTravelLocco( $data_loccoTravel ); */
+        }
+        $message = '';
+        if($request['servis']){
+			if(! $request['comment'] ){
+				$message =  __('ctrl.malfunction');
+				/* return redirect()->back()->withFlashMessage($message); */
+			} else {
+                $send_to = EmailingController::sendTo('loccos','create');
+              
+                try {
+                    foreach(array_unique($send_to) as $send_to_mail) {
+                        if( $send_to_mail != null & $send_to_mail != '' ) {
+                            Mail::to($send_to_mail)->send(new CarServiceMail($locco)); // mailovi upisani u mailing 
+                        }
+                    }
+                } catch (\Throwable $th) {
+                    session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+			        return redirect()->back();
+                }
+            }
         }
        
-        session()->flash('success',  __('ctrl.data_edit'));
+        session()->flash('success',  __('ctrl.data_edit') .  ' ' . $message );
 		return redirect()->back();
     }
 

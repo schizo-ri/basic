@@ -36,8 +36,19 @@ class NoticeMail extends Mailable
      */
     public function build()
     {
+        $title = ''; 
+        if($this->notice->title) {
+            $text = $this->notice->title;
+            $text = explode(" ", $text);
+            foreach ($text as $word) {
+                $title .= $word . ' ';
+            }
+        } else {
+            $title = 'Nova ' . ' ' .  ' obavijest';
+        }
+
         return $this->markdown('Centaur::email.notice_send1')
-                    ->subject( __('emailing.new_notice') . ' - ' . $this->notice->title )
+                    ->subject( __('emailing.new_notice') . ' - ' . $title )
                     ->with(['notice'    => $this->notice,
                             'url'       => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']  . '/dashboard'
                     ]);

@@ -1,6 +1,7 @@
 $(function() { // filter knowledge base
 	var value = null;
 	var date = null;
+	var year = null;
 	var employee_id = null;
 
 	$('.change_month_afterhour').on('change',function(){
@@ -13,9 +14,17 @@ $(function() { // filter knowledge base
 		$.ajax({
 			url: url,
 			type: "get",
+			beforeSend: function(){
+				// Show image container
+				$('body').prepend('<div id="loader"></div>');
+			},
 			success: function( response ) {
 				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
 					$.getScript('/../restfulizer.js');
+					$.getScript('/../js/datatables.js');
+					$('.dt-buttons').show();		
+                   
 				});
 			},
 			error: function(jqXhr, json, errorThrown) {
@@ -23,6 +32,7 @@ $(function() { // filter knowledge base
 			}
 		});
 	});
+	
 	$('.change_employee_afterhour').on('change',function(){
 		employee_id =  $(this).val().toLowerCase();
 		if(employee_id != '' && employee_id != null) {
@@ -33,8 +43,15 @@ $(function() { // filter knowledge base
 		$.ajax({
 			url: location.href + '?date='+date+'&employee_id='+employee_id ,
 			type: "get",
+			beforeSend: function(){
+				// Show image container
+				$('body').prepend('<div id="loader"></div>');
+			},
 			success: function( response ) {
 				$( '#admin_page >main' ).load(location.href + '?date='+date+'&employee_id='+employee_id + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
+					$.getScript('/../js/datatables.js');
+					$('.dt-buttons').show();		
 					$.getScript('/../restfulizer.js');
 				});
 			},
@@ -75,15 +92,23 @@ $(function() { // filter knowledge base
 		}
 
 	});	
-	
-	$('.filter_loccos').on('change',function() {
+
+	$('.filter_notices').on('change',function() {
 		date =  $('#filter_month').val().toLowerCase();
+		url =location.href + '?date='+date;
+		console.log(url);
 		$.ajax({
-			url: location.href + '?date='+date,
+			url: url,
 			type: "get",
 			data: { 'date': date},
+			beforeSend: function(){
+				// Show image container
+				$('body').prepend('<div id="loader"></div>');
+			},
 			success: function( response ) {
-				$( '#admin_page >main' ).load(location.href + '?date='+date + ' #admin_page >main .table-responsive',function(){
+				/* console.log(response); */
+				$( '.notices' ).load(location.href + '?date='+date + ' .notices>article',function(){
+					$('#loader').remove();
 					$.getScript('/../restfulizer.js');
 				});
 			},
@@ -91,22 +116,35 @@ $(function() { // filter knowledge base
 				console.log(jqXhr.responseJSON.message);
 			}
 		});
+	});	
 
-
-		/* if(date == 'all' ) {
-			date = '';
-		}  */
-		
-	/* 	if(date == ''){
-			$('tbody tr').show();
-		} else {
-			$('tbody tr').filter(function() {
-				$(this).toggle($(this).text().toLowerCase().indexOf(date) > -1);
-			});
-		} */
-		/* var title = $(document).prop('title'); 
-		title += ' - ' +date;
-		$(document).prop('title', title); */
+	$('.filter_loccos').on('change',function() {
+		date =  $('#filter_month').val().toLowerCase();
+		console.log(date);
+		url =location.href + '?date='+date;
+		console.log(url);
+		$.ajax({
+			url: url,
+			type: "get",
+			data: { 'date': date},
+			beforeSend: function(){
+				// Show image container
+				$('body').prepend('<div id="loader"></div>');
+			},
+			success: function( response ) {
+				$( '#admin_page >main' ).load(location.href + '?date='+date + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
+					$.getScript('/../js/datatables.js');
+					$('.show_button').on('click',function () {
+                        $('.dt-buttons').toggle();		
+                    })
+					$.getScript('/../restfulizer.js');
+				});
+			},
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr.responseJSON.message);
+			}
+		});
 	});	
 	
 	$('.filter_travel').on('change',function() {
@@ -154,4 +192,9 @@ $(function() { // filter knowledge base
 	/* 	$('#filter_employee option.id_'+ employee_id).attr('selected','selected');
 		$('#filter_date option.date_'+ date).attr('selected','selected'); */
 	});	
+	if( $('.section_notice .notices').length > 0) {
+		$('.select_filter.sort').on('change',function () {
+			$('.section_notice .notices').load($(this).val() + ' .section_notice .notices .noticeboard_notice_body');
+		});
+	}
 });

@@ -14,7 +14,7 @@
                 @php
                     $image = '';
                     $user_name = '';
-                    if($data_day['employee_id']) {
+                    if(isset($data_day['employee_id']) && $data_day['employee_id']) {
                         $image = DashboardController::profile_image($data_day['employee_id']);
                         $user_name =  DashboardController::user_name($data_day['employee_id']);
                     }

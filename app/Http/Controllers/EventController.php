@@ -76,7 +76,12 @@ class EventController extends Controller
         }else{
             $daysInMonth = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
         }
-        $days_in_month = $daysInMonth[intval($selected['mj_select'])-1];
+        if($selected['mj_select']) {
+            $mj_select = $selected['mj_select'];
+        } else {
+            $mj_select = date('m');
+        }
+        $days_in_month = $daysInMonth[intval($mj_select)-1];
         $dataArr_day = EventController::event_for_selected_day( $dataArr, $dan );
      
         $uniqueType = array_unique(array_column($dataArr_day, 'type'));
@@ -84,7 +89,7 @@ class EventController extends Controller
             $events_day = $events->where('date', $dan);
         }
         $tasks_day = TaskController::task_for_selected_day( $dan );
-        $tasks = Task::whereMonth('date', $selected['mj_select'] )->get();
+        $tasks = Task::whereMonth('date', $mj_select )->get();
         foreach ( $tasks as $task ) {
             $task->week = date('W',strtotime($task->date));
         }
@@ -563,7 +568,7 @@ class EventController extends Controller
         if ( $request['dan']) {
             $dan = $request['dan'];
         }
-        dd($request['dataArr_day']);
+
         return view('Centaur::all_event', ['dataArr_day' => $dataArr_day, 'uniqueType' => $uniqueType, 'dan' => $dan]);     
      }
 }

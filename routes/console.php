@@ -18,8 +18,8 @@ Artisan::command('inspire', function () {
 })->describe('Display an inspiring quote');
 
 Artisan::command('email:absence_day', function () {
-    $this->comment(absence_day::quote());
-})->describe('Display an Absences quote');
+    $this->info("Izostanci!");
+});
 
 /* Artisan::command('command:clear_database', function () {
     $this->comment(clear_database::quote());

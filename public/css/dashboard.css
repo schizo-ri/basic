@@ -175,7 +175,7 @@
 
 .container .posts .all_post .post_empl .post_time {
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: #071E57;
     line-height: 24px;
     float: right;
@@ -222,6 +222,8 @@
 }
 .notice>div:nth-child(2){
     padding-left: 25px;
+    max-height: 150px;
+    overflow: hidden;
 }
 
 .notice>div:first-child span.notice_time {
@@ -257,7 +259,7 @@
 }
 .notice>div:nth-child(2) span {
     font-weight: 500;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     line-height: 22px;
     color: #606060;
 }
@@ -296,9 +298,9 @@
     margin-bottom: 15px;
 }
 
-.container h2> a.view_all {
+.container h2> a.view_all, .main_absence a.view_all {
     font-weight: 600;
-    font-size: 0.625rem;
+    font-size: 0.8125rem;
     text-align: right;
     color: #606060;
     float: right;
@@ -307,7 +309,9 @@
     line-height: 26px;
     margin-right: 20px;
 }
-
+.main_absence a.view_all {
+    color: white;
+}
 .container .cal_days p.date {
     float: left;
     width: 64px;
@@ -415,7 +419,7 @@
 
 .comming_agenda .agenda_time {
 	font-weight: 600;
-    font-size: 15px;
+    font-size: 0.9375rem;
     text-align: center;
     color: #1390EA;
     float: left;
@@ -429,7 +433,6 @@
 	text-align: center;
 	color: #071E57;
 	width: 100%;
-
 }
 
 .comming_agenda .agenda_comment {
@@ -450,14 +453,6 @@
     overflow: hidden;
 }
 
-.comming_agenda .btn-new, .noticeboard .btn-new {
-   /*  float: right;
-    width: 30px;
-    height: 26px;
-    line-height: 26px;
-    padding: 0 10px; */
-}
-
 .noticeboard .btn-new {
     margin-left: 30px;
 }
@@ -471,16 +466,54 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-   /*  display: none; */
     clear: left;
     overflow: hidden;
     background: inherit;
-   /*  top: 50%;
-    bottom: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%); */
 }
+
+.placeholder_span {
+    width: auto;
+    max-width: 60%;
+    height: auto;
+    position: relative;
+    clear: left;
+    overflow: hidden;
+    background: inherit;
+    display: block;
+    margin: auto;
+}
+
+.placeholder_span>span {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+.placeholder_span>img  {
+    display: block;
+    margin: 0 auto;
+}
+.placeholder_span label.add_new {
+    float: none;
+}
+#loader {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    position: fixed;
+    z-index: 1;
+    /* margin: 50%; */
+    /* transform: translate(-50%, -50%); */
+    top: 50%;
+    left: 50%;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg);
+    }
+  }
 .comming_agenda .placeholder {
     height: 100%;
     display: none;
@@ -491,6 +524,7 @@
 
 .comming_agenda .placeholder img {
     max-height: 80%;
+    width: auto;
 }
 .day_events .placeholder >img {
     height: calc(100% - 70px);
@@ -568,22 +602,23 @@
 @media (max-width: 1500px) {
     .comming_agenda .placeholder img {
         max-height: 100px;
+        width: auto;
     }    
 }
 
-
 @media (max-width: 1024px) {
+    .comming_agenda {
+        padding: 15px;
+        padding: 10px 30px;
+    }
     .container .noticeboard>div {
         min-height: 150px;
     }
    .container .calendar{
-        height: auto;
         margin: 0;
         padding: 10px 10px;
-        /* margin-bottom: 10px;*/
     }
     .container .posts{
-        height: auto;
         margin: 0;
         padding: 10px 10px;
         overflow: auto;
@@ -606,23 +641,12 @@
         width: 100%;
         font-size: 0.75rem;
     }
-    .index_page.ads_index .placeholder {
-     /*    position: absolute;
-        top: 40%;
-        left: 50%;
-        transform: translate(-50%, -50%); */
-    }
     .index_page.ads_index  .placeholder >img {
         position: static;
         width: 100%;
         transform: none;
     }
-    .index_page.ads_index .placeholder {
-     /*    position: static    ; */
-     /*    transform: none; */
-    }
    
-
 }
 @media (max-width: 768px) {
     .posts_index .posts {
@@ -655,7 +679,7 @@
         width: 100%;
     }
     .placeholder >img {
-        width: 60%;
+        width: auto;
         position: static;
         transform: none;
         margin: auto;
@@ -704,14 +728,14 @@
     .container .noticeboard h2 {
 		padding-top: 0;
     }
+    .comming_agenda {
+        height: auto;
+        min-height: 100px;
+        padding: 10px;
+    }
     .comming_agenda .placeholder {
         height: auto;
-       /*  top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        position: absolute; */
-    }
-  
+	}
     .container .noticeboard, .container .posts, .container .calendar, .container .calendar>div {
         height: auto;
     }
@@ -730,9 +754,6 @@
     }
     .notice>div:first-child span.notice_time {
         font-size: 1rem;
-    }
-    .comming_agenda {
-        min-height: 100px;
     }
     .comming_agenda .agenda_comment {
         float: right;
@@ -753,7 +774,8 @@
     }
     
     .container .calendar h2, .container .calendar .cal_days, .comming_agenda {
-        padding: 10px 0;
+        padding: 0 10px;
+        line-height: 26px;
     }
     .placeholder_cal>p, .placeholder_cal>img {
         float: none;
@@ -797,7 +819,7 @@
         top: -15px;
     }
     .notices_list {
-        height: 150px;
+      
         overflow: hidden;
     }
     .placeholder {

@@ -28,6 +28,7 @@ return [
 	'store'					=> 'Store',
 	'save_calendar'			=> 'Store to calendar',
 	'new_add'				=> 'MyIntranet - a new ad has been published',
-
+	'sickne_info'			=> 'Obavijest o bolovanju',
+	 
 ];
 ?>

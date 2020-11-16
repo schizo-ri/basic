@@ -9,6 +9,7 @@ use App\Mail\GreetingCardMail;
 use App\Mail\BirthDayMail;
 use App\Http\Controllers\EmailingController;
 use DateTime;
+use Log;
 
 class BirthdayCommand extends Command
 {
@@ -43,9 +44,11 @@ class BirthdayCommand extends Command
      */
     public function handle()
     {
-        //$send_to = EmailingController::sendTo('employees','cron');
-        //$send_to = array('uprava@duplico.hr');
-        $send_to = array('jelena.juras@duplico.hr');
+        Log::info('BirthdayCommand');
+
+        $send_to = EmailingController::sendTo('employees','cron');
+      /*   $send_to = array('uprava@duplico.hr'); */ 
+        array_push($send_to , 'jelena.juras@duplico.hr');
 
         $datum = new DateTime('now');
         $employees = Employee::employeesBday($datum);

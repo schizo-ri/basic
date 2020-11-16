@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\EmployeeTrainingMail;
 use App\Http\Controllers\EmailingController;
 use DateTime;
+use Log;
 
 class EmployeeTrainingCommand extends Command
 {
@@ -46,7 +47,8 @@ class EmployeeTrainingCommand extends Command
 
         $datum = new DateTime('now');
         $datum->modify('+2 month');
-        
+        Log::info('EmployeeTrainingCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
+
         $employeeTrainings = EmployeeTraining::EmployeeTrainingDate($datum);
 		foreach($employeeTrainings as $employeeTraining) {
             if(  $employeeTraining->employee->checkout == null ) {

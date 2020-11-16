@@ -45,6 +45,9 @@ return [
     'retrieving_error' => 'Sorry, there was an error retrieving the data.',
     'max_user' => 'Maximum number of users used.',
     'call_duplico' => 'For more users, contact Duplico d.o.o.',  
-    'locco_error'	=> 'Error opening travel order, account not open.'
+    'locco_error'	=> 'Error opening travel order, account not open.',
+    'pass_reset'	=> 	'Instructions for changing your password will be sent to your email address if it is associated with a valid account.',
+    'invalid_code'  => 'Invalid or expired password reset code; please request a new link.',
+    'reset'			=> 	'Reset Your Password.',
     ];
 ?>

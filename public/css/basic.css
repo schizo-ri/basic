@@ -1,4 +1,3 @@
-
 .col-12 {
     width: 100%
 }
@@ -65,7 +64,6 @@
     padding: 20;
 }
 
-
 .padd_tb_5 {
     padding: 5px 0;
 }
@@ -93,7 +91,9 @@
 .padd_l_15 {
     padding-left: 15px;
 }
-
+.padd_h_10 {
+    padding: 0 10px;
+}
 .padd_l_20 {
     padding-left: 20px;
 }
@@ -116,6 +116,10 @@
 
 .height100 {
     height: 100%;
+}
+
+.width_20 {
+    width: 20%;
 }
 
 .height_auto {
@@ -243,6 +247,14 @@
    .color_grey {
         color: rgb(137, 137, 137);
    }
+
+@media (max-width: 576px) {  
+   .col-xs-12 {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+   }
+}
 @media (min-width: 576px) {
     .col-sm-49 {
         -ms-flex: 0 0 49%;

@@ -13,7 +13,6 @@
 					<i class="fas fa-plus"></i>
 				</a>
 			@endif
-			
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -29,7 +28,7 @@
 					<tbody>
 						@foreach ($cars as $car)
 							<tr>
-								<td><a class="open_locco" href="{{ route('loccos.show', $car->id) }}">{{ $car->manufacturer . ' ' . $car->model . ' ' . $car->registration }}</a></td>
+								<td><a class="open_locco admin_link " href="{{ route('loccos.show', $car->id) }}">{{ $car->manufacturer . ' ' . $car->model . ' ' . $car->registration }}</a></td>
 								<td></td>
 							</tr>
 						@endforeach

@@ -11,7 +11,7 @@ class Afterhour extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['employee_id','project_id','date','start_time', 'end_time', 'comment','approve','approved_id','	approved_date','approve_h','paid'];
+	protected $fillable = ['employee_id','project_id','date','start_time', 'end_time', 'comment','approve','approved_id','approved_date','approve_h','paid'];
 	
 	/*
 	* The Eloquent employee model name

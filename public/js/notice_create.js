@@ -53,10 +53,10 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
  
     form_data = $('.form_sequence').serialize();
     form_data_array = $('.form_sequence').serializeArray();
-    console.log(form_data);
+/*     console.log(form_data);
     console.log(form_data_array);
     console.log(data);
-
+ */
     jQuery.each( form_data_array, function( i, field ) {
         if(field.value == "" ) {  //$(field).attr('required') && 
             validate.push("block");
@@ -73,7 +73,6 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
         alert("Nisu uneseni svi parametri, nemoguće spremiti obavijest");
         $(".btn-submit").prop("disabled", false);
     } else { 
-      
         $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
@@ -84,9 +83,8 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
             cache: false,
             timeout: 600000,
             success: function (data) {
-                alert("Dizajn je spremljen!");
-                console.log("SUCCESS : ", form_data_array);
-                $(".btn-submit").prop("disabled", false);
+                alert("Obavijest je uspješno spremljena te istu možete vidjeti na 'Naslovnoj strani' pod 'Oglasna ploča' ili na 'Oglasnoj ploči'!");
+                window.location = location.origin;
             },
             error: function(jqXhr, json, errorThrown) {
 				var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
@@ -102,7 +100,6 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
 					}, 
 					error: function(jqXhr, json, errorThrown) {
 						console.log(jqXhr.responseJSON); 
-						
 					}
 				});
 			}

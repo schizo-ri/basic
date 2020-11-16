@@ -61,9 +61,9 @@ $(function() {
                       
                         get_url(url, datum);
 
-                        if(body_width < 768) {
+                     /*    if(body_width < 768) {
                             $('.index_main.index_event').modal();
-                        }  
+                        }   */
                     }
                 }
                 
@@ -162,7 +162,6 @@ $(function() {
 
             $( ".change_car" ).on('change',function() {
                 var value = $(this).val().toLowerCase();
-                console.log(value);
                 $(".show_locco").filter(function() {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                     
@@ -217,8 +216,6 @@ $(function() {
                 $('.main_calendar .show_locco ').toggle();
                 $('.change_employee').toggle();
                 $('.change_car').toggle();
-                console.log("show_loccos");
-        
             });
             
             var position_selected_day = $('.selected_day').position().top;

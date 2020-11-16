@@ -8,6 +8,7 @@ use App\Models\Questionnaire;
 use App\Models\EvaluationEmployee;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\QuestionnaireMail;
+use Log;
 
 class QuestionnaireCommand extends Command
 {
@@ -44,7 +45,8 @@ class QuestionnaireCommand extends Command
     {
 		$employees = Employee::employees_firstNameASC();
 		$questionnaires = Questionnaire::where('status',1)->get();
-		
+        Log::info('QuestionnaireCommand ' );
+
 		foreach($questionnaires as $questionnaire){
             foreach($employees as $employee) {
                 $evaluationEmployees = EvaluationEmployee::EvaluationEmployeeForQuestionnaire($questionnaire->id,$employee->id );

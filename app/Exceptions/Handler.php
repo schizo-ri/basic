@@ -7,6 +7,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use App\Mail\ErrorMail;
 use Illuminate\Support\Facades\Mail;
 use Sentinel;
+use Log;
 
 class Handler extends ExceptionHandler
 {

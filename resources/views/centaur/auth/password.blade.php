@@ -1,13 +1,13 @@
 @extends('Centaur::layout')
 
-@section('title', 'Create A New Password')
+@section('title', __('ctrl.password'))
 
 @section('content')
-<div class="row">
-    <div class="col-md-4 col-md-offset-4">
+<div class="row password_reset">
+    <div class="col-md-4 offset-md-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Reset Your Password</h3>
+                <h3 class="panel-title">@lang('ctrl.password')</h3>
             </div>
             <div class="panel-body">
                 <form accept-charset="UTF-8" role="form" method="post" action="{{ route('auth.password.reset.attempt', $code) }}">
@@ -21,7 +21,7 @@
                         {!! ($errors->has('password_confirmation') ? $errors->first('password_confirmation', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
                     {{ csrf_field() }}
-                    <input class="btn-submit" type="submit" value="Save">
+                    <input class="btn-submit" type="submit" value="{{ __('basic.save')}}">
                 </fieldset>
                 </form>
             </div>

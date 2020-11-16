@@ -8,6 +8,7 @@ use App\Mail\ProbationMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\EmailingController;
 use DateTime;
+use Log;
 
 class ProbationCommand extends Command
 {
@@ -48,7 +49,7 @@ class ProbationCommand extends Command
         $datum = new DateTime('now');
         $datum->modify('-6 month');
         $datum->modify('+7 days');
-        
+        Log::info('ProbationCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
         $employees = Employee::employeesProbation($datum);
 
 		foreach($employees as $employee) {
@@ -63,7 +64,7 @@ class ProbationCommand extends Command
         $datum = new DateTime('now');
         $datum->modify('-6 month');
         $datum->modify('+15 days');
-        
+        Log::info('ProbationCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
         $employees = Employee::employeesProbation($datum);
 
         foreach($employees as $employee) {
@@ -78,7 +79,7 @@ class ProbationCommand extends Command
         $datum = new DateTime('now');
         $datum->modify('-6 month');
         $datum->modify('+1 month');
-        
+        Log::info('ProbationCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
         $employees = Employee::employeesProbation($datum);
 
         foreach($employees as $employee) {

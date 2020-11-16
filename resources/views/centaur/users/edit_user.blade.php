@@ -8,9 +8,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use App\Models\Document;
 $i = 0;
+
 @endphp
 <div class="index_page index_profile">
-	
 	<main class="col-lg-12 col-xl-12 index_main profile_main float_right">
 		<section>
 			<div class="page-header header_profile">
@@ -20,8 +20,8 @@ $i = 0;
 			<main class="main_profile">
 				<div class="user_profile float_l">
 					@php
-						$profile_image = DashboardController::profile_image(Sentinel::getUser()->employee['id']);
-						$user_name =  DashboardController::user_name(Sentinel::getUser()->employee['id']);
+						$profile_image = DashboardController::profile_image($user->employee['id']);
+						$user_name =  DashboardController::user_name($user->employee['id']);
 					@endphp					
 					<span class="profile_photo">
 						<a  href="{{ route('upload',['profileIMG' => true]) }}" rel="modal:open" title="{{ __('basic.upload_photo_profile') }}">
@@ -32,26 +32,27 @@ $i = 0;
 								<img class="radius50 profile_user" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 							@endif
 								<span class="photo_icon "></span>
-							
 							</span>
 						
 						</a>						
 					</span>
-					<h2>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</h2>
-					<p>@if($employee){{ $employee->work['name'] }}@endif</p>
+					<h2>{{ $user->first_name . ' ' . $user->last_name }}</h2>
+					<p>@if($user->employee){{ $user->employee->work['name'] }}@endif</p>
 					<span class="user_links">
 						<a class="iclude_event"  href="{{ route('events.create') }}" rel="modal:open"><span class="img-calendar">@lang('calendar.add_event')</span></a>
 						<a class="chat"  href="{{ route('posts.create') }}" rel="modal:open" title="{{ __('basic.send_post') }}"></a>
+						<a class="password_edit"  href="{{ route('users.edit', $user->id) }}" rel="modal:open" title="{{ __('ctrl.password_edit') }}"><i class="fas fa-key"></i></a>
+						
 					</span>
 					<div class="user_info">	
 						<p class="label_name">@lang('basic.department')</p>
-						<p  class="label_value">{!! $employee->work ? $employee->work->department['name'] : 'Djelatnik nema upisano radno mjesto' !!}</p>
+						<p  class="label_value">{!! $user->employee->work ? $user->employee->work->department['name'] : 'Djelatnik nema upisano radno mjesto' !!}</p>
 						<p class="label_name">@lang('basic.vacation')</p>
 						<p  class="label_value"></p>
 						<p class="label_name">@lang('basic.phone')</p>
-						<p  class="label_value">{{ $employee['mobile'] }}</p>
+						<p  class="label_value">{{ $user->employee['mobile'] }}</p>
 						<p class="label_name">E-mail</p>
-						<p  class="label_value">{{ $employee['email'] }}</p>
+						<p  class="label_value">{{ $user->employee['email'] }}</p>
 					</div>
 				</div>
 				<div class="user_interest float_l">
@@ -173,8 +174,10 @@ $i = 0;
 		</section>
 	</main>
 </div>
+
 <script>
 	$( function () {
+		$.getScript('/js/validate.js');
 	/* 	$.getScript( '/../js/user_profile.js');  */
 		$('.profile_img a.danger').removeAttr('hidden');
 	});

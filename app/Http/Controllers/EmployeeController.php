@@ -47,6 +47,18 @@ class EmployeeController extends Controller
         } 
 		
 		return view('Centaur::employees.index', ['employees' => $employees, 'permission_dep' => $permission_dep]);
+	}
+	
+	/**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function contacts()
+    {
+		$employees = Employee::employees_lastNameASC();
+		
+		return view('Centaur::contacts', ['employees' => $employees]);
     }
 
     /**

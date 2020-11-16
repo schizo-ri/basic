@@ -12,6 +12,7 @@ use App\Models\CampaignRecipient;
 use App\Mail\SequenceMail;
 use Illuminate\Support\Facades\Mail;
 use DateTIme;
+use Log;
 
 class CampaignEmails extends Command
 {
@@ -46,6 +47,8 @@ class CampaignEmails extends Command
      */
     public function handle()
     {
+        Log::info('CampaignEmails');
+        
         $today = new DateTime();
         $today_date = date_format($today,'Y-m-d');
 
@@ -67,7 +70,7 @@ class CampaignEmails extends Command
                         $sequence_date = $campaign_start->modify('+'. $time_shift[0] . ' ' .$time_shift[1] );
                         if ( date_format($sequence_date,'Y-m-d') == $today_date ) {
                             foreach ($employees as $employee) {
-                                Mail::to($employee->email)->send(new SequenceMail( $sequence ));   
+                                Mail::to( $employee->email )->send(new SequenceMail( $sequence ));   
                             }   
                         }
                     }

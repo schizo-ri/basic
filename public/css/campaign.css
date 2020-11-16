@@ -52,7 +52,7 @@ p.modal_form_group_danger {
     box-sizing: border-box;
     border-radius: 3px;
     font-weight: 600;
-    font-size: 10px;
+    font-size: 0.625rem;
     text-align: center;
     float: right;    
     padding: 10px 40px;
@@ -286,7 +286,7 @@ label.schedule_set {
     border-radius: 3px;
     margin-top: 15px;
     font-weight: 600;
-    font-size: 10px;
+    font-size: 0.625rem;
     line-height: 36px;
     color: #FFFFFF;
     text-align: center;
@@ -303,7 +303,7 @@ label.schedule_set {
     height: 95px;
     line-height: 20px;
     text-align: center;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 600;
     box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
     cursor: pointer;

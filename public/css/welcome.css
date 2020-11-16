@@ -107,7 +107,7 @@ body>section {
 .links > a {
 	color: #636b6f;
 	padding: 0 25px;
-	font-size: 13px;
+	font-size: 0.8125rem;
 	font-weight: 600;
 	letter-spacing: .1rem;
 	text-decoration: none;
@@ -434,7 +434,7 @@ span.img-success {
 
 @media (max-width: 1300px) {
 	html, body{
-		font-size: 15px;
+		font-size: 0.9375rem;
 	}
 	body section.welcome  {
 		padding-left: 40px;
@@ -443,20 +443,19 @@ span.img-success {
 
 @media (max-width: 1200px) {
 	html, body{
-		font-size: 14px;
+		font-size: 0.875rem;
 	}
-	
 	.container {
-		height: calc(100% - 52px);
+		height: calc(100% - 50px);
 	}
 }
 
 @media (max-width: 1024px) {
 	html, body{
-		font-size: 13px;
+		font-size: 0.8125rem;
 	}
 	.container {
-        padding:0;
+        padding: 0 10px;
         /* height: calc(100% - 92px); */
 		overflow: auto;
 		
@@ -466,12 +465,12 @@ span.img-success {
 	}
 	.user_header {
 		padding-right: 10px;
+		margin: 0;
 	}
-	
 }
 @media (max-width: 992px) {
 	html, body{
-		font-size: 14px;
+		font-size: 0.875rem;
 	}
 	.container >section {
 		position: static;
@@ -484,15 +483,14 @@ span.img-success {
 		overflow: hidden;
 		height: auto;
 	}
-	.container >section:first-child, .container >section:last-child{
-		height: auto;
-	}
+
 	.container >section:first-child {
 		padding-top: 10px;
+		padding-bottom: 5px;
+		max-height: fit-content;
+    	overflow: auto;
 	}
-	.container .noticeboard, .container .posts .all_post {
-		min-height: 200px;
-	}
+	
 	.container >section:last-child {
 		padding-bottom: 10px;
 	}
@@ -506,9 +504,8 @@ span.img-success {
 }
 
 @media (max-width: 768px) {
-	
 	html{
-		font-size: 12px;
+		font-size: 0.75rem;
 		height: 100vh;
 	}
 	body {
@@ -532,18 +529,30 @@ span.img-success {
 
 @media (max-width: 600px) {
 	html, body{
-		font-size: 11px;
+		/* font-size: 0.6875rem; */
 	}
 }
 
 @media (max-width: 450px)  {
+	body>.welcome_page { 
+		height: auto;
+	}
+	.container {
+        scrollbar-width: thin;
+		position: relative;
+		overflow: auto;
+		scrollbar-width: thin;
+		height: calc(100% - 50px);
+		padding: 0 5px;
+		z-index: 0;
+	}    
 	.container >section {
 		padding: 0;
 		height: auto;
 	}
 	
 	html, body{
-		font-size: 10px;
+		/* font-size: 0.625rem; */
 	}
 	body {
 		height: 100%;
@@ -554,9 +563,12 @@ span.img-success {
 		padding-left: 40px;
 		width: 100%;
 		max-width: 100%;
+		height: 100vh;
+		overflow: auto;
 	}
 	.welcome_right {		
 		overflow: initial;
+		display: none;
 	}
 	.welcome_right>div {
 		width: 80%;
@@ -576,20 +588,4 @@ span.img-success {
 		left: 15px;
 		width: 95%;
 	}
-	.container {
-		padding: 0 10px;
-	}
-	p.terms {
-	/* 	position: absolute;
-		bottom: 0; */
-	}
 }
-
-	@media (max-height: 650px) and (min-width: 450px) {
-		html {
-			font-size: 14px;
-		}
-		.container {
-			padding: 0 20px 15px 15px;
-		}
-	}

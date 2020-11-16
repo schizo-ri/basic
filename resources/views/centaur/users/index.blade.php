@@ -51,17 +51,17 @@
 										$dep_roles = explode(  ',', $departmentRoles->where('department_id', $user->work_id)->first()->permissions);
 									}
 								@endphp
-								<tr>
+								<tr class="tr_open_link" data-href="/users/{{ $user->id }}" data-modal >
 									<td>
 										@if($user->employee &&  $image_employee != '' &&  ! empty($image_employee ) )
 											<img class="radius50 float_l" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($image_employee)) }}" alt="Profile image"  />
 										@else
 											<img class="radius50 float_l" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 										@endif	
-										<span class="float_l"><a class="show_user" href="{{ route('users.show', ['user_id' => $user->id] ) }}" rel="modal:open" >{{ $user->first_name . ' ' . $user->last_name }}<i class="far fa-eye"></i></a><br>
+										<span class="float_l">{{ $user->first_name . ' ' . $user->last_name }}<br>
 										<span class="user_mail">{{ $user->email }}</span></span>
 									</td>						
-									<td>{!! isset($user->work_id) ? $works->where('id', $user->work_id)->first()->department['name'] . ' - ' .  $works->where('id', $user->work_id)->first()->name : '' !!}</td>
+									<td>{!! isset($user->work_id) && $works->where('id', $user->work_id)->first() ? $works->where('id', $user->work_id)->first()->department['name'] . ' - ' .  $works->where('id', $user->work_id)->first()->name : '' !!}</td>
 									<td>
 										@if(isset($dep_roles))
 											@for ($i = 0; $i < count($dep_roles); $i++)
@@ -109,6 +109,7 @@
 				</table>
 			@endif
 		</div>
+		
 		<div class="second_view">
 			<div class="user_filter">
 				<img class="img_search" src="{{ URL::asset('icons/filter.png')  }}" alt="Filter"/>
@@ -200,6 +201,9 @@
 		<span class="img-error"></span>
 		<p>@lang('ctrl.max_user')</p> 
 		<p>@lang('ctrl.call_duplico')</p> 
+	</div>
+	<div id="login-modal" class="modal modal_user modal_employee">
+		
 	</div>
 	<script>
 		$('.create_user').click(function(event){

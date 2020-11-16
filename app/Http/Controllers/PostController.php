@@ -38,11 +38,17 @@ class PostController extends Controller
 		$empl = Sentinel::getUser()->employee;
 
 		$permission_dep = array();
-		if($empl->work) {
-			$posts = Post::PostToEmployee($empl);
-		} else {
-			$posts = Post::where('employee_id', $empl->id)->orWhere('to_employee_id', $empl->id)->orderBy('updated_at','DESC')->with('comments')->get();
-		}
+
+		$posts = Post::where('employee_id',$empl->id)->orWhere('to_employee_id', $empl->id)->orderBy('updated_at','DESC')->with('comments')->get();
+		if($empl->hasWorkingRecord) {
+			foreach ($empl->hasEmployeeDepartmen as $employeeDepartmen) {
+				if($employeeDepartmen->department) {
+					$posts = $posts->merge( Post::where('to_department_id', $employeeDepartmen->department->id)->orderBy('updated_at','DESC')->with('comments')->get());
+
+				}
+			}
+		} 
+		$posts = $posts->sortByDesc('updated_at');
 
 		if($empl) {
 			if(isset($_GET['id'])) { 
@@ -79,7 +85,7 @@ class PostController extends Controller
 				return redirect()->back()->withFlashMessage($message);
 		}
 		
-		return view('Centaur::posts.index', ['posts' => $posts,'selected_post' => $post,'permission_dep' => $permission_dep]);
+		return view('Centaur::posts.index', ['posts' => $posts,'selected_post' => $post,'employee' => $empl,'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -167,9 +173,30 @@ class PostController extends Controller
 				$post->savePost($data);
 			} 
 
-			$departments = Department::get();
-			$department = $departments->where('id', $post->to_department_id )->first();
+			$department = Department::find( $post->to_department_id );
+			$employeeDepartments = $department->hasEmployeeDepartment;
 
+			foreach ($employeeDepartments as $employeeDepartment) {
+				$to_employee = $employeeDepartment->employee;
+				if($to_employee->checkout == null) {
+					$data1 = array(
+						'employee_id'    => $employee->id,
+						'to_employee_id' => $to_employee->id,
+						'post_id'  		=>  $post->id,
+						'content'  		=>  $request['content'],
+						'status'  		=> '0',
+					);
+					
+					$comment = new Comment();
+					$comment->saveComment($data1);
+	
+					$show_alert_to_employee =  $comment->to_employee_id;
+	
+					event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
+				}
+			}	
+
+			/* 
 			$works = $department->hasWorks;
 			
 			if( $department->level1 == 0) {
@@ -183,9 +210,9 @@ class PostController extends Controller
 				foreach ($departments->where('level2', $department->id) as $department_2) {
 					$works = $works->merge($department_2->hasWorks);
 				}
-			} 
+			}  */
 				
-			foreach ($works as $work) {
+			/* foreach ($works as $work) {
 				$workers = $work->workers;
 				foreach ($workers as $worker) {
 					$data1 = array(
@@ -204,7 +231,7 @@ class PostController extends Controller
 					event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
 
 				}
-			}
+			} */
 		}
 
 		session()->flash('success', "Poruka je poslana");
@@ -373,11 +400,10 @@ class PostController extends Controller
 		$employee = $user->employee;
 	
 		$comments = $post->comments;
-		
 		$comment_count = 0;
 		if( $employee ){
 			$comment_count = $comments->where('to_employee_id', $employee->id)->where('status', 0)->count();
-			$comment_count += $comments->where('to_employee_id', null)->where('status', 0)->count();
+			/* $comment_count += $comments->where('to_employee_id', null)->where('status', 0)->count(); */
 		}
 		
 		return $comment_count;
@@ -385,23 +411,26 @@ class PostController extends Controller
 	
 	static function countComment_all () 
 	{
-		$employee = Sentinel::getUser()->employee;
-		
 		$comment_count = 0;
+		
+		if( Sentinel::getUser() ) {
+			$employee = Sentinel::getUser()->employee;
+			if( $employee ){
+				if($employee->work) {
+					$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->orWhere('to_department_id',$employee->work->department->id)->get();
+				} else {
+					$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->get();
 	
-		if( $employee ){
-			if($employee->work) {
-				$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->orWhere('to_department_id',$employee->work->department->id)->get();
-			} else {
-				$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->get();
-
-			}
-			foreach($posts as $post) {
-				$count = $post->comments->where('to_employee_id', $employee->id)->where('status',0)->count();
-				$comment_count += $count;
-			}
-		} 
-
+				}
+				foreach($posts as $post) {
+					$count = $post->comments->where('to_employee_id', $employee->id)->where('status',0)->count();
+					$comment_count += $count;
+				}
+			} 
+	
+		}
+		
+		
 		return $comment_count;
 	}
 	

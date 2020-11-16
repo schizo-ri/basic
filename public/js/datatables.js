@@ -1,14 +1,14 @@
 $( function () {
-	if( $('table.display').not('.evidention_employee table.display', '.all_absences #index_table').length >0 ) {
+	if( $('table.display').not('.evidention_employee table.display').not('.all_absences #index_table').length >0 ) {
 		var url = location.href;
 		var wrap_col;
 		if( url.includes('loccos/')) {
 			var wrap_col = "H";
-			
 		}
 		
 		var kolona = 0;
 		var sort = 'asc';
+		
 		if ($('#index_table').hasClass('sort_1_asc')) {
 			kolona = 1;
 			sort = 'asc';
@@ -220,7 +220,7 @@ $( function () {
 						customize: function( xlsx ) {
 							var sheet = xlsx.xl.worksheets['sheet1.xml'];
 							$('row:first c', sheet).attr( 's', '2' );
-						/* 	console.log(xlsx); */
+					
 							var pageSet = sheet.createElement("pageSetup");
 							sheet.childNodes["0"].appendChild(pageSet);
 							var pageSetup = sheet.getElementsByTagName("pageSetup")[0];
@@ -250,12 +250,13 @@ $( function () {
 				]
 			});
 		}
+	
 		if($(".index_table_filter .show_button").length == 0) {
 			$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 		}
 	
 		$('.show_button').on('click',function () {
-			$('.index_page .dt-buttons').toggle();		
+			$('.dt-buttons').toggle();		
 		})
 		$('table.display').show();
 	}

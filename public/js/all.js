@@ -3,10 +3,25 @@ $(function(){
 		var d = new Date();
 		var ova_godina = d.getFullYear();
 		var prosla_godina = ova_godina - 1;
-		var year = '';
-		
-		if($(".all_absences").length == 0) {
-			init_absence_table ();
+		var year;
+		var month;
+		var eu_date;
+		var day;
+		var admin;
+		var url;
+		var data_to_send ;
+		var start_date;
+		var end_date;
+		var sheet;
+		var approve;
+		var form_data;
+		var url_load;
+
+		if( $(".all_absences").length > 0 ) {
+			if ( ! $.fn.DataTable.isDataTable( '.all_absences #index_table' ) ) {
+				init_absence_table ();
+			}
+			delete_request ();
 		}
 		function init_absence_table () {
 			jQuery.extend( jQuery.fn.dataTableExt.oSort, {
@@ -17,8 +32,7 @@ $(function(){
 						return 0;
 					}
 				
-					var year;
-					var eu_date = date.split(/[\.\-\/]/);
+					eu_date = date.split(/[\.\-\/]/);
 					/*year (optional)*/
 					if ( eu_date[2] ) {
 						year = eu_date[2];
@@ -28,7 +42,7 @@ $(function(){
 					}
 				
 					/*month*/
-					var month = eu_date[1];
+					month = eu_date[1];
 					try {
 						
 						if ( month.length == 1 ) {
@@ -36,7 +50,7 @@ $(function(){
 						}
 				
 						/*day*/
-						var day = eu_date[0];
+						day = eu_date[0];
 						if ( day.length == 1 ) {
 							day = 0+day;
 						}
@@ -55,72 +69,85 @@ $(function(){
 					return ((a < b) ? 1 : ((a > b) ? -1 : 0));
 				}
 			} );
-			var admin = $('#user_admin').text();
-			if (admin == 'true') {
-				order = [ 1, "desc" ];
-				targets = [1,3,4];
-			} else {
+			admin = $('#user_admin').text();
+			if( $('.all_absences.table_absences.table_requests').length > 0 ) {
 				order = [ 2, "desc" ];
-				targets = [0,2,3];
+				targets = [2,3];
+			} else if( $( '.all_absences.table_absences').length > 0) {
+				order = [ 0, "asc" ];
+				targets = [];
+			} else {
+				if (admin == 'true') {
+					order = [ 3, "desc" ];
+					targets = [1,3,4];
+				} else {
+					order = [ 2, "desc" ];
+					targets = [0,2,3];
+				}
 			}
-			$('.all_absences #index_table').DataTable( {
-				"order": [order],
-				"fixedHeader": true,
-				"columnDefs": [ {
-					"targets"  :targets,
-					"type": 'date-eu'
-				}],
-				dom: 'Bfrtip',
-				"paging": false,
-				buttons: [
-					'copyHtml5',
-					{
-						extend: 'print',
-						customize: function ( win ) {
-							$(win.document.body).find('h1').addClass('title_print');
-							$(win.document.body).find('table').addClass('table_print');
-							$(win.document.body).find('table tr td').addClass('row_print');
-							$(win.document.body).addClass('body_print');
-							$(win.document.body).find('table tr th').addClass('hrow_print');
-							$(win.document.body).find('table tr th:last-child').addClass('not_print');
-							$(win.document.body).find('table tr td:last-child').addClass('not_print');
-						}
-					},
-					{
-						extend: 'pdfHtml5',
-						orientation: 'landscape',
-						pageSize: 'A4',
-						exportOptions: {
-							columns: 'th:not(.not-export-column)',
-							rows: ':visible'
-						}
-					},
-					{
-						extend: 'excelHtml5',
-						autoFilter: true,
-						exportOptions: {
-							columns: 'th:not(.not-export-column)',
-							rows: ':visible'
+			try {
+				$('.all_absences #index_table').DataTable( {
+					"order": [order],
+					fixedHeader: true,
+					"searching": false,
+					"columnDefs": [ {
+						"targets"  :targets,
+						"type": 'date-eu'
+					}],
+					dom: 'Bfrtip',
+					"paging": false,
+					buttons: [
+						'copyHtml5',
+						{
+							extend: 'print',
+							customize: function ( win ) {
+								$(win.document.body).find('h1').addClass('title_print');
+								$(win.document.body).find('table').addClass('table_print');
+								$(win.document.body).find('table tr td').addClass('row_print');
+								$(win.document.body).addClass('body_print');
+								$(win.document.body).find('table tr th').addClass('hrow_print');
+								$(win.document.body).find('table tr th:last-child').addClass('not_print');
+								$(win.document.body).find('table tr td:last-child').addClass('not_print');
+							}
 						},
-						customize: function( xlsx ) {
-							var sheet = xlsx.xl.worksheets['sheet1.xml'];
-						/* 	$('row c', sheet).attr( 's', '25' );  borders */
-							$('row:first c', sheet).attr( 's', '27' );
-						}	
-					}
-				]
-			} );
+						{
+							extend: 'pdfHtml5',
+							orientation: 'landscape',
+							pageSize: 'A4',
+							exportOptions: {
+								columns: 'th:not(.not-export-column)',
+								rows: ':visible'
+							}
+						},
+						{
+							extend: 'excelHtml5',
+							autoFilter: true,
+							exportOptions: {
+								columns: 'th:not(.not-export-column)',
+								rows: ':visible'
+							},
+							customize: function( xlsx ) {
+								sheet = xlsx.xl.worksheets['sheet1.xml'];
+							// 	$('row c', sheet).attr( 's', '25' );  borders 
+								$('row:first c', sheet).attr( 's', '27' );
+							}	
+						}
+					]
+				} );
+			
+			} catch (error) {
+				
+			}
 		}
-		
+
 		$('#year_vacation').on('change',function(){
 			year = $(this).val();
+			employee_id =  $('#filter_employees').val();
 			
 			$('.info_abs>p>.go').hide();
 			$('.info_abs>p>.go.go_'+year).show();
 			$('#mySearchTbl').val("");
-	
-			var url = location.href + '?year='+year;
-			console.log(url);
+			url = location.href + '?year='+year+'&employee_id='+employee_id;
 			$.ajaxSetup({
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -130,14 +157,14 @@ $(function(){
 				url: url,
 				type: "GET",
 				success: function( response ) {
-				
 					$('table').load(url + ' table',function(){
-						
-						$.getScript( '/../restfulizer.js');
+						delete_request ();
+					/* 	$.getScript('/../js/absence.js'); */
+					/* 	$.getScript( '/../restfulizer.js'); */
 					});
 				}, 
 				error: function(jqXhr, json, errorThrown) {
-					var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+					data_to_send = { 'exception':  jqXhr.responseJSON.exception,
 										'message':  jqXhr.responseJSON.message,
 										'file':  jqXhr.responseJSON.file,
 										'line':  jqXhr.responseJSON.line };
@@ -157,13 +184,13 @@ $(function(){
 				}
 			});
 		});
+		
 		$('#year_sick').on('change',function(){
 			year = $(this).val();
 			$('.info_abs>p>.bol').hide();
 			$('.info_abs>p>.bol.bol_'+year).show();
 	
-			var url = location.href + '?year='+year+'&type=BOL';
-			console.log(url);
+			url = location.href + '?year='+year+'&type_bol=BOL';
 			$.ajaxSetup({
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -173,14 +200,14 @@ $(function(){
 				url: url,
 				type: "GET",
 				success: function( response ) {
-					console.log(response);
 					$('table').load(url + ' table',function(){
-						
-						$.getScript( '/../restfulizer.js');
+						delete_request ();
+						/* $.getScript('/../js/absence.js'); */
+					/* 	$.getScript( '/../restfulizer.js'); */
 					});
 				}, 
 				error: function(jqXhr, json, errorThrown) {
-					var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+					data_to_send = { 'exception':  jqXhr.responseJSON.exception,
 										'message':  jqXhr.responseJSON.message,
 										'file':  jqXhr.responseJSON.file,
 										'line':  jqXhr.responseJSON.line };
@@ -199,48 +226,512 @@ $(function(){
 				}
 			});
 		});
+		
 		$( "#request_type" ).on('change',function() {
 			if($(this).val() == 'IZL') {
 				$('.form-group.time').show();
 				$('.form-group.date2').hide();
-				var start_date = $( "#start_date" ).val();
-				var end_date = $( "#end_date" );
+				start_date = $( "#start_date" ).val();
+				end_date = $( "#end_date" );
 				end_date.val(start_date);
 			} else {
 				$('.form-group.time').hide();
 				$('.form-group.date2').show();
 			}
 		});
+		
 		$( "#start_date" ).on('change',function() {
-			var start_date = $( this ).val();
-			var end_date = $( "#end_date" );
+			start_date = $( this ).val();
+			end_date = $( "#end_date" );
 			end_date.val(start_date);
 		});
-	}
-	$('.all_absences #index_table_filter').prepend('<a class="add_new" href="'+ location.origin + '/absences/create ' +'" class="" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>'+ 'Novi zahtjev'+'</a>');
+		
+		$('#filter_employees').on('change',function() {
+			employee_id =  $(this).val();
+			if( $('#filter_types').length>0) {
+				type = $('#filter_types').val();
+			} else {
+				type = 'all';
+			}
+			if( $('#filter_years').length>0) {
+				month =  $('#filter_years').val();
+			} else {
+				month = null;
+			}
+			if( $('#filter_approve').length>0) {
+				approve =  $('#filter_approve').val();
+			} else {
+				approve = null;
+			}
+
+			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
+
+			$.ajax({
+				url: url,
+				type: "get",
+				beforeSend: function(){
+					// Show image container
+					$('body').prepend('<div id="loader"></div>');
+				},
+				success: function( response ) {
+					$('.main_absence ').load(url + " .main_absence>section",function(){
+						$('#loader').remove();
+						$.getScript('/../js/absence.js');
+					
+						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
+						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
+						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
+						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						/* $.getScript( '/../restfulizer.js'); */
+					});
+				},
+				error: function(jqXhr, json, errorThrown) {
+					console.log(jqXhr.responseJSON.message);
+				}
+			});
+		});	
+		
+		$('#filter_types').on('change',function() {
+			type = $( this ).val();
+			if( $('#filter_years').length>0) {
+				month =  $('#filter_years').val();
+			} else {
+				month = null;
+			}
+			if( $('#filter_employees').length>0) {
+				employee_id =  $('#filter_employees').val();
+			} else {
+				employee_id = null;
+			}
+			if( $('#filter_approve').length>0) {
+				approve =  $('#filter_approve').val();
+			} else {
+				approve = null;
+			}
+
+			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
+			/* console.log(url); */
+
+			$.ajax({
+				url: url,
+				type: "get",
+				beforeSend: function(){
+					// Show image container
+					$('body').prepend('<div id="loader"></div>');
+				},
+				success: function( response ) {
+					$('.main_absence ').load(url + " .main_absence>section",function(){
+						$('#loader').remove();
+						$.getScript('/../js/absence.js');
+					
+						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
+						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
+						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
+						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						/* $.getScript( '/../restfulizer.js'); */
+					});
+				},
+				error: function(jqXhr, json, errorThrown) {
+					console.log(jqXhr.responseJSON.message);
+				}
+			});
+		});	
+		
+		$('#filter_years').on('change',function() {
+			month = $( this ).val();
+			if( $('#filter_types').length>0) {
+				type = $('#filter_types').val();
+			} else {
+				type = 'all';
+			}
+			if( $('#filter_employees').length>0) {
+				employee_id =  $('#filter_employees').val();
+			} else {
+				employee_id = null;
+			}
+			if( $('#filter_approve').length>0) {
+				approve =  $('#filter_approve').val();
+			} else {
+				approve = null;
+			}
+			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
+			$.ajax({
+				url: url,
+				type: "get",
+				beforeSend: function(){
+					// Show image container
+					$('body').prepend('<div id="loader"></div>');
+				},
+				success: function( response ) {
+					$('.main_absence ').load(url + " .main_absence>section",function(){
+						$('#loader').remove();
+						$.getScript('/../js/absence.js');
+					
+						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
+						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
+						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
+						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						/* $.getScript( '/../restfulizer.js'); */
+					});
+				},
+				error: function(jqXhr, json, errorThrown) {
+					console.log(jqXhr.responseJSON.message);
+				}
+			});
+		});	
+	
+		$('#filter_approve').on('change',function() {
+			approve = $( this ).val();
+			type = $('#filter_types').val();
+			month = $('#filter_years').val();
+			employee_id =  $('#filter_employees').val();
+			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
+			/* console.log(url); */
+			$.ajax({
+				url: url,
+				type: "get",
+				beforeSend: function(){
+					// Show image container
+					$('body').prepend('<div id="loader"></div>');
+				},
+				success: function( response ) {
+					$('.main_absence ').load(url + " .main_absence>section",function(){
+						$('#loader').remove();
+						$.getScript('/../js/absence.js');
+					
+						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
+						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
+						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
+						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						/* $.getScript( '/../restfulizer.js'); */
+					});
+				},
+				error: function(jqXhr, json, errorThrown) {
+					console.log(jqXhr.responseJSON.message);
+				}
+			});
+		});	
+		$('.all_absences #index_table_filter').show(); 
+
 	if($(".all_absences #index_table_filter .show_button").length == 0) {
 		$('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+		$('.show_button').on('click',function () {
+			$('.dt-buttons').toggle();		
+		/* 	console.log("show_button"); */
+		})
 	}
-	$('.all_absences #index_table_filter').show(); 
-});
+	
+	$('span#checkall').on('click',function(){
+		$('.check.checkinput').prop('checked',true);
+		$('.uncheck.checkinput').prop('checked',false);
 
-$('.select_filter.sort').on('change',function () {
-    $('main.main_ads').load($(this).val() + ' main.main_ads article');
-});
+	});
+	$('span#uncheckall').on('click',function(){
+		$('.check.checkinput').prop('checked',false);
+		$('.uncheck.checkinput').prop('checked',true);
+		
+	});
+	$('span#nocheckall').on('click',function(){
+		$('.check.checkinput').prop('checked',false);
+		$('.uncheck.checkinput').prop('checked',false);
+		
+	});
 
-var body_width = $('body').width();
-if(body_width > 450) {
-    var all_height = [];
-    $('.noticeboard_notice_body.panel .ad_content').each(function(){
-        all_height.push($(this).height());
-    });
-    all_height.sort(function(a, b) {
-        return b-a;
-    });
-    var max_height = all_height[0];
-    $('.noticeboard_notice_body.panel .ad_content').height(max_height);
+	$('.after_form').on('submit',function(e){
+		if (! confirm("Sigurno želiš odobriti zahtjeve?")) {
+			return false;
+		} else {
+			e.preventDefault();
+			url = $(this).attr('action');
+			form_data = $(this).serialize(); 
+		
+			approve = $( '#filter_approve' ).val();
+			type = $('#filter_types').val();
+			month = $('#filter_years').val();
+			employee_id =  $('#filter_employees').val();
+			url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
+
+			/* console.log(url);
+			console.log(form_data); */
+			$.ajax({
+				url: url,
+				type: "post",
+				data: form_data,
+				beforeSend: function(){
+					$('body').prepend('<div id="loader"></div>');
+				},
+				success: function( response ) {
+					$('tbody').load(url_load + " tbody>tr",function(){
+						$('#loader').remove();
+						alert(response);
+					});
+				}, 
+				error: function(xhr,textStatus,thrownError) {
+					console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError);                            
+				}
+			});
+		}
+	}); 
+	$('tr.tr_open_link td:not(.not_link)').on('click', function(e) {
+		e.preventDefault();
+		url = location.origin + $( this ).parent().attr('data-href');
+		console.log(url);
+        window.location = url;
+	});
+	function delete_request () {
+		$('.action_confirm.btn-delete').on('click', function(e) {
+			if (! confirm("Sigurno želiš obrisati zahtjev?")) {
+				return false;
+			} else {
+				e.preventDefault();
+				approve = $('#filter_approve').val();
+				type = $('#filter_types').val();
+				month = $('#filter_years').val();
+				employee_id =  $('#filter_employees').val();
+				url_delete = $( this ).attr('href');
+				url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
+				token = $( this ).attr('data-token');
+				$.ajaxSetup({
+					headers: {
+						'_token': token
+					}
+				});
+				$.ajax({
+					url: url_delete,
+					type: 'POST',
+					data: {_method: 'delete', _token :token},
+					beforeSend: function(){
+						$('body').prepend('<div id="loader"></div>');
+					},
+					success: function(result) {
+						$('tbody ').load(url_load + " tbody>tr",function(){
+							$('#loader').remove();
+							delete_request ();
+						/* 	$.getScript('/../js/absence.js'); */
+							$("#filter_types").find('option[value="'+type+'"]').attr('selected',true);
+							$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
+							$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
+							$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						});
+					}
+				});
+			}
+		});
+	}
+	}
+
+
+});
+$(function(){
+    var employee_id;
+	var type;
+	var start_date;
+	var end_date;
+	var tomorrow;
+	var diff_days;
+	var broj_dana;
+	var date = new Date();
+	var today = date.getFullYear() + '-' + ( '0' + (date.getMonth()+1) ).slice( -2 ) + '-' + ( '0' + (date.getDate()) ).slice( -2 );
+	
+	$( "#request_type" ).on('change',function() {
+		type = $(this).val();
+		if(type == 'IZL') {
+			start_date = $( "#start_date" ).val();
+			end_date = $( "#end_date" );
+			end_date.val(start_date);
+			
+			date.setDate(date.getDate()-1);
+			tomorrow = date.getFullYear() + '-' + ( '0' + (date.getMonth()+1) ).slice( -2 ) + '-' + ( '0' + (date.getDate()) ).slice( -2 );
+			$('#start_date').attr('min', tomorrow);
+			$('#start_date').val(today);
+			$('.form-group.time').show();
+			$('.form-group.date2').hide();
+		} else {
+			$('.form-group.time').hide();
+			$('.form-group.date2').show();
+			$('#start_date').removeAttr('min');
+		}
+
+		if(type == 'GO') {
+			employee_id = $('#select_employee').val();
+			console.log("employee_id " + employee_id);
+			if( employee_id != '' &&  employee_id != undefined) {
+				url = location.origin + '/getDays/'+employee_id;
+				console.log(url);
+				$.ajax({
+					url: url,
+					type: "get",
+					success: function( days_response ) {
+						broj_dana = days_response;
+						
+						if( broj_dana == 0 ) {
+                            $('.days_employee').text("Nemoguće poslati zahtjev. Svi su dani iskorišteni!");
+							$('input[name=start_date]').prop('disabled', true);
+							$('input[name=end_date]').prop('disabled', true);
+							$('.btn-submit').hide();
+						} else {
+                            $('.days_employee').text("Neiskorišteno "+broj_dana+" dana razmjernog godišnjeg odmora");
+							$('input[name=start_date]').prop('disabled', false);
+							$('input[name=end_date]').prop('disabled', false);
+							$('.btn-submit').show();
+                        }
+                        $('.days_employee').show();
+					},
+					error: function(jqXhr, json, errorThrown) {
+						console.log(jqXhr);
+						console.log(json);
+						console.log(errorThrown);
+					}
+				});
+			}
+		} else {
+            $('.days_employee').text("");
+            $('.days_employee').hide();
+            $('.btn-submit').show();
+        }
+
+        if(type == 'SLD') {
+            employee_id = $('#select_employee').val();
+
+            url = location.origin + '/days_offUnused/'+employee_id;
+            console.log(url);
+            $.ajax({
+                url: url,
+                type: "get",
+                success: function( days_response ) {
+                    broj_dana = days_response;
+                    if( broj_dana == 0 ) {
+                        $('.days_employee').text("Nemoguće poslati zahtjev. Svi slobodni dani su iskorišteni!");
+                        $('.btn-submit').hide();
+                    } else {
+                        $('.days_employee').text("Neiskorišteno "+broj_dana+" slobodnih dana");
+                        $('.btn-submit').show();
+                    }
+                    $('.days_employee').show();
+                },
+                error: function(jqXhr, json, errorThrown) {
+                    console.log(jqXhr);
+                    console.log(json);
+                    console.log(errorThrown);
+                }
+            });
+        }
+	});
     
+    $( "#select_employee" ).on('change',function() {
+		employee_id = $(this).val();
+		
+		type = $( "#request_type" ).val();
+		console.log("employee_id " + employee_id);
+		if( employee_id != '' &&  employee_id != undefined && type == 'GO') {
+			url = location.origin + '/getDays/'+employee_id;
+			console.log(url);
+			$.ajax({
+				url: url,
+				type: "get",
+				success: function( days_response ) {
+					broj_dana = days_response;
+					console.log("broj_dana "+broj_dana);
+					if( broj_dana == 0 ) {
+                        $('.days_employee').text("Nemoguće poslati zahtjev. Svi su dani iskorišteni!");
+                        $('input[name=start_date]').prop('disabled', true);
+                        $('input[name=end_date]').prop('disabled', true);
+                        $('.btn-submit').hide();
+                    } else {
+                        $('.days_employee').text("Neiskorišteno "+broj_dana+" dana razmjernog godišnjeg odmora");
+                        $('input[name=start_date]').prop('disabled', false);
+                        $('input[name=end_date]').prop('disabled', false);
+                        $('.btn-submit').show();
+                    }
+                    $('.days_employee').show();
+				},
+				error: function(jqXhr, json, errorThrown) {
+					console.log(jqXhr);
+					console.log(json);
+					console.log(errorThrown);
+				}
+			});
+		}
+	});	
+    
+    $( "#start_date" ).on('change',function() {
+		start_date = $( this ).val();
+		end_date = $( "#end_date" );
+		end_date.val(start_date);
+	});
+    
+    $( "#end_date" ).on('change',function() {
+		console.log("broj_dana_end_date " + broj_dana);
+		start_date = $( "#start_date" ).val();
+		end_date = $( this ).val();
+		if(start_date == '') {
+			$( "#start_date" ).val(end_date);
+		}
+		type = $( "#request_type" ).val();
+		employee_id = $('#select_employee').val();
+		if( employee_id != '' && type == 'GO' ) {
+			diff_days = date_diff_indays( start_date,end_date );
+			console.log(diff_days);
+			if( broj_dana < diff_days ) {
+				$('.days_request>span').text(diff_days - broj_dana);
+				$('.days_request').show();
+				$('.btn-submit').hide();
+			} else {
+				$('.days_request>span').text("");
+				$('.days_request').hide();
+				$('.btn-submit').show();
+			}
+		}
+	});
+	
+});
+
+function date_diff_indays(date1, date2) { // input given as Date objects
+	var dDate1 = new Date(date1);
+	var dDate2 = new Date(date2);
+	var iWeeks, iDateDiff, iAdjust = 0;
+	if (dDate2 < dDate1) return -1; // error code if dates transposed
+	var iWeekday1 = dDate1.getDay(); // day of week
+	var iWeekday2 = dDate2.getDay();
+	iWeekday1 = (iWeekday1 == 0) ? 7 : iWeekday1; // change Sunday from 0 to 7
+	iWeekday2 = (iWeekday2 == 0) ? 7 : iWeekday2;
+	if ((iWeekday1 > 5) && (iWeekday2 > 5)) iAdjust = 1; // adjustment if both days on weekend
+	iWeekday1 = (iWeekday1 > 5) ? 5 : iWeekday1; // only count weekdays
+	iWeekday2 = (iWeekday2 > 5) ? 5 : iWeekday2;
+
+	// calculate differnece in weeks (1000mS * 60sec * 60min * 24hrs * 7 days = 604800000)
+	iWeeks = Math.floor((dDate2.getTime() - dDate1.getTime()) / 604800000)
+
+	if (iWeekday1 < iWeekday2) { //Equal to makes it reduce 5 days
+		iDateDiff = (iWeeks * 5) + (iWeekday2 - iWeekday1)
+	} else {
+		iDateDiff = ((iWeeks + 1) * 5) - (iWeekday1 - iWeekday2)
+	}
+
+	iDateDiff -= iAdjust // take into account both days on weekend
+
+    return (iDateDiff + 1); // add 1 because dates are inclusive
 }
+if($('.main_ads').length >0) {
+    $('.select_filter.sort').on('change',function () {
+        $('main.main_ads').load($(this).val() + ' main.main_ads article');
+    });
+    
+    var body_width = $('body').width();
+    if(body_width > 450) {
+        var all_height = [];
+        $('.noticeboard_notice_body.panel .ad_content').each(function(){
+            all_height.push($(this).height());
+        });
+        all_height.sort(function(a, b) {
+            return b-a;
+        });
+        var max_height = all_height[0];
+        $('.noticeboard_notice_body.panel .ad_content').height(max_height);
+        
+    }
+}
+
 $('.benefit_body').first().show();
 
 $('.benefit_title').on('click',function(){
@@ -1081,16 +1572,16 @@ $(function() {
    
 });
 $( function () {
-	if( $('table.display').not('.evidention_employee table.display', '.all_absences #index_table').length >0 ) {
+	if( $('table.display').not('.evidention_employee table.display').not('.all_absences #index_table').length >0 ) {
 		var url = location.href;
 		var wrap_col;
 		if( url.includes('loccos/')) {
 			var wrap_col = "H";
-			
 		}
 		
 		var kolona = 0;
 		var sort = 'asc';
+		
 		if ($('#index_table').hasClass('sort_1_asc')) {
 			kolona = 1;
 			sort = 'asc';
@@ -1302,7 +1793,7 @@ $( function () {
 						customize: function( xlsx ) {
 							var sheet = xlsx.xl.worksheets['sheet1.xml'];
 							$('row:first c', sheet).attr( 's', '2' );
-						/* 	console.log(xlsx); */
+					
 							var pageSet = sheet.createElement("pageSetup");
 							sheet.childNodes["0"].appendChild(pageSet);
 							var pageSetup = sheet.getElementsByTagName("pageSetup")[0];
@@ -1332,12 +1823,13 @@ $( function () {
 				]
 			});
 		}
+	
 		if($(".index_table_filter .show_button").length == 0) {
 			$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 		}
 	
 		$('.show_button').on('click',function () {
-			$('.index_page .dt-buttons').toggle();		
+			$('.dt-buttons').toggle();		
 		})
 		$('table.display').show();
 	}
@@ -1532,95 +2024,95 @@ $( function () {
 });
 
 $( function () {
-
-    var body_width = $('body').width();
-    var div_width = $( '.preview_doc').width();
-    var all_width = 115;
-   
-    $( ".preview_doc > .thumbnail" ).each( (index, element) => {
-        all_width += 115;
-    });
-
-    if(all_width > div_width ) {
-        $('.preview_doc .scroll_right').show();
-    }
-    /* $('.collapsible').click(function(event){ 
-        $(this).siblings().toggle();
-    }); */
-    $('#right-button').on('click',function(event) {
-        event.preventDefault();
-        $('.preview_doc').animate({
-            scrollLeft: "+=115px"
-        }, "slow");
-        $('.preview_doc .scroll_left').show();
-        
-    });
-
-    $('.thumbnail').each(function(){
-        var src = $(this).attr('title');
-    //	$( this ).find('.ajax-content').load(src);
-    });
-
-    $('#left-button').on('click',function(event) {
-        event.preventDefault();
-        $('.preview_doc').animate({
-            scrollLeft: "-=115px"
-        }, "slow");
-        if($('.preview_doc').scrollLeft() < 115 ) {
-            $('.preview_doc .scroll_left').hide();
-        } else {
-            $('.preview_doc .scroll_left').show();
+    if( $('.index_page.index_documents').length > 0) {
+        var body_width = $('body').width();
+        var div_width = $( '.preview_doc').width();
+        var all_width = 115;
+       
+        $( ".preview_doc > .thumbnail" ).each( (index, element) => {
+            all_width += 115;
+        });
+    
+        if(all_width > div_width ) {
+            $('.preview_doc .scroll_right').show();
         }
-    });
+        /* $('.collapsible').click(function(event){ 
+            $(this).siblings().toggle();
+        }); */
+        $('#right-button').on('click',function(event) {
+            event.preventDefault();
+            $('.preview_doc').animate({
+                scrollLeft: "+=115px"
+            }, "slow");
+            $('.preview_doc .scroll_left').show();
+            
+        });
     
-    var documents_height = $('.all_documents').height();
-    var filter_height = $('.dataTables_filter').height();
-    var table_height = documents_height - filter_height;
-    var body_height;
-//    $('.display.table.dataTable').height(table_height);
-
-    var index_height = $('.index_main.main_documents').height();
-	var header_height = $('.page-header.header_document').height();
+        $('.thumbnail').each(function(){
+            var src = $(this).attr('title');
+        //	$( this ).find('.ajax-content').load(src);
+        });
     
-    if(body_width<768) {
-	 //   $('.all_documents').css('height','auto');
-    } 
-
-	$('.show').on('click',function(){
-        $('.show').toggle();
-        $('.hide').toggle();
-        $('.preview_doc').show();
+        $('#left-button').on('click',function(event) {
+            event.preventDefault();
+            $('.preview_doc').animate({
+                scrollLeft: "-=115px"
+            }, "slow");
+            if($('.preview_doc').scrollLeft() < 115 ) {
+                $('.preview_doc .scroll_left').hide();
+            } else {
+                $('.preview_doc .scroll_left').show();
+            }
+        });
         
-        index_height = $('.index_main.main_documents').height();
-        header_height = $('.page-header.header_document').height();
-        body_height = index_height - header_height - 60;
-        $('.all_documents').height(body_height);
-    });
+        var documents_height = $('.all_documents').height();
+        var filter_height = $('.dataTables_filter').height();
+        var table_height = documents_height - filter_height;
+        var body_height;
+    //    $('.display.table.dataTable').height(table_height);
     
-    $('.hide').on('click',function(){
-        $('.show').toggle();
-        $('.hide').toggle();
-        $('.preview_doc').hide();
-        index_height = $('.index_main.main_documents').height();
-        header_height = $('.page-header.header_document').height();
-        body_height = index_height - header_height - 60;
-        $('.all_documents').height(body_height);
-    });
+        var index_height = $('.index_main.main_documents').height();
+        var header_height = $('.page-header.header_document').height();
+        
+        if(body_width<768) {
+         //   $('.all_documents').css('height','auto');
+        } 
     
-    $('.button_nav').css({
-       /*  'background': '#051847',
-        'color': '#ffffff' */
-    });
-    
-    $( '.doc_button' ).css({
-       /*  'background': '#0A2A79',
-        'color': '#ccc' */
-    });
-    
-    $(function() {
-		 $('#index_table').css('height','fit-content');
-    });
-
+        $('.show').on('click',function(){
+            $('.show').toggle();
+            $('.hide').toggle();
+            $('.preview_doc').show();
+            
+            index_height = $('.index_main.main_documents').height();
+            header_height = $('.page-header.header_document').height();
+            body_height = index_height - header_height - 60;
+            $('.all_documents').height(body_height);
+        });
+        
+        $('.hide').on('click',function(){
+            $('.show').toggle();
+            $('.hide').toggle();
+            $('.preview_doc').hide();
+            index_height = $('.index_main.main_documents').height();
+            header_height = $('.page-header.header_document').height();
+            body_height = index_height - header_height - 60;
+            $('.all_documents').height(body_height);
+        });
+        
+        $('.button_nav').css({
+           /*  'background': '#051847',
+            'color': '#ffffff' */
+        });
+        
+        $( '.doc_button' ).css({
+           /*  'background': '#0A2A79',
+            'color': '#ccc' */
+        });
+        
+        $(function() {
+             $('#index_table').css('height','fit-content');
+        });
+    }
 });
 	$('.efc_show').on('click',function(){
        // $('.efc').css('visibility','initial');
@@ -1701,9 +2193,9 @@ $(function() {
                       
                         get_url(url, datum);
 
-                        if(body_width < 768) {
+                     /*    if(body_width < 768) {
                             $('.index_main.index_event').modal();
-                        }  
+                        }   */
                     }
                 }
                 
@@ -1802,7 +2294,6 @@ $(function() {
 
             $( ".change_car" ).on('change',function() {
                 var value = $(this).val().toLowerCase();
-                console.log(value);
                 $(".show_locco").filter(function() {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                     
@@ -1857,8 +2348,6 @@ $(function() {
                 $('.main_calendar .show_locco ').toggle();
                 $('.change_employee').toggle();
                 $('.change_car').toggle();
-                console.log("show_loccos");
-        
             });
             
             var position_selected_day = $('.selected_day').position().top;
@@ -1957,6 +2446,7 @@ $( document ).ready(function(){
 $(function() { // filter knowledge base
 	var value = null;
 	var date = null;
+	var year = null;
 	var employee_id = null;
 
 	$('.change_month_afterhour').on('change',function(){
@@ -1969,9 +2459,17 @@ $(function() { // filter knowledge base
 		$.ajax({
 			url: url,
 			type: "get",
+			beforeSend: function(){
+				// Show image container
+				$('body').prepend('<div id="loader"></div>');
+			},
 			success: function( response ) {
 				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
 					$.getScript('/../restfulizer.js');
+					$.getScript('/../js/datatables.js');
+					$('.dt-buttons').show();		
+                   
 				});
 			},
 			error: function(jqXhr, json, errorThrown) {
@@ -1979,6 +2477,7 @@ $(function() { // filter knowledge base
 			}
 		});
 	});
+	
 	$('.change_employee_afterhour').on('change',function(){
 		employee_id =  $(this).val().toLowerCase();
 		if(employee_id != '' && employee_id != null) {
@@ -1989,8 +2488,15 @@ $(function() { // filter knowledge base
 		$.ajax({
 			url: location.href + '?date='+date+'&employee_id='+employee_id ,
 			type: "get",
+			beforeSend: function(){
+				// Show image container
+				$('body').prepend('<div id="loader"></div>');
+			},
 			success: function( response ) {
 				$( '#admin_page >main' ).load(location.href + '?date='+date+'&employee_id='+employee_id + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
+					$.getScript('/../js/datatables.js');
+					$('.dt-buttons').show();		
 					$.getScript('/../restfulizer.js');
 				});
 			},
@@ -2031,15 +2537,23 @@ $(function() { // filter knowledge base
 		}
 
 	});	
-	
-	$('.filter_loccos').on('change',function() {
+
+	$('.filter_notices').on('change',function() {
 		date =  $('#filter_month').val().toLowerCase();
+		url =location.href + '?date='+date;
+		console.log(url);
 		$.ajax({
-			url: location.href + '?date='+date,
+			url: url,
 			type: "get",
 			data: { 'date': date},
+			beforeSend: function(){
+				// Show image container
+				$('body').prepend('<div id="loader"></div>');
+			},
 			success: function( response ) {
-				$( '#admin_page >main' ).load(location.href + '?date='+date + ' #admin_page >main .table-responsive',function(){
+				/* console.log(response); */
+				$( '.notices' ).load(location.href + '?date='+date + ' .notices>article',function(){
+					$('#loader').remove();
 					$.getScript('/../restfulizer.js');
 				});
 			},
@@ -2047,22 +2561,35 @@ $(function() { // filter knowledge base
 				console.log(jqXhr.responseJSON.message);
 			}
 		});
+	});	
 
-
-		/* if(date == 'all' ) {
-			date = '';
-		}  */
-		
-	/* 	if(date == ''){
-			$('tbody tr').show();
-		} else {
-			$('tbody tr').filter(function() {
-				$(this).toggle($(this).text().toLowerCase().indexOf(date) > -1);
-			});
-		} */
-		/* var title = $(document).prop('title'); 
-		title += ' - ' +date;
-		$(document).prop('title', title); */
+	$('.filter_loccos').on('change',function() {
+		date =  $('#filter_month').val().toLowerCase();
+		console.log(date);
+		url =location.href + '?date='+date;
+		console.log(url);
+		$.ajax({
+			url: url,
+			type: "get",
+			data: { 'date': date},
+			beforeSend: function(){
+				// Show image container
+				$('body').prepend('<div id="loader"></div>');
+			},
+			success: function( response ) {
+				$( '#admin_page >main' ).load(location.href + '?date='+date + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
+					$.getScript('/../js/datatables.js');
+					$('.show_button').on('click',function () {
+                        $('.dt-buttons').toggle();		
+                    })
+					$.getScript('/../restfulizer.js');
+				});
+			},
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr.responseJSON.message);
+			}
+		});
 	});	
 	
 	$('.filter_travel').on('change',function() {
@@ -2110,6 +2637,11 @@ $(function() { // filter knowledge base
 	/* 	$('#filter_employee option.id_'+ employee_id).attr('selected','selected');
 		$('#filter_date option.date_'+ date).attr('selected','selected'); */
 	});	
+	if( $('.section_notice .notices').length > 0) {
+		$('.select_filter.sort').on('change',function () {
+			$('.section_notice .notices').load($(this).val() + ' .section_notice .notices .noticeboard_notice_body');
+		});
+	}
 });
 function mySearchTable() {
   $("#mySearchTbl").on('keyup',function() {
@@ -2127,7 +2659,7 @@ function mySearchTable() {
 function mySearchTableAbsence() {
   $("#mySearchTbl").on('keyup',function() {
     var value = $(this).val().toLowerCase();
-    var godina = $('#year_vacation').val();
+
     $("#index_table tbody tr").filter(function() {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
@@ -2312,7 +2844,7 @@ function myTopNav() {
     } 
 }
 
-$('.logo_icon').on('click',function(){
+$('span.logo_icon').on('click',function(){
     $('.section_top_nav').css('width','250px');
     $('#myTopnav:not(".responsive")').css('display','block');
     $('#myTopnav:not(".responsive")').css('width','250px');
@@ -2414,14 +2946,15 @@ $('.form_evidention').on('submit',function(e){
         }
     });
 });
-/* 
-document.addEventListener("visibilitychange", function() {
-    if (document.hidden){
-    } else {
-        location.reload();
-    }
-});
- */
+
+if(body_width < 450) {
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden){
+        } else {
+            location.reload();
+        }
+    });
+}
 $('.button_nav').css({
   /*   'background': '#051847',
     'color': '#ffffff' */
@@ -2438,43 +2971,23 @@ var active_link;
 var url_modul = location.pathname;
 url_modul = url_modul.replace("/","");
 url_modul = url_modul.split('/')[0];
-console.log("open admin");
+
 $(function(){
     var class_open;
+    
+    if(body_width > 992) {
+        class_open = $('.admin_link.active_admin').parent().attr('class');
+        if(class_open != undefined && class_open != '') {
+            class_open = "."+class_open.replace(" ",".");
+            $(class_open).show();
+        }
+    }
+
     $('.open_menu').on('click', function(e){
         e.preventDefault();
         class_open = $( this).attr('id');
-        console.log(class_open);
         $('.'+class_open).toggle();
     });
-
-   class_open = $('.admin_link.active_admin').parent().attr('class');
-   if(class_open != undefined) {
-        class_open = "."+class_open.replace(" ",".");
-        $(class_open).show();
-   }
-   
-
-  /*   if($('.car_links').find('.admin_link').hasClass('active_admin')) {
-        $('.car_links').show();
-    } else {
-        $('.car_links').hide();
-    } */
-    /* $('ul.admin_pages li >span.arrow_down ').on('click',function(event){ 
-        if($(this).parent().siblings('.car_links').is(":visible")){ 
-            $(this).parent().siblings('.car_links').css('display','none');
-         } else {
-            $(this).parent().siblings('.car_links').css('display','block');
-         }
-     }); */
-    if(body_width > 991) {
-        if(url_location.includes('templates')) {
-            $('.admin_pages>li>a#emailings').trigger('click');
-        
-        } else {
-         /*    $('.admin_pages>li>a').first().trigger('click'); */
-        }
-    }
     $(".admin_pages a.admin_link").removeClass('disable');
 });
 
@@ -2483,32 +2996,71 @@ if($(".index_table_filter .show_button").length == 0) {
 } 
 
 var click_element;
+var title;
+var url;
 
-$('.admin_pages>li>a').on('click',function(e) {
+$('.admin_pages li>a').not('.open_menu').on('click',function(e) {
+    $('#login-modal').remove();
     e.preventDefault();
     click_element = $(this);
-    var title = click_element.text();
+    title = click_element.text();
     $("title").text( title ); 
-    var url = $(this).attr('href');
-
+    url = $(this).attr('href');
+   
     $('.admin_pages>li>a').removeClass('active_admin');
     $(this).addClass('active_admin');
     active_link = $('.admin_link.active_admin').attr('id');
 
     $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
-       
         window.history.replaceState({}, document.title, url);
         if ( status == "error" ) {
             var msg = "Sorry but there was an error: ";
             $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
         }
-      
-        $.getScript( 'restfulizer.js');
+       
+        $.getScript( '/../restfulizer.js');
         $.getScript( '/../js/filter_dropdown.js');
+        $.getScript( '/../js/open_modal.js');
+        $.getScript( '/../js/datatables.js');
+        if (url.includes('/work_records')) {
+            $.getScript( '/../js/work_records.js');
+        } else if(url.includes('/loccos')) {
+            $('a.open_locco').on('click',function(event) {
+                event.preventDefault();
+                click_element = $(this);
+                title = click_element.text();
+                $("title").text( title ); 
+                url = $(this).attr('href');
+
+                $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
+                    window.history.replaceState({}, document.title, url);
+                    if ( status == "error" ) {
+                        var msg = "Sorry but there was an error: ";
+                        $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
+                    }
+                    $.getScript( '/../restfulizer.js');
+                    $.getScript( '/../js/filter_dropdown.js');
+                    $.getScript( '/../js/datatables.js');
+                    $.getScript( '/../js/open_modal.js');
+                });
+                return false;
+            });
+        }
+       
+        if(body_width < 992 ) {
+            $('aside.admin_aside').hide();
+            $('main.admin_main').show();
+        
+            $('.link_back').on('click',function (e) {
+                e.preventDefault();
+                $('aside.admin_aside').show();
+                $('main.admin_main').hide();
+            });
+        }
     });
     return false;
 });
-
+/* 
 if(body_width < 992) {
     $('.admin_pages>li>a').on('click',function(e) {
         $('aside.admin_aside').hide();
@@ -2539,9 +3091,9 @@ if(body_width < 992) {
         $('aside.admin_aside').show();
         $('main.admin_main').hide();
     });
-}
+} */
 $("a[rel='modal:open']").addClass('disable');
-console.log("Open modal");
+
 $(function() {
     $("a[rel='modal:open']").removeClass('disable');
     $.modal.defaults = {
@@ -2732,7 +3284,6 @@ $(function() {
 		};
     });
     $('tr[data-modal] td:not(:last-child)').on("click", function(e) {
-      
         e.preventDefault();
         var href = location.origin + $(this).parent().data('href');
         
@@ -2763,7 +3314,7 @@ $(function() {
             $( "#login-modal" ).empty();
         });
     }); 
-
+ 
 });
 // on load
 if( $('.posts_index').length > 0) {
@@ -2796,7 +3347,8 @@ if( $('.posts_index').length > 0) {
             $( this ).attr('Placeholder','Type message...');
         });
         $('.search_post').on('click',function(){
-            $('.search_input').show();       
+            $('.search_input').show();     
+            console.log("search_post");  
         });
         $('.search_input').on('hover',function(){ 
             mouse_is_inside=true; 
@@ -2804,10 +3356,12 @@ if( $('.posts_index').length > 0) {
             mouse_is_inside=false; 
         });
         $("body").on('mouseup',function(){ 
+            console.log(mouse_is_inside);  
             if(! mouse_is_inside) 
                 $('.search_input').hide();
         });
         url = location.search;
+       
         if(body_width > 768 && location.href.includes('/posts') ) {
             if( url ) {
                 id = url.replace("?id=", "");
@@ -2816,11 +3370,6 @@ if( $('.posts_index').length > 0) {
                 $('.tablink').first().trigger('click');
             }
         }
-    });
-    
-    $('.post_sent .link_back').on('click',function () {
-        $('.latest_messages').show();
-        $('.posts_index .index_main').hide();
     });
     
     // on submit ajax store
@@ -2922,8 +3471,11 @@ if( $('.posts_index').length > 0) {
                     refreshHeight(tab_id);
                     setPostAsRead(post_id);
                 }
-              
-                
+                $('.post_sent .link_back').on('click',function () {
+                    $('.latest_messages').show();
+                    $('.posts_index .index_main').hide();
+                    console.log("link_back");
+                });
             });
           
             $(active_tabcontent).find('.type_message ').trigger('focus');
@@ -2988,21 +3540,23 @@ if( $('.posts_index').length > 0) {
     
     function broadcastingPusher () {
         // Enable pusher logging - don't include this in production
-        /* Pusher.logToConsole = true; */
+       /*  Pusher.logToConsole = true; */
         var employee_id = $('#employee_id').text();
     
-         var pusher = new Pusher('ace40474cf33846103b6', {
+         var pusher = new Pusher('d2b66edfe7f581348bcc', {
                                 cluster: 'eu'
                                 }); 
         var channel = pusher.subscribe('message_receive');
         channel.bind('my-event', function(data) {
-            /* console.log("pusher id employee " + data.show_alert_to_employee); //2
-            console.log(data.comment); */
+            console.log("data");
+            console.log(data);
+            console.log("pusher id employee " + data.show_alert_to_employee); //2
+            console.log(data.comment);
             if(employee_id == data.show_alert_to_employee) {
-                /* $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
+                $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
                 $( '.posts_button .button_nav_img').load( location.origin + '/posts .posts_button .button_nav_img .line_btn');
                 $( '.refresh.' + tab_id ).load( location.origin + '/posts .refresh.' + tab_id + ' .message',function(){
-                });    */
+                });
             }
         }); 
     }
@@ -3021,99 +3575,102 @@ if( $('.posts_index').length > 0) {
 }
 
 $(function() { 
-    var body_width = $('body').width();
-    if(body_width > 450) {
-        var index_height = $('.index_main.main_documents').height();
-        var header_height = $('.page-header.header_questionnaire').height();
-        var body_height = index_height - header_height;
-        $('.all_documents').height(body_height -65);
-    }
-
-    $('.index_page table.dataTable.no-footer').css('height','fit-content');
-
-    var div_width = $( '.preview_doc').width();
-    var all_width = 217;
-
-    $( ".preview_doc .thumb_container" ).each( (index, element) => {
-        all_width += 217;
-    });
-
-    if(all_width > div_width ) {
-        $('.preview_doc .scroll_right').show();
-    }
-        
-    $(".clickable-row").click(function() {
-     //   window.location = $(this).data("href");
-
-    });
-    $('.collapsible').click(function(event){ 
-        $(this).siblings().toggle();
-    });
-    $('#right-button').click(function() {
-        event.preventDefault();
-        $('.preview_doc').animate({
-            scrollLeft: "+=217px"
-        }, "slow");
-        $('.preview_doc .scroll_left').show();
-        
-    });
-
-    $('.sendEmail').click(function(){
-		if (!confirm("Stvarno želiš poslati obavijest mailom?")) {
-			return false;
-		}
-    });
-    
-    $('#left-button').click(function() {
-        event.preventDefault();
-        $('.preview_doc').animate({
-            scrollLeft: "-=217px"
-        }, "slow");
-        if($('.preview_doc').scrollLeft() < 217 ) {
-            $('.preview_doc .scroll_left').hide();
-        } else {
-            $('.preview_doc .scroll_left').show();
-        }
-    });
-
-    $('.show').click(function(){
-        $('.show').toggle();
-        $('.hide').toggle();
-        $('.preview_doc').toggle();
-        
+    if( $('.main_questionnaire').length > 0) {
         var body_width = $('body').width();
-        if(body_width > 1200) {
+        if(body_width > 450) {
             var index_height = $('.index_main.main_documents').height();
             var header_height = $('.page-header.header_questionnaire').height();
             var body_height = index_height - header_height;
-            $('.all_documents').height(body_height -65 );
-            var thumb_height = $('.preview_doc.preview_q .thumb_container').last().height();
-            $('.thumb_container').first().height(thumb_height);
+            $('.all_documents').height(body_height -65);
         }
-    });
 
-    $('.hide').click(function(){
-        $('.show').toggle();
-        $('.hide').toggle();
-        $('.preview_doc').toggle();
-        var index_height = $('.index_main.main_documents').height();
-        var header_height = $('.page-header.header_questionnaire').height();
-        var body_height = index_height - header_height;
-        $('.all_documents').height(body_height - 65);
-    });
+        $('.index_page table.dataTable.no-footer').css('height','fit-content');
 
-    $( ".main_questionnaire .change_view" ).on('click', function() {
-        $( ".change_view" ).toggle();
-        $( ".change_view2" ).toggle();
-        $('.table-responsive.first_view').toggle();
-        $('.table-responsive.second_view').toggle();        
-    });
-    $( ".main_questionnaire .change_view2" ).on('click', function() {
-        $( ".change_view" ).toggle();
-        $( ".change_view2" ).toggle();
-        $('.table-responsive.first_view').toggle();
-        $('.table-responsive.second_view').toggle();
-    });
+        var div_width = $( '.preview_doc').width();
+        var all_width = 217;
+
+        $( ".preview_doc .thumb_container" ).each( (index, element) => {
+            all_width += 217;
+        });
+
+        if(all_width > div_width ) {
+            $('.preview_doc .scroll_right').show();
+        }
+            
+        $(".clickable-row").click(function() {
+        //   window.location = $(this).data("href");
+
+        });
+        $('.collapsible').click(function(event){ 
+            $(this).siblings().toggle();
+        });
+        $('#right-button').click(function() {
+            event.preventDefault();
+            $('.preview_doc').animate({
+                scrollLeft: "+=217px"
+            }, "slow");
+            $('.preview_doc .scroll_left').show();
+            
+        });
+
+        $('.sendEmail').click(function(){
+            if (!confirm("Stvarno želiš poslati obavijest mailom?")) {
+                return false;
+            }
+        });
+        
+        $('#left-button').click(function() {
+            event.preventDefault();
+            $('.preview_doc').animate({
+                scrollLeft: "-=217px"
+            }, "slow");
+            if($('.preview_doc').scrollLeft() < 217 ) {
+                $('.preview_doc .scroll_left').hide();
+            } else {
+                $('.preview_doc .scroll_left').show();
+            }
+        });
+
+        $('.show').click(function(){
+            $('.show').toggle();
+            $('.hide').toggle();
+            $('.preview_doc').toggle();
+            
+            var body_width = $('body').width();
+            if(body_width > 1200) {
+                var index_height = $('.index_main.main_documents').height();
+                var header_height = $('.page-header.header_questionnaire').height();
+                var body_height = index_height - header_height;
+                $('.all_documents').height(body_height -65 );
+                var thumb_height = $('.preview_doc.preview_q .thumb_container').last().height();
+                $('.thumb_container').first().height(thumb_height);
+            }
+        });
+
+        $('.hide').click(function(){
+            $('.show').toggle();
+            $('.hide').toggle();
+            $('.preview_doc').toggle();
+            var index_height = $('.index_main.main_documents').height();
+            var header_height = $('.page-header.header_questionnaire').height();
+            var body_height = index_height - header_height;
+            $('.all_documents').height(body_height - 65);
+        });
+
+        $( ".main_questionnaire .change_view" ).on('click', function() {
+            $( ".change_view" ).toggle();
+            $( ".change_view2" ).toggle();
+            $('.table-responsive.first_view').toggle();
+            $('.table-responsive.second_view').toggle();        
+        });
+        $( ".main_questionnaire .change_view2" ).on('click', function() {
+            $( ".change_view" ).toggle();
+            $( ".change_view2" ).toggle();
+            $('.table-responsive.first_view').toggle();
+            $('.table-responsive.second_view').toggle();
+        });
+    }
+    
 });
 
 $( window ).resize(function() {
@@ -3664,6 +4221,42 @@ $( ".template_button" ).on('mouseover', function(){
 $( ".template_button" ).on('mouseout', function(){
     $('.show_temp#temp' + temp).remove();
 });
+if( $('#tinymce_textarea').length >0 ) {
+    tinymce.init({
+        selector: '#tinymce_textarea',
+        height : 300,	
+        plugins: "image",
+        menubar: 'file edit insert view format table tools help',
+        toolbar: [
+            {
+            name: 'history', items: [ 'undo', 'redo' ]
+            },
+            {
+            name: 'formatting', items: [ 'bold', 'italic', 'forecolor', 'backcolor' ]
+            },
+            {
+            name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
+            },
+            {
+            name: 'indentation', items: [ 'outdent', 'indent' ]
+            },
+            {
+            name: 'image', items: [ 'image','url' ]
+            },
+            {
+            name: 'styles', items: [ 'styleselect' ]
+            },
+        ],
+
+        image_list: [
+            {title: 'My image 1', value: 'https://www.example.com/my1.gif'},
+            {title: 'My image 2', value: 'http://www.moxiecode.com/my2.gif'}
+        ]		
+    });
+    $('body').on($.modal.CLOSE, function(event, modal) {
+        $.getScript('/../node_modules/tinymce/tinymce.min.js');
+    });
+}
 var locale = $('.locale').text();
 var saved;
 
@@ -3744,92 +4337,94 @@ $( function () {
     
 });
 $.getScript( '/../js/filter_table.js');
+if($('.users_main').length > 0) {
 
-$('.more').on('click',function(){
-    $( this ).siblings('.role').toggle();
-    $( this ).hide();
-    $( this ).siblings('.hide').show();
-});
-$('.hide').on('click',function(){
-    $( this ).siblings('.role').hide();
-    $( this ).siblings('.role._0').show();
-    $( this ).siblings('.role._1').show();
-
-    $( this ).siblings('.more').show();
-    $( this ).hide();
-});
-
-$('.user_header .change_view').on('click', function(){
-    $('.index_table_filter label #mySearchTbl').attr('id','mySearchElement');
-    $('.index_table_filter label #mySearchElement').attr('onkeyup','mySearchElement()');
-
-    $( ".change_view" ).toggle();
-    $( ".change_view2" ).toggle();
-   
-    $('main.users_main .second_view').css('display','flex');
-    $('.table-responsive').toggle();		
-});
-$( ".user_header .change_view2" ).on('click', function() {
-    $('.index_table_filter label #mySearchElement').attr('id','mySearchTbl');
-    $('.index_table_filter label #mySearchTbl').attr('onkeyup','mySearchTable()');
-    $( ".change_view" ).toggle();
-    $( ".change_view2" ).toggle();
+    $('.more').on('click',function(){
+        $( this ).siblings('.role').toggle();
+        $( this ).hide();
+        $( this ).siblings('.hide').show();
+    });
+    $('.hide').on('click',function(){
+        $( this ).siblings('.role').hide();
+        $( this ).siblings('.role._0').show();
+        $( this ).siblings('.role._1').show();
     
-    $('.second_view').css('display','none');
-   
-    $('.table-responsive').toggle();
-});
-$("a.show_user").on('click', function(event) {
-    $.modal.defaults = {
-        closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
-        escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-        clickClose: false,       // Allows the user to close the modal by clicking the overlay
-        closeText: 'Close',     // Text content for the close <a> tag.
-        closeClass: '',         // Add additional class(es) to the close <a> tag.
-        showClose: true,        // Shows a (X) icon/link in the top-right corner
-        modalClass: "modal modal_user",    // CSS class added to the element being displayed in the modal.
-        // HTML appended to the default spinner during AJAX requests.
-        spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
-
-        showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
-        fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
-        fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
-    };
-});
-$("a.edit_user").on('click', function(event) {
-    $.modal.defaults = {
-        closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
-        escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-        clickClose: false,       // Allows the user to close the modal by clicking the overlay
-        closeText: 'Close',     // Text content for the close <a> tag.
-        closeClass: '',         // Add additional class(es) to the close <a> tag.
-        showClose: true,        // Shows a (X) icon/link in the top-right corner
-        modalClass: "modal",    // CSS class added to the element being displayed in the modal.
-        // HTML appended to the default spinner during AJAX requests.
-        spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
-
-        showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
-        fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
-        fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
-    };
-});
-$("a.create_user").on('click', function(event) {
-    $.modal.defaults = {
-        closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
-        escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-        clickClose: false,       // Allows the user to close the modal by clicking the overlay
-        closeText: 'Close',     // Text content for the close <a> tag.
-        closeClass: '',         // Add additional class(es) to the close <a> tag.
-        showClose: true,        // Shows a (X) icon/link in the top-right corner
-        modalClass: "modal",    // CSS class added to the element being displayed in the modal.
-        // HTML appended to the default spinner during AJAX requests.
-        spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
-
-        showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
-        fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
-        fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
-    };
-});
+        $( this ).siblings('.more').show();
+        $( this ).hide();
+    });
+    
+    $('.user_header .change_view').on('click', function(){
+        $('.index_table_filter label #mySearchTbl').attr('id','mySearchElement');
+        $('.index_table_filter label #mySearchElement').attr('onkeyup','mySearchElement()');
+    
+        $( ".change_view" ).toggle();
+        $( ".change_view2" ).toggle();
+       
+        $('main.users_main .second_view').css('display','flex');
+        $('.table-responsive').toggle();		
+    });
+    $( ".user_header .change_view2" ).on('click', function() {
+        $('.index_table_filter label #mySearchElement').attr('id','mySearchTbl');
+        $('.index_table_filter label #mySearchTbl').attr('onkeyup','mySearchTable()');
+        $( ".change_view" ).toggle();
+        $( ".change_view2" ).toggle();
+        
+        $('.second_view').css('display','none');
+       
+        $('.table-responsive').toggle();
+    });
+    $("a.show_user").on('click', function(event) {
+        $.modal.defaults = {
+            closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+            escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            closeText: 'Close',     // Text content for the close <a> tag.
+            closeClass: '',         // Add additional class(es) to the close <a> tag.
+            showClose: true,        // Shows a (X) icon/link in the top-right corner
+            modalClass: "modal modal_user",    // CSS class added to the element being displayed in the modal.
+            // HTML appended to the default spinner during AJAX requests.
+            spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+    
+            showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+            fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+            fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+        };
+    });
+    $("a.edit_user").on('click', function(event) {
+        $.modal.defaults = {
+            closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+            escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            closeText: 'Close',     // Text content for the close <a> tag.
+            closeClass: '',         // Add additional class(es) to the close <a> tag.
+            showClose: true,        // Shows a (X) icon/link in the top-right corner
+            modalClass: "modal",    // CSS class added to the element being displayed in the modal.
+            // HTML appended to the default spinner during AJAX requests.
+            spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+    
+            showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+            fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+            fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+        };
+    });
+    $("a.create_user").on('click', function(event) {
+        $.modal.defaults = {
+            closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+            escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            closeText: 'Close',     // Text content for the close <a> tag.
+            closeClass: '',         // Add additional class(es) to the close <a> tag.
+            showClose: true,        // Shows a (X) icon/link in the top-right corner
+            modalClass: "modal",    // CSS class added to the element being displayed in the modal.
+            // HTML appended to the default spinner during AJAX requests.
+            spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+    
+            showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+            fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+            fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+        };
+    });
+}
 var locale = $('.locale').text();
 var validate_text;
 var email_unique;
@@ -3889,6 +4484,7 @@ function validate_user_form () {
         } else {
             validate.push("block");
         }
+        console.log('validate roles');
     });
     $( "textarea" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
@@ -3902,9 +4498,10 @@ function validate_user_form () {
                 validate.push(true);
             }
         }
+        console.log('validate textarea');
     });
-    $( "input" ).each(function( index ) {
-        if($(this).attr('required') == 'required' ) {
+    $( "input" ).not('.roles').each(function( index ) {
+        if( $(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 || $(this).val() == '') {
                 if( ! $( this ).parent().find('.modal_form_group_danger').length) {
                     $( this ).parent().append('<p class="modal_form_group_danger">' + validate_text + '</p>');
@@ -3914,8 +4511,9 @@ function validate_user_form () {
                 $( this ).parent().find('.modal_form_group_danger').remove();
                 validate.push(true);
             }
-        }      
-    });
+            console.log('validate input');
+        }    
+   });
     $( "select" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val() == null || $(this).val() == '' || $(this).val() == '') {
@@ -3927,6 +4525,7 @@ function validate_user_form () {
                 $( this ).parent().find('.modal_form_group_danger').remove();
                 validate.push(true);
             }
+            console.log('validate select');  
         }
     });
      /*    if (tinyMCE.activeEditor) { */
@@ -3939,11 +4538,11 @@ function validate_user_form () {
     /*            validate.push(true); */
     /*        } */
     /*    } */
-    if($("#password").length >0) {
+    if( $("#password").length > 0 ) {
         password = $("#password");
         conf_password = $("#conf_password");    
-        
-        if(password.val().length > 0 ) {
+       
+        if ($(password).length > 0 && $(password).text() != '') {
             if( password.val().length < 6) {
                 if( password.parent().find('.validate').length  == 0 ) {
                     password.parent().append(' <p class="validate">' + validate_password_lenght + '</p>');
@@ -3953,7 +4552,7 @@ function validate_user_form () {
                 validate.push("block");
             } else {
                 password.parent().find('.validate').text("");     
-                if( ! conf_password.val() || (password.val() != conf_password.val()) ) {
+                if( ! $(conf_password).val() || ($(password).val() != conf_password.val()) ) {
                 if( conf_password.parent().find('.validate').length  == 0 ) {                
                         conf_password.parent().append(' <p class="validate">' + validate_passwordconf + '</p>');
                     }
@@ -3964,6 +4563,7 @@ function validate_user_form () {
                 }
             }
         }
+        console.log('validate password');  
     }
 }
 $('input[type="file"]').on('change',function(e){
@@ -3980,11 +4580,6 @@ $('.btn-submit').on('click',function(event){
     var url_load = window.location.href;
     var pathname = window.location.pathname;
     validate_user_form ();
-
-    console.log(url_load);
-    console.log(url); 
-    console.log(form_data);
-    console.log(validate);
 
     if(validate.includes("block") ) {
        event.preventDefault();
@@ -4119,7 +4714,7 @@ $('.btn-submit').on('click',function(event){
 });
 
 $('.form_user .btn-next').on('click',function(event){
-    console.log("btn-next");
+   
     f_name = $("#first_name");
     l_name = $("#last_name");
     email = $("#email");
@@ -4635,80 +5230,35 @@ $('.form_edit_user .btn-back').on('click',function(){
         $('.mark2').css('background','#1594F0');
     }
 }); */
-/* $('.change_view').click(function(){
-		
-    $( ".change_view" ).toggle();
-    $( ".change_view2" ).toggle();
-
-    $('.second_view').css('display','block');
-    $('main>.table-responsive').toggle();		
-});
-$( ".change_view2" ).click(function() {
-
-    $( ".change_view" ).toggle();
-    $( ".change_view2" ).toggle();
-    
-    $('.second_view').css('display','none');
-    $('main>.table-responsive').toggle();
-}); */
-
-$(function(){
-    $.getScript( '/../js/filter_table.js');
-/*     $.getScript( '/../restfulizer.js'); */
-});
 var month;
-var is_visible;
-    var not_visible;
-$( ".first_view_header .change_month" ).on('change',function() {
+var url;
+var table = $('table.display');
+$('.second_view_header .change_month').on('change',function() {
     if($(this).val() != undefined) {
-        month = $(this).val().toLowerCase();
-        var url = location.origin + '/work_records'+ '?date='+month;
+        date = $(this).val();
+        url = location.href + '?date='+date;
+        console.log(url);
         $.ajax({
-            type: "GET",
-            date: { 'date': month },
-            url: url, 
-            success: function(response) {
-                $('tbody').load(url + " tbody tr");
+            url: url,
+            type: "get",
+            beforeSend: function(){
+                $('body').prepend('<div id="loader"></div>');
             },
-            error: function(jqXhr, json, errorThrown) {
-                var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
-                                    'message':  jqXhr.responseJSON.message,
-                                    'file':  jqXhr.responseJSON.file,
-                                    'line':  jqXhr.responseJSON.line };
-                $.ajax({
-                    url: 'errorMessage',
-                    type: "get",
-                    data: data_to_send,
-                    success: function( response ) {
-                        $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
-                    }, 
-                    error: function(jqXhr, json, errorThrown) {
-                        console.log(jqXhr.responseJSON); 
-                    }
-                });
-            }
-        }); 
-    }
-});
-$( ".second_view_header .change_month" ).on('change',function() {
-    if($(this).val() != undefined) {
-        month = $(this).val().toLowerCase();
-        var url = location.origin + '/work_records_table'+ '?date='+month;
-        $.ajax({
-            type: "GET",
-            date: { 'date': month },
-            url: url, 
-            success: function(response) {
-                $('.main_work_records').load(url + " .main_work_records .second_view",function(){
-                    $( ".td_izostanak:contains('GO')" ).each(function( index ) {
-                        $( this ).addClass('abs_GO');
-                    });
-                    $( ".td_izostanak:contains('BOL')" ).each(function( index ) {
-                        $( this ).addClass('abs_BOL');
-                    });
-                    $('table').show();
-                });
+            success: function( response ) {
+              /*   $('tbody').load(url + " tbody th"); */
                
+                $('.main_work_records').load(url + " .main_work_records .second_view",function(){
+                    $('#loader').remove();
+                    $( ".td_izostanak:not(:empty)" ).each(function( index ) {
+                        $( this ).addClass('abs_'+  $.trim($( this ).text()));
+                       
+                    });
+                    /* $.getScript('/../js/datatables.js'); */
+                    $('.show_button').on('click',function () {
+                        $('.dt-buttons').toggle();		
+                    })
+                    $('.change_month').find('option[value="'+date+'"]').attr('selected',true);
+                });
             },
             error: function(jqXhr, json, errorThrown) {
                 var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
@@ -4727,15 +5277,48 @@ $( ".second_view_header .change_month" ).on('change',function() {
                     }
                 });
             }
-        }); 
+        });
     }
-});
+});	
 
 $(function() {
-    $( ".td_izostanak:contains('GO')" ).each(function( index ) {
-        $( this ).addClass('abs_GO');
-    });
-    $( ".td_izostanak:contains('BOL')" ).each(function( index ) {
-        $( this ).addClass('abs_BOL');
+    $( ".td_izostanak:not(:empty)" ).each(function( index ) {
+        $( this ).addClass('abs_'+  $.trim($( this ).text()));
     });
 });
+if( $('#tinymce_textarea').length >0 ) {
+    tinymce.init({
+        selector: '#tinymce_textarea',
+        height : 300,	
+        plugins: "image",
+        menubar: 'file edit insert view format table tools help',
+        toolbar: [
+            {
+            name: 'history', items: [ 'undo', 'redo' ]
+            },
+            {
+            name: 'formatting', items: [ 'bold', 'italic', 'forecolor', 'backcolor' ]
+            },
+            {
+            name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
+            },
+            {
+            name: 'indentation', items: [ 'outdent', 'indent' ]
+            },
+            {
+            name: 'image', items: [ 'image','url' ]
+            },
+            {
+            name: 'styles', items: [ 'styleselect' ]
+            },
+        ],
+
+        image_list: [
+            {title: 'My image 1', value: 'https://www.example.com/my1.gif'},
+            {title: 'My image 2', value: 'http://www.moxiecode.com/my2.gif'}
+        ]		
+    });
+    $('body').on($.modal.CLOSE, function(event, modal) {
+        $.getScript('/../node_modules/tinymce/tinymce.min.js');
+    });
+}

@@ -36,7 +36,7 @@
 </div>
 <div class="col-12 day_events load_content">
     <div class="col-12">
-        <h6>Global events {{-- <a class="three_dots" rel="modal:open" href="{{ route('all_event', ['dataArr_day' => $dataArr_day, 'uniqueType' => $uniqueType, 'dan' => $dan] ) }}" > @lang('basic.view_all')</a> --}}</h6>
+        <h6>Global events <a class="three_dots" rel="modal:open" href="{{ route('all_event', ['dataArr_day' => $dataArr_day, 'uniqueType' => $uniqueType, 'dan' => $dan] ) }}" > @lang('basic.view_all')</a></h6>
         @if (isset($dataArr_day)  && count($dataArr_day) > 0)
             @if(isset($uniqueType) && count($uniqueType)>0)
                 @foreach ($uniqueType as $type)

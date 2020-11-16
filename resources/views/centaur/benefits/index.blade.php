@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="index_page ads_index">
-	
 	<main class="col-xs-12 col-sm-12 col-md-12  index_main benefit_main float_right">
 		<section>
 			<div class="page-header header_document">
@@ -84,7 +83,6 @@
 										<p class="bnf_description">{!! $benefit->description !!}</p>
 									</div>
 									<div class="col-xs-12 col-sm-4 float_l contact_info">
-										
 										<p>@lang('basic.contact_person')</p>
 										<label><i class="fas fa-user"></i> {{ $benefit->contact }}</label>
 										<p class="last">@lang('basic.contact_info')</p>
@@ -112,6 +110,5 @@
 	$.getScript( '/../js/filter.js');
 	$.getScript( '/../js/benefit.js');
 	$.getScript( '/../js/open_modal.js');
-	
 </script>
 @stop

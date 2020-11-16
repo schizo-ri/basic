@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\EducationRequest;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Controller;
 use App\Models\Education;
 use App\Models\Department;
+use App\Models\Employee;
 use Sentinel;
 
 class EducationController extends Controller
@@ -28,16 +30,32 @@ class EducationController extends Controller
      */
     public function index()
     {
-		$educations = Education::get();
-		$departments = Department::get();
-		$empl = Sentinel::getUser()->employee;
-        $permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        $educations = Education::get();
+       
+        if(! Sentinel::inRole('administrator')) {
+            $employee = Sentinel::getUser()->employee;
+           
+           
+            if( $employee ) {
+                $user_departments_id = Employee::employeesDepartment( $employee);
+                $education_employee = collect();
+
+                if( count( $user_departments_id ) > 0 ) {
+                    foreach ($user_departments_id as $department_id) {
+                        $education_employee =  $education_employee->merge($educations->where('to_department_id', $department_id));
+                    }
+                    $educations = $education_employee;
+                } else {
+                    $educations = null;
+                }
+               
+            } else {
+                $educations = null;
+            }
         } 
-		
-		return view('Centaur::education.index', ['educations' => $educations, 'departments' => $departments, 'permission_dep' => $permission_dep]);
+        $permission_dep = DashboardController::getDepartmentPermission();
+
+		return view('Centaur::educations.index', ['educations' => $educations,'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -51,7 +69,7 @@ class EducationController extends Controller
 		$departments1 = Department::where('level1',1)->orderBy('name','ASC')->get();
 		$departments2 = Department::where('level1',2)->orderBy('name','ASC')->get();
 		
-		return view('Centaur::education.create',['departments0'=>$departments0, 'departments1'=>$departments1, 'departments2'=>$departments2]);
+		return view('Centaur::educations.create',['departments0'=>$departments0, 'departments1'=>$departments1, 'departments2'=>$departments2]);
     }
 
     /**
@@ -60,22 +78,24 @@ class EducationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(EducationRequest $request)
+    public function store(Request $request)
     {
-		$to_department_id = implode(",", $request['to_department_id'] );
-		
-		$data = array(
-			'name'  			=> $request['name'],
-			'to_department_id'  => $to_department_id,
-			'status'  	 		=> $request['status']
-		);
-			
-		$education = new Education();
-		$education->saveEducation($data);
-		
+	/* 	$to_department_id = implode(",", $request['to_department_id'] ); */
+        
+        foreach ($request['to_department_id'] as $department_id ) {
+            $data = array(
+                'name'  			=> $request['name'],
+                'to_department_id'  => $department_id,
+                'status'  	 		=> $request['status']
+            );
+                
+            $education = new Education();
+            $education->saveEducation($data);
+        }
+	
 		session()->flash('success',  __('ctrl.data_save'));
 		
-        return redirect()->route('education.index');
+        return redirect()->route('educations.index');
     }
 
     /**
@@ -98,11 +118,11 @@ class EducationController extends Controller
     public function edit($id)
     {
         $education = Education::find($id);
-		$departments0 = Department::where('level1',0)->orderBy('name','ASC')->get();
+        $departments0 = Department::where('level1',0)->orderBy('name','ASC')->get();
 		$departments1 = Department::where('level1',1)->orderBy('name','ASC')->get();
-		$departments2 = Department::where('level1',2)->orderBy('name','ASC')->get();
-		
-		return view('Centaur::education.edit',['education'=>$education,'departments0'=>$departments0, 'departments1'=>$departments1, 'departments2'=>$departments2]);
+        $departments2 = Department::where('level1',2)->orderBy('name','ASC')->get();
+			
+		return view('Centaur::educations.edit',['education'=>$education,'departments0'=>$departments0, 'departments1'=>$departments1, 'departments2'=>$departments2]);
     }
 
     /**
@@ -115,20 +135,18 @@ class EducationController extends Controller
     public function update(EducationRequest $request, $id)
     {
         $education = Education::find($id);
-	   
-		$to_department_id = implode(",", $request['to_department_id'] );
-		
-		$data = array(
-			'name'  	 => $request['name'],
-			'to_department_id'  => $to_department_id,
-			'status'  	 => $request['status']
-		);
-		
-		$education->updateEducation($data);
+        
+        $data = array(
+            'name'  			=> $request['name'],
+            'to_department_id'  =>  $request['to_department_id'],
+            'status'  	 		=> $request['status']
+        );
+
+        $education->updateEducation($data);
 		
 		session()->flash('success', __('ctrl.data_edit'));
 		
-        return redirect()->route('education.index');
+        return redirect()->route('educations.index');
     }
 
     /**

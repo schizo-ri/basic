@@ -53,6 +53,8 @@ div#calendar div.box-content{
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     overflow: hidden;
     max-height: 80%;
+    width: 100%;
+
 }
 
 div#calendar ul.label{
@@ -76,7 +78,7 @@ div#calendar ul li{
     vertical-align:middle;
     text-align:center;
     color:#000;
-    font-size: 15px;
+    font-size: 0.9375rem;
     background-color: transparent;
 }
  
@@ -148,18 +150,24 @@ div.clear{
     
 }
 
-#calendar button.scroll_right_cal, #calendar button.scroll_left_cal, #calendar a.scroll_right_cal, #calendar a.scroll_left_cal  {
+#calendar button.scroll_right_cal,
+#calendar button.scroll_left_cal,
+#calendar a.scroll_right_cal,
+#calendar a.scroll_left_cal  {
     width: 8.5px;
     height:  1.625rem;
     background-position: center;
     border-radius: 50%;
     float: right;
     border: none;
-    line-height: 1rem;
     margin-right: 30px;
-    line-height: 1.625rem;
+    line-height: 26px;
     background-color: inherit;
     outline: none;
+}
+#calendar button.scroll_right_cal img,
+#calendar button.scroll_left_cal img {
+    height: 12px;
 }
 
 .dates::-webkit-scrollbar {
@@ -228,12 +236,6 @@ div#calendar ul li.active_date {
 .modal.event_show span.green {
     background: #13EA90;
 }
-
-@media (max-width: 450px) {
-    div#calendar {
-        padding: 0;
-    }
-}
 @media (max-width: 1024px) {
     div#calendar div.header {
         padding-top: 10px;
@@ -241,10 +243,6 @@ div#calendar ul li.active_date {
     div#calendar {
         padding: 0 15px;
     }
-    .comming_agenda {
-        padding: 15px;
-    }
-
 }
 
 @media (max-height: 800px) {
@@ -254,6 +252,14 @@ div#calendar ul li.active_date {
     div#calendar ul.dates  {
         height: 75px;
         margin-bottom: 10px;
-}
     }
+}
+@media (max-width: 450px) {
+    div#calendar {
+        padding: 0 10px;
+    }
+    div#calendar ul.dates li {
+        height: 65px;
+    }
+}
     

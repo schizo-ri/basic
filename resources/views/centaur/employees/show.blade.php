@@ -1,5 +1,10 @@
 <header >
-	<h4 class="panel-title">@lang('basic.employee')</h4>
+	<a class="back" rel="modal:close">
+		<span class="arrow_left_wh" />
+	</a>
+	<div class="user_data">
+		<h4 class="panel-title">@lang('basic.employee')</h4>
+	</div>
 </header>
 <main class="">
 	<div class="basic_info">
@@ -100,7 +105,5 @@
 				<p class="show_empl_p" >{{ $kid->first_name . ' ' . $kid->last_name . ' - ' . __('basic.b_day') . ': ' . date('d.m.Y',strtotime($kid->b_day)) }}</p>
 			@endforeach
 		@endif
-		
 	</div>
-
 </main>

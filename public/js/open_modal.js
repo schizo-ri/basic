@@ -1,5 +1,5 @@
 $("a[rel='modal:open']").addClass('disable');
-console.log("Open modal");
+
 $(function() {
     $("a[rel='modal:open']").removeClass('disable');
     $.modal.defaults = {
@@ -190,7 +190,6 @@ $(function() {
 		};
     });
     $('tr[data-modal] td:not(:last-child)').on("click", function(e) {
-      
         e.preventDefault();
         var href = location.origin + $(this).parent().data('href');
         
@@ -221,5 +220,5 @@ $(function() {
             $( "#login-modal" ).empty();
         });
     }); 
-
+ 
 });

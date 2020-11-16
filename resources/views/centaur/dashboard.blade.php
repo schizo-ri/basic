@@ -3,9 +3,8 @@
 @section('title',config('app.name'))
 @php
 	use App\Http\Controllers\PostController;
+	
 	$thisYear = date('Y');
-	use App\Models\WorkRecord;
-
  	$today = new DateTime();
 	$today->modify('-1 years');
 	$today->modify('-14 days');
@@ -53,6 +52,15 @@
 							<p class="col-4"><span class="salery_show">{{ number_format($employee->effective_cost, 2, ',', '.')}}  kn</span><span class="salery_hidden">- Kn</span>@lang('basic.hourly_rate')</p>
 						</div> --}}
 						<div class="shortcuts_container">
+							<div class="" >
+								<span class="shortcut">@lang('basic.edit_shortcut') <span class="btn-new"><i class="fas fa-pen"></i></span></span> 
+							</div>
+							<div class="scroll_button">
+								<button id="left-button-scroll" class=""><i class="fas fa-chevron-left"></i></button>
+								<button id="right-button-scroll" class=""><i class="fas fa-chevron-right"></i></button>
+							</div>
+						</div>
+						<div class="shortcuts_container">
 							<div>
 								<div class="profile_images">
 									@if (isset($employee) && count($shortcuts) > 0 )
@@ -78,15 +86,6 @@
 								</div>
 							</div>
 						</div>
-						<div class="shortcuts_container">
-							<div class="" >
-								<span class="shortcut">@lang('basic.edit_shortcut') <span class="btn-new"><i class="fas fa-pen"></i></span></span> 
-							</div>
-							<div class="scroll_button">
-								<button id="left-button-scroll" class=""><i class="fas fa-chevron-left"></i></button>
-								<button id="right-button-scroll" class=""><i class="fas fa-chevron-right"></i></button>
-							</div>
-						</div>
 						<div class="col-md-12 padd_0 float_left layout_button ">
 							@if(isset($employee) )
 								<button class=""><a href="{{ route('absences.create') }}" rel="modal:open">
@@ -98,7 +97,7 @@
 								@if(in_array('Prekovremeni', $moduli))  
 									<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
 										<span>
-											<span class="img "></span>
+											<span class="img clock"></span>
 											<p>@lang('basic.add_afterhour')</p>
 										</span></a>
 									</button>
@@ -110,10 +109,11 @@
 									</span></a>
 								</button>
 								@if(in_array('Locco vožnja', $moduli))  
-									<button class="{!! $locco_active->first() ? 'background_red' : '' !!}"><a href="{!! $locco_active->first() ? route('loccos.edit', $locco_active->first()->id ) : route('loccos.create') !!}" rel="modal:open">
+									<button class="{!! $locco_active->first() ? 'background_red' : '' !!}">
+										<a href="{!! $locco_active->first() ? route('loccos.edit', $locco_active->first()->id ) : route('loccos.create') !!}" rel="modal:open">
 										<span>
 											<span class="img car "></span>
-												<p>{!! $locco_active->first()  ? __('basic.edit_locco') : __('basic.add_locco') !!}</p>
+												<p>{!! $locco_active->first()  ? __('basic.finish_locco') : __('basic.add_locco') !!}</p>
 										</span></a>
 									</button>
 								@endif
@@ -126,14 +126,14 @@
 									</button>
 									@endif
 								@if(in_array('Locco vožnja', $moduli))  
-									<button class="" ><a href="{{ route('fuels.create')}}" rel="modal:open">
+									{{-- <button class="" ><a href="{{ route('fuels.create')}}" rel="modal:open">
 										<span>
 											<span class="img fuel"></span>
 												<p>{{  __('basic.fuel') }}</p>
 											</span>
 												
 										</span></a>
-									</button>
+									</button> --}}
 								@endif
 								<button class="button_absence" >
 									<a href="{{ route('absences.index') }}" >
@@ -158,6 +158,14 @@
 									</span></a>
 								</button>
 							@endif
+							<button class="">
+								<a href="{{ route('radne_upute') }}" >
+									<span>
+										<span class="img books"></span>
+										<p>@lang('basic.instructions')</p>
+									</span>
+								</a>
+							</button>
 						</div>
 					</div>
 				@endif
@@ -278,7 +286,9 @@
 									@if ($post->to_department_id != null && $post->employee_id == Sentinel::getUser()->employee->id  )
 										<span class="read_post">
 											@foreach ($post->comments->where('to_employee_id','<>',null) as $comment)
-												<span class="read_comment {!! $comment->status == 0? 'post_unread' : 'post_read'!!}">{!! $comment->toEmployee ? substr($comment->toEmployee->user['first_name'],0,1) . substr($comment->toEmployee->user['last_name'],0,1) : $comment->id !!}</span>
+												@if ($comment->toEmployee->checkout == null)
+													<span class="read_comment {!! $comment->status == 0? 'post_unread' : 'post_read'!!}">{!! $comment->toEmployee  ? mb_substr($comment->toEmployee->user['first_name'],0,1) . mb_substr($comment->toEmployee->user['last_name'],0,1) : $comment->id !!}</span>
+												@endif
 											@endforeach
 										</span>
 									@endif

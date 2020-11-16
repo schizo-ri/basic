@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+    
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardController;
@@ -30,12 +30,17 @@ class DocumentController extends Controller
      */
     public function index()
     {
-     /*  $user = Employee::where('user_id',Sentinel::getUser()->id)->first(); */
-      $empl = Sentinel::getUser()->employee;
+        /*  $user = Employee::where('user_id',Sentinel::getUser()->id)->first(); */
+        $empl = Sentinel::getUser()->employee;
 
-      if(isset($empl)) {
-        $user_name = DashboardController::user_name( $empl->id );
-        $documents = Document::where('path','like','%'.$user_name .'/documents/%')->orWhere('path','like','%svi/documents/%')->get();
+        if(isset($empl)) {
+            $user_name = DashboardController::user_name( $empl->id );
+            if(Sentinel::inRole('administrator')) {
+                $documents = Document::get();
+            } else {
+                $documents = Document::where('path','like','%'.$user_name .'/documents/%')->orWhere('path','like','%svi/documents/%')->get();
+            }
+        
         $permission_dep = DashboardController::getDepartmentPermission();
         $employees = Employee::employees_firstNameASC();
        
@@ -69,7 +74,7 @@ class DocumentController extends Controller
      */
     public function create()
     {
-		  $employees = Employee::employees_firstNameASC();
+		  $employees = Employee::employees_lastNameASC();
 		
 		  return view('Centaur::documents.create',['employees' => $employees]);
     }

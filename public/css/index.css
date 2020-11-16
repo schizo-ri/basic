@@ -4,7 +4,9 @@
     display: flex;
     padding: 0 10px;
 }
-
+.password_reset h3 {
+    color: white;
+}
 .form-control.color {
     width: 100px;
 }
@@ -13,7 +15,7 @@
     text-decoration: none;
    
 }
-.posts_index .link_back, .calendar_aside .link_back{
+.calendar_aside .link_back{
     position: absolute;
     top: 5px;
     left: 16px;
@@ -23,11 +25,11 @@
     text-decoration: none;
 }
 .index_page h1 {
-    font-weight: 600;
+  font-weight: 600;
     font-size: 1.375rem;
     color: #071E57;
-    padding: 25px 15px 15px;
-    line-height: 38px;
+    padding: 27px 20px;
+    margin: 0;
 }
 .campaign_start_date {
     float: right;
@@ -45,8 +47,11 @@
     height: auto;
     overflow: hidden;
     max-height: initial;
-    height: calc(100% - 126px);
+    height: calc(100% - 90px);
     padding: 0 15px;
+    background: #ffffff;
+    box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
 }
 .clickable-row {
     cursor: pointer;
@@ -85,9 +90,21 @@
     padding: 0;
     margin: 0;
     width: 100%;
-    background: #ffffff;
+    /* background: #ffffff;
     box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15); 
+    border-radius: 5px; */
+}
+
+.index_page aside.latest_messages header.post_header {
+    box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
     border-radius: 5px;
+    margin: 0;
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: #ffffff;
+    height: 80px;
+    position: relative;
+    overflow: visible;
 }
 
 .index_page aside.calendar_aside>div {
@@ -186,7 +203,6 @@
 
 .index_main.index_event, .index_page.ads_index .index_main  {
     height: 100%;
-    border-radius: 0;
 }
 .all_agenda {
     clear: left;
@@ -209,7 +225,28 @@
 main.index_main>section {
     height: 100%;
     margin: 0;
-    overflow: visible;
+    overflow: hidden;
+}
+main.index_main.locco_create_main {
+    height: 100%;
+    overflow: hidden;
+}
+main.index_main.locco_create_main>section  {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
+}
+main.index_main.locco_create_main>section >main {
+    padding: 20px;
+}
+.locco_create_main form {
+    height: 100%;
+    overflow: auto;
+    padding: 0 20px;
+    font-size: 0.9375rem;
+}
+.locco_create_main form label {
+    font-size: 0.75rem;
 }
 
 .index_main header {
@@ -242,6 +279,7 @@ main.index_main>section {
 
 .index_main main.all_notices {
     height: calc(100% - 65px);
+    min-height: calc(100% - 65px);
 }
 
 .index_main.main_noticeboard .header_noticeboard {
@@ -289,7 +327,7 @@ main.index_main>section {
     margin-top: 0;
     font-style: normal;
     font-weight: 600;
-    font-size: 10px;
+    font-size: 0.625rem;
     line-height: 55px;
     display: flex;
     align-items: center;
@@ -410,6 +448,9 @@ img.doc_icons {
     font-size: 0.8125rem;
     color: #071E57;
     display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .post_sent span.vacation, .post_sent span.phone, .post_sent span.e-mail  {
@@ -427,7 +468,7 @@ img.doc_icons {
     overflow: visible;
 }
 .post_sent span.vacation>span, .post_sent span.phone>span, .post_sent span.e-mail>span {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 400;
     color: #1390E9;
 }
@@ -588,7 +629,7 @@ class="select-css"
     max-width: 100%;
     border: none;
     box-shadow: none;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-top {
@@ -803,7 +844,7 @@ class="select-css"
     padding: 3px;
     border: 1px solid;
     line-height: 14px;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .show_event .btn-edit {
     position: absolute;
@@ -817,7 +858,7 @@ class="select-css"
     border: 1px solid;
     color: #ccc;
     line-height: 14px;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .header_calendar .event_day {
@@ -1068,6 +1109,7 @@ class="select-css"
 
 .index_main main.main_campaign,.index_main main.main_benefits {
     background-color: #fff;
+    overflow: hidden;
 }
 .index_main main.main_benefits {
     height: calc(100% - 65px);
@@ -1153,7 +1195,7 @@ class="select-css"
     margin-top: -5px;
     margin-right: -10px;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 18px;
     color: #1594F0;
     text-transform: uppercase;
@@ -1442,8 +1484,11 @@ main.main_ads {
     justify-content: flex-start;
     padding: 20px;
     padding-right: 5px;
+    height: calc(100% - 145px);
 }
+main.main_ads.main_instructions {
 
+}
 .index_main main.ad_main {
     height: auto;
     padding: 10px 20px;
@@ -1662,11 +1707,16 @@ footer.ad_footer {
     display: inline-block;
     margin: 0;
 }
-
+.main_absence  {
+    height: 100%;
+}
+.all_absences.table_absences>section {
+    height: 100%;
+}
 .modal_campaign .index_table_filter >label input {
     padding-left: 40px;
 }
-.header_ads .index_table_filter .select_filter, .notice_filter .select_filter, .fuel_header .select_filter, .travel_header .select_filter, .work_record_header .select_filter {
+.header_ads .index_table_filter .select_filter, .notice_filter .select_filter, .fuel_header .select_filter, .travel_header .select_filter, .work_record_header .select_filter, .main_absence .select_filter {
     width: auto;
     height: 38px;   
     float: right;
@@ -1687,12 +1737,42 @@ footer.ad_footer {
     margin-right: -5px;
     margin-left: 20px;
     cursor: pointer;
+}
 
+.main_absence .select_filter {
+    margin: 0;
+}
+
+.select_filter option {
+    width: fit-content;
+}
+
+.main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years, .main_absence .select_filter.filter_employees, .main_absence .select_filter.filter_approve {
+    background-position: 98%;
+    background-color: white;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden ;
+    text-overflow: ellipsis;
+    border: 1px solid rgba(7, 30, 86, 0.1);
+    border-radius: 5px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 0.625rem;
+    color: #606060;
+    padding-left: 10px;
+    padding-right: 5px;
+    
+}
+
+.main_absence .select_filter.filter_types>option, .main_absence .select_filter.filter_years>option {
+    color: black;
 }
 
 .index_table_filter>div {
     position: relative;
-    height: 100%;
+    /* height: 100%; */
     float: left;
     width: 50%;
     flex: 0 0 50%;
@@ -1746,13 +1826,13 @@ footer.ad_footer {
     background-color: #fafafa;
 }
 
-.index_page .dt-buttons { 
+.index_page .dt-buttons, .table_absences .dt-buttons { 
    display: none;
    float: right;
    margin-top: 5px;
 }
 
-.index_page .dt-buttons .dt-button {
+.dt-buttons .dt-button {
     padding: 3px 10px;
     border-radius: 3px;
     font-size: 0.75rem;
@@ -1771,19 +1851,23 @@ footer.ad_footer {
     position: sticky;
     top: 0;
     z-index: 1;
+    padding: 20px;
 }
-
+.index_page .dataTables_filter  >div {
+    height: -webkit-fill-available;
+    padding: 0 10px;
+}
 .index_page .dataTables_filter>label {
-    margin: 0;
+  /*   margin: 0;
     position: absolute;
-    top: 50%;
+    top: 50%; */
     /* left: 50%; */
-    transform: translateY(-50%);
+   /*  transform: translateY(-50%); */
     width: 50%;
     margin-left: 20px;
 }
 
-.index_page .dataTables_filter input {
+.index_page .dataTables_filter input:not(.btn-new) {
     width: 100%;
     height: 38px;
     border: none;
@@ -1793,23 +1877,31 @@ footer.ad_footer {
     padding: 0 20px
 }
 
-.dataTables_filter span.show_button {   
-    top: 50%;
-    right: 180px;
-    transform: translateY(-50%);
-    cursor: pointer; 
-    width: auto;
-    height: auto;
-    line-height: 35px;
-    border-radius: 5px;
-    padding: 0;
-    position: absolute;
-    z-index: 1;
-    color: #2B2B2B;
-    font-size: 1rem;
+.modal-body p.days_employee, .modal-body p.days_request {
+    color: red;
+    padding: 10px 20px;
 }
 
-.tr_open_link {
+.dataTables_filter span.show_button {   
+    float: right;
+    height: 100%;
+    line-height: 35px;
+    margin-right: 20px;
+}
+.all_absences .dataTables_filter span.show_button {
+    float: left;
+    margin: 0;
+    margin-left: 20px;
+} 
+.all_absences.table_absences span.show_button {
+    float: right;
+    height: auto;
+    line-height: 35px;
+    margin-right: 20px;
+    color: white;
+}
+
+.tr_open_link td:not(.not_link){
     cursor: pointer;
 }
 
@@ -1827,11 +1919,12 @@ footer.ad_footer {
 .all_documents span.show_button, .header_ads span.show_button  {
     display: none;
 }
-.index_page a.add_new {
+.index_page a.add_new, .btn-new.btn-approve {
     width: auto;
     height: 35px;
     line-height: 35px;
     background: #1594F0;
+    border: none;
     border-radius: 5px;
     padding: 0 20px;
     position: relative;
@@ -1842,16 +1935,18 @@ footer.ad_footer {
     font-weight: 600;
     font-size: 0.6875rem;
     color: #FFFFFF;
-    margin-left: 20px;
+    margin-left: 10px;
+    text-align: center;
 }
 
 .index_page .all_absences a.add_new {
     float: right;
-    top: 50%;
+   /*  top: 50%;
     bottom: 50%;
     transform: translateY(-50%);
-    right: 20px;
+    right: 20px; */
     text-decoration: none;
+    width: 100%;
 }
 .index_page a.add_new i, .index_page a.add_new svg {
     margin-right: 20px;
@@ -1860,7 +1955,12 @@ footer.ad_footer {
 .index_page .dataTables_wrapper .dataTables_length, .index_page .dataTables_wrapper .dataTables_info, .index_page .dataTables_wrapper .dataTables_processing {
     display: none;
 }
-
+.dataTables_info {
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 15px;
+    padding-left: 20px;
+}
 .index_page table.dataTable  {
     font-size: 0.75rem;
     position: relative;
@@ -1870,7 +1970,10 @@ footer.ad_footer {
     font-size: 0.6875rem;   
   
 }
-
+form.after_form  {
+    height: 100%;
+    overflow: hidden;
+}
 .img_approve {
     background: url(../icons/check.png) no-repeat;
     width: 100%;
@@ -1897,6 +2000,13 @@ footer.ad_footer {
     font-weight: 600;
     font-size: 0.625rem;
     line-height: 16px;
+}
+.approve input[type=time] {
+    border: 1px solid rgba(7, 30, 86, 0.1);
+}
+.approve input[type=radio] {
+    margin: 0 4px 0 10px;
+    vertical-align: middle;
 }
 
 .option_dots {
@@ -2001,6 +2111,10 @@ footer.ad_footer {
     padding: 0;
     height: max-content;
     position: relative;
+  
+}
+.noticeboard_notice_body.instructions_body {
+    height: auto;
 }
 .noticeboard_notice_body, .emails_email_body:not(:nth-child(5n)) {
     margin-right: 1%;
@@ -2080,13 +2194,14 @@ footer.ad_footer {
   }
   div.search_input {
     margin: 39px 0;
-    height: 49px;
+    height: auto;
     width: 100%;
     position: absolute;
-    top: 0;
+    top: 40%;
     padding: 0;
     display: none;
     border: none;
+    z-index: 5;
   }
   .search_input>input {
     box-shadow: 3px 0 5px rgba(0, 0, 0, 0.15), -3px 0 5px rgba(0, 0, 0, 0.15);
@@ -2098,7 +2213,7 @@ footer.ad_footer {
     display: block;
   }
   .latest_messages  div.search_input  {
-    margin: 25px 0;
+    /* margin: 25px 0; */
   }
   .search_post {
     background:url(/icons/search.png) no-repeat;
@@ -2106,7 +2221,7 @@ footer.ad_footer {
     width: 21px;
     display: inline-block;
     float: right;
-    margin: 10px 27px 10px 0;
+    margin: 5px 27px 5px 0;
   }
 
 .table-responsive  {
@@ -2121,7 +2236,7 @@ footer.ad_footer {
 .table-responsive .dataTables_wrapper {
     overflow: auto;
     scrollbar-width: thin;
-    height: auto;
+    height: 100%;
 }
 .second_view {
     display: none;
@@ -2416,6 +2531,12 @@ button.scroll_left {
     display: none;
 }
 
+.page-header {
+	/* margin: 20px 0 20px; */
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
 .page-header.header_document > a.add_new {
     bottom: -75px;
     top: auto;
@@ -2462,15 +2583,23 @@ main.index_main.main_absence >section {
 .curve_arrow_left {
     background: url('../icons/curve_arrow_left.png') no-repeat;
     width: 22px;
-    height: 14px;
+    height: 12px;
     display: inline-block;
     margin-right: 20px;
 }
 .curve_arrow_left_grey {
-    background: url(../icons/curve_arrow_left_grey.png) no-repeat;
+    background: url('../icons/curve_arrow_left_grey.png') no-repeat;
     width: 22px;
     height: 14px;
     display: inline-block;
+
+}
+.curve_arrow_left_blue {
+    background: url('../icons/curve_arrow_left_blue1.png') no-repeat;
+    width: 22px;
+    height: 14px;
+    display: inline-block;
+
 }
 .back_to_prev {
     margin: 0;
@@ -2613,7 +2742,7 @@ main.all_absences >section {
 
 .info_abs>p>span {
     font-weight: 600;
-    font-size: 10px;
+    font-size: 0.625rem;
     text-align: center;
     color: #FFFFFF;
     margin-top: 15px;
@@ -2649,9 +2778,19 @@ main.all_absences >section {
     overflow: hidden;
     box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
     background: inherit;
-    height: calc(100% - 65px);
+    
 }
-
+.index_main main.all_absences {
+    height: calc(100% - 65px);
+    padding-bottom: 30px;
+}
+.index_main main.all_absences.all_absences_employee {
+   
+    padding-bottom: 0;
+}
+main.all_absences.all_absences_employee >section {
+    height: 100%;
+}
 .index_main main.all_absences tbody tr {
    /*  display: none; */
 }
@@ -2878,7 +3017,7 @@ label.add_new {
     font-weight: 600;
 }
 
-.table tbody tr>td:last-child, .table thead tr>th:last-child  {
+.table tbody tr>td:last-child:not('.table_work_record tbody tr>td:last-child'), .table thead tr>th:last-child:not('.table_work_record thead tr>th:last-child') {
     min-width: 100px;
 }
 
@@ -2886,7 +3025,7 @@ label.add_new {
     font-size: 0.875rem;
 }
 
-table.dataTable#index_table tbody td:last-child {
+table.dataTable#index_table tbody:not(.table_work_record tbody) td:last-child{
     min-width: 100px;
     text-align: left;
 }
@@ -3071,18 +3210,30 @@ main.index_main>section.section_evidention {
     border-radius: 3px 3px 0px 0px;
     display: block;
     position: relative;
-    padding: 8px 0;
+    padding: 5px 0;
 }
 
 .index_table_filter >label, #index_table_filter >label {
-    margin: 0;
+    /* margin: 0;
     position: absolute;
     top: 50%;
     left: 0;
-    transform: translateY(-50%);
-    width: 50%;
-    margin-left: 20px;
+    transform: translateY(-50%); */
+   
+   /*  min-width: 200px; */
+    margin-left: 0;
+    width: 30%;
+    padding: 0;
 }
+
+.not_scheduled {
+    float: right;
+}
+
+.section_main .dataTables_filter{
+    display: none;
+}
+
 .index_table_filter >label.button_container {
     left: auto;
     right: 0;
@@ -3093,7 +3244,7 @@ main.index_main>section.section_evidention {
  .index_table_filter >label.button_container a.add_new svg {
     margin: 0;
 }
-.index_table_filter input, #index_table_filter input  {
+.index_table_filter input:not(.btn-new), #index_table_filter input:not(.btn-new),.all_absences.table_absences #mySearchTbl   {
     width: 100%;
     height: 38px;
     border: none;
@@ -3102,7 +3253,9 @@ main.index_main>section.section_evidention {
     margin: 0;
     padding: 0 20px;
 }
-
+.search_label {
+    margin: 0;
+}
 .header_ads .index_table_filter input, .header_benefits .index_table_filter input  {
     padding-left: 35px;
 }
@@ -3123,7 +3276,7 @@ main.index_main>section.section_evidention {
     justify-content: flex-start;
     flex-wrap: wrap;*/
 }
-
+s
 .table-responsive.second_view .questionnaires .thumb_name, .table-responsive.second_view .questionnaires .thumb_time  {
     color: #2B2B2B;
 }
@@ -3138,6 +3291,7 @@ input[type="search"]::-webkit-search-cancel-button {
     text-align: left;
     padding-left: 12px;
     border-bottom: 1px solid rgba(154, 154, 154, 0.3);
+
 }
 .evidention_employee table.dataTable#index_table tbody tr {
     height: auto;
@@ -3367,7 +3521,7 @@ a.iclude_event {
     background: #1594F0;
     border-radius: 5px;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #FFFFFF;
     float: left;
     margin-right: 12px;
@@ -3385,6 +3539,20 @@ a.chat{
     margin-bottom: 20px;
     outline: none;
     border: 1px solid #1594F0;
+    margin-right: 12px;
+}
+a.password_edit {
+    width: 45px;
+    height: 45px;
+    background: #1594EE;
+    border-radius: 5px;
+    float: left;
+    margin-bottom: 20px;
+    outline: none;
+    border: 1px solid #1594F0;
+    color: white;
+    line-height: 45px;
+    text-align: center;
 }
 
 .user_profile .user_info {
@@ -3484,9 +3652,47 @@ a.modal_close {
     color: #071E57;
 }
 
+.approve_buttons {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    overflow: hidden;
+    float: left;
+    height: 38px;
+    margin: 0;
+    width: 100%;
+    padding: 0;
+}
+.approve_buttons>div {
+    padding: 0;
+    height: 100%;
+}
+.approve_button {
+    margin-right: 20px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 0.625rem;
+    color: #606060;
+    padding: 10px 0;
+    cursor: pointer;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    display: block;
+    text-align: center;
+}
+}
 @media (max-width: 1200px) {
     .index_main.profile_main .main_profile .user_profile {
         padding: 10px;
+    }
+    .approve_button  {
+        margin-right: 5px;
+    }
+    .index_page a.add_new, .btn-new.btn-approve {
+        padding: 0 10px;
+    }
+    .index_page a.add_new i, .index_page a.add_new svg {
+        margin-right: 5px;
     }
     .iclude_event span.img-calendar {
         background: url(../icons/calendar_small.png) no-repeat 10px 45%;
@@ -3531,8 +3737,16 @@ a.modal_close {
     .index_main main.main_calendar, .index_main main.main_calendar_month, .index_main main.main_calendar_week {
         top: 80px
     }
+    .index_page aside.latest_messages header.post_header {
+        height: 65px;
+    }
+    .posts_index .posts {
+        height: calc(100% - 75px);
+    }
     .index_page h1 {
         line-height: 25px;
+        padding: 20px;
+        font-size: 1.125rem;
     }
     .search_post {
         margin: 3px 10px 3px 0;
@@ -3548,14 +3762,17 @@ a.modal_close {
 	}
 }
 @media (max-width: 1024px) {
+    .index_page {
+        padding-bottom: 15px;
+    }
+    .index_page .calender_view .pignose-calendar .pignose-calendar-top {
+        padding: 0;
+    }
     .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-nav.pignose-calendar-top-prev {
         right: 75px;
     }
     .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-nav.pignose-calendar-top-next {
         right: 35px;
-    }
-    .index_page .calender_view .pignose-calendar .pignose-calendar-top {
-        padding: 0;
     }
     .index_page aside {
         scrollbar-width: thin;
@@ -3570,6 +3787,23 @@ a.modal_close {
     .index_page .calender_view .pignose-calendar .pignose-calendar-body {
         padding: 0;
     }
+    .index_table_filter >label, #index_table_filter >label {
+        width: 100%;
+    }
+    .section_main .dataTables_filter {
+        overflow: hidden;
+        height: auto;
+        position: relative;
+    }
+    .index_page .dataTables_filter >div {
+        margin-bottom: 10px;
+    }
+    .all_absences .dataTables_filter span.show_button {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: auto;
+    }
     .header_calendar .event_day {
         margin-right: 20px;
         width: 40px;
@@ -3579,7 +3813,10 @@ a.modal_close {
         height: 40px;
         line-height: 40px;
     }
-    
+    .approve_buttons {
+        margin-right: 0;
+        padding: 3px 0;
+    }
     .header_calendar .event_day .week_day, .header_calendar .event_day .day {
         height: 50%;
         line-height: 15px;
@@ -3602,16 +3839,17 @@ a.modal_close {
         margin-right: 20px;
     }
     .index_main header {
-        padding: 15px;
+        padding: 10px 15px;
         min-height: 70px;
         height: 70px;
+    }
+    .index_table_filter {
+        padding: 5px 0;
     }
     .page-main {
         height: calc(100% - 50px);
     }
-    .index_page .calender_view .pignose-calendar .pignose-calendar-top {
-        padding: 20px 0;
-    }
+  
     .index_aside>div.calendar_main .btn-new {
         top: 20px;
     }
@@ -3656,9 +3894,12 @@ a.modal_close {
         scrollbar-width: thin;
    
     }
+    .index_main main.main_ads {
+        height: calc(100% - 135px);
+    }
     .index_main .form_post {
         height: 50px;
-
+        line-height: 50px;
     }
     .index_main .form_post .smile {
         width: 15px;
@@ -3691,7 +3932,10 @@ a.modal_close {
    
     }
     .container .posts .all_post {
-        padding: 15px;
+        padding: 10px 15px;
+    }
+    .container .posts .all_post h2 {
+        padding-top: 10px;
     }
     .container h2 {
         font-size: 0.875rem;
@@ -3719,11 +3963,15 @@ a.modal_close {
     .main_benefits_body {
         margin-top: 0;
     }
-    main.main_ads {
-        padding: 0;
-    }
 }
 @media (max-width: 768px) {
+    .header_document.page-header {
+        padding: 10px 0 10px;
+    }
+    .index_main header {
+        min-height: fit-content;
+        height: auto;
+    }
     .index_page .index_main, .index_page.posts_index .index_main {
         position: static;
         width: 100%;
@@ -3731,15 +3979,48 @@ a.modal_close {
         margin: auto;
         height: 100%;
     }
+    .form_post input.type_message, .form_post textarea.type_message { 
+        line-height: 50px;
+    }
     .posts_index .link_back, .calendar_aside .link_back {
-        top: 10px;
+        top: -5px;
         left: 5px;
     }
     .index_page h1 {
         padding-left: 50px;
     }
-    .index_page aside.latest_messages>div {
-      /*   box-shadow: none; */
+    .main_absence main >header {
+        padding: 10px;
+        min-height: auto;
+    }
+    .index_page #index_table_filter.dataTables_filter>label{
+        width: 50%;
+        margin: 0;
+        padding: 0 10px;
+    }
+    .index_page .all_absences .dataTables_filter  a.add_new {
+        transform: none;
+        right: 0;
+        margin-left: 5px;
+        padding: 0 10px;
+    }
+    .index_page a.add_new i, .index_page a.add_new svg {
+        margin-right: 5px;
+    }
+    .main_absence .select_filter {
+        margin-right: 0;
+    }
+    .index_page .dataTables_filter {
+        height: auto;
+        clear: both;
+        overflow: hidden;
+        padding: 10px;
+    }
+    .dataTables_filter span.show_button {
+        display: none;
+    }
+    .main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years {
+        margin-right: 10px;
     }
     .index_page.posts_index .index_main  {
         display: none;
@@ -3774,17 +4055,18 @@ a.modal_close {
         line-height: 50px;
         padding: 0;
     }
+    .main_absence .link_back {
+       margin: 0;
+    }
     .index_main main.all_documents {
         margin: 0;
         box-shadow: none;
     }
-    main.index_main>section {
-     /*    padding: 10px; */
+    main.index_main.main_absence >section {
+        overflow: hidden;
     }
     .header_document, .header_questionnaire {
-       /*  background: inherit; */
-       /*  color: black; */
-       padding: 0;
+        padding: 20px 0 20px;
     }
     .index_page aside {
         width: 100%;
@@ -3861,11 +4143,6 @@ a.modal_close {
         height: auto;
         overflow: hidden;
     }
-    .index_main header.header_calendar>div {
-       /*  width: 100%;
-        max-width: 100%;
-        padding-bottom: 10px; */
-    }
     .index_main main.main_calendar_month, .index_main main.main_calendar_week {
         position: static;
     }
@@ -3873,10 +4150,10 @@ a.modal_close {
         height: auto;
         overflow: hidden;
     }
-    main.main_ads {
-        height: calc(100% - 45px);
-        overflow: hidden;
-        padding: 0;
+    .index_main main.main_ads {
+        height: calc(100% - 150px);
+        overflow: auto;
+        padding: 15px;
         margin-bottom: 0;
     }
     .index_page.ads_index .index_main {
@@ -3889,7 +4166,7 @@ a.modal_close {
         height: auto;
         overflow: hidden;
     }
-    .curve_arrow_left {
+    #index_admin .curve_arrow_left {
         background: url(../icons/curve_arrow_left_grey.png) no-repeat center right;
         height: 12px;
         display: inline-block;
@@ -3942,17 +4219,40 @@ a.modal_close {
         padding: 0;
     }
    
-}
-@media (max-width: 768px) {
+
     .index_admin .admin_main {
         display: none;
     }
 }
 
 @media (max-width: 450px) {
-    
-    main.main_campaign {
-        height: auto;
+    .index_page #index_table_filter.dataTables_filter>label {
+        padding: 0;
+        left: 0;
+    }
+    .user_links {
+        width: 100%;
+    }
+    a.iclude_event {
+        width: 50%;
+    }
+    .curve_arrow_left_grey, .curve_arrow_left_blue {
+        width: 22px;
+        height: 10px;
+        display: inline-block;
+        background-size: 18px 10px;
+    }
+    h3 {
+        margin: 15px;
+    }
+    .locco_create_main form label {
+        font-size: 0.9375rem;
+    }
+    .index_page aside.latest_messages header.post_header {
+        height: 55px;
+    }
+    .index_main main.main_campaign {
+        height: calc(100% - 50px);
         overflow: hidden;
     }
     .btn-new, .add_benefit .btn-new {
@@ -3973,7 +4273,9 @@ a.modal_close {
         height: 100%;
     }
     .all_absences .dataTables_filter {
-        height: 50px;
+        display: block;
+        overflow: hidden;
+        height: auto;
     }
     .index_table_filter input, #index_table_filter input, .index_page a.add_new {
         height: 30px;
@@ -3989,8 +4291,18 @@ a.modal_close {
     .table-responsive,  main.index_main>section {
         overflow: auto; 
     }
+    .main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years, .main_absence .select_filter.filter_employees, .main_absence .select_filter.filter_approve {
+        height: 30px;
+    }
+    .index_page #index_table_filter.dataTables_filter>label, .index_page .dataTables_filter >div {
+        width: 100%;
+        margin-bottom: 5px ;
+    }
+    .index_page a.add_new, .btn-new.btn-approve {
+        line-height: 29px;
+    }
     .index_page aside.latest_messages>div {
-        box-shadow: none;
+        padding: 10px;
     }
     .table-responsive .dataTables_wrapper {
         padding: 0;
@@ -4013,9 +4325,7 @@ a.modal_close {
         width: 100%;
         height: auto;
     }
-    .comming_agenda {
-        height: auto;
-    }
+   
     .container .posts .all_post {
         width: 100%;
         height: auto;
@@ -4025,7 +4335,7 @@ a.modal_close {
         margin: 0;
     }
     .container .posts .all_post > div {
-        padding: 10px;
+        padding: 0;
     }
     .second_view .user_card {
 		width: 100%;
@@ -4043,15 +4353,7 @@ a.modal_close {
         /*height: auto;*/
         height: 100%;
     }
-    .container {
-        padding: 0;
-        position: relative;
-        overflow: auto;
-        scrollbar-width: thin;
-        height: calc(100% - 52px);
-        padding-bottom: 10px;
-        z-index: 0;
-    }    
+ 
     .container .noticeboard {
         height: auto;
         padding: 20px;
@@ -4112,7 +4414,7 @@ a.modal_close {
     }
     .index_page aside.latest_messages .posts {
         box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
-        height: calc(100% - 60px);
+        height: calc(100% - 65px);
     }
     .index_page {
         overflow: auto;
@@ -4133,6 +4435,7 @@ a.modal_close {
     .latest_messages .search_input {
         margin: 10px 0;
         width: 100%;
+        top: 50%;
     }
    
     .table-responsive .table thead th {
@@ -4245,7 +4548,7 @@ a.modal_close {
     }
    
     .header_document, .page-header {
-        color: #606060;
+      /*   color: #606060; */
         padding: 10px;
     }
     
@@ -4302,7 +4605,6 @@ a.modal_close {
         height: calc(100% - 125px);
     }
     .index_main.profile_main .page-header.header_profile {
-        color: #071E57;
         margin: 0;
     }
     .main_calendar_week table tbody tr {
@@ -4322,21 +4624,30 @@ a.modal_close {
         height: auto;
         clear: left;
     }
+    main.index_main.locco_create_main>section >main {
+        padding: 10px 0;
+    }
+    main.index_main.locco_create_main {
+        padding: 10px;
+    }
     .all_agenda {
         height: auto;
     }
     .index_main main.main_profile {
         padding: 10px;
-        overflow: hidden;
+        overflow: auto;
+        height: calc(100% - 36px);
     }
     .index_main main.all_notices {
         height: auto;
+        min-height: 100%;
+        background: white;
         overflow: hidden;
     }
     .index_main header, .filter {
         height: auto;
         overflow: hidden;
-        padding: 0;
+        padding: 5px 0;
         clear: both;
         min-height: auto;
     }
@@ -4381,6 +4692,8 @@ a.modal_close {
         float: left;
         flex: inherit;
         margin-bottom: 0;
+        width: auto;
+        max-width: initial;
     }
     .header_benefits .index_table_filter>div:first-child {
         width: 80%;
@@ -4486,9 +4799,6 @@ a.modal_close {
         margin: 10px;
     }
 
-    .add_benefit {
-  
-    }
     .header_ads>.filter>div:first-child {
         width: 100%;
         max-width: 100%;
@@ -4592,8 +4902,9 @@ a.modal_close {
         padding: 10px;
         line-height: inherit;
     }
-    .index_page .all_absences a.add_new {
-        right: 10px;
+    .index_page .all_absences .dataTables_filter a.add_new {
+       /*  right: 10px; */
+      /*   transform: translateY(-50%); */
     }
    
     .index_main.main_noticeboard .header_noticeboard {
@@ -4694,20 +5005,45 @@ a.modal_close {
     padding-left: 10px
 }
 
-#index_table1.table_work_record tr td.red_rad {
-    background-color: #ccffb3;
+#index_table.table_work_record tr td.abs_RR {
+    background-color: #eee;
 }
-#index_table1.table_work_record tr td.abs_GO {
+#index_table.table_work_record tr td.abs_GO {
     background-color: #ffffb3;
 }
-#index_table1.table_work_record tr td.abs_BOL {
+#index_table.table_work_record tr td.abs_BOL {
     background-color: #ffcce6;
 }
+#index_table.table_work_record tr td.abs_IZL {
+    background-color:rgb(167, 206, 242);
+}
+#index_table.table_work_record tr td.abs_RD {
+    background-color: #2de64c;
+}
+#index_table.table_work_record tr td.abs_PLD {
+    background-color: #d452e6;
+}
+#index_table.table_work_record tr td.abs_NPLD {
+    background-color: #34f7e3;
+}
+#index_table.table_work_record tr td.abs_COVID {
+    background-color: #fab217;
+}
+#index_table.table_work_record tr td.abs_CEK {
+    background-color: #ee62ab;
+}
+#index_table.table_work_record tr td.abs_SLD {
+    background-color: #ccffb3;
+}
+
 
 @media print {
     table tr td {
         transform: scale(.7);
         page-break-inside: avoid;
-        font-size: 8px;
+        font-size: 0.5rem;
     }
+}
+.not_link {
+    cursor: ;
 }

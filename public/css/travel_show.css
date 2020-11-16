@@ -13,7 +13,7 @@ html {
 	background-color: #fff;
 	font-family: Montserrat, sans-serif;
 	font-weight: 400;
-	font-size: 14px;
+	font-size: 0.875rem;
 	position: relative;
 }
 .travel_section {
@@ -137,7 +137,7 @@ select, input {
 input[name=description] {
     width: 100%;
 }
-.table select, .table input {
+.calculation .table select, .calculation .table input {
     width: 100% !important;
     padding: 0;
 }
@@ -158,10 +158,10 @@ input[name=description] {
         display: block;
     }
     .travel_header h1 {
-        font-size: 16px;
+        font-size: 1rem;
     }
     .travel_header p {
-        font-size: 14px;
+        font-size: 0.875rem;
     }
     .aproveBy>p {
         width: 50%;

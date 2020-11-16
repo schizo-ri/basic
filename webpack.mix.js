@@ -33,6 +33,7 @@ mix.styles([
 ], 'public/css/all.css');
 mix.scripts([
     'public/js/absence.js',
+    'public/js/absence_create.js',
     'public/js/ads.js',
     'public/js/benefit.js',
     'public/js/calendar.js',
@@ -83,6 +84,7 @@ mix.scripts([
     'public/js/validate_user.js',
     'public/js/validate_user_edit.js',
     'public/js/work_records.js',
+    'public/js/tinymce.js',
 ], 'public/js/all.js');
 
 /* mix.js('resources/assets/laravel-echo-setup.js', 'public/js'); */

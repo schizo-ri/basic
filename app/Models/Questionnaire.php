@@ -35,4 +35,9 @@ class Questionnaire extends Model
 	{
 		return $this->update($questionnaire);
 	}
+
+	public static function countQuestionnaire()
+	{
+		return count(Questionnaire::where('status',1)->get());
+	}
 }

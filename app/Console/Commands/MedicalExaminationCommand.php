@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\MedicalExaminationMail;
 use App\Http\Controllers\EmailingController;
 use DateTime;
+use Log;
 
 class MedicalExaminationCommand extends Command
 {
@@ -48,7 +49,8 @@ class MedicalExaminationCommand extends Command
         $datum = new DateTime('now');
 		$datum->modify('+1 month');
 		$employees = Employee::employeesMedicalExamination($datum);
-		
+        Log::info('MedicalExaminationCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
+
 		foreach($employees as $employee) {
             foreach($send_to as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
@@ -61,7 +63,8 @@ class MedicalExaminationCommand extends Command
         $datum = new DateTime('now');
         $datum->modify('+15 days');
         $employees = Employee::employeesMedicalExamination($datum);
-        
+        Log::info('MedicalExaminationCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
+
         foreach($employees as $employee) {
             foreach($send_to as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
@@ -72,7 +75,8 @@ class MedicalExaminationCommand extends Command
 
         // Liječnički za 7 dana
         $datum = new DateTime('now');
-		$datum->modify('+7 days');
+        $datum->modify('+7 days');
+        Log::info('MedicalExaminationCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
 		$employees = Employee::employeesMedicalExamination($datum);
 		
 		foreach($employees as $employee) {

@@ -35,7 +35,6 @@ class DashboardController extends Controller
     public function index()
     {
      
-        Artisan::call('cache:clear');
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
             $moduli = CompanyController::getModules();  //dohvaća module firme
@@ -43,14 +42,16 @@ class DashboardController extends Controller
             
             if($employee) {
                 $data_absence = BasicAbsenceController::zahtjevi( $employee ); 
-                //dohvaća dopuštenja odjela za korisnika
-                if($employee->work) {
-                    $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id', $employee->id)->orWhere('to_department_id',$employee->work->department->id)->orderBy('updated_at','DESC')->with('comments')->get()->take(5);
-
-                } else {
-                    $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id', $employee->id)->orderBy('updated_at','DESC')->with('comments')->get()->take(5);
-                }
-                
+               
+                $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id', $employee->id)->orderBy('updated_at','DESC')->with('comments')->get();
+                if($employee->hasWorkingRecord) {
+                    foreach ($employee->hasEmployeeDepartmen as $employeeDepartmen) {
+                        if( $employeeDepartmen->department ) {
+                            $posts = $posts->merge( Post::where('to_department_id', $employeeDepartmen->department->id)->orderBy('updated_at','DESC')->with('comments')->get());
+                        }
+                    }
+                } 
+                $posts = $posts->sortByDesc('updated_at')->take(5);
                 foreach ($posts as $post) {
                     $profile = PostController::profile($post);
                     $post->post_comment = $profile['post_comment'];//zadnji komentar na poruku
@@ -152,12 +153,14 @@ class DashboardController extends Controller
     public static function getUserDepartment () {
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
-            $departments = Department::get();
+           /*  $departments = Department::get(); */
             $user_department = array();
-            
-            if($employee && isset($employee->work) && $employee->work->department) {
-                array_push($user_department, $employee->work->department->id);
-                array_push($user_department, $departments->where('level1', 0)->first()->id);
+            $employee_departments = $employee->hasEmployeeDepartmen;
+      
+            if($employee && $employee_departments) {
+                foreach ($employee_departments as $department) {
+                    array_push($user_department, $department->department_id);
+                }
             }
             return $user_department;	
         } 

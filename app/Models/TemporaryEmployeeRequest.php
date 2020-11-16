@@ -88,6 +88,6 @@ class TemporaryEmployeeRequest extends Model
 	}
 
 	public static function TemporaryEmployeeSortApproved () {
-		return TemporaryEmployeeRequest::join('temporary_employees','temporary_employee_requests.employee_id', '=', 'temporary_employees.id')->select('temporary_employee_requests.*', 'temporary_employees.first_name','temporary_employees.last_name')->where('approve',1)->orderBy('temporary_employee_requests.zahtjev','ASC')->orderBy('temporary_employees.last_name','ASC')->get();
+		return TemporaryEmployeeRequest::where('approve',1)->orderBy('temporary_employee_requests.type','ASC')->get();
 	}
 }

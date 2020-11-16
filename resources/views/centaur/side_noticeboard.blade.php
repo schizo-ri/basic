@@ -1,23 +1,9 @@
 @php
-    use App\Models\Notice;
-    use App\Models\Department;
     use App\Http\Controllers\DashboardController;
     use App\Http\Controllers\NoticeController;
 	
     $permission_dep = DashboardController::getDepartmentPermission();
-    $user_department = DashboardController::getUserDepartment();
-  
-    $notices = NoticeController::getNotice('DESC');
- 
-    $notices_user = collect();
-   
-    foreach ($notices as $notice) {
-        $notice_dep = explode(',', $notice->to_department);
-
-        if(array_intersect($user_department, $notice_dep) ) {
-            $notices_user->push( $notice );
-        }
-    }
+    $notices_user = NoticeController::getNoticeDashboard();
 @endphp
 <section class="col-12 float_left noticeboard">
     <h2>@lang('basic.noticeboard')
@@ -33,7 +19,7 @@
     <div>        
         <div class="notices_list">
             @if(count($notices_user)>0)
-                @foreach ($notices_user->take(10) as $notice)
+                @foreach ($notices_user->take(3) as $notice)
                     <a class="notice_show"  href="{{ route('notices.show', $notice->id) }}" rel="modal:open">
                         <article class="notice">
                             <div class="col-2 float_left">
@@ -51,7 +37,8 @@
                                 </span>
                             </div>
                             <div class="col-10 float_left">
-                                <span class="notice_text">{!! $notice->title !!} </span>
+                                <span class="notice_text">{!! $notice->title !!} {!! strtotime($notice->schedule_date) > strtotime(date('Y-m-d H:i')) ? '<span class="not_scheduled"><small>Datum objave '.date('d.m.Y', strtotime($notice->schedule_date)).'</small></span>' : '' !!}</span>
+                                <span class="notice_text">{!! $notice->notice !!} </span>
                             </div>
                         </article>
                     </a>
@@ -68,16 +55,12 @@
                 </div>
             @endif
         </div>
-       
     </div>
 </section>
 <script>
     $(function(){
         var aside_height = $('.index_page.index_documents aside').height();
-       
         $('.placeholder').show();        
     });
-    
-  /*   $.getScript( '/../js/open_modal.js'); */
-    
+    /*  $.getScript( '/../js/open_modal.js'); */
 </script>

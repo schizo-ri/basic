@@ -29,7 +29,8 @@ if( $('.posts_index').length > 0) {
             $( this ).attr('Placeholder','Type message...');
         });
         $('.search_post').on('click',function(){
-            $('.search_input').show();       
+            $('.search_input').show();     
+            console.log("search_post");  
         });
         $('.search_input').on('hover',function(){ 
             mouse_is_inside=true; 
@@ -37,10 +38,12 @@ if( $('.posts_index').length > 0) {
             mouse_is_inside=false; 
         });
         $("body").on('mouseup',function(){ 
+            console.log(mouse_is_inside);  
             if(! mouse_is_inside) 
                 $('.search_input').hide();
         });
         url = location.search;
+       
         if(body_width > 768 && location.href.includes('/posts') ) {
             if( url ) {
                 id = url.replace("?id=", "");
@@ -49,11 +52,6 @@ if( $('.posts_index').length > 0) {
                 $('.tablink').first().trigger('click');
             }
         }
-    });
-    
-    $('.post_sent .link_back').on('click',function () {
-        $('.latest_messages').show();
-        $('.posts_index .index_main').hide();
     });
     
     // on submit ajax store
@@ -155,8 +153,11 @@ if( $('.posts_index').length > 0) {
                     refreshHeight(tab_id);
                     setPostAsRead(post_id);
                 }
-              
-                
+                $('.post_sent .link_back').on('click',function () {
+                    $('.latest_messages').show();
+                    $('.posts_index .index_main').hide();
+                    console.log("link_back");
+                });
             });
           
             $(active_tabcontent).find('.type_message ').trigger('focus');
@@ -221,21 +222,23 @@ if( $('.posts_index').length > 0) {
     
     function broadcastingPusher () {
         // Enable pusher logging - don't include this in production
-        /* Pusher.logToConsole = true; */
+       /*  Pusher.logToConsole = true; */
         var employee_id = $('#employee_id').text();
     
-         var pusher = new Pusher('ace40474cf33846103b6', {
+         var pusher = new Pusher('d2b66edfe7f581348bcc', {
                                 cluster: 'eu'
                                 }); 
         var channel = pusher.subscribe('message_receive');
         channel.bind('my-event', function(data) {
-            /* console.log("pusher id employee " + data.show_alert_to_employee); //2
-            console.log(data.comment); */
+            console.log("data");
+            console.log(data);
+            console.log("pusher id employee " + data.show_alert_to_employee); //2
+            console.log(data.comment);
             if(employee_id == data.show_alert_to_employee) {
-                /* $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
+                $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
                 $( '.posts_button .button_nav_img').load( location.origin + '/posts .posts_button .button_nav_img .line_btn');
                 $( '.refresh.' + tab_id ).load( location.origin + '/posts .refresh.' + tab_id + ' .message',function(){
-                });    */
+                });
             }
         }); 
     }

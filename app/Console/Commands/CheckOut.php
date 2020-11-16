@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\WorkRecord;
 use DateTime;
+use Log;
 
 class CheckOut extends Command
 {
@@ -39,6 +40,7 @@ class CheckOut extends Command
      */
     public function handle()
     {
+       
         $today_date = date('Y-m-d');
         $checkOut_time = $today_date . ' 16:15';
         $workRecords = WorkRecord::whereDate('start',$today_date)->get();

@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 class Education extends Model
 {
 	/**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+	protected $table = 'educations';
+	
+	/**
 	* The attributes thet are mass assignable
 	*
 	* @var array

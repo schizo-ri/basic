@@ -2,7 +2,7 @@
 	<h3 class="panel-title">{!! $absence->approve != null ? __('absence.request_approved') : __('absence.approve_absence') !!}</h3>
 </div>
 <div class="modal-body">
-	@if( $absence->approve != null )
+	@if( $absence->approve == 1 || $absence->approve == '0')
 		<div class="odobreno">
 			<p>@lang('absence.approved_by'): {!! $absence->approved_id != null ? $absence->approved->user['first_name'] . ' ' . $absence->approved->user['last_name'] : '' !!}</p>
 			<p>Status: {!! $absence->approve == 1 ? __('absence.approved') : __('absence.not_approved') !!}
@@ -18,8 +18,8 @@
 			</p>
 		</div>
 	@endif
-	<div class="odobrenje" {!!  $absence->approve != null ? 'style="display:none"' : '' !!} >
-		<form name="contactform" method="get" action="{{ route('confirmation_update') }}">
+	<div class="odobrenje" {!!  $absence->approve == 1 || $absence->approve == '0' ? 'style="display:none"' : '' !!} >
+		<form class="confirmation_update_form" method="get" action="{{ route('confirmation_update', $absence->id ) }}">
 			<input type="hidden" name="id" value="{{ $absence->id}}">
 			<input type="hidden" name="approve_date" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
 			<div class="form-group {{ ($errors->has('approve_reason')) ? 'has-error' : '' }}">
@@ -28,14 +28,16 @@
 				{!! ($errors->has('approve_reason') ? $errors->first('approve_reason', '<p class="text-danger">:message</p>') : '') !!}	
 			</div>
 			<div class="form-group">
-				<input type="radio" name="approve" id="approve" value="1" checked> <label for="approve">@lang('absence.approved')</label>
-				<input type="radio" name="approve" id="not_approve" value="0" > <label for="not_approve">@lang('absence.not_approved')</label><br>
+				<input type="radio" name="approve" id="approve" value="1" {!!  $absence->approve == 1 ? 'checked' : '' !!} > <label for="approve">@lang('absence.approved')</label>
+				<input type="radio" name="approve" id="not_approve" value="0"  {!!  $absence->approve == 0 ? 'checked' : '' !!}> <label for="not_approve">@lang('absence.is_not_approved')</label><br>
 			</div>
 			<div class="form-group">
 				<label for="email">@lang('absence.email_send')</label><br>
 				<input type="radio" name="email" value="1" id="send" checked><label for="send"> @lang('absence.send_email')</label><br>
 				<input type="radio" name="email" value="0" id="no_send" ><label for="no_send"> @lang('absence.dont_send_email')</label>
 			</div>
+			{{ csrf_field() }}
+			{{ method_field('PUT') }}
 			<input class="btn-submit" type="submit" value="{{ __('basic.confirm') }}">
 		</form>
 	</div>
@@ -43,6 +45,49 @@
 <script>
 	$('#da').click(function(){
 		$('.odobrenje').show();
+		$('.confirmation_update_form').on('submit',function(e){
+			if (! confirm("Sigurno želiš promijeniti odobrenje zahtjeve?")) {
+				return false;
+			} else {
+				e.preventDefault();
+				url = $(this).attr('action');
+				form_data = $(this).serialize(); 
+			
+				approve = $( '#filter_approve' ).val();
+				type = $('#filter_types').val();
+				month = $('#filter_years').val();
+				employee_id =  $('#filter_employees').val();
+				url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
+				token = $( this ).attr('data-token');
+
+				console.log(url);
+				console.log(form_data);
+				console.log(url_load);
+				$.ajaxSetup({
+					headers: {
+						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+					}
+				});
+				$.ajax({
+					url: url,
+					type : 'get',
+					data: form_data,
+					beforeSend: function(){
+						$('body').prepend('<div id="loader"></div>');
+					},
+					success: function( response ) {
+						$('tbody').load(url_load + " tbody>tr",function(){
+							$('#loader').remove();
+							$.modal.close();
+							$('<div class="modal"><div class="modal-header">'+response+'</div></div>').appendTo('body').modal();
+						});
+					}, 
+					error: function(xhr,textStatus,thrownError) {
+						console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError);                            
+					}
+				});
+			}
+		}); 
 	});
 </script>
 

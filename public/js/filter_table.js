@@ -14,7 +14,7 @@ function mySearchTable() {
 function mySearchTableAbsence() {
   $("#mySearchTbl").on('keyup',function() {
     var value = $(this).val().toLowerCase();
-    var godina = $('#year_vacation').val();
+
     $("#index_table tbody tr").filter(function() {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });

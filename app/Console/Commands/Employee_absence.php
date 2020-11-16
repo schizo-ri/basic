@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Mail\AbsenceCronMail;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\EmailingController;
+use Log;
 
 class Employee_absence extends Command
 {
@@ -38,8 +39,10 @@ class Employee_absence extends Command
      *
      * @return mixed
      */
-    public function handle(AbsenceCronMail $abs)
+    public function handle()
     {
+        Log::info('Employee_absence');
+
 		$send_to = EmailingController::sendTo('absences','cron');
 		        
         foreach($send_to as $send_to_mail) {

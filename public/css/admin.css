@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap');
 
+p {
+    width: 100%;
+}
 .index_page aside > .admin_panel {
     height: 100%;
     clear: both;
@@ -126,6 +129,19 @@ ul.admin_pages li >span.image_template{
     margin-left: 15px;
     padding: 0 16px;
 }
+#admin_page .btn-new.btn-approve {
+    width: auto;
+    height: auto;
+    padding: 3px 10px;
+    border: none;
+    font-size: 0.75rem;
+}
+
+.check_label {
+    margin: 0;
+    vertical-align: middle;
+}
+
 #admin_page .btn-template {
     line-height: 35px;
     float: right;
@@ -145,7 +161,7 @@ ul.admin_pages li >span.image_template{
     padding: 5px 0; */
     position: absolute;
     top: 29px;
-    left: 10px;
+    left: 0;
     z-index:30;
 }
 #admin_page table span.role {
@@ -245,6 +261,7 @@ ul.admin_pages li >span.image_template{
 
 @media (max-width: 450px) {
     #admin_page {
+        height: 100%;
         overflow: auto;
     }
     .admin_main .link_back {

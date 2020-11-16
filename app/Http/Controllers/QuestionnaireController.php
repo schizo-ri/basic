@@ -346,16 +346,10 @@ class QuestionnaireController extends Controller
 	{
 		/* mail obavijest o novoj poruci */
 		//$emailings = Emailing::get();
-		$send_to = array();
-		$employees = Employee::employees_firstNameASC();
+		
+		$send_to = Employee::getEmails();
 		$questionnaire = Questionnaire::find($request['id']);
 		
-		foreach ($employees as $employee) {
-			if( $employee->email ) {
-				array_push($send_to, $employee->email );
-			}                                   
-		}           
-
 		if($send_to) {
 			try {
 				foreach(array_unique($send_to) as $send_to_mail) {

@@ -65,7 +65,9 @@
 									<!--<th>@lang('basic.path')</th>-->
 										<th>Type</th>
 										<th>@lang('basic.date')</th>
-										<th class="not-export-column no-sort"></th>
+										@if (Sentinel::inRole('administrator'))
+											<th class="not-export-column no-sort"></th>
+										@endif
 									</tr>
 								</thead>
 								<tbody>
@@ -86,18 +88,15 @@
 									<!--	<td>{{ $document->path }}</td>-->
 											<td>{{ __('doc_type.' . pathinfo($open, PATHINFO_EXTENSION) ) }}</td>
 											<td>{{ Carbon\Carbon::parse($document->created_at)->diffForHumans()  }}</td>
-											<td class="options center">
-												@if(Sentinel::getUser()->hasAccess(['documents.update']) || in_array('documents.update', $permission_dep) || Sentinel::getUser()->hasAccess(['documents.delete']) || in_array('abdocumentssences.delete', $permission_dep))
-													<!-- <button class="collapsible option_dots float_r"></button> -->
-													
-												
+											@if (Sentinel::inRole('administrator'))
+												<td class="options center">
 													@if(Sentinel::getUser()->hasAccess(['documents.delete']) || in_array('documents.delete', $permission_dep))
-													<a href="{{ route('documents.destroy', $document->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
-														<i class="far fa-trash-alt"></i>
-													</a>
-												@endif
-												@endif
-											</td>
+														<a href="{{ route('documents.destroy', $document->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
+															<i class="far fa-trash-alt"></i>
+														</a>
+													@endif
+												</td>
+											@endif
 										</tr>
 									@endforeach
 								</tbody>
@@ -122,10 +121,5 @@
 		</section>
 	</main>
 </div>
-<script>
-	$.getScript( '/../js/datatables.js');
-	$.getScript( '/../js/documents.js');
-	$.getScript( '/../js/filter_table.js'); 
-	$.getScript( '/../js/open_modal.js');
-</script>
+
 @stop

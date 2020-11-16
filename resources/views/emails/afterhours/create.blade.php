@@ -56,7 +56,7 @@
 		<div class="marg_20">
 			{{ $afterhour->comment }}
 		</div>		
-		<form name="contactform" method="get" target="_blank" action="{{ route('confirmationAfterHours') }}">
+		<form method="get" target="_blank" action="{{ route('confirmationAfterHours') }}">
 			<input style="height: 34px;width: 100%; border-radius: 5px; border: 1px solid #ccc;" type="text" name="approved_reason" maxlength="191"><br>
 			<input type="hidden" name="id" value="{{$afterhour->id}}"><br>
 			<div class="time">

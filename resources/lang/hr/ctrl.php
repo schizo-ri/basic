@@ -5,6 +5,7 @@ return [
 	'data_edit' 	=> 'Podaci su uspješno ispravljeni.',
 	'data_delete' 	=> 'Podaci su uspješno obrisani.',
 	'request_sent' 	=> 'Zahtjev je poslan.',
+	'sent_message' 	=> 'Poslana je poruka.',
 	'not_registered'=> 'Nisi prijavljen djelatnik.',
     'invalid_user'  => 'Nevažeći korisnik!',
 	'delete_self'   => 'Nemožeš obrisati sebe!',
@@ -45,6 +46,13 @@ return [
 	'call_duplico' => 'Za više korisnika kontaktirajte Duplico d.o.o.',
 	'locco_error'	=> 'Greška kod otvaranja putnog naloga, nalog nije otvoren.',
 	'data_error'	=> 'Došlo je do greške, podaci nisu spremljeni.',
-	'email_error'	=> 'E-mail nije poslan, došlo je do greške.'
+	'email_error'	=> 'E-mail nije poslan, došlo je do greške.',
+	'pass_reset'	=> 	'Upute za promjenu lozinke poslat će se na vašu adresu e-pošte ako je povezana s važećim računom.',
+	'password'		=> 	'Kreiraj novu lozinku',
+	'password_edit'	=> 	'Ispravi lozinku',
+	'reset'			=> 	'Poništi lozinku.',
+    'invalid_code'  => 'Nevažeći ili istekao kôd za poništavanje lozinke; zatražite novu poveznicu.',
+    'instruction_create'  => 'Nova radna uputa je objavljena.',
+    'request_exist'  => 'Zahtjev za taj period je već upisan.'
 ];
 ?>

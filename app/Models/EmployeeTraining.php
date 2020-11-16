@@ -73,6 +73,6 @@ class EmployeeTraining extends Model
 
 	public static function EmployeeTrainingDate( $date )
 	{
-		return EmployeeTraining::whereYear('expiry_date', date_format($date,'Y') )->whereMonth('expiry_date',  date_format($date,'m'))->whereDay('expiry_date', '=', date_format($date,'d'))->get();
+		return EmployeeTraining::whereYear('expiry_date', date_format($date,'Y') )->whereMonth('expiry_date', date_format($date,'m'))->whereDay('expiry_date', '=', date_format($date,'d'))->get();
 	}	
 }

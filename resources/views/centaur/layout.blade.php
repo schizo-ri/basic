@@ -55,7 +55,7 @@
 			use App\Models\Shortcut;
             $permission_dep = DashboardController::getDepartmentPermission();
             $moduli = CompanyController::getModules();
-            $check = DashboardController::evidention_check();
+           /*  $check = DashboardController::evidention_check(); */
 			$countComment_all = PostController::countComment_all();
 			$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
         ?>
@@ -76,14 +76,17 @@
 						<ul class="nav_ul float_right">
 							@if (Sentinel::check())
 								@if( $_SERVER['REQUEST_URI'] != '/dashboard')
-										@if (Shortcut::where('url', $url)->first() )
-											<a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i> <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
-										@else
-											<a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
-										@endif
+								<li>
+									@if (Shortcut::where('url', $url)->first() )
+									<a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i> <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
+								@else
+									<a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
+								@endif
+								</li>
+									
 									
 								@endif
-								@if(in_array('Evidencija', $moduli))  
+							{{-- 	@if(in_array('Evidencija', $moduli))  
 									@if(! $check )
 										<li class="evidention_check">
 											<form  title="{{__('basic.entry') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}" >
@@ -95,7 +98,7 @@
 										</li>
 									@elseif($check && $check->end == null)
 										<li class="evidention_check">
-											{{-- <span class="checkout" title="{{__('basic.checkout') }}" ><i class="far fa-calendar-times"></i></span> --}}
+											
 											<form title="{{__('basic.checkout') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}"  >
 												<input type="hidden" name="checkout" value="checkout">
 												<input type="hidden" name="entry" value="false">
@@ -104,7 +107,7 @@
 											</form>
 										</li>
 									@endif
-								@endif
+								@endif --}}
 								@if(Sentinel::inRole('administrator'))
 									<li><a id="open-admin" href="{{ route('users.index') }}" title="{{ __('basic.open_admin')}}"  >
 										<img class="img_button" src="{{ URL::asset('icons/flash.png') }}" alt="messages" title="{{ __('basic.open_admin')}}" /></a>
@@ -125,98 +128,7 @@
 							@endif
 						</ul>
 					</nav>
-					<section class="section_top_nav" id="section_top_nav">
-						<span class="close_topnav">
-							@if(file_exists('../public/storage/company_img/logo.png'))
-								<img src="{{ URL::asset('storage/company_img/logo.png')}}" alt="company_logo"/>
-							@else 
-								<img src="{{ URL::asset('icons/myIntranet.png')}}" alt="company_logo"/>
-							@endif
-							<i class=" fas fa-times"></i></span>
-						<div class="topnav" id="myTopnav">
-							<div class="">
-								<a class="button_nav dashboard_button active" href="{{ route('dashboard') }}" title="{{ __('welcome.dashboard') }}">
-									<span class="button_nav_img arrow_dashboard"></span>
-									<p class="button_nav_text">@lang('welcome.home')</p>
-								</a>
-							</div>
-							@if(in_array('Poruke', $moduli))
-								@if(Sentinel::getUser()->hasAccess(['posts.view']) || in_array('posts.view', $permission_dep) )
-									<div class="div_posts">
-										<a class="button_nav load_button posts_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('posts.index') }}" title="{{ __('basic.posts') }}">
-											<span class="button_nav_img messages"><!-- <img class="" src="{{ URL::asset('../icons/messages_grey.png') }}" alt="Profile image"  /> -->
-												<span class="line_btn">
-													@if($countComment_all >0)<span class="count_comment">{{ $countComment_all }}</span>@endif  
-												</span>
-											</span>
-											<p class="button_nav_text">@lang('basic.posts')</p>
-										</a>
-									</div>
-								@endif
-							@endif
-							@if(in_array('Dokumenti', $moduli))
-								@if(Sentinel::getUser()->hasAccess(['documents.view']) || in_array('documents.view', $permission_dep) )
-									<div class="">
-										<a class="button_nav load_button documents_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('documents.index') }}" title="{{ __('basic.documents') }}">
-											<span class="button_nav_img documents "><!-- <img class="" src="{{ URL::asset('../icons/documents_grey.png') }}" alt="Profile image"  /> --></span>
-											<p class="button_nav_text">@lang('basic.documents')</p>
-										</a>
-									</div>
-								@endif
-							@endif
-							@if(in_array('Kalendar', $moduli))
-								@if(Sentinel::getUser()->hasAccess(['events.view']) || in_array('events.view', $permission_dep) )
-									<div class="">
-										<a class="button_nav load_button events_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('events.index') }}" title="{{ __('calendar.events') }}" >
-											<span class="button_nav_img calendar"><!-- <img class="" src="{{ URL::asset('../icons/calendar_grey.png') }}" alt="Profile image"  /> --></span>
-											<p class="button_nav_text">@lang('calendar.calendar')</p>
-										</a>
-									</div>
-								@endif
-							@endif
-							<!--Provjera kod superadmina ima li korisnik modul-->
-							@if(in_array('Ankete', $moduli))
-								@if(Sentinel::getUser()->hasAccess(['questionnaires.view']) || in_array('questionnaires.view', $permission_dep) )
-									<div class="">
-										<a class="button_nav load_button questionnaires_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('questionnaires.index') }}"  title="{{ __('questionnaire.questionnaires') }}">
-											<span class="button_nav_img questionnaire"><!-- <img class="" src="{{ URL::asset('../icons/list_grey.png') }}" alt="Profile image"  /> --></span>
-											<p class="button_nav_text">@lang('questionnaire.questionnaires')</p>	
-										</a>
-									</div>
-								@endif
-							@endif
-							@if(in_array('Oglasnik',$moduli))
-								@if(Sentinel::getUser()->hasAccess(['ads.view']) || in_array('ads.view', $permission_dep) )
-									<div class="">
-										<a class="button_nav load_button oglasnik_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('oglasnik') }}" title="{{ __('basic.ads') }}">
-											<span class="button_nav_img ads"><!-- <img class="" src="{{ URL::asset('../icons/ads_grey.png') }}" alt="Profile image"  /> --></span>
-											<p class="button_nav_text">@lang('basic.ads')</p>	
-										</a>	
-									</div>
-								@endif
-							@endif
-							@if(in_array('Kampanje', $moduli))
-								@if(Sentinel::getUser()->hasAccess(['campaigns.view']) || in_array('campaigns.view', $permission_dep) )
-									<div class="">
-										<a class="button_nav load_button campaigns_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('campaigns.index') }}" title="{{ __('basic.campaigns') }}">
-											<span class="button_nav_img campaign"><!-- <img class="" src="{{ URL::asset('../icons/messages_grey.png') }}" alt="Profile image"  /> --></span>
-											<p class="button_nav_text">@lang('basic.campaigns')</p>	
-										</a>	
-									</div>
-								@endif
-							@endif
-							@if(in_array('Pogodnosti', $moduli))							
-								@if(Sentinel::getUser()->hasAccess(['benefits.view']) || in_array('benefits.view', $permission_dep) )
-									<div class="">
-										<a class="button_nav load_button benefits_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('benefits.index') }}" title="{{ __('basic.benefits') }}">
-											<span class="button_nav_img benefits"><!-- <img class="" src="{{ URL::asset('../icons/messages_grey.png') }}" alt="Profile image"  /> --></span>
-											<p class="button_nav_text">@lang('basic.benefits')</p>
-										</a>	
-									</div>
-								@endif
-							@endif
-						</div>
-					</section>
+					@include('Centaur::side_nav')
 				</header>
 				<div class="container col-sm-12 col-md-12 col-lg-12">
 					@if(Sentinel::check())				
@@ -234,8 +146,12 @@
 				<span id="hiddenId"></span>
 				@include('Centaur::notifications', ['modal' => 'true'])
 			</section>
+		@else
+			<div class="container col-sm-12 col-md-12 col-lg-12">
+				@yield('content')
+			</div>
 		@endif
-		<span hidden id="employee_id">{!! Sentinel::getUser()->employee ? Sentinel::getUser()->employee->id : null !!}</span>
+		<span hidden id="employee_id">{!!  Sentinel::getUser() && Sentinel::getUser()->employee ? Sentinel::getUser()->employee->id : null !!}</span>
 		<!-- Scripts -->
 			<script>
 				// Enable pusher logging - don't include this in production
@@ -290,7 +206,6 @@
 			<script src="{{URL::asset('/../js/all.js?random=@dt') }}"></script>
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
-
 			<!-- Datatables -->
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
@@ -298,7 +213,6 @@
 			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
 			<!-- tinymce js -->
 			<script src="{{ URL::asset('/node_modules/tinymce/tinymce.min.js') }}" ></script>
-			
 			@if(session()->has('modal'))
 				<script>
 					$("#modal_notification").modal();

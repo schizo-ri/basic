@@ -16,11 +16,12 @@
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-
+		<script>var dt = new Date().getTime();</script>
+		
         <!-- Styles -->
-		<link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}" type="text/css" >
-		<link rel="stylesheet" href="{{ URL::asset('css/modal.css') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/modal.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('css/welcome.css?random=@dt') }}" type="text/css" >
+		<link rel="stylesheet" href="{{ URL::asset('css/modal.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/modal.css?random=@dt') }}"/>
 
 		<!-- JS modal -->
 		<link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
@@ -34,7 +35,6 @@
 		@php
 			use App\User;
 		@endphp
-
 		<section class="welcome_page">
 			<section class="col-sm-7 col-md-7 col-lg-7 col-xl-7 float_left welcome">
 				<div class="">
@@ -84,7 +84,7 @@
 		<link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" >
 		
 		<!-- Modal js -->
-		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
+		<script src="{{URL::asset('/../js/open_modal.js?random=@dt') }}"></script>
 		<script>
 			@if(session()->has('modal'))
 				$('.row.notification').modal();

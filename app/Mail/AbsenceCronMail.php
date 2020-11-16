@@ -7,9 +7,6 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Absence;
-use App\Models\Emailing;
-use App\Models\Department;
-use App\Models\Employee;
 use App\Models\TemporaryEmployeeRequest;
 use DateTime;
 use DateInterval;
@@ -20,7 +17,6 @@ class AbsenceCronMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-  
     /**
      * Create a new message instance.
      *
@@ -28,7 +24,7 @@ class AbsenceCronMail extends Mailable
      */
     public function __construct()
     {
-         
+        //
     }
 
     /**
@@ -90,15 +86,15 @@ class AbsenceCronMail extends Mailable
                     $period_month = date_format($dan2,'m');
                     $period_year = date_format($dan2,'Y');
                     if($begin2 == $end2 && $begin_dan == $dan && $begin_mjesec == $mjesec){
-                        array_push($day_absences,array('ime' => $izostanak_priv->first_name . ' ' . $izostanak_priv->last_name, 
-                                                        'zahtjev' =>  $izostanak_priv->absence['name'], 
+                        array_push($day_absences,array('ime' => $izostanak_priv->employee->user->first_name . ' ' . $izostanak_priv->employee->user->last_name, 
+                                                        'zahtjev' =>  $izostanak_priv->absence_type['name'], 
                                                         'period' => date('d.m.Y', strtotime( $izostanak_priv->start_date)), 
                                                         'vrijeme' => $izostanak_priv->start_time . ' - ' .  $izostanak_priv->end_time, 
                                                         'dani_GO' => '', 
                                                         'napomena' =>  $izostanak_priv->comment ));
                     } else if($period_day == $dan && $period_month == $mjesec && $period_year == $ova_godina || $begin2 == $end2 ){
-                        array_push($day_absences,array('ime' => $izostanak_priv->first_name . ' ' . $izostanak_priv->last_name, 
-                                                        'zahtjev' =>  $izostanak_priv->absence['name'], 
+                        array_push($day_absences,array('ime' => $izostanak_priv->employee->user->first_name . ' ' . $izostanak_priv->employee->user->last_name, 
+                                                        'zahtjev' =>  $izostanak_priv->absence_type['name'], 
                                                         'period' => date('d.m.Y', strtotime( $izostanak_priv->start_date)) . ' - ' .  date('d.m.Y', strtotime($izostanak_priv->end_date)), 
                                                         'vrijeme' => $izostanak_priv->start_time . ' - ' .  $izostanak_priv->end_time, 
                                                         'napomena' =>  $izostanak_priv->comment, 
@@ -109,7 +105,7 @@ class AbsenceCronMail extends Mailable
         }
         
         if(count($day_absences)>0) {
-            return $this->view('Centaur::email.absence_day')
+            return $this->markdown('emails.absences.absence_today')
                     ->subject( __('emailing.day_absence') . ' ' . date_format($datum,'d.m.Y'))
                     ->with([
                         'day_absences' => $day_absences

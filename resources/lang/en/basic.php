@@ -410,6 +410,7 @@ return [
 	'access_data'	=> 'MyIntranet - access data',
 	'request'		=> 'Request',	
 	'all_employees'		=> 'All employees',	
+	'instructions'	=> 'Instructions',
 	
 ];	
 ?>

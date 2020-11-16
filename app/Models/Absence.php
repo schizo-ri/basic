@@ -92,6 +92,20 @@ class Absence extends Model
 	}
 
 	/*
+		* Absence - za traženi mjesec i traženi tip
+		* 
+		* @param $type, mjesec
+		* @return - zahtjevi Izlasci za djelatnika
+	*/
+	public static function AbsencesForMonth( $month, $year )
+	{
+		$absences = Absence::whereMonth('start_date', $month)->whereYear('start_date', $year)->get();
+		$absences = $absences->merge( Absence::whereMonth('end_date', $month)->whereYear('end_date',$year)->get());
+		
+		return $absences;
+	}
+
+	/*
 		* Absence IZL - za traženi mjesec
 		* 
 		* @param $user_id, $type, mjesec
@@ -102,4 +116,30 @@ class Absence extends Model
 		return Absence::where('employee_id',$user_id)->where('type', AbsenceType::where('mark',$type)->first()->id )->whereMonth('start_date',month)->whereYear('start_date',$year)->get();
 	}
 
+	public static function getYears () 
+	{
+		$absences = Absence::get();
+
+		$years = $absences->unique(function($absence){
+          return date('Y', strtotime($absence['start_date']) );
+         })->map(function($absence){
+          return date('Y', strtotime($absence['start_date']) ); 
+		 })->sort()->toArray();
+		 
+		 return $years;
+	}
+
+	public static function getYearsMonth () 
+	{
+		$absences = Absence::get();
+
+		$month = $absences->unique(function($absence){
+          return date('Y-m', strtotime($absence['start_date']) );
+         })->map(function($absence){
+          return date('Y-m', strtotime($absence['start_date']) ); 
+		 })->sort()->toArray();
+		 
+		 return $month;
+	}
+	
 }

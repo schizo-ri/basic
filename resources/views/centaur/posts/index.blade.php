@@ -1,6 +1,6 @@
 @extends('Centaur::layout')
 
-@section('title', __('basic.edit_post'))
+@section('title', __('basic.posts'))
 
 @section('content')
 
@@ -9,22 +9,24 @@
 		use App\Http\Controllers\PostController; 
 		use App\Http\Controllers\DashboardController; 
 		use App\Models\Employee;
-
 	@endphp
 	<aside class="col-xs-12 col-sm-12 col-md-4 col-lg-4 latest_messages">
+		
 		<div>
-			<a class="link_back" href="{{  url()->previous() }}"><span class="curve_arrow_left_grey"></span></a>
-			<h1>@lang('basic.latest_messages')
-				@if(Sentinel::getUser()->hasAccess(['posts.create']) || in_array('posts.create', $permission_dep))
-					<a class="btn btn-primary btn-lg btn-new" href="{{ route('posts.create') }}" rel="modal:open" title="{{ __('basic.new_post')}}">
-						<i style="font-size:12px" class="fa">&#xf067;</i>
-					</a>
-				@endif
-				<span class="search_post"></span>
-			</h1>
-			<div class="input_search search_input">
-				<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="Type ... " >
-			</div>
+			<header class="post_header">
+				
+				<h1><a class="link_back" href="{{  url()->previous() }}"><span class="curve_arrow_left_blue"></span></a>@lang('basic.latest_messages')
+					@if(Sentinel::getUser()->hasAccess(['posts.create']) || in_array('posts.create', $permission_dep))
+						<a class="btn btn-primary btn-lg btn-new" href="{{ route('posts.create') }}" rel="modal:open" title="{{ __('basic.new_post')}}">
+							<i style="font-size:12px" class="fa">&#xf067;</i>
+						</a>
+					@endif
+					<span class="search_post"></span>
+				</h1>
+				<div class="input_search search_input">
+					<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="Type ... " >
+				</div>
+			</header>
 			<section class="col-md-12 posts">
 				<div class="all_post">
 					@if(count( $posts ) > 0)
@@ -64,7 +66,10 @@
 										@if ( $post->to_department_id != null && $post->employee_id == Sentinel::getUser()->employee->id  )
 											<span class="read_post">
 												@foreach ($post->comments->where('to_employee_id','<>',null) as $comment)
-													<span class="read_comment {!! $comment->status == 0? 'post_unread' : 'post_read' !!}" title="{!! $comment->status == 1 ? date('d.m.Y H:i',strtotime( $comment->updated_at )) : '' !!}" >{!! $comment->toEmployee ? substr($comment->toEmployee->user['first_name'],0,1) . substr($comment->toEmployee->user['last_name'],0,1) : $comment->id !!}</span>
+													@if ($comment->toEmployee->checkout == null)
+												
+														<span class="read_comment {!! $comment->status == 0? 'post_unread' : 'post_read' !!}" title="{!! $comment->status == 1 ? date('d.m.Y H:i',strtotime( $comment->updated_at )) : '' !!}" >{!! $comment->toEmployee ? mb_substr($comment->toEmployee->user['first_name'],0,1) . mb_substr($comment->toEmployee->user['last_name'],0,1) : $comment->id !!}</span>
+													@endif
 												@endforeach
 											</span>
 										@endif
@@ -122,7 +127,7 @@
 									@if(count($post->comments ) > 0)
 										@php
 											$comments = $post->comments->unique(function ($item) {
-												return $item['content'].$item['created_at'];
+												return $item['content'].$item['post_id'];
 											});
 										@endphp
 										@if ($post->to_department_id != null )
@@ -235,19 +240,4 @@
 		$('.placeholder').show();
 	});
 </script> 
-{{--  <script>
-   window.laravel_echo_port='{{env("LARAVEL_ECHO_PORT")}}';
-	</script> -->
-	<script type="text/javascript" src="{{ url('/js/socket.io.js') }}"></script> 
-    <script src="//{{ Request::getHost() }}:{{env('LARAVEL_ECHO_PORT')}}/socket.io/socket.io.js"></script>
-    <script src="{{ url('/js/laravel-echo-setup.js') }}" type="text/javascript"></script>
-      
-    <script type="text/javascript">
-        var i = 0;
-        window.Echo.channel('user-channel')
-         .listen('.MessageSendEvent', (data) => {
-            i++;
-            $("#notification").append('<div class="alert alert-success">'+i+'.'+data.title+'</div>');
-        });
-    </script> --}}
 @stop

@@ -29,7 +29,7 @@ class Emailing extends Model
 	protected static $tableModel = 'App\Models\Table'; 
 	
 	/*
-	* Returns the Users relationship
+	* Returns the employee relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
 	*/

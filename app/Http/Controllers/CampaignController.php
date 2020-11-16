@@ -171,10 +171,12 @@ class CampaignController extends Controller
         $campaign_sequence = CampaignSequence::where('campaign_id', $campaign->id)->orderBy('created_at','ASC')->get();
 
         if( count($campaign_sequence) > 0 ) {
-            $send_to = array();
-            $send_to_mail = 'jelena.juras@duplico.hr';
-    
-            Mail::to($send_to_mail)->send(new CampaignMail( $campaign ));
+            $send_to = Employee::getEmails();
+            foreach(array_unique($send_to) as $send_to_mail) {
+                if( $send_to_mail != null & $send_to_mail != '' ) {
+                    Mail::to($send_to_mail)->send(new CampaignMail( $campaign ));
+                }
+            }
     
             $message = session()->flash('success', __('emailing.campaign_start'));
             
