@@ -85,7 +85,7 @@
 													@if( $absence->absence['mark'] != 'IZL' )
 														{{ $dani_go }} @lang('absence.days')
 													@else
-														{{ date('H:i', strtotime($hours . ':' . $minutes))  . ' h'}}
+														{!! $absence->approve == 1 ? date('H:i', strtotime($hours . ':' . $minutes))  . ' h' : '' !!}
 													@endif
 												</td>
 												<td>{{ $absence->start_time . '-' .  $absence->end_time }}</td>
@@ -113,7 +113,7 @@
 												<td>Prekovremeni sati</td>
 												<td>{{ date('d.m.Y', strtotime($afterhour->date)) }}</td>
 												<td></td>
-												<td>{{ date('H:i', strtotime($afterhour->approve_h ))}}</td>
+												<td>{!! $afterhour->approve_h ? date('H:i', strtotime($afterhour->approve_h )) : '' !!}</td>
 												<td>{{ $afterhour->start_time . '-' .  $afterhour->end_time }}</td>
 												<td>{{ $afterhour->comment }}</td>
 												<td>{!! $afterhour->approve == 1 ? 'DA' : 'NE' !!}</td>

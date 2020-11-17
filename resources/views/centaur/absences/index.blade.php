@@ -167,8 +167,9 @@
 											<th class="sort_date">@lang('absence.end_date')</th>
 											<!--<th>Period</th>-->
 											<th>@lang('absence.time')</th>
-											<th style="max-width: 40%">@lang('basic.comment')</th>
-											<th>@lang('absence.approved')</th>
+											<th style="max-width:30%;width:30%">@lang('basic.comment')</th>
+											<th style="max-width:10%;width:10%">@lang('absence.approved')</th>
+											<th style="max-width:10%;width:10%">@lang('absence.approve_comment')</th>
 											<!--<th>@lang('absence.aproved_by')</th>
 											<th>@lang('absence.aprove_date')</th>-->
 											<th class="not-export-column no-sort">@lang('basic.options')</th>
@@ -206,7 +207,7 @@
 															<td>{{  date('d.m.Y.',strtotime($absence->end_date))  }}</td>
 															<!--<td>xx dana</td>-->
 															<td>{!! $absence->absence['mark'] == 'IZL' ? date('H:i',strtotime($absence->start_time)) . '-' .  date('H:i',strtotime($absence->end_time)) :'' !!}</td>
-															<td style="max-width: 40%">
+															<td style="max-width:30%;width:30%">
 																@if( $absence->absence['mark'] != 'IZL' )
 																	[{{ $dani_go }} @lang('absence.days')  {!! $dana_GO_PG ? '| PG: ' .$dana_GO_PG : '' !!} ] 
 																@else
@@ -214,7 +215,7 @@
 																@endif
 																{{ $absence->comment }}
 															</td>
-															<td class="approve not_link">
+															<td class="approve not_link"  style="max-width:10%;width:10%">
 																@if($absence->approve == 1) 
 																	<span class="img_approve"><span>@lang('absence.approved')</span></span>
 																@elseif($absence->approve == "0") 
@@ -225,6 +226,13 @@
 																	<input class="check checkinput" type="radio" name="approve[{{ $absence->id}}]" value="1" id="odobreno{{ $absence->id}}" ><label class="check check_label" for="odobreno{{ $absence->id}}">DA</label>
 																	<input class="uncheck checkinput" type="radio" name="approve[{{ $absence->id}}]" value="0" id="neodobreno{{ $absence->id}}" ><label class="uncheck check_label"  for="neodobreno{{ $absence->id}}">NE</label>
 																	<input class="nocheck checkinput" type="radio" name="approve[{{ $absence->id}}]" value="" id="bezodobreno{{ $absence->id}}" ><label class="uncheck check_label"  for="bezodobreno{{ $absence->id}}">-</label>
+																@endif
+															</td>
+															<td class="approve not_link"  style="max-width:10%;width:10%">
+																@if($absence->approve == 1 || $absence->approve == "0") 
+																	{!! $absence->approve_reason ? $absence->approve_reason : '' !!}
+																@elseif($absence->approve == null) 
+																	<textarea class="" type="text" name="approved_reason[{{ $absence->id}}]" rows="2"></textarea>
 																@endif
 															</td>
 															{{-- <td>{!! $absence->approved ? $absence->approved['first_name'] . ' ' . $absence->approved['last_name'] : ''!!}</td> --}}
@@ -264,11 +272,11 @@
 														<td>{{ date('d.m.Y.',strtotime($afterhour->date))  }}</td>
 														<td>-</td>
 														<td>{{ date('H:i',strtotime($afterhour->start_time)) . '-' .  date('H:i',strtotime($afterhour->end_time)) }}</td>
-														<td style="max-width: 40%; width: 40%">		
+														<td style="max-width:30%;width:30%">		
 															{!! $afterhour->approve_h ? 'Odobreno: '. $afterhour->approve_h : '' !!} [Traženo: {{ $interval }}]
 															{{ $afterhour->comment }}
 														</td>
-														<td class="not_link approve">
+														<td class="not_link approve" style="max-width:10%;width:10%">
 															@if($afterhour->approve == 1) 
 																<span class="img_approve"><span>@lang('absence.approved')</span></span>
 															@elseif($afterhour->approve == '0')
@@ -276,10 +284,17 @@
 															@elseif($afterhour->approve == null)
 																<input type="hidden" name="id[{{ $afterhour->id}}]" class="id" value="{{ $afterhour->id}}">
 																<input type="hidden" name="type[{{ $afterhour->id}}]" class="id" value="aft">
-																<input name="approve_h[{{ $afterhour->id}}]" style="border-radius:5px;" class="odobreno_h[{{ $afterhour->id}}]" type="time" value="{!! isset( $interval ) ? $interval : '00:00' !!}" required>
+																<input name="approve_h[{{ $afterhour->id}}]" style="border-radius:5px;" class="odobreno_h[{{ $afterhour->id}}]" type="time" value="{!! isset( $interval ) ? $interval : '00:00' !!}" required><br>
 																<input class="check checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="1" id="odobreno{{ $afterhour->id}}" ><label class="check check_label" for="odobreno{{ $afterhour->id}}">DA</label>
 																<input class="uncheck checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="0" id="neodobreno{{ $afterhour->id}}" ><label class="uncheck check_label"  for="neodobreno{{ $afterhour->id}}">NE</label>
 																<input class="nocheck checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="" id="bezodobreno{{ $afterhour->id}}" ><label class="uncheck check_label"  for="bezodobreno{{ $afterhour->id}}">-</label>
+															@endif
+														</td>
+														<td class="not_link approve" style="max-width:10%;width:10%">
+															@if($afterhour->approve == 1 || $afterhour->approve == '0') 
+																{!! $afterhour->approved_reason ? $afterhour->approved_reason : '' !!}
+															@elseif($afterhour->approve == null)
+																<textarea class="" type="text" name="approved_reason[{{ $afterhour->id}}]" rows="2"></textarea>
 															@endif
 														</td>
 														{{-- <td>{!! $afterhour->approved ? $afterhour->approved['first_name'] . ' ' . $afterhour->approved['last_name'] : ''!!}</td> --}}
@@ -316,15 +331,6 @@
 													</span>
 												</td>
 											</tr>
-											{{-- <div class="placeholder">
-												<img class="" src="{{ URL::asset('icons/placeholder_absence.png') }}" alt="Placeholder image" />
-												<p>@lang('basic.no_absence1')
-													<label type="text" class="add_new" rel="modal:open" >
-														<i style="font-size:11px" class="fa">&#xf067;</i>
-													</label>
-													@lang('basic.no_absence2')
-												</p>
-											</div> --}}
 										@endif
 									</tbody>
 								</table>

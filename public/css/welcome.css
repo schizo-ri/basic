@@ -378,6 +378,7 @@ p.terms>span {
 	width: 5px;
 	height: 5px;
 	background-color: transparent;
+	display: none;
 }
 
 /* Track */

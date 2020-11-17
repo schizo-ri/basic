@@ -7,6 +7,7 @@ use App\Http\Requests\EducationRequest;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Controller;
 use App\Models\Education;
+use App\Models\EducationTheme;
 use App\Models\Department;
 use App\Models\Employee;
 use Sentinel;
@@ -34,7 +35,6 @@ class EducationController extends Controller
        
         if(! Sentinel::inRole('administrator')) {
             $employee = Sentinel::getUser()->employee;
-           
            
             if( $employee ) {
                 $user_departments_id = Employee::employeesDepartment( $employee);
@@ -106,7 +106,9 @@ class EducationController extends Controller
      */
     public function show($id)
     {
-        //
+        $education = Education::find($id);
+
+        return view('Centaur::educations.show',['education'=>$education]);
     }
 
     /**

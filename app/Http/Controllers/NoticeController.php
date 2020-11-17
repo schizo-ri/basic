@@ -16,6 +16,7 @@ use Sentinel;
 use App\Mail\NoticeMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Log;
 
 class NoticeController extends Controller
 {
@@ -108,8 +109,11 @@ class NoticeController extends Controller
                 /* ***************************  posebna slika  ******************************** */
 
                 if(isset($request['fileToUpload'])) {
+                    $target_dir = 'storage/'; 
+                    if(!file_exists($target_dir)){
+                        mkdir($target_dir);
+                    }
                     $target_dir = 'storage/notice/'; 
-                    
                     // Create directory
                     if(!file_exists($target_dir)){
                         mkdir($target_dir);
@@ -158,19 +162,21 @@ class NoticeController extends Controller
                     // if everything is ok, try to upload file
                     } else {
                         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-
                             if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                                $employees = array();
-            
-                              /*   try { */
-                                    foreach($request['to_department'] as $department_id) {
-                                        array_push( $employees, Department::allDepartmentsEmployeesEmail( $department_id));
-                                    }
+                                $all_dep_employee = array();
+                                foreach($request['to_department'] as $department_id) {
+                                    $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
+                                    $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
+                                }
+                                Log::info($all_dep_employee);
+                                foreach (array_unique($all_dep_employee) as $mail) {
+                                    Log::info('Notice image');
+                                    Log::info($mail);
 
-                                    foreach (array_unique($employees) as $mail) {
-                                        Mail::to($mail)->send(new NoticeMail($notice1));
-                                    }                    
-                             /*    } catch (\Throwable $th) {
+                                    Mail::to($mail)->send(new NoticeMail($notice1));
+                                }   
+                                /*   try {               
+                                } catch (\Throwable $th) {
                                     $message = session()->flash('success',  __('emailing.not_send'));
                                     return redirect()->back()->withFlashMessage($message);
                                 } */
@@ -187,17 +193,22 @@ class NoticeController extends Controller
                 /* ************************* SEND MAIL *********************************** */
         
                 if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                    $employees = array();
+                    $all_dep_employee = array();
                     
-                   /*  try { */
-                        foreach($request['to_department'] as $department_id) {
-                            array_push( $employees, Department::allDepartmentsEmployeesEmail( $department_id));
-                        }
-                        
-                        foreach (array_unique($employees) as $mail) {
-                            Mail::to($mail)->send(new NoticeMail($notice1));
-                        }                    
-               /*      } catch (\Throwable $th) {
+                    foreach($request['to_department'] as $department_id) {
+                        $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
+                        $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
+                    }
+                    Log::info($all_dep_employee);
+                    foreach (array_unique($all_dep_employee) as $mail) {
+                    
+                        Log::info('Notice bo image');
+                        Log::info($mail);
+
+                        Mail::to($mail)->send(new NoticeMail($notice1));
+                    }   
+                    /*   try {               
+                    } catch (\Throwable $th) {
                         $message = session()->flash('success',  __('emailing.not_send'));
                         return redirect()->back()->withFlashMessage($message);
                     } */
@@ -364,16 +375,20 @@ class NoticeController extends Controller
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 
                         if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                            $prima = array('jelena.juras@duplico.hr');
+                            $all_dep_employee = array();
                             foreach($request['to_department'] as $department_id) {
-                                array_push( $prima, Department::allDepartmentsEmployeesEmail( $department_id));
+                                $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
+                                $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
                             }
-                           
-                            /* try { */
-                                foreach (array_unique($prima) as $mail) {
-                                    Mail::to($mail)->send(new NoticeMail($notice1));
-                                }                    
-                          /*   } catch (\Throwable $th) {
+                            Log::info($all_dep_employee);
+                            foreach (array_unique($all_dep_employee) as $mail) {
+                                Log::info('Notice image - edit');
+                                Log::info($mail);
+
+                                Mail::to($mail)->send(new NoticeMail($notice1));
+                            }   
+                            /*   try {               
+                            } catch (\Throwable $th) {
                                 $message = session()->flash('success',  __('emailing.not_send'));
                                 return redirect()->back()->withFlashMessage($message);
                             } */
@@ -389,18 +404,20 @@ class NoticeController extends Controller
             /* ************************* SEND MAIL *********************************** */
      
             if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                
-                $employees = array();
-            
-              /*   try { */
-                    foreach($request['to_department'] as $department_id) {
-                        array_push( $employees, Department::allDepartmentsEmployeesEmail( $department_id));
-                    }
+                $all_dep_employee = array();
+                foreach($request['to_department'] as $department_id) {
+                    $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
+                    $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
+                }
+                Log::info($all_dep_employee);
+                foreach (array_unique($all_dep_employee) as $mail) {
+                    Log::info('Notice no image - edit');
+                    Log::info($mail);
 
-                    foreach (array_unique($employees) as $mail) {
-                        Mail::to($mail)->send(new NoticeMail($notice1));
-                    }                    
-             /*    } catch (\Throwable $th) {
+                    Mail::to($mail)->send(new NoticeMail($notice1));
+                }   
+                /*   try {               
+                } catch (\Throwable $th) {
                     $message = session()->flash('success',  __('emailing.not_send'));
                     return redirect()->back()->withFlashMessage($message);
                 } */

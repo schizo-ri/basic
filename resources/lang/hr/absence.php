@@ -2,6 +2,7 @@
 
 return [
     'absences' 		=> 'Izostanci',
+    'absence_for_day' => 'Izostanci za dan',
 	'absence' 		=> 'Izostanak',
     'add_absence' 	=> 'Dodaj zahtjev',
 	'edit_absence' 	=> 'Ispravi zahtjev',
@@ -47,6 +48,7 @@ return [
 	'req_received'	=> 'Zahtjev je primljen',
 	'request'		=> 'Zahtjev za',
 	'approve_absence'=> 'Odobrenje zahtjeva',
+	'approve_comment'=> 'Komentar odobrenja',
 	'all_requests' 	=> 'Svi zahtjevi',
 	'done' 			=> 'Gotovo',
 	'vacat_days' 	=> 'Dani godišnjeg odmora',

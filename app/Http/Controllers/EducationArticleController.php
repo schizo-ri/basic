@@ -63,13 +63,14 @@ class EducationArticleController extends Controller
     public function create(Request $request)
     {
 		$educationThemes = EducationTheme::orderBy('name','ASC')->get();
-		
-		if($request->theme_id){
-			return view('Centaur::education_articles.create',['educationThemes'=>$educationThemes, 'theme_id'=>$request->theme_id]);
+
+		if( isset($request['theme_id'])) {
+			$theme_id = $request['theme_id'];
 		} else {
-			return view('Centaur::education_articles.create',['educationThemes'=>$educationThemes]);
+			$theme_id = null;
 		}
-		
+	
+		return view('Centaur::education_articles.create',['educationThemes'=>$educationThemes, 'theme_id'=> $theme_id]);
     }
 
     /**
@@ -80,15 +81,13 @@ class EducationArticleController extends Controller
      */
     public function store(ArticleRequest $request)
     {
-		
-		if(empty ($request['article'])) {
+		if(empty($request['article'])) {
 			$message = session()->flash('error', 'Nemoguće spremiti članak bez teksta.');
 		
 			return redirect()->back()->withFlashMessage($message);
 		}
 		
 		$user = Sentinel::getUser();
-		
 		$employee = $user->employee;
 		
 		if($employee) {
@@ -108,8 +107,7 @@ class EducationArticleController extends Controller
 		$educationArticle = new EducationArticle();
 		$educationArticle->saveEducationArticle($data);
 		
-		if($educationArticle->status == 'aktivan') {
-			/* mail obavijest o novoj poruci */
+		/* if($educationArticle->status == 1) {
 			$emailings = Emailing::get();
 			$send_to = EmailingController::sendTo('education_articles','create');
 			try {
@@ -121,11 +119,11 @@ class EducationArticleController extends Controller
 				session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 				return redirect()->back();
 			}
-		}
+		} */
 		
 		session()->flash('success', __('ctrl.data_save'));
 		
-        return redirect()->route('education_articles.index', ['theme_id' => $request['theme_id']]);
+        return redirect()->back();
 
     }
 
@@ -137,7 +135,9 @@ class EducationArticleController extends Controller
      */
     public function show($id)
     {
-        //
+		$educationArticle = EducationArticle::find($id);
+
+		return view('Centaur::education_articles.show', ['educationArticle' => $educationArticle]);
     }
 
     /**

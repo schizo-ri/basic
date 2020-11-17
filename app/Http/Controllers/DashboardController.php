@@ -155,11 +155,13 @@ class DashboardController extends Controller
             $employee = Sentinel::getUser()->employee;
            /*  $departments = Department::get(); */
             $user_department = array();
-            $employee_departments = $employee->hasEmployeeDepartmen;
+            if( $employee ) {
+                $employee_departments = $employee->hasEmployeeDepartmen;
       
-            if($employee && $employee_departments) {
-                foreach ($employee_departments as $department) {
-                    array_push($user_department, $department->department_id);
+                if( $employee_departments) {
+                    foreach ($employee_departments as $department) {
+                        array_push($user_department, $department->department_id);
+                    }
                 }
             }
             return $user_department;	

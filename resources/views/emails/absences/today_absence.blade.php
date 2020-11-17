@@ -1,11 +1,12 @@
 @component('mail::message')
-# @lang('absence.absences')  
+# {!! $title !!}
 
-@foreach($day_absences as $day_absence)
-    <p>{{ $day_absence->absence['zahtjev'] . ', ' . $day_absence['ime'] . ', ' . (string)$day_absence['period'] . ', ' . $day_absence['vrijeme'] }}</p>
-@endforeach
+@component('mail::panel')
+    @foreach($day_absences as $day_absence)
+        {!! $day_absence['zahtjev'] . ', ' . $day_absence['ime'] . ', ' . (string)$day_absence['period'] . ', ' . $day_absence['vrijeme'] !!} <br>
+    @endforeach
+@endcomponent
 
-
-Thanks,<br>
+<br>
 {{ config('app.name') }}
 @endcomponent

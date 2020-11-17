@@ -27,9 +27,16 @@ class Education extends Model
 	protected static $departmentModel = 'App\Models\Department'; 
 	
 	/*
-	* Returns the projekt relationship
+	* The Eloquent EducationTheme model name
 	* 
-	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	* @var string
+	*/
+	protected static $EducationThemeModel = 'App\Models\EducationTheme'; 
+
+	/*
+	* Returns the department relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\belongsTo
 	*/
 	
 	public function department()
@@ -37,6 +44,17 @@ class Education extends Model
 		return $this->belongsTo(static::$departmentModel,'to_department_id');
 	}	
 	
+	/*
+	* Returns the department relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasMany
+	*/
+	
+	public function educationThemes()
+	{
+		return $this->hasMany(static::$EducationThemeModel,'education_id');
+	}	
+
 	/*
 	* Save Education
 	* 

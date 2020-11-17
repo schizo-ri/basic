@@ -67,9 +67,9 @@ $('#da').click(function(){
 				url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
 				token = $( this ).attr('data-token');
 
-				console.log(url);
+				/* console.log(url);
 				console.log(form_data);
-				console.log(url_load);
+				console.log(url_load); */
 				$.ajaxSetup({
 					headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

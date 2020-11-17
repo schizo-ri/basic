@@ -220,5 +220,13 @@ $(function() {
             $( "#login-modal" ).empty();
         });
     }); 
+
+    $('tr.tr_open_link_new_page td:not(.not_link)').on('click', function(e) {
+		e.preventDefault();
+		url = location.origin + $( this ).parent().attr('data-href');
+		console.log(url);
+        window.location = url;
+    });
+    
  
 });

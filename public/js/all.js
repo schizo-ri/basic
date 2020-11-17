@@ -450,9 +450,9 @@ $(function(){
 			month = $('#filter_years').val();
 			employee_id =  $('#filter_employees').val();
 			url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
-
-			/* console.log(url);
-			console.log(form_data); */
+			
+			console.log(url),
+			console.log(form_data); 
 			$.ajax({
 				url: url,
 				type: "post",
@@ -517,10 +517,8 @@ $(function(){
 				});
 			}
 		});
+		}
 	}
-	}
-
-
 });
 $(function(){
     var employee_id;
@@ -3314,6 +3312,14 @@ $(function() {
             $( "#login-modal" ).empty();
         });
     }); 
+
+    $('tr.tr_open_link_new_page td:not(.not_link)').on('click', function(e) {
+		e.preventDefault();
+		url = location.origin + $( this ).parent().attr('data-href');
+		console.log(url);
+        window.location = url;
+    });
+    
  
 });
 // on load
@@ -4573,6 +4579,7 @@ $('input[type="file"]').on('change',function(e){
 
 $('.btn-submit').on('click',function(event){
     /* event.preventDefault(); */
+ 
     var form = $(this).parents('form:first');
     let url = $(this).parents('form:first').attr('action');
     var form_data = form.serialize();
@@ -4580,6 +4587,9 @@ $('.btn-submit').on('click',function(event){
     var url_load = window.location.href;
     var pathname = window.location.pathname;
     validate_user_form ();
+    console.log(url);
+    console.log(form_data);
+    console.log(validate);
 
     if(validate.includes("block") ) {
        event.preventDefault();
@@ -4714,7 +4724,6 @@ $('.btn-submit').on('click',function(event){
 });
 
 $('.form_user .btn-next').on('click',function(event){
-   
     f_name = $("#first_name");
     l_name = $("#last_name");
     email = $("#email");

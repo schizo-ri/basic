@@ -46,8 +46,6 @@ class EducationThemeController extends Controller
 			
 			return view('Centaur::education_themes.index', ['educationThemes' => $educationThemes, 'permission_dep' => $permission_dep]);
 		}
-		
-		
     }
 
     /**
@@ -57,16 +55,14 @@ class EducationThemeController extends Controller
      */
     public function create(Request $request)
     {
-
-		$educations = Education::get();
+        if(isset($request['education_id'])) {
+           $education_id = $request['education_id'];
+        } else {
+            $education_id = null;
+        }
+        $educations = Education::get();
 		
-		if(isset($request->education_id)) {
-			$education1 = $educations->where('id',$request->education_id)->first();
-			
-			return view('Centaur::education_themes.create',['educations'=>$educations, 'education1'=>$education1]);
-		} else {
-			return view('Centaur::education_themes.create',['educations'=>$educations]);
-		}
+		return view('Centaur::education_themes.create',['educations'=>$educations, 'education_id'=> $education_id]);
     }
 
     /**
@@ -87,7 +83,7 @@ class EducationThemeController extends Controller
 		
 		session()->flash('success',  __('ctrl.data_save'));
 		
-        return redirect()->route('education_themes.index',['education_id' => $request['education_id']]);
+        return redirect()->back();
     }
 
     /**
@@ -98,7 +94,9 @@ class EducationThemeController extends Controller
      */
     public function show($id)
     {
-        //
+        $educationTheme = EducationTheme::find($id);
+      
+        return view('Centaur::education_themes.show',['educationTheme'=>$educationTheme]);
     }
 
     /**
@@ -135,7 +133,7 @@ class EducationThemeController extends Controller
 		
 		session()->flash('success', __('ctrl.data_edit'));
 		
-        return redirect()->route('education_themes.index',['education_id' => $request['education_id']]);
+        return redirect()->back();
     }
 
     /**

@@ -28,7 +28,12 @@
                                     <img class="profile_img radius50 float_left" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
                                 @endif
                             </span>
-                            {{ $data_day['employee'] . ' - ' .  $data_day['type'] }}
+                            @if ($data_day['employee'])
+                                {{ $data_day['employee'] . ' - ' .  $data_day['type'] }}
+                            @else
+                                {{ $data_day['type'] }}
+                            @endif
+                          
                             @if (isset($data_day['title']))
                                {{ ' - ' .  $data_day['title'] }}
                             @endif

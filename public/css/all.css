@@ -3996,7 +3996,7 @@ footer.ad_footer {
     color: white;
 }
 
-.tr_open_link td:not(.not_link){
+.tr_open_link td:not(.not_link), .tr_open_link_new_page td:not(.not_link){
     cursor: pointer;
 }
 
@@ -4096,7 +4096,7 @@ form.after_form  {
     font-size: 0.625rem;
     line-height: 16px;
 }
-.approve input[type=time] {
+.approve input[type=time], .approve input[type=text],  .approve textarea {
     border: 1px solid rgba(7, 30, 86, 0.1);
 }
 .approve input[type=radio] {
@@ -5718,10 +5718,11 @@ a.modal_close {
     height: 116px;
     width: 116px;
     border-radius: 50%;
+    overflow: hidden;
 }
 .profile_photo>a img.profile_user {
     width: 100%;
-    height: 100%;
+    height: auto;
     margin-top: 50%;
     transform: translateY(-50%);
 }
@@ -12750,6 +12751,7 @@ p.terms>span {
 	width: 5px;
 	height: 5px;
 	background-color: transparent;
+	display: none;
 }
 
 /* Track */

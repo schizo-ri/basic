@@ -8,10 +8,11 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Absence;
 use App\Models\TemporaryEmployeeRequest;
+use App\Http\Controllers\BasicAbsenceController;
 use DateTime;
 use DateInterval;
 use DatePeriod;
-use App\Http\Controllers\BasicAbsenceController;
+use Log;
 
 class AbsenceCronMail extends Mailable
 {
@@ -41,7 +42,9 @@ class AbsenceCronMail extends Mailable
         $ova_godina = date_format($datum,'Y');
         
         $day_absences = array();
-        $absences = Absence::where('approve',1)->get();
+        $absences = Absence::AbsencesForMonth($mjesec, $ova_godina);
+        $absences = $absences->where('approve',1);
+
         foreach($absences as $absence){			
             $begin = new DateTime($absence->start_date);
             $end = new DateTime($absence->end_date);
@@ -52,17 +55,18 @@ class AbsenceCronMail extends Mailable
             $zahtjevi = BasicAbsenceController::zahtjevi($absence->employee); 
             $dani_GO = $zahtjevi['ukupnoPreostalo'];
 
-            foreach ($period as $dan) {  //ako je dan  GO !!!
-                $period_day = date_format($dan,'d');
-                $period_month = date_format($dan,'m');
-                $period_year = date_format($dan,'Y');
+            foreach ($period as $dan_perioda) {  //ako je dan  GO !!!
+                $period_day = date_format($dan_perioda,'d');
+                $period_month = date_format($dan_perioda,'m');
+                $period_year = date_format($dan_perioda,'Y');
                 if($period_day == $dan & $period_month == $mjesec & $period_year == $ova_godina ){
                     array_push($day_absences, array(
-                        'ime' => $absence->user['first_name'] . ' ' . $absence->user['last_name'], 
+                        'ime' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name'], 
                         'zahtjev' =>  $absence->absence['name'], 
-                        'period' => date('d.m.Y', strtotime($absence->start_date)) . ' - ' .  date('d.m.Y', strtotime($absence->end_date)), 
-                        'vrijeme' => $absence->start_time . ' - ' .  $absence->end_time, 
-                        'napomena' =>  $absence->comment, 'dani_GO' => $dani_GO ));
+                        'period' => date('d.m.Y', strtotime($absence->start_date)) . ' - ' . $absence->absence['name'] != 'Izlazak' ? date('d.m.Y', strtotime($absence->end_date)) : '', 
+                        'vrijeme' => $absence->absence['name'] == 'Izlazak' ? $absence->start_time . ' - ' .  $absence->end_time : '', 
+                        'napomena' => $absence->comment,
+                        'dani_GO' => $dani_GO ));
                 }
             }
         }
@@ -103,13 +107,15 @@ class AbsenceCronMail extends Mailable
                 }
 			}
         }
+        Log::info($day_absences);
         
         if(count($day_absences)>0) {
-            return $this->markdown('emails.absences.absence_today')
+            $title = __('absence.absence_for_day') . ' ' . date_format($datum,'d.m.Y');
+            return $this->markdown('emails.absences.today_absence')
                     ->subject( __('emailing.day_absence') . ' ' . date_format($datum,'d.m.Y'))
-                    ->with([
-                        'day_absences' => $day_absences
-                    ]);
+                    ->with(['day_absences'    => $day_absences,
+                            'title'    => $title
+            ]);
         }
     }
 }

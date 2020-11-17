@@ -42,6 +42,6 @@
 		
         <br/> 
 		
-		<div><b>{{ 'Odobrio: ' . $odobrio }}</b></div>
+		<div><b>{{ 'Odluku donio: ' . $odobrio }}</b></div>
 	</body>
 </html>

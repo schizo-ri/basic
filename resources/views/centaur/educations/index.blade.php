@@ -9,7 +9,6 @@
 			<div class="page-header header_document">
 				<a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a>
 				@lang('basic.educations')
-				
 			</div>
 			<main class="all_documents">
 				<div class="table-responsive">
@@ -39,11 +38,11 @@
 								</thead>
 								<tbody>
 									@foreach ($educations as $education)
-										<tr>
+										<tr class="tr_open_link_new_page" data-href="/educations/{{ $education->id }}"  >
 											<td>{{ $education->name }}</td>
-											<td>{{ $education->department->name }}</td>
+											<td >{{ $education->department->name }}</td>
 											@if (Sentinel::inRole('administrator'))
-												<td class="options center">
+												<td class="options center not_link" ">
 													@if(Sentinel::getUser()->hasAccess(['educations.update']) || in_array('educations.update', $permission_dep) )
 													<a href="{{ route('educations.edit', $education->id ) }}" class="btn-edit" title="{{ __('basic.edit_education')}}" rel="modal:open">
 														<i class="far fa-edit"></i>

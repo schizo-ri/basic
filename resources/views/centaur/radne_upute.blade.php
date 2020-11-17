@@ -1,6 +1,6 @@
 @extends('Centaur::layout')
 
-@section('title', __('basic.ads'))
+@section('title', __('basic.instructions'))
 
 @section('content')
 <div class="index_page ads_index">

@@ -146,6 +146,7 @@ $('input[type="file"]').on('change',function(e){
 
 $('.btn-submit').on('click',function(event){
     /* event.preventDefault(); */
+ 
     var form = $(this).parents('form:first');
     let url = $(this).parents('form:first').attr('action');
     var form_data = form.serialize();
@@ -153,6 +154,9 @@ $('.btn-submit').on('click',function(event){
     var url_load = window.location.href;
     var pathname = window.location.pathname;
     validate_user_form ();
+    console.log(url);
+    console.log(form_data);
+    console.log(validate);
 
     if(validate.includes("block") ) {
        event.preventDefault();
@@ -287,7 +291,6 @@ $('.btn-submit').on('click',function(event){
 });
 
 $('.form_user .btn-next').on('click',function(event){
-   
     f_name = $("#first_name");
     l_name = $("#last_name");
     email = $("#email");

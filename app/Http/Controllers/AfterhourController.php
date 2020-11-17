@@ -18,6 +18,7 @@ use App\Mail\AbsenceConfirmMail;
 use Illuminate\Support\Facades\Mail;
 use Sentinel;
 use DateTime;
+use Log;
 
 class AfterhourController extends Controller
 {
@@ -78,7 +79,6 @@ class AfterhourController extends Controller
         $afterhours = $afterhours->filter(function ($afterhour, $key) use($month, $year) {
             return date('m',strtotime($afterhour->date)) == $month && date('Y',strtotime($afterhour->date)) == $year;
         });
-        
        
         return view('Centaur::afterhours.index', ['afterhours' => $afterhours,'employees' => $employees, 'dates' => $dates, 'permission_dep' => $permission_dep]);
     }
@@ -146,19 +146,20 @@ class AfterhourController extends Controller
                 $afterHour = new Afterhour();
                 $afterHour->saveAfterhour($data);
            
-           /*      Mail::to($afterHour->employee->email)->send(new AfterHourSendMail($afterHour));  */
+                Mail::to($afterHour->employee->email)->send(new AfterHourSendMail($afterHour));
     
                 $send_to = EmailingController::sendTo('afterhours', 'create');
              
                 foreach(array_unique($send_to) as $send_to_mail) {
-                    if( $send_to_mail != null & $send_to_mail != '' )
+                    if( $send_to_mail != null & $send_to_mail != '' ) {
                         Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterHour)); 
+                    }
                 }
                 
-              /*   $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
+                $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
                 if($superior) {
                     Mail::to( $superior->email)->send(new AfterHourInfoMail($afterHour)); 
-                } */
+                } 
             } else {
                 session()->flash('error',  __('ctrl.request_exist'));
                 return redirect()->back();
@@ -256,7 +257,7 @@ class AfterhourController extends Controller
             );
             
             $afterHour->updateAfterhour($data);
-                  Mail::to($mail)->send(new AfterHourApproveMail($afterHour));  
+                    Mail::to($mail)->send(new AfterHourApproveMail($afterHour));  
                 
             foreach(array_unique($send_to) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
@@ -275,7 +276,7 @@ class AfterhourController extends Controller
     public function storeConfMulti(Request $request)
     {
         $approve_employee = Sentinel::getUser()->employee;
-
+        Log::info('storeConfMulti');
         if( is_array($request['id']) ) {
             if( ! isset($request['approve']) ) {
 				$message = session()->flash('error', 'Nemoguće spremiti, nije označeno ni jedno odobrenje.');
@@ -287,38 +288,40 @@ class AfterhourController extends Controller
 				if(isset($request['approve'][$key]) && $request['approve'][$key] != null && $request['approve'][$key] != '') {
                     if($request['type'][$key] == 'aft')  {
                         $send_to = EmailingController::sendTo('afterhours', 'confirm');
+                        
                         $count++;
-                        $afterHour = AfterHour::find( $id );
+                        $afterHour = Afterhour::find( $id );
                         $data = array(
                             'approve'  		    => $request['approve'][$key],
                             'approve_h'  		=> $request['approve_h'][$key],
                             'approved_id'    	=> $approve_employee->id,
-                            'approved_reason'  	=> null,
+                            'approved_reason'  	=> $request['approved_reason'][$key],
                             'approved_date'	=> date("Y-m-d")
                         );
                     
                         $afterHour->updateAfterhour($data);
                         $employee = $afterHour->employee;
                         $mail = $employee->email;
-                        
+                       
                         if( $mail) {
                             Mail::to( $mail )->send(new AfterHourApproveMail($afterHour)); 
                         }
                      
                         foreach(array_unique($send_to) as $send_to_mail) {
-                            if( $send_to_mail != null & $send_to_mail != '' )
+                            if( $send_to_mail != null & $send_to_mail != '' ) {
                                 Mail::to($send_to_mail)->send(new AfterHourApproveMail($afterHour)); 
+                            }
                         }  
                         
                     } elseif ($request['type'][$key] == 'abs') {
                         $send_to_abs = EmailingController::sendTo('absences','confirm');
                         $count++;
-                        $absence = Absence::find( $id ) ;
+                        $absence = Absence::find( $id );
                 
                         $data = array(
                             'approve'  		    => $request['approve'][$key],
                             'approved_id'    	=> $approve_employee->id,
-                            'approved_reason'  	=> null,
+                            'approved_reason'  	=> $request['approved_reason'][$key],
                             'approved_date'		=> date('Y-m-d')
                         );
                                 
@@ -356,7 +359,7 @@ class AfterhourController extends Controller
             return $message;
           /*   return redirect()->back()->withFlashMessage($message); */
         } else {
-            return "Greška, neško nije prošlo dobro";
+            return "Greška, nešto nije prošlo dobro";
         }
     }
 
@@ -406,7 +409,7 @@ class AfterhourController extends Controller
 		}
 		
 	    /* 	$message = session()->flash('success',  $afterhour->approve == 1 ? __('absence.approved') :  __('absence.refused') ); */
-		/* return redirect()->route('dashboard')->withFlashMessage($message); */
+		/*  return redirect()->route('dashboard')->withFlashMessage($message); */
         /*  return redirect()->back()->withFlashMessage($message);*/
 
         $message = $afterhour->approve == 1 ?  __('absence.changed_approval') . ': ' . $request['approve_h'] . ' ' . __('absence.approved') :  __('absence.changed_approval') . ': ' .  __('absence.refused'); 

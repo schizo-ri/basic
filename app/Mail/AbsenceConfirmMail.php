@@ -46,12 +46,14 @@ class AbsenceConfirmMail extends Mailable
         
         if( $this->absence->approve == '1'){
             $odobrenje = __('absence.is_approved');
+            $title = 'Zahtjev odobren';
         } else {
-            $odobrenje = __('absence.not_approved');
+            $odobrenje = __('absence.is_refused');
+            $title = 'Zahtjev odbijen';
         }
 
         return $this->view('Centaur::email.absence_confirm')
-                    ->subject( __('absence.approve_absence') . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])
+                    ->subject( $title  . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])
                     ->with([
                         'absence' => $this->absence,
                         'odobrenje' => $odobrenje,

@@ -450,9 +450,9 @@ $(function(){
 			month = $('#filter_years').val();
 			employee_id =  $('#filter_employees').val();
 			url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
-
-			/* console.log(url);
-			console.log(form_data); */
+			
+			console.log(url),
+			console.log(form_data); 
 			$.ajax({
 				url: url,
 				type: "post",
@@ -517,8 +517,6 @@ $(function(){
 				});
 			}
 		});
+		}
 	}
-	}
-
-
 });
