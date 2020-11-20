@@ -264,6 +264,9 @@ ul.admin_pages li >span.image_template{
         height: 100%;
         overflow: auto;
     }
+    .index_page aside > .admin_panel, .index_page .index_main.admin_main {
+        border-radius: 0;
+    }
     .admin_main .link_back {
         padding: 10px;
         top: 20px;
@@ -999,6 +1002,10 @@ summary {
     }
 }
 
+button {
+    cursor: pointer;
+    
+}
 div#calendar{
     padding: 0 30px;
     width: 100%;
@@ -1873,6 +1880,11 @@ div#calendar ul li.active_date {
 }
 
 @media (max-width: 1024px) {
+    .container .calendar>div {
+        padding: 10px 0;
+        overflow: auto;
+        scrollbar-width: thin;
+    }
     .comming_agenda {
         padding: 15px;
         padding: 10px 30px;
@@ -1914,6 +1926,18 @@ div#calendar ul li.active_date {
     }
    
 }
+@media (max-width: 992px) {
+    .container .calendar{
+        margin: 0;
+        padding: 10px 10px;
+        height: auto;
+        flex: 0 0 auto;
+    }
+    .container .posts{
+        height: auto;
+        flex: 0 0 auto;
+    }
+}
 @media (max-width: 768px) {
     .posts_index .posts {
         height: auto;
@@ -1924,10 +1948,12 @@ div#calendar ul li.active_date {
         max-width: 100%;
     }
     .container .calendar>div, .container .noticeboard>div {
-		height: auto;
 		margin: auto;
     }
-   
+    .container .calendar>div {
+        height: auto;
+        overflow: hidden;
+    }
     .placeholder, .placeholder_cal {
         display: none;
         position: static;
@@ -2004,6 +2030,12 @@ div#calendar ul li.active_date {
 	}
     .container .noticeboard, .container .posts, .container .calendar, .container .calendar>div {
         height: auto;
+        width: 100%;
+    }
+    .container .noticeboard, .container .posts, .container .calendar {
+        margin: 0;
+        box-shadow: none;
+        padding-bottom: 10px;
     }
     .container .noticeboard>div {
         background: #FFFFFF;
@@ -2029,16 +2061,24 @@ div#calendar ul li.active_date {
         height: auto;
         margin: auto;
     }    
-    .container .noticeboard, .container .posts, .container .calendar {
+    .container .noticeboard, .container .posts, .container .calendar{
+        height: auto;
         padding: 10px;
+        padding-top: 20px;
+        margin-top: 20px;
         width: 100%;
+        max-width: 100%;
+        float: none;
+        margin: auto;
     }
     .container .calendar>div, .container .posts .all_post {
-     /*   box-shadow: none;*/
         width:100% ;
         padding: 10px 0;
     }
-    
+    .container .calendar>div {
+		height: auto;
+		padding-top: 0;
+	}
     .container .calendar h2, .container .calendar .cal_days, .comming_agenda {
         padding: 0 10px;
         line-height: 26px;
@@ -2059,6 +2099,7 @@ div#calendar ul li.active_date {
         top: 40%;
         left: 50%;
         transform: translate(-50%, -50%);
+        display: block;
     }
 }
 
@@ -2826,8 +2867,8 @@ class="select-css"
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-unit .pignose-calendar-button-schedule-container {
     position: absolute;
-    right: 12px;
-    top: 7px;
+    right: 14px;
+    top: 5px;
     bottom: 0;
 }
 .employee_color {
@@ -3613,16 +3654,6 @@ main.main_ads.main_instructions {
     align-items: center;
 }
 
-.index_main header.ad_header > a >img {
-  /*  max-height: 100%;
-    max-width: 100%;
-    top: 50%;
-    display: inline-block;
-    transform: translate(-50%,-50%);
-    margin-left: 50%;
-    margin-top: 50%;*/
-   
-}
 .index_main header.ad_header > img  {
     display: inline-block;
     transform: translate(-50%,-50%);
@@ -4211,6 +4242,13 @@ form.after_form  {
 .noticeboard_notice_body.instructions_body {
     height: auto;
 }
+
+.noticeboard_notice_body.theme_body {
+    height: fit-content;
+    max-height: 50%;
+    overflow: auto;
+}
+
 .noticeboard_notice_body, .emails_email_body:not(:nth-child(5n)) {
     margin-right: 1%;
 }
@@ -4641,7 +4679,7 @@ button.scroll_left {
     overflow: auto;
     scrollbar-width: thin;
     overscroll-behavior-y: contain;
-    height: calc(100% - 60px);
+    height: calc(100% - 80px);
     padding: 0 15px;
 }
 .index_page .index_main.main_absence, .index_page.index_documents .index_main.main_documents {
@@ -5483,11 +5521,14 @@ input[type="search"]::-webkit-search-cancel-button {
     clear: both;
     overflow-x: scroll;
     white-space: nowrap;
-    display: flex-root;
-    justify-content: start;
+   /*  display: flex;
+    justify-content: start; */
     align-items: center;
    /*  position: relative;  */
     margin-right: 5px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
 }
 .index_page.index_profile .user_interest span.count_images {
     font-weight: 700;
@@ -5776,7 +5817,74 @@ a.modal_close {
     display: block;
     text-align: center;
 }
+
+.mail_tamplate_title {
+    padding: 0;
+    padding-left: 20px;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
+
+.page-header .btn-submit {
+    margin: 0;
+}
+.mail_form {
+    height: 100%;
+}
+
+#style_items, #mail_template {
+    height: 100%;
+    padding: 20px;
+    font-size: 14px;
+}
+#style_items {
+   /*  visibility: hidden; */
+}
+#style_items input, #style_items select {
+    border: 1px solid #ccc;
+    background: inherit;
+    border-radius: 5px;
+    padding: 0 10px;
+    margin-left: 10px;
+}
+#style_items p {
+    margin-bottom: 5px;
+    clear: left;
+}
+#style_items label {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 30px;
+    width: auto;
+    float: left;
+    font-size: 12px;
+}
+.form-group {
+    clear: both;
+    overflow: hidden;
+}
+#mail_template #mail_header, #mail_template #mail_footer {
+    height: 10%;
+    border: 1px dashed #eee;
+    padding: 30px 15px;
+    text-align: center;
+}
+#mail_template #mail_header {
+    font-size: 16px;
+}
+#mail_template #mail_footer {
+    font-size: 12px;
+}
+#mail_template #mail_main {
+    height: 60%;
+    border: 1px dashed #eee;
+   font-size: 14px;
+   padding: 15px;
+}
+
 @media (max-width: 1200px) {
     .index_main.profile_main .main_profile .user_profile {
         padding: 10px;
@@ -5884,7 +5992,7 @@ a.modal_close {
         padding: 0;
     }
     .index_table_filter >label, #index_table_filter >label {
-        width: 100%;
+        width: 50%;
     }
     .section_main .dataTables_filter {
         overflow: hidden;
@@ -6020,13 +6128,7 @@ a.modal_close {
         font-size: 1rem;
         padding: 8px 15px;
     }
-    
-    .container .calendar>div {
-        padding: 10px 0;
-        overflow: auto;
-        scrollbar-width: thin;
    
-    }
     .container .posts .all_post {
         padding: 10px 15px;
     }
@@ -6062,7 +6164,14 @@ a.modal_close {
 }
 @media (max-width: 768px) {
     .header_document.page-header {
-        padding: 10px 0 10px;
+        padding: 10px;
+    }
+    .index_main main.all_notices {
+        height: calc(100% - 45px);
+        min-height: calc(100% - 45px);
+    }
+    span.show, span.hide {
+        padding: 10px 0;
     }
     .index_main header {
         min-height: fit-content;
@@ -6074,6 +6183,13 @@ a.modal_close {
         max-width: 100%;
         margin: auto;
         height: 100%;
+    }
+    .header_ads .index_table_filter .select_filter, .notice_filter .select_filter, .fuel_header .select_filter, .travel_header .select_filter, .work_record_header .select_filter, .main_absence .select_filter {
+        margin-left: 10px;
+    }
+    .header_ads .add_ads {
+        padding: 0;
+        padding-left: 15px;
     }
     .form_post input.type_message, .form_post textarea.type_message { 
         line-height: 50px;
@@ -6231,8 +6347,6 @@ a.modal_close {
     .show_event {
         overflow: auto;
         scrollbar-width: thin;
-
-   
     }
     .index_main header.header_calendar {
         padding: 10px;
@@ -6242,10 +6356,7 @@ a.modal_close {
     .index_main main.main_calendar_month, .index_main main.main_calendar_week {
         position: static;
     }
-    .container .calendar>div {
-        height: auto;
-        overflow: hidden;
-    }
+   
     .index_main main.main_ads {
         height: calc(100% - 150px);
         overflow: auto;
@@ -6285,8 +6396,6 @@ a.modal_close {
         height: 100%;
         max-width: initial;
         max-height: initial;
-    
-        
     }
     .post_sent span.vacation {
         width: 100%;
@@ -6314,8 +6423,15 @@ a.modal_close {
     .index_page.posts_index .index_main >section {
         padding: 0;
     }
-   
-
+    .index_table_filter >label, #index_table_filter >label {
+        margin-bottom:0 ;
+    }
+    .notice_filter {
+        padding: 0 35px 10px 0;
+    }
+    .section_notice .img_search {
+        margin-top: 5px;
+    }
     .index_admin .admin_main {
         display: none;
     }
@@ -6326,6 +6442,30 @@ a.modal_close {
         padding: 0;
         left: 0;
     }
+    
+    .main_benefits_body .btn-edit {
+        margin-top: 0;
+        margin-right: 0;
+    }
+    .index_main main.main_ads {
+        height: calc(100% - 97px);
+    }
+    .header_ads .index_table_filter .select_filter, .notice_filter .select_filter, .fuel_header .select_filter, .travel_header .select_filter, .work_record_header .select_filter, .main_absence .select_filter {
+        padding: 0;
+        padding-right: 18px;
+        height: 30px;
+        margin: 0;
+    }
+    .index_main main.main_benefits {
+        height: auto;
+    }
+    
+    .index_page.ads_index .index_main .btn-new {
+		width: 30px;
+		height: 30px;
+        padding: 0;
+        margin: 0;
+	}
     .user_links {
         width: 100%;
     }
@@ -6360,6 +6500,11 @@ a.modal_close {
     .index_main header.ad_header > img.placeholder_image {
         display:none;
     }
+    .index_table_filter input:not(.btn-new), #index_table_filter input:not(.btn-new),.all_absences.table_absences #mySearchTbl{
+        height: 30px;
+
+    }
+    
     main.index_main>section {
         padding-bottom: 0;
         height: auto;
@@ -6412,16 +6557,6 @@ a.modal_close {
    
         height: fit-content;
     }
-    .container .noticeboard, .container .posts, .container .calendar{
-        height: fit-content;
-        padding: 10px;
-        margin-top: 20px;
-    }
-    .container .calendar>div {
-        width: 100%;
-        height: auto;
-    }
-   
     .container .posts .all_post {
         width: 100%;
         height: auto;
@@ -6454,14 +6589,8 @@ a.modal_close {
         height: auto;
         padding: 20px;
     }
-    .container .noticeboard, .container .posts, .container .calendar {
-        margin: 0;
-        box-shadow: none;
-        padding-bottom: 10px;
-    }
-   .container >section:first-child, .container >section:last-child {
-        margin:0;
-    }
+   
+  
     .container .noticeboard {
         padding: 10px;
     }
@@ -6593,6 +6722,7 @@ a.modal_close {
     }
     .index_aside div.calendar_main {
         padding: 10px;
+        height: 50%;
     }
     .index_main header.header_calendar>div.event_container {
         display: none;
@@ -6610,13 +6740,27 @@ a.modal_close {
     
     .index_aside .day_events {
         padding: 10px;
+        height: 47%;
+        margin-top: 3% ;
     }
-    .main_calendar > div.all_events {
-        padding: 0 10px;
+    .index_page .calender_view .pignose-calendar .pignose-calendar-unit {
+        height: auto;
+    }
+    .index_page .calender_view .pignose-calendar .pignose-calendar-unit.pignose-calendar-unit-active a {
+        width: 30px;
+        height: 30px;
+    }
+    .index_page .calender_view .pignose-calendar .pignose-calendar-unit .pignose-calendar-button-schedule-container .pignose-calendar-button-schedule-pin {
+        width: 5px;
+        height: 5px;
     }
     .index_aside .day_events >div {
         padding: 0;
     }
+    .main_calendar > div.all_events {
+        padding: 0 10px;
+    }
+    
     .hour_in_day {
         min-height: 30px;
         overflow: visible;
@@ -6652,7 +6796,7 @@ a.modal_close {
         box-shadow: none;
         width: 100%;
         margin: 0;
-        height: calc(100% - 65px);
+        height: calc(100% - 45px);
     }
     .index_main.main_documents >section {
         height: 100%;
@@ -6781,8 +6925,19 @@ a.modal_close {
         max-width: 100%;
         overflow: hidden;
     }
+    .header_ads .index_table_filter>div {
+        width: 50%;
+        flex: 0 0 50%;
+        float: left;
+    }
+    .header_ads .add_ads {
+        padding: 0;
+        height: 30px;
+        width: 30px;
+        line-height: 30px;
+    }
     .header_ads .index_table_filter {
-        padding: 10px;
+        padding: 5px 10px;
     }
     .header_benefits .index_table_filter>div {
         float: left;
@@ -6795,7 +6950,7 @@ a.modal_close {
         width: 80%;
         max-width: 80%;
     }
-    .header_benefits .index_table_filter>div:last-child {
+    .header_benefits .index_table_filter>div:nth-child(2){
         width: 20%;
         max-width: 20%;
     }
@@ -6810,8 +6965,10 @@ a.modal_close {
     .index_table_filter >label,  #index_table_filter >label{
         float: left;
         margin: 0;
-        left: 10px
+        left: 10px;
+        width: 50%;
     }
+    
     .show_button {
         display: none;
     }
@@ -7736,6 +7893,7 @@ ul.nav_ul.float_right li img {
 .shortcuts_container .profile_img {
 	width: 126px;
 	height: 100%;
+	flex: 0 0 126px;
 }
 
 .shortcuts_container .profile_img>span {
@@ -7746,7 +7904,7 @@ ul.nav_ul.float_right li img {
 	display: block;
 	overflow: hidden;
 	position: relative;
-	padding: 35px;
+	padding: 37px;
 }
 .shortcuts_container .profile_img >span>span {
 	display: block;
@@ -7788,7 +7946,7 @@ ul.nav_ul.float_right li img {
 	border: 1px solid #e9ecef;
 	background: #f9f9f9;
 	white-space: initial;
-    padding: 39px;
+    padding: 28px;
 }
 .shortcut_box >a.btn-delete {
 	z-index: 20;
@@ -8052,7 +8210,8 @@ input[type=file] {
 .upload form {
 	line-height: 25px;
 	clear: left;
-    overflow: hidden;
+	overflow: hidden;
+	max-width: 100%;
 }
 
 .upload form .form-group {
@@ -8361,7 +8520,6 @@ span.img-error {
 .layout_button span.img.all_req {
 	background: url('../icons/zahtjevi.svg') no-repeat center;
 	background-size:  65px 65px;
-}
 }
 
 .layout_button span.img.all_req p {
@@ -8893,6 +9051,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 }
 
 @media (max-height: 950px)  {
+	.layout_button span.img {
+		margin-bottom:0 ;
+	}
 	.layout_button span.img,.layout_button span.img.all_req {
 		width: 45px;
 		height: 45px;
@@ -8969,8 +9130,6 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		background-size: 35px 35px;
 	}
 }
-
-
 
 @media (max-height: 650px) and (min-width: 450px) {
 	.nav_top {
@@ -9069,9 +9228,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
     	background-size: 35px 35px;
 	}
 	.layout_button span.img.all_req {
-		width: 70px;
-		height: 70px;
-		margin: 0;
+		width: 35px; 
+		height: 35px;
+    	background-size: 35px 35px;
 	}
 	div.topnav>div:nth-child(odd) {
 	
@@ -9130,6 +9289,11 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	body>section {
 		height: auto;
 	}
+	.user_header {
+		padding-right: 10px;
+		margin: 0;
+		flex: 0 0 auto;
+	}
 }
 
 @media (max-width: 992px) {
@@ -9145,10 +9309,6 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	span.img.sick, span.img.beach, span.img.books, span.img.overtime{
 	/* 	background-size: 45px 45px; */
 	 	margin-bottom: 0;
-	}
-	.layout_button span.img.all_req {
-		width: 45px;
-		height: 45px;
 	}
 	.layout_button span.img {
 		margin: 0 auto;
@@ -9173,6 +9333,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.shortcut>span.shortcut_text {
 		display: none;
 	}
+	
 	.topnav.nav_top a.shortcut >svg.svg-inline--fa.fa-w-14, .topnav.nav_top a.shortcut >svg.svg-inline--fa.fa-w-16 {
 		position: absolute; 
     top: 50%;
@@ -9200,7 +9361,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		top: 0;
 		overflow: hidden;
 		right: 0;
-		padding: 9px;
+		padding: 10px;
 	}
 	.notices_list {
 		height: auto;
@@ -9214,11 +9375,15 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.user_header .info, .user_header .info>div, .info .layout_button, .container .noticeboard  {
 		height: auto;
 	}
-	.user_header .info, .user_header .info>div, .info .layout_button, .container .calendar>div {
+	.user_header .info, .user_header .info>div, .info .layout_button {
 		height: auto;
 	}
 	.salary>div {
 		padding-bottom: 10px;
+
+	}
+	.shortcuts_container:first-child {
+		padding-bottom: 32px;
 	}
 	.info .layout_button {
 		scroll-padding-top: 10px;
@@ -9233,6 +9398,12 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.topnav >div {
 	  display: none;
 	}
+	.shortcuts_container .profile_images {
+		height: 75px;
+	}
+	.shortcuts_container .profile_img>span {
+		padding: 26px;
+	}
 	.section_top_nav.responsive .topnav >div {
 		display: block;
 	}
@@ -9240,6 +9411,15 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		right: 15px;
     	top: 2px;
 	}
+	.modal.upload span.img_plus  {
+		width: 40px;
+		height: 40px;
+		left: 20%;
+	}
+	.modal.upload span.text_upload {
+		left: 50%;
+	}
+
 	.topnav ul.nav_ul.float_right li.icon {
 	  float: right;
 	  display: block;
@@ -9309,7 +9489,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		margin: auto;
 		width: 100%;
 		max-width: 100%;
-		padding: 20px 0;
+		padding: 10px;
 	}	
 	.index_page .index_main  {
 		float: none;
@@ -9359,30 +9539,13 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.nav_top img {
 		max-height: 40px;
 	}
-	.container .calendar>div {
-		height: auto;
-		width: 98%;
-		padding-top: 0;
-	}
+	
 	ul.nav_ul.float_right li {
 		margin-left: 0px;
 	}
 	.container div.user_header {
 		height: fit-content;
-		/* width: 100%; */
-		/* max-width: 100%; */
-		/* height: auto; */
-		/* top: 0; */
-		/* color: #071E57; */
-		/* text-align: center; */
-		/* padding: 0; */
-		/* right: 0; */
-		/* position: relative; */
-		/* margin:0; */
-		/* padding: 10px; */
-		/* left: 0; */
-		/* right: 0; */
-		/* transform: none; */
+		margin: 0;
 	}
 	.button_nav.active p.button_nav_text {
 		
@@ -9391,18 +9554,13 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	.container .noticeboard, .container .latest_survey {
 		height: auto;
-		padding: 9px;
+		padding: 10px;
 		max-width: 100%;
 		float: none;
+		border-radius: 0;
 	}
-	.container>.posts, .container .latest_survey {
+	.container .latest_survey {
 		padding: 0;
-	}
-	.container .posts, .container .calendar {
-		height: auto;
-		padding-top: 20px;
-		max-width: 100%;
-		float: none;
 	}
 	.container>.posts .all_post {
 		float: none;
@@ -9415,7 +9573,6 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	body section {
 		height: auto;
 	}
-	
 	.user_header .info>div {
 		padding: 10px 0;
 		margin-bottom: 10px;
@@ -9572,13 +9729,11 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.info .layout_button >button:nth-child(odd) {
 		margin-right: 10px;
 	}
-	.container .posts, .container .calendar {
-		padding:8px;
-		margin: auto;
-	}
-
 	.layout_button span.img.all_req {
-		width: 100%;
+		width: 35px;
+		height: 35px;
+		background-size: 35px 35px;
+		margin: auto;
 	}
 }
 .modal-open{overflow:hidden}
@@ -9588,6 +9743,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	top: 15px !important;
     right: 20px !important;
 	background-image: url('../icons/close.png') !important;
+	background-size: 12px 12px;
 	width: 12px !important;
 	height: 12px !important;
 	padding: 10px;
@@ -10601,17 +10757,23 @@ option::selection {
 	background: #1594F0;
 	border-radius: 5px;
 	border: none;
+	cursor: pointer;
+}
+
+.modal-footer .done:hover {
+	color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
 }
 
 .modal-footer .done a {
 	color: white;
 	font-weight: 500;
-	font-size: 0.625rem;
+	font-size: 0.75rem;
 	width: 100%;
     height: 100%;
     display: inline-block;
 	line-height: 40px;
-	
 }
 
 .modal a.btn-close {
@@ -11966,6 +12128,10 @@ input.form-control.date {
 }
 
 @media (max-width:450px) {
+	.modal a.close-modal {
+		top: 5px !important;
+		right: 10px !important;
+	}
 	input.btn-submit, .btn-next, input.btn-submit_user_create, input.btn-submit_user_edit {
 		margin: 0px;
 		margin-bottom: 15px;
@@ -12715,6 +12881,7 @@ p.terms>span {
 	position: static;
 	transform: none;
 	display: flex;
+	justify-content: center;
 	align-items: center;
 }
 
@@ -12837,14 +13004,16 @@ span.img-success {
 	.container >section {
 		padding-bottom: 10px;
 	}
-	.user_header {
-		padding-right: 10px;
-		margin: 0;
-	}
+
 }
 @media (max-width: 992px) {
 	html, body{
 		font-size: 0.875rem;
+	}
+	.container {
+		display: flex;
+		flex-direction: column;
+		justify-content: start;
 	}
 	.container >section {
 		position: static;
@@ -12862,7 +13031,8 @@ span.img-success {
 		padding-top: 10px;
 		padding-bottom: 5px;
 		max-height: fit-content;
-    	overflow: auto;
+		overflow: auto;
+		flex: 0 0 auto;
 	}
 	
 	.container >section:last-child {
@@ -12911,23 +13081,24 @@ span.img-success {
 	body>.welcome_page { 
 		height: auto;
 	}
-	.container {
+	
+	 {
         scrollbar-width: thin;
 		position: relative;
 		overflow: auto;
 		scrollbar-width: thin;
 		height: calc(100% - 50px);
-		padding: 0 5px;
+		padding: 0;
 		z-index: 0;
+		
 	}    
 	.container >section {
 		padding: 0;
 		height: auto;
-	}
-	
-	html, body{
-		/* font-size: 0.625rem; */
-	}
+	} 
+	.container >section:first-child, .container >section:last-child {
+        margin:0;
+    }
 	body {
 		height: 100%;
 		overflow-y: auto;
@@ -12961,5 +13132,10 @@ span.img-success {
 		margin: auto;
 		left: 15px;
 		width: 95%;
+	}
+}
+@media (max-height: 500px) {
+	.index_page {
+		height: auto;
 	}
 }

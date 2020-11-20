@@ -41,7 +41,7 @@ class TemporaryEmployeeAbsenceMail extends Mailable
         $dani_zahtjev = BasicAbsenceController::daniGO($zahtjev);
 
         return $this->view('Centaur::email.temporaryEmployeeRequest')
-                    ->subject( __('emailing.new_temporary_employee') )
+                    ->subject( __('emailing.new_absence'))
                     ->with([
                         'temporaryEmployeeRequest' => $this->temporaryEmployeeRequest,
                         'dani_zahtjev' => $dani_zahtjev,

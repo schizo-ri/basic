@@ -192,37 +192,39 @@
 					</div>
 				</div>
 				<div class="comming_agenda">
-					@if(in_array('Kalendar', $moduli))
-						@if(isset($employee))
-							<a class="btn btn-primary btn-lg btn-new" href="{{ route('events.create') }}" rel="modal:open">
-								<i style="font-size:11px" class="fa">&#xf067;</i>
-							</a>
-						@endif
-						<h2 class="agenda_title">@lang('calendar.your_agenda') </h2>
-						<div class="all_agenda">
-							@if( isset($employee) && (isset($events) && count($events)>0) || ( isset($tasks) && count($tasks) > 0) )
-								@foreach($events->take(5) as $event)
-									<p class="agenda" id="{{ $event->date }}">
-										<span class="agenda_mark"><span class="green"></span></span>
-										<span class="agenda_time">{{ date('H:i',strtotime($event->time1)) }}<br><span>{{ date('H:i',strtotime($event->time2)) }}</span></span>
-										<span class="agenda_comment">{{ $event->description }}</span>
-									</p>
-								@endforeach
-								@foreach($tasks->take(5) as $task)
-									<p class="agenda" id="{{ $task->date }}">
-										<span class="agenda_mark"><span class="green"></span></span>
-										<span class="agenda_time">{{ date('H:i',strtotime($task->time1)) }}<br><span>{{ date('H:i',strtotime($task->time2)) }}</span></span>
-										<span class="agenda_comment">{{ $task->title . ' - ' }} {{ $task->description }}{!! $task->car_id ? ', ' . $task->car['registration']  : '' !!}</span>
-									</p>
-								@endforeach
-							@else
-								<div class="placeholder">
-									<img class="" src="{{ URL::asset('icons/placeholder_calendar.png') }}" alt="Placeholder image" />
-									<p><span>@lang('basic.no_schedule')</span></p>
-								</div>
+					<section>
+						@if(in_array('Kalendar', $moduli))
+							@if(isset($employee))
+								<a class="btn btn-primary btn-lg btn-new" href="{{ route('events.create') }}" rel="modal:open">
+									<i style="font-size:11px" class="fa">&#xf067;</i>
+								</a>
 							@endif
-						</div>
-					@endif
+							<h2 class="agenda_title">@lang('calendar.your_agenda') </h2>
+							<div class="all_agenda">
+								@if( isset($employee) && (isset($events) && count($events)>0) || ( isset($tasks) && count($tasks) > 0) )
+									@foreach($events->take(5) as $event)
+										<p class="agenda" id="{{ $event->date }}">
+											<span class="agenda_mark"><span class="green"></span></span>
+											<span class="agenda_time">{{ date('H:i',strtotime($event->time1)) }}<br><span>{{ date('H:i',strtotime($event->time2)) }}</span></span>
+											<span class="agenda_comment">{{ $event->description }}</span>
+										</p>
+									@endforeach
+									@foreach($tasks->take(5) as $task)
+										<p class="agenda" id="{{ $task->date }}">
+											<span class="agenda_mark"><span class="green"></span></span>
+											<span class="agenda_time">{{ date('H:i',strtotime($task->time1)) }}<br><span>{{ date('H:i',strtotime($task->time2)) }}</span></span>
+											<span class="agenda_comment">{{ $task->title . ' - ' }} {{ $task->description }}{!! $task->car_id ? ', ' . $task->car['registration']  : '' !!}</span>
+										</p>
+									@endforeach
+								@else
+									<div class="placeholder">
+										<img class="" src="{{ URL::asset('icons/placeholder_calendar.png') }}" alt="Placeholder image" />
+										<p><span>@lang('basic.no_schedule')</span></p>
+									</div>
+								@endif
+							</div>
+						@endif
+					</section>
 					
 				</div>
 			</div>

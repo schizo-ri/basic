@@ -1123,8 +1123,11 @@ class BasicAbsenceController extends Controller
 		public function days_offUnused( $user_id ) 
 		{
 			$user = Employee::find($user_id);
-			$days_off = BasicAbsenceController::days_off( $user );
-			$days_offUsed = BasicAbsenceController::days_offUsed($user);
+
+			$days_off = BasicAbsenceController::afterHours_withoutOuts( $user );
+			$days_offUsed = BasicAbsenceController::days_offUsed( $user );
+		/* 	$days_off = BasicAbsenceController::days_off( $user ); */
+		/* 	$days_offUsed = BasicAbsenceController::days_offUsed($user); */
 
 			$unused_days = $days_off - $days_offUsed;
 

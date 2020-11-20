@@ -108,7 +108,7 @@
 												<span class="approve_button" id="nocheckall" >Ukloni oznake</span>
 											</div>
 											<div class="col-3 col-sm-3 col-md-3 float_left">
-												<input class="btn-new btn-approve" type="submit" value="Odobri">
+												<input class="btn-new btn-approve" type="submit" value="Obradi">
 												{{ csrf_field() }}
 											</div>
 										</div>
@@ -136,7 +136,9 @@
 											@foreach ($types as $type)
 												<option value="{{ $type->id }}" >{{ $type->name }}</option>
 											@endforeach
-											<option value="afterhour" >Prekovremeni sati</option>
+											@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
+												<option value="afterhour" >Prekovremeni sati</option>
+											@endif
 										</select>
 									</div>
 									<div class="width_20 float_left padd_l_20">
@@ -160,19 +162,23 @@
 								<table id="index_table" class="display table table-hover sort_1_desc">
 									<thead>
 										<tr>
-											@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )<th>@lang('basic.fl_name')</th>@endif
-											<th class="sort_date">@lang('absence.request_date')</th>
-											<th>@lang('absence.request_type')</th>
-											<th class="sort_date">@lang('absence.start_date')</th>
-											<th class="sort_date">@lang('absence.end_date')</th>
+											@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
+												<th style="max-width:10%;width:10%">@lang('basic.fl_name')</th>
+											@endif
+											{{-- <th class="sort_date">@lang('absence.request_date')</th> --}}
+											<th style="max-width:10%;width:10%">@lang('absence.request_type')</th>
+											<th class="sort_date" style="max-width:7%;width:7%">@lang('absence.start_date')</th>
+											<th class="sort_date absence_end_date" style="max-width:7%;width:7%">@lang('absence.end_date')</th>
 											<!--<th>Period</th>-->
-											<th>@lang('absence.time')</th>
+											<th class="absence_time" style="max-width:7%;width:7%">@lang('absence.time')</th>
 											<th style="max-width:30%;width:30%">@lang('basic.comment')</th>
 											<th style="max-width:10%;width:10%">@lang('absence.approved')</th>
-											<th style="max-width:10%;width:10%">@lang('absence.approve_comment')</th>
+											<th style="max-width:15%;width:15%">@lang('absence.approve_comment')</th>
 											<!--<th>@lang('absence.aproved_by')</th>
 											<th>@lang('absence.aprove_date')</th>-->
-											<th class="not-export-column no-sort">@lang('basic.options')</th>
+											@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
+												<th class="not-export-column no-sort" style="max-width:10%;width:10%">@lang('basic.options')</th>
+											@endif
 										</tr>
 									</thead>
 									<tbody class="overflow_auto">
@@ -200,43 +206,46 @@
 											
 													@endphp
 													<tr class="tr_open_link tr {!! $absence->absence->mark == 'BOL' ? 'bol bol-'.date('Y',strtotime($absence->start_date)) : '' !!}" data-href="/absences/{{ $absence->employee->id }} empl_{{ $absence->employee_id}}" >
-														@if( Sentinel::inRole('administrator') )<td>{{ $absence->employee->user['last_name'] . ' ' . $absence->employee->user['first_name'] }}</td>@endif
-															<td>{{ date('d.m.Y.',strtotime($absence->created_at)) }}</td>
-															<td>{{ '[' . $absence->absence['mark'] . '] ' . $absence->absence['name'] }}</td>
-															<td>{{ date('d.m.Y.',strtotime($absence->start_date))  }}</td>
-															<td>{{  date('d.m.Y.',strtotime($absence->end_date))  }}</td>
-															<!--<td>xx dana</td>-->
-															<td>{!! $absence->absence['mark'] == 'IZL' ? date('H:i',strtotime($absence->start_time)) . '-' .  date('H:i',strtotime($absence->end_time)) :'' !!}</td>
-															<td style="max-width:30%;width:30%">
-																@if( $absence->absence['mark'] != 'IZL' )
-																	[{{ $dani_go }} @lang('absence.days')  {!! $dana_GO_PG ? '| PG: ' .$dana_GO_PG : '' !!} ] 
-																@else
-																	[{{ $hours . ' h, ' . $minutes . ' m'}}]
-																@endif
-																{{ $absence->comment }}
-															</td>
-															<td class="approve not_link"  style="max-width:10%;width:10%">
-																@if($absence->approve == 1) 
-																	<span class="img_approve"><span>@lang('absence.approved')</span></span>
-																@elseif($absence->approve == "0") 
-																	<span class="img_denied"><span>@lang('absence.refused')</span></span>
-																@elseif($absence->approve == null) 
-																	<input type="hidden" name="id[{{ $absence->id}}]" class="id" value="{{ $absence->id}}">
-																	<input type="hidden" name="type[{{ $absence->id}}]" class="id" value="abs">
-																	<input class="check checkinput" type="radio" name="approve[{{ $absence->id}}]" value="1" id="odobreno{{ $absence->id}}" ><label class="check check_label" for="odobreno{{ $absence->id}}">DA</label>
-																	<input class="uncheck checkinput" type="radio" name="approve[{{ $absence->id}}]" value="0" id="neodobreno{{ $absence->id}}" ><label class="uncheck check_label"  for="neodobreno{{ $absence->id}}">NE</label>
-																	<input class="nocheck checkinput" type="radio" name="approve[{{ $absence->id}}]" value="" id="bezodobreno{{ $absence->id}}" ><label class="uncheck check_label"  for="bezodobreno{{ $absence->id}}">-</label>
-																@endif
-															</td>
-															<td class="approve not_link"  style="max-width:10%;width:10%">
-																@if($absence->approve == 1 || $absence->approve == "0") 
-																	{!! $absence->approve_reason ? $absence->approve_reason : '' !!}
-																@elseif($absence->approve == null) 
-																	<textarea class="" type="text" name="approved_reason[{{ $absence->id}}]" rows="2"></textarea>
-																@endif
-															</td>
-															{{-- <td>{!! $absence->approved ? $absence->approved['first_name'] . ' ' . $absence->approved['last_name'] : ''!!}</td> --}}
-															{{-- <td>{{ $absence->approved_date }}</td> --}}
+														@if( Sentinel::inRole('administrator') )
+															<td style="max-width:10%;width:10%">{{ $absence->employee->user['last_name'] . ' ' . $absence->employee->user['first_name'] }}</td>
+														@endif
+														{{-- <td>{{ date('d.m.Y.',strtotime($absence->created_at)) }}</td> --}}
+														<td style="max-width:10%;width:10%">{{ '[' . $absence->absence['mark'] . '] ' . $absence->absence['name'] }}</td>
+														<td style="max-width:7%;width:7%">{{ date('d.m.Y.',strtotime($absence->start_date))  }}</td>
+														<td class="absence_end_date" style="max-width:7%;width:7%">{{  date('d.m.Y.',strtotime($absence->end_date))  }}</td>
+														<!--<td>xx dana</td>-->
+														<td class="absence_time" style="max-width:7%;width:7%" >{!! $absence->absence['mark'] == 'IZL' ? date('H:i',strtotime($absence->start_time)) . '-' .  date('H:i',strtotime($absence->end_time)) :'' !!}</td>
+														<td style="max-width:30%;width:30%">
+															@if( $absence->absence['mark'] != 'IZL' )
+																[{{ $dani_go }} @lang('absence.days')  {!! $dana_GO_PG ? '| PG: ' .$dana_GO_PG : '' !!} ] 
+															@else
+																[{{ $hours . ' h, ' . $minutes . ' m'}}]
+															@endif
+															{{ $absence->comment }}
+														</td>
+														<td class="approve not_link"  style="max-width:15%;width:15%">
+															@if($absence->approve == 1) 
+																<span class="img_approve"><span>@lang('absence.approved')</span></span>
+															@elseif($absence->approve == "0") 
+																<span class="img_denied"><span>@lang('absence.refused')</span></span>
+															@elseif($absence->approve == null) 
+																<input type="hidden" name="id[{{ $absence->id}}]" class="id" value="{{ $absence->id}}">
+																<input type="hidden" name="type[{{ $absence->id}}]" class="id" value="abs">
+																<input class="check checkinput" type="radio" name="approve[{{ $absence->id}}]" value="1" id="odobreno{{ $absence->id}}" ><label class="check check_label" for="odobreno{{ $absence->id}}">DA</label>
+																<input class="uncheck checkinput" type="radio" name="approve[{{ $absence->id}}]" value="0" id="neodobreno{{ $absence->id}}" ><label class="uncheck check_label"  for="neodobreno{{ $absence->id}}">NE</label>
+																<input class="nocheck checkinput" type="radio" name="approve[{{ $absence->id}}]" value="" id="bezodobreno{{ $absence->id}}" ><label class="uncheck check_label"  for="bezodobreno{{ $absence->id}}">-</label>
+															@endif
+														</td>
+														<td class="approve not_link"  style="max-width:10%;width:10%">
+															@if($absence->approve == 1 || $absence->approve == "0") 
+																{!! $absence->approve_reason ? $absence->approve_reason : '' !!}
+															@elseif($absence->approve == null) 
+																<textarea class="" type="text" name="approved_reason[{{ $absence->id}}]" rows="2"></textarea>
+															@endif
+														</td>
+														{{-- <td>{!! $absence->approved ? $absence->approved['first_name'] . ' ' . $absence->approved['last_name'] : ''!!}</td> --}}
+														{{-- <td>{{ $absence->approved_date }}</td> --}}
+														@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
 															<td class="not_link options center">
 																@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep) || Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
 																	<!-- <button class="collapsible option_dots float_r"></button> -->
@@ -254,7 +263,8 @@
 																	</a>
 																@endif
 															</td>
-														</tr>
+														@endif
+													</tr>
 												@endforeach
 											@endif
 											@if(isset( $afterhours ) && count( $afterhours )>0 && Sentinel::inRole('administrator') )
@@ -266,17 +276,17 @@
 														$interval = $interval->format('%H:%I');
 													@endphp
 													<tr class="tr_open_link tr" data-href="/absences/{{ $afterhour->employee->id }} empl_{{ $afterhour->employee_id}}" >
-														<td>{{ $afterhour->employee->user['last_name'] . ' ' . $afterhour->employee->user['first_name'] }}</td>
-														<td>{{ date('d.m.Y.',strtotime($afterhour->created_at)) }}</td>
-														<td>Prekovremeni sati</td>
-														<td>{{ date('d.m.Y.',strtotime($afterhour->date))  }}</td>
-														<td>-</td>
-														<td>{{ date('H:i',strtotime($afterhour->start_time)) . '-' .  date('H:i',strtotime($afterhour->end_time)) }}</td>
+														<td style="max-width:10%;width:10%">{{ $afterhour->employee->user['last_name'] . ' ' . $afterhour->employee->user['first_name'] }}</td>
+														{{-- <td>{{ date('d.m.Y.',strtotime($afterhour->created_at)) }}</td> --}}
+														<td style="max-width:10%;width:10%">Prekovremeni sati</td>
+														<td style="max-width:7%;width:7%">{{ date('d.m.Y.',strtotime($afterhour->date))  }}</td>
+														{{-- <td class="absence_end_date" style="max-width:10%;width:10%">-</td> --}}
+														<td class="absence_time" style="max-width:7%;width:7%">{{ date('H:i',strtotime($afterhour->start_time)) . '-' .  date('H:i',strtotime($afterhour->end_time)) }}</td>
 														<td style="max-width:30%;width:30%">		
 															{!! $afterhour->approve_h ? 'Odobreno: '. $afterhour->approve_h : '' !!} [Traženo: {{ $interval }}]
 															{{ $afterhour->comment }}
 														</td>
-														<td class="not_link approve" style="max-width:10%;width:10%">
+														<td class="not_link approve" style="max-width:15%;width:15%">
 															@if($afterhour->approve == 1) 
 																<span class="img_approve"><span>@lang('absence.approved')</span></span>
 															@elseif($afterhour->approve == '0')
@@ -284,7 +294,7 @@
 															@elseif($afterhour->approve == null)
 																<input type="hidden" name="id[{{ $afterhour->id}}]" class="id" value="{{ $afterhour->id}}">
 																<input type="hidden" name="type[{{ $afterhour->id}}]" class="id" value="aft">
-																<input name="approve_h[{{ $afterhour->id}}]" style="border-radius:5px;" class="odobreno_h[{{ $afterhour->id}}]" type="time" value="{!! isset( $interval ) ? $interval : '00:00' !!}" required><br>
+																<input name="approve_h[{{ $afterhour->id}}]" style="border-radius:5px;" class="odobreno_h[{{ $afterhour->id}}]" type="time" value="{!! isset( $interval ) ? $interval : '00:00' !!}" required>
 																<input class="check checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="1" id="odobreno{{ $afterhour->id}}" ><label class="check check_label" for="odobreno{{ $afterhour->id}}">DA</label>
 																<input class="uncheck checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="0" id="neodobreno{{ $afterhour->id}}" ><label class="uncheck check_label"  for="neodobreno{{ $afterhour->id}}">NE</label>
 																<input class="nocheck checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="" id="bezodobreno{{ $afterhour->id}}" ><label class="uncheck check_label"  for="bezodobreno{{ $afterhour->id}}">-</label>
@@ -299,22 +309,24 @@
 														</td>
 														{{-- <td>{!! $afterhour->approved ? $afterhour->approved['first_name'] . ' ' . $afterhour->approved['last_name'] : ''!!}</td> --}}
 														{{-- <td>{{ $afterhour->approved_date }}</td> --}}
-														<td class="not_link options center">
-															@if(Sentinel::getUser()->hasAccess(['afterhours.update']) || in_array('afterhours.update', $permission_dep) || Sentinel::getUser()->hasAccess(['afterhours.delete']) || in_array('afterhours.delete', $permission_dep))
-																@if(Sentinel::getUser()->hasAccess(['afterhours.update']) || in_array('afterhours.update', $permission_dep))
-																	<a href="{{ route('afterhours.edit', $afterhour->id) }}" class="btn-edit" title="{{ __('afterhour.edit_afterhour')}}" rel="modal:open" >
-																		<i class="far fa-edit"></i>
+														@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
+															<td class="not_link options center" style="max-width:10%;width:10%">
+																@if(Sentinel::getUser()->hasAccess(['afterhours.update']) || in_array('afterhours.update', $permission_dep) || Sentinel::getUser()->hasAccess(['afterhours.delete']) || in_array('afterhours.delete', $permission_dep))
+																	@if(Sentinel::getUser()->hasAccess(['afterhours.update']) || in_array('afterhours.update', $permission_dep))
+																		<a href="{{ route('afterhours.edit', $afterhour->id) }}" class="btn-edit" title="{{ __('afterhour.edit_afterhour')}}" rel="modal:open" >
+																			<i class="far fa-edit"></i>
+																		</a>
+																	@endif
+																	@if(Sentinel::getUser()->hasAccess(['afterhours.delete']) || in_array('afterhours.delete', $permission_dep))
+																		<a href="{{ route('afterhours.destroy', $afterhour->id) }}" class="action_confirm btn-delete danger" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>
+																		{{-- <a href="{{ route('afterhours.destroy', $afterhour->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}"  title="{{ __('afterhour.delete_afterhour')}}" ><i class="far fa-trash-alt"></i></a> --}}
+																	@endif
+																	<a href="{{ route('confirmation_show_after', $afterhour->id) }}" class="btn-edit" title="{{ __('absence.approve_absence')}}" rel="modal:open" >
+																		<i class="far fa-check-square"></i>
 																	</a>
 																@endif
-																@if(Sentinel::getUser()->hasAccess(['afterhours.delete']) || in_array('afterhours.delete', $permission_dep))
-																	<a href="{{ route('afterhours.destroy', $afterhour->id) }}" class="action_confirm btn-delete danger" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>
-																	{{-- <a href="{{ route('afterhours.destroy', $afterhour->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}"  title="{{ __('afterhour.delete_afterhour')}}" ><i class="far fa-trash-alt"></i></a> --}}
-																@endif
-																<a href="{{ route('confirmation_show_after', $afterhour->id) }}" class="btn-edit" title="{{ __('absence.approve_absence')}}" rel="modal:open" >
-																	<i class="far fa-check-square"></i>
-																</a>
-															@endif
-														</td>
+															</td>
+														@endif
 													</tr>
 												@endforeach
 											@endif

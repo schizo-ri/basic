@@ -16,6 +16,8 @@ $(function(){
 		var approve;
 		var form_data;
 		var url_load;
+		var type;
+		var type_text;
 
 		if( $(".all_absences").length > 0 ) {
 			if ( ! $.fn.DataTable.isDataTable( '.all_absences #index_table' ) ) {
@@ -250,6 +252,7 @@ $(function(){
 			employee_id =  $(this).val();
 			if( $('#filter_types').length>0) {
 				type = $('#filter_types').val();
+				type_text = $('#filter_types').find('option:selected').text();
 			} else {
 				type = 'all';
 			}
@@ -276,6 +279,22 @@ $(function(){
 				success: function( response ) {
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','none');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else if (type_text == '') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','none');
+							$('.table-responsive .table tbody td.absence_time').css('display','none');
+						}
 						$.getScript('/../js/absence.js');
 					
 						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
@@ -293,6 +312,8 @@ $(function(){
 		
 		$('#filter_types').on('change',function() {
 			type = $( this ).val();
+			type_text = $( this ).find('option:selected').text();
+			console.log(type_text);
 			if( $('#filter_years').length>0) {
 				month =  $('#filter_years').val();
 			} else {
@@ -322,6 +343,23 @@ $(function(){
 				success: function( response ) {
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
+						
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','none');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else if (type_text == '') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','none');
+							$('.table-responsive .table tbody td.absence_time').css('display','none');
+						}
 						$.getScript('/../js/absence.js');
 					
 						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
@@ -341,6 +379,7 @@ $(function(){
 			month = $( this ).val();
 			if( $('#filter_types').length>0) {
 				type = $('#filter_types').val();
+				type_text = $('#filter_types').find('option:selected').text();
 			} else {
 				type = 'all';
 			}
@@ -365,6 +404,22 @@ $(function(){
 				success: function( response ) {
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','none');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else if (type_text == '') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','none');
+							$('.table-responsive .table tbody td.absence_time').css('display','none');
+						}
 						$.getScript('/../js/absence.js');
 					
 						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
@@ -383,6 +438,7 @@ $(function(){
 		$('#filter_approve').on('change',function() {
 			approve = $( this ).val();
 			type = $('#filter_types').val();
+			type_text = $('#filter_types').find('option:selected').text();
 			month = $('#filter_years').val();
 			employee_id =  $('#filter_employees').val();
 			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
@@ -397,6 +453,22 @@ $(function(){
 				success: function( response ) {
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','none');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else if (type_text == '') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','none');
+							$('.table-responsive .table tbody td.absence_time').css('display','none');
+						}
 						$.getScript('/../js/absence.js');
 					
 						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);

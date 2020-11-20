@@ -209,6 +209,7 @@ Route::resource('travel_expenses', 'TravelExpensesController');
 
 //Shortcut
 Route::resource('shortcuts', 'ShortcutController');
+Route::get('shortcut_exist', ['as' => 'shortcut_exist', 'uses' => 'ShortcutController@shortcutExist']);
 
 // Terminations
 Route::resource('terminations', 'TerminationController');
@@ -252,6 +253,9 @@ Route::resource('kids', 'KidController');
 // Instruction
 Route::resource('instructions', 'InstructionController');
 Route::get('radne_upute', ['as' => 'radne_upute', 'uses' => 'InstructionController@radne_upute']);
+
+// MailTemplate
+Route::resource('mail_templates', 'MailTemplateController');
 
 // Oglasnik
 Route::get('oglasnik', ['as' => 'oglasnik', 'uses' => 'AdController@oglasnik']);

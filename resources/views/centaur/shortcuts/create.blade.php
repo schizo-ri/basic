@@ -9,22 +9,11 @@
 				<input class="form-control" name="title" type="text" value="{{ $title }}" maxlength="30" required />
 				{!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-		{{-- 	<div class="form-group {{ ($errors->has('color')) ? 'has-error' : '' }}">
-				<label>@lang('basic.color')</label>
-				<input class="form-control" name="color" type="color" value="{{ old('color') }}" required />
-				{!! ($errors->has('color') ? $errors->first('color', '<p class="text-danger">:message</p>') : '') !!}
-			</div> --}}
 			<div class="form-group {{ ($errors->has('url'))  ? 'has-error' : '' }}">
 				<label>URL</label>
 				<input class="form-control" name="url" type="url" value="{{ $url }}" readonly/>
 				{!! ($errors->has('url') ? $errors->first('url', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			{{-- <div class="form-group {{ ($errors->has('icon'))  ? 'has-error' : '' }}">
-				<button data-selected="graduation-cap" type="button" class="icp icp-dd btn btn-default dropdown-toggle iconpicker-component iconpicker-element" data-toggle="dropdown">
-					Dropdown <i class="fa fa-fw iconpicker-component"></i>
-					<span class="caret"></span>
-				</button>
-			</div> --}}
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" id="submit" value="{{ __('basic.save')}}">
 		</fieldset>
@@ -32,6 +21,5 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-
 	$.getScript( '/../js/validate.js');
 </script>

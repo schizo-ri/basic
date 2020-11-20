@@ -170,9 +170,6 @@ class NoticeController extends Controller
                                 }
                                 Log::info($all_dep_employee);
                                 foreach (array_unique($all_dep_employee) as $mail) {
-                                    Log::info('Notice image');
-                                    Log::info($mail);
-
                                     Mail::to($mail)->send(new NoticeMail($notice1));
                                 }   
                                 /*   try {               
@@ -201,10 +198,6 @@ class NoticeController extends Controller
                     }
                     Log::info($all_dep_employee);
                     foreach (array_unique($all_dep_employee) as $mail) {
-                    
-                        Log::info('Notice bo image');
-                        Log::info($mail);
-
                         Mail::to($mail)->send(new NoticeMail($notice1));
                     }   
                     /*   try {               
@@ -237,28 +230,34 @@ class NoticeController extends Controller
     {
         $notice = Notice::find($id);
         $employee = Sentinel::getUser()->employee;
-        $employee_id =  $employee->id;
+        if( $employee) {
+            $employee_id =  $employee->id;
 
-        $permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        
-        if( $notice  && ! NoticeStatistic::where('notice_id', $notice->id)->where('employee_id',  $employee_id)->first() ) {
-            $data = array(
-                'employee_id'   => $employee_id,
-                'notice_id'     => $notice->id,
-                'status'  		=> 1
-            );
+            $permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
             
-            $statistic = new NoticeStatistic();
-            $statistic->saveStatistic($data);
-            
-            $notice_statistic = NoticeStatistic::where('notice_id', $notice->id)->get();
-            $count_statistic = count( $notice_statistic);
-            $employees = Employee::employees_firstNameASC();
-            $count_employees = count($employees);
-            $statistic = $count_statistic /  $count_employees *100 ;
+            if( $notice && ! NoticeStatistic::where('notice_id', $notice->id)->where('employee_id',  $employee_id)->first() ) {
+                $data = array(
+                    'employee_id'   => $employee_id,
+                    'notice_id'     => $notice->id,
+                    'status'  		=> 1
+                );
+                
+                $statistic = new NoticeStatistic();
+                $statistic->saveStatistic($data);
+                
+                $notice_statistic = NoticeStatistic::where('notice_id', $notice->id)->get();
+                $count_statistic = count( $notice_statistic);
+                $employees = Employee::employees_firstNameASC();
+                $count_employees = count($employees);
+                $statistic = $count_statistic /  $count_employees *100 ;
+            } else {
+                $statistic = 0;
+            }
         } else {
+            $permission_dep = array();
             $statistic = 0;
         }
+      
         
         return view('Centaur::notices.show', ['notice' => $notice,'permission_dep' => $permission_dep, 'statistic' => $statistic]);
     }
@@ -382,9 +381,6 @@ class NoticeController extends Controller
                             }
                             Log::info($all_dep_employee);
                             foreach (array_unique($all_dep_employee) as $mail) {
-                                Log::info('Notice image - edit');
-                                Log::info($mail);
-
                                 Mail::to($mail)->send(new NoticeMail($notice1));
                             }   
                             /*   try {               
@@ -411,9 +407,6 @@ class NoticeController extends Controller
                 }
                 Log::info($all_dep_employee);
                 foreach (array_unique($all_dep_employee) as $mail) {
-                    Log::info('Notice no image - edit');
-                    Log::info($mail);
-
                     Mail::to($mail)->send(new NoticeMail($notice1));
                 }   
                 /*   try {               

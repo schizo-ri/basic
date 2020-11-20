@@ -11,4 +11,3 @@
 		<small>{{ $educationArticle->employee->user['first_name'] .' | ' . \Carbon\Carbon::createFromTimeStamp(strtotime($educationArticle->created_at))->diffForHumans()  }}</small>		
 	</div>
 </div>
-

@@ -16,6 +16,8 @@ $(function(){
 		var approve;
 		var form_data;
 		var url_load;
+		var type;
+		var type_text;
 
 		if( $(".all_absences").length > 0 ) {
 			if ( ! $.fn.DataTable.isDataTable( '.all_absences #index_table' ) ) {
@@ -250,6 +252,7 @@ $(function(){
 			employee_id =  $(this).val();
 			if( $('#filter_types').length>0) {
 				type = $('#filter_types').val();
+				type_text = $('#filter_types').find('option:selected').text();
 			} else {
 				type = 'all';
 			}
@@ -276,6 +279,22 @@ $(function(){
 				success: function( response ) {
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','none');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else if (type_text == '') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','none');
+							$('.table-responsive .table tbody td.absence_time').css('display','none');
+						}
 						$.getScript('/../js/absence.js');
 					
 						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
@@ -293,6 +312,8 @@ $(function(){
 		
 		$('#filter_types').on('change',function() {
 			type = $( this ).val();
+			type_text = $( this ).find('option:selected').text();
+			console.log(type_text);
 			if( $('#filter_years').length>0) {
 				month =  $('#filter_years').val();
 			} else {
@@ -322,6 +343,23 @@ $(function(){
 				success: function( response ) {
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
+						
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','none');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else if (type_text == '') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','none');
+							$('.table-responsive .table tbody td.absence_time').css('display','none');
+						}
 						$.getScript('/../js/absence.js');
 					
 						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
@@ -341,6 +379,7 @@ $(function(){
 			month = $( this ).val();
 			if( $('#filter_types').length>0) {
 				type = $('#filter_types').val();
+				type_text = $('#filter_types').find('option:selected').text();
 			} else {
 				type = 'all';
 			}
@@ -365,6 +404,22 @@ $(function(){
 				success: function( response ) {
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','none');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else if (type_text == '') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','none');
+							$('.table-responsive .table tbody td.absence_time').css('display','none');
+						}
 						$.getScript('/../js/absence.js');
 					
 						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
@@ -383,6 +438,7 @@ $(function(){
 		$('#filter_approve').on('change',function() {
 			approve = $( this ).val();
 			type = $('#filter_types').val();
+			type_text = $('#filter_types').find('option:selected').text();
 			month = $('#filter_years').val();
 			employee_id =  $('#filter_employees').val();
 			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
@@ -397,6 +453,22 @@ $(function(){
 				success: function( response ) {
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','none');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else if (type_text == '') {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
+						} else {
+							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
+							$('.table-responsive .table thead th.absence_time').css('display','none');
+							$('.table-responsive .table tbody td.absence_time').css('display','none');
+						}
 						$.getScript('/../js/absence.js');
 					
 						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
@@ -561,7 +633,6 @@ $(function(){
 					type: "get",
 					success: function( days_response ) {
 						broj_dana = days_response;
-						
 						if( broj_dana == 0 ) {
                             $('.days_employee').text("Nemoguće poslati zahtjev. Svi su dani iskorišteni!");
 							$('input[name=start_date]').prop('disabled', true);
@@ -853,7 +924,7 @@ $( function () {
 			url: url,
 			type: "GET",
 			success: function( response ) {
-                $('.comming_agenda').load(url + ' .comming_agenda>a, .comming_agenda>h3, .comming_agenda .all_agenda',function(){
+                $('.comming_agenda').load(url + ' .comming_agenda>section',function(){
                     if( $( '.comming_agenda .all_agenda .agenda').length == 0 ) {
                        $('.comming_agenda .placeholder').show();
                     };
@@ -1023,7 +1094,7 @@ $('.campaign_show').on('click',function(e){
             $.modal.defaults = {
                 closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
                 escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-                clickClose: false,       // Allows the user to close the modal by clicking the overlay
+                clickClose: true,       // Allows the user to close the modal by clicking the overlay
                 closeText: 'Close',     // Text content for the close <a> tag.
                 closeClass: '',         // Add additional class(es) to the close <a> tag.
                 showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -2153,10 +2224,12 @@ $(function() {
         init: function(contex) {
             calendar_aside_height = $('.calendar_aside').height();
             calendar_main_height = $('.calendar_main').height();
-            if($('body').width() > 450) {
+            if($('body').width() > 450 && $('body').height() < 768) {
+                $('.index_aside .day_events').height('fit-content');   
+            } else if($('body').width() > 450) {
                 $('.index_aside .day_events').height(calendar_aside_height -calendar_main_height - 110 );   
             } else {
-                $('.index_aside .day_events').height(calendar_aside_height -calendar_main_height - 60 );
+              //  $('.index_aside .day_events').height(calendar_aside_height -calendar_main_height - 60 );
             }
                    
         },
@@ -2967,26 +3040,44 @@ var body_width = $('body').width();
 var url_location = location.href;
 var active_link;
 var url_modul = location.pathname;
+var title;
 url_modul = url_modul.replace("/","");
 url_modul = url_modul.split('/')[0];
 
 $(function(){
-    var class_open;
+    if($('.index_admin').length > 0 ) {
+        var class_open;
     
-    if(body_width > 992) {
-        class_open = $('.admin_link.active_admin').parent().attr('class');
-        if(class_open != undefined && class_open != '') {
-            class_open = "."+class_open.replace(" ",".");
-            $(class_open).show();
+        if(body_width > 992) {
+            class_open = $('.admin_link.active_admin').parent().attr('class');
+            if(class_open != undefined && class_open != '') {
+                class_open = "."+class_open.replace(" ",".");
+                $(class_open).show();
+            }
         }
+    
+        $('.open_menu').on('click', function(e){
+            e.preventDefault();
+            class_open = $( this).attr('id');
+            $('.'+class_open).toggle();
+        });
+        $(".admin_pages a.admin_link").removeClass('disable');
+       /*  console.log( "url_location: " + url_location );
+        console.log( "id: " + id ); */
+        // ako ima shortcut - href edit
+        $.get( "shortcut_exist", {'url': url_location }, function( id ) {
+        
+            if(id != null && id != '') {
+                $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+                $('.shortcut_text').text('Ispravi prečac'); 
+            } else {
+                title = $('.admin_link.active_admin').attr('id');
+    
+                $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url_location+'&title='+title );
+                $('.shortcut_text').text('Dodaj prečac'); 
+            }
+        });
     }
-
-    $('.open_menu').on('click', function(e){
-        e.preventDefault();
-        class_open = $( this).attr('id');
-        $('.'+class_open).toggle();
-    });
-    $(".admin_pages a.admin_link").removeClass('disable');
 });
 
 if($(".index_table_filter .show_button").length == 0) {
@@ -3004,18 +3095,32 @@ $('.admin_pages li>a').not('.open_menu').on('click',function(e) {
     title = click_element.text();
     $("title").text( title ); 
     url = $(this).attr('href');
-   
+ 
+    // ako ima shortcut - href edit
+    $.get( "shortcut_exist", {'url': url }, function( id ) {
+        console.log( "id: " + id );
+        if(id != null && id != '') {
+            $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+            $('.shortcut_text').text('Ispravi prečac'); 
+        } else {
+            title = $('.admin_link.active_admin').attr('id');
+
+            $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url+'&title='+title );
+            $('.shortcut_text').text('Dodaj prečac'); 
+        }
+    });
+
     $('.admin_pages>li>a').removeClass('active_admin');
     $(this).addClass('active_admin');
     active_link = $('.admin_link.active_admin').attr('id');
 
     $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
+        console.log();
         window.history.replaceState({}, document.title, url);
         if ( status == "error" ) {
             var msg = "Sorry but there was an error: ";
             $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
         }
-       
         $.getScript( '/../restfulizer.js');
         $.getScript( '/../js/filter_dropdown.js');
         $.getScript( '/../js/open_modal.js');
@@ -3097,7 +3202,7 @@ $(function() {
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
         escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-        clickClose: false,       // Allows the user to close the modal by clicking the overlay
+        clickClose: true,       // Allows the user to close the modal by clicking the overlay
         closeText: 'Close',     // Text content for the close <a> tag.
         closeClass: '',         // Add additional class(es) to the close <a> tag.
         showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -3114,7 +3219,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -3131,7 +3236,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -3148,7 +3253,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -3166,7 +3271,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -3183,7 +3288,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -3200,7 +3305,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -3217,7 +3322,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -3230,11 +3335,11 @@ $(function() {
             fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
         };
     });
-    $('a.campaign_show[rel="modal:open"]').on('click',function(){  
+    $('a.campaign_show[rel="modal:open"]').on('click',function(){
         $.modal.defaults = { 
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -3251,7 +3356,7 @@ $(function() {
 		$.modal.defaults = {
 			closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
 			escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-			clickClose: false,       // Allows the user to close the modal by clicking the overlay
+			clickClose: true,       // Allows the user to close the modal by clicking the overlay
 			closeText: 'Close',     // Text content for the close <a> tag.
 			closeClass: '',         // Add additional class(es) to the close <a> tag.
 			showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -3268,7 +3373,7 @@ $(function() {
 		$.modal.defaults = {
 			closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
 			escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-			clickClose: false,       // Allows the user to close the modal by clicking the overlay
+			clickClose: true,       // Allows the user to close the modal by clicking the overlay
 			closeText: 'Close',     // Text content for the close <a> tag.
 			closeClass: '',         // Add additional class(es) to the close <a> tag.
 			showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -3288,7 +3393,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,      // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -4383,7 +4488,7 @@ if($('.users_main').length > 0) {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -4400,7 +4505,7 @@ if($('.users_main').length > 0) {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -4417,7 +4522,7 @@ if($('.users_main').length > 0) {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -4564,7 +4669,7 @@ function validate_user_form () {
                     }
                     validate.push("block");
                 } else {
-                    conf_password.parent().find('.validate').text("");     
+                    conf_password.parent().find('.validate').text("");
                     validate.push(true);
                 }
             }
@@ -4579,7 +4684,7 @@ $('input[type="file"]').on('change',function(e){
 
 $('.btn-submit').on('click',function(event){
     /* event.preventDefault(); */
- 
+   
     var form = $(this).parents('form:first');
     let url = $(this).parents('form:first').attr('action');
     var form_data = form.serialize();
@@ -4596,6 +4701,7 @@ $('.btn-submit').on('click',function(event){
        validate = [];
     } else {
         $('.roles_form .checkbox').show();
+      
        /*  $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

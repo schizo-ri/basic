@@ -43,8 +43,6 @@ class AnniversaryCommand extends Command
      */
     public function handle()
     {
-        Log::info('AnniversaryCommand');
-
         $send_to = EmailingController::sendTo('employees','cron');
         array_push($send_to , 'jelena.juras@duplico.hr');
         
@@ -80,7 +78,7 @@ class AnniversaryCommand extends Command
                 $years = $datum2->format('Y') - $date1->format('Y') ; 
                 
                 if($years > 0) {
-                    foreach($send_to as $send_to_mail) {
+                    foreach(array_unique($send_to) as $send_to_mail) {
                         if( $send_to_mail != null & $send_to_mail != '' ) {
                             Mail::to($send_to_mail)->send(new AnniversaryMail( $employee )); 
                         }

@@ -186,7 +186,7 @@ class EducationArticleController extends Controller
 		
 		session()->flash('success', __('ctrl.data_edit'));
 		
-       return redirect()->route('education_articles.index', ['theme_id' => $request['theme_id']]);
+       return redirect()->back();
     }
 
     /**

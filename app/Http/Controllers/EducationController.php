@@ -31,7 +31,7 @@ class EducationController extends Controller
      */
     public function index()
     {
-        $educations = Education::get();
+        $educations = Education::orderBy('name','ASC')->get();
        
         if(! Sentinel::inRole('administrator')) {
             $employee = Sentinel::getUser()->employee;
@@ -107,8 +107,9 @@ class EducationController extends Controller
     public function show($id)
     {
         $education = Education::find($id);
+        $permission_dep = DashboardController::getDepartmentPermission();
 
-        return view('Centaur::educations.show',['education'=>$education]);
+        return view('Centaur::educations.show',[ 'education'=>$education, 'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -160,6 +161,17 @@ class EducationController extends Controller
     public function destroy($id)
     {
         $education = Education::find($id);
+
+        if(count($education->educationThemes) > 0) {
+            foreach($education->educationThemes as $theme) {
+                if(count($theme->educationArticles) > 0) {
+                    foreach($theme->educationArticles as $article) {
+                        $article->delete();
+                    }
+                }
+                $theme->delete();
+            }
+        }
 		$education->delete();
 		
 		$message = session()->flash('success',  __('ctrl.data_delete'));

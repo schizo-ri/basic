@@ -264,6 +264,9 @@ ul.admin_pages li >span.image_template{
         height: 100%;
         overflow: auto;
     }
+    .index_page aside > .admin_panel, .index_page .index_main.admin_main {
+        border-radius: 0;
+    }
     .admin_main .link_back {
         padding: 10px;
         top: 20px;

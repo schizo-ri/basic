@@ -38,11 +38,11 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
        
-       $schedule->command('email:absence_day') 
-                   /* ->dailyAt('7:00')  */
+      /*  $schedule->command('email:absence_day') 
+                   // ->dailyAt('7:00')  
                    ->everyMinute()
                     ->evenInMaintenanceMode();
-       /*  $schedule->command('email:campaign')
+        $schedule->command('email:campaign')
                    ->dailyAt('7:00') 
                    ->evenInMaintenanceMode();
         $schedule->command('notice')
@@ -53,11 +53,12 @@ class Kernel extends ConsoleKernel
                   ->evenInMaintenanceMode(); 
          $schedule->command('car_registration')
                   ->dailyAt('7:00') 
-                  ->evenInMaintenanceMode(); 
+                  ->evenInMaintenanceMode();  */
          $schedule->command('anniversary')
-                  ->dailyAt('7:00') 
+                 ->everyMinute()
+                 /* ->dailyAt('7:00')  */
                   ->evenInMaintenanceMode(); 
-         $schedule->command('medicalExamination')
+      /*    $schedule->command('medicalExamination')
                   ->dailyAt('7:00') 
                   ->evenInMaintenanceMode(); 
          $schedule->command('checkout_employee')

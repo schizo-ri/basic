@@ -12,11 +12,11 @@
                 <a href="{{ route('employees.index') }}" class="line_height_45 admin_link {{ Request::is('employees*') ? 'active_admin' : '' }}" id="employees">@lang('basic.employees')</a>
             </li>
             <li class="first_group hr_links"><span class="space" ></span> 
-                <a href="{{ route('employee_departments.index') }}" class="line_height_45 admin_link {{ Request::is('employee_departments*') ? 'active_admin' : '' }}" id="departments">@lang('basic.employee_departments')</a>
+                <a href="{{ route('employee_departments.index') }}" class="line_height_45 admin_link {{ Request::is('employee_departments*') ? 'active_admin' : '' }}" id="employee_departments">@lang('basic.employee_departments')</a>
             </li>
             @if(in_array('Privremeni', $moduli))  
                 <li class="first_group hr_links"><span class="space" ></span>
-                    <a href="{{ route('temporary_employees.index') }}" class="line_height_45 admin_link {{ Request::is('temporary_employees*') ? 'active_admin' : '' }}" id="temporary_employee_requests">@lang('basic.temporary_employees')</a>
+                    <a href="{{ route('temporary_employees.index') }}" class="line_height_45 admin_link {{ Request::is('temporary_employees*') ? 'active_admin' : '' }}" id="temporary_employees">@lang('basic.temporary_employees')</a>
                 </li>
             @endif
             <li class="first_group hr_links"><span class="space" ></span>
@@ -24,19 +24,19 @@
             </li>
             @if(in_array('Razgovori', $moduli))  
                 <li class="first_group hr_links"><span class="space" ></span>
-                    <a href="{{ route('job_interviews.index') }}" class="line_height_45 admin_link {{ Request::is('job_interviews*') ? 'active_admin' : '' }}" id="employees">@lang('basic.job_interviews')</a>
+                    <a href="{{ route('job_interviews.index') }}" class="line_height_45 admin_link {{ Request::is('job_interviews*') ? 'active_admin' : '' }}" id="job_interviews">@lang('basic.job_interviews')</a>
                 </li>
             @endif
             @if(in_array('Osposobljavanja', $moduli))
                 <li class="first_group hr_links"><span class="space" ></span>
-                    <a href="{{ route('employee_trainings.index') }}" class="line_height_45 admin_link {{ Request::is('employee_trainings*') ? 'active_admin' : '' }}" id="employees">@lang('basic.employee_trainings')</a>
+                    <a href="{{ route('employee_trainings.index') }}" class="line_height_45 admin_link {{ Request::is('employee_trainings*') ? 'active_admin' : '' }}" id="employee_trainings">@lang('basic.employee_trainings')</a>
                 </li>
             @endif
             <li class="first_group hr_links"><span class="space" ></span>
-                <a href="{{ route('employee_terminations.index') }}" class="line_height_45 admin_link {{ Request::is('employee_terminations*') ? 'active_admin' : '' }}" id="employees">@lang('basic.employee_terminations')</a>
+                <a href="{{ route('employee_terminations.index') }}" class="line_height_45 admin_link {{ Request::is('employee_terminations*') ? 'active_admin' : '' }}" id="employee_terminations">@lang('basic.employee_terminations')</a>
             </li>
             <li class="first_group hr_links"><span class="space" ></span>
-                <a href="{{ route('day_offs.index') }}" class="line_height_45 admin_link {{ Request::is('day_offs*') ? 'active_admin' : '' }}" id="employees">@lang('basic.days_off')</a>
+                <a href="{{ route('day_offs.index') }}" class="line_height_45 admin_link {{ Request::is('day_offs*') ? 'active_admin' : '' }}" id="day_offs">@lang('basic.days_off')</a>
             </li>
         <li class="first_group">
             <span class="space" ></span> 
@@ -62,10 +62,10 @@
             <a href="" class="line_height_45 admin_link open_menu" id="project_links" >PROJEKTI <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
         </li>
             <li class="first_group project_links"><span class="space" ></span> 
-                <a href="{{ route('projects.index') }}" class="line_height_45 admin_link {{ Request::is('projects*') ? 'active_admin' : '' }}" id="department_roles">@lang('basic.projects')</a>
+                <a href="{{ route('projects.index') }}" class="line_height_45 admin_link {{ Request::is('projects*') ? 'active_admin' : '' }}" id="projects">@lang('basic.projects')</a>
             </li>
             <li class="first_group project_links"><span class="space" ></span> 
-                <a href="{{ route('customers.index') }}" class="line_height_45 admin_link {{ Request::is('customers*') ? 'active_admin' : '' }}" id="department_roles">@lang('basic.customers')</a>
+                <a href="{{ route('customers.index') }}" class="line_height_45 admin_link {{ Request::is('customers*') ? 'active_admin' : '' }}" id="customers">@lang('basic.customers')</a>
             </li>
         <li class="first_group">
             <span class="space" ></span> 
@@ -128,7 +128,7 @@
                 </li>
             @endif
             <li class="first_group basic_links"><span class="space" ></span>
-                <a href="{{ route('terminations.index') }}"  class="line_height_45 admin_link {{ Request::is('terminations*') ? 'active_admin' : '' }}" id="works">@lang('basic.termination_types')</a>
+                <a href="{{ route('terminations.index') }}"  class="line_height_45 admin_link {{ Request::is('terminations*') ? 'active_admin' : '' }}" id="terminations">@lang('basic.termination_types')</a>
             </li>
         <li class="">
             <span class="image_company" ></span> 
@@ -137,10 +137,14 @@
         <li class="">
             <span class="image_emailings" ></span> 
             <a href="{{ route('emailings.index') }}" class="line_height_61 admin_link {{ Request::is('emailings*') ? 'active_admin' : '' }}" id="emailings">@lang('basic.emailings')</a>
+        </li>
+        <li class="">
+            <span class="space" ></span>
+            <a href="{{ route('mail_templates.index') }}" class="line_height_45 admin_link {{ Request::is('mail_templates*') ? 'active_admin' : '' }}" id="mail_templates">@lang('basic.mail_templates')</a>
         </li>      
         <li class="">
             <span class="image_template" ><i class="far fa-clone"></i></span> 
-            <a href="{{ route('templates.index') }}" class="line_height_61 admin_link {{ Request::is('templates*') ? 'active_admin' : '' }}" id="emailings">@lang('basic.templates')</a>
+            <a href="{{ route('templates.index') }}" class="line_height_61 admin_link {{ Request::is('templates*') ? 'active_admin' : '' }}" id="templates">@lang('basic.templates')</a>
         </li>   
     @endif
     @if (Sentinel::inRole('superadmin') )

@@ -59,10 +59,10 @@
 		<form name="contactform" method="get" target="_blank" action="{{ route('confirmation') }}">
 			<input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="approve_reason" value=""><br>
 			<input type="hidden" name="id" value="{{ $absence->id }}"><br>
-			<input type="radio" name="approve" value="1" checked> @lang('absence.approved')
-			<input type="radio" name="approve" value="0" style="padding-left:20px;">  @lang('absence.not_approved')<br>
+			<input type="radio" name="approve" value="1" id="approve1" style="cursor:pointer" checked> <label for="approve1" style="cursor:pointer"> @lang('absence.approved')</label>
+			<input type="radio" name="approve" value="0" id="approve0" style="padding-left:20px; cursor:pointer"> <label for="approve0" style="cursor:pointer">@lang('absence.not_approve')</label><br>
 			<input type="hidden" name="email" value="1" checked><br>
-			<input class="odobri marg_top_20" type="submit" value="{{ __('basic.send_mail') }}">
+			<input class="odobri marg_top_20" type="submit" value="{{ __('basic.process') }}" style="cursor:pointer">
 		</form>
 	</body>
 </html>

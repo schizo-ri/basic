@@ -55,7 +55,18 @@
 					</tbody>
 				</table>
 			@else
-				<p class="no_data">@lang('basic.no_data')</p>
+			<div class="placeholder">
+				<img class="" src="{{ URL::asset('icons/placeholder_document.png') }}" alt="Placeholder image" />
+				<p> @lang('basic.no_education1')
+					@if(Sentinel::getUser()->hasAccess(["education_articles.create"]) || in_array("education_articles.create", $permission_dep) )
+					@lang('basic.no_education2')
+					<label type="text" class="add_new" rel="modal:open" >
+						<i style="font-size:11px" class="fa">&#xf067;</i>
+					</label>
+						
+					@endif
+				</p>
+			</div>
 			@endif
 		</div>
 	</div>

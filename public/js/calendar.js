@@ -52,7 +52,7 @@ $( function () {
 			url: url,
 			type: "GET",
 			success: function( response ) {
-                $('.comming_agenda').load(url + ' .comming_agenda>a, .comming_agenda>h3, .comming_agenda .all_agenda',function(){
+                $('.comming_agenda').load(url + ' .comming_agenda>section',function(){
                     if( $( '.comming_agenda .all_agenda .agenda').length == 0 ) {
                        $('.comming_agenda .placeholder').show();
                     };

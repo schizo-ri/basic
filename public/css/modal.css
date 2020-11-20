@@ -5,6 +5,7 @@
 	top: 15px !important;
     right: 20px !important;
 	background-image: url('../icons/close.png') !important;
+	background-size: 12px 12px;
 	width: 12px !important;
 	height: 12px !important;
 	padding: 10px;
@@ -1018,17 +1019,23 @@ option::selection {
 	background: #1594F0;
 	border-radius: 5px;
 	border: none;
+	cursor: pointer;
+}
+
+.modal-footer .done:hover {
+	color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
 }
 
 .modal-footer .done a {
 	color: white;
 	font-weight: 500;
-	font-size: 0.625rem;
+	font-size: 0.75rem;
 	width: 100%;
     height: 100%;
     display: inline-block;
 	line-height: 40px;
-	
 }
 
 .modal a.btn-close {
@@ -2383,6 +2390,10 @@ input.form-control.date {
 }
 
 @media (max-width:450px) {
+	.modal a.close-modal {
+		top: 5px !important;
+		right: 10px !important;
+	}
 	input.btn-submit, .btn-next, input.btn-submit_user_create, input.btn-submit_user_edit {
 		margin: 0px;
 		margin-bottom: 15px;

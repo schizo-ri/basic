@@ -131,7 +131,7 @@ function validate_user_form () {
                     }
                     validate.push("block");
                 } else {
-                    conf_password.parent().find('.validate').text("");     
+                    conf_password.parent().find('.validate').text("");
                     validate.push(true);
                 }
             }
@@ -146,7 +146,7 @@ $('input[type="file"]').on('change',function(e){
 
 $('.btn-submit').on('click',function(event){
     /* event.preventDefault(); */
- 
+   
     var form = $(this).parents('form:first');
     let url = $(this).parents('form:first').attr('action');
     var form_data = form.serialize();
@@ -163,6 +163,7 @@ $('.btn-submit').on('click',function(event){
        validate = [];
     } else {
         $('.roles_form .checkbox').show();
+      
        /*  $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

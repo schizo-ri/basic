@@ -23,10 +23,12 @@ $(function() {
         init: function(contex) {
             calendar_aside_height = $('.calendar_aside').height();
             calendar_main_height = $('.calendar_main').height();
-            if($('body').width() > 450) {
+            if($('body').width() > 450 && $('body').height() < 768) {
+                $('.index_aside .day_events').height('fit-content');   
+            } else if($('body').width() > 450) {
                 $('.index_aside .day_events').height(calendar_aside_height -calendar_main_height - 110 );   
             } else {
-                $('.index_aside .day_events').height(calendar_aside_height -calendar_main_height - 60 );
+              //  $('.index_aside .day_events').height(calendar_aside_height -calendar_main_height - 60 );
             }
                    
         },

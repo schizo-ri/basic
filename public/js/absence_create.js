@@ -39,7 +39,6 @@ $(function(){
 					type: "get",
 					success: function( days_response ) {
 						broj_dana = days_response;
-						
 						if( broj_dana == 0 ) {
                             $('.days_employee').text("Nemoguće poslati zahtjev. Svi su dani iskorišteni!");
 							$('input[name=start_date]').prop('disabled', true);

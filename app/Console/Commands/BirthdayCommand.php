@@ -44,8 +44,6 @@ class BirthdayCommand extends Command
      */
     public function handle()
     {
-        Log::info('BirthdayCommand');
-
         $send_to = EmailingController::sendTo('employees','cron');
       /*   $send_to = array('uprava@duplico.hr'); */ 
         array_push($send_to , 'jelena.juras@duplico.hr');

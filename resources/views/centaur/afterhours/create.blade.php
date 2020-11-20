@@ -31,7 +31,7 @@
 		</div>
 		<div class="form-group datum date1 float_l  {{ ($errors->has('date')) ? 'has-error' : '' }}" >
 			<label>@lang('basic.date')</label>
-			<input name="date" id="date" class="form-control" type="date" min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-4 day'), 'Y-m-d') : '' !!}" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
+			<input name="date" id="date" class="form-control" type="date" min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-1 day'), 'Y-m-d') : '' !!}" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
 			{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="col-md-12 clear_l overflow_hidd padd_0" >
@@ -48,7 +48,7 @@
         </div>
 		<div class="form-group clear_l {{ ($errors->has('comment')) ? 'has-error' : '' }}">
 			<label>@lang('basic.comment')</label>
-			<textarea rows="4" name="comment" type="text" class="form-control" value="" maxlength="16535" required>{{ old('comment') }}</textarea>
+			<textarea rows="4" name="comment" type="text" class="form-control" value="" maxlength="16535" required >{{ old('comment') }}</textarea>
 			{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		{{ csrf_field() }}
@@ -57,7 +57,6 @@
 	</form>
 </div>
 <script>
-	
 	$( ".date.form-control" ).change(function() {
 		if( ! $('.role_admin').text()) {
 			var date = $( this ).val();
@@ -75,4 +74,5 @@
 			}
 		}
 	});
+	
 </script>

@@ -607,6 +607,11 @@
 }
 
 @media (max-width: 1024px) {
+    .container .calendar>div {
+        padding: 10px 0;
+        overflow: auto;
+        scrollbar-width: thin;
+    }
     .comming_agenda {
         padding: 15px;
         padding: 10px 30px;
@@ -648,6 +653,18 @@
     }
    
 }
+@media (max-width: 992px) {
+    .container .calendar{
+        margin: 0;
+        padding: 10px 10px;
+        height: auto;
+        flex: 0 0 auto;
+    }
+    .container .posts{
+        height: auto;
+        flex: 0 0 auto;
+    }
+}
 @media (max-width: 768px) {
     .posts_index .posts {
         height: auto;
@@ -658,10 +675,12 @@
         max-width: 100%;
     }
     .container .calendar>div, .container .noticeboard>div {
-		height: auto;
 		margin: auto;
     }
-   
+    .container .calendar>div {
+        height: auto;
+        overflow: hidden;
+    }
     .placeholder, .placeholder_cal {
         display: none;
         position: static;
@@ -738,6 +757,12 @@
 	}
     .container .noticeboard, .container .posts, .container .calendar, .container .calendar>div {
         height: auto;
+        width: 100%;
+    }
+    .container .noticeboard, .container .posts, .container .calendar {
+        margin: 0;
+        box-shadow: none;
+        padding-bottom: 10px;
     }
     .container .noticeboard>div {
         background: #FFFFFF;
@@ -763,16 +788,24 @@
         height: auto;
         margin: auto;
     }    
-    .container .noticeboard, .container .posts, .container .calendar {
+    .container .noticeboard, .container .posts, .container .calendar{
+        height: auto;
         padding: 10px;
+        padding-top: 20px;
+        margin-top: 20px;
         width: 100%;
+        max-width: 100%;
+        float: none;
+        margin: auto;
     }
     .container .calendar>div, .container .posts .all_post {
-     /*   box-shadow: none;*/
         width:100% ;
         padding: 10px 0;
     }
-    
+    .container .calendar>div {
+		height: auto;
+		padding-top: 0;
+	}
     .container .calendar h2, .container .calendar .cal_days, .comming_agenda {
         padding: 0 10px;
         line-height: 26px;
@@ -793,6 +826,7 @@
         top: 40%;
         left: 50%;
         transform: translate(-50%, -50%);
+        display: block;
     }
 }
 

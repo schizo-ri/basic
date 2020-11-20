@@ -5,7 +5,7 @@ $(function() {
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
         escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-        clickClose: false,       // Allows the user to close the modal by clicking the overlay
+        clickClose: true,       // Allows the user to close the modal by clicking the overlay
         closeText: 'Close',     // Text content for the close <a> tag.
         closeClass: '',         // Add additional class(es) to the close <a> tag.
         showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -22,7 +22,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -39,7 +39,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -56,7 +56,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -74,7 +74,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -91,7 +91,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -108,7 +108,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -125,7 +125,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -138,11 +138,11 @@ $(function() {
             fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
         };
     });
-    $('a.campaign_show[rel="modal:open"]').on('click',function(){  
+    $('a.campaign_show[rel="modal:open"]').on('click',function(){
         $.modal.defaults = { 
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,       // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -159,7 +159,7 @@ $(function() {
 		$.modal.defaults = {
 			closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
 			escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-			clickClose: false,       // Allows the user to close the modal by clicking the overlay
+			clickClose: true,       // Allows the user to close the modal by clicking the overlay
 			closeText: 'Close',     // Text content for the close <a> tag.
 			closeClass: '',         // Add additional class(es) to the close <a> tag.
 			showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -176,7 +176,7 @@ $(function() {
 		$.modal.defaults = {
 			closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
 			escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-			clickClose: false,       // Allows the user to close the modal by clicking the overlay
+			clickClose: true,       // Allows the user to close the modal by clicking the overlay
 			closeText: 'Close',     // Text content for the close <a> tag.
 			closeClass: '',         // Add additional class(es) to the close <a> tag.
 			showClose: true,        // Shows a (X) icon/link in the top-right corner
@@ -196,7 +196,7 @@ $(function() {
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-            clickClose: false,       // Allows the user to close the modal by clicking the overlay
+            clickClose: true,      // Allows the user to close the modal by clicking the overlay
             closeText: 'Close',     // Text content for the close <a> tag.
             closeClass: '',         // Add additional class(es) to the close <a> tag.
             showClose: true,        // Shows a (X) icon/link in the top-right corner

@@ -4,26 +4,44 @@ var body_width = $('body').width();
 var url_location = location.href;
 var active_link;
 var url_modul = location.pathname;
+var title;
 url_modul = url_modul.replace("/","");
 url_modul = url_modul.split('/')[0];
 
 $(function(){
-    var class_open;
+    if($('.index_admin').length > 0 ) {
+        var class_open;
     
-    if(body_width > 992) {
-        class_open = $('.admin_link.active_admin').parent().attr('class');
-        if(class_open != undefined && class_open != '') {
-            class_open = "."+class_open.replace(" ",".");
-            $(class_open).show();
+        if(body_width > 992) {
+            class_open = $('.admin_link.active_admin').parent().attr('class');
+            if(class_open != undefined && class_open != '') {
+                class_open = "."+class_open.replace(" ",".");
+                $(class_open).show();
+            }
         }
+    
+        $('.open_menu').on('click', function(e){
+            e.preventDefault();
+            class_open = $( this).attr('id');
+            $('.'+class_open).toggle();
+        });
+        $(".admin_pages a.admin_link").removeClass('disable');
+       /*  console.log( "url_location: " + url_location );
+        console.log( "id: " + id ); */
+        // ako ima shortcut - href edit
+        $.get( "shortcut_exist", {'url': url_location }, function( id ) {
+        
+            if(id != null && id != '') {
+                $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+                $('.shortcut_text').text('Ispravi prečac'); 
+            } else {
+                title = $('.admin_link.active_admin').attr('id');
+    
+                $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url_location+'&title='+title );
+                $('.shortcut_text').text('Dodaj prečac'); 
+            }
+        });
     }
-
-    $('.open_menu').on('click', function(e){
-        e.preventDefault();
-        class_open = $( this).attr('id');
-        $('.'+class_open).toggle();
-    });
-    $(".admin_pages a.admin_link").removeClass('disable');
 });
 
 if($(".index_table_filter .show_button").length == 0) {
@@ -41,18 +59,32 @@ $('.admin_pages li>a').not('.open_menu').on('click',function(e) {
     title = click_element.text();
     $("title").text( title ); 
     url = $(this).attr('href');
-   
+ 
+    // ako ima shortcut - href edit
+    $.get( "shortcut_exist", {'url': url }, function( id ) {
+        console.log( "id: " + id );
+        if(id != null && id != '') {
+            $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+            $('.shortcut_text').text('Ispravi prečac'); 
+        } else {
+            title = $('.admin_link.active_admin').attr('id');
+
+            $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url+'&title='+title );
+            $('.shortcut_text').text('Dodaj prečac'); 
+        }
+    });
+
     $('.admin_pages>li>a').removeClass('active_admin');
     $(this).addClass('active_admin');
     active_link = $('.admin_link.active_admin').attr('id');
 
     $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
+        console.log();
         window.history.replaceState({}, document.title, url);
         if ( status == "error" ) {
             var msg = "Sorry but there was an error: ";
             $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
         }
-       
         $.getScript( '/../restfulizer.js');
         $.getScript( '/../js/filter_dropdown.js');
         $.getScript( '/../js/open_modal.js');

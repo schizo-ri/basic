@@ -283,3 +283,8 @@
         max-width: 19%;
     }
 }
+
+button {
+    cursor: pointer;
+    
+}

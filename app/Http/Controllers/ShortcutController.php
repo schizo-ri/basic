@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Shortcut;
 use App\Models\Table;
 use Sentinel;
+use Log;
 
 class ShortcutController extends Controller
 {
@@ -30,6 +31,25 @@ class ShortcutController extends Controller
         //
     }
 
+    public function shortcutExist (Request $request) 
+    {
+        $employee = Sentinel::getUser()->employee;
+       
+        if( $employee ) {
+            $shortcut = Shortcut::where('employee_id', $employee->id)->where('url', $request['url'])->first();
+            if( $shortcut ) {
+                $shortcut_id = $shortcut->id;
+            } else {
+                $shortcut_id = null;
+            }
+    
+        } else {
+            $shortcut_id = null;
+        }
+       
+        return $shortcut_id;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -38,9 +58,10 @@ class ShortcutController extends Controller
     public function create(Request $request)
     {
         $url =  $request['url'];
-        $title =  str_replace('/','',$request['title']);
+        $title =  str_replace('/','', $request['title']);
 
         $table = Table::where('name', $title)->first();
+        
         if($table) {
             $title = $table->description;
         } else {

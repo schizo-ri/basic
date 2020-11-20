@@ -95,8 +95,14 @@ class EducationThemeController extends Controller
     public function show($id)
     {
         $educationTheme = EducationTheme::find($id);
-      
-        return view('Centaur::education_themes.show',['educationTheme'=>$educationTheme]);
+        $empl = Sentinel::getUser()->employee;
+        $permission_dep = array();
+        
+		if($empl) {
+			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        } 
+
+        return view('Centaur::education_themes.show',['educationTheme'=>$educationTheme, 'permission_dep'=>$permission_dep]);
     }
 
     /**
@@ -145,6 +151,12 @@ class EducationThemeController extends Controller
     public function destroy($id)
     {
         $educationTheme = EducationTheme::find($id);
+        if(count($educationTheme->educationArticles) > 0) {
+            foreach($educationTheme->educationArticles as $article) {
+                $article->delete();
+            }
+        }
+
 		$educationTheme->delete();
 		
 		$message = session()->flash('success',  __('ctrl.data_delete'));

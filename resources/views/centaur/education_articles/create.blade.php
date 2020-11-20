@@ -67,11 +67,7 @@
 				name: 'styles', items: [ 'styleselect' ]
 				},
 			],
-
-			image_list: [
-				{title: 'My image 1', value: 'https://www.example.com/my1.gif'},
-				{title: 'My image 2', value: 'http://www.moxiecode.com/my2.gif'}
-			]		
+	
 		});
 		$('body').on($.modal.CLOSE, function(event, modal) {
 			$.getScript('/../node_modules/tinymce/tinymce.min.js');

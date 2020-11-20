@@ -156,6 +156,7 @@ return [
 	'sent_to_empl'	=> 'Slati djelatnicima',
 	'send_mail'		=> 'Pošalji e-mail',
 	'dont_send_mail'=> 'Ne slati e-mail',
+	'process'	=> 'Obradi',
 	'for'			=> 'za',
 	'view_all'		=> 'Vidi sve',
 	'all_cars'		=> 'Sva vozila',
@@ -220,6 +221,8 @@ return [
 	'no_file1'			=> 'Nema dukumenata',
 	'no_file2'			=> ' klikni na gumb ',
 	'no_file3'			=> ' da bi dodao dokument.',
+	'no_education1'		=> 'Nema edukacija',
+	'no_education2'		=> ', da bi dodao novu klikni na gumb ',
 	'survey1'			=> 'Nema anketa, klikni na gumb ',
 	'survey2'			=> ' da bi kreirao anketu.',
 	'no_absence1'		=> 'Trenutno nema zahtjeva, klikni na gumb ',
@@ -439,7 +442,12 @@ return [
 	'add_day_off'		=> 'Dodaj slobodan dan',
 	'edit_day_off'		=> 'Ispravi slobodan dan',
 	'no_days'			=> 'Broj dana',
-	'add_by_user'		=> 'Dodao djelatnik'
+	'add_by_user'		=> 'Dodao djelatnik',
+	'mail_templates'	=> 'Mail predlošci',
+	'mail_template'		=> 'Mail predložak',
+	'add_mail_templates'=> 'Dodaj mail predložak',
+	'edit_mail_templates'=> 'Ispravi mail predložak',
+	
 ];	
 
 ?>

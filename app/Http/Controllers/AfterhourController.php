@@ -132,7 +132,9 @@ class AfterhourController extends Controller
             }
         } else {
             $request_exist = BasicAbsenceController::afterhoursForDay($request['employee_id'], $request['date'], $request['start_time'], $request['end_time'] );
-           
+            Log::info( 'request_exist:' );
+            Log::info( $request_exist );
+            
             if( $request_exist == false ) {
                 $data = array(
                     'employee_id'  	=> $request['employee_id'],
@@ -146,7 +148,7 @@ class AfterhourController extends Controller
                 $afterHour = new Afterhour();
                 $afterHour->saveAfterhour($data);
            
-                Mail::to($afterHour->employee->email)->send(new AfterHourSendMail($afterHour));
+               /*  Mail::to($afterHour->employee->email)->send(new AfterHourSendMail($afterHour));
     
                 $send_to = EmailingController::sendTo('afterhours', 'create');
              
@@ -154,12 +156,12 @@ class AfterhourController extends Controller
                     if( $send_to_mail != null & $send_to_mail != '' ) {
                         Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterHour)); 
                     }
-                }
+                } */
                 
-                $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
+                /* ZA SADA NE !!!!!   $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
                 if($superior) {
                     Mail::to( $superior->email)->send(new AfterHourInfoMail($afterHour)); 
-                } 
+                }  */
             } else {
                 session()->flash('error',  __('ctrl.request_exist'));
                 return redirect()->back();
@@ -178,7 +180,7 @@ class AfterhourController extends Controller
      */
     public function show($id)
     {
-        
+        //
     }
 
     /**
@@ -224,10 +226,10 @@ class AfterhourController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+        * Remove the specified resource from storage.
+        *
+        * @param  int  $id
+        * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
@@ -276,7 +278,6 @@ class AfterhourController extends Controller
     public function storeConfMulti(Request $request)
     {
         $approve_employee = Sentinel::getUser()->employee;
-        Log::info('storeConfMulti');
         if( is_array($request['id']) ) {
             if( ! isset($request['approve']) ) {
 				$message = session()->flash('error', 'Nemoguće spremiti, nije označeno ni jedno odobrenje.');

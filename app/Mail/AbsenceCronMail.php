@@ -107,8 +107,6 @@ class AbsenceCronMail extends Mailable
                 }
 			}
         }
-        Log::info($day_absences);
-        
         if(count($day_absences)>0) {
             $title = __('absence.absence_for_day') . ' ' . date_format($datum,'d.m.Y');
             return $this->markdown('emails.absences.today_absence')
