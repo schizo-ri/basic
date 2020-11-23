@@ -13,14 +13,13 @@ class DatabaseController extends Controller
    
     public static function create ($name, $url, $client_id) 
     {
-     
         $servername = "localhost";
         $username = "root";
         $password = "";
         
-   /*    $servername = "administracija.duplico.hr";
-      $username = "duplicoh_jelena";
-      $password = "Sifra123jj";
+    /*    $servername = "administracija.duplico.hr";
+        $username = "duplicoh_jelena";
+        $password = "Sifra123jj";
         */
         try {
 
