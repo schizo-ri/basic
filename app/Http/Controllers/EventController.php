@@ -478,7 +478,7 @@ class EventController extends Controller
                     }
                 }
                 
-                $absences = $employee->hasAbsences;
+                $absences = $employee->hasAbsences->where('approve','<>',null);
                 $absences = $absences->filter(function ($absence, $key) use ( $month, $year ) {
                     return (date('m',strtotime($absence->start_date)) == $month && date('Y',strtotime($absence->start_date)) == $year) || (date('m',strtotime($absence->end_date)) == $month && date('Y',strtotime($absence->end_date)) );
                 });

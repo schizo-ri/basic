@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap');
 
+.view_all{
+   color: #57b3f4; 
+}
 .index_page aside > .admin_panel {
     height: 100%;
     clear: both;
@@ -250,7 +253,9 @@ ul.admin_pages li >span.image_template{
         
     }
     .admin_main .link_back {
-        padding: 10px;
+        top: 20px;
+        left: 0;
+        z-index: 1;
     }
     ul.admin_pages {
         padding: 0;

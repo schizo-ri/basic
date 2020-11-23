@@ -61,9 +61,9 @@ class CheckOut extends Command
                     }
                 } */
              
-               /*  if ( $checkOut ) */ {
+               /*  if ( $checkOut ) {
               
-                }  
+                }  */ 
             }
         }
         

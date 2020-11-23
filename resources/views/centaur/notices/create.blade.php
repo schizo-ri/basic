@@ -28,7 +28,7 @@
 		<!-- ICON -->
 			<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
 		<!--Unlayer -->
-			<script src="https://editor.unlayer.com/embed.js"></script>
+            <script src="https://editor.unlayer.com/embed.js"></script>
 		<!--Jquery -->
 			<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
 		

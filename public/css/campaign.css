@@ -13,7 +13,7 @@ body {
     font-family: Montserrat, sans-serif;
     background: inherit;
 }
-form {
+.form_sequence form, form.template_create, form.template_edit, form.form_sequence  {
     height: 100vh;
     width: 100%;
     font-family: Montserrat, sans-serif;

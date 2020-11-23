@@ -192,7 +192,7 @@ $(function() {
       
         e.preventDefault();
         var href = location.origin + $(this).parent().data('href');
-        
+        console.log(href);
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`

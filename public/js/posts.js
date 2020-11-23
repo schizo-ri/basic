@@ -30,16 +30,17 @@ if( $('.posts_index').length > 0) {
         });
         $('.search_post').on('click',function(){
             $('.search_input').show();       
+            $('.search_input input').trigger('focus');       
         });
-        $('.search_input').on('hover',function(){ 
-            mouse_is_inside=true; 
+       /*  $('.search_input').on('hover',function(){ 
+            mouse_is_inside = true; 
         }, function(){ 
-            mouse_is_inside=false; 
+            mouse_is_inside = false; 
         });
         $("body").on('mouseup',function(){ 
             if(! mouse_is_inside) 
                 $('.search_input').hide();
-        });
+        }); */
         url = location.search;
         if(body_width > 768 && location.href.includes('/posts') ) {
             if( url ) {
@@ -52,6 +53,7 @@ if( $('.posts_index').length > 0) {
     });
     
     $('.post_sent .link_back').on('click',function () {
+        console.log('link_back');
         $('.latest_messages').show();
         $('.posts_index .index_main').hide();
     });

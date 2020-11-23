@@ -67,7 +67,6 @@
 											<a href="{{ action('TravelOrderController@close_travel', ['id' => $travel->id]) }}" class="btn-finish close_travel" title="{{ __('basic.finish')}}" >
 												<i class="fas fa-check"></i>
 											</a>
-											
 										@else
 											<a href="{{ action('TravelOrderController@close_travel',  ['id' => $travel->id]) }}" class="btn-edit close_travel" title="{{ __('basic.open_order')}}" >
 												<i class="fas fa-times"></i>

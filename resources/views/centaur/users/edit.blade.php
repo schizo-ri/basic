@@ -3,7 +3,7 @@
     <h3 class="panel-title">@lang('basic.edit_user')</h3>
 </div>
 <div class="modal-body">
-    <form accept-charset="UTF-8" class="form_edit_user" role="form" method="post" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data" >
+    <form accept-charset="UTF-8" class="form_user form_edit_user" role="form" method="post" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data" >
         <div class="first_tab">
             <div class="form-group upload_user_photo">
                 <label class="label_file" for="file">@lang('basic.upload_photo')
@@ -58,7 +58,6 @@
                             </label>
                         
                         @endforeach
-                             
                 </div>
             </div>
                 {{ csrf_field() }}

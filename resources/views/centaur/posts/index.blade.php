@@ -134,13 +134,16 @@
 																$next_comment = PostController::previous($comment->id, $post->id);
 																$next_empl = $next_comment['employee_id'];
 															@endphp
-															@if ( $comment->employee_id == $post->employee_id && $next_empl != $comment->employee_id)
-																{{ $post->to_department->name }} |
+																@if ( $next_empl != $comment->employee_id)
+																	{!! $comment->employee ? $comment->employee->user->first_name . ' ' . $comment->employee->user->last_name : '' !!}
+																@endif
+														{{-- 	@if ( $comment->employee_id == $post->employee_id && $next_empl != $comment->employee_id)
+																{{ $comment->employee->user['first_name'] }} |
 															@else
 																@if( $next_empl != $comment->employee_id )
-																	{{ $comment->employee->user['first_name'] }} |
+																	{{ $comment->toEmployee->user['first_name'] }} |
 																@endif
-															@endif
+															@endif --}}
 															<small>{{ date('d.m.Y H:i', strtotime($comment->created_at )) }}</small>
 														</p>
 														<div class="content">
@@ -235,19 +238,4 @@
 		$('.placeholder').show();
 	});
 </script> 
-{{--  <script>
-   window.laravel_echo_port='{{env("LARAVEL_ECHO_PORT")}}';
-	</script> -->
-	<script type="text/javascript" src="{{ url('/js/socket.io.js') }}"></script> 
-    <script src="//{{ Request::getHost() }}:{{env('LARAVEL_ECHO_PORT')}}/socket.io/socket.io.js"></script>
-    <script src="{{ url('/js/laravel-echo-setup.js') }}" type="text/javascript"></script>
-      
-    <script type="text/javascript">
-        var i = 0;
-        window.Echo.channel('user-channel')
-         .listen('.MessageSendEvent', (data) => {
-            i++;
-            $("#notification").append('<div class="alert alert-success">'+i+'.'+data.title+'</div>');
-        });
-    </script> --}}
 @stop

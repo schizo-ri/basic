@@ -13,7 +13,7 @@
 			<p>@lang('absence.aprove_date'): {!! $absence->approved_date ? date('d.m.Y', strtotime( $absence->approved_date )) : '' !!}</p>
 			<p>
 				@lang('absence.change_approval')
-				<a class="btn1" id="da">@lang('absence.yes')</a>
+				<a class="btn1" href=""  id="da">@lang('absence.yes')</a>
 				<a class="btn1" href="{{ route('dashboard') }}" id="ne" rel="modal:close">@lang('absence.no')</a>
 			</p>
 		</div>

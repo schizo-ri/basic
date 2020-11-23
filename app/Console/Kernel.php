@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\CampaignEmails::class,
         \App\Console\Commands\NoticeSchedule::class,
         \App\Console\Commands\CheckOut::class,
+        \App\Console\Commands\CheckIn::class,
         \App\Console\Commands\CarsRegistration::class,
     ];
 
@@ -28,25 +29,25 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
-       /*  $schedule->command('email:absence_day') */
-                 /*  ->dailyAt('8:00') */
-        /*           ->everyMinute()
+       /*  $schedule->command('email:absence_day') 
+                  ->dailyAt('8:00')
+                 ->everyMinute()
                   ->evenInMaintenanceMode();
         $schedule->command('email:campaign')
                    ->everyMinute()
                    ->evenInMaintenanceMode();
         $schedule->command('notice')
                   ->everyMinute()
-                  ->evenInMaintenanceMode(); */
-       /*  $schedule->command('check_out')
+                  ->evenInMaintenanceMode();  */
+        $schedule->command('check_out')
                   ->everyMinute()
-                  ->evenInMaintenanceMode(); */
-        $schedule->command('car_registration')
+                  ->evenInMaintenanceMode(); 
+         $schedule->command('car_registration')
                   ->everyMinute()
-                  ->evenInMaintenanceMode();
-        
+                  ->evenInMaintenanceMode(); 
+        $schedule->command('check_in')
+                  ->everyMinute()
+                  ->evenInMaintenanceMode(); 
     }
 
     /**

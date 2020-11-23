@@ -104,11 +104,8 @@ class LoccoController extends Controller
        
         /* Upis u evidenciju rada ako je otvoren putni nalog prije 8:15 / 7:00 */
         $now = new DateTime();
-        if( $now->format('N') < 5 ) {
-            $time = '08:00';
-        } else if($now->format('N') == 5) {
-            $time = '07:00';
-        }  
+      
+        $time = '08:00';
         
         $workRecord = WorkRecord::where('employee_id', $request['employee_id'])->whereDate('start', $now->format('Y-m-d'))->first();
         if( ! $workRecord ) {
@@ -316,8 +313,8 @@ class LoccoController extends Controller
                     'travel_id'  => $travelOrder->id,
                 );
                 $locco->updateLocco($data_locco);
-
-                $data_loccoTravel = array(
+                
+             /*    $data_loccoTravel = array(
                     'travel_id'  => $travelOrder->id,
                     'starting_point'  =>  $request['starting_point'],
                     'destination'  =>  $request['km_destination'],
@@ -325,8 +322,8 @@ class LoccoController extends Controller
                 );
 
                 $travelLocco = new TravelLocco();
-                $travelLocco->saveTravelLocco( $data_loccoTravel );
-
+                $travelLocco->saveTravelLocco( $data_loccoTravel ); */
+               
             }
         } else if( $request['travel']) {
             $travelOrder = new TravelOrder();
@@ -337,7 +334,7 @@ class LoccoController extends Controller
             );
             $locco->updateLocco($data_locco);
 
-            $data_loccoTravel = array(
+        /*     $data_loccoTravel = array(
                 'travel_id'  => $travelOrder->id,
                 'starting_point'  =>  $request['starting_point'],
                 'destination'  =>  $request['km_destination'],
@@ -345,7 +342,7 @@ class LoccoController extends Controller
             );
 
             $travelLocco = new TravelLocco();
-            $travelLocco->saveTravelLocco( $data_loccoTravel );
+            $travelLocco->saveTravelLocco( $data_loccoTravel ); */
         }
        
         session()->flash('success',  __('ctrl.data_edit'));

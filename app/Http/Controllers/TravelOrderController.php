@@ -53,7 +53,7 @@ class TravelOrderController extends Controller
             array_push($dates, date('m.Y',strtotime($date)) );
         }
         $dates = array_unique($dates);
-
+        rsort( $dates );
         $empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
         
@@ -299,8 +299,8 @@ class TravelOrderController extends Controller
                 try {
                     Mail::to($send_to_mail)->send(new TravelClose($travel));  
                 } catch (\Throwable $th) {
-                    $message = session()->flash('error', __('emailing.not_send'));
-                    return redirect()->back()->withFlashMessage($message);
+                    $message = "Mail nije poslan, onemogućeno spajanje na mail server";
+                    return $message;
                 }
             }
         }

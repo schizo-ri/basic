@@ -34,7 +34,9 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all_new.css') }}"/>
+		<script>var dt = new Date().getTime();</script>
+		<!-- CSS -->
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all_new.css?random=@dt') }}"/>
 	
 		{{-- Material design --}}
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -79,14 +81,13 @@
 						<ul class="nav_ul float_right">
 							@if (Sentinel::check())
 								@if( $_SERVER['REQUEST_URI'] != '/dashboard')
-									
 										@if (Shortcut::where('url', $url)->first() )
 											<a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i> <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
 										@else
 											<a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
 										@endif
-									
 								@endif
+								@if($countComment_all >0)<li><span class="count_comment"><a class="link_posts" href="#link_posts">{{ $countComment_all }}</a></span></li>@endif
 								@if(! $check )
 									<li class="evidention_check">
 										<form  title="{{__('basic.entry') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}" >
@@ -271,7 +272,7 @@
 			<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
 
 			<!-- Scripts -->
-			<script src="{{URL::asset('/../js/all_new.js') }}"></script>
+			<script src="{{URL::asset('/../js/all_new.js?random=@dt') }}"></script>
 
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>

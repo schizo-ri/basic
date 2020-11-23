@@ -301,9 +301,9 @@ class WorkRecordController extends Controller
             $record->interval = date('H:i',strtotime( $interval->h .':'.$interval->i));
         }
         // zahtjevi za izostanak
-        $absences = Absence::where('employee_id', $employee->id)->whereMonth('start_date', $mjesec )->whereYear('start_date', $godina )->where('approve','<>',null)->get();
-        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_before )->whereYear('start_date', $year_before )->where('approve','<>',null)->get());
-        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_after )->whereYear('start_date', $year_after )->where('approve','<>',null)->get());
+        $absences = Absence::where('employee_id', $employee->id)->whereMonth('start_date', $mjesec )->whereYear('start_date', $godina )->where('approve',1)->get();
+        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_before )->whereYear('start_date', $year_before )->where('approve',1)->get());
+        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_after )->whereYear('start_date', $year_after )->where('approve',1)->get());
      
         $holidays = BasicAbsenceController::holidays();
         $holidaysThisYear = BasicAbsenceController::holidaysThisYear($godina);

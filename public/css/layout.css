@@ -32,8 +32,8 @@ table.dataTable thead th, table.dataTable thead td{
     padding: 0;
     width: auto;
 	height: auto;
-	
 }
+
 #admin_page a.shortcut,#admin_page span.shortcut {
     float: left;
     font-weight: 500;
@@ -51,7 +51,7 @@ table.dataTable thead th, table.dataTable thead td{
 	text-decoration: none;
     font-weight: 600;
     font-size: 0.625rem;
-    color: #606060;
+    color: #57b3f4;
     text-transform: uppercase;
 	line-height: 20px;
 	float: left;
@@ -68,7 +68,18 @@ table.dataTable thead th, table.dataTable thead td{
     margin: 0;
     margin-left: 5px;
 }
-
+.topnav.nav_top a.link_posts {
+	width: 100%;
+    color: white;
+    height: 100%;
+    line-height: 1rem;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.topnav.nav_top li:hover {
+	transform: scale(1.2);
+}
 .disable {
 	pointer-events: none;
    	cursor: default;
@@ -136,9 +147,7 @@ aside.side_nav {
 .topnav a.button_nav:hover {
 	color: #071e57;	
 }
-.button_nav:hover p.button_nav_text {
-	/* color: #6a789a; */
-}
+
 .nav_ul a {
     display: inline-block;
 	width: 100%;
@@ -157,7 +166,6 @@ aside.side_nav {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
 
 .nav_top img {
 	min-height: 25px;
@@ -966,21 +974,30 @@ span.line_btn {
 span.count_comment{
     background: #1594F0;
     color: white;
-    width: 18px;
-    height: 18px;
+    
     display: inline-block;
     text-align: center;
     line-height: 18px;
     border-radius: 50%;
-	margin-left: 20px;
-	position: absolute;
-    left: 0;
-	bottom: 20px;
 	font-style: normal;
 	font-weight: 600;
 	font-size: 8px;
+	display: flex;
+    justify-content: center;
 }
-
+span.count_comment:not(.nav_ul span.count_comment) {
+	position: absolute;
+    left: 0;
+	bottom: 20px;
+	margin-left: 20px;
+	width: 18px;
+    height: 18px;
+}
+.nav_ul span.count_comment {
+	width: 1rem;
+    height: 1rem;
+    align-self: center;
+}
 span.count_post1{
     background: #1594F0;
     color: white;
@@ -1723,8 +1740,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		clear: left;
 		margin: auto;
 		margin-top: 10px;
+		margin-bottom: 15px;
 		top: 0;
-		overflow: hidden;
+		overflow: visible;
 		right: 0;
 		padding: 9px;
 	}
@@ -1740,6 +1758,13 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	.user_header .info, .user_header .info>div, .info .layout_button, .container .calendar>div {
 		height: auto;
+	}
+	.salary>div.shortcuts_container  {
+		width: 100%;
+	}
+	.scroll_button button {
+		width: auto;
+		padding: 0 10px;
 	}
 	.salary>div {
 		padding-bottom: 10px;
@@ -1758,7 +1783,14 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
         padding: 0 10px;
         position: sticky;
         top: 0;
-    }
+	}
+	.salary>div.shortcuts_container {
+		width: 100%;
+	}
+	.scroll_button button {
+		width: auto;
+		padding: 0 10px;
+	}
 	.logo_icon {
 		display: none;
 	}
@@ -1825,7 +1857,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	.container>.posts .all_post {
 		float: none;
-		padding: 20px;
+		padding: 10px;
 		width: 98%;
 		height: auto;
 		margin-bottom: 20px;
@@ -1944,7 +1976,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		clear: left;
 		margin: auto;
 		height: auto;
-		margin: auto;
+		padding: 0 10px;
 	}
 	.user_header .info>div:first-child {
 		width: 100% !important;
@@ -2044,7 +2076,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
   
 @media (max-height: 950px) and (min-width: 450px)  {
     .user_header,.container .posts, .container .calendar {
-		height: 50%;
+		/* height: 50%; */
 	}
     .user_header .info>div:first-child {
         padding: 20px;

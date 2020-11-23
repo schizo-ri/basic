@@ -126,4 +126,15 @@ class TravelOrder extends Model
 	{
 		return $this->update($travelOrder);
 	}	
+
+	/*
+		* Otvoreni putni nalozi na dan
+		* 
+		* @param array $travelOrder
+		* @return void
+	*/
+	public static function openTravelOrders( )
+	{
+		return TravelOrder::where('end_date', null)->get();
+	}
 }

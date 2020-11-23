@@ -506,6 +506,10 @@ span.img-success {
 		left: 20%;
 		top: 15%;
 	}
+	.container {
+		display: flex;
+    	flex-wrap: wrap;
+	}
 }
 
 @media (max-width: 600px) {
@@ -516,7 +520,7 @@ span.img-success {
 
 @media (max-width: 450px)  {
 	.container >section {
-		padding: 0;
+		padding: 0 8px;
 		height: auto;
 	}
 	
@@ -555,7 +559,7 @@ span.img-success {
 		width: 95%;
 	}
 	.container {
-		padding: 0 10px;
+		padding: 0;
 	}
 	p.terms {
 	/* 	position: absolute;

@@ -13,7 +13,6 @@
    
     foreach ($notices as $notice) {
         $notice_dep = explode(',', $notice->to_department);
-
         if(array_intersect($user_department, $notice_dep) ) {
             $notices_user->push( $notice );
         }
@@ -33,7 +32,7 @@
     <div>        
         <div class="notices_list">
             @if(count($notices_user)>0)
-                @foreach ($notices_user->take(10) as $notice)
+                @foreach ($notices_user->take(3) as $notice)
                     <a class="notice_show"  href="{{ route('notices.show', $notice->id) }}" rel="modal:open">
                         <article class="notice">
                             <div class="col-2 float_left">

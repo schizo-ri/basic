@@ -66,11 +66,11 @@
 											$work = $work_records->where('start','>', date('Y-m-d',strtotime($day2)) . ' 00:00:00')->where('start','<', date('Y-m-d',strtotime($day2)). ' 23:59:59')->first();
 											if($work) {
 												$start_time = strtotime($work->start);
-												if($start_time >= strtotime($day2 .' 07:15:00') && $start_time <= strtotime($day2 .' 08:15:00') ) {
+												/* if($start_time >= strtotime($day2 .' 07:15:00') && $start_time <= strtotime($day2 .' 08:15:00') ) { */
 													$start = '08:00';
-												} else {
+											/* 	} else {
 													$start = date('H:i',$start_time );
-												}
+												} */
 											}
 										@endphp
 										<td class="">
@@ -90,17 +90,17 @@
 												if($work->end) {
 													$end_time = strtotime($work->end);
 													if(date('N',strtotime($day2)) < 5 ) {
-														if($end_time >= strtotime($day2 .' 16:15:00') && $end_time <= strtotime($day2 .' 17:00:00') ) {
+													/* 	if($end_time >= strtotime($day2 .' 16:15:00') && $end_time <= strtotime($day2 .' 17:00:00') ) { */
 															$end = '16:15';
-														} else {
+													/* 	} else {
 															$end = date('H:i',$end_time );
-														}
+														} */
 													} else if(date('N',strtotime($day2) ) == 5) {
-														if($end_time >= strtotime($day2 .' 14:45:00') && $end_time <= strtotime($day2 .' 16:00:00') ) {
+													/* 	if($end_time >= strtotime($day2 .' 14:45:00') && $end_time <= strtotime($day2 .' 16:00:00') ) { */
 															$end = '15:00';
-														} else {
+												/* 		} else {
 															$end = date('H:i',$end_time );
-														}
+														} */
 													}
 												}
 											}
@@ -122,14 +122,20 @@
 											$interval = '';
 											$work = $work_records->where('start','>', date('Y-m-d',strtotime($day2)) . ' 00:00:00')->where('start','<', date('Y-m-d',strtotime($day2)). ' 23:59:59')->first();
 											if($work && $work->end) {
-												$start_time = strtotime($work->start);
-												if($start_time >= strtotime($day2 .' 07:15:00') && $start_time <= strtotime($day2 .' 08:15:00') ) {
+												/* $start_time = strtotime($work->start); */
+												$start = date('Y-m-d H:i', strtotime($day2 .' 08:00:00'));
+											/* 	if($start_time >= strtotime($day2 .' 07:15:00') && $start_time <= strtotime($day2 .' 08:15:00') ) {
 													$start = date('Y-m-d H:i', strtotime($day2 .' 08:00:00'));
 												} else {
 													$start = date('Y-m-d H:i', $start_time );
-												}
-												$end_time = strtotime($work->end);
+												} */
+											/* 	$end_time = strtotime($work->end); */
 												if(date('N',strtotime($day2)) < 5 ) {
+													$end = date('Y-m-d H:i', strtotime($day2 .' 16:15:00'));
+												} else if(date('N',strtotime($day2) ) == 5) {
+													$end = date('Y-m-d H:i', strtotime($day2 .' 15:00:00'));
+												}
+												/* if(date('N',strtotime($day2)) < 5 ) {
 													if($end_time >= strtotime($day2 .' 16:15:00') && $end_time <= strtotime($day2 .' 17:00:00') ) {
 														$end = date('Y-m-d H:i', strtotime($day2 .' 16:15:00'));
 													} else {
@@ -141,7 +147,7 @@
 													} else {
 														$end = date('Y-m-d H:i',$end_time );
 													}
-												}
+												} */
 												$interval = AbsenceController::dateDifference($start, $end);
 											} else {
 												$interval = '';

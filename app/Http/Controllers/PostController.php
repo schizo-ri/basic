@@ -364,7 +364,7 @@ class PostController extends Controller
 		//return redirect()->route('admin.posts.index')->withFlashMessage($message);
 	}
 	
-	static function countComment ($post) 
+	static function countComment ( $post ) 
 	{
 		$user = Sentinel::getUser();
 		$employee = $user->employee;
@@ -372,9 +372,10 @@ class PostController extends Controller
 		$comments = $post->comments;
 		
 		$comment_count = 0;
+
 		if( $employee ){
 			$comment_count = $comments->where('to_employee_id', $employee->id)->where('status', 0)->count();
-			$comment_count += $comments->where('to_employee_id', null)->where('status', 0)->count();
+		/* 	$comment_count += $comments->where('to_employee_id', null)->where('status', 0)->count(); */
 		}
 		
 		return $comment_count;
@@ -387,7 +388,8 @@ class PostController extends Controller
 		$comment_count = 0;
 	
 		if( $employee ){
-			$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->orWhere('to_department_id',$employee->work->department->id)->get();
+			$posts = Post::PostToEmployee($employee);
+			
 			foreach($posts as $post) {
 				$count = $post->comments->where('to_employee_id', $employee->id)->where('status',0)->count();
 				$comment_count += $count;

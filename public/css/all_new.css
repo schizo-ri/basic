@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap');
 
+.view_all{
+   color: #57b3f4; 
+}
 .index_page aside > .admin_panel {
     height: 100%;
     clear: both;
@@ -250,7 +253,9 @@ ul.admin_pages li >span.image_template{
         
     }
     .admin_main .link_back {
-        padding: 10px;
+        top: 20px;
+        left: 0;
+        z-index: 1;
     }
     ul.admin_pages {
         padding: 0;
@@ -1238,7 +1243,7 @@ body {
     font-family: Montserrat, sans-serif;
     background: inherit;
 }
-form {
+.form_sequence form, form.template_create, form.template_edit, form.form_sequence  {
     height: 100vh;
     width: 100%;
     font-family: Montserrat, sans-serif;
@@ -1921,7 +1926,7 @@ span.read_post {
     font-weight: 600;
     font-size: 0.625rem;
     text-align: right;
-    color: #606060;
+    color: #57b3f4;
     float: right;
     text-transform: uppercase;
     text-decoration-line: none;
@@ -2314,6 +2319,9 @@ span.read_post {
     
 }
 @media (max-width: 450px) {
+    .container .posts .all_post h2, div#calendar div.header, .container .calendar h2, .container .calendar .cal_days, .comming_agenda {
+        padding: 0;
+    }
     .container .noticeboard h2 {
 		padding-top: 0;
     }
@@ -2366,7 +2374,7 @@ span.read_post {
     }
     
     .container .calendar h2, .container .calendar .cal_days, .comming_agenda {
-        padding: 10px 0;
+        padding: 10px;
     }
     .placeholder_cal>p, .placeholder_cal>img {
         float: none;
@@ -2846,6 +2854,8 @@ img.doc_icons {
     scrollbar-width: thin;
     overscroll-behavior-y: contain;
     padding-right: 15px;
+    min-height: unset;
+
 }
 
 .tabcontent .comments .message {
@@ -3223,7 +3233,9 @@ class="select-css"
     line-height: 14px;
     font-size: 12px;
 }
-
+tr[data-modal] {
+    cursor: pointer;
+}
 .header_calendar .event_day {
     width: 50px;
     height: 50px;
@@ -3246,8 +3258,9 @@ class="select-css"
     text-decoration: none;
 
 }
-.btn1 {
+a.btn1 {
     margin-left: 15px;
+    color: #57b3f4;
 }
 .header_calendar .event_day .week_day {
     font-weight: 700;
@@ -6126,6 +6139,7 @@ a.modal_close {
     }
     .index_page aside.latest_messages>div {
         box-shadow: none;
+        height: auto;
     }
     .index_page.posts_index .index_main  {
         display: none;
@@ -6324,7 +6338,10 @@ a.modal_close {
 }
 
 @media (max-width: 450px) {
-    
+    .posts_index .link_back, .calendar_aside .link_back {
+        position: relative;
+        margin: 0;
+    }
     main.main_campaign {
         height: auto;
         overflow: hidden;
@@ -6485,8 +6502,8 @@ a.modal_close {
         display: none;
     }
     .index_page aside.latest_messages .posts {
-        box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
-        height: calc(100% - 60px);
+        /* box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
+        height: calc(100% - 60px); */
     }
     .index_page {
         overflow: auto;
@@ -6671,8 +6688,15 @@ a.modal_close {
     .tabcontent .comments {
         padding: 10px;
         overflow: auto;
-        max-height: -webkit-fill-available;
+        min-height: calc(100% - 125px);
         height: calc(100% - 125px);
+    }
+    .index_main header.post_sent .link_back {
+        line-height: normal;
+        left: 0;
+    }
+    .form_post input.type_message, .form_post textarea.type_message {
+        line-height: 50px;
     }
     .index_main.profile_main .page-header.header_profile {
         color: #071E57;
@@ -7120,8 +7144,8 @@ table.dataTable thead th, table.dataTable thead td{
     padding: 0;
     width: auto;
 	height: auto;
-	
 }
+
 #admin_page a.shortcut,#admin_page span.shortcut {
     float: left;
     font-weight: 500;
@@ -7139,7 +7163,7 @@ table.dataTable thead th, table.dataTable thead td{
 	text-decoration: none;
     font-weight: 600;
     font-size: 0.625rem;
-    color: #606060;
+    color: #57b3f4;
     text-transform: uppercase;
 	line-height: 20px;
 	float: left;
@@ -7156,7 +7180,18 @@ table.dataTable thead th, table.dataTable thead td{
     margin: 0;
     margin-left: 5px;
 }
-
+.topnav.nav_top a.link_posts {
+	width: 100%;
+    color: white;
+    height: 100%;
+    line-height: 1rem;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.topnav.nav_top li:hover {
+	transform: scale(1.2);
+}
 .disable {
 	pointer-events: none;
    	cursor: default;
@@ -7224,9 +7259,7 @@ aside.side_nav {
 .topnav a.button_nav:hover {
 	color: #071e57;	
 }
-.button_nav:hover p.button_nav_text {
-	/* color: #6a789a; */
-}
+
 .nav_ul a {
     display: inline-block;
 	width: 100%;
@@ -7245,7 +7278,6 @@ aside.side_nav {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
 
 .nav_top img {
 	min-height: 25px;
@@ -8054,21 +8086,30 @@ span.line_btn {
 span.count_comment{
     background: #1594F0;
     color: white;
-    width: 18px;
-    height: 18px;
+    
     display: inline-block;
     text-align: center;
     line-height: 18px;
     border-radius: 50%;
-	margin-left: 20px;
-	position: absolute;
-    left: 0;
-	bottom: 20px;
 	font-style: normal;
 	font-weight: 600;
 	font-size: 8px;
+	display: flex;
+    justify-content: center;
 }
-
+span.count_comment:not(.nav_ul span.count_comment) {
+	position: absolute;
+    left: 0;
+	bottom: 20px;
+	margin-left: 20px;
+	width: 18px;
+    height: 18px;
+}
+.nav_ul span.count_comment {
+	width: 1rem;
+    height: 1rem;
+    align-self: center;
+}
 span.count_post1{
     background: #1594F0;
     color: white;
@@ -8811,8 +8852,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		clear: left;
 		margin: auto;
 		margin-top: 10px;
+		margin-bottom: 15px;
 		top: 0;
-		overflow: hidden;
+		overflow: visible;
 		right: 0;
 		padding: 9px;
 	}
@@ -8828,6 +8870,13 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	.user_header .info, .user_header .info>div, .info .layout_button, .container .calendar>div {
 		height: auto;
+	}
+	.salary>div.shortcuts_container  {
+		width: 100%;
+	}
+	.scroll_button button {
+		width: auto;
+		padding: 0 10px;
 	}
 	.salary>div {
 		padding-bottom: 10px;
@@ -8846,7 +8895,14 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
         padding: 0 10px;
         position: sticky;
         top: 0;
-    }
+	}
+	.salary>div.shortcuts_container {
+		width: 100%;
+	}
+	.scroll_button button {
+		width: auto;
+		padding: 0 10px;
+	}
 	.logo_icon {
 		display: none;
 	}
@@ -8913,7 +8969,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	.container>.posts .all_post {
 		float: none;
-		padding: 20px;
+		padding: 10px;
 		width: 98%;
 		height: auto;
 		margin-bottom: 20px;
@@ -9032,7 +9088,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		clear: left;
 		margin: auto;
 		height: auto;
-		margin: auto;
+		padding: 0 10px;
 	}
 	.user_header .info>div:first-child {
 		width: 100% !important;
@@ -9132,7 +9188,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
   
 @media (max-height: 950px) and (min-width: 450px)  {
     .user_header,.container .posts, .container .calendar {
-		height: 50%;
+		/* height: 50%; */
 	}
     .user_header .info>div:first-child {
         padding: 20px;
@@ -12651,6 +12707,10 @@ span.img-success {
 		left: 20%;
 		top: 15%;
 	}
+	.container {
+		display: flex;
+    	flex-wrap: wrap;
+	}
 }
 
 @media (max-width: 600px) {
@@ -12661,7 +12721,7 @@ span.img-success {
 
 @media (max-width: 450px)  {
 	.container >section {
-		padding: 0;
+		padding: 0 8px;
 		height: auto;
 	}
 	
@@ -12700,7 +12760,7 @@ span.img-success {
 		width: 95%;
 	}
 	.container {
-		padding: 0 10px;
+		padding: 0;
 	}
 	p.terms {
 	/* 	position: absolute;

@@ -92,9 +92,8 @@
 	</main>
 	<script>
 		$(function(){
-		
-		
-			$('tr[data-modal] td:not(:last-child)').on("click", function(e) {
+			/* $('tr[data-modal] td:not(:last-child)').on("click", function(e) {
+				console.log('[data-modal');
 				event.preventDefault();
 				var href = location.origin + $(this).parent().data('href');
 				console.log(href);
@@ -104,8 +103,9 @@
 				$('#login-modal').modal();
 				$('a.close-modal').click(function(){
 					$( "#login-modal" ).empty();
+					$('#login-modal').close();
 				});
-			}); 
+			});  */
 		});
 	</script>
 @stop

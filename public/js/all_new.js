@@ -593,7 +593,7 @@ try {
             }
         },
         id: 'editor-container',
-        projectId: 4441,
+        projectId: 4895,
         displayMode: 'email'
     })
     
@@ -763,7 +763,7 @@ try {
             }
         },
         id: 'editor-container',
-        projectId: 4441,
+        projectId: 4895,
         displayMode: 'email'
     })
     unlayer.loadDesign(design);
@@ -2723,7 +2723,9 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
             timeout: 600000,
             success: function (data) {
                 alert("Obavijest je spremljena!");
-                location.reload();
+                
+                window.location = location.origin;
+
                 $(".btn-submit").prop("disabled", false);
             },
             error: function(jqXhr, json, errorThrown) {
@@ -2819,7 +2821,7 @@ try {
             }
         },
         id: 'editor-container',
-        projectId: 4441,
+        projectId: 4895,
         displayMode: 'email'
     })
     
@@ -2964,6 +2966,105 @@ var active_link;
 var url_modul = location.pathname;
 url_modul = url_modul.replace("/","");
 url_modul = url_modul.split('/')[0];
+
+$(function(){
+    var class_open;
+    
+    if(body_width > 992) {
+        class_open = $('.admin_link.active_admin').parent().attr('class');
+        if(class_open != undefined && class_open != '') {
+            class_open = "."+class_open.replace(" ",".");
+            $(class_open).show();
+        }
+    }
+
+    $('.open_menu').on('click', function(e){
+        e.preventDefault();
+        class_open = $( this).attr('id');
+        $('.'+class_open).toggle();
+    });
+    $(".admin_pages a.admin_link").removeClass('disable');
+});
+
+if($(".index_table_filter .show_button").length == 0) {
+    $('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+} 
+
+var click_element;
+var title;
+var url;
+
+$('.admin_pages li>a').not('.open_menu').on('click',function(e) {
+    $('#login-modal').remove();
+    e.preventDefault();
+    click_element = $(this);
+    title = click_element.text();
+    $("title").text( title ); 
+    url = $(this).attr('href');
+   
+    $('.admin_pages>li>a').removeClass('active_admin');
+    $(this).addClass('active_admin');
+    active_link = $('.admin_link.active_admin').attr('id');
+
+    $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
+        window.history.replaceState({}, document.title, url);
+        if ( status == "error" ) {
+            var msg = "Sorry but there was an error: ";
+            $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
+        }
+       
+        $.getScript( '/../restfulizer.js');
+        $.getScript( '/../js/filter_dropdown.js');
+        $.getScript( '/../js/open_modal.js');
+        $.getScript( '/../js/datatables.js');
+        if (url.includes('/work_records')) {
+            $.getScript( '/../js/work_records.js');
+        } else if(url.includes('/loccos')) {
+            $('a.open_locco').on('click',function(event) {
+                event.preventDefault();
+                click_element = $(this);
+                title = click_element.text();
+                $("title").text( title ); 
+                url = $(this).attr('href');
+
+                $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
+                    window.history.replaceState({}, document.title, url);
+                    if ( status == "error" ) {
+                        var msg = "Sorry but there was an error: ";
+                        $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
+                    }
+                    $.getScript( '/../restfulizer.js');
+                    $.getScript( '/../js/filter_dropdown.js');
+                    $.getScript( '/../js/datatables.js');
+                    $.getScript( '/../js/open_modal.js');
+                });
+                return false;
+            });
+        }
+       
+        if(body_width < 992 ) {
+            $('aside.admin_aside').hide();
+            $('main.admin_main').show();
+        
+            $('.link_back').on('click',function (e) {
+                e.preventDefault();
+                $('aside.admin_aside').show();
+                $('main.admin_main').hide();
+            });
+        }
+    });
+    return false;
+});
+/* 
+
+/* var prev_url = location.href;
+$(".admin_pages a.admin_link").addClass('disable');
+var body_width = $('body').width();
+var url_location = location.href;
+var active_link;
+var url_modul = location.pathname;
+url_modul = url_modul.replace("/","");
+url_modul = url_modul.split('/')[0];
 $(function(){
     if($('.car_links').find('.admin_link').hasClass('active_admin')) {
         $('.car_links').show();
@@ -2975,7 +3076,7 @@ $(function(){
             $('.admin_pages>li>a#emailings').trigger('click');
         
         } else {
-         /*    $('.admin_pages>li>a').first().trigger('click'); */
+         //    $('.admin_pages>li>a').first().trigger('click'); 
         }
     }
     $(".admin_pages a.admin_link").removeClass('disable');
@@ -3040,7 +3141,7 @@ if(body_width < 992) {
         $('aside.admin_aside').show();
         $('main.admin_main').hide();
     });
-}
+} */
 $("a[rel='modal:open']").addClass('disable');
 $(function() {
     $("a[rel='modal:open']").removeClass('disable');
@@ -3235,7 +3336,7 @@ $(function() {
       
         e.preventDefault();
         var href = location.origin + $(this).parent().data('href');
-        
+        console.log(href);
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -3297,16 +3398,17 @@ if( $('.posts_index').length > 0) {
         });
         $('.search_post').on('click',function(){
             $('.search_input').show();       
+            $('.search_input input').trigger('focus');       
         });
-        $('.search_input').on('hover',function(){ 
-            mouse_is_inside=true; 
+       /*  $('.search_input').on('hover',function(){ 
+            mouse_is_inside = true; 
         }, function(){ 
-            mouse_is_inside=false; 
+            mouse_is_inside = false; 
         });
         $("body").on('mouseup',function(){ 
             if(! mouse_is_inside) 
                 $('.search_input').hide();
-        });
+        }); */
         url = location.search;
         if(body_width > 768 && location.href.includes('/posts') ) {
             if( url ) {
@@ -3319,6 +3421,7 @@ if( $('.posts_index').length > 0) {
     });
     
     $('.post_sent .link_back').on('click',function () {
+        console.log('link_back');
         $('.latest_messages').show();
         $('.posts_index .index_main').hide();
     });
@@ -3871,7 +3974,7 @@ try {
             }
         },
         id: 'editor-container',
-        projectId: 4441,
+        projectId: 4895,
         displayMode: 'email'
     })
     
@@ -4014,7 +4117,7 @@ try {
             }
         },
         id: 'editor-container',
-        projectId: 4441,
+        projectId: 4895,
         displayMode: 'email'
     })
     unlayer.setMergeTags({
@@ -4172,8 +4275,7 @@ if(locale == 'en') {
 } else {
     saved = "Podaci su spremljeni";
 }
-$('.close_travel').click(function(e){
-    console.log("close_travel");
+$('.close_travel').on('click',function(e){
     e.preventDefault();
     $.ajaxSetup({
         headers: {
@@ -4181,12 +4283,10 @@ $('.close_travel').click(function(e){
         }
     });
     var url = $(this).attr('href');
-    console.log(url);
     $.ajax({
         url: url,
         type: "get",
         success: function( response ) {
-
             $('tbody').load(location.origin + '/travel_orders' + ' tbody>tr',function(){
                 $.getScript( '/../restfulizer.js');
                 $.getScript( '/../js/travel.js');
@@ -4195,8 +4295,11 @@ $('.close_travel').click(function(e){
         },
         error: function(jqXhr, json, errorThrown) {
             console.log(jqXhr.responseJSON); 
-        }
+            
+            alert("Nešto je pošlo krivo!");
 
+            location.reload();
+        }
     });
 }); 
 //load wifhout refresh pages
@@ -4381,16 +4484,16 @@ $('.remove').on('click',function(){
 var page = $('.admin_pages li').find('a.active_admin');
 var modul_name = $('.admin_pages li').find('a.active_admin').attr('id');
 
-function validate_user_form () {
+function validate_user_form (form) {
     validate = [];
-    $('.roles').on('change',function(event){
+    $(form).find('.roles').on('change',function(event) {
         if( roles.is(':checked')) {
             validate.push(true);
         } else {
             validate.push("block");
         }
     });
-    $( "textarea" ).each(function( index ) {
+    $(form).find( "textarea" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 ) {
                 if( !$( this ).parent().find('.modal_form_group_danger').length) {
@@ -4403,7 +4506,7 @@ function validate_user_form () {
             }
         }
     });
-    $( "input" ).each(function( index ) {
+    $(form).find( "input" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 || $(this).val() == '') {
                 if( ! $( this ).parent().find('.modal_form_group_danger').length) {
@@ -4416,7 +4519,7 @@ function validate_user_form () {
             }
         }      
     });
-    $( "select" ).each(function( index ) {
+    $(form).find( "select" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val() == null || $(this).val() == '' || $(this).val() == '') {
                 if( ! $( this ).parent().find('.modal_form_group_danger').length) {
@@ -4479,12 +4582,12 @@ $('.btn-submit').on('click',function(event){
   
     var url_load = window.location.href;
     var pathname = window.location.pathname;
-    validate_user_form ();
-/* 
+    validate_user_form (form);
+
     console.log(url_load);
     console.log(url); 
     console.log(form_data);
-    console.log(validate); */
+    console.log(validate);
 
     if(validate.includes("block") ) {
        event.preventDefault();

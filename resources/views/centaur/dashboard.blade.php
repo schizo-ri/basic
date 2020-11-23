@@ -204,7 +204,7 @@
 			</div>
 		</section>
 		<section class="col-xs-12 col-sm-12 col-md-12 col-lg-3 float_left posts">
-			<div class="all_post">
+			<div class="all_post" id="link_posts">
 				<div>
 					<h2>
 						@lang('basic.posts')

@@ -434,6 +434,8 @@ img.doc_icons {
     scrollbar-width: thin;
     overscroll-behavior-y: contain;
     padding-right: 15px;
+    min-height: unset;
+
 }
 
 .tabcontent .comments .message {
@@ -811,7 +813,9 @@ class="select-css"
     line-height: 14px;
     font-size: 12px;
 }
-
+tr[data-modal] {
+    cursor: pointer;
+}
 .header_calendar .event_day {
     width: 50px;
     height: 50px;
@@ -834,8 +838,9 @@ class="select-css"
     text-decoration: none;
 
 }
-.btn1 {
+a.btn1 {
     margin-left: 15px;
+    color: #57b3f4;
 }
 .header_calendar .event_day .week_day {
     font-weight: 700;
@@ -3714,6 +3719,7 @@ a.modal_close {
     }
     .index_page aside.latest_messages>div {
         box-shadow: none;
+        height: auto;
     }
     .index_page.posts_index .index_main  {
         display: none;
@@ -3912,7 +3918,10 @@ a.modal_close {
 }
 
 @media (max-width: 450px) {
-    
+    .posts_index .link_back, .calendar_aside .link_back {
+        position: relative;
+        margin: 0;
+    }
     main.main_campaign {
         height: auto;
         overflow: hidden;
@@ -4073,8 +4082,8 @@ a.modal_close {
         display: none;
     }
     .index_page aside.latest_messages .posts {
-        box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
-        height: calc(100% - 60px);
+        /* box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);
+        height: calc(100% - 60px); */
     }
     .index_page {
         overflow: auto;
@@ -4259,8 +4268,15 @@ a.modal_close {
     .tabcontent .comments {
         padding: 10px;
         overflow: auto;
-        max-height: -webkit-fill-available;
+        min-height: calc(100% - 125px);
         height: calc(100% - 125px);
+    }
+    .index_main header.post_sent .link_back {
+        line-height: normal;
+        left: 0;
+    }
+    .form_post input.type_message, .form_post textarea.type_message {
+        line-height: 50px;
     }
     .index_main.profile_main .page-header.header_profile {
         color: #071E57;

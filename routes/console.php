@@ -33,11 +33,14 @@ Artisan::command('email:campaign', function () {
     $this->comment(campaign::quote());
 })->describe('Display an campaign quote');
 
+Artisan::command('check_in', function () {
+    $this->comment(CheckIn::quote());
+})->describe('Display an workrecord quote');
 
 Artisan::command('check_out', function () {
     $this->comment(CheckOut::quote());
 })->describe('Display an workrecord quote');
 
 Artisan::command('car_registration', function () {
-    $this->info("Registracija vozila!");
-});
+    $this->comment(car_registration::quote());
+})->describe('Display an workrecord quote');

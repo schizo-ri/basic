@@ -85,7 +85,9 @@ $('.form_sequence.notice_create .btn-submit').on('click',function(e) {
             timeout: 600000,
             success: function (data) {
                 alert("Obavijest je spremljena!");
-                location.reload();
+                
+                window.location = location.origin;
+
                 $(".btn-submit").prop("disabled", false);
             },
             error: function(jqXhr, json, errorThrown) {

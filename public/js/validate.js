@@ -49,16 +49,16 @@ $('.remove').on('click',function(){
 var page = $('.admin_pages li').find('a.active_admin');
 var modul_name = $('.admin_pages li').find('a.active_admin').attr('id');
 
-function validate_user_form () {
+function validate_user_form (form) {
     validate = [];
-    $('.roles').on('change',function(event){
+    $(form).find('.roles').on('change',function(event) {
         if( roles.is(':checked')) {
             validate.push(true);
         } else {
             validate.push("block");
         }
     });
-    $( "textarea" ).each(function( index ) {
+    $(form).find( "textarea" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 ) {
                 if( !$( this ).parent().find('.modal_form_group_danger').length) {
@@ -71,7 +71,7 @@ function validate_user_form () {
             }
         }
     });
-    $( "input" ).each(function( index ) {
+    $(form).find( "input" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 || $(this).val() == '') {
                 if( ! $( this ).parent().find('.modal_form_group_danger').length) {
@@ -84,7 +84,7 @@ function validate_user_form () {
             }
         }      
     });
-    $( "select" ).each(function( index ) {
+    $(form).find( "select" ).each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val() == null || $(this).val() == '' || $(this).val() == '') {
                 if( ! $( this ).parent().find('.modal_form_group_danger').length) {
@@ -147,12 +147,12 @@ $('.btn-submit').on('click',function(event){
   
     var url_load = window.location.href;
     var pathname = window.location.pathname;
-    validate_user_form ();
-/* 
+    validate_user_form (form);
+
     console.log(url_load);
     console.log(url); 
     console.log(form_data);
-    console.log(validate); */
+    console.log(validate);
 
     if(validate.includes("block") ) {
        event.preventDefault();

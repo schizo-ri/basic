@@ -517,7 +517,7 @@ class NoticeController extends Controller
         if(Sentinel::inRole('administrator')) {
             $notices = Notice::orderBy('created_at', $sort)->get();        
         } else {
-            $notices = NoticeController::getNotice($sort);
+            $notices = NoticeController::getNotice($sort );
         }
 
         $empl = Sentinel::getUser()->employee;
@@ -537,9 +537,9 @@ class NoticeController extends Controller
         return view('Centaur::notices.schedule');
     }
 
-    public static function getNotice ($sort) 
+    public static function getNotice ($sort ) 
     {
-        $notices = Notice::getNotice($sort);
+        $notices = Notice::getNotice( $sort );
        
 
         return $notices;

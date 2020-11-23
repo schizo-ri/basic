@@ -95,10 +95,10 @@
 										<span class="td col-2 align_c dnevnice">{{ $dnevnice }}</span>
 										<span class="td col-2 align_r">
 											@if($dnevnice > 0) 
-												<input name="daily_wage" type="number" class="align_r" step="0.01" value="{{ number_format( $travel->daily_wage, 2, '.', ' ') }}" >
+												<input name="daily_wage" type="number" class="align_r" step="0.01" value="{{ number_format( $travel->daily_wage, 2, '.', '') }}" >
 											@endif
 										</span>
-										<span class="td col-2 align_r total_sum sum_daily_wage">{{ number_format($dnevnice * $travel->daily_wage, 2, '.', ' ') }}</span>
+										<span class="td col-2 align_r total_sum sum_daily_wage">{{ number_format($dnevnice * $travel->daily_wage, 2, '.', '') }}</span>
 									</div>
 								</div>
 							</div>
@@ -121,7 +121,7 @@
 											<span class="td col-3">{{ $locco1->destination }}</span>
 											<span class="td col-2 distance align_c">{{ $locco1->distance }}</span>
 											<span class="td col-2 km_price align_r">{!! $locco1->car['private_car'] == 1 ? 2.00 : '' !!}</span>
-											<span class="td col-2 summary align_r total_sum">{!! $locco1->car['private_car'] == 1 ? number_format($locco1->distance * 2, 2, '.', ' ') : '' !!}</span>
+											<span class="td col-2 summary align_r total_sum">{!! $locco1->car['private_car'] == 1 ? number_format($locco1->distance * 2, 2, '.', '') : '' !!}</span>
 										</div>
 									@endif
 									@if (count($loccos) > 0)
@@ -135,7 +135,7 @@
 												<span class="td col-3"><input class="form-control" name="km_destination[{{$i}}]" type="text" value="{{ $locco->destination }}"  /></span>
 												<span class="td col-2 distance align_c"><input class="form-control align_c" name="distance[{{$i}}]" type="number" value="{{ $locco->distance }}"  /></span>
 												<span class="td col-2 km_price align_r">{!! $travel->car['private_car'] == 1 ? 2.00 : '' !!}</span>
-												<span class="td col-2 summary align_r total_sum">{!! $travel->car['private_car'] == 1 ? number_format($locco->distance * 2, 2, '.', ' ') : '' !!}</span>
+												<span class="td col-2 summary align_r total_sum">{!! $travel->car['private_car'] == 1 ? number_format($locco->distance * 2, 2, '.', '') : '' !!}</span>
 											</div>
 											@php
 												$i++;
@@ -156,7 +156,7 @@
 												<span class="td col-3"><input class="form-control starting_point" name="starting_point[{{$i}}]" type="text" value="{{ old('starting_point') }}"  /></span>
 												<span class="td col-3"><input class="form-control" name="km_destination[{{$i}}]" type="text" value="{{ old('km_destination') }}"  /></span>
 												<span class="td col-2 distance align_c"><input class="form-control align_c" name="distance[{{$i}}]"  type="number" value="{{ old('distance') }}"  /></span>
-												<span class="td col-2 km_price align_r">{!! $travel->car['private_car'] == 1 ? 2.00 : '' !!}</span>
+												<span class="td col-2 km_price align_r"></span>
 												<span class="td col-2 summary align_r total_sum"></span>
 											</div>
 										@endfor
@@ -183,7 +183,7 @@
 											<input type="hidden" name="expence_id[{{ $j }}]" value="{{ $expense->id }}" >
 											<span class="td col-2"><input name="bill[{{ $j }}]" type="text" value="{{ $expense->bill }}" class="bill" ></span>
 											<span class="td col-5"><input name="cost_description[{{ $j }}]" type="text" value="{{ $expense->cost_description }}" class="cost_description" ></span>
-											<span class="td col-2 align_r"><input name="amount[{{ $j }}]" type="number" class="align_r amount" step="0.01" value="{{ number_format($expense->amount, 2, '.', ' ') }}"  ></span>
+											<span class="td col-2 align_r"><input name="amount[{{ $j }}]" type="number" class="align_r amount" step="0.01" value="{{ number_format($expense->amount, 2, '.', '') }}"  ></span>
 											<span class="td col-1 align_c"><input name="currency[{{ $j }}]" type="text" class="align_c currency" value="{{ $expense->currency }}" ></span>
 											<span class="td col-2 align_r total_amount"><input name="total_amount[{{ $j }}]" type="text" class="align_r total_sum " type="number" step="0.01" value="{{ $expense->total_amount }}" ></span>
 										</div>
@@ -210,10 +210,10 @@
 					<p>Primljen predujam dana 
 						<input name="advance_date" type="date" class="form-control align_c" value="{!! $travel->advance_date ? $travel->advance_date : '' !!}" >
 						u iznosu 
-						<input name="advance" type="number" step="0.01" class="form-control align_c" value="{{ number_format( $travel->advance, 2, '.', ' ') }}" id="advance" /> Kn</p>
+						<input name="advance" type="number" step="0.01" class="form-control align_c" value="{{ number_format( $travel->advance, 2, '.', '') }}" id="advance" /> Kn</p>
 					<p>Ostaje za isplatu / povrat <input name="rest_payout" id="rest_payout" type="number" step="0.01" class="form-control align_c" value="" > Kn</p>  
 					
-					{{--  {{ number_format( $travel->rest_payout, 2, '.', ' ')}} --}}
+					{{--  {{ number_format( $travel->rest_payout, 2, '.', '')}} --}}
 					<p>Podnositelj obračuna 
 						<select class="form-control" name="calculate_employee" >
 						<option selected disabled></option>

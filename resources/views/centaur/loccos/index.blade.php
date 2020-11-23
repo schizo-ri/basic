@@ -29,7 +29,7 @@
 					<tbody>
 						@foreach ($cars as $car)
 							<tr>
-								<td><a class="open_locco" href="{{ route('loccos.show', $car->id) }}">{{ $car->manufacturer . ' ' . $car->model . ' ' . $car->registration }}</a></td>
+								<td><a class="admin_link open_locco" href="{{ route('loccos.show', $car->id) }}">{{ $car->manufacturer . ' ' . $car->model . ' ' . $car->registration }}</a></td>
 								<td></td>
 							</tr>
 						@endforeach

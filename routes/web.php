@@ -21,6 +21,7 @@ Route::get('/', function () {
   
 });
 
+
 // Authorization
 Route::get('login', 'Auth\SessionController@getLogin')->name('auth.login.form');
 Route::post('login', 'Auth\SessionController@postLogin')->name('auth.login.attempt');
@@ -62,7 +63,6 @@ Route::resource('works', 'WorkController');
 //WorkRecords
 Route::resource('work_records', 'WorkRecordController');
 Route::get('work_records_table', ['as' => 'work_records_table', 'uses' => 'WorkRecordController@workRecordsTable']);
-
 
 // Employee
 Route::resource('employees', 'EmployeeController');

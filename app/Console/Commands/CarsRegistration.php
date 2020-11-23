@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\EmailingController;
 use App\Models\Car;
 use DateTime;
+use Log;
 
 class CarsRegistration extends Command
 {
@@ -43,16 +44,20 @@ class CarsRegistration extends Command
     public function handle()
     {
         $send_to = EmailingController::sendTo('cars','cron');
+        array_push( $send_to, 'jelena.juras@duplico.hr');
+       
         $today = new DateTime();
         $today->modify('-1 years');
         $today->modify('-14 days');
-      
+       
         $cars = Car::where('last_registration',$today->format('Y-m-d') )->get();
         if( count($cars) > 0) {
+           
             foreach($send_to as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     foreach($cars as $car) {
-                        Mail::to($send_to_mail)->send(new CarsRegistrationMail( $car )); // mailovi upisani u mailing 
+                        Log::info("Cron job CarsRegistration send_to_mail");
+                        Mail::to(trim($send_to_mail))->send(new CarsRegistrationMail( $car )); // mailovi upisani u mailing 
                     }
                 }
             }
