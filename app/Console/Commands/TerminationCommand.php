@@ -46,7 +46,7 @@ class TerminationCommand extends Command
         $send_to = EmailingController::sendTo('employee_terminations','cron');
         Log::info('TerminationCommand');
         foreach ( $employees as $employee ) {
-            foreach($send_to as $send_to_mail) {
+            foreach(array_unique( $send_to ) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     Log::info('send_mail to employee_id' . $employee );
                     Mail::to($send_to_mail)->send(new TermintionMail($employee)); 

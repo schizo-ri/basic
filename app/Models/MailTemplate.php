@@ -9,12 +9,30 @@ class MailTemplate extends Model
     protected $fillable = ['name','for_mail','description'];
     
 	/*
+	* The Eloquent MailStyle model name
+	* 
+	* @var string
+	*/
+	protected static $mailStyleModel = 'App\Models\MailStyle'; 
+
+	/*
+	* Returns the Travel relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasMany
+	*/
+	
+	public function mailStyle()
+	{
+		return $this->hasMany(static::$mailStyleModel,'mail_id');
+	}
+
+	/*
 	* Save MailTemplate
 	* 
 	* @param array $mailTemplate
 	* @return void
 	*/
-	
+
 	public function saveMailTemplate($mailTemplate=array())
 	{
 		return $this->fill($mailTemplate)->save();

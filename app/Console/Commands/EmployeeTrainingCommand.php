@@ -52,7 +52,7 @@ class EmployeeTrainingCommand extends Command
         $employeeTrainings = EmployeeTraining::EmployeeTrainingDate($datum);
 		foreach($employeeTrainings as $employeeTraining) {
             if(  $employeeTraining->employee->checkout == null ) {
-                foreach($send_to as $send_to_mail) {
+                foreach(arryy_unique($send_to) as $send_to_mail) {
                     if( $send_to_mail != null & $send_to_mail != '' ) {
                         Mail::to($send_to_mail)->send(new EmployeeTrainingMail($employeeTraining)); 
                     }

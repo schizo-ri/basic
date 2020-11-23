@@ -111,11 +111,16 @@ class AfterhourController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info( 'AfterhourController store ' . Sentinel::getUser()->last_name );
+            
         $message_exist = '';
         if(is_array($request['employee_id']) && count($request['employee_id'])>0) {
 			foreach($request['employee_id'] as $employee_id){
                 $request_exist = BasicAbsenceController::afterhoursForDay($employee_id, $request['date'], $request['start_time'], $request['end_time'] );
                 
+                Log::info( 'Array: request_exist: '.  $request_exist . ' employee_id '.$employee_id );
+                Log::info( 'Zahtjev poslao ' . Sentinel::getUser()->last_name );
+
                 if( $request_exist == false ) {
                     $data = array(
                         'employee_id'  	=> $employee_id,
@@ -132,8 +137,8 @@ class AfterhourController extends Controller
             }
         } else {
             $request_exist = BasicAbsenceController::afterhoursForDay($request['employee_id'], $request['date'], $request['start_time'], $request['end_time'] );
-            Log::info( 'request_exist:' );
-            Log::info( $request_exist );
+            Log::info( 'Request_exist: '.  $request_exist . ' employee_id '. $request['employee_id']);
+            Log::info( 'Zahtjev poslao ' . Sentinel::getUser()->last_name );
             
             if( $request_exist == false ) {
                 $data = array(
@@ -148,7 +153,7 @@ class AfterhourController extends Controller
                 $afterHour = new Afterhour();
                 $afterHour->saveAfterhour($data);
            
-               /*  Mail::to($afterHour->employee->email)->send(new AfterHourSendMail($afterHour));
+                Mail::to($afterHour->employee->email)->send(new AfterHourSendMail($afterHour));
     
                 $send_to = EmailingController::sendTo('afterhours', 'create');
              
@@ -156,7 +161,7 @@ class AfterhourController extends Controller
                     if( $send_to_mail != null & $send_to_mail != '' ) {
                         Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterHour)); 
                     }
-                } */
+                }
                 
                 /* ZA SADA NE !!!!!   $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
                 if($superior) {
@@ -253,7 +258,7 @@ class AfterhourController extends Controller
     
             $data = array(
                 'approve'  		    =>  intval($request['approve']),
-                'approve_h'  		=>  $request['approve_h'],
+                'approve_h'  		=>  $request['approve'] == 0 ? '00:00:00' : $request['approve_h'],
                 'approved_id'    	=>  $approve_employee ? $approve_employee->id : null,
                 'approved_date'	    =>  date("Y-m-d")
             );
@@ -280,8 +285,8 @@ class AfterhourController extends Controller
         $approve_employee = Sentinel::getUser()->employee;
         if( is_array($request['id']) ) {
             if( ! isset($request['approve']) ) {
-				$message = session()->flash('error', 'Nemoguće spremiti, nije označeno ni jedno odobrenje.');
-				return redirect()->back()->withFlashMessage($message);
+				$message = 'Nemoguće spremiti, nije označeno ni jedno odobrenje.';
+				return $message;
             } 
 
             $count = 0;
@@ -294,7 +299,7 @@ class AfterhourController extends Controller
                         $afterHour = Afterhour::find( $id );
                         $data = array(
                             'approve'  		    => $request['approve'][$key],
-                            'approve_h'  		=> $request['approve_h'][$key],
+                            'approve_h'  		=> $request['approve'][$key] == 0 ? '00:00:00' : $request['approve_h'][$key],
                             'approved_id'    	=> $approve_employee->id,
                             'approved_reason'  	=> $request['approved_reason'][$key],
                             'approved_date'	=> date("Y-m-d")
@@ -343,27 +348,26 @@ class AfterhourController extends Controller
 
                         $send_to_abs = array_diff( $send_to_abs, array(	$approve_employee )); // bez djelatnika koji odobrava
 
-                      /*   try { */
-                            foreach($send_to_abs as $send_to_mail) {
+                      //   try { 
+                            foreach(array_unique( $send_to_abs ) as $send_to_mail) {
                                 if( $send_to_mail != null & $send_to_mail != '' ) {
                                     Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
                                 }
                             }
-                      /*   } catch (\Throwable $th) {
-                            session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
-                            return redirect()->back();
-                        } */
+                      //  } catch (\Throwable $th) {
+                        //    session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+                          //  return redirect()->back();
+                        //} 
                     }
 				}
             }
-            $message = 'Uspješno je odobreno ' . $count . ' zahtjeva!';
+            $message = 'Uspješno je obrađeno ' . $count . ' zahtjeva!';
             return $message;
           /*   return redirect()->back()->withFlashMessage($message); */
         } else {
             return "Greška, nešto nije prošlo dobro";
         }
     }
-
 
     public function confirmation_show_after( $id)
 	{
@@ -387,7 +391,7 @@ class AfterhourController extends Controller
 		$data = array(
 			'approve'  			=>  $request['approve'],
             'approved_id'    	=>  $odobrio_user->id,
-            'approve_h'  		=>  $request['approve_h'],
+            'approve_h'  		=>  $request['approve'] == 0 ? '00:00:00' : $request['approve_h'],
 			'approved_reason'  	=>  $request['approved_reason'],
 			'approved_date'		=>  date('Y-m-d')
 		);

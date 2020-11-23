@@ -13,7 +13,6 @@
 .link_back {
     color: inherit;
     text-decoration: none;
-   
 }
 .calendar_aside .link_back{
     position: absolute;
@@ -25,11 +24,14 @@
     text-decoration: none;
 }
 .index_page h1 {
-  font-weight: 600;
+    font-weight: 600;
     font-size: 1.375rem;
     color: #071E57;
     padding: 27px 20px;
     margin: 0;
+    position: relative;
+    vertical-align: middle;
+    line-height: 26px;
 }
 .campaign_start_date {
     float: right;
@@ -1882,6 +1884,7 @@ footer.ad_footer {
     float: left;
     margin: 0;
     margin-left: 20px;
+    cursor: pointer;
 } 
 .all_absences.table_absences span.show_button {
     float: right;
@@ -2190,11 +2193,11 @@ form.after_form  {
 
   }
   div.search_input {
-    margin: 39px 0;
+    margin: 0;
     height: auto;
-    width: 100%;
+    width: calc(100% - 40px);
     position: absolute;
-    top: 40%;
+    top: 20px;
     padding: 0;
     display: none;
     border: none;
@@ -2202,7 +2205,7 @@ form.after_form  {
   }
   .search_input>input {
     box-shadow: 3px 0 5px rgba(0, 0, 0, 0.15), -3px 0 5px rgba(0, 0, 0, 0.15);
-    width: 95%;
+    width: 100%;
     height: 44px;
     border: none;
     border-radius: 5px;
@@ -2213,11 +2216,11 @@ form.after_form  {
     /* margin: 25px 0; */
   }
   .search_post {
-    background:url(/icons/search.png) no-repeat;
+    background: url(/icons/search.png) no-repeat;
     height: 21px;
     width: 21px;
-    display: inline-block;
     float: right;
+    cursor: pointer;
     margin: 5px 27px 5px 0;
   }
 
@@ -2596,6 +2599,7 @@ main.index_main.main_absence >section {
     width: 22px;
     height: 14px;
     display: inline-block;
+    margin-right: 20px;
 
 }
 .back_to_prev {
@@ -2756,6 +2760,7 @@ main.all_absences >section {
     border: none;
     outline-color: #051847;
     padding: 0 10px;
+    cursor: pointer;
 }
 
 .info_abs .title .year_select option {
@@ -3148,6 +3153,7 @@ button.show_loccos {
     font-size: 0.625rem;
     height: 40px;
     float: right;
+    cursor: pointer;
 }
  .change_view_calendar >option {
     line-height: 20px;
@@ -3706,12 +3712,15 @@ a.modal_close {
 #style_items {
    /*  visibility: hidden; */
 }
+#style_items label>input, #style_items label>select {
+    margin-left: 10px;
+}
 #style_items input, #style_items select {
     border: 1px solid #ccc;
     background: inherit;
     border-radius: 5px;
     padding: 0 10px;
-    margin-left: 10px;
+ 
 }
 #style_items p {
     margin-bottom: 5px;
@@ -3730,19 +3739,19 @@ a.modal_close {
     clear: both;
     overflow: hidden;
 }
-#mail_template #mail_header, #mail_template #mail_footer {
+#mail_template #header, #mail_template #footer {
     height: 10%;
     border: 1px dashed #eee;
     padding: 30px 15px;
     text-align: center;
 }
-#mail_template #mail_header {
+#mail_template #header {
     font-size: 16px;
 }
-#mail_template #mail_footer {
+#mail_template #footer {
     font-size: 12px;
 }
-#mail_template #mail_main {
+#mail_template #body {
     height: 60%;
     border: 1px dashed #eee;
    font-size: 14px;
@@ -3808,13 +3817,19 @@ a.modal_close {
     .index_page aside.latest_messages header.post_header {
         height: 65px;
     }
+    div.search_input {
+        top: 10px;
+    }
     .posts_index .posts {
         height: calc(100% - 75px);
     }
     .index_page h1 {
         line-height: 25px;
-        padding: 20px;
-        font-size: 1.125rem;
+        padding: 20px 10px;
+        font-size: 1rem;
+    }
+    .curve_arrow_left_blue {
+        margin-right: 10px;
     }
     .search_post {
         margin: 3px 10px 3px 0;
@@ -4520,13 +4535,10 @@ a.modal_close {
     .index_aside .day_events .day_events_data>span:first-child {
         width: 100%;
     }
-   
     .latest_messages .search_input {
-        margin: 10px 0;
-        width: 100%;
-        top: 50%;
+        top: 5px;
+        width: calc(100% - 30px);
     }
-   
     .table-responsive .table thead th {
         min-width: 33%;
     }

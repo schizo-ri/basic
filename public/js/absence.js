@@ -485,110 +485,114 @@ $(function(){
 		});	
 		$('.all_absences #index_table_filter').show(); 
 
-	if($(".all_absences #index_table_filter .show_button").length == 0) {
-		$('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
-		$('.show_button').on('click',function () {
-			$('.dt-buttons').toggle();		
-		/* 	console.log("show_button"); */
-		})
-	}
-	
-	$('span#checkall').on('click',function(){
-		$('.check.checkinput').prop('checked',true);
-		$('.uncheck.checkinput').prop('checked',false);
-
-	});
-	$('span#uncheckall').on('click',function(){
-		$('.check.checkinput').prop('checked',false);
-		$('.uncheck.checkinput').prop('checked',true);
-		
-	});
-	$('span#nocheckall').on('click',function(){
-		$('.check.checkinput').prop('checked',false);
-		$('.uncheck.checkinput').prop('checked',false);
-		
-	});
-
-	$('.after_form').on('submit',function(e){
-		if (! confirm("Sigurno želiš odobriti zahtjeve?")) {
-			return false;
-		} else {
-			e.preventDefault();
-			url = $(this).attr('action');
-			form_data = $(this).serialize(); 
-		
-			approve = $( '#filter_approve' ).val();
-			type = $('#filter_types').val();
-			month = $('#filter_years').val();
-			employee_id =  $('#filter_employees').val();
-			url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
-			
-			console.log(url),
-			console.log(form_data); 
-			$.ajax({
-				url: url,
-				type: "post",
-				data: form_data,
-				beforeSend: function(){
-					$('body').prepend('<div id="loader"></div>');
-				},
-				success: function( response ) {
-					$('tbody').load(url_load + " tbody>tr",function(){
-						$('#loader').remove();
-						alert(response);
-					});
-				}, 
-				error: function(xhr,textStatus,thrownError) {
-					console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError);                            
-				}
-			});
+		if($(".all_absences #index_table_filter .show_button").length == 0) {
+			$('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+			$('.show_button').on('click',function () {
+				$('.dt-buttons').toggle();		
+			/* 	console.log("show_button"); */
+			})
 		}
-	}); 
-	$('tr.tr_open_link td:not(.not_link)').on('click', function(e) {
-		e.preventDefault();
-		url = location.origin + $( this ).parent().attr('data-href');
-		console.log(url);
-        window.location = url;
-	});
-	function delete_request () {
-		$('.action_confirm.btn-delete').on('click', function(e) {
-			if (! confirm("Sigurno želiš obrisati zahtjev?")) {
+		
+		$('span#checkall').on('click',function(){
+			$('.check.checkinput').prop('checked',true);
+			$('.uncheck.checkinput').prop('checked',false);
+
+		});
+		$('span#uncheckall').on('click',function(){
+			$('.check.checkinput').prop('checked',false);
+			$('.uncheck.checkinput').prop('checked',true);
+			
+		});
+		$('span#nocheckall').on('click',function(){
+			$('.check.checkinput').prop('checked',false);
+			$('.uncheck.checkinput').prop('checked',false);
+			$('.nocheck.checkinput').prop('checked',false);
+			
+		});
+
+		$('.after_form').on('submit',function(e){
+			var broj_zahtjeva = $('.checkinput:checked').length;
+
+			if (! confirm("Sigurno želiš odobriti "+broj_zahtjeva+" zahtjeva?")) {
+				
 				return false;
 			} else {
 				e.preventDefault();
-				approve = $('#filter_approve').val();
+				url = $(this).attr('action');
+				form_data = $(this).serialize(); 
+			
+				approve = $( '#filter_approve' ).val();
 				type = $('#filter_types').val();
 				month = $('#filter_years').val();
 				employee_id =  $('#filter_employees').val();
-				url_delete = $( this ).attr('href');
 				url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
-				token = $( this ).attr('data-token');
-				$.ajaxSetup({
-					headers: {
-						'_token': token
-					}
-				});
+				
+				console.log(url),
+				console.log(form_data); 
 				$.ajax({
-					url: url_delete,
-					type: 'POST',
-					data: {_method: 'delete', _token :token},
+					url: url,
+					type: "post",
+					data: form_data,
 					beforeSend: function(){
 						$('body').prepend('<div id="loader"></div>');
 					},
-					success: function(result) {
-						$('tbody ').load(url_load + " tbody>tr",function(){
+					success: function( response ) {
+						$('tbody').load(url_load + " tbody>tr",function(){
 							$('#loader').remove();
-							delete_request ();
-						/* 	$.getScript('/../js/absence.js'); */
-							$("#filter_types").find('option[value="'+type+'"]').attr('selected',true);
-							$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
-							$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
-							$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+							alert(response);
 						});
+					}, 
+					error: function(xhr,textStatus,thrownError) {
+						console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError);                            
 					}
 				});
 			}
+		}); 
+		$('tr.tr_open_link td:not(.not_link)').on('click', function(e) {
+			e.preventDefault();
+			url = location.origin + $( this ).parent().attr('data-href');
+			console.log(url);
+			window.location = url;
 		});
+		function delete_request () {
+			$('.action_confirm.btn-delete').on('click', function(e) {
+				if (! confirm("Sigurno želiš obrisati zahtjev?")) {
+					return false;
+				} else {
+					e.preventDefault();
+					approve = $('#filter_approve').val();
+					type = $('#filter_types').val();
+					month = $('#filter_years').val();
+					employee_id =  $('#filter_employees').val();
+					url_delete = $( this ).attr('href');
+					url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
+					token = $( this ).attr('data-token');
+					$.ajaxSetup({
+						headers: {
+							'_token': token
+						}
+					});
+					$.ajax({
+						url: url_delete,
+						type: 'POST',
+						data: {_method: 'delete', _token :token},
+						beforeSend: function(){
+							$('body').prepend('<div id="loader"></div>');
+						},
+						success: function(result) {
+							$('tbody ').load(url_load + " tbody>tr",function(){
+								$('#loader').remove();
+								delete_request ();
+							/* 	$.getScript('/../js/absence.js'); */
+								$("#filter_types").find('option[value="'+type+'"]').attr('selected',true);
+								$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
+								$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
+								$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+							});
+						}
+					});
+				}
+			});
 		}
 	}
 });

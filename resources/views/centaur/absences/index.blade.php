@@ -283,7 +283,7 @@
 														{{-- <td class="absence_end_date" style="max-width:10%;width:10%">-</td> --}}
 														<td class="absence_time" style="max-width:7%;width:7%">{{ date('H:i',strtotime($afterhour->start_time)) . '-' .  date('H:i',strtotime($afterhour->end_time)) }}</td>
 														<td style="max-width:30%;width:30%">		
-															{!! $afterhour->approve_h ? 'Odobreno: '. $afterhour->approve_h : '' !!} [Traženo: {{ $interval }}]
+															{!! $afterhour->approve_h && $afterhour->approve == 1 ? 'Odobreno: '. $afterhour->approve_h : '' !!} [Traženo: {{ $interval }}]
 															{{ $afterhour->comment }}
 														</td>
 														<td class="not_link approve" style="max-width:15%;width:15%">

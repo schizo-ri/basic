@@ -57,7 +57,7 @@ class AnniversaryCommand extends Command
                 $years = $interval->format('%y'); 
                 
                 if($years > 0) {
-                    foreach($send_to as $send_to_mail) {
+                    foreach(array_unique($send_to) as $send_to_mail) {
                         if( $send_to_mail != null & $send_to_mail != '' ) {
                             Mail::to($send_to_mail)->send(new AnniversaryMail( $employee )); 
                         }

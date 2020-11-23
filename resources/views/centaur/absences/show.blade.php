@@ -10,7 +10,7 @@
 		<section>
 			<header class="header_absence">
 				<a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a>
-				@if (Sentinel::inRole('administrator')	)
+				@if (Sentinel::inRole('administrator') || Sentinel::inRole('superadmin')	)
 					<p>@lang('absence.all_requests') 
 						<a href="{{ route('absences_table') }}" class="view_all" title="{{ __('absence.absences')}}" >vidi izračune</a>
 						{{-- <a href="{{ route('absences_requests') }}" class="view_all" title="{{ __('absence.absences')}}" >vidi zahtjeve za mjesec</a> --}}
@@ -52,7 +52,9 @@
 											<th>@lang('absence.approved')</th>
 											<th>@lang('absence.reason')</th>
 											<th>@lang('absence.aprove_date')</th>
+											@if (Sentinel::inRole('administrator') || Sentinel::inRole('superadmin')	)
 											<th class="not-export-column">@lang('basic.options')</th>
+											@endif
 										</tr>
 									</thead>
 									<tbody>
@@ -93,18 +95,20 @@
 												<td>{!! $absence->approve == 1 ? 'DA' : 'NE' !!} {!! $absence->approve_reason ? ' - ' . $absence->approve_reason : '' !!}</td>
 												<td>{{ $absence->approved['first_name'] . ' ' . $absence->approved['last_name'] }}</td>
 												<td>{{ $absence->approved_date }}</td>
-												<td class="center">
-													@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep) )
-														<a href="{{ route('absences.edit', $absence->id) }}" class="btn-edit">
-															<i class="far fa-edit"></i>
-														</a>
-													@endif
-													@if(Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
-														<a href="{{ route('absences.destroy', $absence->id) }}" class="action_confirm btn-delete danger" {{-- data-method="delete" --}} data-token="{{ csrf_token() }}">
-															<i class="far fa-trash-alt"></i>
-														</a>
-													@endif
-												</td>
+												@if (Sentinel::inRole('administrator') || Sentinel::inRole('superadmin')	)
+													<td class="center">
+														@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep) )
+															<a href="{{ route('absences.edit', $absence->id) }}" class="btn-edit" rel="modal:open">
+																<i class="far fa-edit"></i>
+															</a>
+														@endif
+														@if(Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
+															<a href="{{ route('absences.destroy', $absence->id) }}" class="action_confirm btn-delete danger"  {{-- data-method="delete" --}} data-token="{{ csrf_token() }}">
+																<i class="far fa-trash-alt"></i>
+															</a>
+														@endif
+													</td>
+												@endif
 											</tr>
 										@endforeach
 										@foreach ($afterhours as $afterhour)
@@ -119,18 +123,20 @@
 												<td>{!! $afterhour->approve == 1 ? 'DA' : 'NE' !!}</td>
 												<td>{{ $afterhour->approved['first_name'] . ' ' . $afterhour->approved['last_name'] }}</td>
 												<td>{{ $afterhour->approved_date }}</td>
-												<td class="center">
-													@if(Sentinel::getUser()->hasAccess(['afterhours.update']) || in_array('afterhours.update', $permission_dep) )
-														<a href="{{ route('afterhours.edit', $afterhour->id) }}" class="btn-edit">
-															<i class="far fa-edit"></i>
-														</a>
-													@endif
-													@if(Sentinel::getUser()->hasAccess(['afterhours.delete']) || in_array('afterhours.delete', $permission_dep))
-														<a href="{{ route('afterhours.destroy', $afterhour->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
-															<i class="far fa-trash-alt"></i>
-														</a>
-													@endif
-												</td>
+												@if (Sentinel::inRole('administrator') || Sentinel::inRole('superadmin')	)
+													<td class="center">
+														@if(Sentinel::getUser()->hasAccess(['afterhours.update']) || in_array('afterhours.update', $permission_dep) )
+															<a href="{{ route('afterhours.edit', $afterhour->id) }}" class="btn-edit" rel="modal:open">
+																<i class="far fa-edit"></i>
+															</a>
+														@endif
+														@if(Sentinel::getUser()->hasAccess(['afterhours.delete']) || in_array('afterhours.delete', $permission_dep))
+															<a href="{{ route('afterhours.destroy', $afterhour->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+																<i class="far fa-trash-alt"></i>
+															</a>
+														@endif
+													</td>
+												@endif
 											</tr>
 										@endforeach
 									</tbody>
@@ -140,7 +146,6 @@
 							@endif
 						</div>
 					</div>
-					
 				</section>
 			</main>	
 		</section>

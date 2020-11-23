@@ -22,10 +22,10 @@
 						</a>
 					@endif
 					<span class="search_post"></span>
+					<div class="input_search search_input">
+						<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="Type ... " >
+					</div>
 				</h1>
-				<div class="input_search search_input">
-					<input type="text" id="mySearch" placeholder="{{ __('basic.search')}}" title="Type ... " >
-				</div>
 			</header>
 			<section class="col-md-12 posts">
 				<div class="all_post">

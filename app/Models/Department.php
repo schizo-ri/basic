@@ -171,6 +171,6 @@ class Department extends Model
 				}
 			}
 		}
-		return $employeesEmail;
+		return array_unique($employeesEmail);
 	}
 }

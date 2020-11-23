@@ -52,7 +52,7 @@ class CarsRegistration extends Command
 
         $cars = Car::where('last_registration',$today->format('Y-m-d') )->get();
         if( count($cars) > 0) {
-            foreach($send_to as $send_to_mail) {
+            foreach(array_unique($send_to ) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     foreach($cars as $car) {
                         Mail::to($send_to_mail)->send(new CarsRegistrationMail( $car )); // mailovi upisani u mailing 

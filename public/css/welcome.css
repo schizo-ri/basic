@@ -475,6 +475,7 @@ span.img-success {
 		display: flex;
 		flex-direction: column;
 		justify-content: start;
+		z-index: 1;
 	}
 	.container >section {
 		position: static;

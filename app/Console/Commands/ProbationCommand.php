@@ -49,11 +49,10 @@ class ProbationCommand extends Command
         $datum = new DateTime('now');
         $datum->modify('-6 month');
         $datum->modify('+7 days');
-        Log::info('ProbationCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
         $employees = Employee::employeesProbation($datum);
 
 		foreach($employees as $employee) {
-            foreach($send_to as $send_to_mail) {
+            foreach(array_unique( $send_to ) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     Mail::to($send_to_mail)->send(new ProbationMail($employee)); 
                 }
@@ -64,11 +63,10 @@ class ProbationCommand extends Command
         $datum = new DateTime('now');
         $datum->modify('-6 month');
         $datum->modify('+15 days');
-        Log::info('ProbationCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
         $employees = Employee::employeesProbation($datum);
 
         foreach($employees as $employee) {
-            foreach($send_to as $send_to_mail) {
+            foreach(array_unique( $send_to ) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     Mail::to($send_to_mail)->send(new ProbationMail($employee)); 
                 }
@@ -79,11 +77,10 @@ class ProbationCommand extends Command
         $datum = new DateTime('now');
         $datum->modify('-6 month');
         $datum->modify('+1 month');
-        Log::info('ProbationCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
         $employees = Employee::employeesProbation($datum);
 
         foreach($employees as $employee) {
-            foreach($send_to as $send_to_mail) {
+            foreach(array_unique( $send_to ) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     Mail::to($send_to_mail)->send(new ProbationMail($employee)); 
                 }

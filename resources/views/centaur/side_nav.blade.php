@@ -94,20 +94,16 @@
                 </div>
             @endif
         @endif
-      {{--   @if(in_array('Radne upute', $moduli)) --}}
-            @if(Sentinel::getUser()->hasAccess(['instructions.view']) || in_array('instructions.view', $permission_dep) )
-                <div class="">
-                    <a class="button_nav load_button contacts_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('contacts') }}" title="{{ __('basic.contacts') }}">
-                        <span class="button_nav_img "><i class="far fa-address-book"></i></span>
-                        <p class="button_nav_text">@lang('basic.contacts')</p>
-                    </a>	
-                </div>
-            @endif
-       {{--  @endif --}}
+        <div class="">
+            <a class="button_nav load_button contacts_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('contacts') }}" title="{{ __('basic.contacts') }}">
+                <span class="button_nav_img contacts"><i class="far fa-address-book"></i></span>
+                <p class="button_nav_text">@lang('basic.contacts')</p>
+            </a>	
+        </div>
        @if(Sentinel::getUser()->hasAccess(['instructions.view']) || in_array('instructions.view', $permission_dep) )
         <div class="">
-            <a class="button_nav load_button instructions_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('radne_upute') }}" title="{{ __('basic.instructions') }}">
-                <span class="button_nav_img "><i class="fas fa-book-open"></i></span>
+            <a class="button_nav load_button radne_upute_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('radne_upute') }}" title="{{ __('basic.instructions') }}">
+                <span class="button_nav_img instructions"><i class="fas fa-book-open"></i></span>
                 <p class="button_nav_text">@lang('basic.instructions')</p>
             </a>	
         </div>
@@ -116,7 +112,7 @@
             @if(Sentinel::getUser()->hasAccess(['educations.view']) || in_array('educations.view', $permission_dep) )
                 <div class="">
                     <a class="button_nav load_button educations_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('educations.index') }}" title="{{ __('basic.educations') }}">
-                        <span class="button_nav_img "><i class="fas fa-user-graduate"></i></span>
+                        <span class="button_nav_img educations"><i class="fas fa-user-graduate"></i></span>
                         <p class="button_nav_text">@lang('basic.educations')</p>
                     </a>	
                 </div>

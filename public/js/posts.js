@@ -28,20 +28,19 @@ if( $('.posts_index').length > 0) {
         $('.type_message').on('blur',function(){
             $( this ).attr('Placeholder','Type message...');
         });
+        
         $('.search_post').on('click',function(){
-            $('.search_input').show();     
-            console.log("search_post");  
+            $('.search_input').show();  
         });
-        $('.search_input').on('hover',function(){ 
-            mouse_is_inside=true; 
-        }, function(){ 
-            mouse_is_inside=false; 
+        $(document).on('mouseup',function(e){
+            var search_input = $(".search_input");
+         
+            // If the target of the click isn't the container
+            if(!search_input.is(e.target) && search_input.has(e.target).length === 0){
+                search_input.hide();
+            }
         });
-        $("body").on('mouseup',function(){ 
-            console.log(mouse_is_inside);  
-            if(! mouse_is_inside) 
-                $('.search_input').hide();
-        });
+
         url = location.search;
        
         if(body_width > 768 && location.href.includes('/posts') ) {
@@ -123,7 +122,6 @@ if( $('.posts_index').length > 0) {
           
             $('.post-content').css('line-height','70px');
         });
-        
     }
     
     function tablink_on_click() {

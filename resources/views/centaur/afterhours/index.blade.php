@@ -53,7 +53,7 @@
 								<td>{!! $afterhour->date ? date('d.m.Y', strtotime($afterhour->date)) : '' !!}</td>
 								<td>{!! $afterhour->start_time ? date('H:i', strtotime($afterhour->start_time))  : '' !!} - {!! $afterhour->end_time ? date('H:i', strtotime($afterhour->end_time)) : '' !!}</td>
 								<td>{!! $afterhour->approve_h ? date('H:i', strtotime($afterhour->approve_h))  : '' !!}</td>
-								<td>{{ $afterhour->project->id }}</td>
+								<td>{!! $afterhour->project ? $afterhour->project->id : '' !!}</td>
 								<td>{{ $afterhour->comment }}</td>
 								<td>{!! $afterhour->approve == 1 ? 'odobreno' : '' !!}{!! $afterhour->approve == 0 ? ' nije odobreno' : '' !!}</td>
 								<td class="center">

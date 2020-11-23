@@ -1402,6 +1402,7 @@ option::selection {
 	line-height: 18px;
 	color: #1594F0;
 	text-transform: uppercase;
+	text-decoration: none;
 }
 
 .modal.modal_notice.modal_campaign .btn-delete, .modal.modal_notice.modal_campaign .btn-edit {

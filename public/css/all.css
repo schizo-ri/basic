@@ -1885,6 +1885,9 @@ div#calendar ul li.active_date {
         overflow: auto;
         scrollbar-width: thin;
     }
+    .placeholder p, .placeholder_cal>p {
+        font-size: 0.75rem;
+    }
     .comming_agenda {
         padding: 15px;
         padding: 10px 30px;
@@ -2149,7 +2152,6 @@ div#calendar ul li.active_date {
 .link_back {
     color: inherit;
     text-decoration: none;
-   
 }
 .calendar_aside .link_back{
     position: absolute;
@@ -2161,11 +2163,14 @@ div#calendar ul li.active_date {
     text-decoration: none;
 }
 .index_page h1 {
-  font-weight: 600;
+    font-weight: 600;
     font-size: 1.375rem;
     color: #071E57;
     padding: 27px 20px;
     margin: 0;
+    position: relative;
+    vertical-align: middle;
+    line-height: 26px;
 }
 .campaign_start_date {
     float: right;
@@ -4018,6 +4023,7 @@ footer.ad_footer {
     float: left;
     margin: 0;
     margin-left: 20px;
+    cursor: pointer;
 } 
 .all_absences.table_absences span.show_button {
     float: right;
@@ -4326,11 +4332,11 @@ form.after_form  {
 
   }
   div.search_input {
-    margin: 39px 0;
+    margin: 0;
     height: auto;
-    width: 100%;
+    width: calc(100% - 40px);
     position: absolute;
-    top: 40%;
+    top: 20px;
     padding: 0;
     display: none;
     border: none;
@@ -4338,7 +4344,7 @@ form.after_form  {
   }
   .search_input>input {
     box-shadow: 3px 0 5px rgba(0, 0, 0, 0.15), -3px 0 5px rgba(0, 0, 0, 0.15);
-    width: 95%;
+    width: 100%;
     height: 44px;
     border: none;
     border-radius: 5px;
@@ -4349,11 +4355,11 @@ form.after_form  {
     /* margin: 25px 0; */
   }
   .search_post {
-    background:url(/icons/search.png) no-repeat;
+    background: url(/icons/search.png) no-repeat;
     height: 21px;
     width: 21px;
-    display: inline-block;
     float: right;
+    cursor: pointer;
     margin: 5px 27px 5px 0;
   }
 
@@ -4732,6 +4738,7 @@ main.index_main.main_absence >section {
     width: 22px;
     height: 14px;
     display: inline-block;
+    margin-right: 20px;
 
 }
 .back_to_prev {
@@ -4892,6 +4899,7 @@ main.all_absences >section {
     border: none;
     outline-color: #051847;
     padding: 0 10px;
+    cursor: pointer;
 }
 
 .info_abs .title .year_select option {
@@ -5284,6 +5292,7 @@ button.show_loccos {
     font-size: 0.625rem;
     height: 40px;
     float: right;
+    cursor: pointer;
 }
  .change_view_calendar >option {
     line-height: 20px;
@@ -5842,12 +5851,15 @@ a.modal_close {
 #style_items {
    /*  visibility: hidden; */
 }
+#style_items label>input, #style_items label>select {
+    margin-left: 10px;
+}
 #style_items input, #style_items select {
     border: 1px solid #ccc;
     background: inherit;
     border-radius: 5px;
     padding: 0 10px;
-    margin-left: 10px;
+ 
 }
 #style_items p {
     margin-bottom: 5px;
@@ -5866,19 +5878,19 @@ a.modal_close {
     clear: both;
     overflow: hidden;
 }
-#mail_template #mail_header, #mail_template #mail_footer {
+#mail_template #header, #mail_template #footer {
     height: 10%;
     border: 1px dashed #eee;
     padding: 30px 15px;
     text-align: center;
 }
-#mail_template #mail_header {
+#mail_template #header {
     font-size: 16px;
 }
-#mail_template #mail_footer {
+#mail_template #footer {
     font-size: 12px;
 }
-#mail_template #mail_main {
+#mail_template #body {
     height: 60%;
     border: 1px dashed #eee;
    font-size: 14px;
@@ -5944,13 +5956,19 @@ a.modal_close {
     .index_page aside.latest_messages header.post_header {
         height: 65px;
     }
+    div.search_input {
+        top: 10px;
+    }
     .posts_index .posts {
         height: calc(100% - 75px);
     }
     .index_page h1 {
         line-height: 25px;
-        padding: 20px;
-        font-size: 1.125rem;
+        padding: 20px 10px;
+        font-size: 1rem;
+    }
+    .curve_arrow_left_blue {
+        margin-right: 10px;
     }
     .search_post {
         margin: 3px 10px 3px 0;
@@ -6656,13 +6674,10 @@ a.modal_close {
     .index_aside .day_events .day_events_data>span:first-child {
         width: 100%;
     }
-   
     .latest_messages .search_input {
-        margin: 10px 0;
-        width: 100%;
-        top: 50%;
+        top: 5px;
+        width: calc(100% - 30px);
     }
-   
     .table-responsive .table thead th {
         min-width: 33%;
     }
@@ -7331,26 +7346,19 @@ table.dataTable thead th, table.dataTable thead td{
 	padding-top: 15px;
 	border: none;	
 }
+
 .topnav.nav_top a.shortcut,.topnav.nav_top span.shortcut {
     float: left;
     font-weight: 500;
     font-size: 0.75rem;
     line-height: 32px;
     color: #98acdf;
-    padding: 0;
+    padding: 0 10px;
 	width: 100%;
     height: 100%;
 	position: relative;
 }
-.topnav.nav_top a.shortcut >svg.svg-inline--fa.fa-w-14, .topnav.nav_top a.shortcut >svg.svg-inline--fa.fa-w-16 {
-	/* position: absolute; */
-    /* top: 50%; */
-    /* left: 50%; */
-	/* transform: translate(-50%, -50%); */
-	/* width: 15px; */
-    /* height: 15px; */
 
-}
 #admin_page a.shortcut,#admin_page span.shortcut {
     float: left;
     font-weight: 500;
@@ -7385,7 +7393,10 @@ table.dataTable thead th, table.dataTable thead td{
     margin: 0;
     margin-left: 5px;
 }
-
+.shortcuts_container .btn-new:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
 .disable {
 	pointer-events: none;
    	cursor: default;
@@ -7493,7 +7504,7 @@ aside.side_nav {
 	transform: translate(-50%, -50%);
 }
 
-.header_nav .nav_top.topnav a.icon>svg.svg-inline--fa.svg-inline--fa.fa-w-14 {
+.header_nav .nav_top.topnav a.icon>i, .header_nav .nav_top.topnav a.icon>svg.svg-inline--fa.svg-inline--fa.fa-w-14 {
 	margin: 0;
 	padding: 0;
 	margin-top: 50%;
@@ -7501,6 +7512,7 @@ aside.side_nav {
 	transform: translate(-50%, -50%);
 	width: 19px;
 	height: 19px;
+	font-size: 19px;
 	color: #A7BBEE;
 }
 .header_nav img.img_button, .header_nav i, .header_nav svg {
@@ -7558,13 +7570,14 @@ ul.nav_ul.float_right li img {
 	
 	
 }
-.logo_icon>svg.svg-inline--fa.fa-w-14 {
+.logo_icon>i, .logo_icon>svg.svg-inline--fa.fa-w-14 {
 	color: #fff;
 	width: auto;
 	float: left;
 	margin: 0;
 	width: 19px;
-    height: 19px;
+	height: 19px;
+	font-size: 19px;
 }
 .header_nav .section_top_nav {
 	clear: left;
@@ -8731,6 +8744,10 @@ span.button_nav_img.campaign {
 	background-size: 28px;
 	background-position: center;
 }
+.button_nav.active span.button_nav_img.contacts>svg, .button_nav.active span.button_nav_img.instructions>svg, .button_nav.active span.button_nav_img.educations>svg {
+	color: #071e57;
+}
+
 .index_absence .header_absence {
 	font-weight: 600;
 	font-size: 1.125rem;
@@ -11140,6 +11157,7 @@ option::selection {
 	line-height: 18px;
 	color: #1594F0;
 	text-transform: uppercase;
+	text-decoration: none;
 }
 
 .modal.modal_notice.modal_campaign .btn-delete, .modal.modal_notice.modal_campaign .btn-edit {
@@ -13014,6 +13032,7 @@ span.img-success {
 		display: flex;
 		flex-direction: column;
 		justify-content: start;
+		z-index: 1;
 	}
 	.container >section {
 		position: static;

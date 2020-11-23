@@ -30,9 +30,9 @@
 					<tbody>
 						@foreach ($mail_templates as $mail_template)
 							<tr >
-								<td>{{ $kid->first_name . ' ' . $kid->last_name }}</td>
-								<td>{!! $kid->b_day ? date("d.m.Y",strtotime($kid->b_day)) : '' !!}</td>
-								<td>{{ $kid->employee->user['first_name'] . ' ' . $kid->employee->user['last_name'] }}</td>
+								<td>{{ $mail_template->name }}</td>
+								<td>{!! $mail_template->description !!}</td>
+								<td>{{ $mail_template->to_mail  }}</td>
 								<td class="center">
 									@if(Sentinel::getUser()->hasAccess(['mail_templates.update']) || in_array('mail_templates.update', $permission_dep))
 										<a href="{{ route('mail_templates.edit', $mail_template->id) }}" title="{{ __('basic.edit_employee') }}"  rel="modal:open">

@@ -26,17 +26,15 @@ $(function(){
             $('.'+class_open).toggle();
         });
         $(".admin_pages a.admin_link").removeClass('disable');
-       /*  console.log( "url_location: " + url_location );
+        /*  console.log( "url_location: " + url_location );
         console.log( "id: " + id ); */
         // ako ima shortcut - href edit
         $.get( "shortcut_exist", {'url': url_location }, function( id ) {
-        
             if(id != null && id != '') {
                 $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
                 $('.shortcut_text').text('Ispravi prečac'); 
             } else {
                 title = $('.admin_link.active_admin').attr('id');
-    
                 $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url_location+'&title='+title );
                 $('.shortcut_text').text('Dodaj prečac'); 
             }

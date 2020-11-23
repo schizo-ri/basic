@@ -7,7 +7,7 @@
 	<main class="col-xs-12 col-sm-12 col-md-12  index_main benefit_main float_right">
 		<section>
 			<div class="page-header header_document">
-				<!-- <a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a> -->
+				<a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a>
 				@lang('basic.benefits')
 			</div>
 			<main class="main_benefits">

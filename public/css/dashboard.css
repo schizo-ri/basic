@@ -612,6 +612,9 @@
         overflow: auto;
         scrollbar-width: thin;
     }
+    .placeholder p, .placeholder_cal>p {
+        font-size: 0.75rem;
+    }
     .comming_agenda {
         padding: 15px;
         padding: 10px 30px;

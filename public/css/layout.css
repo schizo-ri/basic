@@ -29,26 +29,19 @@ table.dataTable thead th, table.dataTable thead td{
 	padding-top: 15px;
 	border: none;	
 }
+
 .topnav.nav_top a.shortcut,.topnav.nav_top span.shortcut {
     float: left;
     font-weight: 500;
     font-size: 0.75rem;
     line-height: 32px;
     color: #98acdf;
-    padding: 0;
+    padding: 0 10px;
 	width: 100%;
     height: 100%;
 	position: relative;
 }
-.topnav.nav_top a.shortcut >svg.svg-inline--fa.fa-w-14, .topnav.nav_top a.shortcut >svg.svg-inline--fa.fa-w-16 {
-	/* position: absolute; */
-    /* top: 50%; */
-    /* left: 50%; */
-	/* transform: translate(-50%, -50%); */
-	/* width: 15px; */
-    /* height: 15px; */
 
-}
 #admin_page a.shortcut,#admin_page span.shortcut {
     float: left;
     font-weight: 500;
@@ -83,7 +76,10 @@ table.dataTable thead th, table.dataTable thead td{
     margin: 0;
     margin-left: 5px;
 }
-
+.shortcuts_container .btn-new:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
 .disable {
 	pointer-events: none;
    	cursor: default;
@@ -191,7 +187,7 @@ aside.side_nav {
 	transform: translate(-50%, -50%);
 }
 
-.header_nav .nav_top.topnav a.icon>svg.svg-inline--fa.svg-inline--fa.fa-w-14 {
+.header_nav .nav_top.topnav a.icon>i, .header_nav .nav_top.topnav a.icon>svg.svg-inline--fa.svg-inline--fa.fa-w-14 {
 	margin: 0;
 	padding: 0;
 	margin-top: 50%;
@@ -199,6 +195,7 @@ aside.side_nav {
 	transform: translate(-50%, -50%);
 	width: 19px;
 	height: 19px;
+	font-size: 19px;
 	color: #A7BBEE;
 }
 .header_nav img.img_button, .header_nav i, .header_nav svg {
@@ -256,13 +253,14 @@ ul.nav_ul.float_right li img {
 	
 	
 }
-.logo_icon>svg.svg-inline--fa.fa-w-14 {
+.logo_icon>i, .logo_icon>svg.svg-inline--fa.fa-w-14 {
 	color: #fff;
 	width: auto;
 	float: left;
 	margin: 0;
 	width: 19px;
-    height: 19px;
+	height: 19px;
+	font-size: 19px;
 }
 .header_nav .section_top_nav {
 	clear: left;
@@ -1429,6 +1427,10 @@ span.button_nav_img.campaign {
 	background-size: 28px;
 	background-position: center;
 }
+.button_nav.active span.button_nav_img.contacts>svg, .button_nav.active span.button_nav_img.instructions>svg, .button_nav.active span.button_nav_img.educations>svg {
+	color: #071e57;
+}
+
 .index_absence .header_absence {
 	font-weight: 600;
 	font-size: 1.125rem;
