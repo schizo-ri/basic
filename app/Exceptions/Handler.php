@@ -53,7 +53,7 @@ class Handler extends ExceptionHandler
             $email = 'jelena.juras@duplico.hr';
             $url = $_SERVER['REQUEST_URI'];
     
-            Mail::to($email)->send(new ErrorMail( $exception->getMessage(), $url)); 
+         //   Mail::to($email)->send(new ErrorMail( $exception->getMessage(), $url)); 
 
         }
         return parent::render($request, $exception);

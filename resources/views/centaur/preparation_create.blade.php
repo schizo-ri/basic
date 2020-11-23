@@ -9,37 +9,32 @@
     <span class="input_preparation delivery_input">
         <input class="" name="delivery" type="date" value="" required />
     </span>
-    @if (Sentinel::inRole('moderator') || Sentinel::inRole('administrator') || Sentinel::inRole('upload_list'))
-        <span class="input_preparation manager_input">
-            <select name="project_manager" class="project_manager" required>
-                <option disabled selected >Voditelj projekta</option>
-                @foreach ($all_users as $user)
-                    @if ($user->first_name && $user->last_name)
-                        <option value="{{ $user->id }}">{{ $user->first_name . ' ' .  $user->last_name}}</option>
-                    @endif                    
-                @endforeach
-            </select>
-        </span>
-        <span class="input_preparation designed_input">
-            <select name="designed_by" class="designed_by" required>
-                <option disabled selected >Projektant</option>
-                @foreach ($all_users as $user)
-                    @if ($user->first_name && $user->last_name)
-                        <option value="{{ $user->id }}">{{ $user->first_name . ' ' .  $user->last_name}}</option>
-                    @endif                    
-                @endforeach
-            </select>
-        </span>
-    @endif
-    @if (Sentinel::inRole('moderator') || Sentinel::inRole('administrator') || Sentinel::inRole('upload_list'))
-        <span class="input_preparation for_file">
-            <input name="siemens" value="1" type="checkbox"/> Siemens
-            <input type="file" style="display:none" name="file" id="file" required />
-            <label for="file" class="label_file" title="Učitaj dokumenat"><i class="fas fa-upload"></i></label>
-            <span class="file_to_upload"></span>
-        </span>
-       
-    @endif
+    <span class="input_preparation manager_input">
+        <select name="project_manager" class="project_manager" required>
+            <option disabled selected >Voditelj projekta</option>
+            @foreach ($voditelji as $user)
+                @if ($user->first_name && $user->last_name)
+                    <option value="{{ $user->id }}">{{ $user->first_name . ' ' .  $user->last_name}}</option>
+                @endif                    
+            @endforeach
+        </select>
+    </span>
+    <span class="input_preparation designed_input">
+        <select name="designed_by" class="designed_by" required>
+            <option disabled selected >Projektant</option>
+            @foreach ($projektanti as $user)
+                @if ($user->first_name && $user->last_name)
+                    <option value="{{ $user->id }}">{{ $user->first_name . ' ' .  $user->last_name}}</option>
+                @endif                    
+            @endforeach
+        </select>
+    </span>
+    <span class="input_preparation for_file">
+        <input name="siemens" value="1" type="checkbox"/> Siemens
+        <input type="file" style="display:none" name="file" id="file" required />
+        <label for="file" class="label_file" title="Učitaj dokumenat"><i class="fas fa-upload"></i></label>
+        <span class="file_to_upload"></span>
+    </span>
     <span class="input_preparation submit_preparation">
         {{ csrf_field() }}
         <input class="btn btn_spremi submit_createForm" disabled type="submit" value="&#10004; Spremi">

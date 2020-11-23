@@ -8,32 +8,32 @@
     <span class="td text_preparation designed_input"></span>
     <span class="td text_preparation date_input">{{ date('d.m.Y', strtotime($record->date)) }}</span> 
     @if($record->preparation && json_decode($record->preparation))
-        <span class="td text_preparation preparation_input" {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!}  >
+        <span class="td text_preparation preparation_input" {!! Sentinel::inRole('voditelj') ||  Sentinel::inRole('projektant') ? 'hidden' : '' !!}  >
             @foreach(json_decode($record->preparation) as $key => $preparation1)
                 <span >{{ $key . ': '}}<b>{{ $preparation1 }}</b></span>
             @endforeach
         </span>
     @else
-        <span class="td text_preparation preparation_input " {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!}  >{{ $record->preparation }}</span>
+        <span class="td text_preparation preparation_input " {!! Sentinel::inRole('voditelj') ||  Sentinel::inRole('projektant')  ? 'hidden' : '' !!}  >{{ $record->preparation }}</span>
     @endif
     @if($record->mechanical_processing && json_decode($record->mechanical_processing))
-        <span class="td text_preparation mechanical_input" {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!} >
+        <span class="td text_preparation mechanical_input" {!! Sentinel::inRole('voditelj') ||  Sentinel::inRole('projektant')  ? 'hidden' : '' !!} >
         @foreach(json_decode($record->mechanical_processing) as $key => $mechanical)
             <span >{{ $key . ': '}}<b>{{ $mechanical }}</b></span>
         @endforeach
         </span>
     @else
-        <span class="td text_preparation mechanical_input " {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!} >
+        <span class="td text_preparation mechanical_input " {!! Sentinel::inRole('voditelj') ||  Sentinel::inRole('projektant')  ? 'hidden' : '' !!} >
             {{ $record->mechanical_processing }}</span>
     @endif
     @if($record->marks_documentation && json_decode($record->marks_documentation))
-        <span class="td text_preparation marks_input" {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!} >
+        <span class="td text_preparation marks_input" {!! Sentinel::inRole('voditelj') ||  Sentinel::inRole('projektant')  ? 'hidden' : '' !!} >
             @foreach(json_decode($record->marks_documentation) as $key => $mark)
                 <span >{{ $key . ': '}}<b>{{ $mark }}</b></span>
             @endforeach
         </span>
     @else
-        <span class="td text_preparation marks_input " {!! Sentinel::inRole('moderator') ? 'hidden' : '' !!} >
+        <span class="td text_preparation marks_input " {!! Sentinel::inRole('voditelj') ||  Sentinel::inRole('projektant')  ? 'hidden' : '' !!} >
         {{ $record->marks_documentation }}</span>
     @endif
     <span class="td text_preparation equipment_input"></span>

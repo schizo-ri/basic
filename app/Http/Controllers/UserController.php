@@ -75,7 +75,8 @@ class UserController extends Controller
             'email' => trim($request->get('email')),
             'password' => $request->get('password'),
             'first_name' => $request->get('first_name', null),
-            'last_name' => $request->get('last_name', null)
+            'last_name' => $request->get('last_name', null),
+            'color' => $request->get('color')
         ];
         $activate = (bool)$request->get('activate', false);
 
@@ -162,7 +163,8 @@ class UserController extends Controller
         $attributes = [
             'email' => trim($request->get('email')),
             'first_name' => $request->get('first_name', null),
-            'last_name' => $request->get('last_name', null)
+            'last_name' => $request->get('last_name', null),
+            'color' => $request->get('color')
         ];
 
         // Do we need to update the password as well?

@@ -1,16 +1,16 @@
 <form class="form_preparation edit_preparation" accept-charset="UTF-8" role="form" method="post" action="{{ route('preparations.update', $preparation->id) }}" >
     <span class="input_preparation file_input"></span>
     <span class="input_preparation project_no_input">
-        <input  name="project_no" type="text" value="{{ $preparation->project_no }}" maxlength="30" required autofocus {!! Sentinel::inRole('subscriber') ? 'readonly style="border:none"' : '' !!} />
+        <input  name="project_no" type="text" value="{{ $preparation->project_no }}" maxlength="30" required autofocus />
     </span>
     <span class="input_preparation name_input">
-        <input class=""  name="name" type="text" value="{{ $preparation->name }}" maxlength="100"  {!! Sentinel::inRole('subscriber') ? 'readonly style="border:none"' : '' !!}  />
+        <input class=""  name="name" type="text" value="{{ $preparation->name }}" maxlength="100"   />
     </span>
     <span class="input_preparation delivery_input">
-        <input class="" name="delivery" type="date" {!! Sentinel::inRole('subscriber') ? 'readonly ' : '' !!} value="{{ $preparation->delivery }}" />
+        <input class="" name="delivery" type="date" value="{{ $preparation->delivery }}" />
     </span>
     <span class="input_preparation manager_input">
-        <select name="project_manager" class="project_manager" required {!! Sentinel::inRole('subscriber') ? 'readonly ' : ''  !!}>
+        <select name="project_manager" class="project_manager" required >
             <option disabled selected >Voditelj projekta</option>
             @foreach ($users as $user)
                 @if ($user->first_name && $user->last_name)
@@ -20,7 +20,7 @@
         </select>
     </span>
     <span class="input_preparation designed_input">
-        <select name="designed_by" class="designed_by" required {!! Sentinel::inRole('subscriber') ? 'readonly ' : '' !!}>
+        <select name="designed_by" class="designed_by" required >
             <option disabled selected >Projektant</option>
             @foreach ($users as $user)
             @if ($user->first_name && $user->last_name)
@@ -31,7 +31,7 @@
     </span>
   {{--   <span class="input_preparation date_input"></span> --}}
     <span class="input_preparation preparation_input">
-        @if (Sentinel::inRole('subscriber')  || Sentinel::inRole('administrator'))
+        @if (Sentinel::inRole('priprema')  || Sentinel::inRole('administrator'))
             @foreach($priprema as $key1 => $priprema1) 
         
                 <h5>{{ $priprema1 }}</h5>
@@ -48,7 +48,7 @@
         @endif
     </span>
     <span class="input_preparation mechanical_input">
-        @if (Sentinel::inRole('subscriber')  || Sentinel::inRole('administrator') )
+        @if (Sentinel::inRole('mehanicka')  || Sentinel::inRole('administrator') )
             @foreach($mehanicka as $key => $meh_obrada) 
                 <h5>{{ $meh_obrada }}</h5>
                 <input type="hidden" name="mechanical_title[{{ $key }}]" value="{{ $meh_obrada}}"   >
@@ -64,7 +64,7 @@
         @endif
     </span>
     <span class="input_preparation marks_input">
-        @if (Sentinel::inRole('subscriber') || Sentinel::inRole('administrator'))
+        @if (Sentinel::inRole('oznake') || Sentinel::inRole('administrator'))
             @foreach($oznake as $key2 => $oznake1) 
                 <h5>{{ $oznake1 }}</h5>
                 <input type="hidden" name="marks_title[{{ $key2 }}]" value="{{ $oznake1}}"   >

@@ -1,15 +1,15 @@
 @component('mail::message')
-# Voditelj projekta {!! $designing->manager->first_name . ' ' . $designing->manager->last_name !!} te je odabrao za zadatak.
+# {!! Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name !!} te je odabrao za zadatak na slijedećem projektu:
 
 Broj projekta: {!! $designing->project_no !!}
 
 Naziv projekta: {!! $designing->name !!}
 
-Voditelj: {!! $designing->manager->first_name . ' ' . $designing->manager->last_name !!}
+Voditelj: {!! $designing->manager ? $designing->manager->first_name . ' ' . $designing->manager->last_name : '' !!}
 
-Projektant: {!! $designing->designer->first_name . ' ' . $designing->designer->last_name !!}
+Projektant: {!! $designing->designer ? $designing->designer->first_name . ' ' . $designing->designer->last_name : '' !!}
 
-napomena: {!! $designing->comment !!}
+Napomena: {!! $designing->comment !!}
 
 
 @component('mail::button', ['url' => $link])

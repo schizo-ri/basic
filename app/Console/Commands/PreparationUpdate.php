@@ -8,7 +8,6 @@ use Cartalyst\Sentinel\Users\EloquentUser;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PreparationReminderMail;
 
-
 class PreparationUpdate extends Command
 {
     /**
@@ -45,11 +44,9 @@ class PreparationUpdate extends Command
         $users = EloquentUser::get();
 
         foreach ($users as $key => $user) {
-            if( $user->inRole('subscriber')) {
-                if($user->first_name != 'Live' ) {
-                    $email = $user->email;
-                    Mail::to($email)->send(new PreparationReminderMail());
-                }
+            if( $user->inRole('priprema') ||  $user->inRole('mehanicka') || $user->inRole('oznake')) {
+                $email = $user->email;
+                Mail::to($email)->send(new PreparationReminderMail());
             }
         }
     }

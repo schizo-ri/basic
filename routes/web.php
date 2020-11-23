@@ -75,6 +75,13 @@ Route::resource('preparation_records', 'PreparationRecordController');
 // ListUpdate
 Route::resource('list_updates', 'ListUpdateController');
 
+// Designing
+Route::resource('designings', 'DesigningController');
+Route::get('close_designing/{designing?}', ['as' => 'close_designing', 'uses' => 'DesigningController@close_designing']);
+
+//DesigningComment
+Route::resource('designing_comments', 'DesigningCommentController');
+
 // EquipmentList
 Route::resource('equipment_lists', 'EquipmentListController');
 Route::post('addItem', 'EquipmentListController@addItem');
@@ -115,8 +122,7 @@ Route::get('errorMessage', ['as' => 'errorMessage', 'uses' => 'ErrorController@e
 // Android
 Route::resource('android', 'ConnectController');
 
-// Designing
-Route::resource('designings', 'DesigningController');
+
 
 Route::get('delete_file', 'DesigningController@delete_file')->name('delete_file');
  

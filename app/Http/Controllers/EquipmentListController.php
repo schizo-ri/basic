@@ -256,7 +256,14 @@ class EquipmentListController extends Controller
      */
     public function edit($id)
     {   
-        $preparation =  Preparation::where('id', EquipmentList::find($id)->preparation_id)->with('equipment')->with('updates')->first();
+        if(isset($_GET['preparation_id'])) {
+            $preparation_id = $_GET['preparation_id'];
+        } else {
+            $equipment_item = EquipmentList::find($id);
+            $preparation_id =  $equipment_item->preparation_id;
+        }
+        
+        $preparation =  Preparation::where('id',$preparation_id )->with('equipment')->with('updates')->first();
         $equipments = $preparation->equipment;
         $listUpdates = $preparation->updates;
      
@@ -269,11 +276,11 @@ class EquipmentListController extends Controller
         $list_dates = $equipments->unique('created_at')->map(function ($item, $key) {
             return $item->created_at->toDateTimeString();
         });
-     /* 
+        /* 
        foreach ($equipments as $equipment ) {
             $listUpdates =  $listUpdates->merge(ListUpdate::where('item_id',$equipment->id)->orderBy('created_at', 'ASC')->get());
         }
-
+ 
        /*  $list_dates = array();
         foreach ($equipments_dates as $date ) {
             array_push($list_dates, $date->created_at->toDateTimeString());
@@ -395,8 +402,9 @@ class EquipmentListController extends Controller
     public function destroy($id)
     {
         $item_level1 = EquipmentList::find($id);
-     
+        
         $items_level2 = EquipmentList::where('stavka_id_level1', $item_level1->id)->get();
+    
         if(count($items_level2)>0) {
             foreach ($items_level2 as $item_level2) {
                 $items_level3 = EquipmentList::where('stavka_id_level2', $item_level2->id)->get();
@@ -409,7 +417,7 @@ class EquipmentListController extends Controller
             }
         }
         $item_level1->delete();
-        
+     
         session()->flash('success', "Stavka je obrisana");
         
         return redirect()->back();
@@ -495,15 +503,28 @@ class EquipmentListController extends Controller
 
     public function exportList(Request $request) 
     {
+        ini_set('memory_limit','-1');
+
         $equipments =  EquipmentList::where('preparation_id', $request['id'])->select('id','product_number','name','unit','quantity','delivered')->get();
-       
         $listUpdates = ListUpdate::orderBy('created_at', 'ASC')->get();
-       
+        $equipments2 = collect();
+
         if( $request['status'] == 'no') {
             $equipments = $equipments->where('delivered', null);
+            foreach ($equipments as $equipment) { 
+                $listUpdates_item = $listUpdates->where('item_id', $equipment->id );
+                $delivered = $equipment->delivered;
+                
+                foreach ($listUpdates_item as $listUpdate) {
+                    $delivered +=  $listUpdate->quantity;                   
+                }
+                $equipment->delivered =  $delivered;
+                if ( $delivered == 0 || $delivered == null  ) {
+                    $equipments2->push($equipment);
+                }
+            }
         }
 
-        $equipments2 = collect();
         if( $request['status'] == 'ok') {
             foreach ($equipments as $equipment) { 
               

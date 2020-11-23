@@ -355,5 +355,6 @@
         calendar.render();
         $('.fc-scroller.fc-day-grid-container').css('height','auto');
         $('.fc-scroller.fc-day-grid-container').css('overflow','hidden');
+        
     });
  }

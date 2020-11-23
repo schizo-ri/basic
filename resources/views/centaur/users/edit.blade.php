@@ -34,6 +34,10 @@
             <input class="form-control" placeholder="Confirm Password" name="password_confirmation" type="password"  />
             {!! ($errors->has('password_confirmation') ? $errors->first('password_confirmation', '<p class="text-danger">:message</p>') : '') !!}
         </div>
+        <div class="form-group {{ ($errors->has('color')) ? 'has-error' : '' }}">
+            <input class="form-control" placeholder="Izaberi boju" name="color" type="color" value="{{ $user->color }}" />
+            {!! ($errors->has('color') ? $errors->first('color', '<p class="text-danger">:message</p>') : '') !!}
+        </div>
         {{ csrf_field() }}
 		{{ method_field('PUT') }}
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Update">

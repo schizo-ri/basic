@@ -1,5 +1,6 @@
 var str_roles = $('.roles').text();
 var roles = str_roles.split(",");
+
 var _token = $('meta[name="csrf-token"]').attr('content');
 var equipmentLists_json;
 var equipmentLists;
@@ -30,7 +31,7 @@ function updatePage() {
         success: function (data) {
             preparations = data.preparations;
 
-            users = jQuery.parseJSON($('span.users_json').text());
+            users = JSON.parse($('span.users_json').text());
             $.each( $('.row_preparation_text.'+project_no), function( index, value1 ) {
                 var tr_text = '';
                 preparation_id =  $(this).attr('id');
@@ -52,7 +53,7 @@ function updatePage() {
                         designed = users.find(x => x.id === preparation.designed_by).first_name + ' ' + users.find(x => x.id === preparation.designed_by).last_name;
                     }
                 
-                    if ( preparation.active == 1) {
+                    if ( preparation.active == 1 && (roles.includes('projektant') || roles.includes('voditelj') || roles.includes('administrator')) || roles.includes('nabava')) {
                         tr_text += '<span class="td text_preparation file_input"><a class="open_upload_link"><i class="fas fa-upload"></i><span class="preparation_id" hidden>' + preparation_id + '</span></a></span>';
                     }
                     tr_text += '<span class="td text_preparation project_no_input">'+ preparation.project_no +'</span>';
@@ -63,7 +64,7 @@ function updatePage() {
                     if ( preparation.active == 1) {
                         var priprema = preparation.preparation;
                         try {
-                            priprema = jQuery.parseJSON(priprema);
+                            priprema = JSON.parse(priprema);
                         } catch (error) {
                             priprema = null;
                         }
@@ -82,7 +83,7 @@ function updatePage() {
                         
                         var mehanicka = preparation.mechanical_processing;
                         try {
-                            mehanicka = jQuery.parseJSON(mehanicka);
+                            mehanicka = JSON.parse(mehanicka);
                         } catch (error) {
                             mehanicka = null;
                         }
@@ -101,7 +102,7 @@ function updatePage() {
                         tr_text += '</span>';
                         var oznake = preparation.marks_documentation;
                         try {
-                            oznake = jQuery.parseJSON(oznake);
+                            oznake = JSON.parse(oznake);
                         } catch (error) {
                             oznake = null;
                         }
@@ -135,23 +136,21 @@ function updatePage() {
                                     return equipment[index].level1 != null;
                                 }); 
                                 $.each( equipment_level1, function( key, value ) {
-                                    tr_text += '<a href="' + location.origin + '/equipment_lists/' + this.id + '/edit" class="equipment_lists_open" >'  +this.product_number + '</a>';
+                                    tr_text += '<a href="' + location.origin + '/equipment_lists/' + this.id + '/edit?preparation_id='+preparation.id + '" class="equipment_lists_open" >'  +this.product_number + '</a>';
                                 });
                             } else {
                                 if(equipment[0] != undefined) {
-                                    tr_text += '<a href="' + location.origin + '/equipment_lists/' + equipment[0].id + '/edit" class="equipment_lists_open" >Upis opreme</a>' ;
+                                    tr_text += '<a href="' + location.origin + '/equipment_lists/' + equipment[0].id + '/edit?preparation_id='+preparation.id + '" class="equipment_lists_open" >Upis opreme</a>' ;
                                 } else {
                                     tr_text += "Nema zapisa";
                                 }
                             }
-                            tr_text += '<a href="' + location.origin + '/multiReplaceItem/' + preparation_id + '" class="equipment_lists_open multi_replace" >Zamjena</a>';
-                            
-                            if (! roles.includes('list_view')) {
-                                
-                                if(hasmark == true) {
-                                    tr_text += '<a class="btn-file-input equipment_lists_mark" href="'+ location.origin + '/export/'+preparation_id +'" ><i class="fas fa-download"></i> Preuzmi oznake</a>'
-                                } 
+                            if ( roles.includes('nabava') || roles.includes('administrator') ) {
+                                tr_text += '<a href="' + location.origin + '/multiReplaceItem/' + preparation_id + '" class="equipment_lists_open multi_replace" >Zamjena</a>';
                             }
+                            if(hasmark == true) {
+                                tr_text += '<a class="btn-file-input equipment_lists_mark" href="'+ location.origin + '/export/'+preparation_id +'" ><i class="fas fa-download"></i> Preuzmi oznake</a>'
+                            } 
                         } 
                     } else {
                         tr_text += "Nema zapisa";
@@ -209,7 +208,7 @@ function updatePage() {
         }
     });
 }
-$('a.btn-cancel').click(function(event ){
+$('a.btn-cancel').on('click',function(event ){
     event.preventDefault();
     id = $( this ).parent().parent().attr('id');
     id = id.replace('form_','');
@@ -219,7 +218,7 @@ $('a.btn-cancel').click(function(event ){
     collapsThisProject (id);
 
 }); 
-$('.equipment_lists_open').click(function(){
+$('.equipment_lists_open').on('click',function(){
     $.modal.defaults = {
         closeExisting: false, 
         escapeClose: true,
@@ -234,7 +233,7 @@ $('.equipment_lists_open').click(function(){
         fadeDelay: 0.5  
         };
 });
-$('.open_upload_link').click(function(){
+$('.open_upload_link').on('click',function(){
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
         escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -252,7 +251,7 @@ $('.open_upload_link').click(function(){
         };
        
 });
-$('.edit_preparation').submit(function(e){
+$('.edit_preparation').on('submit',function(e){
     e.preventDefault();
     var form = $(this);
     var url = $(this).attr('action');
@@ -261,7 +260,11 @@ $('.edit_preparation').submit(function(e){
     id = id.replace('form_','');
     var project_no = $(this).find('input[name=project_no]').val();
     project_no = project_no.replace(":","_");
-    
+    $.ajaxSetup({
+        headers : {
+            'CSRFToken' : _token
+        }
+    });
     $.ajax({
         url: url,
         type: "post",
@@ -334,7 +337,7 @@ function collapsThisProject ( id ) { // id = project id
         if ( preparation.active == 1) {
             var priprema = preparation.preparation;
             try {
-                priprema = jQuery.parseJSON(priprema);
+                priprema = JSON.parse(priprema);
             } catch (error) {
                 priprema = null;
             }
@@ -354,7 +357,7 @@ function collapsThisProject ( id ) { // id = project id
             
             var mehanicka = preparation.mechanical_processing;
             try {
-                mehanicka = jQuery.parseJSON(mehanicka);
+                mehanicka = JSON.parse(mehanicka);
             } catch (error) {
                 mehanicka = null;
             }
@@ -373,7 +376,7 @@ function collapsThisProject ( id ) { // id = project id
             tr_text += '</span>';
             var oznake = preparation.marks_documentation;
             try {
-                oznake = jQuery.parseJSON(oznake);
+                oznake = JSON.parse(oznake);
             } catch (error) {
                 oznake = null;
             }
@@ -392,31 +395,34 @@ function collapsThisProject ( id ) { // id = project id
         tr_text += '</span>';
         // equipment_input
         tr_text += '<span class="td text_preparation equipment_input">';
+      
         $.ajax({
             type: "get",
-            url: location.origin + '/equipmentList/'+preparation_id+'/'+active,
+            url: location.origin + '/equipmentList/'+preparation_id,
             success: function (data) {
                 equipmentLists = preparation.equipment;
                 isporuceno = preparation.delivered;
-               /*  equipmentLists = jQuery.parseJSON(equipmentLists_json); */
+               /*  equipmentLists = JSON.parse(equipmentLists_json); */
                 $('.row_preparation_text#'+preparation_id).find('.equipmentLists_json').text(equipmentLists_json);
-                if( !jQuery.isEmptyObject( equipment ) ) {
+                console.log(equipmentLists);
+              
+                if( !jQuery.isEmptyObject( equipmentLists ) ) {
                     if ( preparation.active == 1) {
-                        if(equipmentLists.level1 == 1) {
+                        if(equipmentLists[0].level1 == 1) {
                             $.each(equipmentLists, function( index, value1 ) {
-                                tr_text += '<a href="' + location.origin + '/equipment_lists/' + this.id + '/edit" class="equipment_lists_open" rel="modal:open" >' +this.product_number + '</a>';
+                                if(this.level1 == 1) {
+                                    tr_text += '<a href="' + location.origin + '/equipment_lists/' + this.id + '/edit?preparation_id='+preparation.id + '" class="equipment_lists_open" >' +this.product_number + '</a>';
+                                }
                             });
                         } else {
-                            tr_text += '<a href="' + location.origin + '/equipment_lists/' + equipmentLists.id + '/edit" class="equipment_lists_open" rel="modal:open" >Upis opreme</a>' ;
+                            tr_text += '<a href="' + location.origin + '/equipment_lists/' + equipmentLists[0].id + '/edit?preparation_id='+preparation.id + '" class="equipment_lists_open"  >Upis opreme</a>' ;
                         }
-                        
-                        tr_text += '<a href="' + location.origin + '/multiReplaceItem/' + preparation_id + '" class="equipment_lists_open multi_replace" rel="modal:open">Zamjena</a>';
-        
-                        if (! roles.includes('list_view')) {
+                        if ( roles.includes('nabava') || roles.includes('administrator') ) {
+                            tr_text += '<a href="' + location.origin + '/multiReplaceItem/' + preparation.id + '" class="equipment_lists_open multi_replace" >Zamjena</a>';
+                        }
                         if(equipmentLists.mark != null) {
                             tr_text += '<a class="btn-file-input equipment_lists_mark" href="'+ location.origin + '/export/'+preparation_id +'" ><i class="fas fa-download"></i> Preuzmi oznake</a>'
-                            } 
-                        }
+                        } 
                     }
                 } else {
                     tr_text += "Nema zapisa";
@@ -426,7 +432,7 @@ function collapsThisProject ( id ) { // id = project id
                /*  console.log(preparation_id); */
                 $('.row_preparation_text#id_'+preparation_id).prepend(tr_text);
                 $('.row_preparation_text#id_'+preparation_id + ' span.text_preparation.option_input').show();
-                $('.equipment_lists_open').click(function(){
+                $('.equipment_lists_open').on('click',function(){
                     $.modal.defaults = {
                         closeExisting: false, 
                         escapeClose: true,
@@ -441,7 +447,7 @@ function collapsThisProject ( id ) { // id = project id
                         fadeDelay: 0.5  
                         };
                 });
-                $('.open_upload_link').click(function(){
+                $('.open_upload_link').on('click',function(){
                     $.modal.defaults = {
                         closeExisting: false,
                         escapeClose: true,
@@ -457,7 +463,7 @@ function collapsThisProject ( id ) { // id = project id
                         };
                 });
                css();
-                $('.open_upload_link').click(function(){
+                $('.open_upload_link').on('click',function(){
                     var preparation_id = $( this ).find('.preparation_id').text();
                 
                     $('.upload_links .prep_id').val(preparation_id);
@@ -465,12 +471,14 @@ function collapsThisProject ( id ) { // id = project id
                     return false;
                 });
     
-                $('a.btn-cancel').click(function(event ){
+                $('a.btn-cancel').on('click',function(event ){
                     event.preventDefault();
-                    $('.row_preparation_text#id_'+preparation_id).show();
+                    id = $( this ).parent().parent().attr('id');
+                    id = id.replace('form_','');
+                    $('.row_preparation_text.'+project_no).show();
                     $(this).parent().parent().hide();
-                    $(this).parent().siblings().not('.input_preparation.option_input').remove();
-                    /* $(this).parent().parent().remove(); */
+                    
+                    collapsThisProject (id);
                 }); 
             
             },
@@ -483,10 +491,6 @@ function collapsThisProject ( id ) { // id = project id
                                     'line':  jqXhr.responseJSON.line };
     
                 console.log(data_to_send); 
-           
-                if(url.includes("users") && errorThrown == 'Unprocessable Entity' ) {
-                    alert(email_unique);
-                }  else {
                     $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + error + '</div></div></div>').appendTo('body').modal();
                     
                     $.ajax({
@@ -501,7 +505,7 @@ function collapsThisProject ( id ) { // id = project id
                           
                         }
                     });
-                }
+                
             }
         });
         $(this).next('.open_upload_link').toggle();
@@ -511,7 +515,7 @@ function collapsThisProject ( id ) { // id = project id
 btnEdit();
 
 function btnEdit () {
-    $('a.btn-edit').click(function( event ){
+    $('a.btn-edit').on('click',function( event ){
         event.preventDefault();
         var id = $(this).attr('id');
         id = id.replace('edit_','');
@@ -519,9 +523,9 @@ function btnEdit () {
         var preparation_json = $(this).parent().siblings('.preparation_json').text();
         var preparation = '';
         if (preparation_json != '') {
-            preparation = jQuery.parseJSON(preparation_json)
+            preparation = JSON.parse(preparation_json)
         };
-        var users = jQuery.parseJSON($('span.users_json').text());
+        var users = JSON.parse($('span.users_json').text());
         var manager = '';
         
         $.each(users, function( index, value_users ) {
@@ -531,10 +535,11 @@ function btnEdit () {
             }
         });
         var i = 0;
+    
         var priprema = preparation.preparation;
         var priprema_text = '';
-        if (priprema != undefined) {
-            priprema = jQuery.parseJSON(priprema);
+        if (priprema != undefined && ( roles.includes('priprema') || roles.includes('administrator') ) ){
+            priprema =  JSON.parse(priprema);
             $.each(priprema, function( index, value1 ) {
                 priprema_text += '<h5>'+index+'</h5><input type="hidden" name="preparation_title['+index+']"  ><span class="col-md-4"><label for="a_' + i + '" ><input type="radio" name="preparation['+index+']" id="a_' + i + '" value="DA"/> DA</label></span><span class="col-md-4"><label for="b_' + i + '" ><input type="radio" name="preparation['+index+']" id="b_' + i + '" value="NE" /> NE</label></span><span class="col-md-4"><label for="c_' + i + '" ><input type="radio" name="preparation['+index+']" id="c_' + i + '"  value="N/A" /> N/A</label></span>';
                 i++;
@@ -542,8 +547,8 @@ function btnEdit () {
         }
         var mehanicka = preparation.mechanical_processing;
         var mehanicka_text = '';
-        if (mehanicka != undefined) {
-            mehanicka = jQuery.parseJSON(mehanicka);
+        if (mehanicka != undefined && (roles.includes('mehanicka') || roles.includes('administrator') )) {
+            mehanicka =  JSON.parse(mehanicka);
             $.each(mehanicka, function( index, value2 ) {
                 mehanicka_text += '<h5>' + index + '</h5><input type="hidden" name="mechanical_title['+index+']" ><span class="col-md-4"><label for="a_' + i + '" ><input type="radio" name="mechanical_processing['+index+']" id="a_' + i + '" value="DA"/> DA</label></span><span class="col-md-4"><label for="b_' + i + '"  ><input type="radio" name="mechanical_processing['+ index +']" id="b_' + i + '" value="NE" /> NE</label></span><span class="col-md-4"><label for="c_' + i + '"><input type="radio" name="mechanical_processing['+ index +']" id="c_' + i + '" value="N/A" /> N/A</label></span>';
                 i++;
@@ -551,8 +556,8 @@ function btnEdit () {
         }
         var oznake = preparation.marks_documentation;
         var oznake_text = '';
-        if (oznake != undefined) {
-            oznake = jQuery.parseJSON(oznake);
+        if (oznake != undefined && (roles.includes('oznake') || roles.includes('administrator') )) {
+            oznake =  JSON.parse(oznake);
             $.each(oznake, function( index, value3 ) {
                 oznake_text += '<h5>' + index + '</h5><input type="hidden" name="marks_title['+ index +']" ><span class="col-md-4"><label for="a_' + i + '" ><input type="radio" name="marks_documentation['+ index +']" id="a_' + i + '" value="DA"/> DA</label></span><span class="col-md-4"><label for="b_' + i + '" ><input type="radio" name="marks_documentation['+ index +']" id="b_' + i + '" value="NE" /> NE</label></span><span class="col-md-4"><label for="c_' + i + '" ><input type="radio" name="marks_documentation['+ index +']" value="N/A" id="c_' + i + '"  /> N/A</label></span>';
                 i++;
@@ -579,62 +584,67 @@ function btnEdit () {
                 }
             })
         }
-        $.each(priprema, function( index, value_priprema ) {
-            var naziv = index;
-            var vrijednost = value_priprema;
-            $.each($('span.input_preparation.preparation_input input'), function( index, value ) {
-                var element = $(this);
-                if( element.attr('name').includes(naziv) && element.val() == vrijednost) {
-                    $(this).attr('checked','checked');
-                } 
-            });
-        }); 
-        $.each(mehanicka, function( index, value_mehanicka ) {
-            var naziv = index;
-            var vrijednost = value_mehanicka;
-            $.each($('span.input_preparation.mechanical_input input'), function( index, value_span ) {
-                var element = $(this);
-                if( element.attr('name').includes(naziv) && element.val() == vrijednost) {
-                    $(this).attr('checked','checked');
-                } 
-            });
-        }); 
-        $.each(oznake, function( index, value_oznake ) {
-            var naziv = index;
-            var vrijednost = value_oznake;
-            $.each($('span.input_preparation.marks_input input'), function( index, value_span2 ) {
-                var element = $(this);
-                if( element.attr('name').includes(naziv) && element.val() == vrijednost) {
-                    $(this).attr('checked','checked');
-                } 
-            });
-        }); 
-        
+        if(roles.includes('priprema') || roles.includes('administrator') ) {
+            $.each(priprema, function( index, value_priprema ) {
+                var naziv = index;
+                var vrijednost = value_priprema;
+                $.each($('span.input_preparation.preparation_input input'), function( index, value ) {
+                    var element = $(this);
+                    if( element.attr('name').includes(naziv) && element.val() == vrijednost) {
+                        $(this).attr('checked','checked');
+                    } 
+                });
+            }); 
+        }
+      
+        if(roles.includes('mehanicka')|| roles.includes('administrator') ) {
+            $.each(mehanicka, function( index, value_mehanicka ) {
+                var naziv = index;
+                var vrijednost = value_mehanicka;
+                $.each($('span.input_preparation.mechanical_input input'), function( index, value_span ) {
+                    var element = $(this);
+                    if( element.attr('name').includes(naziv) && element.val() == vrijednost) {
+                        $(this).attr('checked','checked');
+                    } 
+                });
+            }); 
+        }
+     
+        if(roles.includes('oznake')|| roles.includes('administrator') ) {
+            $.each(oznake, function( index, value_oznake ) {
+                var naziv = index;
+                var vrijednost = value_oznake;
+                $.each($('span.input_preparation.marks_input input'), function( index, value_span2 ) {
+                    var element = $(this);
+                    if( element.attr('name').includes(naziv) && element.val() == vrijednost) {
+                        $(this).attr('checked','checked');
+                    } 
+                });
+            }); 
+        }
     });
 }
 
-$('.show_inactive').click(function(){
+$('.show_inactive').on('click',function(){
     $('.show_active').toggle();
     $('.show_inactive').toggle();
 });
-$('.show_active').click(function(){
+$('.show_active').on('click',function(){
     $('.show_active').toggle();
     $('.show_inactive').toggle();
 });
-$('.upload_file input[type=file]').change(function(){
-    $(this).parent().parent().submit();
+$('.upload_file input[type=file]').on('change',function(){
+    $(this).parent().parent().trigger('submit');
 });
-$('.upload_file_replace input[type=file]').change(function(){
-    $(this).parent().parent().submit();
+$('.upload_file_replace input[type=file]').on('change',function(){
+    $(this).parent().parent().trigger('submit');
 });
-
-$('a.btn-cancel2').click(function(event ){
+$('a.btn-cancel2').on('click',function(event ){
     event.preventDefault();
     $(this).parent().parent().prev('p').show();
     $(this).parent().parent().hide();
 });
-
-$('#mySearch_preparation').keyup(function() {
+$('#mySearch_preparation').on('keyup',function() {
     var trazi = $( this ).val().toLowerCase();
     $('.row_preparation_text').filter(function() {
         $(this).toggle($(this).text().toLowerCase().indexOf(trazi) > -1)
@@ -643,16 +653,60 @@ $('#mySearch_preparation').keyup(function() {
         $(this).toggle($(this).text().toLowerCase().indexOf(trazi) > -1)
     });
 });	
-$('.clearable__clear').click(function(){
+$('.clearable__clear').on('click',function(){
     $('#mySearch_preparation').val('');
     $('.row_preparation_text').show();
 
     //   $('.form_preparation').hide();
 });
-$('.table_preparations .tbody').width($('.table_preparations .thead').width());
+/* $('.table_preparations .tbody').width($('.table_preparations .thead').width()); */
 
 function css () {
     $('.status_NE').css('background','rgba(256,0,0,0.3)');
     $('.status_DA').css('background','rgba(0,256,0,0.3)');
     $('.status_N_A').css('background','rgba(0,0,0,0.2)');
 }
+
+$('#close_preparation').on('click',function(e){
+    e.preventDefault();
+    url = $(this).attr('href');
+    id = location.pathname.substr( location.pathname.lastIndexOf("/")+1, location.pathname.length - location.pathname.lastIndexOf("/"));
+    console.log(url);
+    console.log(id);
+    $.ajax({
+        type: "get",
+        url: url,
+        success: function (data) {
+            $('#id_'+id).remove();
+            $('#form_'+id).remove();
+
+        },
+        error: function(jqXhr, json, errorThrown) {
+            alert("Projekt nema dovoljno podataka, došlo je do greške!");
+            $(".btn-submit").prop("disabled", false);
+            var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                'message':  jqXhr.responseJSON.message,
+                                'file':  jqXhr.responseJSON.file,
+                                'line':  jqXhr.responseJSON.line };
+    
+            console.log(data_to_send); 
+       
+            
+            $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + error + '</div></div></div>').appendTo('body').modal();
+            
+            $.ajax({
+                url: 'errorMessage',
+                type: "get",
+                data: data_to_send,
+                success: function( response ) {
+                    console.log(response);
+                }, 
+                error: function(jqXhr, json, errorThrown) {
+                    alert(jqXhr.responseJSON); 
+                    
+                }
+            });
+            
+        }
+    });
+});

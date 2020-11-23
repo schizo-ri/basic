@@ -44,7 +44,9 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('Centaur::roles.create');
+        $modules = array('category_employees','designings','employees','equipment_lists','list_reports','list_updates','preparations','preparation_employees','preparation_records','projects','project_employees','publishes','publish_projects','roles','role_users','users');
+        $permissions = array('view','create','update','delete');
+        return view('Centaur::roles.create',['modules' => $modules ,'permissions' => $permissions]);
     }
 
     /**
@@ -111,9 +113,11 @@ class RoleController extends Controller
         // $id = $this->decode($hash);
         $role = $this->roleRepository->findById($id);
 
+        $modules = array('category_employees','designings','employees','equipment_lists','list_reports','list_updates','preparations','preparation_employees','preparation_records','projects','project_employees','publishes','publish_projects','roles','role_users','users');
+        $permissions = array('view','create','update','delete');
+
         if ($role) {
-            return view('Centaur::roles.edit')
-                ->with('role', $role);
+            return view('Centaur::roles.edit',['role' => $role,'permissions' => $permissions,'modules' => $modules ]);
         }
 
         session()->flash('error', 'Invalid role.');

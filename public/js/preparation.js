@@ -94,6 +94,9 @@ $('.update_preparation_employee').submit(function(e){
 
 open_list();
 
+var body_height = $('body').height();
+var position;
+var checkbox_height;
 function open_list () {
     var expanded = false;
 
@@ -122,7 +125,11 @@ function open_list () {
                 }
             });
         }
-        console.log("expanded " + expanded);
+        position = this_checkboxes1.offset().top;
+        checkbox_height = this_checkboxes1.height();
+        if(position + checkbox_height + 100 > body_height) {
+            this_checkboxes1.css({"bottom": '100%', "top": "auto"});
+        } 
     });
 
 }

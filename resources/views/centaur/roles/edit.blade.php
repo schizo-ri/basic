@@ -13,107 +13,35 @@
             {!! ($errors->has('slug') ? $errors->first('slug', '<p class="text-danger">:message</p>') : '') !!}
         </div>
 
-        <h5>Permissions:</h5>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[users.create]" value="1" {{ $role->hasAccess('users.create') ? 'checked' : '' }}>
-                users.create
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[users.update]" value="1" {{ $role->hasAccess('users.update') ? 'checked' : '' }}>
-                users.update
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[users.view]" value="1" {{ $role->hasAccess('users.view') ? 'checked' : '' }}>
-                users.view
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[users.destroy]" value="1" {{ $role->hasAccess('users.destroy') ? 'checked' : '' }}>
-                users.destroy
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[roles.create]" value="1" {{ $role->hasAccess('roles.create') ? 'checked' : '' }}>
-                roles.create
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[roles.update]" value="1" {{ $role->hasAccess('roles.update') ? 'checked' : '' }}>
-                roles.update
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[roles.view]" value="1" {{ $role->hasAccess('roles.view') ? 'checked' : '' }}>
-                roles.view
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[roles.delete]" value="1" {{ $role->hasAccess('roles.delete') ? 'checked' : '' }}>
-                roles.delete
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[employees.create]" value="1" {{ $role->hasAccess('employees.create') ? 'checked' : '' }}>
-                employees.create
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[employees.update]" value="1" {{ $role->hasAccess('employees.update') ? 'checked' : '' }}>
-                employees.update
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[employees.view]" value="1" {{ $role->hasAccess('employees.view') ? 'checked' : '' }}>
-                employees.view
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[employees.delete]" value="1" {{ $role->hasAccess('employees.delete') ? 'checked' : '' }}>
-                employees.delete
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[projects.create]" value="1" {{ $role->hasAccess('projects.create') ? 'checked' : '' }}>
-                projects.create
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[projects.update]" value="1" {{ $role->hasAccess('projects.update') ? 'checked' : '' }}>
-                projects.update
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[projects.view]" value="1" {{ $role->hasAccess('projects.view') ? 'checked' : '' }}>
-                projects.view
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="permissions[projects.delete]" value="1" {{ $role->hasAccess('projects.delete') ? 'checked' : '' }}>
-                projects.delete
-            </label>
-        </div>
+        <h5>Permissions: <input type="search" placeholder="{{ __('basic.search')}}" id="mySearch"></span></h5>
+        <button type="button" id="checkedAll">Označi sve</button><button type="button" id="uncheckedAll">Skini sve ovnake</button>
+        @foreach ($modules as $module)
+            @foreach ($permissions as $permission)
+                <div class="checkbox panel">
+                    <label>
+                        <input type="checkbox" name="permissions[{{$module}}.{{ $permission }}]" value="1" {!! $role->hasAccess( $module .'.'. $permission ) ? 'checked' : '' !!}>
+                        {{$module}}.{{ $permission }}
+                    </label>
+                </div>
+            @endforeach
+        @endforeach
         {{ csrf_field() }}
 		{{ method_field('PUT') }}
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="Update">
     </fieldset>
     </form>
 </div>
-      
+<script>
+    $("#mySearch").keyup( function() {
+		var value = $(this).val().toLowerCase();
+		$(".panel").filter(function() {
+			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+		});
+    });
+    $('#checkedAll').click(function(){
+        $('input[type="checkbox"]:visible').prop('checked',true);
+    });
+    $('#uncheckedAll').click(function(){
+        $('input[type="checkbox"]:visible').prop('checked',false);
+    });
+</script>

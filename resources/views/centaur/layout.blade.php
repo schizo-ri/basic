@@ -47,15 +47,27 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            @if (Sentinel::inRole('administrator'))
+                            @if(Sentinel::getUser()->hasAccess(['publishes.view']))
                                 <li ><a href="{{ route('dashboard') }}">Raspored</a></li>
+                            @endif
+                            @if(Sentinel::getUser()->hasAccess(['users.view']))
                                 <li class="{{ Request::is('users*') ? 'active' : '' }}"><a href="{{ route('users.index') }}">Users</a></li>
+                            @endif
+                            @if(Sentinel::getUser()->hasAccess(['roles.view']))
                                 <li class="{{ Request::is('roles*') ? 'active' : '' }}"><a href="{{ route('roles.index') }}">Roles</a></li>
+                            @endif
+                            @if(Sentinel::getUser()->hasAccess(['employees.view']))
                                 <li class="{{ Request::is('employees*') ? 'active' : '' }}"><a href="{{ route('employees.index') }}">Djelatnici</a></li>
+                            @endif
+                            @if(Sentinel::getUser()->hasAccess(['projects.view']))
                                 <li class="{{ Request::is('projects*') ? 'active' : '' }}"><a href="{{ route('projects.index') }}">Projekti</a></li>
+                            @endif
+                            @if(Sentinel::getUser()->hasAccess(['designings.view']))
                                 <li class="{{ Request::is('designings*') ? 'active' : '' }}"><a href="{{ route('designings.index') }}">Projektiranje</a></li>
                             @endif
-                            <li class="{{ Request::is('preparations*') ? 'active' : '' }}"><a href="{{ route('preparations.index') }}">Priprema i mehanička obrada</a></li>
+                            @if(Sentinel::getUser()->hasAccess(['preparations.view']))
+                                <li class="{{ Request::is('preparations*') ? 'active' : '' }}"><a href="{{ route('preparations.index') }}">Proizvodnja</a></li>
+                            @endif
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             @if (Sentinel::check())

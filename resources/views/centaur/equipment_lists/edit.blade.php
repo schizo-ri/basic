@@ -1,6 +1,6 @@
 @extends('Centaur::layout')
 
-@section('title', 'Priprema i mehanička obrada')
+@section('title', 'Lista - '.$equipments->first()->preparation1['name'] )
 
 @section('content')
 @php
@@ -9,7 +9,7 @@
 @endphp
 <div class="page-header" id="first_anchor">
     <div class="page_navigation pull-left">
-        <a class="link_back " href="{{ route('preparations.index') }}">Priprema i mehanička obrada</a>
+        <a class="link_back " href="{{ route('preparations.index') }}">Proizvodnja</a>
         <span>/</span>
         <a class="link_back " href="{{ route('preparations.show', $equipments->first()->preparation_id) }}">Projekt  {!! $equipments->first() ?  $equipments->first()->preparation1->project_no : '' !!}</a>
         <span>/</span>
@@ -135,9 +135,9 @@
                                             <span class="td text_preparation ">{{ $equipment_level2->unit }}</span>
                                             <span class="td text_preparation quantity ">{{ $equipment_level2->quantity }}</span>
                                             <span class="td text_preparation delivered">
-                                                <input name="delivered[{{ $equipment_level2->id }}]" type="number" step="0.01"  title="Please enter number only" value="{{ $delivered }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') && ! Sentinel::inRole('upload_list') ? 'disabled' : '' !!} />    
+                                                <input name="delivered[{{ $equipment_level2->id }}]" type="number" step="0.01"  title="Please enter number only" value="{{ $delivered }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} />    
                                                 @if ( $delivered )
-                                                    @if (Sentinel::inRole('administrator') || Sentinel::inRole('list_view')  )
+                                                    @if (Sentinel::inRole('administrator') || Sentinel::inRole('nabava')  )
                                                         <span class="arrow_down"><i class="fas fa-arrow-down"></i></span>  
                                                         <span class="delivered_history">
                                                             @if ( $equipment_level2->delivered)
@@ -149,11 +149,11 @@
                                                                 <span class="item_delivered">
                                                                     @if ($listUpdate->quantity)
                                                                         {{ date('d.m.Y H:i',strtotime($listUpdate->created_at)) . ' | ' . $listUpdate->quantity  . ' ' .  $equipment_level2->unit }} {!! $listUpdate->user ? $listUpdate->user->first_name : '' !!} <br>
-                                                                        {{-- @if (Sentinel::inRole('administrator')) --}}
-                                                                        {{--    <a href="{{ route('list_updates.destroy', $listUpdate->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši update"> --}}
-                                                                        {{--         <i class="fas fa-trash-alt"></i> --}}
-                                                                        {{--     </a> --}}
-                                                                        {{-- @endif --}}
+                                                                      {{--   @if (Sentinel::inRole('administrator')) 
+                                                                           <a href="{{ route('list_updates.destroy', $listUpdate->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši update"> 
+                                                                               <i class="fas fa-trash-alt"></i> 
+                                                                            </a>
+                                                                        @endif --}}
                                                                     @endif
                                                                 </span>
                                                             @endforeach
@@ -162,11 +162,16 @@
                                                 @endif
                                             </span>
                                             <span class="td text_preparation replace">
-                                            @if (Sentinel::inRole('list_view') || Sentinel::inRole('moderator') || Sentinel::inRole('administrator'))
-                                                @if ($equipment_level2->replace_item == null && $equipment_level2->delivered < $equipment_level2->quantity || $delivered == 0  )
-                                                    <span class="action_confirm2 btn-file-input equipment_lists_mark" title="Zamjeni stavku" id="{{ $equipment_level2->id }}" ><i class="fas fa-exchange-alt"></i></span>
-                                                @endif 
-                                            @endif                                                                  
+                                                @if (Sentinel::inRole('nabava') || Sentinel::inRole('administrator'))
+                                                    @if ($equipment_level2->replace_item == null && $equipment_level2->delivered < $equipment_level2->quantity || $delivered == 0  )
+                                                        <span class="action_confirm2 btn-file-input equipment_lists_mark" title="Zamjeni stavku" id="{{ $equipment_level2->id }}" ><i class="fas fa-exchange-alt"></i></span>
+                                                    @endif 
+                                                @endif
+                                                @if (Sentinel::inRole('administrator') ) 
+                                                    <a href="{{ route('equipment_lists.destroy', $equipment_level2->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši stavku">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a> 
+                                                @endif
                                             </span>
                                         @else
                                             <span class="td text_preparation"></span>
@@ -181,89 +186,91 @@
                                             </span>
                                         @endif
                                     </p>
-                                    <span class="content">
-                                        @foreach ($equipments->where('stavka_id_level2',$equipment_level2->id) as $equipment_level3)
-                                            <!-- stavka -->
-                                                <input name="id[{{ $equipment_level3->id }}]" value="{{ $equipment_level3->id }}" hidden/>
-                                                <p class="tr row_preparation_text {!! $equipment_level3->replace_item == 1 ? 'removed_item' : '' !!} item_level3" id="{{ $equipment_level3->id }}" >
-                                                    @php
-                                                        $listUpdates_item = $listUpdates->where('item_id', $equipment_level3->id );
-                                                        $delivered = $equipment_level3->delivered;
-                                                    
-                                                        $delivered += $listUpdates_item->sum('quantity');
-                                                    @endphp
-                                                    <span class="td text_preparation align_left padding_h_10">
-                                                        @if ($equipment_level3->replace_item == 1)
-                                                            @if($equipments->where('replaced_item_id', $equipment_level3->id )->first())
-                                                                <a class="link_to_replaced" href="#{{ $equipments->where('replaced_item_id', $equipment_level3->id )->first()->id }}" >
+                                    @if(count($equipments->where('stavka_id_level2',$equipment_level2->id) ) > 0)
+                                        <span class="content">
+                                            @foreach ($equipments->where('stavka_id_level2',$equipment_level2->id) as $equipment_level3)
+                                                <!-- stavka -->
+                                                    <input name="id[{{ $equipment_level3->id }}]" value="{{ $equipment_level3->id }}" hidden/>
+                                                    <p class="tr row_preparation_text {!! $equipment_level3->replace_item == 1 ? 'removed_item' : '' !!} item_level3" id="{{ $equipment_level3->id }}" >
+                                                        @php
+                                                            $listUpdates_item = $listUpdates->where('item_id', $equipment_level3->id );
+                                                            $delivered = $equipment_level3->delivered;
+                                                        
+                                                            $delivered += $listUpdates_item->sum('quantity');
+                                                        @endphp
+                                                        <span class="td text_preparation align_left padding_h_10">
+                                                            @if ($equipment_level3->replace_item == 1)
+                                                                @if($equipments->where('replaced_item_id', $equipment_level3->id )->first())
+                                                                    <a class="link_to_replaced" href="#{{ $equipments->where('replaced_item_id', $equipment_level3->id )->first()->id }}" >
+                                                                @endif
+                                                            @elseif ($equipment_level3->replaced_item_id != null)
+                                                                @if ($equipments->where('id', $equipment_level3->replaced_item_id )->first())
+                                                                    <a class="link_to_replaced" href="#{{ $equipment_level3->where('id', $equipment_level3->replaced_item_id )->first()->id }}">
+                                                                @endif
                                                             @endif
-                                                        @elseif ($equipment_level3->replaced_item_id != null)
-                                                            @if ($equipments->where('id', $equipment_level3->replaced_item_id )->first())
-                                                                <a class="link_to_replaced" href="#{{ $equipment_level3->where('id', $equipment_level3->replaced_item_id )->first()->id }}">
+                                                                {{ $equipment_level3->product_number}}
+                                                            @if ($equipment_level3->replace_item == 1)
+                                                                @if($equipments->where('replaced_item_id', $equipment_level3->id )->first())
+                                                                    [ zamjena: {{ $equipments->where('replaced_item_id', $equipment_level3->id )->first()->product_number }} ]
+                                                                </a>
+                                                                @endif
+                                                            @elseif ($equipment_level3->replaced_item_id != null)
+                                                                @if ($equipments->where('id', $equipment_level3->replaced_item_id )->first())
+                                                                [ {{ $equipments->where('id', $equipment_level3->replaced_item_id )->first()->product_number }} ]
+                                                                </a>
+                                                                @endif
                                                             @endif
-                                                        @endif
-                                                            {{ $equipment_level3->product_number}}
-                                                        @if ($equipment_level3->replace_item == 1)
-                                                            @if($equipments->where('replaced_item_id', $equipment_level3->id )->first())
-                                                                [ zamjena: {{ $equipments->where('replaced_item_id', $equipment_level3->id )->first()->product_number }} ]
-                                                            </a>
+                                                        </span>
+                                                        <span class="td text_preparation">{{ $equipment_level3->mark }}</span>
+                                                        <span class="td text_preparation">{{ $equipment_level3->name }}</span>
+                                                        <span class="td text_preparation ">{{ $equipment_level3->unit }}</span>
+                                                        <span class="td text_preparation quantity ">{{ $equipment_level3->quantity }}</span>
+                                                        <span class="td text_preparation delivered">
+                                                            <input name="delivered[{{ $equipment_level3->id }}]" type="number" step="0.01"  title="Please enter number only" value="{{ $delivered }}"  {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!}  />    
+                                                            @if ( $delivered )
+                                                                @if ( Sentinel::inRole('administrator') || Sentinel::inRole('nabava') )
+                                                                    <span class="arrow_down"><i class="fas fa-arrow-down"></i></span>  
+                                                                    <span class="delivered_history">
+                                                                        @if ( $equipment_level3->delivered)
+                                                                            <span class="item_delivered">
+                                                                                {{ date('d.m.Y',strtotime($equipment_level3->created_at)) . ' | ' . $equipment_level3->delivered . ' ' .  $equipment_level3->unit }}
+                                                                            </span>
+                                                                        @endif
+                                                                        @foreach ($listUpdates_item as $listUpdate)
+                                                                            <span class="item_delivered">
+                                                                                @if ($listUpdate->quantity)
+                                                                                    {{ date('d.m.Y H:i',strtotime($listUpdate->created_at)) . ' | ' . $listUpdate->quantity  . ' ' .  $equipment_level3->unit  . ' | '}} {!! $listUpdate->user ? $listUpdate->user->first_name : '' !!}
+                                                                                
+                                                                                    {{--  @if (Sentinel::inRole('administrator'))
+                                                                                        <a href="{{ route('list_updates.destroy', $listUpdate->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši update">
+                                                                                            <i class="fas fa-trash-alt"></i>
+                                                                                        </a>
+                                                                                    @endif --}}
+                                                                                
+                                                                                @endif
+                                                                            </span>
+                                                                        @endforeach
+                                                                    </span>
+                                                                @endif                                        
                                                             @endif
-                                                        @elseif ($equipment_level3->replaced_item_id != null)
-                                                            @if ($equipments->where('id', $equipment_level3->replaced_item_id )->first())
-                                                            [ {{ $equipments->where('id', $equipment_level3->replaced_item_id )->first()->product_number }} ]
-                                                            </a>
-                                                            @endif
-                                                        @endif
-                                                    </span>
-                                                    <span class="td text_preparation">{{ $equipment_level3->mark }}</span>
-                                                    <span class="td text_preparation">{{ $equipment_level3->name }}</span>
-                                                    <span class="td text_preparation ">{{ $equipment_level3->unit }}</span>
-                                                    <span class="td text_preparation quantity ">{{ $equipment_level3->quantity }}</span>
-                                                    <span class="td text_preparation delivered">
-                                                        <input name="delivered[{{ $equipment_level3->id }}]" type="number" step="0.01"  title="Please enter number only" value="{{ $delivered }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') && ! Sentinel::inRole('upload_list') ? 'disabled' : '' !!} />    
-                                                        @if ( $delivered )
-                                                            @if (Sentinel::inRole('administrator') || Sentinel::inRole('list_view')  )
-                                                                <span class="arrow_down"><i class="fas fa-arrow-down"></i></span>  
-                                                                <span class="delivered_history">
-                                                                    @if ( $equipment_level3->delivered)
-                                                                        <span class="item_delivered">
-                                                                            {{ date('d.m.Y',strtotime($equipment_level3->created_at)) . ' | ' . $equipment_level3->delivered . ' ' .  $equipment_level3->unit }}
-                                                                        </span>
-                                                                    @endif
-                                                                    @foreach ($listUpdates_item as $listUpdate)
-                                                                        <span class="item_delivered">
-                                                                            @if ($listUpdate->quantity)
-                                                                                {{ date('d.m.Y H:i',strtotime($listUpdate->created_at)) . ' | ' . $listUpdate->quantity  . ' ' .  $equipment_level3->unit  . ' | '}} {!! $listUpdate->user ? $listUpdate->user->first_name : '' !!}
-                                                                              
-                                                                                {{--  @if (Sentinel::inRole('administrator'))
-                                                                                    <a href="{{ route('list_updates.destroy', $listUpdate->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši update">
-                                                                                        <i class="fas fa-trash-alt"></i>
-                                                                                    </a>
-                                                                                @endif --}}
-                                                                            
-                                                                            @endif
-                                                                        </span>
-                                                                    @endforeach
-                                                                </span>
-                                                            @endif                                        
-                                                        @endif
-                                                    </span>
-                                                    <span class="td text_preparation replace">
-                                                        @if (Sentinel::inRole('list_view') || Sentinel::inRole('moderator') || Sentinel::inRole('administrator'))
-                                                            @if ($equipment_level3->replace_item == null && $equipment_level3->delivered < $equipment_level3->quantity || $delivered == 0  )
-                                                                <span class="action_confirm2 btn-file-input equipment_lists_mark" title="Zamjeni stavku" id="{{ $equipment_level3->id }}" ><i class="fas fa-exchange-alt"></i></span>
-                                                            @endif 
-                                                        @endif  
-                                                        @if (Sentinel::inRole('administrator') ) 
-                                                            <a href="{{ route('equipment_lists.destroy', $equipment_level2->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši stavku">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </a> 
-                                                        @endif                                                                
-                                                    </span>
-                                                </p>
-                                            <!-- end stavka -->
-                                        @endforeach
-                                    </span> 
+                                                        </span>
+                                                        <span class="td text_preparation replace">
+                                                            @if (Sentinel::inRole('nabava') || Sentinel::inRole('administrator'))
+                                                                @if ($equipment_level3->replace_item == null && $equipment_level3->delivered < $equipment_level3->quantity || $delivered == 0  )
+                                                                    <span class="action_confirm2 btn-file-input equipment_lists_mark" title="Zamjeni stavku" id="{{ $equipment_level3->id }}" ><i class="fas fa-exchange-alt"></i></span>
+                                                                @endif 
+                                                            @endif  
+                                                            @if (Sentinel::inRole('administrator') ) 
+                                                                <a href="{{ route('equipment_lists.destroy', $equipment_level3->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši stavku">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </a> 
+                                                            @endif                                                                
+                                                        </span>
+                                                    </p>
+                                                <!-- end stavka -->
+                                            @endforeach
+                                        </span> 
+                                    @endif
                                 <!-- end podnaslov -->
                             @endforeach
                         </span>
@@ -315,7 +322,7 @@
                                     <span class="td text_preparation ">{{ $equipment->unit }}</span>
                                     <span class="td text_preparation quantity ">{{ $equipment->quantity }}</span>
                                     <span class="td text_preparation delivered">
-                                        <input name="delivered[]" type="number" step="0.01"  title="Please enter number only" value="{{ $delivered }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} />    
+                                        <input name="delivered[]" type="number" step="0.01"  title="Please enter number only" value="{{ $delivered }}"  {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!}  />    
                                         @if ( $delivered )
                                             @if (Sentinel::inRole('administrator') || Sentinel::inRole('list_view')  )
                                                 <span class="arrow_down"><i class="fas fa-arrow-down"></i></span>  
@@ -337,13 +344,13 @@
                                         @endif
                                     </span>
                                     <span class="td text_preparation replace">
-                                        @if (Sentinel::inRole('list_view') || Sentinel::inRole('moderator') || Sentinel::inRole('administrator'))
+                                        @if (Sentinel::inRole('nabava') || Sentinel::inRole('administrator'))
                                             @if ($equipment->replace_item == null && $equipment->delivered < $equipment->quantity || $delivered == 0  )
                                                 <span class="action_confirm2 btn-file-input equipment_lists_mark" title="Zamjeni stavku" id="{{ $equipment->id }}" ><i class="fas fa-exchange-alt"></i></span>
                                             @endif 
                                         @endif
                                         @if (Sentinel::inRole('administrator') ) 
-                                            <a href="{{ route('equipment_lists.destroy', $equipment_level1->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši stavku">
+                                            <a href="{{ route('equipment_lists.destroy', $equipment->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="obriši stavku">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a> 
                                         @endif
@@ -357,12 +364,12 @@
                     @endforeach                    
                 @endif
             </div>
-            @if ( Sentinel::inRole('priprema') || Sentinel::inRole('administrator') || Sentinel::inRole('upload_list'))
+            @if ( Sentinel::inRole('priprema')  )
                 @csrf
                 <input class="btn btn-lg btn-primary store_changes" type="submit" value="Spremi">
             @endif
         </form>
-        <form class="create_item" accept-charset="UTF-8" role="form" method="post" action="{{ route('equipment_lists.create') }}">
+        <form class="create_item" accept-charset="UTF-8" role="form" method="post" action="{{ route('equipment_lists.store') }}">
             <p>Zamjena stavke</p>
             <input name="preparation_id" id="preparation_id"  value="{{ $preparation_id }}" hidden />
             <input name="product_number" id="product_number" placeholder="Upiši broj produkta..." value="{{ old('product_number') }}" required/>
@@ -379,7 +386,7 @@
         </form>
        
       {{--   @if ( $equipments->where('level1',1)->first())
-            <form class="create_item_siemens" accept-charset="UTF-8" role="form" method="post" action="{{ route('equipment_lists.create') }}">
+            <form class="create_item_siemens" accept-charset="UTF-8" role="form" method="post" action="{{ route('equipment_lists.store') }}">
                 <p>Unos nove stavke</p>
                 <input name="preparation_id" id="preparation_id1"  value="{{ $preparation_id }}" hidden />
                 <input name="product_number" id="product_number1" placeholder="Upiši broj produkta..." value="{{ old('product_number') }}" required/>
@@ -524,7 +531,6 @@
             if( $('#stavka_id_level1')) {
                 stavka_id_level2 = $('#stavka_id_level2').val();
             }
-
             $.ajax({
                 url:  location.origin +'/addItem', 
                 type: 'post',
@@ -541,8 +547,7 @@
             })
             .done(function( msg ) {
                 console.log(msg);
-               /*  location.reload(); */
-                console.log("Prošlo");
+                $('.tbody').load(location.href + ' .tbody>div');
 
             })
             .fail(function() {

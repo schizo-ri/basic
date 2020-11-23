@@ -20,6 +20,25 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
+    /*
+	* The Eloquent designingModel model name
+	* 
+	* @var string
+	*/
+	protected static $designingModel = 'App\Models\Designing'; 
+    
+    /*
+	* Returns the equipmentList relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasmany
+	*/
+	
+	public function designins()
+	{
+		return $this->hasMany(static::$designingModel,'designer_id');
+	}
+
+
     /**
      * The attributes that should be hidden for arrays.
      *

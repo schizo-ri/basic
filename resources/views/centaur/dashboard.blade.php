@@ -1,17 +1,17 @@
 @extends('Centaur::layout')
 
 @section('title', 'Raspored')
-<link href="{{ URL::asset('node_modules/@fullcalendar/core/main.css') }}" rel='stylesheet' />
-<link href="{{ URL::asset('node_modules/@fullcalendar/daygrid/main.css') }}" rel='stylesheet' />
-<link href="{{ URL::asset('node_modules/@fullcalendar/list/main.css') }}" rel='stylesheet' />
+    <link href="{{ URL::asset('node_modules/@fullcalendar/core/main.css') }}" rel='stylesheet' />
+    <link href="{{ URL::asset('node_modules/@fullcalendar/daygrid/main.css') }}" rel='stylesheet' />
+    <link href="{{ URL::asset('node_modules/@fullcalendar/list/main.css') }}" rel='stylesheet' />
 
-<script  src="{{ URL::asset('node_modules/@fullcalendar/core/main.js') }}"></script>
-<script type="module" src="{{ URL::asset('node_modules/@fullcalendar/daygrid/main.js') }}"></script>
-<script type="module" src="{{ URL::asset('node_modules/@fullcalendar/interaction/main.js') }}"></script>
-<script type="module" src="{{ URL::asset('node_modules/@fullcalendar/list/main.js') }}"></script>
-<script type="module" src="{{ URL::asset('node_modules/@fullcalendar/resource-common/main.js') }}"></script>
-<script src="{{ URL::asset('screenshot/html2canvas.min.js') }}"></script>
-<script src="{{ URL::asset('screenshot/canvas2image.js') }}"></script>
+    <script  src="{{ URL::asset('node_modules/@fullcalendar/core/main.js') }}"></script>
+    <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/daygrid/main.js') }}"></script>
+    <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/interaction/main.js') }}"></script>
+    <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/list/main.js') }}"></script>
+    <script type="module" src="{{ URL::asset('node_modules/@fullcalendar/resource-common/main.js') }}"></script>
+    <script src="{{ URL::asset('screenshot/html2canvas.min.js') }}"></script>
+    <script src="{{ URL::asset('screenshot/canvas2image.js') }}"></script>
 @php
     $url = $_SERVER['HTTP_HOST'] . $_SERVER["REQUEST_URI"] ;
     if(isset(parse_url($url)['query'])) {
@@ -23,16 +23,21 @@
  //   dd(get_defined_vars());
 @endphp
 @section('content')
-<div class="row calendar_main">
+@if(Sentinel::getUser()->hasAccess(['publishes.view']))
+<div class=" calendar_main">
     @if (Sentinel::check())    
         <main class="col-lg-6 col-md-12" >
           {{-- 
-          
             <a class="" href="{{ route('android.index') }}" ><span>android</span></a>
              --}}
-
-            <a class='new_project' href="{{ route('projects.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" title="Dodaj novi projekt" /> Novi projekt</a>
-         
+           
+            @if(Sentinel::getUser()->hasAccess(['projects.create']))
+                <a class='new_project' href="{{ route('projects.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" title="Dodaj novi projekt" /> Novi projekt</a>
+            @endif
+            <label class="filter_project">
+                <input type="search" placeholder="Traži" id="mySearchProject"  name="search">
+                <i class="clearable__clear">&times;</i>
+            </label>
             <div id='calendar'></div>
            {{--  <div>
                 <h2 class="toCanvas" style="display: none">To Canvas</h2>
@@ -43,7 +48,9 @@
             <div hidden class="dataArrResource">{!! json_encode($dataArrResource) !!}</div>
         </main>    
         <aside class="col-lg-6 col-md-12">
-            <span class="publish_btn pull_right" >Publish</span>
+            @if(Sentinel::getUser()->hasAccess(['publishes.create']))
+                <span class="publish_btn pull_right" >Publish</span>
+            @endif
             <form id="fupForm" enctype="multipart/form-data">
 
             </form>
@@ -114,7 +121,9 @@
                 </div>
             </div>
             <div class='btn-toolbar'>
-                <a href="{{ route('projects.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" title="Dodaj novi projekt" /></a>
+                @if(Sentinel::getUser()->hasAccess(['projects.create']))
+                    <a href="{{ route('projects.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" title="Dodaj novi projekt" /></a>
+                @endif
             </div>
             <div class="list">
                 <div class="projects_list first">
@@ -131,13 +140,15 @@
                                                     <p class="{{ $project_employee->date }}" title="{{ $project_employee->employee->category['description'] }}">
                                                     {{ $project_employee->employee->category['mark'] . ' | ' .  $project_employee->employee['first_name'] . ' ' . $project_employee->employee['last_name'] }}</p>
                                                     <!-- <a href="{{ route('project_employees.destroy', $project_employee->id) }}" class="delete_btn action_confirm" data-method="delete" data-token="{{ csrf_token() }}" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>-->
-                                                    <form class="delete_form" action="{{ action('ProjectEmployeeController@destroy', ['id' => $project_employee->id]) }}" method="POST" onSubmit="if(!confirm('Želiš li stvarno obrisati djelatnika sa projekta?')){return false;}">
-                                                        @method('DELETE')
-                                                        @csrf
-                                                        <button type="submit" class="" title="Obriši djelatnika sa projekta">
-                                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                                        </button>
-                                                    </form>
+                                                    @if( Sentinel::inRole('administrator'))
+                                                        <form class="delete_form" action="{{ action('ProjectEmployeeController@destroy', ['id' => $project_employee->id]) }}" method="POST" onSubmit="if(!confirm('Želiš li stvarno obrisati djelatnika sa projekta?')){return false;}">
+                                                            @method('DELETE')
+                                                            @csrf
+                                                            <button type="submit" class="" title="Obriši djelatnika sa projekta">
+                                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 </div>
                                             @endif
                                         @endforeach
@@ -148,13 +159,15 @@
                                                 <p class="{{ $project_employee->date }}" title="{{ $project_employee->employee->category['description'] }}">
                                                 {{ $project_employee->employee->category['mark'] . ' | ' .  $project_employee->employee['first_name'] . ' ' . $project_employee->employee['last_name'] }}</p>
                                                 <!-- <a href="{{ route('project_employees.destroy', $project_employee->id) }}" class="delete_btn action_confirm" data-method="delete" data-token="{{ csrf_token() }}" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>-->
-                                                <form class="delete_form" action="{{ action('ProjectEmployeeController@destroy', ['id' => $project_employee->id]) }}" method="POST" onSubmit="if(!confirm('Želiš li stvarno obrisati djelatnika sa projekta?')){return false;}">
-                                                    @method('DELETE')
-                                                    @csrf
-                                                    <button type="submit" class="" title="Obriši djelatnika sa projekta">
-                                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                                    </button>
-                                                </form>
+                                                @if( Sentinel::inRole('administrator'))
+                                                    <form class="delete_form" action="{{ action('ProjectEmployeeController@destroy', ['id' => $project_employee->id]) }}" method="POST" onSubmit="if(!confirm('Želiš li stvarno obrisati djelatnika sa projekta?')){return false;}">
+                                                        @method('DELETE')
+                                                        @csrf
+                                                        <button type="submit" class="" title="Obriši djelatnika sa projekta">
+                                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         @endif
                                     @endforeach
@@ -177,13 +190,15 @@
                                                     <p class="{{ $project_employee->date }}" title="{{ $project_employee->employee->category['description'] }}">
                                                     {{ $project_employee->employee->category['mark'] . ' | ' .  $project_employee->employee['first_name'] . ' ' . $project_employee->employee['last_name'] }}</p>
                                                     <!-- <a href="{{ route('project_employees.destroy', $project_employee->id) }}" class="delete_btn action_confirm" data-method="delete" data-token="{{ csrf_token() }}" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>-->
-                                                    <form class="delete_form" action="{{ action('ProjectEmployeeController@destroy', ['id' => $project_employee->id]) }}" method="POST" onSubmit="if(!confirm('Želiš li stvarno obrisati djelatnika sa projekta?')){return false;}">
-                                                        @method('DELETE')
-                                                        @csrf
-                                                        <button type="submit" class="" title="Obriši djelatnika sa projekta">
-                                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                                        </button>
-                                                    </form>
+                                                    @if( Sentinel::inRole('administrator'))
+                                                        <form class="delete_form" action="{{ action('ProjectEmployeeController@destroy', ['id' => $project_employee->id]) }}" method="POST" onSubmit="if(!confirm('Želiš li stvarno obrisati djelatnika sa projekta?')){return false;}">
+                                                            @method('DELETE')
+                                                            @csrf
+                                                            <button type="submit" class="" title="Obriši djelatnika sa projekta">
+                                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 </div>
                                             @endif
                                         @endforeach
@@ -194,13 +209,15 @@
                                                 <p class="{{ $project_employee->date }}" title="{{ $project_employee->employee->category['description'] }}">
                                                 {{ $project_employee->employee->category['mark'] . ' | ' .  $project_employee->employee['first_name'] . ' ' . $project_employee->employee['last_name'] }}</p>
                                                 <!-- <a href="{{ route('project_employees.destroy', $project_employee->id) }}" class="delete_btn action_confirm" data-method="delete" data-token="{{ csrf_token() }}" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>-->
-                                                <form class="delete_form" action="{{ action('ProjectEmployeeController@destroy', ['id' => $project_employee->id]) }}" method="POST" onSubmit="if(!confirm('Želiš li stvarno obrisati djelatnika sa projekta?')){return false;}">
-                                                    @method('DELETE')
-                                                    @csrf
-                                                    <button type="submit" class="" title="Obriši djelatnika sa projekta">
-                                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                                    </button>
-                                                </form>
+                                                @if( Sentinel::inRole('administrator'))
+                                                    <form class="delete_form" action="{{ action('ProjectEmployeeController@destroy', ['id' => $project_employee->id]) }}" method="POST" onSubmit="if(!confirm('Želiš li stvarno obrisati djelatnika sa projekta?')){return false;}">
+                                                        @method('DELETE')
+                                                        @csrf
+                                                        <button type="submit" class="" title="Obriši djelatnika sa projekta">
+                                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         @endif
                                     @endforeach
@@ -215,6 +232,7 @@
         Nisi prijavljen
     @endif
 </div>
+@endif
 <!-- Image loader -->
 <div id='loader' style='display: none;'>
     <img src='{{ URL::asset('icons/ajax-loader1.gif') }}' width='100px' height='100px'>
@@ -235,6 +253,19 @@ $('.fc-next-button').click(function(){
 });
 $(function(){
     $('a.fc-day-grid-event').attr('rel','modal:open');
+    $("#mySearchProject").on('keyup',function() {
+        var value = $(this).val().toLowerCase();
+        console.log(value);
+
+        $(".fc-day-grid-event ").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        }); 
+    });
+
+    $('.clearable__clear').on('click',function(){
+        $('#mySearchProject').val('');
+        $(".fc-day-grid-event ").show(); 
+    });
 });
 </script>
 @stop

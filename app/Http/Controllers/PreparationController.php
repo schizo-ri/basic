@@ -32,31 +32,31 @@ class PreparationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index( Request $request )
     {
-        $preparations = Preparation::where('active', 1)->orderBy('project_no','ASC')->with('employees')->get()->groupBy('project_no');
+        if( isset($request['active'])) {
+            $active = $request['active'];
+        } else {
+            $active = 1;
+        }
+
+        $preparations = Preparation::where('active', $active)->orderBy('created_at','ASC')->with('employees')->get()->groupBy('project_no');
        
        /*  $users = EloquentUser::orderBy('first_name','ASC')->with('roles')->get(); */
         $users = EloquentUser::whereHas('roles', function ($query) {
-            return $query->where('slug', 'subscriber')->orWhere('slug', 'priprema');
+            return $query->where('slug', 'priprema');
         })->orderBy('first_name','ASC')->get();
-        $all_users = User::get();
+        /* $all_users = User::get(); */
 
-      /*  $mehanicka = collect(['Obrađena ploča','Obrađen ormar','Postavljeni PF-ovi','Montirane kanalice','Montirane din šine','Postavljena oprema na vrata ormara']);
-        $oznake = collect(['Pripremljene oznake za opremu','Pripremljene oznake za stezaljke','Pripremljene i postavljene oznake s nazivom ormara i QR pločica','Pripremljene opisne oznake','Napravljena izlazna dokumentacija i pripremljena shema']);
-        $priprema = collect(['Oprema preuzeta iz skladišta','Postavljene oznake na opremu','Oprema namontirana na ploču ormara','Periferna oprema postavljena (lampa, grijač, uvodnice...)','Postavljene i označene stezaljke']);*/
-        /* $roles = Sentinel::getUser()->roles->toArray();
-        $roles_text = '';
-        foreach ($roles as $role) {
-            $roles_text .=  $role['slug'] . ',';
-        } */
+        $projektanti = EloquentUser::whereHas('roles', function ($query) {
+            return $query->where('slug', 'projektant');
+        })->orderBy('first_name','ASC')->with('designins')->get();
 
-        //  $preparationRecords = PreparationRecord::orderBy('created_at','DESC')->get();
-        //  $equipmentLists = EquipmentList::get();
-        //  return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations, 'preparationRecords' => $preparationRecords, 'equipmentLists' => $equipmentLists]);
-      /*   return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'priprema' => $priprema, 'mehanicka' => $mehanicka,'oznake' => $oznake,'roles' => substr($roles_text, 0, -1) ]); */
-     
-      return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'all_users' => $all_users ]);
+        $voditelji = EloquentUser::whereHas('roles', function ($query) {
+            return $query->where('slug', 'voditelj');
+        })->orderBy('first_name','ASC')->with('designins')->get();
+
+        return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'projektanti' => $projektanti,'voditelji' => $voditelji,'active' => $active]);
 
     }
 
@@ -70,9 +70,17 @@ class PreparationController extends Controller
 
         $preparations = Preparation::where('active',$active)->orderBy('project_no','ASC')->get()->groupBy('project_no');
 
-        $users = User::orderBy('first_name','ASC')->get();
-       
-        return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations, ]);
+        $users = EloquentUser::whereHas('roles', function ($query) {
+            return $query->where('slug', 'priprema');
+        })->orderBy('first_name','ASC')->get();
+        $projektanti = EloquentUser::whereHas('roles', function ($query) {
+            return $query->where('slug', 'projektant');
+        })->orderBy('first_name','ASC')->with('designins')->get();
+
+        $voditelji = EloquentUser::whereHas('roles', function ($query) {
+            return $query->where('slug', 'voditelj');
+        })->orderBy('first_name','ASC')->with('designins')->get();
+        return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'projektanti' => $projektanti,'voditelji' => $voditelji]);
 
         /*  $mehanicka = collect(['Obrađena ploča','Obrađen ormar','Postavljeni PF-ovi','Montirane kanalice','Montirane din šine','Postavljena oprema na vrata ormara']);
         $oznake = collect(['Pripremljene oznake za opremu','Pripremljene oznake za stezaljke','Pripremljene i postavljene oznake s nazivom ormara i QR pločica','Pripremljene opisne oznake','Napravljena izlazna dokumentacija i pripremljena shema']);
@@ -86,8 +94,6 @@ class PreparationController extends Controller
         }
         */
         /* return view('Centaur::preparations.index', ['users' => $users,'preparations' => $preparations,'priprema' => $priprema, 'mehanicka' => $mehanicka,'oznake' => $oznake, 'roles' => substr($roles_text, 0, -1)]); */
-     
-        
     } 
 
     /**
@@ -186,13 +192,13 @@ class PreparationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $preparation = Preparation::find($id);
-        if( $preparation) {
+        if( $preparation ) {
             $active = $preparation->active;
             if($preparation) {
-                $preparations = Preparation::where('project_no', $preparation->project_no )->where('active', $active)->orderBy('project_no','ASC')->get();
+                $preparations = Preparation::where('project_no', $preparation->project_no )->where('active', $preparation->active)->orderBy('project_no','ASC')->get();
             } else {
                 $preparations = collect();
             }
@@ -207,14 +213,18 @@ class PreparationController extends Controller
             $priprema = collect(['Oprema preuzeta iz skladišta','Postavljene oznake na opremu','Oprema namontirana na ploču ormara','Periferna oprema postavljena (lampa, grijač, uvodnice...)','Postavljene i označene stezaljke']);
     
             $users = User::orderBy('first_name','ASC')->get(); 
-            $all_users = User::get();
+            $projektanti = EloquentUser::whereHas('roles', function ($query) {
+                return $query->where('slug', 'projektant');
+            })->orderBy('first_name','ASC')->with('designins')->get();
+    
+            $voditelji = EloquentUser::whereHas('roles', function ($query) {
+                return $query->where('slug', 'voditelj');
+            })->orderBy('first_name','ASC')->with('designins')->get();
 
-            return view('Centaur::preparations.show', ['preparations' => $preparations,'all_users' => $all_users,'users' => $users,'roles' => substr($roles_text, 0, -1), 'priprema' => $priprema, 'mehanicka' => $mehanicka,'oznake' => $oznake,]);
+            return view('Centaur::preparations.show', ['preparations' => $preparations,'projektanti' => $projektanti,'voditelji' => $voditelji, 'users' => $users,'roles' => substr($roles_text, 0, -1), 'priprema' => $priprema, 'mehanicka' => $mehanicka,'oznake' => $oznake,]);
         } else {
             return redirect()->route('preparations.index');
         }
-      
-
     }
 
     /**
@@ -242,38 +252,48 @@ class PreparationController extends Controller
         $preparation_val = array();
         $marks_val = array();
         $mehan_val = array();
-        foreach ($request['preparation_title'] as $key_title => $title) {
-            foreach ($request['preparation'] as $key_value => $value) {
-                if($key_title == $key_value) {
-                    $preparation_val += [$key_title => $value];
-                }
-            }
-        }
-        foreach ($request['mechanical_title'] as $key_title => $title) {
-            foreach ($request['mechanical_processing'] as $key_value => $value) {
-                if($key_title == $key_value) {
-                    $mehan_val += [$key_title => $value];
-                }
-            }
-        }
-        foreach ($request['marks_title'] as $key_title => $title) {
-            foreach ($request['marks_documentation'] as $key_value => $value) {
-                if($key_title == $key_value) {
-                    $marks_val += [$key_title =>  $value];
-                }
-            }
-        }
+       
         $data = array(
             'name' => $request['name'],
             'project_no'  => str_replace(" ", "_",$request['project_no']),
             'project_manager'  => $request['project_manager'],
             'designed_by'  => $request['designed_by'],
-            'preparation'  => json_encode($preparation_val ),
-            'mechanical_processing'  => json_encode($mehan_val ),
-            'marks_documentation'   => json_encode($marks_val ),
+            
+           
+            
             'delivery'  => $request['delivery'],
         );
-    
+        if(isset($request['preparation_title'])) {
+            foreach ($request['preparation_title'] as $key_title => $title) {
+                foreach ($request['preparation'] as $key_value => $value) {
+                    if($key_title == $key_value) {
+                        $preparation_val += [$key_title => $value];
+                    }
+                }
+            }
+            $data += ['preparation'  => json_encode($preparation_val )];
+        }
+        if(isset($request['mechanical_title'])) {
+            foreach ($request['mechanical_title'] as $key_title => $title) {
+                foreach ($request['mechanical_processing'] as $key_value => $value) {
+                    if($key_title == $key_value) {
+                        $mehan_val += [$key_title => $value];
+                    }
+                }
+            }
+            $data += [ 'mechanical_processing'  => json_encode($mehan_val )];
+        }
+        if(isset($request['marks_title'])) {
+            foreach ($request['marks_title'] as $key_title => $title) {
+                foreach ($request['marks_documentation'] as $key_value => $value) {
+                    if($key_title == $key_value) {
+                        $marks_val += [$key_title =>  $value];
+                    }
+                }
+            }
+            $data += ['marks_documentation' => json_encode($marks_val )];
+        }
+
         $preparation->updatePreparation($data);
 
         /*   
@@ -331,7 +351,7 @@ class PreparationController extends Controller
         return redirect()->back();
     }
 
-    public function close_preparation ($id) 
+    public function close_preparation ( $id ) 
     {
         $preparation = Preparation::find($id);
 
@@ -352,8 +372,8 @@ class PreparationController extends Controller
         } else {
             session()->flash('success', "Podaci su spremljeni, projekt je aktivan.");
         }
-        
-        return redirect()->back();
+      
+        return redirect()->back(); 
     }
 
     public static function delivered( $id) 

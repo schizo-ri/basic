@@ -103,8 +103,9 @@ class ProjectController extends Controller
         $project = Project::find($id);
         $projectEmployees = ProjectEmployee::where('project_id', $project->id)->get()->unique('employee_id');
         $employees = Employee::orderBy('first_name')->get();
-     
-        return view('Centaur::projects.show',['project' => $project,'employees' => $employees,'projectEmployees' => $projectEmployees]);
+        $categories = CategoryEmployee::orderBy('mark')->get();
+
+        return view('Centaur::projects.show',['project' => $project,'employees' => $employees,'projectEmployees' => $projectEmployees, 'categories' => $categories]);
     }
 
     /**
@@ -175,8 +176,12 @@ class ProjectController extends Controller
 
         $project->updateProject($data);
 
-        ProjectEmployeeController::uskladi($project->id);
-   
+        if( isset($request['employee_id']) && count($request['employee_id']) > 0 ) {
+            ProjectEmployeeController::store( $request );
+        } else {
+            ProjectEmployeeController::uskladi($project->id);
+        }
+      
         return redirect()->back();
     }
 

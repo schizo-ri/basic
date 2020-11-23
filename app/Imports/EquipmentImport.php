@@ -34,7 +34,7 @@ class EquipmentImport implements ToModel, WithHeadingRow
            'product_number' => $row['product_number'], 
            'mark' => $row['mark'], 
            'name'    => $row['name'], 
-           'unit' => intval($row['unit']), 
+           'unit' => $row['unit'], 
            'quantity' => $row['quantity'],
            'user_id' => Sentinel::getUser()->id
         ]);

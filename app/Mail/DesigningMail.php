@@ -34,7 +34,7 @@ class DesigningMail extends Mailable
         $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']  . '/designings';
 
         return $this->markdown('email.designing.new_project')
-                    ->subject( 'Projektiranje - Novi projekt' . $this->designing->project_no )
+                    ->subject( 'Dodjeljen projektant na projekt ' . $this->designing->project_no )
                     ->with([
                         'designing' => $this->designing,
                         'link' => $link

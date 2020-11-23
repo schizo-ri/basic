@@ -96,8 +96,6 @@ class DashboardController extends Controller
                             $project_duration ++;
                         }
                     }
-                    
-                    
                 }
                 
                 for ($i=0; $i <= $project_duration; $i++) {
@@ -243,11 +241,9 @@ class DashboardController extends Controller
                 }
             }
 
-            if(Sentinel::inRole('administrator')) {
-                return view('Centaur::dashboard',['employees' => $employees, 'projects' => $projects, 'project_employees' => $project_employees, 'dataArr' => $dataArr, 'dataArrResource' => $dataArrResource, 'categories' => $categories]);
-            } else {
-                return redirect()->route('preparations.index');
-            }
+            
+            return view('Centaur::dashboard',['employees' => $employees, 'projects' => $projects, 'project_employees' => $project_employees, 'dataArr' => $dataArr, 'dataArrResource' => $dataArrResource, 'categories' => $categories]);
+          
         } else {           
             return view('Centaur::auth.login');
         }        
@@ -439,11 +435,11 @@ class DashboardController extends Controller
     {
        /*  $project_employees  = Publish::get(); */
         $projects = Project::where('active',1)->where('preparation_id','<>',null)->where('duration','<>',null)->whereDate('end_date','>=',date('Y-m-d'))->get();
-        $preparations_list = Preparation::where('active',1)->whereDate('delivery','>=',date('Y-m-d'))->whereBetween('delivered',[60,100])->with('equipment')->with('updates')->get();
+        $preparations_list = Preparation::where('active',1)->whereDate('delivery','>=',date('Y-m-d'))->whereBetween('delivered',[0,100])->with('equipment')->with('updates')->with('employees')->get();
     
         foreach ($projects as $project) {
             $preparation =  $project->preparation;
-            if($preparation &&  $preparation->delivered > 60 && $preparation->delivered < 100 ) {
+            if($preparation &&  $preparation->delivered > 60 ) {
                 $preparations_list = $preparations_list->push($preparation);
             }
         }

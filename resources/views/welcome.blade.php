@@ -27,10 +27,12 @@
 					@endif
                 @endauth
 			</div>
-			<div class="row">
-			<div class="title m-b-md">
-					PROIZVODNJA
+			<div class="">
+				<div class="title m-b-md">
+						PROIZVODNJA
+				</div>
 			</div>
+		</div>
 		
 		@stack('script')
     </body>

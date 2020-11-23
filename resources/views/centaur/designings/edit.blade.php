@@ -23,7 +23,7 @@
 				<label>Voditelj projekta</label>
 				<select name="manager_id" class="form-control" required>
 					<option selected disabled></option>
-					@foreach ($users as $user)
+					@foreach ($voditelji as $user)
 						<option value="{{ $user->id }}"  {!! $designing->manager_id == $user->id ? 'selected' : '' !!}>{{ $user->first_name . ' ' . $user->last_name }}</option>
 					@endforeach
 				</select>
@@ -34,7 +34,7 @@
 					<label>Projektant</label>
 					<select name="designer_id" class="form-control" >
 						<option selected disabled></option>
-						@foreach ($users as $user)
+						@foreach ($projektanti as $user)
 							<option value="{{ $user->id }}" {!! $designing->designer_id == $user->id ? 'selected' : '' !!} >{{ $user->first_name . ' ' . $user->last_name }}</option>
 						@endforeach
 					</select>
@@ -43,18 +43,28 @@
 			@endif
 			<div class="form-group {{ ($errors->has('comment')) ? 'has-error' : '' }}">
 				<label>Napomera</label>
-				<textarea class="form-control" name="comment" type="text" rows="3" required>{{ $designing->comment }}</textarea>
+				<textarea class="form-control" name="comment" type="text" rows="3" maxlength="5592415">{{ $designing->comment }}</textarea>
 				{!! ($errors->has('comment') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('fileToUpload')) ? 'has-error' : '' }}">
+			{{-- <div class="form-group {{ ($errors->has('fileToUpload')) ? 'has-error' : '' }}">
 				<label>Dodaj dokumenat</label>
 				<input type="file" name="fileToUpload" id="fileToUpload">
 				{!! ($errors->has('fileToUpload') ? $errors->first('fileToUpload', '<p class="text-danger">:message</p>') : '') !!}
 				
 			</div>
+			<div class="form-group">
+				<label>Naziv dokumenta</label><input type="text" class="form-control" name="file_name" id="file_name" value="">
+			</div> --}}
 			{{ csrf_field() }}
 			{{ method_field('PUT') }}
 			<input class="btn btn-lg btn-primary btn-block" type="submit" value="Spremi">
 		</fieldset>
 	</form>
 </div>
+<script>
+	 $('#fileToUpload').change(function(e){
+		var filename = e.target.files[0].name;
+		console.log(filename.substr(0, filename.lastIndexOf('.')));
+		$('#file_name').val(filename.substr(0, filename.lastIndexOf('.')));
+	});
+</script>

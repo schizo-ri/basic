@@ -8,7 +8,7 @@ class PreparationEmployee extends Model
 {
    
     protected $fillable = [
-        'preparation_id','user_id'];
+        'preparation_id','user_id','start','end'];
 
     /*
 	* The Eloquent user model name

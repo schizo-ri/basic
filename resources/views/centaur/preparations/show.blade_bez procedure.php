@@ -164,7 +164,7 @@
                         @endforeach
                     @endforeach
                     <!-- Novi unos -->
-                    @if( Sentinel::inRole('moderator') || Sentinel::inRole('voditelj') || Sentinel::inRole('administrator') || Sentinel::inRole('upload_list'))
+                    @if( Sentinel::inRole('voditelj') || Sentinel::inRole('administrator') || Sentinel::inRole('upload_list'))
                         @include('centaur.preparation_create')
                     @endif
                 </div>
@@ -193,7 +193,7 @@
                 @csrf
             </form>
         @endif
-        @if( Sentinel::inRole('administrator') || Sentinel::inRole('moderator') || Sentinel::inRole('upload_list')|| Sentinel::inRole('list_view'))
+        @if( Sentinel::inRole('administrator') || Sentinel::inRole('voditelj') || Sentinel::inRole('projektant'))
             <form class="upload_file_replace" action="{{ action('EquipmentListController@importSiemens') }}" method="POST" enctype="multipart/form-data" title ="Import siemens">
                 <div class="file-input-wrapper">
                     <button class="btn-file-input"><i class="fas fa-upload"></i> Upload Siemens Linde (hierarhija)</button>

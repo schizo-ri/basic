@@ -12,7 +12,7 @@
         
        
     </div>
-    <div class="row">
+    <div class="">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             @foreach ($users as $user)
                 <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
@@ -20,7 +20,7 @@
                         <div class="panel-body text-center">
                             <img src="//www.gravatar.com/avatar/{{ md5($user->email) }}?d=mm" alt="{{ $user->email }}" class="img-circle">
                             @if (!empty($user->first_name . $user->last_name))
-                                <h4>{{ $user->first_name . ' ' . $user->last_name}}</h4>
+                                <h4>{{ $user->first_name . ' ' . $user->last_name}} <span class="user_color" style="background-color:{{ $user->color }} "></span></h4>
                                 <p>{{ $user->email }}</p>
                             @else
                                 <h4>{{ $user->email }}</h4>
@@ -34,6 +34,7 @@
                                 <em>No Assigned Role</em>
                             @endif
                             </li>
+                            
                         </ul>
                         <div class="panel-footer">
                             <a href="{{ route('users.edit', $user->id) }}" class="btn" rel="modal:open">

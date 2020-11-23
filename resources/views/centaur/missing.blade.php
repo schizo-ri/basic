@@ -53,14 +53,19 @@
                                     <div>
                                         <h3>{{ $preparation->project_no . ' ' .  $preparation->name }}</h3>
                                         <h4>Rok isporuke <span class="{{ date('Y-m-d',strtotime($preparation->delivery)) }}">{{ date('d.m.Y',strtotime($preparation->delivery)) }}</span> </h4>
+                                        <p>Zaduženi u pripremi:
+                                            @foreach ($preparation->employees as $zaduzen)
+                                                <span>{{ $zaduzen->user->first_name . ' ' . $zaduzen->user->last_name }}, </span>
+                                            @endforeach
+                                        </p>
                                         @foreach ($preparation->equipment as $item)
                                             @if ($item->updates->sum('quantity') < $item->quantity )
-                                            
                                                 <p class="{!! $item->updates->sum('quantity') != 0 && $item->quantity > $item->updates->sum('quantity')? 'partial' : '' !!} {!! $item->updates->sum('quantity') == 0 ? 'not_delivered' : '' !!}">{{ $item->product_number . ' ' . str_limit($item->name, 50) .'quantity: ' . $item->quantity . ' / delivered: '. $item->updates->sum('quantity') }} </p>
-                                                
                                             @endif
                                         @endforeach
+                                        
                                     </div>
+
                                 </div>
                             @endforeach
                         @endif
@@ -96,9 +101,8 @@
             decimalTimeString--;
             var n = new Date(0,0);
             n.setSeconds(+decimalTimeString * 60 );
-            console.log( n.toTimeString());
             $('#time').html("Slijedeće osvježavanje stranice za " + n.toTimeString().slice(0, 5) + " minuta");
-            if (time === 0) {
+            if (decimalTimeString === 0) {
                 location.reload();
             }    
         }, 1000 );

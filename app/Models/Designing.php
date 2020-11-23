@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Designing extends Model
 {
     protected $fillable = [
-        'project_no','name','date','manager_id','designer_id','comment'];
+        'project_no','name','date','manager_id','designer_id','comment','start','end','active'];
 
      /*
 	* The Eloquent project model name
@@ -15,7 +15,14 @@ class Designing extends Model
 	* @var string
 	*/
     protected static $userModel = 'App\User'; 
-    
+	
+	/*
+		* The Eloquent DesigningComment model name
+		* 
+		* @var string
+	*/
+	protected static $commentModel = 'App\Models\DesigningComment'; 
+	
     /*
 	* Returns the user relationship
 	* 
@@ -34,9 +41,18 @@ class Designing extends Model
 	public function designer()
 	{
 		return $this->belongsTo(static::$userModel,'designer_id');
-    }
-    
-
+	}
+	
+	 /*
+	* Returns the DesigningComment relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	public function hasComments()
+	{
+		return $this->hasMany(static::$commentModel,'designing_id');
+	}
+	
     /*
 	* Save Designing
 	* 
@@ -58,5 +74,7 @@ class Designing extends Model
 	public function updateDesigning($designing=array())
 	{
 		return $this->update($designing);
-    }
+	}
+	
+
 }

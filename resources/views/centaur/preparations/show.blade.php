@@ -1,36 +1,35 @@
 @extends('Centaur::layout')
 
-@section('title', 'Priprema i mehanička obrada')
+@section('title', 'Proizvodnja'/* . $preparations->first()->project_no */)
 
 @section('content')
 @php  
     use App\Http\Controllers\PreparationController;
-    use App\Models\EquipmentList;
-  
+    use App\Models\EquipmentList;  
 @endphp
 <span hidden class="today">{{ date('Y-m-d') }}</span>
 <span hidden class="roles">{{ $roles }}</span>
 <div class="page-header">
     <div class="page_navigation pull-left">
-        <a class="link_back " href="{{ route('preparations.index') }}">Priprema i mehanička obrada</a>
+        <a class="link_back " href="{{ route('preparations.index') }}">Proizvodnja</a>
         <span>/</span>
         <span class="pull-left" >{!! $preparations->first() ? 'Projekt ' . $preparations->first()->project_no : 'Nema zapisa...' !!}</span>
     </div>
    {{--  <div style="float:right"><span class="alert alert-danger" style="display: block; margin: 0;">Molim obrisati cache sa ctrl+f5 da se povuće novi dizajn</span></div> --}}
-        {{-- <h1>Priprema i mehanička obrada</h1> --}}
-        <div class='btn-toolbar pull-right'>
-            @if( isset($_GET["active"]) && $_GET["active"] == 1)
-                <span class="active">Aktivni projekti</span>
-            @elseif( isset($_GET["active"]) && $_GET["active"] == 0) 
-                <span class="inactive"></span>
-            @else 
-                <span class="active"></span>
-            @endif
-            <label class="filter_empl">
-                <input type="search" placeholder="Traži..." id="mySearch_preparation">
-                <i class="clearable__clear">&times;</i>
-            </label>
-         <!--  <a href="{{ route('preparations.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" /></a>-->
+    {{-- <h1>Priprema i mehanička obrada</h1> --}}
+    <div class='btn-toolbar pull-right'>
+        @if( isset($_GET["active"]) && $_GET["active"] == 1)
+            <span class="active">Aktivni projekti</span>
+        @elseif( isset($_GET["active"]) && $_GET["active"] == 0) 
+            <span class="inactive"></span>
+        @else 
+            <span class="active"></span>
+        @endif
+        <label class="filter_empl">
+            <input type="search" placeholder="Traži..." id="mySearch_preparation">
+            <i class="clearable__clear">&times;</i>
+        </label>
+        <!--  <a href="{{ route('preparations.create') }}" rel="modal:open"><img class="" src="{{ URL::asset('icons/plus.png') }}" alt="arrow" /></a>-->
     </div>
 </div>
 <div class="row">
@@ -56,46 +55,38 @@
                 </div>
                 <div class="tbody">
                     @foreach ($preparations as $preparation)
-                  
-                        @if (Sentinel::getUser()->id == $preparation->project_manager || 
-                        Sentinel::getUser()->id == $preparation->designed_by || 
-                        Sentinel::inRole('administrator') || 
-                        Sentinel::inRole('subscriber') || 
-                        Sentinel::inRole('priprema') || 
-                        Sentinel::inRole('list_view') || 
-                        Sentinel::inRole('upload_list') )
-                            <span class="project_show" id="collaps_{{  $preparation->project_no  }}"></span> 
-                            <!-- Ispis pripreme -->  
-                            <p class="tr row_preparation_text {!! $preparation->active == 1 ? 'active' : 'inactive' !!} {{ str_replace(':','_', $preparation->project_no)  }}" id="id_{{ $preparation->id }}" style="display: none">
-                                <span class="td text_preparation option_input not_remove">
-                                    @if (! Sentinel::inRole('list_view'))
-                                        <a class="btn btn-edit" id="edit_{{ $preparation->id }}" ><span class="glyphicon glyphicon-edit not_remove" aria-hidden="true" title="Ispravi" ></span></a>
-                                    @endif
-                                    @if ( Sentinel::inRole('administrator'))
-                                        <a href="{{ route('preparations.destroy', $preparation->id) }}"  class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="Obriši"><span class="glyphicon glyphicon-remove not_remove" aria-hidden="true" ></span></a>
-                                        <a href="{{ action('PreparationController@close_preparation', $preparation->id) }}" class="btn" class="action_confirm" ><i class="fas fa-check"></i>
-                                            @if ($preparation->active == 1)Završi @else Vrati @endif  
-                                        </a>
-                                    @endif
-                                </span>
-                                
-                                <span hidden class="equipmentLists_json not_remove"></span>
-                                <span hidden class="preparation_json not_remove">{{ json_encode($preparation->toArray()) }}</span>
-                            </p>
-                            <form class="form_preparation edit_preparation {{ $preparation->id }}" id="form_{{ $preparation->id }}" accept-charset="UTF-8" role="form" method="post" action="{{ route('preparations.update', $preparation->id) }}" >
-                                <span class="input_preparation option_input">
-                                    <input class="btn btn_spremi btn-preparation" type="submit" value="&#10004;" title="Ispravi">
-                                    <a class="btn btn-cancel" >
-                                        <span class="glyphicon glyphicon-remove" aria-hidden="true" title="Poništi"></span>
+                        <span class="project_show" id="collaps_{{  $preparation->project_no  }}"></span> 
+                        <!-- Ispis pripreme -->  
+                        <p class="tr row_preparation_text {!! $preparation->active == 1 ? 'active' : 'inactive' !!} {{ str_replace(':','_', $preparation->project_no)  }}" id="id_{{ $preparation->id }}" style="display: none">
+                            <span class="td text_preparation option_input not_remove">
+                                @if ( Sentinel::getUser()->hasAccess(['preparations.update']) )
+                                    <a class="btn btn-edit" id="edit_{{ $preparation->id }}" ><span class="glyphicon glyphicon-edit not_remove" aria-hidden="true" title="Ispravi" ></span></a>
+                                @endif
+                                @if ( Sentinel::getUser()->hasAccess(['preparations.delete']))
+                                    <a href="{{ route('preparations.destroy', $preparation->id) }}"  class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}" title="Obriši"><span class="glyphicon glyphicon-remove not_remove" aria-hidden="true" ></span>
+                                @endif
+                                @if ( Sentinel::getUser()->hasAccess(['preparations.create']) )
+                                    <a href="{{ action('PreparationController@close_preparation', $preparation->id) }}" class="btn" id="close_preparation" class="action_confirm" ><i class="fas fa-check"></i>
+                                        @if ($preparation->active == 1)Završi @else Vrati @endif  
                                     </a>
-                                </span>
-                            </form>
-                            <!-- Edit pripreme -->
-                                {{-- @include('centaur.preparation_edit') --}}
-                        @endif
+                                @endif
+                            </span>
+                            <span hidden class="equipmentLists_json not_remove"></span>
+                            <span hidden class="preparation_json not_remove">{{ json_encode($preparation->toArray()) }}</span>
+                        </p>
+                        <form class="form_preparation edit_preparation {{ $preparation->id }}" id="form_{{ $preparation->id }}" accept-charset="UTF-8" role="form" method="post" action="{{ route('preparations.update', $preparation->id) }}" >
+                            <span class="input_preparation option_input">
+                                <input class="btn btn_spremi btn-preparation" type="submit" value="&#10004;" title="Ispravi">
+                                <a class="btn btn-cancel" >
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true" title="Poništi"></span>
+                                </a>
+                            </span>
+                        </form>
+                        <!-- Edit pripreme -->
+                            {{-- @include('centaur.preparation_edit') --}}
                     @endforeach
                     <!-- Novi unos -->
-                    @if( Sentinel::inRole('moderator') || Sentinel::inRole('voditelj') || Sentinel::inRole('administrator') || Sentinel::inRole('upload_list'))
+                    @if(Sentinel::getUser()->hasAccess(['preparations.create']))
                         @include('centaur.preparation_create')
                     @endif
                 </div>
@@ -105,7 +96,7 @@
 </div>
 <div class="upload_links" >
     <h3>Upload</h3>
-    @if(! Sentinel::inRole('subscriber'))
+    @if(Sentinel::getUser()->hasAccess(['preparations.create']))
         <form class="upload_file" action="{{ action('EquipmentListController@import') }}" method="POST" enctype="multipart/form-data">
             <div class="file-input-wrapper">
                 <button class="btn-file-input"><i class="fas fa-upload"></i> Upload</button>
@@ -114,7 +105,7 @@
             </div>
             @csrf
         </form>
-        @if( Sentinel::inRole('list_view') ||  Sentinel::inRole('administrator'))
+        @if( Sentinel::inRole('nabava') )
             <form class="upload_file_replace" action="{{ action('EquipmentListController@import_with_replace') }}" method="POST" enctype="multipart/form-data" title ="Import with replace replace">
                 <div class="file-input-wrapper">
                     <button class="btn-file-input"><i class="fas fa-exchange-alt"></i> Upload sa zamjenom</button>
@@ -124,16 +115,14 @@
                 @csrf
             </form>
         @endif
-        @if( Sentinel::inRole('administrator') || Sentinel::inRole('moderator') || Sentinel::inRole('upload_list')|| Sentinel::inRole('list_view'))
-            <form class="upload_file_replace" action="{{ action('EquipmentListController@importSiemens') }}" method="POST" enctype="multipart/form-data" title ="Import siemens">
-                <div class="file-input-wrapper">
-                    <button class="btn-file-input"><i class="fas fa-upload"></i> Upload Siemens Linde (hierarhija)</button>
-                    <input type="file" name="file" required />
-                    <input type="text" class="prep_id" name="preparation_id" hidden />
-                </div>
-                @csrf
-            </form>
-        @endif 
+        <form class="upload_file_replace" action="{{ action('EquipmentListController@importSiemens') }}" method="POST" enctype="multipart/form-data" title ="Import siemens">
+            <div class="file-input-wrapper">
+                <button class="btn-file-input"><i class="fas fa-upload"></i> Upload Siemens Linde (hierarhija)</button>
+                <input type="file" name="file" required />
+                <input type="text" class="prep_id" name="preparation_id" hidden />
+            </div>
+            @csrf
+        </form>
     @endif           
 </div>
 <span hidden class="users_json">{{ json_encode($users->toArray()) }}</span>

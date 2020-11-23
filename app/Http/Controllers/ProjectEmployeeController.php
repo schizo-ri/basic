@@ -49,7 +49,7 @@ class ProjectEmployeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public static function store(Request $request)
     {
         $project = Project::where('id',  $request['project_id'])->first();
         $project_employees = ProjectEmployee::where('project_id', $project->id)->delete();       
@@ -135,7 +135,7 @@ class ProjectEmployeeController extends Controller
             }
         }
         
-        session()->flash('success', "Djelatnik je upisan na projekt");
+        session()->flash('success', "Djelatnici su upisani na projekt");
         return redirect()->back();
     }
 
@@ -415,8 +415,6 @@ class ProjectEmployeeController extends Controller
                 }
             }
         }
-
         return null;
     }
-
 }

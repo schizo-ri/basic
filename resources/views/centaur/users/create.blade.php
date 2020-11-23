@@ -34,6 +34,10 @@
             <input class="form-control" placeholder="Confirm Password" name="password_confirmation" type="password" required/>
             {!! ($errors->has('password_confirmation') ? $errors->first('password_confirmation', '<p class="text-danger">:message</p>') : '') !!}
         </div>
+        <div class="form-group {{ ($errors->has('color')) ? 'has-error' : '' }}">
+            <input class="form-control" placeholder="Izaberi boju" name="color" type="color" required/>
+            {!! ($errors->has('color') ? $errors->first('color', '<p class="text-danger">:message</p>') : '') !!}
+        </div>
         <div class="checkbox">
             <label>
                 <input name="activate" type="checkbox" value="true" {{ old('activate') == 'true' ? 'checked' : ''}}> Activate
