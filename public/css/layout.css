@@ -32,7 +32,6 @@ table.dataTable thead th, table.dataTable thead td{
     padding: 0;
     width: auto;
 	height: auto;
-	
 }
 #admin_page a.shortcut,#admin_page span.shortcut {
     float: left;
@@ -68,7 +67,18 @@ table.dataTable thead th, table.dataTable thead td{
     margin: 0;
     margin-left: 5px;
 }
-
+.topnav.nav_top a.link_posts {
+	width: 100%;
+    color: white;
+    height: 100%;
+    line-height: 1rem;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.topnav.nav_top li:hover {
+	transform: scale(1.2);
+}
 .disable {
 	pointer-events: none;
    	cursor: default;
@@ -136,9 +146,7 @@ aside.side_nav {
 .topnav a.button_nav:hover {
 	color: #071e57;	
 }
-.button_nav:hover p.button_nav_text {
-	/* color: #6a789a; */
-}
+
 .nav_ul a {
     display: inline-block;
 	width: 100%;
@@ -157,7 +165,6 @@ aside.side_nav {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
 
 .nav_top img {
 	min-height: 25px;
@@ -966,21 +973,30 @@ span.line_btn {
 span.count_comment{
     background: #1594F0;
     color: white;
-    width: 18px;
-    height: 18px;
+    
     display: inline-block;
     text-align: center;
     line-height: 18px;
     border-radius: 50%;
-	margin-left: 20px;
-	position: absolute;
-    left: 0;
-	bottom: 20px;
 	font-style: normal;
 	font-weight: 600;
 	font-size: 8px;
+	display: flex;
+    justify-content: center;
 }
-
+span.count_comment:not(.nav_ul span.count_comment) {
+	position: absolute;
+    left: 0;
+	bottom: 20px;
+	margin-left: 20px;
+	width: 18px;
+    height: 18px;
+}
+.nav_ul span.count_comment {
+	width: 1rem;
+    height: 1rem;
+    align-self: center;
+}
 span.count_post1{
     background: #1594F0;
     color: white;
@@ -1762,6 +1778,13 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.logo_icon {
 		display: none;
 	}
+	.salary>div.shortcuts_container {
+		width: 100%;
+	}
+	.scroll_button button {
+		width: auto;
+		padding: 0 10px;
+	}
 	.shortcut>span.shortcut_text {
 		display: none;
 	}
@@ -1825,7 +1848,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	.container>.posts .all_post {
 		float: none;
-		padding: 20px;
+		padding: 10px;
 		width: 98%;
 		height: auto;
 		margin-bottom: 20px;

@@ -33,9 +33,10 @@
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
+		<script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all_new.css') }}"/>
-	
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all_new.css?random=@dt') }}"/>
+
 		{{-- Material design --}}
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	  
@@ -244,7 +245,7 @@
 				// Enable pusher logging - don't include this in production
 				/* Pusher.logToConsole = true; */
 				var employee_id = $('#employee_id').text();
-				var pusher = new Pusher('b07d5ace8e5b948bf9fc', {
+				var pusher = new Pusher('3121b5d978b5490fa747', {
 					cluster: 'eu'
 				});
 
@@ -271,7 +272,7 @@
 			<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
 
 			<!-- Scripts -->
-			<script src="{{URL::asset('/../js/all_new.js') }}"></script>
+			<script src="{{URL::asset('/../js/all_new.js?random=@dt') }}"></script>
 
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>

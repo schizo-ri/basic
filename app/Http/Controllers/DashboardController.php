@@ -35,7 +35,7 @@ class DashboardController extends Controller
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
             $moduli = CompanyController::getModules();  //dohvaća module firme
-
+          
             if($employee) {
                 $data_absence = BasicAbsenceController::zahtjevi( $employee ); 
                 //dohvaća dopuštenja odjela za korisnika

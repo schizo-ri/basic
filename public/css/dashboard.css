@@ -695,6 +695,9 @@ span.read_post {
     
 }
 @media (max-width: 450px) {
+    .container .posts .all_post h2, div#calendar div.header, .container .calendar h2, .container .calendar .cal_days, .comming_agenda {
+        padding: 0;
+    }
     .container .noticeboard h2 {
 		padding-top: 0;
     }

@@ -328,7 +328,7 @@
 				//Pusher.logToConsole = true;
 				var employee_id = $('#employee_id').text();
 
-				var pusher = new Pusher('b07d5ace8e5b948bf9fc', {
+				var pusher = new Pusher('3121b5d978b5490fa747', {
 										cluster: 'eu'
 										});
 

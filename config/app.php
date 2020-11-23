@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://ru-ve.myintranet.io'),
+    'url' => env('APP_URL', 'https://domes.myintranet.io'),
 
     'asset_url' => env('ASSET_URL', null),
 

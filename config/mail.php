@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'jelena.juras@duplico.hr'),
-        'name' => env('MAIL_FROM_NAME', 'Jelena Juras'),
+        'address' => env('MAIL_FROM_ADDRESS', 'info@myintranet.io'),
+        'name' => env('MAIL_FROM_NAME', 'myIntranet Domes'),
     ],
 
     /*
