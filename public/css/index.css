@@ -22,6 +22,25 @@
     color: #ccc;
     text-decoration: none;
 }
+#loader {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    position: fixed;
+    z-index: 1;
+    /* margin: 50%; */
+    /* transform: translate(-50%, -50%); */
+    top: 50%;
+    left: 50%;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg);
+    }
+  }
 .index_page h1 {
     font-weight: 600;
     font-size: 1.375rem;
@@ -1803,13 +1822,17 @@ footer.ad_footer {
     font-size: 1rem;
 }
 
-.index_table_filter span.show_button {
+.index_table_filter span.show_button, .export_file {
     width: auto;
     height: auto;
     z-index: 2;
     cursor: pointer;
     float: right;
     line-height: 35px;
+    display: block;
+}
+.export_file {
+    margin-left: 20px;
 }
 .all_documents span.show_button, .header_ads span.show_button  {
     display: none;
@@ -3028,7 +3051,7 @@ button.show_loccos {
     border-bottom: 1px solid #e1e0e1;
 }
 main.index_main>section.section_evidention {
-    overflow: hidden;
+    overflow: auto;
 }
 .section_evidention .index_table_filter {
     background: inherit;

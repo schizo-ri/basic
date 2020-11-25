@@ -82,7 +82,7 @@
 							@endphp
 							<tr class="second empl_{{ $employee->id }}">
 								<td>
-									<a href="{{ route('work_records.show', ['id'=>$employee->id, 'date' => $request_date ]) }}" {{-- target="_blank"  --}}{{-- rel="modal:open" --}}>
+									<a href="{{ route('work_records.show', ['id'=>$employee->id, 'date' => $request_date ]) }}" >
 										{{ $employee->user['last_name'] . ' ' . $employee->user['first_name'] }}
 									</a>
 								</td>

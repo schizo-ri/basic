@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\WorkRecord;
 use DateTime;
+use Log;
 
 class CheckOut extends Command
 {
@@ -45,25 +46,12 @@ class CheckOut extends Command
         } else {
             $checkOut_time = $today_date . ' 15:00';
         }
-       
+        Log::info('CheckOut '. $today_date);
         $workRecords = WorkRecord::whereDate('start',$today_date)->get();
         
         foreach ($workRecords as $workRecord) {
             if($workRecord->end == null) {
                 $workRecord->updateWorkRecords(['end' => $checkOut_time ]);
-               /*  $checkOut = true; */
-                /* $loccos = $workRecord->employee->hasLocco()->where('status',0);
-                if( count($loccos) > 0) {
-                    foreach ($loccos as $locco) {
-                        if( date('Y-m-d',strtotime($locco->date)) == $today_date ) {
-                            $checkOut = false;
-                        }
-                    }
-                } */
-             
-               /*  if ( $checkOut ) {
-              
-                }  */ 
             }
         }
         

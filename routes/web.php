@@ -63,6 +63,8 @@ Route::resource('works', 'WorkController');
 //WorkRecords
 Route::resource('work_records', 'WorkRecordController');
 Route::get('work_records_table', ['as' => 'work_records_table', 'uses' => 'WorkRecordController@workRecordsTable']);
+Route::get('pdfWorkRecords/{id}',array('as'=>'pdfWorkRecords','uses'=>'WorkRecordController@pdfWorkRecords'));
+Route::get('export_all_work_records', ['as' => 'export_all_work_records', 'uses' => 'WorkRecordController@exportWorkRecords']);
 
 // Employee
 Route::resource('employees', 'EmployeeController');

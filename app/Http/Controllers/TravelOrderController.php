@@ -321,11 +321,7 @@ class TravelOrderController extends Controller
        return view('Centaur::travel_orders.travelShow',['travel' => $travel, 'company' => $company, 'cars' => $cars, 'locco1' => $locco1,'loccos' => $loccos,'employees' => $employees ]);
     }
 
-     /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public static function pdfTravel($id)
     {
         $travel = TravelOrder::find($id);

@@ -15,7 +15,7 @@ use DB;
 use DateTime;
 use DateInterval;
 use DatePeriod;
-
+use PDF;
 
 class WorkRecordController extends Controller
 {
@@ -421,8 +421,8 @@ class WorkRecordController extends Controller
             'end'  		    =>  $end,
         );
         $workRecord->updateWorkRecords($data);
-        session()->flash('success',  __('ctrl.data_edit'));
-
+        
+        session()->flash('success', __('ctrl.data_edit'));
         return redirect()->back();	
     }
 
@@ -453,5 +453,143 @@ class WorkRecordController extends Controller
         rsort($months);
 
         return $months;
+    }
+
+    public function exportWorkRecords(Request $request)
+    {
+        ini_set('max_execution_time', 300);
+        $employees = Employee::employees_lastNameASC();
+        
+        foreach ($employees as $employee ) {
+            $this->pdfWorkRecords($request['date'], $employee);
+        }
+
+        $message = "Evidencija je generirana za ". date('m-Y', strtotime($request['date'])) . ' mjesec';
+        return $message;
+    }
+
+    public static function pdfWorkRecords($date, $employee)
+    {
+        $mjesec = date('m',strtotime( $date ));
+        $godina = date('Y',strtotime( $_GET['date']));
+        $prev_month = new DateTime($date);
+        $prev_month->modify('-1 month');
+        $month_before = date_format($prev_month,'m');
+        $year_before = date_format($prev_month,'Y');
+        $next_month = new DateTime($date);
+        $next_month->modify('+1 month');
+        $month_after = date_format($next_month,'m');
+        $year_after = date_format($next_month,'Y');
+         
+        $work_records = WorkRecord::where('employee_id', $employee->id)->whereMonth('start', $mjesec )->whereYear('start', $godina )->get();
+
+        foreach($work_records as $record){
+            $time1 = date_create($record->start);
+            $time2 = date_create($record->end);
+            $interval = date_diff($time1,$time2);
+            
+            $record->interval = date('H:i',strtotime( $interval->h .':'.$interval->i));
+        }
+        // zahtjevi za izostanak
+        $absences = Absence::where('employee_id', $employee->id)->whereMonth('start_date', $mjesec )->whereYear('start_date', $godina )->where('approve',1)->get();
+        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_before )->whereYear('start_date', $year_before )->where('approve',1)->get());
+        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_after )->whereYear('start_date', $year_after )->where('approve',1)->get());
+     
+        $holidays = BasicAbsenceController::holidays();
+        $holidaysThisYear = BasicAbsenceController::holidaysThisYear($godina);
+        
+        foreach ($absences as $absence) {
+            $absence->days = array();
+            $absence->mark = $absence->absence['mark'];
+            $begin = new DateTime($absence['start_date']);
+            $end = new DateTime($absence['end_date']);
+            $end->setTime(0,0,1);
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
+            $i = 0;
+            foreach ($period as $dan) {
+                if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
+                    $absence->days += [$i => date_format($dan,'Y-m-d')];
+                    $i++;
+                }
+            }
+        }
+
+        $travelOrders = TravelOrder::where('employee_id', $employee->id)->whereMonth('start_date', $mjesec )->whereYear('start_date', $godina )->get();
+        $travelOrders = $travelOrders->merge(TravelOrder::where('employee_id', $employee->id)->whereMonth('end_date', $mjesec )->whereYear('end_date', $godina )->get());
+
+        foreach ($travelOrders as $travel) {
+            $travel->travelDays = array();
+           
+            $begin = new DateTime($travel['start_date']);
+            $end = new DateTime($travel['end_date']);
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
+
+            $i = 0;
+            foreach ($period as $dan) {
+                if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
+                    $travel->travelDays += [$i => date_format($dan,'Y-m-d')];
+                    $i++;
+                }
+            }
+        }
+
+        $loccos = Locco::where('employee_id', $employee->id)->whereMonth('date', $mjesec )->whereYear('date', $godina )->get();
+        
+        foreach($loccos as $locco){
+            $time1 = date_create($locco->date);
+            if( $locco->end_date ) {
+                $time2 = date_create($locco->end_date);
+                $interval = date_diff($time1,$time2);
+                $locco->interval = date('H:i',strtotime( $interval->h .':'.$interval->i));
+            } else {
+                $locco->interval = null;
+            }
+        }
+      
+        $empl = Sentinel::getUser()->employee;
+        $permission_dep = array();
+        if($empl) {
+            $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        }
+        $sum = array();
+        for($d=1; $d<=31; $d++){
+			$time=mktime(12, 0, 0, $mjesec, $d, $godina);  
+			if (date('m', $time)==$mjesec){   
+                    $list[]=date('Y-m-d', $time);
+                    $sum[date('Y-m-d', $time)] = 0;
+			}
+        }
+        
+        
+        $data = [
+            'employee'          =>  $employee,
+            'month'          =>  $date,
+            'work_records'  =>  $work_records,
+            'travelOrders'  =>  $travelOrders,
+            'loccos'        =>  $loccos,
+            'permission_dep'  =>  $permission_dep,
+            'list'          =>  $list,
+            'sum'           =>  $sum,
+            'absences'      =>  $absences,
+            'holidaysThisYear'      =>  $holidaysThisYear,
+          
+        ];
+
+        $pdf = PDF::loadView('Centaur::work_records.workrecord_pdf', $data)->setPaper('a4', 'landscape'); 
+        
+        $path = '../public/workRecords/';
+        if (!file_exists($path)) {
+            mkdir($path);
+        } 
+        $path =  $path .date('Y-m',strtotime($date)).'/';
+        if (!file_exists($path)) {
+            mkdir($path);
+        }
+
+        $pdf->save($path.'Evidencija_' . date('Y-m',strtotime($date . '-1')) . '_' . $employee->last_name  . '_' . $employee->first_name.'.pdf'); 
+        
+        return true; 
     }
 }

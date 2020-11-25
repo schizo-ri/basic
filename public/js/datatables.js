@@ -146,6 +146,7 @@ $( function () {
 					{
 						extend: 'pdfHtml5',
 						orientation: 'landscape',
+						footer: true,
 						pageSize: 'A4',
 						download: 'open',
 						exportOptions: {
@@ -220,6 +221,7 @@ $( function () {
 					{
 						extend: 'excelHtml5',
 						autoFilter: true,
+						footer: true,
 						exportOptions: {
 							columns: 'th:not(.not-export-column)',
 							rows: ':visible'

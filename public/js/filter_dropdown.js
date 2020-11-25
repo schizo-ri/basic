@@ -31,8 +31,12 @@ $(function() { // filter knowledge base
 		$.ajax({
 			url: url,
 			type: "get",
+			beforeSend: function(){
+                $('body').prepend('<div id="loader"></div>');
+            },
 			success: function( response ) {
 				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
 					$.getScript('/../restfulizer.js');
 					$.getScript('/../js/datatables.js');
 					$('.show_button').on('click',function () {
@@ -75,8 +79,11 @@ $(function() { // filter knowledge base
 		$.ajax({
 			url: url,
 			type: "get",
+			beforeSend: function(){
+                $('body').prepend('<div id="loader"></div>');
+            },
 			success: function( response ) {
-				console.log(response);
+				$('#loader').remove();
 				$('.main_work_records').load(url + " .main_work_records .second_view",function(){
 					$( ".td_izostanak:contains('GO')" ).each(function( index ) {
 						$( this ).addClass('abs_GO');
@@ -128,14 +135,21 @@ $(function() { // filter knowledge base
 		$.ajax({
 			url: url,
 			type: "get",
+			beforeSend: function(){
+                $('body').prepend('<div id="loader"></div>');
+            },
 			success: function( response ) {
+				$( '.export_file').load(url +  ' .export_file>a');
 				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
 					$.getScript('/../restfulizer.js');
 					$.getScript('/../js/datatables.js');
+					$.getScript('/../js/work_records.js');
 					$('.show_button').on('click',function () {
 						$('.index_page .dt-buttons').toggle();		
 					})
 				});
+				
 			},
 			error: function(jqXhr, json, errorThrown) {
 				data_to_send = { 'exception':  jqXhr.responseJSON.exception,
@@ -198,8 +212,12 @@ $(function() { // filter knowledge base
 		$.ajax({
 			url: url,
 			type: "get",
+			beforeSend: function(){
+                $('body').prepend('<div id="loader"></div>');
+            },
 			success: function( response ) {
 				$('.main_work_records').load(url + " .main_work_records .second_view",function(){
+					$('#loader').remove();
 					$( ".td_izostanak:contains('GO')" ).each(function( index ) {
 						$( this ).addClass('abs_GO');
 					});
@@ -262,8 +280,12 @@ $(function() { // filter knowledge base
 			url: location.href + '?date='+date,
 			type: "get",
 			data: { 'date': date},
+			beforeSend: function(){
+                $('body').prepend('<div id="loader"></div>');
+            },
 			success: function( response ) {
 				$( '#admin_page >main' ).load(location.href + '?date='+date + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
 					var title = $(document).prop('title'); 
 					title = title.substring(0, title.indexOf(','));
 					console.log(title);

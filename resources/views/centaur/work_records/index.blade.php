@@ -10,6 +10,9 @@
 		} else {
 			$request_date = date('Y-m-d');
 		}
+		$path = 'workRecords/' . date('Y-m',strtotime($request_date)) . '/';
+
+		
 	@endphp
 	<header class="page-header work_record_header first_view_header">
 		<div class="index_table_filter">
@@ -33,6 +36,10 @@
 					<option value="empl_{{ $employee->id }}">{{ $employee->first_name . ' ' . $employee->last_name }}</option>
 				@endforeach
 			</select>
+			<span class="export_file">
+				<a href="{{ action('WorkRecordController@exportWorkRecords', ['date' => $request_date]) }}" title="Export" ><i class="fas fa-file-download"></i>
+				</a>
+			</span>
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -51,10 +58,10 @@
 					</thead>
 					<tbody>
 						@foreach ($work_records as $record)
-						@php
-							$trav = $record->employee->hasTravels->whereBetween('start_date', [ date('Y-m-d',strtotime($record->start)) . ' 00:00:00', date('Y-m-d',strtotime($record->start))  . ' 23:59:59' ] );
-							$locco_day = $record->employee->hasLocco->whereBetween('date', [ date('Y-m-d',strtotime($record->start))  . ' 00:00:00', date('Y-m-d',strtotime($record->start)) . ' 23:59:59' ] );
-						@endphp
+							@php
+								$trav = $record->employee->hasTravels->whereBetween('start_date', [ date('Y-m-d',strtotime($record->start)) . ' 00:00:00', date('Y-m-d',strtotime($record->start))  . ' 23:59:59' ] );
+								$locco_day = $record->employee->hasLocco->whereBetween('date', [ date('Y-m-d',strtotime($record->start))  . ' 00:00:00', date('Y-m-d',strtotime($record->start)) . ' 23:59:59' ] );
+							@endphp
 							<tr class="empl_{{ $record->employee_id }}">
 								<td>
 									<a href="{{ route('work_records.show', ['id'=>$record->employee->id, 'date' => $request_date ]) }}">
@@ -74,10 +81,16 @@
 											{{'L - ' . $locco->car->car_index }}<br>
 										@endforeach
 									@endif
-								
 								</td>
 								<td>{{ $record->interval  }}</td>
 								<td class="center">
+									@php
+										$file = $path . 'Evidencija_'. date('Y-m',strtotime($request_date)).'_'. $record->employee->user['last_name'] . '_' . $record->employee->user['first_name']. '.pdf';
+										
+									@endphp
+									@if(file_exists($file))
+										<a href="{{ asset($file) }}" target="_blank"><i class="far fa-file-pdf"></i></a>
+									@endif
 									@if(Sentinel::getUser()->hasAccess(['work_records.update']) || in_array('work_records.update', $permission_dep))
 										<a href="{{ route('work_records.edit', $record->id) }}" class="btn-edit" rel="modal:open" >
 												<i class="far fa-edit"></i>
@@ -98,4 +111,7 @@
 			@endif
 		</div>		
 	</main>
+	<script>
+		/* $.getScript('/../js/work_records.js'); */
+	</script>
 @stop
