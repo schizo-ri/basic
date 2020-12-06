@@ -19,16 +19,36 @@
 			</p>
 			<input name="employee_id" type="hidden" value="{{  $absence->employee_id }}" />
 		@endif
-		<div class="form-group {{ ($errors->has('type')) ? 'has-error' : '' }}">
-			<label>@lang('absence.abs_type')</label>
-			<select class="form-control"  name="type" value="{{ old('type') }}" id="request_type" required >
+		@if( $leave_types )
+			<select class="form-control"  name="erp_type" value="{{ old('erp_type') }}" id="request_type" required >
 				<option disabled selected value></option>
-				@foreach($absenceTypes as $absenceType)
-					<option value="{{ $absenceType->mark }}" {!! $absence->type ==  $absenceType->id ? 'selected' : '' !!} >{{ $absenceType->name}}</option>
+				@foreach($leave_types as $id => $absenceType)
+					<option value="{{ $id }}"  {!! $absence->ERP_leave_type ==  $id ? 'selected' : '' !!}>{{ $absenceType }}</option>
 				@endforeach
 			</select> 
-			{!! ($errors->has('type') ? $errors->first('type', '<p class="text-danger">:message</p>') : '') !!}	
-		</div>
+		@else 
+			<div class="form-group {{ ($errors->has('type')) ? 'has-error' : '' }}">
+				<label>@lang('absence.abs_type')</label>
+				<select class="form-control"  name="type" value="{{ old('type') }}" id="request_type" required >
+					<option disabled selected value></option>
+					@foreach($absenceTypes as $absenceType)
+						<option value="{{ $absenceType->mark }}" {!! $absence->type ==  $absenceType->id ? 'selected' : '' !!} >{{ $absenceType->name}}</option>
+					@endforeach
+				</select> 
+				{!! ($errors->has('type') ? $errors->first('type', '<p class="text-danger">:message</p>') : '') !!}	
+			</div>
+		@endif
+		@if($tasks)
+			<div class="form-group {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
+				<label>@lang('basic.task')</label>
+				<select id="select-state" name="erp_task_id" placeholder="Pick a state..."  value="{{ old('erp_task_id') }}" id="sel1" required>
+					<option value="" disabled selected></option>
+					@foreach ($tasks as $id => $task)
+						<option class="project_list" name="erp_task_id" value="{{ $id }}" {!! $absence->erp_task_id ==  $id ? 'selected' : '' !!}>{{ $task  }}</option>
+					@endforeach	
+				</select>
+			</div>
+		@endif
 		<div class="form-group datum date1 float_l {{ ($errors->has('start_date')) ? 'has-error' : '' }}" >
 			<label>@lang('absence.start_date')</label>
 			<input name="start_date" id="start_date" class="form-control" type="date" value="{{ $absence->start_date }}" required>

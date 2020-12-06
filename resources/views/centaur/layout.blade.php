@@ -61,6 +61,7 @@
         ?>
 		@if (Sentinel::check())
 			<section>
+				<span id="user_role" hidden>{!! Sentinel::inRole('administrator') ? 'admin' : 'basic' !!}</span>
 				<header class="header_nav">
 					<nav class="nav_top col-md-12 topnav">
 						<span class="logo_icon" >
@@ -73,6 +74,7 @@
 								<img src="{{ URL::asset('icons/intranet_logo.png')}}" alt="company_logo"/>
 							@endif
 						</a>
+						<!-- <a class="" href="{{ route('api_erp.index') }}" ><span>api</span></a> -->
 						<ul class="nav_ul float_right">
 							@if (Sentinel::check())
 								@if( Sentinel::getUser()->employee && $_SERVER['REQUEST_URI'] != '/dashboard')

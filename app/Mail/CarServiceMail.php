@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Locco;
 use App\Models\Car;
 use Sentinel;
+use App\Models\MailTemplate;
 
 class CarServiceMail extends Mailable
 {
@@ -39,14 +40,17 @@ class CarServiceMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','CarServiceMail')->first();
+        
         $car = Car::find($this->locco->car_id);
 
-        return $this->markdown('centaur.email.car_service')
+        return $this->view('centaur.email.car_service')
                     ->subject( __('basic.malfunction') . ' - ' . $car->registration)
                     ->with([
                         'car' => $car, 
                         'user' =>  Sentinel::getUser(), 
-                        'napomena' =>  $this->locco->comment, 
+                        'napomena' =>  $this->locco->comment,
+                        'template_mail' => $mail_template
                         ]);
     }
 }

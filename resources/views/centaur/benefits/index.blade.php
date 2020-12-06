@@ -8,7 +8,7 @@
 		<section>
 			<div class="page-header header_document">
 				<a class="link_back" href="{{ url()->previous() }}"><span class="curve_arrow_left"></span></a>
-				@lang('basic.benefits')
+				@lang('basic.benefits') 
 			</div>
 			<main class="main_benefits">
 				<header class="header_benefits">
@@ -59,23 +59,23 @@
 							@if ( $benefit->status == 1 || (Sentinel::getUser()->hasAccess(['benefits.create']) || in_array('benefits.create', $permission_dep)) )
 								@php
 									$benefit_img = '';
-										$path_benefit = 'img/benefits/' . $benefit->id . '/';
-										if(file_exists($path_benefit)){
-											$benefit_img = array_diff(scandir($path_benefit), array('..', '.', '.gitignore'));
-										} else {
-											$benefit_img = '';
-										}
+									$path_benefit = 'img/benefits/' . $benefit->id . '/';
+									if(file_exists($path_benefit)){
+										$benefit_img = array_diff(scandir($path_benefit), array('..', '.', '.gitignore'));
+									} else {
+										$benefit_img = '';
+									}
 								@endphp											
 								<div class="benefit_body" id="_{{ $benefit->id }}" >	
 									@if(Sentinel::getUser()->hasAccess(['benefits.update']) || in_array('benefits.update', $permission_dep))
 										<a class="btn-edit" href="{{ route('benefits.edit', $benefit->id) }}"  title="{{ __('basic.add_benefit')}}" rel="modal:open">
-											<img class="img_statistic" src="{{ URL::asset('icons/edit.png') }}" alt="edit" />
+											<img class="img_statistic" src="{{ asset('icons/edit.png') }}" alt="edit" />
 											<span>Edit</span>
 										</a>	
 									@endif
 									<div class="col-12 bnf_img">
 										@if($benefit_img)
-											<img class="" src="{{ URL::asset($path_benefit . end($benefit_img)) }}" alt="{{ $benefit->title }}" title="{{ $benefit->title }}"  />
+											<img class="" src="{{ asset($path_benefit . end($benefit_img )) }}" alt="{{ $benefit->title }}" title="{{ $benefit->title }}"  />
 										@endif
 									</div>						
 									<div class="col-xs-12 col-sm-8 float_l bnf_main">								
@@ -96,7 +96,7 @@
 				@else
 					<div class="placeholder_div">
 						<div class="placeholder">
-							<img class="" src="{{ URL::asset('icons/placeholder_ad.png') }}" alt="Placeholder image" />
+							<img class="" src="{{ asset('icons/placeholder_ad.png') }}" alt="Placeholder image" />
 							<p>@lang('basic.no_benefits')</p>
 						</div>
 					</div>

@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Employee;
+use App\Models\MailTemplate;
 
 class GreetingCardMail extends Mailable
 {
@@ -37,10 +38,13 @@ class GreetingCardMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.employees.greeting_card')
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','GreetingCardMail')->first();
+        
+        return $this->view('emails.employees.greeting_card')
                     ->subject( 'Čestitka!' )
                     ->with([
-                        'employee' =>  $this->employee
+                        'employee' =>  $this->employee,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

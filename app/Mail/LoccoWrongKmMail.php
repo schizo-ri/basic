@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Locco;
 use App\Models\Car;
 use Sentinel;
+use App\Models\MailTemplate;
 
 class LoccoWrongKmMail extends Mailable
 {
@@ -39,15 +40,18 @@ class LoccoWrongKmMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','LoccoWrongKmMail')->first();
+        
         $car = Car::find($this->locco->car_id);
 
-        return $this->markdown('centaur.email.wrong_km')
+        return $this->view('centaur.email.wrong_km')
                     ->subject( __('basic.wrong_km') . ' - ' . $car->registration)
                     ->with([
                         'car' => $car, 
                         'locco' => $this->locco, 
                         'user' =>  Sentinel::getUser(), 
-                        'napomena' =>  $this->locco->comment, 
+                        'napomena' =>  $this->locco->comment,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

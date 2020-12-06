@@ -18,12 +18,12 @@ class MailTemplate extends Model
 	/*
 	* Returns the Travel relationship
 	* 
-	* @return \Illuminate\Database\Eloquent\Relations\hasMany
+	* @return \Illuminate\Database\Eloquent\Relations\hasOne
 	*/
 	
 	public function mailStyle()
 	{
-		return $this->hasMany(static::$mailStyleModel,'mail_id');
+		return $this->hasOne(static::$mailStyleModel,'mail_id');
 	}
 
 	/*

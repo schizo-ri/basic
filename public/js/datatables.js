@@ -256,7 +256,8 @@ $( function () {
 		}
 	
 		$('.show_button').on('click',function () {
-			$('.dt-buttons').toggle();		
+			console.log("dt-buttons");
+			$('.dt-buttons').toggle();
 		})
 		$('table.display').show();
 	}

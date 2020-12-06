@@ -42,7 +42,9 @@ class Employee_absence extends Command
     public function handle()
     {
 		$send_to = EmailingController::sendTo('absences','cron');
-       
+
+        Log::info( 'Employee_absence');
+        Log::info( $send_to);
         foreach(array_unique($send_to ) as $send_to_mail) {
 			if( $send_to_mail != null & $send_to_mail != '' ) {
                 Mail::to($send_to_mail)->send(new AbsenceCronMail());

@@ -307,6 +307,7 @@ return [
 	'add_category'   	=> 'DODAJ KATEGORIJU',
 	'add_answer'   		=> 'DODAJ ODGOVOR',
 	'add_image' 		=> 'Dodaj sliku',	
+	'add_file' 			=> 'Dodaj dokument',	
 	'contact_person' 	=> 'Kontakt osoba',	
 	'contact_info' 		=> 'Kontakt info',
 	'settings' 			=> 'Postavke aplikacije',
@@ -330,7 +331,10 @@ return [
 	'add_service'		=> 'Dodaj servis',
 	'edit_service'		=> 'Ispravi servis',
 	'event'         	=> 'Događaj',
+	'tasks'         	=> 'Zadaci',
 	'task'         		=> 'Zadatak',
+	'add_task'         	=> 'Dodaj zadatak',
+	'edit_task'         => 'Ispravi zadatak',
 	'evergreen'         => 'Trajna',
 	'one_time'          => 'Jednokratna (promo)',
 	'type'          	=> 'Tip',
@@ -447,7 +451,8 @@ return [
 	'mail_template'		=> 'Mail predložak',
 	'add_mail_templates'=> 'Dodaj mail predložak',
 	'edit_mail_templates'=> 'Ispravi mail predložak',
-	
+	'employees_in_charge' => 'Zaduženi djelatnici',
+	'employee_in_charge' => 'Zaduženi djelatnik',
 ];	
 
 ?>

@@ -177,7 +177,7 @@ input:-webkit-autofill:active  {
 }
 
 
-.form-group img {
+.form-group img:not() {
 	position: absolute;
 	top: 5px;
 	right: 0;
@@ -190,7 +190,11 @@ input:-webkit-autofill:active  {
 .form_login .form-group:first-child {
     margin-bottom: 60px;
 }
-
+.form_login .form-group img {
+	position: absolute;
+    right: 10px;
+    bottom: 14px;
+}
 .remember {
 	display: inline-block;
 	position: relative;
@@ -357,6 +361,12 @@ p.terms>span {
 	position: relative;
 }
 
+.user_interest .btn-new:hover {
+	color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
 .user_interest .btn-new svg, .user_interest .btn-new i {
 	position: absolute;
     top: 50%;
@@ -472,10 +482,11 @@ span.img-success {
 		font-size: 0.875rem;
 	}
 	.container {
-		display: flex;
+	/* 	display: flex;
+		-webkit-flex-wrap: wrap;
 		flex-direction: column;
 		justify-content: start;
-		z-index: 1;
+		z-index: 1; */
 	}
 	.container >section {
 		position: static;

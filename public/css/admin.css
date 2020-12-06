@@ -3,6 +3,9 @@
 p {
     width: 100%;
 }
+a, button {
+    text-decoration: none !important;
+}
 .index_page aside > .admin_panel {
     height: 100%;
     clear: both;
@@ -16,7 +19,6 @@ p {
     box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15); 
     border-radius: 5px;
     overflow: auto;
-    
 }
 .index_page.index_admin h1 {
     padding: 25px 15px 20px;
@@ -67,11 +69,13 @@ ul.admin_pages li >span.arrow_down {
     overflow: auto;
     height: 100%;
 }
-.car_links, .basic_links, .hr_links, .abs_links, .project_links {
+.car_links, .basic_links, .hr_links, .abs_links, .project_links, .tasks_links {
     display: none;
     padding-left: 20px;
 }
-
+.open_menu {
+    text-transform: uppercase;
+}
 ul.admin_pages li >span.image_settings {
     background-color: #ebebeb;
     position: relative;
@@ -129,6 +133,11 @@ ul.admin_pages li >span.image_template{
     margin-left: 15px;
     padding: 0 16px;
 }
+#admin_page .btn-new:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
 #admin_page .btn-new.btn-approve {
     width: auto;
     height: auto;
@@ -160,9 +169,14 @@ ul.admin_pages li >span.image_template{
     display: block;
     padding: 5px 0; */
     position: absolute;
-    top: 29px;
-    left: 0;
-    z-index:30;
+    top: 20px;
+    left: 20px;
+    z-index: 1;
+    vertical-align: middle;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 #admin_page table span.role {
     display: none;

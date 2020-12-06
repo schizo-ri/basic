@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DashboardController;
 use App\Models\Car;
 use App\Models\Employee;
 use App\Models\Task;
+use App\Models\EmployeeTask;
 use Sentinel;
+use App\Mail\TaskCreateMail;
+use Illuminate\Support\Facades\Mail;
+use Log;
 
 class TaskController extends Controller
 {
@@ -19,10 +24,27 @@ class TaskController extends Controller
     public function index()
     {
         $employee = Sentinel::getUser()->employee;
+        $employees = Employee::employees_lastNameASC();
         $date = date('Y-m-d');
-        $tasks_group_date = Task::whereDate('date', '>=', $date)->orderBy('date','ASC')->get()->groupBy('date');
-        
-        return view('Centaur::tasks.index', ['tasks_group_date' => $tasks_group_date]);
+        $tasks = Task::whereDate('start_date', '>=', $date)->orderBy('start_date','ASC')->get();
+        if(! Sentinel::inRole('administrator')) {
+            $tasks = $tasks->where('to_employee_id',$employee->id );
+        }
+        $permission_dep = DashboardController::getDepartmentPermission();
+        return view('Centaur::tasks.index', ['tasks' => $tasks, 'employees' => $employees,'permission_dep' => $permission_dep]);
+    }
+
+    public function openTaskList()
+    {
+        $employee = Sentinel::getUser()->employee;
+        $date = date('Y-m-d');
+
+        $tasks_employee = EmployeeTask::whereDate('created_at', '>=', $date)->orderBy('created_at','ASC')->get();
+        if( ! Sentinel::inRole('administrator')) {
+            $tasks_employee = $tasks_employee->where('employee_id',$employee->id );
+        }
+
+        return view('Centaur::tasks.task_list', ['tasks_employee' => $tasks_employee]);
     }
 
     /**
@@ -32,8 +54,8 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $employees = Employee::employees_firstNameASC();
-        $cars = Car::orderBy('registration','ASC')->get();
+        $employees = Employee::employees_lastNameASC();
+        $cars = Car::orderBy('model','ASC')->get();
 
         return view('Centaur::tasks.create', ['employees' => $employees, 'cars' => $cars]);
     }
@@ -46,24 +68,89 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
+        $employee = Sentinel::getUser()->employee;
+      
+        if(! $request['to_employee_id']) {
+            session()->flash('error', 'Nemoguće spremiti zadatak bez upisanih djelatnika!');
+            return redirect()->back();
+        }
+
+        $employees_id = implode(",",$request['to_employee_id']);
         $data = array(
-			'employee_id'  	=> $request['employee_id'],
-			'car_id'  		=> $request['car_id'],
-			'title'  		=> $request['title'],
-			'date'  		=> $request['date'],
-			'time1' 		=> $request['time1'],
-			'time2' 		=> $request['time2'],
-			'type' 		    => $request['type'],
-			'description'   => $request['description']
+			'employee_id'  	    => $employee->id,
+			'to_employee_id'    => $employees_id,
+			'car_id'  		    => $request['car_id'],
+            'task'  		    => $request['task'],
+            'description'       => $request['description'],
+			'start_date'  	    => $request['start_date'],
+			'end_date'  	    => $request['end_date'],
+			'interval_period'   => $request['interval_period'],
+			'active' 		    => $request['active'],
         );
 
         $task = new Task();
 		$task->saveTask($data);
 
+        // spremanje dnevnog zadatka i slanje maila
+        if( $task->start_date == date('Y-m-d') ) {
+            foreach ($request['to_employee_id'] as $key => $employee_id) {
+                if($key == 0) {
+                    $data_task = array(
+                        'task_id'  	    => $task->id,
+                        'employee_id'  	=> $employee_id,
+                        'comment'  	    => $request['comment']            
+                    );
+            
+                    $employeeTask = new EmployeeTask();
+                    $employeeTask->saveEmployeeTask($data_task);
+
+                    $email = $employeeTask->employee->email;
+                    Log::info($email);
+                    $mail = 'jelena.juras@duplico.hr';
+
+                    if($email != null && $email != '') {
+                       /*  try { */
+                            Mail::to($mail)->send(new TaskCreateMail($employeeTask));
+                      /*   } catch (\Throwable $th) { */
+                            // dd($th);
+                         /*    $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+                
+                            return redirect()->route('admin.tasks.index')->withFlashMessage($message); */
+                     /*    } */
+                    } else {
+                       /*  $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
+                
+                        return redirect()->route('admin.tasks.index')->withFlashMessage($message); */
+                    }
+                }  
+            }            
+        } else {
+            /* foreach ($request['to_employee_id'] as $employee_id) {
+                $email = Employee::where('id',$employee_id )->first()->email;
+                if($email != null && $email != '') {
+                    try {
+                        Mail::queue('email.task_info', ['task' => $task ], function ($mail) use ($task, $email) {
+                            $mail->to($email)
+                                ->from('info@duplico.hr', 'Duplico')
+                                ->subject('Novi zadatak');
+                        });
+                    } catch (\Throwable $th) {
+                        dd($th );
+                        $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+            
+                        return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                    }
+                } else {
+                    $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
+            
+                    return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                }
+            }            */
+        } 
+
 		session()->flash('success',  __('ctrl.data_save'));
 	
         return redirect()->back();
-       
     }
 
     /**
@@ -92,8 +179,8 @@ class TaskController extends Controller
     public function edit($id)
     {
         $task = Task::find($id);
-        $employees = Employee::employees_firstNameASC();
-        $cars = Car::orderBy('registration','ASC')->get();
+        $employees = Employee::employees_lastNameASC();
+        $cars = Car::orderBy('model','ASC')->get();
 
          return view('Centaur::tasks.edit', ['task' => $task,'employees' => $employees, 'cars' => $cars]);
     }
@@ -107,20 +194,89 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $task = Task::find($id);
+        if(! $request['to_employee_id']) {
+            $message = session()->flash('error', 'Nemoguće spremiti zadatak bez upisanih djelatnika!');
+            
+            return redirect()->back()->withFlashMessage($message);
+        } 
+        $employee = Sentinel::getUser()->employee;
+        $task = Task::find( $id );
 
+        $employees_id = implode(",",$request['to_employee_id']);
         $data = array(
-			'employee_id'  	=> $request['employee_id'],
-			'car_id'  		=> $request['car_id'],
-			'title'  		=> $request['title'],
-			'date'  		=> $request['date'],
-			'time1' 		=> $request['time1'],
-			'time2' 		=> $request['time2'],
-			'type' 		    => $request['type'],
-			'description'   => $request['description']
+			'employee_id'  	    => $employee->id,
+			'to_employee_id'    => $employees_id,
+			'car_id'  		    => $request['car_id'],
+            'task'  		    => $request['task'],
+            'description'       => $request['description'],
+			'start_date'  	    => $request['start_date'],
+			'end_date'  	    => $request['end_date'],
+			'interval_period'   => $request['interval_period'],
+			'active' 		    => $request['active'],
         );
-      
+
 		$task->updateTask($data);
+        // spremanje dnevnog zadatka i slanje maila
+        if( $task->start_date == date('Y-m-d') ) {
+            foreach ($request['to_employee_id'] as $key => $employee_id) {
+                if($key == 0) {
+                    $employeeTask = EmployeeTask::where('employee_id', $employee_id)->where('task_id', $task->id )->whereDate('created_at',date('Y-m-d'))->first();
+                    if(! $employeeTask) {
+                        $data_task = array(
+                            'task_id'  	    => $task->id,
+                            'employee_id'  	=> $employee_id,
+                            'comment'  	    => $request['comment']            
+                        );
+                
+                        $employeeTask = new EmployeeTask();
+                        $employeeTask->saveEmployeeTask($data_task);
+    
+                        $email = $employeeTask->employee->email;
+    
+                        if($email != null && $email != '') {
+                            try {
+                                /*   Mail::queue('email.task_form', ['employeeTask' => $employeeTask ], function ($mail) use ($email) {
+                                    $mail->to($email)
+                                        ->from('info@duplico.hr', 'Duplico')
+                                        ->subject('Novi zadatak');
+                                }); */
+                            } catch (\Throwable $th) {
+                                // dd($th);
+                                /*    $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+                    
+                                return redirect()->route('admin.tasks.index')->withFlashMessage($message); */
+                            }
+                        } else {
+                            /*  $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
+                    
+                            return redirect()->route('admin.tasks.index')->withFlashMessage($message); */
+                        }
+                    }
+                }  
+            }
+        } else {
+            /* foreach ($request['to_employee_id'] as $employee_id) {
+                $email = Employee::where('id',$employee_id )->first()->email;
+                if($email != null && $email != '') {
+                    try {
+                        Mail::queue('email.task_info', ['task' => $task ], function ($mail) use ($task, $email) {
+                            $mail->to($email)
+                                ->from('info@duplico.hr', 'Duplico')
+                                ->subject('Novi zadatak');
+                        });
+                    } catch (\Throwable $th) {
+                        dd($th );
+                        $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+            
+                        return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                    }
+                } else {
+                    $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
+            
+                    return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                }
+            }            */
+        } 
 
 		session()->flash('success',  __('ctrl.data_edit'));
 	
@@ -145,7 +301,7 @@ class TaskController extends Controller
 
     public static function task_for_selected_day ($date) 
     {
-        $tasks = Task::whereDate('date', $date)->get();
+        $tasks = Task::whereDate('start_date', $date)->get();
         return $tasks;
     }
 }

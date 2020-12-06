@@ -12,7 +12,10 @@
 					<i class="fas fa-plus"></i>
 				</a>
 			@endif
-		{{-- 	<span class="change_view"></span> --}}
+			<select id="filter_types" class="select_filter filter_checkout" >
+				<option value="checkin" selected>Prijavljeni</option>
+				<option value="checkout"  >Odjavljeni</option>
+			</select>
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -22,6 +25,7 @@
 					<thead>
 						<tr>
 							<th>@lang('basic.fl_name')</th>
+							<th>ERP ID</th>
 							<th class="sort_date">@lang('basic.b_day')</th>
 							<th>@lang('basic.work')</th>
 							<th>@lang('basic.department')</th>
@@ -36,6 +40,7 @@
 									<span class="employee_color" {!! $employee->color ? 'style="background-color:' . $employee->color . '"' : '' !!}>
 									</span>
 								</td>
+								<td>{!! $employee->erp_id ? $employee->erp_id : '' !!}</td>
 								<td>{!! $employee->b_day ? date("d.m.Y",strtotime($employee->b_day)) : '' !!}</td>
 								<td>{!! $employee->work ? $employee->work['name'] : '' !!}</td>
 								<td>

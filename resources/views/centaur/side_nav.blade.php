@@ -1,8 +1,10 @@
 @php
     use App\Models\Questionnaire;
+    use App\Http\Controllers\DashboardController;
     use App\Models\Campaign;
 	$countQuestionnaire =  Questionnaire::countQuestionnaire();
     $countCampaign = Campaign::countCampaign();
+    $permission_dep = DashboardController::getDepartmentPermission();
 @endphp
 <section class="section_top_nav" id="section_top_nav">
     <span class="close_topnav">
@@ -11,7 +13,8 @@
         @else 
             <img src="{{ URL::asset('icons/myIntranet.png')}}" alt="company_logo"/>
         @endif
-        <i class=" fas fa-times"></i></span>
+        <i class=" fas fa-times"></i>
+    </span>
     <div class="topnav" id="myTopnav">
         <div class="">
             <a class="button_nav dashboard_button active" href="{{ route('dashboard') }}" title="{{ __('welcome.dashboard') }}">
@@ -84,12 +87,12 @@
                 </div>
             @endif
         @endif
-        @if(in_array('Pogodnosti', $moduli))							
+        @if(in_array('Pogodnosti', $moduli) )
             @if(Sentinel::getUser()->hasAccess(['benefits.view']) || in_array('benefits.view', $permission_dep) )
                 <div class="">
-                    <a class="button_nav load_button benefits_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('benefits.index') }}" title="{{ __('basic.benefits') }}">
-                        <span class="button_nav_img benefits"><!-- <img class="" src="{{ URL::asset('../icons/messages_grey.png') }}" alt="Profile image"  /> --></span>
-                        <p class="button_nav_text">@lang('basic.benefits')</p>
+                    <a  href="{{ route('suitabilities.index') }}"  class="button_nav load_button suitabilities_button isDisabled  {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" title="{{ __('basic.benefits') }}">
+                        <span class="button_nav_img benefits"></span>
+                        <p class="button_nav_text">@lang('basic.benefits')</p>	
                     </a>	
                 </div>
             @endif

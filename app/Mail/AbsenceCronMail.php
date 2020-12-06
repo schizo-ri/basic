@@ -13,6 +13,7 @@ use DateTime;
 use DateInterval;
 use DatePeriod;
 use Log;
+use App\Models\MailTemplate;
 
 class AbsenceCronMail extends Mailable
 {
@@ -35,6 +36,8 @@ class AbsenceCronMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','AbsenceCronMail')->first();
+
         $datum = new DateTime('now');
 		date_modify($datum, '+1day');
 		$dan = date_format($datum,'d');
@@ -109,10 +112,11 @@ class AbsenceCronMail extends Mailable
         }
         if(count($day_absences)>0) {
             $title = __('absence.absence_for_day') . ' ' . date_format($datum,'d.m.Y');
-            return $this->markdown('emails.absences.today_absence')
+            return $this->view('emails.absences.today_absence')
                     ->subject( __('emailing.day_absence') . ' ' . date_format($datum,'d.m.Y'))
                     ->with(['day_absences'    => $day_absences,
-                            'title'    => $title
+                            'title'    => $title,
+                            'template_mail' => $mail_template
             ]);
         }
     }

@@ -45,7 +45,9 @@
 		</div>
 		<div class="col-3 info_abs">
 			@php
-				rsort($requests['years']);
+				if(is_array($requests['years'])) {
+					rsort($requests['years']);
+				}
 			@endphp
 			@if($user->employee)
 				<span class="title">@lang('absence.vacat_days')

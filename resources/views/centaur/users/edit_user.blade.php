@@ -14,7 +14,7 @@ $i = 0;
 	<main class="col-lg-12 col-xl-12 index_main profile_main float_right">
 		<section>
 			<div class="page-header header_profile">
-				
+				<a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a>
 				@lang('basic.profile')
 			</div>
 			<main class="main_profile">

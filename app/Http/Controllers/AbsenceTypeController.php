@@ -59,6 +59,7 @@ class AbsenceTypeController extends Controller
     public function store(AbsenceTypeRequest $request)
     {
         $data = array(
+			'erp_id'  	=> $request['erp_id'],
 			'name'  	=> $request['name'],
 			'temp'  	=> $request['temp'], // za privremene djelatnike
 			'mark'  	=> str_replace(" ","_",trim(strtoupper($request['mark'])))
@@ -114,6 +115,7 @@ class AbsenceTypeController extends Controller
          $absenceType = AbsenceType::find($id);
 		
 		 $data = array(
+            'erp_id'  	=> $request['erp_id'],
             'name'  	=> $request['name'],
             'temp'  	=> $request['temp'], // za privremene djelatnike
 			'mark'  	=> str_replace(" ","_",trim(strtoupper($request['mark'])))

@@ -1,5 +1,5 @@
 <div class="modal-header">
-	<h3 class="panel-title">@lang('basic.edit_employee_terminations')</h3>
+	<h3 class="panel-title">@lang('basic.edit_emailings')</h3>
 </div>
 <div class="modal-body">
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('emailings.update', $emailing->id) }}" >

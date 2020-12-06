@@ -119,8 +119,6 @@ $('.form_evidention').on('submit',function(e){
             $('.header_nav').load(location.href + ' .header_nav .topnav',function(){
                 $.getScript('/../js/nav_active.js');
             });
-            
-            
         }, 
         error: function(jqXhr, json, errorThrown) {
             console.log(jqXhr.responseJSON);

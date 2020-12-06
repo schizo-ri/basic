@@ -34,7 +34,6 @@ class ShortcutController extends Controller
     public function shortcutExist (Request $request) 
     {
         $employee = Sentinel::getUser()->employee;
-       
         if( $employee ) {
             $shortcut = Shortcut::where('employee_id', $employee->id)->where('url', $request['url'])->first();
             if( $shortcut ) {

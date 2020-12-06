@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\EvaluationEmployee;
+use App\Models\MailTemplate;
 
 class QuestionnaireMail extends Mailable
 {
@@ -37,12 +38,15 @@ class QuestionnaireMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','QuestionnaireMail')->first();
+        
         $brojAnketa = count($this->brojAnketa);
 
-        return $this->markdown('emails.quersionnaires.unfinished')
+        return $this->view('emails.quersionnaires.unfinished')
                     ->subject( __('quersionnaire.questionnaire_day') . ' - ' . $this->employee->user->first_name. ' - ' . $this->employee->user->last_name )
                     ->with(['employee'    => $this->employee,
-                            'brojAnketa'       => $brojAnketa
+                            'brojAnketa'       => $brojAnketa,
+                            'template_mail' => $mail_template
                     ]);
     }
 }

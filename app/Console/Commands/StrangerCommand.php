@@ -47,7 +47,6 @@ class StrangerCommand extends Command
 
         $datum = new DateTime('now');
         $datum->modify('+75 days');
-        Log::info('ProbationCommand ' . ' | ' .  date_format($datum,'Y-m-d'));
         
         $employees = Employee::employeeStranger($datum);
         foreach ($employees as $employee) {

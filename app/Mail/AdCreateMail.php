@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Ad;
+use App\Models\MailTemplate;
 
 class AdCreateMail extends Mailable
 {
@@ -36,6 +37,8 @@ class AdCreateMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','AdCreateMail')->first();
+        
         if(isset( $_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != 'localhost') {
             $host =  $_SERVER['HTTP_HOST'];
         } else {
@@ -44,11 +47,12 @@ class AdCreateMail extends Mailable
 
         $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $host  . '/oglasnik';
 
-        return $this->markdown('emails.ads.create')
+        return $this->view('emails.ads.create')
                     ->subject('MyIntranet oglasnik - objavljen je novi oglas')
 					->with([
 						'ad' =>  $this->ad,
-						'url' =>  $url
+						'url' =>  $url,
+                        'template_mail' => $mail_template
 					]);
     }
 }

@@ -18,7 +18,7 @@ $(function() {
         fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
     };
 
-    $('.btn-new:not(.create_notice), .add_new, a.create_user[rel="modal:open"], #add_event[rel="modal:open"], .oglasnik_button, .posts_button, .doc_button, .events_button').click(function(){
+    $('.btn-new:not(.create_notice), .add_new, a.create_user[rel="modal:open"], #add_event[rel="modal:open"], .oglasnik_button, .posts_button, .doc_button, .events_button').on('click',function(){
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -192,7 +192,7 @@ $(function() {
     $('tr[data-modal] td:not(:last-child)').on("click", function(e) {
         e.preventDefault();
         var href = location.origin + $(this).parent().data('href');
-        
+        console.log(href);
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -227,4 +227,6 @@ $(function() {
 		console.log(url);
         window.location = url;
     });
+
+
 });

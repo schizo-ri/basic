@@ -12,7 +12,7 @@ class Employee extends Model
 	* @var array
 	*/
 	protected $fillable = [
-		'user_id','father_name','mather_name','maiden_name','oib','oi','oi_expiry','b_day','b_place','mobile','email','priv_mobile','priv_email','prebiv_adresa','prebiv_grad','borav_adresa','borav_grad','title','qualifications','marital','work_id','superior_id','reg_date','probation','years_service','termination_service','first_job','comment','checkout','termination_id',
+		'erp_id','user_id','father_name','mather_name','maiden_name','oib','oi','oi_expiry','b_day','b_place','mobile','email','priv_mobile','priv_email','prebiv_adresa','prebiv_grad','borav_adresa','borav_grad','title','qualifications','marital','work_id','superior_id','reg_date','probation','years_service','termination_service','first_job','comment','checkout','termination_id',
 		'effective_cost','brutto','color','abs_days','lijecn_pregled','znr','size','shoe_size','days_off','stranger','permission_date'
 
 	];
@@ -253,9 +253,23 @@ class Employee extends Model
 	* 
 	* @return void
 	*/
+	public static function employees_lastNameASCStatus($status)
+	{
+		if($status == 0) {
+			return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout','<>',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.last_name','ASC')->get();
+		} else {
+			return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout', null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.last_name','ASC')->get();
+		}
+	}
+
+	/*
+	* get employees join users order by firstName ASC from Employee
+	* 
+	* @return void
+	*/
 	public static function employees_firstNameASC()
 	{
-		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->orderBy('users.first_name','ASC')->get();
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.first_name','ASC')->get();
 	}
 
 	/*
@@ -265,7 +279,7 @@ class Employee extends Model
 	*/
 	public static function employees_lastNameASC()
 	{
-		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->orderBy('users.last_name','ASC')->get();
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.last_name','ASC')->get();
 	}
 
 	public static function employeesAnniversary( $date )

@@ -10,6 +10,12 @@
 .form-control.color {
     width: 100px;
 }
+.link_to_file {
+    color: blue;
+}
+.benefit_documents {
+    padding-top: 15px;
+}
 .link_back {
     color: inherit;
     text-decoration: none;
@@ -273,6 +279,7 @@ main.index_main.locco_create_main>section >main {
 }
 .index_main.admin_main header  {
     height: 78px;
+    padding-left: 60px;
 }
 
 .index_main.main_noticeboard  {
@@ -619,6 +626,7 @@ class="select-css"
     display: flex;
     justify-content: center;
 }
+
 .index_aside>div.calendar_main .btn-new {
     z-index: 1;
     position: absolute;
@@ -1125,7 +1133,7 @@ class="select-css"
     cursor: pointer;
 }
 
-.main_benefits_head .benefit_title:hover {
+.main_benefits_head .benefit_title:hover .bnf_img {
     background-color: #fafafa;
 }
 .main_benefits_head .benefit_title.active {
@@ -1708,9 +1716,9 @@ footer.ad_footer {
 .modal_campaign .index_table_filter >label input {
     padding-left: 40px;
 }
-.header_ads .index_table_filter .select_filter, .notice_filter .select_filter, .fuel_header .select_filter, .travel_header .select_filter, .work_record_header .select_filter, .main_absence .select_filter {
+.header_ads .index_table_filter .select_filter, .notice_filter .select_filter, .fuel_header .select_filter, .travel_header .select_filter, .work_record_header .select_filter, .main_absence .select_filter, .select_filter.filter_checkout  {
     width: auto;
-    height: 38px;   
+    height: 38px;
     float: right;
     background: inherit;
     border: none;
@@ -1720,15 +1728,27 @@ footer.ad_footer {
     display: flex;
     color: #071E57;
     outline: none;
-    -moz-appearance:none; /* Firefox */
-    -webkit-appearance:none; /* Safari and Chrome */
-    background: url(../icons/arrow_down1.png) no-repeat;
-    background-position: 98%;
-    appearance:none;
+    -moz-appearance: none;
+    /* -webkit-appearance: none; */
+    /* background: url(../icons/arrow_down1.png) no-repeat; */
+    /* background-position: 98%; */
+    /* appearance: none; */
     padding-right: 30px;
     margin-right: -5px;
     margin-left: 20px;
     cursor: pointer;
+    background-color: white;
+    border: 1px solid rgba(7, 30, 86, 0.1);
+    border-radius: 5px;
+}
+.header_ads .index_table_filter .select_filter:hover,
+ .notice_filter .select_filter:hover, 
+ .fuel_header .select_filter:hover, 
+ .travel_header .select_filter:hover, 
+ .work_record_header .select_filter:hover, 
+ .main_absence .select_filter:hover, 
+ .select_filter.filter_checkout:hover {
+    color: #999999;
 }
 
 .main_absence .select_filter {
@@ -1737,9 +1757,10 @@ footer.ad_footer {
 
 .select_filter option {
     width: fit-content;
+    
 }
 
-.main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years, .main_absence .select_filter.filter_employees, .main_absence .select_filter.filter_approve {
+.main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years, .main_absence .select_filter.filter_employees, .main_absence .select_filter.filter_approve{
     background-position: 98%;
     background-color: white;
     width: 100%;
@@ -1751,13 +1772,18 @@ footer.ad_footer {
     font-family: Montserrat;
     font-style: normal;
     font-weight: 600;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     color: #606060;
     padding-left: 10px;
-    padding-right: 5px;
+    padding-right: 20px;
     
 }
-
+.main_absence .select_filter.filter_types:hover,
+.main_absence .select_filter.filter_years:hover, 
+.main_absence .select_filter.filter_employees:hover,
+.main_absence .select_filter.filter_approve:hover{
+    color: #999999;
+}
 .main_absence .select_filter.filter_types>option, .main_absence .select_filter.filter_years>option {
     color: black;
 }
@@ -1881,9 +1907,8 @@ footer.ad_footer {
     margin-right: 20px;
 }
 .all_absences .dataTables_filter span.show_button {
-    float: left;
+    float: right;
     margin: 0;
-    margin-left: 20px;
     cursor: pointer;
 } 
 .all_absences.table_absences span.show_button {
@@ -1898,7 +1923,7 @@ footer.ad_footer {
     cursor: pointer;
 }
 
-.index_table_filter span.show_button {
+.index_table_filter span.show_button  {
     width: auto;
     height: auto;
     z-index: 2;
@@ -1931,7 +1956,10 @@ footer.ad_footer {
     margin-left: 10px;
     text-align: center;
 }
-
+.index_page a.add_new:hover, .btn-new.btn-approve:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
 .index_page .all_absences a.add_new {
     float: right;
    /*  top: 50%;
@@ -1940,6 +1968,10 @@ footer.ad_footer {
     right: 20px; */
     text-decoration: none;
     width: 100%;
+}
+.index_page .all_absences a.add_new:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
 }
 .index_page a.add_new i, .index_page a.add_new svg {
     margin-right: 20px;
@@ -2579,20 +2611,22 @@ main.index_main.main_absence >section {
     height: 21px;
     display: inline-block;
     margin-left: 5px;
+    vertical-align: middle;
 }
 .curve_arrow_left {
     background: url('../icons/curve_arrow_left.png') no-repeat;
     width: 22px;
-    height: 12px;
+    height: 14px;
     display: inline-block;
     margin-right: 20px;
+    vertical-align: middle;
 }
 .curve_arrow_left_grey {
     background: url('../icons/curve_arrow_left_grey.png') no-repeat;
     width: 22px;
     height: 14px;
     display: inline-block;
-
+    vertical-align: middle;
 }
 .curve_arrow_left_blue {
     background: url('../icons/curve_arrow_left_blue1.png') no-repeat;
@@ -2600,7 +2634,7 @@ main.index_main.main_absence >section {
     height: 14px;
     display: inline-block;
     margin-right: 20px;
-
+    vertical-align: middle;
 }
 .back_to_prev {
     margin: 0;
@@ -2768,7 +2802,46 @@ main.all_absences >section {
     border: none;
     outline-color: #051847;
 }
-
+section.modal_employee .show_empl_label, section.modal_employee .show_empl_p, section.modal_user main .basic_info >div>label {
+    float: left;
+    width: auto;
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: #071E57;
+    display: block;
+    margin: 0;
+    line-height: 20px;
+}
+section.modal_employee .show_empl_label {
+    font-weight: 600;
+}
+section.modal.modal_user>header {
+    padding: 20px;
+    background: none;
+    color: black;
+    border-bottom: 1px solid black;
+}
+section.modal_user.modal_employee main .basic_info {
+    width: 42%;
+    margin-right: 0;
+    margin-top: 0;
+    padding: 0 20px;
+    background: inherit;
+}
+section.modal.modal_user.modal_employee {
+    max-width: 800px;
+    margin: auto;
+    float: none;
+    clear: left;
+    position: static;
+    box-shadow: none;
+}
+section.modal_user main >div h4 {
+    margin-bottom: 10px;
+}
+section.modal_user.modal_employee main {
+    padding: 0 20px;
+}
 .info_abs>p>span.go_og {
     display: block;
 }
@@ -2784,7 +2857,7 @@ main.all_absences >section {
 }
 .index_main main.all_absences {
     height: calc(100% - 65px);
-    padding-bottom: 30px;
+    /* padding-bottom: 30px; */
 }
 .index_main main.all_absences.all_absences_employee {
    
@@ -3155,6 +3228,15 @@ button.show_loccos {
     float: right;
     cursor: pointer;
 }
+.change_view_calendar:hover,
+.change_employee:hover,
+.change_employee_work:hover,
+.change_employee_afterhour:hover,
+.change_car, .change_month:hover,
+.change_month_afterhour:hover {
+    color: #999999;
+}
+
  .change_view_calendar >option {
     line-height: 20px;
 }
@@ -3314,10 +3396,16 @@ input[type="search"]::-webkit-search-cancel-button {
 .evidention_employee table.dataTable.display tbody tr td:not(:last-child) {
     border-right: 1px solid #ccc;
 }
+
 .table-responsive .table thead th:last-child {
-    min-width: 50px;
+    min-width: 100px;
     max-width: 100px;
     width: auto;
+}
+
+.filter_area>div {
+   /*  max-width: fit-content; */
+   max-width: 20%;
 }
 
 .index_main.profile_main {
@@ -3327,6 +3415,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .index_main.profile_main .page-header.header_profile {
     color: white;
+    padding: 20px;
 }
 
 .index_main.profile_main .main_profile .user_profile {
@@ -3448,6 +3537,9 @@ input[type="search"]::-webkit-search-cancel-button {
     display: inline-block;
     margin-bottom: 4px;
 }
+.index_page.index_profile .user_interest .tags>span:hover {
+    background-color:#ccc;
+}
 
 .interesing_facts h4 {
     font-weight: 600;
@@ -3518,8 +3610,6 @@ input[type="search"]::-webkit-search-cancel-button {
     color: #606060;
 }
 
-
-
 a.iclude_event {
     width: 200px;
     max-width: 100%;
@@ -3536,6 +3626,11 @@ a.iclude_event {
     border: 1px solid #1594F0;
 }
 
+.user_links a:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
 a.chat{
     width: 45px;
     height: 45px;
@@ -3668,26 +3763,34 @@ a.modal_close {
     margin: 0;
     width: 100%;
     padding: 0;
+    display: flex;
+    justify-content: flex-start;
 }
 .approve_buttons>div {
-    padding: 0;
+    max-width: fit-content;
+    min-width: 120px;
     height: 100%;
+    padding: 0 10px;
 }
+
 .approve_button {
     margin-right: 20px;
     font-style: normal;
     font-weight: 600;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     color: #606060;
-    padding: 10px 0;
+    padding: 5px 0;
     cursor: pointer;
     margin: auto;
     width: 100%;
     height: 100%;
     display: block;
     text-align: center;
+    line-height: 27px;
 }
-
+.approve_button:hover {
+    color: #999999;
+}
 .mail_tamplate_title {
     padding: 0;
     padding-left: 20px;
@@ -3699,6 +3802,10 @@ a.modal_close {
 
 .page-header .btn-submit {
     margin: 0;
+}
+.btn-submit:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
 }
 .mail_form {
     height: 100%;
@@ -3740,13 +3847,13 @@ a.modal_close {
     overflow: hidden;
 }
 #mail_template #header, #mail_template #footer {
-    height: 10%;
+    height: auto;
     border: 1px dashed #eee;
-    padding: 30px 15px;
+    padding: 10px 15px;
     text-align: center;
 }
 #mail_template #header {
-    font-size: 16px;
+    font-size: 12px;
 }
 #mail_template #footer {
     font-size: 12px;
@@ -3754,7 +3861,7 @@ a.modal_close {
 #mail_template #body {
     height: 60%;
     border: 1px dashed #eee;
-   font-size: 14px;
+   font-size: 12px;
    padding: 15px;
 }
 

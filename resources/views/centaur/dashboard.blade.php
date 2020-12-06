@@ -53,7 +53,10 @@
 						</div> --}}
 						<div class="shortcuts_container">
 							<div class="" >
-								<span class="shortcut">@lang('basic.edit_shortcut') <span class="btn-new"><i class="fas fa-pen"></i></span></span> 
+								<span class="shortcut">
+									<span class="shortcut-text">@lang('basic.edit_shortcut') </span>
+									<span class="btn-new"><i class="fas fa-pen"></i></span>
+								</span> 
 							</div>
 							<div class="scroll_button">
 								<button id="left-button-scroll" class=""><i class="fas fa-chevron-left"></i></button>
@@ -102,7 +105,7 @@
 										</span></a>
 									</button>
 								@endif
-								<button class="" ><a href="{{ route('tasks.index') }}" rel="modal:open">
+								<button class="" ><a href="{{ route('task_list') }}" rel="modal:open">
 									<span>
 										<span class="img task"></span>
 										<p>@lang('calendar.tasks')</p>

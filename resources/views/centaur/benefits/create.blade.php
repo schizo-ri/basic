@@ -6,7 +6,7 @@
 	<form class="form_benefit" accept-charset="UTF-8" role="form" method="post" action="{{ route('benefits.store') }}" enctype="multipart/form-data" >
 		<fieldset>
 			<div class="form-group">
-				<label class="label_file" for="file">@lang('basic.add_image')<span><img src="{{ URL::asset('icons/download.png') }}" />Add image here</span></label>
+				<label class="label_file" for="file">@lang('basic.add_image')<span><img src="{{ URL::asset('icons/download.png') }}" class="img_download" />Add image here</span></label>
 				<input type='file' id="file" name="fileToUpload" >
 				<span id="file_name"></span>
 			</div>
@@ -35,6 +35,7 @@
 				<input name="phone" type="text" class="form-control" maxlength="100" value="{{ old('phone') }}"  >
 				{!! ($errors->has('phone') ? $errors->first('phone', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+		
 			<div class="form-group">
 				<label>Status</label>
 				<input type="radio" id="status_0" name="status" value="0" checked /><label for="status_0">@lang('basic.inactive')</label>
@@ -47,7 +48,7 @@
 	</form>
 </div>
 <script>
-	if( $('#tinymce_textarea').length >0 ) {
+	/* if( $('#tinymce_textarea').length >0 ) {
 		tinymce.init({
 			selector: '#tinymce_textarea',
 			height : 300,	
@@ -82,11 +83,10 @@
 		$('body').on($.modal.CLOSE, function(event, modal) {
 			$.getScript('/../node_modules/tinymce/tinymce.min.js');
 		});
-	}
-	//$.getScript( '/../js/validate.js');
+	} */
+	$.getScript( '/../js/validate.js');
 	
-
-$('#file').change(function(){
-	$('#file_name').text( $('input[type=file]').val());
-});
+	$('#file').change(function(){
+		$('#file_name').text( $('input[type=file]').val());
+	});
 </script>

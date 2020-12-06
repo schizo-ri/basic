@@ -4,10 +4,7 @@
 ?>
  @if(Sentinel::getUser()->employee)
 <div class="col-12 calendar_main">
-    {{-- <a class="btn btn-primary btn-lg btn-new" href="{{ route('events.create') }}" title="{{ __('calendar.add_event')}}" rel="modal:open">
-        <i style="font-size:11px" class="fa">&#xf067;</i>
-    </a> --}}
-    @if(Sentinel::getUser()->hasAccess(['tasks.create']) || in_array('tasks.create', $permission_dep))
+    @if(Sentinel::inRole('administrator'))
         <a href="#event_show" rel="modal:open">
             <span class="btn btn-primary btn-lg btn-new" id="add_event" title="{{ __('calendar.add_event')}}" ><i style="font-size:11px" class="fa">&#xf067;</i></span>
         </a>

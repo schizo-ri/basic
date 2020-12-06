@@ -35,8 +35,8 @@
 								<td>{{ $mail_template->to_mail  }}</td>
 								<td class="center">
 									@if(Sentinel::getUser()->hasAccess(['mail_templates.update']) || in_array('mail_templates.update', $permission_dep))
-										<a href="{{ route('mail_templates.edit', $mail_template->id) }}" title="{{ __('basic.edit_employee') }}"  rel="modal:open">
-											<i class="fas fa-user-cog"></i>
+										<a href="{{ route('mail_templates.edit', $mail_template->id) }}" title="{{ __('basic.edit_employee') }}" >
+											<i class="fas fa-edit"></i>
 										</a>
 									@endif
 									@if( Sentinel::getUser()->hasAccess(['mail_templates.delete']) || in_array('mail_templates.delete', $permission_dep))
@@ -44,6 +44,9 @@
 											<i class="far fa-trash-alt"></i>
 										</a>
 									@endif
+									<a href="{{ route('mail_test', $mail_template->id) }}" title="Test mail"  rel="modal:open">
+										<i class="far fa-envelope-open"></i>
+									</a>
 								</td>
 							</tr>
 						@endforeach

@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
+use App\Models\MailTemplate;
 
 class UserCreateMail extends Mailable
 {
@@ -38,16 +39,19 @@ class UserCreateMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','UserCreateMail')->first();
+        
         $link = 'https://duplico.myintranet.io';
         $podrska = 'itpodrska@duplico.hr';
 
-        return $this->markdown('emails.users.create')
+        return $this->view('emails.users.create')
                     ->subject( __('basic.access_data'))
                     ->with([
                         'user' => $this->user,
                         'password' => $this->password,
                         'link' =>  $link,
-                        'podrska' => $podrska
+                        'podrska' => $podrska,
+                        'template_mail' => $mail_template
                     ]);
     } 
 }

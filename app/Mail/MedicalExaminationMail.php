@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Employee; 
 use DateTime;
+use App\Models\MailTemplate;
 
 class MedicalExaminationMail extends Mailable
 {
@@ -38,16 +39,19 @@ class MedicalExaminationMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','MedicalExaminationMail')->first();
+        
         $date1 = new DateTime($this->employee->lijecn_pregled); 
         $date2 = new DateTime("now"); 
         $interval = $date1->diff($date2); 
         $days = $interval->format('%a');
         
-        return $this->markdown('emails.employees.medical_examination')
+        return $this->view('emails.employees.medical_examination')
                     ->subject( __('basic.medical_examination') . ' - ' . $this->employee->first_name . ' ' .  $this->employee->last_name )
                     ->with([
                         'employee' => $this->employee,
-                        'days' => $days
+                        'days' => $days,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

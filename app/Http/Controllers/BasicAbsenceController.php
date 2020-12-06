@@ -948,16 +948,43 @@ class BasicAbsenceController extends Controller
 		*/ 
 		public static function absenceForDay ($employee_id, $date, $time1, $time2) 
 		{
-			$request = Absence::where('employee_id', $employee_id)->whereDate('start_date', $date)->whereTime('start_time', $time1)->first();
+			$request = Absence::where('employee_id', $employee_id)->whereDate('start_date', $date)->first();
 			
 			if( $request ) {
-				return true;
+				return 1;
 			} else {
-				return false;
+				return 0;
 			}
 		}
+
+		/* Provjera da li postoji zahtjev za izostanak
+			Vraća true / false 
+		*/ 
+		public static function absenceForDayTask ($employee_id, $date) 
+		{
+			$today = new DateTime($date);
+			$date_modify = $today->modify('-1 month');
+			$date2 = $date_modify->format('Y-m-d');
+			
+			$zahtjevi = Absence::whereDate('start_date', '>=', $date2)->where('employee_id',$employee_id)->where('approve', 1)->get(); // svi zahtjevi djelatnika veći od mjesec dana prije traženog datuma 
 		
-	
+			foreach($zahtjevi as $zahtjev){
+				$begin = new DateTime($zahtjev->start_date);
+				$end = new DateTime($zahtjev->end_date);
+				$end->setTime(0,0,1);
+				$interval = DateInterval::createFromDateString('1 day');
+				$period = new DatePeriod($begin, $interval, $end);
+
+				foreach ($period as $dan) {
+					if(date_format($dan,'Y-m-d') == $date){
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+		
 	/* ########################      ZAHTJEVI  kraj  ######################## */	
 	
 	/* ########################      PREKOVREMENI SATI     ######################## */
@@ -969,7 +996,7 @@ class BasicAbsenceController extends Controller
 		public static function afterHours($user) 
 		{
 			$afterHours = Afterhour::where('employee_id', $user->id)->where('approve',1)->get();
-			
+			//->where('paid','<>',1)
 			$hours = 0;
 			foreach ($afterHours as $afterHour) {
 				if($afterHour->approve_h) {
@@ -1038,10 +1065,11 @@ class BasicAbsenceController extends Controller
 		public static function afterhoursForDay ($employee_id, $date, $time1, $time2) 
 		{
 			$request = Afterhour::where('employee_id', $employee_id)->whereDate('date', $date)->whereTime('start_time', $time1)->first();
+			
 			if( $request ) {
-				return true;
+				return 1;
 			} else {
-				return false;
+				return 0;
 			}
 		}
 	

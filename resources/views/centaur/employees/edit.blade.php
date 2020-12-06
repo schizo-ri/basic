@@ -18,11 +18,15 @@
 			<div class="form-group {{ ($errors->has('user_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.user')</label>
 				<select class="form-control" name="user_id" required>
-					<option value="{{ $employee->user_id }}" >{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}</option>
+					<option value="{{ $employee->user_id }}" >{{ $employee->user['last_name'] . ' ' . $employee->user['first_name'] }}</option>
 				</select>
 				{!! ($errors->has('user_id') ? $errors->first('user_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			
+			<div class="form-group  {{ ($errors->has('erp_id'))  ? 'has-error' : '' }}" style="padding-top: 10px">
+				<label>ERP ID</label>
+				<input class="form-control " type="text" name="erp_id" value="{{ $employee->erp_id }}" maxlength="10" >
+				{!! ($errors->has('color') ? $errors->first('color', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
 			<div class="form-group  {{ ($errors->has('color'))  ? 'has-error' : '' }}" style="padding-top: 10px">
 				<label>@lang('basic.color') </label>
 				<input class="form-control color"  type="color" name="color" value="{!! $employee->color ? $employee->color : '#ffffff' !!}" >
@@ -157,18 +161,20 @@
 				</select>
 				{!! ($errors->has('superior_id') ? $errors->first('superior_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('effective_cost'))  ? 'has-error' : '' }}">
-				<span><b>Efektivna cijena sata:</b></span>
-				<input class="form-control" name="effective_cost" type="number" step="0.01" value="{{ $employee->effective_cost }}" pattern="[-+]?[0-9]*[.,]?[0-9]+"
-				title="This must be a number with up to 2 decimal places" />
-				{!! ($errors->has('effective_cost') ? $errors->first('effective_cost', '<p class="text-danger">:message</p>') : '') !!}
-			</div>
-			<div class="form-group {{ ($errors->has('brutto'))  ? 'has-error' : '' }}">
-				<span><b>Brutto godišnja plaća:</b></span>
-				<input class="form-control" name="brutto" type="number" step="0.01" value="{{ $employee->brutto }}" pattern="[-+]?[0-9]*[.,]?[0-9]+"
-				title="This must be a number with up to 2 decimal places" />
-				{!! ($errors->has('brutto') ? $errors->first('brutto', '<p class="text-danger">:message</p>') : '') !!}
-			</div>
+			@if(Sentinel::inRole('view_efc') || Sentinel::inRole('uprava') )
+				<div class="form-group {{ ($errors->has('effective_cost'))  ? 'has-error' : '' }}">
+					<span><b>Efektivna cijena sata:</b></span>
+					<input class="form-control" name="effective_cost" type="number" step="0.01" value="{{ $employee->effective_cost }}" pattern="[-+]?[0-9]*[.,]?[0-9]+"
+					title="This must be a number with up to 2 decimal places" />
+					{!! ($errors->has('effective_cost') ? $errors->first('effective_cost', '<p class="text-danger">:message</p>') : '') !!}
+				</div>
+				<div class="form-group {{ ($errors->has('brutto'))  ? 'has-error' : '' }}">
+					<span><b>Brutto godišnja plaća:</b></span>
+					<input class="form-control" name="brutto" type="number" step="0.01" value="{{ $employee->brutto }}" pattern="[-+]?[0-9]*[.,]?[0-9]+"
+					title="This must be a number with up to 2 decimal places" />
+					{!! ($errors->has('brutto') ? $errors->first('brutto', '<p class="text-danger">:message</p>') : '') !!}
+				</div>
+			@endif
 			<div class="form-group {{ ($errors->has('reg_date')) ? 'has-error' : '' }}">
 				<label>@lang('basic.reg_date')</label>
 				<input class="form-control" placeholder="{{ __('basic.reg_date')}}" name="reg_date" type="date" value="{{ $employee->reg_date }}" />
@@ -191,8 +197,8 @@
 				<input name="stazD" type="text" class="staz" value="{{ $stazD }}" maxlength="2" >
 				{!! ($errors->has('years_service') ? $errors->first('years_service', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('termination_service'))  ? 'has-error' : '' }}">
-				<input type="checkbox" name="termination_service" {!! $employee->termination_service  ? 'checked' : '' !!} > Prekid radnog odnosa više od 8 dana
+			<div class="form-group {!! ($errors->has('termination_service'))  ? 'has-error' : '' !!}">
+				<input type="checkbox" name="termination_service" value="DA" {!! $employee->termination_service  ? 'checked' : '' !!} > Prekid radnog odnosa više od 8 dana
 					{!! ($errors->has('termination_service') ? $errors->first('termination_service', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group">
@@ -233,7 +239,7 @@
 			<div class="form-group">
 				<input type="checkbox" name="stranger" value="1" id="stranger" {!! $employee->stranger == 1 ? 'checked' : '' !!}  > <label for="stranger">Djelatnik je stranac</label>
 			</div>
-			<div class="form-group" hidden id="dozvola">
+			<div class="form-group"  id="dozvola">
 				<label>Datum isteka dozvole boravka u RH: </label>
 				<input name="permission_date" class="form-control" type="date" value="{{ $employee->permission_date }}" >
 			</div>

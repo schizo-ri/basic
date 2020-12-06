@@ -12,12 +12,15 @@ use App\Models\Employee;
 use App\Models\Campaign;
 use App\Models\CampaignRecipient;
 use App\Models\EmployeeDepartment;
+use App\Models\EmployeeTermination;
 use App\User;
 use Sentinel;
 use App\Mail\EmployeeCreate;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Emailing;
 use App\Models\Department;
+use Log;
+use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
 {
@@ -36,9 +39,19 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-		$employees = Employee::employees_firstNameASC();
+		if( isset($request['status'])) {
+			if( $request['status'] == 'checkout' ) {
+				$status = 0;
+			} else {
+				$status = 1;
+			}
+		} else {
+			$status = 1;
+		}
+
+		$employees = Employee::employees_lastNameASCStatus($status); 
 		$empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
         
@@ -68,11 +81,11 @@ class EmployeeController extends Controller
      */
     public function create(Request $request)
     {
-		$users = User::get();
+		$users = User::where('active', 1)->orderBy('last_name','ASC')->get();
 		$departments = Department::orderBy('name','ASC')->get();
 	 	$works = Work::orderBy('name','ASC')->get();
-		$employees = Employee::employees_firstNameASC();
-	
+		$employees = Employee::employees_lastNameASC();
+		
 		$campaigns = Campaign::where('type','evergreen')->get();
 		$moduli = CompanyController::getModules(); // provjera da li se koriste moduli kampanja
 
@@ -119,6 +132,7 @@ class EmployeeController extends Controller
 
 		$data = array(
 			'user_id'  				=> $input['user_id'],
+			'erp_id'  				=> $input['erp_id'],
 			'father_name'     		=> $input['father_name'],
 			'mather_name'     		=> $input['mather_name'],
 			'oib'           		=> $input['oib'],
@@ -141,8 +155,8 @@ class EmployeeController extends Controller
 			'reg_date' 	    		=> $input['reg_date'],
 			'probation' 	   		=> $input['probation'],
 			'years_service' 	   	=> $input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'],
-			'termination_service' 	=> isset($input['termination_service']) ? $input['termination_service'] : null,
-			'first_job' 			=> isset($input['first_job']) ? $input['first_job'] : null,
+			'termination_service' 	=> isset($input['termination_service']) && $input['termination_service'] ? $input['termination_service'] : null,
+			'first_job' 			=> isset($input['first_job']) && $input['first_job'] ? $input['first_job'] : null,
 			'comment' 	   		    => $input['comment'],
 			'color' 	   		    => $input['color'],
 			'abs_days' 	    		=> count($abs_days) > 0 ? serialize($abs_days) : null,
@@ -184,8 +198,10 @@ class EmployeeController extends Controller
 		}
 		
 		/* mail obavijest o novoj poruci */
+		$send_to = EmailingController::sendTo('employees', 'create');
+		Log::info( 'create employee' );
+		Log::info( $send_to );
 		if($request['send_email'] == 'DA') {
-			$send_to = EmailingController::sendTo('employees', 'create');
 			try {
 				foreach(array_unique($send_to) as $send_to_mail) {
 					if( $send_to_mail != null & $send_to_mail != '' )
@@ -227,8 +243,30 @@ class EmployeeController extends Controller
 		}
 
 		return view('Centaur::employees.show', ['employee' => $employee,'docs' => $docs,'user_name' => $user_name]);
+	}
+	
+	public function showPrint($id)
+    {
+        $employee = Employee::find($id);		
+		
+		$user_name = explode('.',strstr($employee->email,'@',true));
+		if(count($user_name) == 2) {
+			$user_name = $user_name[1] . '_' . $user_name[0];
+		} else {
+			$user_name = $user_name[0];
+		}
+
+		$path = 'storage/' . $user_name . "/profile_img/";
+		if(file_exists($path)){
+			$docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
+		}else {
+			$docs = '';
+		}
+
+		return view('Centaur::employees.show_print', ['employee' => $employee,'docs' => $docs,'user_name' => $user_name]);
     }
 
+	
     /**
      * Show the form for editing the specified resource.
      *
@@ -238,17 +276,16 @@ class EmployeeController extends Controller
     public function edit($id)
     {
 		$employee = Employee::find($id);
-		$users = User::get();
+		$users = User::where('active',1)->orderBy('last_name','ASC')->get();
 		$works = Work::orderBy('name','ASC')->get();
 		$departments = Department::orderBy('name','ASC')->get();
-		$employees = Employee::employees_firstNameASC();
+		$employees = Employee::employees_lastNameASC();
 		$campaigns = Campaign::where('type','evergreen')->get();
 		$campaignRecipients = CampaignRecipient::where('employee_id',$employee->id )->get();
 
 		$moduli = CompanyController::getModules(); // provjera da li se koriste moduli kampanja
 
 		return view('Centaur::employees.edit', ['works' => $works, 'departments' => $departments,'users' => $users,'moduli' => $moduli, 'employee' => $employee, 'employees' => $employees,'campaigns' => $campaigns,'campaignRecipients' => $campaignRecipients]);
-		
     }
 
     /**
@@ -273,6 +310,7 @@ class EmployeeController extends Controller
 	
 		$data = array(
 			'user_id'  				=> $input['user_id'],
+			'erp_id'  				=> $input['erp_id'],
 			'father_name'     		=> $input['father_name'],
 			'mather_name'     		=> $input['mather_name'],
 			'oib'           		=> $input['oib'],
@@ -295,8 +333,8 @@ class EmployeeController extends Controller
 			'reg_date' 	    		=> $input['reg_date'],
 			'probation' 	   		=> $input['probation'],
 			'years_service' 	   	=> $input['stazY'].'-'.$input['stazM'].'-'.$input['stazD'],
-			'termination_service' 	=> isset($input['termination_service']) ? $input['termination_service'] : null,
-			'first_job' 			=> isset($input['first_job']) ? $input['first_job'] : null,
+			'termination_service' 	=> isset($input['termination_service']) && $input['termination_service'] ? $input['termination_service'] : null,
+			'first_job' 			=> isset($input['first_job']) && $input['first_job'] ? $input['first_job'] : null,
 			'comment' 	   		    => $input['comment'],
 			'color' 	   		    => $input['color'],
 			'abs_days' 	    		=> count($abs_days) > 0 ? serialize($abs_days) : null,
@@ -306,22 +344,22 @@ class EmployeeController extends Controller
 			'size' 	    			=> $input['size'],
 			'shoe_size' 	    	=> $input['shoe_size'],
 			'days_off' 	    		=> $input['days_off'] ? $input['days_off'] : 0,
-			'stranger' 	    		=> isset( $input['stranger']) ? $input['stranger'] : 0,
-			'permission_date' 	    => isset($input['permission_date']) ? $input['permission_date'] : null,
+			'stranger' 	    		=> isset( $input['stranger']) && $input['stranger'] ? $input['stranger'] : 0,
+			'permission_date' 	    => isset($input['permission_date']) && $input['permission_date'] ? $input['permission_date'] : null,
 			'superior_id' 	    	=> isset($input['superior_id']) && $input['superior_id'] != 0 ?  $input['superior_id'] : null,
-			'effective_cost' 	    => $input['effective_cost'] ? str_replace(',','.', $input['effective_cost']) : null,
-			'brutto' 	    		=> $input['brutto'] ? str_replace(',','.', $input['brutto']) : null,
+			'effective_cost' 	    => isset($input['effective_cost']) && $input['effective_cost'] ? str_replace(',','.', $input['effective_cost']) : null,
+			'brutto' 	    		=> isset($input['brutto']) && $input['brutto'] ? str_replace(',','.', $input['brutto']) : null,
 		);
 		
 		$employee->updateEmployee($data);
 	
 		// za odjavljenog djelatnika - korisnički kodaci deaktivirani
-		if( $input['checkout'] != '' ) {
+		if( $input['checkout'] ) {
 			$user = Sentinel::findById($employee->user_id );
 
 			$credentials = [
 				'active' => 0,
-				'password' => 'otkaz123',
+				'password' => Hash::make('otkaz123'),
 			];
 
 			$user = Sentinel::update($user, $credentials);
@@ -366,8 +404,11 @@ class EmployeeController extends Controller
 		}
 
 		/* mail obavijest o novoj poruci */
-
+		$send_to = EmailingController::sendTo('employees', 'update');
+		Log::info( 'edit employee' );
+		Log::info( $send_to );
 		if($request['send_email'] == 'DA') {
+			Log::info(" request['send_email'] = DA" );
 			$send_to = EmailingController::sendTo('employees', 'update');
 			try {
 				foreach($send_to as $send_to_mail) {
@@ -379,7 +420,6 @@ class EmployeeController extends Controller
 				session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 				return redirect()->back();
 			}
-			
 		}
 
 		session()->flash('success', __('ctrl.data_edit'));

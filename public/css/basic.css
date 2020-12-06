@@ -88,11 +88,15 @@
     padding-right: 30px;
 }
 
-.padd_l_15 {
-    padding-left: 15px;
-}
+
 .padd_h_10 {
     padding: 0 10px;
+}
+.padd_l_10 {
+    padding-left: 10px;
+}
+.padd_l_15 {
+    padding-left: 15px;
 }
 .padd_l_20 {
     padding-left: 20px;

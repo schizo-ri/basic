@@ -10,15 +10,12 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
 Route::get('/', function () {
     if(Sentinel::check()) {
         return redirect('dashboard');
     } else {
         return view('welcome');
     }
-  
 });
 
 // Authorization
@@ -40,6 +37,9 @@ Route::get('password/reset/{code}', 'Auth\PasswordController@getReset')->name('a
 Route::post('password/reset/{code}', 'Auth\PasswordController@postReset')->name('auth.password.reset.attempt');
 Route::get('password/reset', 'Auth\PasswordController@getRequest')->name('auth.password.request.form');
 Route::post('password/reset', 'Auth\PasswordController@postRequest')->name('auth.password.request.attempt');
+
+// Api
+Route::resource('api_erp', 'ApiController');
 
 // Users
 Route::resource('users', 'UserController');
@@ -66,9 +66,9 @@ Route::resource('works', 'WorkController');
 Route::resource('work_records', 'WorkRecordController');
 Route::get('work_records_table', ['as' => 'work_records_table', 'uses' => 'WorkRecordController@workRecordsTable']);
 
-
 // Employee
 Route::resource('employees', 'EmployeeController');
+Route::get('employees/show_print/{id}', ['as' => 'show_print', 'uses' => 'EmployeeController@showPrint']);
 
 // Education
 Route::resource('educations', 'EducationController');
@@ -162,6 +162,9 @@ Route::resource('campaign_recipients', 'CampaignRecipientController');
 // Benefit
 Route::resource('benefits', 'BenefitController');
 
+// Benefit
+Route::resource('suitabilities', 'SuitabilityController');
+
 // Car
 Route::resource('cars', 'CarController');
 
@@ -174,6 +177,10 @@ Route::get('loccos_qr/create_qr', ['as' => 'loccos_qr.create_qr', 'uses' => 'Loc
 
 // Task
 Route::resource('tasks', 'TaskController');
+Route::get('task_list', ['as' => 'task_list', 'uses' => 'TaskController@openTaskList']);
+
+// EmployeeTask
+Route::resource('employee_tasks', 'EmployeeTaskController');
 
 // Setting
 Route::resource('settings', 'SettingController');
@@ -256,6 +263,7 @@ Route::get('radne_upute', ['as' => 'radne_upute', 'uses' => 'InstructionControll
 
 // MailTemplate
 Route::resource('mail_templates', 'MailTemplateController');
+Route::get('mail_test/{id}', ['as' => 'mail_test', 'uses' => 'MailTemplateController@mailTest']);
 
 // Oglasnik
 Route::get('oglasnik', ['as' => 'oglasnik', 'uses' => 'AdController@oglasnik']);

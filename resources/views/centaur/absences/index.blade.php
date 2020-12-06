@@ -92,10 +92,10 @@
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padd_0 position_rel height100">
 						<form name="contactform" class="after_form" method="post" action="{{ action('AfterhourController@storeConfMulti') }}">
 							<div id="index_table_filter" class="dataTables_filter">
-								<label class="col-md-12 col-lg-2 col-xl-4 float_left">
+								<label class="col-md-12 col-lg-2 col-xl-2 float_left">
 									<input type="search" placeholder="Search" onkeyup="mySearchTableAbsence()" id="mySearchTbl">
 								</label>
-								<div class="col-md-12 col-lg-4 col-xl-3 float_left">
+								<div class="col-md-12 col-lg-4 col-xl-4 float_left approve_area">
 									{{-- @if( count( $absences->where('approve', null) ) > 0 && (isset( $afterhours ) && count( $afterhours->where('approve', null) )> 0 )) --}}
 										<div class="approve_buttons">
 											<div class="col-3 col-sm-3 col-md-3 float_left">
@@ -114,34 +114,11 @@
 										</div>
 									{{-- @endif --}}
 								</div>
-								<div class="col-md-12 col-lg-6 col-xl-5 float_left">
-									<div class="width_20 float_left padd_l_20">
-										<select id="filter_approve" class="select_filter filter_approve" >
-											<option value="all">@lang('absence.all_requests') </option>
-											<option value="approved">@lang('absence.approved')</option>
-											<option value="refused">@lang('absence.refused')</option>
-											<option value="not_approved">@lang('absence.not_approved')</option>
-										</select>
+								<div class="col-md-12 col-lg-6 col-xl-6 float_left filter_area">
+									<div class="float_right padd_l_10">
+										<a class="add_new" href="{{ route('absences.create') }}" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('basic.add')</a>
 									</div>
-									<div class="width_20 float_left padd_l_20">
-										<select id="filter_years" class="select_filter filter_years" >
-											@foreach ($years_all as $year)
-												<option value="{{ $year }}" {!! $year == date('Y-m') ? 'selected' : '' !!} >{{ $year }}</option>
-											@endforeach
-										</select>
-									</div>
-									<div class="width_20 float_left padd_l_20">
-										<select id="filter_types" class="select_filter filter_types" >
-											<option value="all" >@lang('absence.all_types')</option>
-											@foreach ($types as $type)
-												<option value="{{ $type->id }}" >{{ $type->name }}</option>
-											@endforeach
-											@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
-												<option value="afterhour" >Prekovremeni sati</option>
-											@endif
-										</select>
-									</div>
-									<div class="width_20 float_left padd_l_20">
+									<div class="width_20 float_right padd_l_10">
 										<select id="filter_employees" class="select_filter filter_employees" >
 											@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
 												<option value="all" selected >SVI djelatnici</option>
@@ -153,9 +130,34 @@
 											@endif
 										</select>
 									</div>
-									<div class="width_20 float_left padd_l_20">
-										<a class="add_new" href="{{ route('absences.create') }}" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('basic.add')</a>
+									<div class="width_20 float_right padd_l_10">
+										<select id="filter_types" class="select_filter filter_types" >
+											<option value="all" >@lang('absence.all_types')</option>
+											@foreach ($types as $type)
+												<option value="{{ $type->id }}" >{{ $type->name }}</option>
+											@endforeach
+											@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
+												<option value="afterhour" >Prekovremeni sati</option>
+											@endif
+										</select>
 									</div>
+									<div class="width_20 float_right padd_l_10">
+										<select id="filter_years" class="select_filter filter_years" >
+											@foreach ($years_all as $year)
+												<option value="{{ $year }}" {!! $year == date('Y-m') ? 'selected' : '' !!} >{{ $year }}</option>
+											@endforeach
+										</select>
+									</div>
+									<div class="width_20 float_right padd_l_10">
+										<select id="filter_approve" class="select_filter filter_approve" >
+											<option value="all">@lang('absence.all_requests') </option>
+											<option value="approved">@lang('absence.approved')</option>
+											<option value="refused">@lang('absence.refused')</option>
+											<option value="not_approved">@lang('absence.not_approved')</option>
+										</select>
+									</div>
+									
+									
 								</div>
 							</div>
 							<div class="table-responsive" >
@@ -240,7 +242,7 @@
 															@if($absence->approve == 1 || $absence->approve == "0") 
 																{!! $absence->approve_reason ? $absence->approve_reason : '' !!}
 															@elseif($absence->approve == null) 
-																<textarea class="" type="text" name="approved_reason[{{ $absence->id}}]" rows="2"></textarea>
+																<textarea class="" type="text" name="approve_reason[{{ $absence->id}}]" rows="2"></textarea>
 															@endif
 														</td>
 														{{-- <td>{!! $absence->approved ? $absence->approved['first_name'] . ' ' . $absence->approved['last_name'] : ''!!}</td> --}}
@@ -256,7 +258,7 @@
 																	@endif
 																	@if(Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
 																		{{-- <a href="{{ route('absences.destroy', $absence->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}"  title="{{ __('absence.delete_absence')}}" ><i class="far fa-trash-alt"></i></a> --}}
-																		<a href="{{ route('absences.destroy', $absence->id) }}" class="action_confirm btn-delete danger"  data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>
+																		<a href="{{ route('absences.destroy', $absence->id) }}" class="action_confirm btn-delete danger" title="{{ __('basic.delete')}}" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>
 																	@endif
 																	<a href="{{ route('confirmation_show', [ 'absence_id' => $absence->id ]) }}" class="btn-edit" title="{{ __('absence.approve_absence')}}" rel="modal:open" >
 																		<i class="far fa-check-square"></i>
@@ -280,7 +282,7 @@
 														{{-- <td>{{ date('d.m.Y.',strtotime($afterhour->created_at)) }}</td> --}}
 														<td style="max-width:10%;width:10%">Prekovremeni sati</td>
 														<td style="max-width:7%;width:7%">{{ date('d.m.Y.',strtotime($afterhour->date))  }}</td>
-														{{-- <td class="absence_end_date" style="max-width:10%;width:10%">-</td> --}}
+														<td class="absence_end_date" style="max-width:10%;width:10%">-</td>
 														<td class="absence_time" style="max-width:7%;width:7%">{{ date('H:i',strtotime($afterhour->start_time)) . '-' .  date('H:i',strtotime($afterhour->end_time)) }}</td>
 														<td style="max-width:30%;width:30%">		
 															{!! $afterhour->approve_h && $afterhour->approve == 1 ? 'Odobreno: '. $afterhour->approve_h : '' !!} [Traženo: {{ $interval }}]
@@ -313,13 +315,12 @@
 															<td class="not_link options center" style="max-width:10%;width:10%">
 																@if(Sentinel::getUser()->hasAccess(['afterhours.update']) || in_array('afterhours.update', $permission_dep) || Sentinel::getUser()->hasAccess(['afterhours.delete']) || in_array('afterhours.delete', $permission_dep))
 																	@if(Sentinel::getUser()->hasAccess(['afterhours.update']) || in_array('afterhours.update', $permission_dep))
-																		<a href="{{ route('afterhours.edit', $afterhour->id) }}" class="btn-edit" title="{{ __('afterhour.edit_afterhour')}}" rel="modal:open" >
+																		<a href="{{ route('afterhours.edit', $afterhour->id) }}" class="btn-edit" title="{{ __('basic.edit_afterhour')}}" rel="modal:open" >
 																			<i class="far fa-edit"></i>
 																		</a>
 																	@endif
 																	@if(Sentinel::getUser()->hasAccess(['afterhours.delete']) || in_array('afterhours.delete', $permission_dep))
-																		<a href="{{ route('afterhours.destroy', $afterhour->id) }}" class="action_confirm btn-delete danger" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>
-																		{{-- <a href="{{ route('afterhours.destroy', $afterhour->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}"  title="{{ __('afterhour.delete_afterhour')}}" ><i class="far fa-trash-alt"></i></a> --}}
+																		<a href="{{ route('afterhours.destroy', $afterhour->id) }}" class="action_confirm btn-delete danger" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}" ><i class="far fa-trash-alt"></i></a>
 																	@endif
 																	<a href="{{ route('confirmation_show_after', $afterhour->id) }}" class="btn-edit" title="{{ __('absence.approve_absence')}}" rel="modal:open" >
 																		<i class="far fa-check-square"></i>
@@ -353,6 +354,10 @@
 			</main>
 		</section>
 	</main>
+	<span  class="selected_employee" style="visibility: hidden;"></span>
+	<span  class="selected_type" style="visibility: hidden;"></span>
+	<span  class="selected_approve" style="visibility: hidden;"></span>
+	<span  class="selected_month" style="visibility: hidden;"></span>
 </div>
 <div id="login-modal" class="modal">
 		

@@ -2,6 +2,9 @@
 	<a class="back" rel="modal:close">
 		<span class="arrow_left_wh" />
 	</a>
+	<a class="float_right" href="{{ route('show_print',$employee->id) }}" target="_blank">
+		<i class="fas fa-print"></i>
+	</a>
 	<div class="user_data">
 		<h4 class="panel-title">@lang('basic.employee')</h4>
 	</div>
@@ -73,10 +76,12 @@
 			<p class="show_empl_p" >{!! $employee->termination_service == 1 ? 'DA' : 'NE' !!}</p>
 		<label class="show_empl_label" for="">Prvo zaposlenje</label>
 			<p class="show_empl_p" >{!! $employee->first_job == 1 ? 'DA' : 'NE' !!}</p>
-		<label class="show_empl_label" for="">Efektivna cijena sata:</label>
-			<p class="show_empl_p" >{{ $employee->effective_cost }} Kn</p>
-		<label class="show_empl_label" for="">Brutto godišnja plaća:</label>
-			<p class="show_empl_p" >{{ $employee->brutto }} Kn</p>
+		@if(Sentinel::inRole('view_efc') || Sentinel::inRole('uprava') )
+			<label class="show_empl_label" for="">Efektivna cijena sata:</label>
+				<p class="show_empl_p" >{{ $employee->effective_cost }} Kn</p>
+			<label class="show_empl_label" for="">Brutto godišnja plaća:</label>
+				<p class="show_empl_p" >{{ $employee->brutto }} Kn</p>
+		@endif
 		<label class="show_empl_label" for="">@lang('basic.lijecn_pregled')</label>
 			<p class="show_empl_p" >{{ date('d.m.Y',strtotime($employee->lijecn_pregled)) }}</p>
 		<label class="show_empl_label" for="">@lang('basic.znr')</label>

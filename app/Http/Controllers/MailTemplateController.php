@@ -51,12 +51,20 @@ class MailTemplateController extends Controller
             $docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
         }
 
-        Mail::to('jelena.juras@duplico.hr')->send(new TestMail());  
-
-
         return view('Centaur::mail_templates.create', ['elements' => $elements, 'docs' => $docs]);
     }
 
+    public function mailTest ($id)
+    {
+        $template_mail = MailTemplate::where('for_mail', 'AbsenceMail')->first(); 
+
+        Mail::to('jelena.juras@duplico.hr')->send(new TestMail($template_mail ));
+
+        /* session()->flash('success',__('ctrl.email_send')); */
+		
+       /*  return redirect()->back(); */
+       return __('ctrl.email_send');
+    } 
     /**
      * Store a newly created resource in storage.
      *
@@ -82,7 +90,6 @@ class MailTemplateController extends Controller
                 $style_text .= ($key . ':' . $value.';');
             }
             $style[ $element ] = $style_text;
-         
         }
        
         $data_style = array(
@@ -96,7 +103,7 @@ class MailTemplateController extends Controller
         $mailStyle->saveMailStyle($data_style);
 
         session()->flash('success',  __('ctrl.data_save'));
-        return redirect()->back();
+        return redirect()->route('mail_templates.index');
     }
 
     /**
@@ -118,7 +125,17 @@ class MailTemplateController extends Controller
      */
     public function edit($id)
     {
-        //
+        $mailTemplate = MailTemplate::find($id);
+        $elements = array('header', 'body','footer');
+
+        $path = '../app/Mail';
+        $docs = '';
+        if(file_exists($path)){
+            $docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
+        }
+
+        return view('Centaur::mail_templates.edit', ['mailTemplate' => $mailTemplate,'elements' => $elements, 'docs' => $docs]);
+
     }
 
     /**
@@ -130,7 +147,38 @@ class MailTemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $mailTemplate = MailTemplate::find($id);
+        $mailStyle =  $mailTemplate->mailStyle;
+
+        $data = array(
+			'name'          => $request['name'],
+			'description'   => $request['description'],
+			'for_mail'      => $request['for_mail'],
+		);
+		
+        $mailTemplate->updateMailTemplate($data);
+       
+        $elements = array('header', 'body','footer');
+        $style = array();
+        foreach( $elements as $element ) {
+            $style_text = '';
+            foreach(  $request[ $element ] as $key => $value ) {
+                $style_text .= ($key . ':' . $value.';');
+            }
+            $style[ $element ] = $style_text;
+        }
+       
+        $data_style = array(
+            'mail_id'       => $mailTemplate->id,
+            'style_header'  => $style['header'],
+            'style_body'    => $style['body'],
+            'style_footer'  => $style['footer'],
+        );
+
+        $mailStyle->updateMailStyle($data_style);
+
+        session()->flash('success',  __('ctrl.data_save'));
+        return redirect()->route('mail_templates.index');
     }
 
     /**
@@ -141,6 +189,11 @@ class MailTemplateController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $mailTemplate = MailTemplate::find($id);
+        $mailTemplate->delete();
+        
+        session()->flash('success',__('ctrl.data_delete'));
+		
+        return redirect()->back();
     }
 }

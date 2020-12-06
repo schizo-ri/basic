@@ -133,8 +133,18 @@ class Department extends Model
 
 		$department = Department::where('id', $department_id)->first();
 		if($department->level1 == 0) {
-			foreach ($employees as $employee) {
-				array_push($employeesEmail, $employee->email );
+			if( $department->name == 'Svi') {
+				foreach ($employees as $employee) {
+					array_push($employeesEmail, $employee->email );
+				}
+			} else {
+				foreach ($employees as $employee) {
+					if(  $employee->hasEmployeeDepartmen && count( $employee->hasEmployeeDepartmen) > 0) {
+						if(  $employee->hasEmployeeDepartmen->where('department_id',$department->id)->first()) {
+							array_push($employeesEmail, $employee->email );
+						}
+					}
+				}
 			}
 		}
 		if($department->level1 == 1) {

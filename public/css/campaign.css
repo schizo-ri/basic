@@ -56,6 +56,7 @@ p.modal_form_group_danger {
     text-align: center;
     float: right;    
     padding: 10px 40px;
+   
 }
 
 .btn-back {
@@ -63,11 +64,21 @@ p.modal_form_group_danger {
     color: #1594F0;
     margin-right: 15px;
 }
+
 .btn-submit {
     background: #1594F0;
     color: #FFFFFF;
 }
-
+.btn-submit:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+.btn-back:hover {
+    background-color: #0069d9;
+    border-color: #0069d9;
+    color: white;
+    text-decoration: none;
+}
 .unlayer.container {
     float: right;
     width: 425px;
@@ -290,6 +301,11 @@ label.schedule_set {
     line-height: 36px;
     color: #FFFFFF;
     text-align: center;
+    cursor: pointer;
+}
+.label_file >span:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
 }
 #file {
     display: none;

@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Absence; 
 use App\Models\Employee; 
 use Sentinel;
+use App\Models\MailTemplate;
 
 class AbsenceConfirmMail extends Mailable
 {
@@ -39,6 +40,8 @@ class AbsenceConfirmMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','AbsenceConfirmMail')->first();
+
         $odobrio_user = Sentinel::getUser();
 		$odobrio = $odobrio_user->first_name . ' ' . $odobrio_user->last_name;
 
@@ -58,6 +61,7 @@ class AbsenceConfirmMail extends Mailable
                         'absence' => $this->absence,
                         'odobrenje' => $odobrenje,
                         'odobrio' => $odobrio,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

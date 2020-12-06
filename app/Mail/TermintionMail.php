@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\EmployeeTermination;
 use Log;
+use App\Models\MailTemplate;
 
 class TermintionMail extends Mailable
 {
@@ -38,10 +39,13 @@ class TermintionMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.employee_terminations.termination')
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','TermintionMail')->first();
+        
+        return $this->view('emails.employee_terminations.termination')
                     ->subject( __('basic.employee_termination') )
                     ->with([
-						'employeeTermination' => $this->employeeTermination
+						'employeeTermination' => $this->employeeTermination,
+                        'template_mail' => $mail_template
 					]);
     }
 }

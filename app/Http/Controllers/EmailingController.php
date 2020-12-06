@@ -237,7 +237,7 @@ class EmailingController extends Controller
         $send_to = array();
         $departments = Department::get();
         $employees = Employee::get();
-
+      
         if(isset($emailings)) {
             foreach($emailings as $emailing) {
                 if($emailing->table['name'] == $table && $emailing->method == $method) {

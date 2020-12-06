@@ -198,7 +198,7 @@ class NoticeController extends Controller
                     }
                     Log::info($all_dep_employee);
                     foreach (array_unique($all_dep_employee) as $mail) {
-                        Mail::to($mail)->send(new NoticeMail($notice1));
+                       Mail::to($mail)->send(new NoticeMail($notice1));
                     }   
                     /*   try {               
                     } catch (\Throwable $th) {

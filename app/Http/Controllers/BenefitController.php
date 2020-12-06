@@ -172,7 +172,6 @@ class BenefitController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $benefit = Benefit::find($id);
         
         $data = array(

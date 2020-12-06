@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\TemporaryEmployee;
+use App\Models\MailTemplate;
 
 class TemporaryEmployeeMail extends Mailable
 {
@@ -37,10 +38,13 @@ class TemporaryEmployeeMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.temporary_employees.create')
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','TemporaryEmployeeMail')->first();
+        
+        return $this->view('emails.temporary_employees.create')
                     ->subject( __('emailing.new_temporary_employee') )
                     ->with([
-						'temporaryEmployee' => $this->temporaryEmployee
+						'temporaryEmployee' => $this->temporaryEmployee,
+                        'template_mail' => $mail_template
 					]);
     }
 }

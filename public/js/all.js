@@ -138,7 +138,7 @@ $(function(){
 				} );
 			
 			} catch (error) {
-				
+				console.log(error.message);
 			}
 		}
 
@@ -301,6 +301,7 @@ $(function(){
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						select_width();
 						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
@@ -312,6 +313,7 @@ $(function(){
 		
 		$('#filter_types').on('change',function() {
 			type = $( this ).val();
+		
 			type_text = $( this ).find('option:selected').text();
 			console.log(type_text);
 			if( $('#filter_years').length>0) {
@@ -337,7 +339,6 @@ $(function(){
 				url: url,
 				type: "get",
 				beforeSend: function(){
-					// Show image container
 					$('body').prepend('<div id="loader"></div>');
 				},
 				success: function( response ) {
@@ -362,10 +363,12 @@ $(function(){
 						}
 						$.getScript('/../js/absence.js');
 					
-						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
-						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
+						$(this).find('option[value="'+type+'"]').attr('selected',true);
+						$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						select_width();
+					
 						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
@@ -426,6 +429,7 @@ $(function(){
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						select_width();
 						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
@@ -475,6 +479,7 @@ $(function(){
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						select_width();
 						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
@@ -486,7 +491,7 @@ $(function(){
 		$('.all_absences #index_table_filter').show(); 
 
 		if($(".all_absences #index_table_filter .show_button").length == 0) {
-			$('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+			$('.all_absences #index_table_filter .filter_area').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 			$('.show_button').on('click',function () {
 				$('.dt-buttons').toggle();		
 			/* 	console.log("show_button"); */
@@ -595,6 +600,30 @@ $(function(){
 			});
 		}
 	}
+	function select_width() {
+		$('.selected_employee').text($('#filter_employees').find('option[value="'+employee_id+'"]').text());
+		$('.selected_type').text($('#filter_types').find('option[value="'+type+'"]').text());
+		$('.selected_approve').text($('#filter_approve').find('option[value="'+approve+'"]').text());
+		$('.selected_month').text($('#filter_years').find('option[value="'+month+'"]').text());
+		
+		$('#filter_types').css('width', $('.selected_type').width() +50); 
+		$('#filter_employees').css('width', $('.selected_employee').width() + 50); 
+		$('#filter_approve').css('width',$('.selected_approve').width() + 50); 
+		$('#filter_years').css('width',$('.selected_month').width() + 50); 
+		$('#filter_types').css('max-width', $('.selected_type').width() +50); 
+		$('#filter_employees').css('max-width', $('.selected_employee').width() + 50); 
+		$('#filter_approve').css('max-width',$('.selected_approve').width() + 50); 
+		$('#filter_years').css('max-width',$('.selected_month').width() + 50); 
+
+		$('#filter_types').parent().css('max-width', $('.selected_type').width() +60); 
+		$('#filter_employees').parent().css('max-width', $('.selected_employee').width() + 60); 
+		$('#filter_approve').parent().css('max-width',$('.selected_approve').width() + 60); 
+		$('#filter_years').parent().css('max-width',$('.selected_month').width() + 60);
+		$('#filter_types').parent().css('width', $('.selected_type').width() +60); 
+		$('#filter_employees').parent().css('width', $('.selected_employee').width() + 60); 
+		$('#filter_approve').parent().css('width',$('.selected_approve').width() + 60); 
+		$('#filter_years').parent().css('width',$('.selected_month').width() + 60);
+	}
 });
 $(function(){
     var employee_id;
@@ -606,10 +635,11 @@ $(function(){
 	var broj_dana;
 	var date = new Date();
 	var today = date.getFullYear() + '-' + ( '0' + (date.getMonth()+1) ).slice( -2 ) + '-' + ( '0' + (date.getDate()) ).slice( -2 );
-	
+	var user_role = $('#user_role').text();	
+
 	$( "#request_type" ).on('change',function() {
 		type = $(this).val();
-		if(type == 'IZL') {
+		if(type == 'IZL' || type == 61) {
 			start_date = $( "#start_date" ).val();
 			end_date = $( "#end_date" );
 			end_date.val(start_date);
@@ -625,11 +655,10 @@ $(function(){
 			$('.form-group.date2').show();
 			$('#start_date').removeAttr('min');
 		}
-
 		if(type == 'GO') {
 			employee_id = $('#select_employee').val();
 			console.log("employee_id " + employee_id);
-			if( employee_id != '' &&  employee_id != undefined) {
+			if( employee_id != '' && employee_id != undefined) {
 				url = location.origin + '/getDays/'+employee_id;
 				console.log(url);
 				$.ajax({
@@ -637,7 +666,7 @@ $(function(){
 					type: "get",
 					success: function( days_response ) {
 						broj_dana = days_response;
-						if( broj_dana == 0 ) {
+						if( broj_dana == 0 && user_role != 'admin') {
                             $('.days_employee').text("Nemoguće poslati zahtjev. Svi su dani iskorišteni!");
 							$('input[name=start_date]').prop('disabled', true);
 							$('input[name=end_date]').prop('disabled', true);
@@ -745,7 +774,7 @@ $(function(){
 		if( employee_id != '' && type == 'GO' ) {
 			diff_days = date_diff_indays( start_date,end_date );
 			console.log(diff_days);
-			if( broj_dana < diff_days ) {
+			if( broj_dana < diff_days && user_role != 'admin' ) {
 				$('.days_request>span').text(diff_days - broj_dana);
 				$('.days_request').show();
 				$('.btn-submit').hide();
@@ -1057,62 +1086,65 @@ $( function () {
         $.getScript( '/../js/event_click.js');
     });
 });
-$('.campaign_show').on('click',function(e){
-    window.history.replaceState({}, document.title, $(this).attr('href') ); 
- /*   location = $(this).attr('href'); */
-    e.preventDefault();
-    var page = $(this).attr('href');
-    $('.index_main').load( page + ' .index_main > section', function() {
-        $.getScript('/../js/jquery-ui.js');
-        $.getScript( '/../js/sequence_dragDrop.js');
-        $.getScript( '/../restfulizer.js');
-       /*  $('.collapsible').click(function(event){
-            $(this).siblings().toggle();
-        }); */
-       /*  $('.link_back').click(function(e){
-            e.preventDefault();
-            $('.campaigns_button').click();
-           
-        });  */
-           /* Radi!!! Load back sa sekvence na kampanje*/
-           $('.main_noticeboard .header_document .link_back').on('click', function(e){
-            e.preventDefault();
-            var url = location['origin'] +'/campaigns';
-            
-            $('.container').load( url + ' .container > div', function() {
+if($('.campaign_show').length > 0) {
+    $('.campaign_show').on('click',function(e){
+        window.history.replaceState({}, document.title, $(this).attr('href') ); 
+     /*   location = $(this).attr('href'); */
+        e.preventDefault();
+        var page = $(this).attr('href');
+        $('.index_main').load( page + ' .index_main > section', function() {
+            $.getScript('/../js/jquery-ui.js');
+            $.getScript( '/../js/sequence_dragDrop.js');
+            $.getScript( '/../restfulizer.js');
+           /*  $('.collapsible').click(function(event){
+                $(this).siblings().toggle();
+            }); */
+           /*  $('.link_back').click(function(e){
+                e.preventDefault();
+                $('.campaigns_button').click();
                
-                $.getScript( '/../js/datatables.js');
-                $.getScript( '/../js/filter_table.js');                    
-                $.getScript( '/../restfulizer.js');
-                $.getScript( '/../js/event.js');
-                $.getScript( '/../js/campaign.js');
-                /* $('.collapsible').click(function(event){        
-                    $(this).siblings().toggle();
-                }); */
+            });  */
+               /* Radi!!! Load back sa sekvence na kampanje*/
+               $('.main_noticeboard .header_document .link_back').on('click', function(e){
+                e.preventDefault();
+                var url = location['origin'] +'/campaigns';
                 
+                $('.container').load( url + ' .container > div', function() {
+                   
+                    $.getScript( '/../js/datatables.js');
+                    $.getScript( '/../js/filter_table.js');                    
+                    $.getScript( '/../restfulizer.js');
+                    $.getScript( '/../js/event.js');
+                    $.getScript( '/../js/campaign.js');
+                    /* $('.collapsible').click(function(event){        
+                        $(this).siblings().toggle();
+                    }); */
+                    
+                });
+                window.history.pushState( location.href, 'Title',  url);
+    
+             }); 
+            $('.campaign_mail').on('click', function(){
+                $.modal.defaults = {
+                    closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+                    escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+                    clickClose: true,       // Allows the user to close the modal by clicking the overlay
+                    closeText: 'Close',     // Text content for the close <a> tag.
+                    closeClass: '',         // Add additional class(es) to the close <a> tag.
+                    showClose: true,        // Shows a (X) icon/link in the top-right corner
+                    modalClass: "modal campaign_mail",    // CSS class added to the element being displayed in the modal.
+                    // HTML appended to the default spinner during AJAX requests.
+                    spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+                
+                    showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+                    fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+                    fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+                };
             });
-            window.history.pushState( location.href, 'Title',  url);
-
-         }); 
-        $('.campaign_mail').on('click', function(){
-            $.modal.defaults = {
-                closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
-                escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
-                clickClose: true,       // Allows the user to close the modal by clicking the overlay
-                closeText: 'Close',     // Text content for the close <a> tag.
-                closeClass: '',         // Add additional class(es) to the close <a> tag.
-                showClose: true,        // Shows a (X) icon/link in the top-right corner
-                modalClass: "modal campaign_mail",    // CSS class added to the element being displayed in the modal.
-                // HTML appended to the default spinner during AJAX requests.
-                spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
-            
-                showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
-                fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
-                fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
-            };
         });
     });
-});
+}
+
 $('.period').on('change',function(){
     if($(this).val() == 'customized') {
         $('#period .period').hide();
@@ -1902,7 +1934,8 @@ $( function () {
 		}
 	
 		$('.show_button').on('click',function () {
-			$('.dt-buttons').toggle();		
+			console.log("dt-buttons");
+			$('.dt-buttons').toggle();
 		})
 		$('table.display').show();
 	}
@@ -2523,7 +2556,6 @@ $(function() { // filter knowledge base
 	var date = null;
 	var year = null;
 	var employee_id = null;
-
 	$('.change_month_afterhour').on('change',function(){
 		date =  $(this).val().toLowerCase();
 		employee_id =  $('.change_employee_afterhour').val();
@@ -2540,11 +2572,13 @@ $(function() { // filter knowledge base
 			},
 			success: function( response ) {
 				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+				
 					$('#loader').remove();
-					$.getScript('/../restfulizer.js');
 					$.getScript('/../js/datatables.js');
-					$('.dt-buttons').show();		
-                   
+					$('.show_button').on('click',function () {
+                        $('.dt-buttons').toggle();		
+                    })
+					$.getScript('/../restfulizer.js');
 				});
 			},
 			error: function(jqXhr, json, errorThrown) {
@@ -2571,7 +2605,9 @@ $(function() { // filter knowledge base
 				$( '#admin_page >main' ).load(location.href + '?date='+date+'&employee_id='+employee_id + ' #admin_page >main .table-responsive',function(){
 					$('#loader').remove();
 					$.getScript('/../js/datatables.js');
-					$('.dt-buttons').show();		
+					$('.show_button').on('click',function () {
+                        $('.dt-buttons').toggle();		
+                    })
 					$.getScript('/../restfulizer.js');
 				});
 			},
@@ -2717,6 +2753,35 @@ $(function() { // filter knowledge base
 			$('.section_notice .notices').load($(this).val() + ' .section_notice .notices .noticeboard_notice_body');
 		});
 	}
+
+	$('.filter_checkout').on('change',function(e) {
+		var check = $(this).val();
+
+		var url = location.href + '?status='+check;
+		console.log(url);
+
+		$.ajax({
+			url: url,
+			type: "get",
+			beforeSend: function(){
+				$('body').prepend('<div id="loader"></div>');
+			},
+			success: function( response ) {
+				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
+					$.getScript('/../js/open_modal.js');
+					$.getScript('/../js/datatables.js');
+					$('.show_button').on('click',function () {
+                        $('.dt-buttons').toggle();		
+                    })
+					$.getScript('/../restfulizer.js');
+				});
+			},
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr.responseJSON.message);
+			}
+		});
+	});
 });
 function mySearchTable() {
   $("#mySearchTbl").on('keyup',function() {
@@ -2995,8 +3060,6 @@ $('.form_evidention').on('submit',function(e){
             $('.header_nav').load(location.href + ' .header_nav .topnav',function(){
                 $.getScript('/../js/nav_active.js');
             });
-            
-            
         }, 
         error: function(jqXhr, json, errorThrown) {
             console.log(jqXhr.responseJSON);
@@ -3066,19 +3129,23 @@ $(function(){
             $('.'+class_open).toggle();
         });
         $(".admin_pages a.admin_link").removeClass('disable');
-        /*  console.log( "url_location: " + url_location );
-        console.log( "id: " + id ); */
+        
         // ako ima shortcut - href edit
-        $.get( "shortcut_exist", {'url': url_location }, function( id ) {
-            if(id != null && id != '') {
-                $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
-                $('.shortcut_text').text('Ispravi prečac'); 
-            } else {
-                title = $('.admin_link.active_admin').attr('id');
-                $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url_location+'&title='+title );
-                $('.shortcut_text').text('Dodaj prečac'); 
-            }
-        });
+        try {
+            $.get( location.origin+"/shortcut_exist", {'url': url_location }, function( id ) {
+                if(id != null && id != '') {
+                    $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+                    $('.shortcut_text').text('Ispravi prečac'); 
+                } else {
+                    title = $('.admin_link.active_admin').attr('id');
+                    $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url_location+'&title='+title );
+                    $('.shortcut_text').text('Dodaj prečac'); 
+                }
+            });
+        } catch (error) {
+            //
+        }
+       
     }
 });
 
@@ -3090,113 +3157,88 @@ var click_element;
 var title;
 var url;
 
-$('.admin_pages li>a').not('.open_menu').on('click',function(e) {
-    $('#login-modal').remove();
-    e.preventDefault();
-    click_element = $(this);
-    title = click_element.text();
-    $("title").text( title ); 
-    url = $(this).attr('href');
- 
-    // ako ima shortcut - href edit
-    $.get( "shortcut_exist", {'url': url }, function( id ) {
-        console.log( "id: " + id );
-        if(id != null && id != '') {
-            $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
-            $('.shortcut_text').text('Ispravi prečac'); 
-        } else {
-            title = $('.admin_link.active_admin').attr('id');
-
-            $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url+'&title='+title );
-            $('.shortcut_text').text('Dodaj prečac'); 
-        }
-    });
-
-    $('.admin_pages>li>a').removeClass('active_admin');
-    $(this).addClass('active_admin');
-    active_link = $('.admin_link.active_admin').attr('id');
-
-    $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
-        console.log();
-        window.history.replaceState({}, document.title, url);
-        if ( status == "error" ) {
-            var msg = "Sorry but there was an error: ";
-            $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
-        }
-        $.getScript( '/../restfulizer.js');
-        $.getScript( '/../js/filter_dropdown.js');
-        $.getScript( '/../js/open_modal.js');
-        $.getScript( '/../js/datatables.js');
-        if (url.includes('/work_records')) {
-            $.getScript( '/../js/work_records.js');
-        } else if(url.includes('/loccos')) {
-            $('a.open_locco').on('click',function(event) {
-                event.preventDefault();
-                click_element = $(this);
-                title = click_element.text();
-                $("title").text( title ); 
-                url = $(this).attr('href');
-
-                $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
-                    window.history.replaceState({}, document.title, url);
-                    if ( status == "error" ) {
-                        var msg = "Sorry but there was an error: ";
-                        $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
-                    }
-                    $.getScript( '/../restfulizer.js');
-                    $.getScript( '/../js/filter_dropdown.js');
-                    $.getScript( '/../js/datatables.js');
-                    $.getScript( '/../js/open_modal.js');
-                });
-                return false;
-            });
-        }
-       
-        if(body_width < 992 ) {
-            $('aside.admin_aside').hide();
-            $('main.admin_main').show();
-        
-            $('.link_back').on('click',function (e) {
-                e.preventDefault();
-                $('aside.admin_aside').show();
-                $('main.admin_main').hide();
-            });
-        }
-    });
-    return false;
-});
-/* 
-if(body_width < 992) {
-    $('.admin_pages>li>a').on('click',function(e) {
-        $('aside.admin_aside').hide();
-        $('main.admin_main').show();
+if($('.index_admin').length > 0 ) { 
+    $('.admin_pages li>a').not('.open_menu').on('click',function(e) {
+        $('#login-modal').remove();
+        e.preventDefault();
         click_element = $(this);
-        var title = click_element.text();
+        title = click_element.text();
         $("title").text( title ); 
-        var url = $(this).attr('href');
+        url = $(this).attr('href');
     
+        // ako ima shortcut - href edit
+    try {
+        $.get( "shortcut_exist", {'url': url }, function( id ) {
+            console.log( "id: " + id );
+            if(id != null && id != '') {
+                $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+                $('.shortcut_text').text('Ispravi prečac'); 
+            } else {
+                title = $('.admin_link.active_admin').attr('id');
+
+                $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url+'&title='+title );
+                $('.shortcut_text').text('Dodaj prečac'); 
+            }
+        });
+    } catch (error) {
+        //
+    }
+
         $('.admin_pages>li>a').removeClass('active_admin');
         $(this).addClass('active_admin');
         active_link = $('.admin_link.active_admin').attr('id');
-    
+
         $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
+            console.log();
             window.history.replaceState({}, document.title, url);
             if ( status == "error" ) {
                 var msg = "Sorry but there was an error: ";
                 $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
             }
-            $.getScript( 'js/datatables.js');
-            $.getScript( 'js/filter_table.js');
-            $.getScript( 'js/open_modal.js');
+            $.getScript( '/../restfulizer.js');
+            $.getScript( '/../js/filter_dropdown.js');
+            $.getScript( '/../js/open_modal.js');
+            $.getScript( '/../js/datatables.js');
+            if (url.includes('/work_records')) {
+                $.getScript( '/../js/work_records.js');
+            } else if(url.includes('/loccos')) {
+                $('a.open_locco').on('click',function(event) {
+                    event.preventDefault();
+                    click_element = $(this);
+                    title = click_element.text();
+                    $("title").text( title ); 
+                    url = $(this).attr('href');
+
+                    $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
+                        window.history.replaceState({}, document.title, url);
+                        if ( status == "error" ) {
+                            var msg = "Sorry but there was an error: ";
+                            $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
+                        }
+                        $.getScript( '/../restfulizer.js');
+                        $.getScript( '/../js/filter_dropdown.js');
+                        $.getScript( '/../js/datatables.js');
+                        $.getScript( '/../js/open_modal.js');
+                    });
+                    return false;
+                });
+            }
+        
+            if(body_width < 992 ) {
+                $('aside.admin_aside').hide();
+                $('main.admin_main').show();
+            
+                $('.link_back').on('click',function (e) {
+                    e.preventDefault();
+                    $('aside.admin_aside').show();
+                    $('main.admin_main').hide();
+                });
+            }
         });
         return false;
-    }); 
-
-     $('.link_back').on('click',function () {
-        $('aside.admin_aside').show();
-        $('main.admin_main').hide();
     });
-} */
+}
+
 $("a[rel='modal:open']").addClass('disable');
 
 $(function() {
@@ -3217,7 +3259,7 @@ $(function() {
         fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
     };
 
-    $('.btn-new:not(.create_notice), .add_new, a.create_user[rel="modal:open"], #add_event[rel="modal:open"], .oglasnik_button, .posts_button, .doc_button, .events_button').click(function(){
+    $('.btn-new:not(.create_notice), .add_new, a.create_user[rel="modal:open"], #add_event[rel="modal:open"], .oglasnik_button, .posts_button, .doc_button, .events_button').on('click',function(){
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -3391,7 +3433,7 @@ $(function() {
     $('tr[data-modal] td:not(:last-child)').on("click", function(e) {
         e.preventDefault();
         var href = location.origin + $(this).parent().data('href');
-        
+        console.log(href);
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -3426,6 +3468,8 @@ $(function() {
 		console.log(url);
         window.location = url;
     });
+
+
 });
 // on load
 if( $('.posts_index').length > 0) {
@@ -5366,7 +5410,7 @@ $('.second_view_header .change_month').on('change',function() {
                         $( this ).addClass('abs_'+  $.trim($( this ).text()));
                        
                     });
-                    /* $.getScript('/../js/datatables.js'); */
+                    $.getScript('/../js/datatables.js');
                     $('.show_button').on('click',function () {
                         $('.dt-buttons').toggle();		
                     })

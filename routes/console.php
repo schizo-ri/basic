@@ -68,3 +68,7 @@ Artisan::command('birthday', function () {
 Artisan::command('stranger', function () {
     $this->info("Istek dozvole za boravak!");
 });
+
+Artisan::command('task', function () {
+    $this->info("Novi zadatak!");
+});

@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ProbationCommand::class,
         \App\Console\Commands\BirthdayCommand::class,
         \App\Console\Commands\StrangerCommand::class,
+        \App\Console\Commands\TaskCreateNotification::class,
     ];
 
     /**
@@ -41,8 +42,8 @@ class Kernel extends ConsoleKernel
       /*  $schedule->command('email:absence_day') 
                    // ->dailyAt('7:00')  
                    ->everyMinute()
-                    ->evenInMaintenanceMode();
-        $schedule->command('email:campaign')
+                    ->evenInMaintenanceMode(); */
+      /*   $schedule->command('email:campaign')
                    ->dailyAt('7:00') 
                    ->evenInMaintenanceMode();
         $schedule->command('notice')
@@ -54,10 +55,10 @@ class Kernel extends ConsoleKernel
          $schedule->command('car_registration')
                   ->dailyAt('7:00') 
                   ->evenInMaintenanceMode();  */
-         $schedule->command('anniversary')
-                 ->everyMinute()
-                 /* ->dailyAt('7:00')  */
-                  ->evenInMaintenanceMode(); 
+       /*   $schedule->command('anniversary') */
+       /*           ->everyMinute() */
+       /*           // ->dailyAt('7:00')  */
+       /*            ->evenInMaintenanceMode();  */
       /*    $schedule->command('medicalExamination')
                   ->dailyAt('7:00') 
                   ->evenInMaintenanceMode(); 
@@ -76,6 +77,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('stranger')
                   ->dailyAt('7:00') 
                   ->evenInMaintenanceMode(); */
+        $schedule->command('task')
+                    ->everyMinute()
+                    ->evenInMaintenanceMode(); 
     }
 
     /**

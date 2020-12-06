@@ -28,7 +28,7 @@
 				</div>
 			</header>
 			<main class="main_ads main_instructions">
-				@if(isset($educationTheme) && ($educationTheme && count($educationTheme->educationArticles) >0)
+				@if(isset($educationTheme) && ($educationTheme && count($educationTheme->educationArticles) >0 ))
 					@foreach($educationTheme->educationArticles as $educationArticle)
 						<article class="col-xs-12 col-sm-49 col-md-32 col-lg-24 col-xl-19 noticeboard_notice_body theme_body panel">
 							<a href="{{ route('education_articles.show', $educationArticle->id) }}" rel="modal:open">

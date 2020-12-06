@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BasicAbsenceController;
+use App\Http\Controllers\ApiController;
 use App\Models\Afterhour;
 use App\Models\Employee;
 use App\Models\Project;
@@ -98,9 +99,20 @@ class AfterhourController extends Controller
     public function create()
     {
         $employees = Employee::employees_firstNameASC();
-        $projects = Project::where('active',1)->get();
-
-        return view('Centaur::afterhours.create',['employees' => $employees,'projects' => $projects]);
+     
+        $employee = Sentinel::getUser()->employee;
+        if( $employee ) {
+            $erp_id = $employee->erp_id;
+            $api = new ApiController();
+            
+            $tasks = $api->get_employee_project_tasks( $erp_id );
+            $projects = null;
+        } else {
+            $tasks = null;
+            $projects = Project::where('active',1)->get();
+        }
+       
+        return view('Centaur::afterhours.create',['employees' => $employees,'projects' => $projects,'tasks' => $tasks]);
     }
 
     /**
@@ -121,16 +133,20 @@ class AfterhourController extends Controller
                 Log::info( 'Array: request_exist: '.  $request_exist . ' employee_id '.$employee_id );
                 Log::info( 'Zahtjev poslao ' . Sentinel::getUser()->last_name );
 
-                if( $request_exist == false ) {
+                if( $request_exist == 0 ) {
                     $data = array(
                         'employee_id'  	=> $employee_id,
-                        'project_id'  	=> $request['project_id'],
                         'date'    		=> $request['date'],
                         'start_time'  	=> $request['start_time'],
                         'end_time'  	=> $request['end_time'],
                         'comment'  		=> $request['comment']
                     );
-                    
+                    if(isset( $request['project_id']) ) {
+                        $data += ['project_id'  	=> $request['project_id']];
+                    }
+                    if( isset($request['erp_task_id']) ) {
+                        $data += ['erp_task_id'  	=> $request['erp_task_id']];
+                    }
                     $afterHour = new Afterhour();
                     $afterHour->saveAfterhour($data);
                 } 
@@ -140,19 +156,24 @@ class AfterhourController extends Controller
             Log::info( 'Request_exist: '.  $request_exist . ' employee_id '. $request['employee_id']);
             Log::info( 'Zahtjev poslao ' . Sentinel::getUser()->last_name );
             
-            if( $request_exist == false ) {
+            if( $request_exist == 0  ) {
                 $data = array(
-                    'employee_id'  	=> $request['employee_id'],
-                    'project_id'  	=> $request['project_id'],
+                    'employee_id'  	=> $employee_id,
                     'date'    		=> $request['date'],
                     'start_time'  	=> $request['start_time'],
                     'end_time'  	=> $request['end_time'],
                     'comment'  		=> $request['comment']
                 );
+                if(isset( $request['project_id']) ) {
+                    $data += ['project_id'  	=> $request['project_id']];
+                }
+                if( isset($request['erp_task_id']) ) {
+                    $data += ['erp_task_id'  	=> $request['erp_task_id']];
+                }
                 
                 $afterHour = new Afterhour();
                 $afterHour->saveAfterhour($data);
-           
+                
                 Mail::to($afterHour->employee->email)->send(new AfterHourSendMail($afterHour));
     
                 $send_to = EmailingController::sendTo('afterhours', 'create');
@@ -162,7 +183,15 @@ class AfterhourController extends Controller
                         Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterHour)); 
                     }
                 }
-                
+                // za djelatnike Inženjeringa mail ide voditelju - Željko Rendulić
+                if( $afterHour->employee->work->department == 'Inženjering') {
+                    $voditelj =  $afterHour->employee->work ? $afterHour->employee->work->employee : null;
+                    if( $voditelj ) {
+                        Log::info( 'Prekovremeni - info mail ide na  ' . $voditelj->user->first_name . ' '. $voditelj->user->last_name );
+                        Mail::to( $voditelj->email)->send(new AfterHourInfoMail($afterHour)); 
+                    }
+                }
+
                 /* ZA SADA NE !!!!!   $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
                 if($superior) {
                     Mail::to( $superior->email)->send(new AfterHourInfoMail($afterHour)); 
@@ -198,9 +227,20 @@ class AfterhourController extends Controller
     {
         $afterhour = Afterhour::find($id);
         $employees = Employee::employees_firstNameASC();
-        $projects = Project::where('active',1)->get();
 
-        return view('Centaur::afterhours.edit',['afterhour' => $afterhour,'employees' => $employees,'projects' => $projects]);
+        $employee = Sentinel::getUser()->employee;
+        if( $employee ) {
+            $erp_id = $employee->erp_id;
+            $api = new ApiController();
+            
+            $tasks = $api->get_employee_project_tasks( $erp_id );
+            $projects = null;
+        } else {
+            $tasks = null;
+            $projects = Project::where('active',1)->get();
+        }
+
+        return view('Centaur::afterhours.edit',['afterhour' => $afterhour,'employees' => $employees,'projects' => $projects,'tasks' => $tasks]);
     }
 
     /**
@@ -216,13 +256,17 @@ class AfterhourController extends Controller
 
         $data = array(
             'employee_id'  		=> $request['employee_id'],
-            'project_id'  		=> $request['project_id'],
             'date'    			=> $request['date'],
             'start_time'  		=> $request['start_time'],
             'end_time'  		=> $request['end_time'],
             'comment'  		    => $request['comment']
         );
-        
+        if(isset( $request['project_id']) ) {
+            $data += ['project_id'  	=> $request['project_id']];
+        }
+        if( isset($request['erp_task_id']) ) {
+            $data += ['erp_task_id'  	=> $request['erp_task_id']];
+        }
         $afterhour->updateAfterhour($data);
 
         session()->flash('success',  __('ctrl.data_edit'));
@@ -264,14 +308,15 @@ class AfterhourController extends Controller
             );
             
             $afterHour->updateAfterhour($data);
-                    Mail::to($mail)->send(new AfterHourApproveMail($afterHour));  
+
+            Mail::to($mail)->send(new AfterHourApproveMail($afterHour));  
                 
             foreach(array_unique($send_to) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     Mail::to($send_to_mail)->send(new AfterHourApproveMail($afterHour));     
                 }
-            }  
-            
+            }
+
             $message = session()->flash('success', 'Zahtjev je potvrđen');
         } else {
             $message = session()->flash('error', 'Zahtjev nije nađen');
@@ -399,12 +444,12 @@ class AfterhourController extends Controller
 		$afterhour->updateAfterhour($data);
 
         if($request['email'] == 1 ){ 
-			$send_to = EmailingController::sendTo('absences','confirm');
-			array_push($send_to, $absence->employee->email );
+			$send_to = EmailingController::sendTo('afterhours', 'confirm');
+			array_push($send_to, $afterhour->employee->email );
 			try {
 				foreach(array_unique($send_to) as $send_to_mail) {
 					if( $send_to_mail != null & $send_to_mail != '' ) {
-						Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
+						Mail::to($send_to_mail)->send(new AfterHourApproveMail($afterhour)); // mailovi upisani u mailing 
 					}
 				}
 			} catch (\Throwable $th) {

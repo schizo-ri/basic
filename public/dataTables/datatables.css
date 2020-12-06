@@ -58,10 +58,10 @@ table.dataTable thead .sorting {
   background-image: url("DataTables-1.10.21/images/sort_both.png");
 }
 table.dataTable thead .sorting_asc {
-  background-image: url("DataTables-1.10.21/images/sort_asc.png");
+  background-image: url("DataTables-1.10.21/images/sort_asc.png"), url("DataTables-1.10.21/images/sort_both.png");
 }
 table.dataTable thead .sorting_desc {
-  background-image: url("DataTables-1.10.21/images/sort_desc.png");
+  background-image: url("DataTables-1.10.21/images/sort_desc.png"), url("DataTables-1.10.21/images/sort_both.png");
 }
 table.dataTable thead .sorting_asc_disabled {
   background-image: url("DataTables-1.10.21/images/sort_asc_disabled.png");

@@ -66,7 +66,7 @@ class DashboardController extends Controller
                 }
                 
                 $events = Event::where('employee_id',$employee->id)->where('date', $date)->orderBy('date','DESC')->get();
-                $tasks = Task::where('employee_id', $employee->id)->where('date', $date)->orderBy('date','DESC')->get();
+                $tasks = Task::where('employee_id', $employee->id)->where('start_date', $date)->orderBy('start_date','DESC')->get();
 
                 $profile_image = DashboardController::profile_image( $employee->id );
                 $user_name =  DashboardController::user_name( $employee->id );					

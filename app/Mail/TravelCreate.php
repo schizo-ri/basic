@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\TravelOrder; 
+use App\Models\MailTemplate;
 
 class TravelCreate extends Mailable
 {
@@ -37,10 +38,13 @@ class TravelCreate extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.travel.create')
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','TravelCreate')->first();
+        
+        return $this->view('emails.travel.create')
                     ->subject(__('basic.create_travel1') . ' - ' . $this->travel->employee->user['last_name'] )
                     ->with([
-                        'travel' =>  $this->travel
+                        'travel' =>  $this->travel,
+                        'template_mail' => $mail_template
                     ]);;
     }
 }

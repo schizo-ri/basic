@@ -505,6 +505,7 @@ span.work {
 	width: 45%;
 	display: block;
 	margin-bottom: 20px;
+	clear: none;
 }
 .modal-body .form_sequence .form-group.datum {
 	width: 100%;
@@ -566,13 +567,19 @@ input.btn-submit, .btn-next, input.btn-submit_user_create, input.btn-submit_user
 	border: none;
 	margin: 20px;
 }
-
+input.btn-submit:hover, input.btn-submit_user_create:hover, input.btn-submit_user_edit:hover,  .btn-next:hover {
+	background-color: #0069d9;
+    border-color: #0062cc;
+}
+.modal a.btn-close:hover {
+	color: #999999;
+}
 .modal a.btn-cancel, .modal a.btn-back {
 	width: auto;
 	height: 35px;
 	line-height: 35px;
 	font-weight: 500;
-	font-size: 0.5625rem;	
+	font-size: 0.6875rem;	
 	text-align: center;
 	text-decoration-line: underline;
 	color: #2B2B2B;
@@ -1705,7 +1712,7 @@ option::selection {
 	color: #13EA90;
 }
 
-input#file {
+input#file, input#doc {
     visibility: hidden;
 }
 
@@ -2541,6 +2548,7 @@ span.file_name {
 
 .ad_image {
 	padding-left: 20px;
+	display:block;
 }
 
 .modal .tox-tinymce {
@@ -2590,6 +2598,10 @@ span.file_name {
     float: right;
     color: #1b95f0;
 }
+.add_new:hover {
+	background-color: #0069d9;
+    border-color: #0062cc;
+}
 .group_abs {
 	overflow: hidden;
     margin-bottom: 10px;
@@ -2621,12 +2633,14 @@ span.file_name {
 }
 
 .task_list {
-    border-radius: 3px;
+	border-radius: 3px;
+	width: 100%;
 }
 
 .task_item {
-    padding: 5px 10px;
+	padding: 5px 10px;
     border-radius: 3px;
-	display: inline-block;
-	color: #000000;
+    display: block;
+    color: #000000;
+    margin-bottom: 5px;
 }

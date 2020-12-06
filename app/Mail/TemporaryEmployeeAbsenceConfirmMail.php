@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\TemporaryEmployeeRequest;
 use Sentinel;
+use App\Models\MailTemplate;
 
 class TemporaryEmployeeAbsenceConfirmMail extends Mailable
 {
@@ -37,6 +38,8 @@ class TemporaryEmployeeAbsenceConfirmMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','TemporaryEmployeeAbsenceConfirmMail')->first();
+        
         $odobrio_user = Sentinel::getUser();
 		$odobrio = $odobrio_user->first_name . ' ' . $odobrio_user->last_name;
         
@@ -46,12 +49,13 @@ class TemporaryEmployeeAbsenceConfirmMail extends Mailable
             $odobrenje = __('absence.not_approved');
         }
 
-        return $this->markdown('emails.temporary_employee_requests.confirm')
+        return $this->view('emails.temporary_employee_requests.confirm')
                     ->subject( __('absence.approve_absence') . ' - ' . $this->temporaryEmployeeRequest->employee->user['first_name']   . '_' . $this->temporaryEmployeeRequest->employee->user['last_name'])
                     ->with([
                         'absence' => $this->temporaryEmployeeRequest,
                         'odobrenje' => $odobrenje,
                         'odobrio' => $odobrio,
+                        'template_mail' => $mail_template
                     ]);
 
     }

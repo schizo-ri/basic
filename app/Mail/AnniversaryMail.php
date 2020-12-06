@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Employee;
 use DateTime;
+use App\Models\MailTemplate;
 
 class AnniversaryMail extends Mailable
 {
@@ -37,6 +38,8 @@ class AnniversaryMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','AnniversaryMail')->first();
+        
         $date_now = new DateTime('now'); 
         $date = new DateTime( $this->employee->reg_date); 
         $years = $date_now->format('Y') - $date->format('Y') ; 
@@ -57,12 +60,13 @@ class AnniversaryMail extends Mailable
             $dana =  'za ' . $br_dana . ' dana';
         } 
             
-        return $this->markdown('emails.employees.anniversary')
+        return $this->view('emails.employees.anniversary')
                     ->subject( __('basic.anniversary') . ' - ' .  $this->employee->first_name . ' ' .  $this->employee->last_name)
                     ->with([
                         'employee' =>  $this->employee,
                         'dana' =>  $dana,
                         'years' =>  $years,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

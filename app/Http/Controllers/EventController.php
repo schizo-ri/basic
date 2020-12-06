@@ -81,7 +81,12 @@ class EventController extends Controller
         } else {
             $mj_select = date('m');
         }
-        $days_in_month = $daysInMonth[intval($mj_select)-1];
+        try {
+            $days_in_month = $daysInMonth[intval($mj_select)-1];
+        } catch (\Throwable $th) {
+            $days_in_month = $daysInMonth[date('m')-1];
+        }
+        
         $dataArr_day = EventController::event_for_selected_day( $dataArr, $dan );
      
         $uniqueType = array_unique(array_column($dataArr_day, 'type'));
@@ -89,9 +94,9 @@ class EventController extends Controller
             $events_day = $events->where('date', $dan);
         }
         $tasks_day = TaskController::task_for_selected_day( $dan );
-        $tasks = Task::whereMonth('date', $mj_select )->get();
+        $tasks = Task::whereMonth('start_date', $mj_select )->get();
         foreach ( $tasks as $task ) {
-            $task->week = date('W',strtotime($task->date));
+            $task->week = date('W',strtotime($task->start_date));
         }
     
         $employees = Employee::employees_firstNameASC();
@@ -109,8 +114,6 @@ class EventController extends Controller
                                                 'selected' => $selected,
                                                 'selected_day' => $selected_day,
                                                 'count_days' => $count_days,
-                                                'tasks' => $tasks,
-                                                'events' => $events,
                                                 'uniqueType' => $uniqueType,
                                                 'cars' => $cars]);
           
@@ -443,7 +446,7 @@ class EventController extends Controller
                 }
                 $tasks = $employee->hasTasks;
                 $tasks = $tasks->filter(function ($task, $key) use ( $month, $year) {
-                    return date('m',strtotime($task->date)) == $month && date('Y',strtotime($task->date)) == $year;
+                    return date('m',strtotime($task->start_date)) == $month && date('Y',strtotime($task->start_date)) == $year;
                 });
             /*     $tasks = Task::whereMonth('date', $month)->whereYear('date',$year)->get(); */
                 if(count($tasks) > 0) {
@@ -451,7 +454,7 @@ class EventController extends Controller
                         array_push($dataArr, ['name' => "task", 
                                               'type' => __('calendar.task'), 
                                               'id' => $task->id,
-                                              'date' => $task->date,
+                                              'date' => $task->start_date,
                                               'time1' => $task->time1, 
                                               'time2' => $task->time2, 
                                               'title' => $task->title, 

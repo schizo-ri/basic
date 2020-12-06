@@ -82,13 +82,9 @@
 </div>
 <script>
 	$( function () {
-		/* $.getScript( '/../js/filter.js');
-		$.getScript( '/../js/open_modal.js');
-		$.getScript( '/../js/set_height_notice.js');
-		$.getScript( '/../js/sequence_dragDrop.js');
-		$.getScript( '/../js/set_height_campaign.js'); */
-		
-		$('.main_noticeboard .header_document .link_back').click(function(e){
+		if($('.noticeboard_index').length > 0) {
+
+			$('.main_noticeboard .header_document .link_back').click(function(e){
             e.preventDefault();
             var url = location['origin'] +'/campaigns';
             
@@ -109,6 +105,7 @@
 		$('.sendEmail').click(function(){
 		//	$.getScript('/../js/validate.js');
 		});
+		}
 	});
 </script>
 @stop

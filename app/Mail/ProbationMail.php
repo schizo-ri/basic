@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Employee; 
 use DateTime;
+use App\Models\MailTemplate;
 
 class ProbationMail extends Mailable
 {
@@ -38,6 +39,7 @@ class ProbationMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','ProbationMail')->first();
         
         $date1 = new DateTime( $this->employee->reg_date); 
         $date1->modify('+6 month');
@@ -45,11 +47,12 @@ class ProbationMail extends Mailable
         $interval = $date1->diff($date2); 
         $days = $interval->format('%a');
 
-        return $this->markdown('emails.employees.probation')
+        return $this->view('emails.employees.probation')
                     ->subject( __('basic.probation') . ' - ' . $this->employee->user->first_name . ' ' .  $this->employee->user->last_name )
                     ->with([
                         'employee'  => $this->employee,
                         'days'      => $days,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

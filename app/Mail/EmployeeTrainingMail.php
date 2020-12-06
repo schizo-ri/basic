@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\EmployeeTraining;
+use App\Models\MailTemplate;
 
 class EmployeeTrainingMail extends Mailable
 {
@@ -37,10 +38,13 @@ class EmployeeTrainingMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.employee_training.expiry')
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','EmployeeTrainingMail')->first();
+        
+        return $this->view('emails.employee_training.expiry')
                     ->subject( __('emailing.expiry_training') . ' ' . $this->employeeTraining->employee->user->first_name . ' ' . $this->employeeTraining->employee->user->last_name  )
                     ->with([
-                        'employeeTraining' => $this->employeeTraining
+                        'employeeTraining' => $this->employeeTraining,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

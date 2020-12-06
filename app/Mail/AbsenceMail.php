@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Absence; 
 use App\Models\Employee; 
 use App\Http\Controllers\BasicAbsenceController;
+use App\Models\MailTemplate;
 
 class AbsenceMail extends Mailable
 {
@@ -38,6 +39,8 @@ class AbsenceMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','AbsenceMail')->first();
+
         $employee = $this->absence->employee;
         $zahtjev = array('start_date' => $this->absence['start_date'], 'end_date' => $this->absence['end_date']);
         $dani_zahtjev = BasicAbsenceController::daniGO($zahtjev);
@@ -63,7 +66,8 @@ class AbsenceMail extends Mailable
                         'absence' => $this->absence,
                         'dani_zahtjev' => $dani_zahtjev,
                         'slobodni_dani' => $slobodni_dani,
-                        'neiskoristeno_GO' => $neiskoristeno_GO
+                        'neiskoristeno_GO' => $neiskoristeno_GO,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\TravelOrder; 
+use App\Models\MailTemplate;
 
 class TravelClose extends Mailable
 {
@@ -14,7 +15,7 @@ class TravelClose extends Mailable
     /**
      * The travel instance.
      *
-     * @var vacationRequest
+     * @var travel
      */
     public $travel;
     
@@ -35,11 +36,14 @@ class TravelClose extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.travel.close')
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','TravelClose')->first();
+        
+        return $this->view('emails.travel.close')
                     ->subject(__('basic.close_travel') . ' - ' . $this->travel->employee->user['first_name'] . ' ' . $this->travel->employee->user['last_name'] )
                     ->attach('travelOrder/Putni nalog_' . $this->travel->id .'.pdf')
                     ->with([
-                        'travel' =>  $this->travel
+                        'travel' =>  $this->travel,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

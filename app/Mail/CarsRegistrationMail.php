@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Car;
-
+use App\Models\MailTemplate;
 
 class CarsRegistrationMail extends Mailable
 {
@@ -36,6 +36,8 @@ class CarsRegistrationMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','CarsRegistrationMail')->first();
+        
         if(isset( $_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != 'localhost') {
             $host =  $_SERVER['HTTP_HOST'];
         } else {
@@ -49,6 +51,7 @@ class CarsRegistrationMail extends Mailable
                     ->with([
                         'car' => $this->car,
                         'url'=>  $url,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

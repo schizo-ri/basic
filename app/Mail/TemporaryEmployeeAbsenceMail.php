@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\TemporaryEmployeeRequest;
 use App\Http\Controllers\BasicAbsenceController;
+use App\Models\MailTemplate;
 
 class TemporaryEmployeeAbsenceMail extends Mailable
 {
@@ -37,6 +38,8 @@ class TemporaryEmployeeAbsenceMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','TemporaryEmployeeAbsenceMail')->first();
+        
         $zahtjev = array('start_date' => $this->temporaryEmployeeRequest['start_date'], 'end_date' => $this->temporaryEmployeeRequest['end_date']);
         $dani_zahtjev = BasicAbsenceController::daniGO($zahtjev);
 
@@ -45,6 +48,7 @@ class TemporaryEmployeeAbsenceMail extends Mailable
                     ->with([
                         'temporaryEmployeeRequest' => $this->temporaryEmployeeRequest,
                         'dani_zahtjev' => $dani_zahtjev,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

@@ -138,7 +138,7 @@ $(function(){
 				} );
 			
 			} catch (error) {
-				
+				console.log(error.message);
 			}
 		}
 
@@ -301,6 +301,7 @@ $(function(){
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						select_width();
 						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
@@ -312,6 +313,7 @@ $(function(){
 		
 		$('#filter_types').on('change',function() {
 			type = $( this ).val();
+		
 			type_text = $( this ).find('option:selected').text();
 			console.log(type_text);
 			if( $('#filter_years').length>0) {
@@ -337,7 +339,6 @@ $(function(){
 				url: url,
 				type: "get",
 				beforeSend: function(){
-					// Show image container
 					$('body').prepend('<div id="loader"></div>');
 				},
 				success: function( response ) {
@@ -362,10 +363,12 @@ $(function(){
 						}
 						$.getScript('/../js/absence.js');
 					
-						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
-						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
+						$(this).find('option[value="'+type+'"]').attr('selected',true);
+						$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						select_width();
+					
 						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
@@ -426,6 +429,7 @@ $(function(){
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						select_width();
 						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
@@ -475,6 +479,7 @@ $(function(){
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						select_width();
 						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
@@ -486,7 +491,7 @@ $(function(){
 		$('.all_absences #index_table_filter').show(); 
 
 		if($(".all_absences #index_table_filter .show_button").length == 0) {
-			$('.all_absences #index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+			$('.all_absences #index_table_filter .filter_area').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 			$('.show_button').on('click',function () {
 				$('.dt-buttons').toggle();		
 			/* 	console.log("show_button"); */
@@ -594,5 +599,29 @@ $(function(){
 				}
 			});
 		}
+	}
+	function select_width() {
+		$('.selected_employee').text($('#filter_employees').find('option[value="'+employee_id+'"]').text());
+		$('.selected_type').text($('#filter_types').find('option[value="'+type+'"]').text());
+		$('.selected_approve').text($('#filter_approve').find('option[value="'+approve+'"]').text());
+		$('.selected_month').text($('#filter_years').find('option[value="'+month+'"]').text());
+		
+		$('#filter_types').css('width', $('.selected_type').width() +50); 
+		$('#filter_employees').css('width', $('.selected_employee').width() + 50); 
+		$('#filter_approve').css('width',$('.selected_approve').width() + 50); 
+		$('#filter_years').css('width',$('.selected_month').width() + 50); 
+		$('#filter_types').css('max-width', $('.selected_type').width() +50); 
+		$('#filter_employees').css('max-width', $('.selected_employee').width() + 50); 
+		$('#filter_approve').css('max-width',$('.selected_approve').width() + 50); 
+		$('#filter_years').css('max-width',$('.selected_month').width() + 50); 
+
+		$('#filter_types').parent().css('max-width', $('.selected_type').width() +60); 
+		$('#filter_employees').parent().css('max-width', $('.selected_employee').width() + 60); 
+		$('#filter_approve').parent().css('max-width',$('.selected_approve').width() + 60); 
+		$('#filter_years').parent().css('max-width',$('.selected_month').width() + 60);
+		$('#filter_types').parent().css('width', $('.selected_type').width() +60); 
+		$('#filter_employees').parent().css('width', $('.selected_employee').width() + 60); 
+		$('#filter_approve').parent().css('width',$('.selected_approve').width() + 60); 
+		$('#filter_years').parent().css('width',$('.selected_month').width() + 60);
 	}
 });

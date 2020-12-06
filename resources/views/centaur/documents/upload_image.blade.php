@@ -2,7 +2,7 @@
     <form action="{{ route('documents.store') }}" class="box" method="post" id="form_submit" enctype="multipart/form-data" >
         @if (! $profileIMG)
             <div class="form-group ">
-                <label>Name your content</label>
+                <label>@lang('basic.name')</label>
                 <input type='text' name="title" class="form-control" required />
             </div>
             <input type='hidden' name="users_interest" value="true"/>

@@ -14,14 +14,27 @@
 				</select>
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-		<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
-			<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{  $afterhour->project_id }}" id="sel1" required>
-				<option value="" disabled selected></option>
-				@foreach ($projects as $project)
-					<option class="project_list" name="project_id" value="{{ intval($project->id) }}" {!! $afterhour->project_id == $project->id ? 'selected' : '' !!}>{{ $project->erp_id  . ' ' . $project->name }}</option>
-				@endforeach	
-			</select>
-		</div>
+		@if($projects)
+			<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
+				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{  $afterhour->project_id }}" id="sel1" required>
+					<option value="" disabled selected></option>
+					@foreach ($projects as $project)
+						<option class="project_list" name="project_id" value="{{ intval($project->id) }}" {!! $afterhour->project_id == $project->id ? 'selected' : '' !!}>{{ $project->erp_id  . ' ' . $project->name }}</option>
+					@endforeach	
+				</select>
+			</div>
+		@endif
+		@if($tasks)
+			<div class="form-group {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
+				<select id="select-state" name="erp_task_id" placeholder="Pick a state..."  value="{{ old('erp_task_id') }}" id="sel1" required>
+					<option value="" disabled selected></option>
+					@foreach ($tasks as $id => $task)
+						<option class="project_list" name="erp_task_id" value="{{ $id }}" {!! $afterhour->erp_task_id == $id ? 'selected' : '' !!}>{{ $task  }}</option>
+					@endforeach	
+				</select>
+			</div>
+		@endif
+		
 		<div class="form-group datum date1 float_l  {{ ($errors->has('date')) ? 'has-error' : '' }}" >
 			<label>@lang('basic.date')</label>
 			<input name="date" id="date" class="form-control" type="date" value="{{ $afterhour->date }}" required>

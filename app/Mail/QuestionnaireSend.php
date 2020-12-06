@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Questionnaire;
 use DateTime;
+use App\Models\MailTemplate;
 
 class QuestionnaireSend extends Mailable
 {
@@ -30,10 +31,13 @@ class QuestionnaireSend extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','QuestionnaireSend')->first();
+        
 		return $this->view('Centaur::email.Questionnaire')
 					->subject( __('questionnaire.questionnaire') . ' - ' . $this->questionnaire->name)
 					->with([
-						'questionnaire' => $this->questionnaire
+						'questionnaire' => $this->questionnaire,
+                        'template_mail' => $mail_template
 					]);
     }
 }

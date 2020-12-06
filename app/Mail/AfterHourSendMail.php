@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Afterhour;
+use App\Models\MailTemplate;
 
 class AfterHourSendMail extends Mailable
 {
@@ -37,10 +38,13 @@ class AfterHourSendMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.afterhours.send')
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','AfterHourSendMail')->first();
+        
+        return $this->view('emails.afterhours.send')
                     ->subject( __('basic.request'))
                     ->with([
                         'afterhour' =>  $this->afterhour,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

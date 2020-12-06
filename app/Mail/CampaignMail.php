@@ -7,6 +7,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Campaign;
 use App\Models\CampaignSequence;
+use App\Models\MailTemplate;
 
 class CampaignMail extends Mailable
 {
@@ -42,15 +43,18 @@ class CampaignMail extends Mailable
         $campaign_sequences = CampaignSequence::where('campaign_id',  $this->campaign->id)->orderBy('created_at','ASC')->get();
         $first_sequence = $campaign_sequences->first();
                  */
-       /*  return $this->markdown('emails.campaign.template')
+       /*  return $this->view('emails.campaign.template')
                     ->subject($this->campaign->name)
                     ->with([
                         'first_sequence' => $first_sequence]); */
 
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','CampaignMail')->first();
+        
         return $this->view('Centaur::campaign_sequences.campaign_mail')
 					->subject($this->campaignSequence->subject )
 					->with([
-						'campaign_sequence' =>  $this->campaignSequence
+						'campaign_sequence' =>  $this->campaignSequence,
+                        'template_mail' => $mail_template
 					]);
     }
 }

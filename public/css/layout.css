@@ -76,10 +76,11 @@ table.dataTable thead th, table.dataTable thead td{
     margin: 0;
     margin-left: 5px;
 }
-.shortcuts_container .btn-new:hover {
+.shortcuts_container .btn-new:hover, .shortcuts_container .shortcut:hover .btn-new{
     background-color: #0069d9;
     border-color: #0062cc;
 }
+
 .disable {
 	pointer-events: none;
    	cursor: default;
@@ -175,10 +176,10 @@ aside.side_nav {
 	max-width: 140px;
 	max-height: 80px;
 	text-align: center;
-	top: 50%;
+	/* top: 50%;
     position: absolute;
     bottom: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%); */
 }
 .nav_ul.float_right a img {
 	position: absolute;
@@ -198,12 +199,6 @@ aside.side_nav {
 	font-size: 19px;
 	color: #A7BBEE;
 }
-.header_nav img.img_button, .header_nav i, .header_nav svg {
-	/* max-width: 28px;
-    margin-right: 25px;
-	font-size: 22px;
-	margin: 0; */
-}
 
 ul.nav_ul.float_right li {
     float: left;
@@ -217,7 +212,9 @@ ul.nav_ul.float_right li {
 	display: flex;
 	justify-content: center;
 }
-
+ul.nav_ul.float_right li:hover {
+	background-color:#082877;
+}
 ul.nav_ul.float_right {
 	list-style: none;
 	margin: 0;
@@ -1506,11 +1503,16 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	line-height: 36px;
 	color: #FFFFFF;
 	text-align: center;
+	cursor: pointer;
 }
-
+.label_file >span:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
 .label_file >span >img {
 	margin-right: 20px;
 }
+
 .box.is-uploading .box__input {
 	visibility: none;
 }
@@ -1523,11 +1525,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 .box__dragndrop, .box__uploading, .box__success, .box__error {
 	display: none;
 }
-.box.has-advanced-upload {
- /*   background-color: white;
-	outline: 2px dashed black;
-	outline-offset: -10px;*/
-}
+
 .box.has-advanced-upload .box__dragndrop {
 	display: inline;
 }
@@ -1541,6 +1539,10 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	position: relative;
 	padding: 15px;
 	cursor: pointer;
+}
+.modal.upload .label_file:hover >span:not(.img_plus):not(.text_upload box__dragndrop){
+	background-color: #0069d9;
+    border-color: #0062cc;
 }
 .modal.upload .label_file>input#file_upload {
 	width: 100%;

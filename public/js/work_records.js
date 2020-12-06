@@ -21,7 +21,7 @@ $('.second_view_header .change_month').on('change',function() {
                         $( this ).addClass('abs_'+  $.trim($( this ).text()));
                        
                     });
-                    /* $.getScript('/../js/datatables.js'); */
+                    $.getScript('/../js/datatables.js');
                     $('.show_button').on('click',function () {
                         $('.dt-buttons').toggle();		
                     })

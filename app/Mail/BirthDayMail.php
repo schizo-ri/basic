@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Employee;
+use App\Models\MailTemplate;
 
 class BirthDayMail extends Mailable
 {
@@ -37,10 +38,13 @@ class BirthDayMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.employees.birthday')
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','BirthDayMail')->first();
+        
+        return $this->view('emails.employees.birthday')
                     ->subject( __('basic.b_day_employee') . ' - ' .  $this->employee->first_name . ' ' .  $this->employee->last_name)
                     ->with([
-                        'employee' =>  $this->employee
+                        'employee' =>  $this->employee,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

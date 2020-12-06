@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\EducationArticle; 
+use App\Models\MailTemplate;
 
 class EducationArticleMail extends Mailable
 {
@@ -37,10 +38,13 @@ class EducationArticleMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','EducationArticleMail')->first();
+
          return $this->view('Centaur::email.article_add')
 					->subject( __('emailing.new_article') . ' - ' . $this->educationArticle->subject )
 					->with([
-						'educationArticle' => $this->educationArticle
+						'educationArticle' => $this->educationArticle,
+                        'template_mail' => $mail_template
 					]);
     }
 }

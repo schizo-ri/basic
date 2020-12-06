@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Sentinel;
+use App\Models\MailTemplate;
 
 class ErrorMail extends Mailable
 {
@@ -30,27 +31,30 @@ class ErrorMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','ErrorMail')->first();
+        
         if(is_array($this->request)) {
-            return $this->markdown('emails.error.new_error')
+            return $this->view('emails.error.new_error')
             ->subject( "Prijava " . " greške" )
              ->with([
                  'request' =>  $this->request,
                  'user' => Sentinel::getUser()->first_name .' '. Sentinel::getUser()->last_name,
                  'user_mail' => Sentinel::getUser()->email,
                  'request_uri' => $this->request_uri,
-                 'url' => $_SERVER['HTTP_HOST']
+                 'url' => $_SERVER['HTTP_HOST'],
+                 'template_mail' => $mail_template
              ]);
         } else {
-            return $this->markdown('emails.error.new_error1')
+            return $this->view('emails.error.new_error1')
             ->subject( "Prijava " . " greške" )
              ->with([
                  'request' =>  $this->request,
                  'user' => Sentinel::getUser()->first_name .' '. Sentinel::getUser()->last_name,
                  'user_mail' => Sentinel::getUser()->email,
                  'request_uri' => $this->request_uri,
-                 'url' => $_SERVER['HTTP_HOST']
+                 'url' => $_SERVER['HTTP_HOST'],
+                 'template_mail' => $mail_template
              ]);
         }
-       
     }
 }

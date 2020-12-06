@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Afterhour;
 use DateTime;
+use App\Models\MailTemplate;
 
 class AfterHourCreateMail extends Mailable
 {
@@ -37,6 +38,8 @@ class AfterHourCreateMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','AfterHourCreateMail')->first();
+        
         $time1 = new DateTime($this->afterhour->start_time );
         $time2 = new DateTime($this->afterhour->end_time);
         
@@ -48,6 +51,7 @@ class AfterHourCreateMail extends Mailable
 					->with([
 						'afterhour' =>  $this->afterhour,
 						'interval' =>  $interval,
+                        'template_mail' => $mail_template
 					]);
     }
 }

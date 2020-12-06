@@ -3,7 +3,6 @@ $(function() { // filter knowledge base
 	var date = null;
 	var year = null;
 	var employee_id = null;
-
 	$('.change_month_afterhour').on('change',function(){
 		date =  $(this).val().toLowerCase();
 		employee_id =  $('.change_employee_afterhour').val();
@@ -20,11 +19,13 @@ $(function() { // filter knowledge base
 			},
 			success: function( response ) {
 				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+				
 					$('#loader').remove();
-					$.getScript('/../restfulizer.js');
 					$.getScript('/../js/datatables.js');
-					$('.dt-buttons').show();		
-                   
+					$('.show_button').on('click',function () {
+                        $('.dt-buttons').toggle();		
+                    })
+					$.getScript('/../restfulizer.js');
 				});
 			},
 			error: function(jqXhr, json, errorThrown) {
@@ -51,7 +52,9 @@ $(function() { // filter knowledge base
 				$( '#admin_page >main' ).load(location.href + '?date='+date+'&employee_id='+employee_id + ' #admin_page >main .table-responsive',function(){
 					$('#loader').remove();
 					$.getScript('/../js/datatables.js');
-					$('.dt-buttons').show();		
+					$('.show_button').on('click',function () {
+                        $('.dt-buttons').toggle();		
+                    })
 					$.getScript('/../restfulizer.js');
 				});
 			},
@@ -197,4 +200,33 @@ $(function() { // filter knowledge base
 			$('.section_notice .notices').load($(this).val() + ' .section_notice .notices .noticeboard_notice_body');
 		});
 	}
+
+	$('.filter_checkout').on('change',function(e) {
+		var check = $(this).val();
+
+		var url = location.href + '?status='+check;
+		console.log(url);
+
+		$.ajax({
+			url: url,
+			type: "get",
+			beforeSend: function(){
+				$('body').prepend('<div id="loader"></div>');
+			},
+			success: function( response ) {
+				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
+					$.getScript('/../js/open_modal.js');
+					$.getScript('/../js/datatables.js');
+					$('.show_button').on('click',function () {
+                        $('.dt-buttons').toggle();		
+                    })
+					$.getScript('/../restfulizer.js');
+				});
+			},
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr.responseJSON.message);
+			}
+		});
+	});
 });

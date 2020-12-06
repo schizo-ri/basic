@@ -8,10 +8,11 @@ $(function(){
 	var broj_dana;
 	var date = new Date();
 	var today = date.getFullYear() + '-' + ( '0' + (date.getMonth()+1) ).slice( -2 ) + '-' + ( '0' + (date.getDate()) ).slice( -2 );
-	
+	var user_role = $('#user_role').text();	
+
 	$( "#request_type" ).on('change',function() {
 		type = $(this).val();
-		if(type == 'IZL') {
+		if(type == 'IZL' || type == 61) {
 			start_date = $( "#start_date" ).val();
 			end_date = $( "#end_date" );
 			end_date.val(start_date);
@@ -27,11 +28,10 @@ $(function(){
 			$('.form-group.date2').show();
 			$('#start_date').removeAttr('min');
 		}
-
 		if(type == 'GO') {
 			employee_id = $('#select_employee').val();
 			console.log("employee_id " + employee_id);
-			if( employee_id != '' &&  employee_id != undefined) {
+			if( employee_id != '' && employee_id != undefined) {
 				url = location.origin + '/getDays/'+employee_id;
 				console.log(url);
 				$.ajax({
@@ -39,7 +39,7 @@ $(function(){
 					type: "get",
 					success: function( days_response ) {
 						broj_dana = days_response;
-						if( broj_dana == 0 ) {
+						if( broj_dana == 0 && user_role != 'admin') {
                             $('.days_employee').text("Nemoguće poslati zahtjev. Svi su dani iskorišteni!");
 							$('input[name=start_date]').prop('disabled', true);
 							$('input[name=end_date]').prop('disabled', true);
@@ -147,7 +147,7 @@ $(function(){
 		if( employee_id != '' && type == 'GO' ) {
 			diff_days = date_diff_indays( start_date,end_date );
 			console.log(diff_days);
-			if( broj_dana < diff_days ) {
+			if( broj_dana < diff_days && user_role != 'admin' ) {
 				$('.days_request>span').text(diff_days - broj_dana);
 				$('.days_request').show();
 				$('.btn-submit').hide();

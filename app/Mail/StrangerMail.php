@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Employee; 
 use DateTime;
+use App\Models\MailTemplate;
 
 class StrangerMail extends Mailable
 {
@@ -38,16 +39,19 @@ class StrangerMail extends Mailable
      */
     public function build()
     {
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','StrangerMail')->first();
+        
         $date1 = new DateTime($this->employee->permission_date); 
         $date2 = new DateTime("now"); 
         $interval = $date1->diff($date2); 
         $days = $interval->format('%a');
 
-        return $this->markdown('emails.employees.stranger')
+        return $this->view('emails.employees.stranger')
                     ->subject( __('basic.stranger') . ' - ' . $this->employee->user->first_name . ' ' .  $this->employee->user->last_name )
                     ->with([
                         'employee'  => $this->employee,
                         'days'      => $days,
+                        'template_mail' => $mail_template
                     ]);
     }
 }

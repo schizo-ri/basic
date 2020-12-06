@@ -309,6 +309,9 @@
     line-height: 26px;
     margin-right: 20px;
 }
+.container h2> a.view_all:hover, .main_absence a.view_all:hover {
+    color: #999999;
+}
 .main_absence a.view_all {
     color: white;
 }

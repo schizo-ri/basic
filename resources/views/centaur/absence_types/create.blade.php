@@ -8,6 +8,11 @@
 			<input name="name" type="text" class="form-control" value="{{ old('name') }}" maxlength="50" required >
 			{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
+		<div class="form-group {{ ($errors->has('erp_id'))  ? 'has-error' : '' }}">
+			<label>ERP ID</label>
+			<input name="erp_id" type="text" class="form-control" maxlength="10" value="{{ old('erp_id') }}" required >
+			{!! ($errors->has('erp_id') ? $errors->first('erp_id', '<p class="text-danger">:message</p>') : '') !!}
+		</div>
 		<div class="form-group {{ ($errors->has('mark'))  ? 'has-error' : '' }}">
 			<label>@lang('absence.mark')</label>
 			<input name="mark" type="text" class="form-control" maxlength="5" value="{{ old('mark') }}" required >

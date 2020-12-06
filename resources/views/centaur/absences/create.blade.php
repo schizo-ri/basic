@@ -22,25 +22,45 @@
 			<input name="employee_id" type="hidden" value="{{ $user->employee->id }}" id="select_employee"/>
 		@endif
 		<input type="hidden" value="{{ $preostali_dani }}" id="preostalo_dana">
-		<div class="form-group {{ ($errors->has('type')) ? 'has-error' : '' }}">
+		<div class="form-group {{ ($errors->has('erp_type')) ? 'has-error' : '' }}">
 			<label>@lang('absence.abs_type')</label>
-			<select class="form-control"  name="type" value="{{ old('type') }}" id="request_type" required >
-				<option disabled selected value></option>
-				@foreach($absenceTypes as $absenceType)
-					<option value="{{ $absenceType->mark }}" {!! $type ==  $absenceType->mark ? 'selected' : '' !!}>{{ $absenceType->name}}</option>
-				@endforeach
-			</select> 
+			@if( $leave_types )
+				<select class="form-control"  name="erp_type" value="{{ old('erp_type') }}" id="request_type" required >
+					<option disabled selected value></option>
+					@foreach($leave_types as $id => $absenceType)
+						<option value="{{ $id }}">{{ $absenceType }}</option>
+					@endforeach
+				</select> 
+			@else 
+				<select class="form-control" name="type" value="{{ old('type') }}" id="request_type" required >
+					<option disabled selected value></option>
+					@foreach($absenceTypes as $absenceType)
+						@if(  $absenceType->mark != 'SLD' || ( $absenceType->mark == 'SLD' && Sentinel::inRole('administrator') || Sentinel::getUser()->employee->days_off == 1 ))
+							<option value="{{ $absenceType->mark }}" {!! $type ==  $absenceType->mark ? 'selected' : '' !!}>{{ $absenceType->name}}</option>
+						@endif
+					@endforeach
+				</select> 
+			@endif
 			<p class="days_employee" style="display: none"></p>
 			{!! ($errors->has('type') ? $errors->first('type', '<p class="text-danger">:message</p>') : '') !!}	
 		</div>
-		
+		@if($tasks)
+			<div class="form-group {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
+				<label>@lang('basic.task')</label>
+				<select id="select-state" name="erp_task_id" placeholder="Pick a state..."  value="{{ old('erp_task_id') }}" id="sel1" required>
+					<option value="" disabled selected></option>
+					@foreach ($tasks as $id => $task)
+						<option class="project_list" name="erp_task_id" value="{{ $id }}">{{ $task  }}</option>
+					@endforeach	
+				</select>
+			</div>
+		@endif
 		<div class="form-group datum date1 float_l  {{ ($errors->has('start_date')) ? 'has-error' : '' }}" >
 			<label>@lang('absence.start_date')</label>
 			<input name="start_date" id="start_date" class="form-control" type="date" value="{!!  old('start_date') ? old('start_date') : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
 			{!! ($errors->has('start_date') ? $errors->first('start_date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-		
-		<div class="form-group datum  date2 float_r  {{ ($errors->has('end_date')) ? 'has-error' : '' }}" >
+		<div class="form-group datum date2 float_r  {{ ($errors->has('end_date')) ? 'has-error' : '' }}" >
 			<label>@lang('absence.end_date')</label>
 			<input name="end_date" id="end_date" class="form-control" type="date" value="{!!  old('end_date') ? old('end_date') : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
 			{!! ($errors->has('end_date') ? $errors->first('end_date', '<p class="text-danger">:message</p>') : '') !!}
@@ -86,5 +106,8 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
+	$('.btn-submit').on('click',function(){
+		$( this ).hide();
+	});
 	$.getScript('/../js/absence_create.js');
 </script>

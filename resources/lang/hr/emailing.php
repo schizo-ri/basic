@@ -29,6 +29,7 @@ return [
 	'save_calendar'				=> 'Spremi događaj u kalendar',
 	'new_add'					=> 'MyIntranet - objavljen je novi oglas',
 	'afterhour'					=> 'Zahtjev za odobrenje prekovremenog rada ',
+	'afterhour_approve'			=> 'Odobrenje zahtjeva za prekovremenog rada ',
 	'new_temporary_employee'	=> 'Privremeni djelatnik - obavijest ' . ' o ' . ' početku ' . ' rada',
 	'expiry_training'			=> 'Istek ' . ' osposobljavanja ',
 	'sickne_info'			=> 'Obavijest o bolovanju',

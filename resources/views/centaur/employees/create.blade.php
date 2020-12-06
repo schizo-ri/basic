@@ -9,12 +9,17 @@
 				<select class="form-control" name="user_id" required>
 					<option value="" disabled selected ></option>
 					@foreach($users as $user)					
-						@if( ! Sentinel::findById($user->id)->inRole('superadmin') && ! $employees->where('user_id', $user->id)->first())
-							<option value="{{ $user->id}}" {!! isset($user1) && $user1->id ==  $user->id ? 'selected' : '' !!}>{{ $user->first_name . ' ' . $user->last_name }}</option>
+						@if( ! $employees->where('user_id', $user->id)->first() )
+							<option value="{{ $user->id}}" {!! isset($user1) && $user1->id ==  $user->id ? 'selected' : '' !!}>{{ $user->last_name . ' ' . $user->first_name }}</option>
 						@endif					
 					@endforeach
 				</select>
 				{!! ($errors->has('user_id') ? $errors->first('user_id', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="form-group  {{ ($errors->has('erp_id'))  ? 'has-error' : '' }}" style="padding-top: 10px">
+				<label>ERP ID</label>
+				<input class="form-control " type="text" name="erp_id" value="{{ old('erp_id') }}" maxlength="10" >
+				{!! ($errors->has('color') ? $errors->first('color', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group  {{ ($errors->has('color'))  ? 'has-error' : '' }}" style="padding-top: 10px">
 				<label>@lang('basic.color') </label>
@@ -220,7 +225,7 @@
 			<div class="form-group">
 				<input type="checkbox" name="stranger" value="1" id="stranger" > <label for="stranger">Djelatnik je stranac</label>
 			</div>
-			<div class="form-group" hidden id="dozvola">
+			<div class="form-group" id="dozvola">
 				<label>Datum isteka dozvole boravka u RH: </label>
 				<input name="permission_date" class="form-control" type="date">
 			</div>
