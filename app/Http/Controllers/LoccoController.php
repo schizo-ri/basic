@@ -134,6 +134,7 @@ class LoccoController extends Controller
                 'employee_id'  	    => $request['employee_id'],
                 'car_id'  		    => $request['car_id'],
                 'destination'  	    => $request['destination'],
+                'description'  	    => $request['comment'],
                 'days'  	        => 1,
                 'start_date'  	    => $request['date'],
                 'end_date'  	    => null,
@@ -196,9 +197,9 @@ class LoccoController extends Controller
         $car = Car::find($id);
         
         if(isset( $request['date'])) {
-            $date = $request['date'];
+            $request_date = $request['date'];
         } else {
-            $date = date('Y-m');
+            $request_date = date('Y-m');
         }
         
         $loccos = Locco::where('car_id', $id)->whereYear('date', '>=', date('Y')-1)->get();
@@ -214,15 +215,15 @@ class LoccoController extends Controller
 
         /* $loccos = Locco::where('car_id', $id)->whereYear('date', $year )->whereMonth('date',$month)->orderBy('date','ASC')->get(); */
 
-        $loccos = $loccos->filter(function ($locco, $key) use ($date, $id) {
-            return date('Y-m',strtotime( $locco->date)) == $date /* && $locco->car_id == $id */;
+        $loccos = $loccos->filter(function ($locco, $key) use ($request_date, $id) {
+            return date('Y-m',strtotime( $locco->date)) == $request_date /* && $locco->car_id == $id */;
         });
        
-        if( ! in_array($date, $dates)) {
-            array_unshift($dates, $date);
+        if( ! in_array($request_date, $dates)) {
+            array_unshift($dates, $request_date);
         }
       
-        return view('Centaur::loccos.show', ['loccos' => $loccos, 'car' =>  $car, 'dates' => $dates, 'permission_dep' => $permission_dep]);
+        return view('Centaur::loccos.show', ['loccos' => $loccos, 'car' =>  $car, 'dates' => $dates, 'permission_dep' => $permission_dep,'request_date' => $request_date]);
     }
 
     /**
@@ -293,7 +294,7 @@ class LoccoController extends Controller
             'employee_id'  	    => $request['employee_id'],
             'car_id'  		    => $request['car_id'],
             'destination'  	    => $request['destination'],
-            'description'  	    => $request['description'],
+            'description'  	    => $request['comment'],
             'days'  	        => $brojDana->d + 1,
             'start_date'  	    => $request['date'],
             'end_date'  	    => $request['end_date'],
@@ -363,5 +364,15 @@ class LoccoController extends Controller
         session()->flash('success',__('ctrl.data_delete'));
 		
         return redirect()->back();
+    }
+
+    public function exportLoccos(Request $request) 
+    {
+        $godina = date('Y',strtotime( $request['date']));
+        $mjesec = date('m',strtotime( $request['date']));
+
+        $cars = Car::orderBy('registration','ASC')->get();
+
+        return view('Centaur::loccos.loccos_all', ['cars' => $cars, 'month' => $request['date']]);
     }
 }

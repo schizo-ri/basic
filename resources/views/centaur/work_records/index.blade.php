@@ -37,7 +37,7 @@
 				@endforeach
 			</select>
 			<span class="export_file">
-				<a href="{{ action('WorkRecordController@exportWorkRecords', ['date' => $request_date]) }}" title="Export" ><i class="fas fa-file-download"></i>
+				<a href="{{ action('WorkRecordController@exportWorkRecords', ['date' => $request_date]) }}" title="Export" target="_blank" ><i class="fas fa-file-download"></i>
 				</a>
 			</span>
 		</div>

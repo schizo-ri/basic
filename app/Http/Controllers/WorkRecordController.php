@@ -212,7 +212,7 @@ class WorkRecordController extends Controller
             }
         }
         
-        if($request['entry'] == 'entry') { 
+        if(isset($request['entry']) && $request['entry'] == 'entry') { 
             if(isset($request['start'])) {
                 $start = $request['start'];
             } else {
@@ -230,7 +230,7 @@ class WorkRecordController extends Controller
 
             return "Prijavljeni ste za dan " . date('d.m.Y') . ' u ' . date('H:i');
 
-        } else if( $request['checkout'] == 'checkout' ) {
+        } else if( isset($request['checkout']) && $request['checkout'] == 'checkout' ) {
             if(isset($request['end'])) {
                 $end = $request['end'];
             } else {
@@ -251,7 +251,19 @@ class WorkRecordController extends Controller
               /*   session()->flash('error',  __('ctrl.data_error')); */
                 return  __('ctrl.data_error');
             }
+        } else {
+            $data = array(
+                'employee_id'  	=> $request['employee_id'],
+                'start'  		=> $request['start'],
+                'end'  		    => $request['end']
+            );
+            $workRecord = new WorkRecord();
+            $workRecord->saveWorkRecords($data);
+
+            session()->flash('success',  __('ctrl.data_save'));
+            return redirect()->back();	
         }
+
 	
         // return redirect()->back();	
     }
@@ -457,13 +469,26 @@ class WorkRecordController extends Controller
 
     public function exportWorkRecords(Request $request)
     {
+        $godina = date('Y',strtotime( $request['date']));
+        $mjesec = date('m',strtotime( $request['date']));
+
         ini_set('max_execution_time', 300);
         $employees = Employee::employees_lastNameASC();
-        
-        foreach ($employees as $employee ) {
-            $this->pdfWorkRecords($request['date'], $employee);
+        $holidaysThisYear = BasicAbsenceController::holidaysThisYear($godina);
+        $sum = array();
+        for($d=1; $d<=31; $d++){
+			$time=mktime(12, 0, 0, $mjesec, $d, $godina);  
+			if (date('m', $time)==$mjesec){   
+                    $list[]=date('Y-m-d', $time);
+                    $sum[date('Y-m-d', $time)] = 0;
+			}
         }
-
+        
+       /*  foreach ($employees as $employee ) {
+            $this->pdfWorkRecords($request['date'], $employee);
+        } */
+        return view('Centaur::work_records.workrecord_pdf', ['employees' => $employees, 'month' => $request['date'],'sum' => $sum, 'list' => $list, 'holidaysThisYear' => $holidaysThisYear]);
+    
         $message = "Evidencija je generirana za ". date('m-Y', strtotime($request['date'])) . ' mjesec';
         return $message;
     }
@@ -591,5 +616,102 @@ class WorkRecordController extends Controller
         $pdf->save($path.'Evidencija_' . date('Y-m',strtotime($date . '-1')) . '_' . $employee->last_name  . '_' . $employee->first_name.'.pdf'); 
         
         return true; 
+    }
+
+    public static function dataRecord($date, $employee)
+    {
+        $mjesec = date('m',strtotime( $date ));
+        $godina = date('Y',strtotime( $_GET['date']));
+        $prev_month = new DateTime($date);
+        $prev_month->modify('-1 month');
+        $month_before = date_format($prev_month,'m');
+        $year_before = date_format($prev_month,'Y');
+        $next_month = new DateTime($date);
+        $next_month->modify('+1 month');
+        $month_after = date_format($next_month,'m');
+        $year_after = date_format($next_month,'Y');
+         
+        $work_records = WorkRecord::where('employee_id', $employee->id)->whereMonth('start', $mjesec )->whereYear('start', $godina )->get();
+
+        foreach($work_records as $record){
+            $time1 = date_create($record->start);
+            $time2 = date_create($record->end);
+            $interval = date_diff($time1,$time2);
+            
+            $record->interval = date('H:i',strtotime( $interval->h .':'.$interval->i));
+        }
+        // zahtjevi za izostanak
+        $absences = Absence::where('employee_id', $employee->id)->whereMonth('start_date', $mjesec )->whereYear('start_date', $godina )->where('approve',1)->get();
+        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_before )->whereYear('start_date', $year_before )->where('approve',1)->get());
+        $absences = $absences->merge(Absence::where('employee_id', $employee->id)->whereMonth('start_date', $month_after )->whereYear('start_date', $year_after )->where('approve',1)->get());
+     
+        $holidays = BasicAbsenceController::holidays();
+       
+        
+        foreach ($absences as $absence) {
+            $absence->days = array();
+            $absence->mark = $absence->absence['mark'];
+            $begin = new DateTime($absence['start_date']);
+            $end = new DateTime($absence['end_date']);
+            $end->setTime(0,0,1);
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
+            $i = 0;
+            foreach ($period as $dan) {
+                if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
+                    $absence->days += [$i => date_format($dan,'Y-m-d')];
+                    $i++;
+                }
+            }
+        }
+
+        $travelOrders = TravelOrder::where('employee_id', $employee->id)->whereMonth('start_date', $mjesec )->whereYear('start_date', $godina )->get();
+        $travelOrders = $travelOrders->merge(TravelOrder::where('employee_id', $employee->id)->whereMonth('end_date', $mjesec )->whereYear('end_date', $godina )->get());
+
+        foreach ($travelOrders as $travel) {
+            $travel->travelDays = array();
+           
+            $begin = new DateTime($travel['start_date']);
+            $end = new DateTime($travel['end_date']);
+            $interval = DateInterval::createFromDateString('1 day');
+            $period = new DatePeriod($begin, $interval, $end);
+
+            $i = 0;
+            foreach ($period as $dan) {
+                if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
+                    $travel->travelDays += [$i => date_format($dan,'Y-m-d')];
+                    $i++;
+                }
+            }
+        }
+
+        $loccos = Locco::where('employee_id', $employee->id)->whereMonth('date', $mjesec )->whereYear('date', $godina )->get();
+        
+        foreach($loccos as $locco){
+            $time1 = date_create($locco->date);
+            if( $locco->end_date ) {
+                $time2 = date_create($locco->end_date);
+                $interval = date_diff($time1,$time2);
+                $locco->interval = date('H:i',strtotime( $interval->h .':'.$interval->i));
+            } else {
+                $locco->interval = null;
+            }
+        }
+      
+        $empl = Sentinel::getUser()->employee;
+        $permission_dep = array();
+        if($empl) {
+            $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
+        }
+        
+        $data = [
+            'work_records'  =>  $work_records,
+            'travelOrders'  =>  $travelOrders,
+            'loccos'        =>  $loccos,
+            'permission_dep'  =>  $permission_dep,
+            'absences'      =>  $absences,
+        ];
+       
+        return $data; 
     }
 }

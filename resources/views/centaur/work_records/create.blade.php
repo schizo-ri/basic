@@ -23,8 +23,6 @@
 			<input name="end" id="end" class="form-control" type="datetime-local" value="{!!  old('end') ? old('end') : '' !!}" >
 			{!! ($errors->has('end') ? $errors->first('end', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-		
-
 		{{ csrf_field() }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">
 	</form>

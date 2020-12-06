@@ -57,8 +57,9 @@ class CheckIn extends Command
                         
                     $workRecord = new WorkRecord();
                     $workRecord->saveWorkRecords($data);
+                    Log::info($workRecord);
                 }
-                Log::info($workRecord);
+              
             }
         }
        

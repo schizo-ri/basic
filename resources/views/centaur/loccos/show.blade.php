@@ -1,6 +1,6 @@
 @extends('Centaur::admin')
 
-@section('title', __('basic.loccos') . ' ' . (isset($loccos) && $loccos->first() ? $loccos->first()->car->manufacturer . ' ' . $loccos->first()->car->model . ' ' . $loccos->first()->car->registration : '') . ', ' . date('m-Y',strtotime($dates[0])))
+@section('title', __('basic.loccos') . ' ' . (isset($loccos) && count($loccos)>0 ? $loccos->first()->car->manufacturer . ' ' . $loccos->first()->car->model . ' ' . $loccos->first()->car->registration : '') . ', ' . date('m-Y',strtotime($dates[0])))
 
 @section('content')
 	<header class="page-header">
@@ -20,6 +20,10 @@
 					<option value="{{ $date }}">{{ $date }}</option>
 				@endforeach
 			</select>
+			<span class="export_file">
+				<a href="{{ action('LoccoController@exportLoccos', ['date' => $request_date]) }}" title="Export" target="_blank" ><i class="fas fa-file-download"></i>
+				</a>
+			</span>
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

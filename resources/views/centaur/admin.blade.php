@@ -56,6 +56,7 @@
             $check = DashboardController::evidention_check();
             $countComment_all = PostController::countComment_all();
             $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+           
         ?>
         <section >
             <header class="header_nav">

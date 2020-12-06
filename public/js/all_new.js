@@ -2257,14 +2257,16 @@ $(function() { // filter knowledge base
                 $('body').prepend('<div id="loader"></div>');
             },
 			success: function( response ) {
-				$( '#admin_page >main' ).load(location.href + '?date='+date + ' #admin_page >main .table-responsive',function(){
+				$( '.admin_main >section' ).load(location.href + '?date='+date + ' .admin_main >section #admin_page',function(){
 					$('#loader').remove();
+					$('.filter_loccos').find('option[value="'+date+'"]').attr('selected',true);
 					var title = $(document).prop('title'); 
 					title = title.substring(0, title.indexOf(','));
 					console.log(title);
 					title += ', ' +date;
 
 					$(document).prop('title', title);  
+					$.getScript('/../js/filter_dropdown.js');
 					$.getScript('/../restfulizer.js');
 					$.getScript('/../js/datatables.js');
 					$('.show_button').on('click',function () {
@@ -5262,7 +5264,6 @@ $('.form_edit_user .btn-back').on('click',function(){
         $('.mark2').css('background','#1594F0');
     }
 }); */
-console.log('work_record');
 if( $('.work_record_header').length > 0) {
     
     $( ".td_izostanak:contains('GO')" ).each(function( index ) {
@@ -5271,7 +5272,7 @@ if( $('.work_record_header').length > 0) {
     $( ".td_izostanak:contains('BOL')" ).each(function( index ) {
         $( this ).addClass('abs_BOL');
     });
-    $('.export_file>a').on('click',function(e){
+   /*  $('.export_file>a').on('click',function(e){
         e.preventDefault();
         console.log('export_file');
 
@@ -5284,7 +5285,7 @@ if( $('.work_record_header').length > 0) {
                 $('body').prepend('<div id="loader"></div>');
             },
             success: function( response ) {
-                $( 'tbody' ).load( location.href + ' tbody>tr', function() {
+                $( 'body' ).load( location.href , function() {
                     $('#loader').remove();
                     alert(response);
                 });
@@ -5293,6 +5294,6 @@ if( $('.work_record_header').length > 0) {
                 console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError);                            
             }
         });
-    });
+    }); */
 }
 

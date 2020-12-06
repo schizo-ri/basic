@@ -3088,43 +3088,23 @@ main.index_main>section.section_evidention {
 .export_loccos {
     font-family: 'Montserrat';
     font-size: 12px;
-    padding: 10px;
+    padding: 20px;
 }
-.export_loccos .table  {
+.export_loccos table  {
     width: 100%;
     border: 1px solid #ccc;
     border-spacing: initial;
 }
-
-.export_loccos .table-responsive .table .thead .th, .export_loccos .table-responsive .table .tbody .td, .export_loccos .table-responsive .table .tfoot .td  {
+.export_loccos .table-responsive .table thead th, .export_loccos .table-responsive .table tbody td, .export_loccos .table-responsive .table tfoot td  {
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     padding: 5px;
-    float: left;
 }
-.export_loccos .table-responsive .table .thead .th {
-    font-size: 0.75rem;
-    text-align: center;
-    font-weight: 700;
-}
-.export_loccos .table-responsive .table .tbody .td {
-    font-size: 10px;
-}
-.export_loccos .table-responsive {
-   /*  overflow: hidden; */
-   padding:0;
-
-}
-.export_loccos .tr {
-    width: 100%;
-    display: flex;
-    overflow: hidden;
-}
-.export_loccos .table-responsive .table .tfoot .td {
+.export_loccos .table-responsive .table tfoot td {
     background-color: #ddd;
     font-weight: 700;
 }
-.export_loccos .table-responsive .table .tfoot .td  {
+.export_loccos .table-responsive .table tfoot td  {
     text-align: right;
     border-top: 1px solid #ccc;
 }
@@ -3134,32 +3114,32 @@ main.index_main>section.section_evidention {
     overflow: hidden;
 }
 
-.export_loccos .table .th:first-child, .export_loccos .table .td:first-child,
-.export_loccos .table .th:nth-child(2), .export_loccos .table .td:nth-child(2), 
-.export_loccos .table .th:nth-child(3), .export_loccos .table .td:nth-child(3)
+.export_loccos table th:first-child, .export_loccos table td:first-child,
+.export_loccos table th:nth-child(2), .export_loccos table td:nth-child(2), 
+.export_loccos table th:nth-child(3), .export_loccos table td:nth-child(3)
 {
     width: 10%;
     min-width: 10%;
 }
-.export_loccos .table .th:nth-child(4):not('.fuel_th'), .export_loccos .table .td:nth-child(4):not('.fuel_td') {
+.export_loccos table th:nth-child(4), .export_loccos table td:nth-child(4) {
     width: 15%;
     min-width: 15%;
 }
 
-.export_loccos .table .th:nth-child(5), .export_loccos .table .td:nth-child(5),
-.export_loccos .table .th:nth-child(6), .export_loccos .table .td:nth-child(6),
-.export_loccos .table .th:nth-child(7), .export_loccos .table .td:nth-child(7)
+.export_loccos table th:nth-child(5), .export_loccos table td:nth-child(5),
+.export_loccos table th:nth-child(6), .export_loccos table td:nth-child(6),
+.export_loccos table th:nth-child(7), .export_loccos table td:nth-child(7)
 {
     width: 5%;
     min-width: 5%;
     text-align: right;
 }
-.export_loccos .table .th:nth-child(8), .export_loccos .table .td:nth-child(8) 
+.export_loccos table th:nth-child(8), .export_loccos table td:nth-child(8) 
 {
     min-width: 30%;
     width: 30%;
 }
-.export_loccos .table .tbody .tr>.td:last-child, .table thead .tr>.th:last-child {
+.export_loccos .table tbody tr>td:last-child, .table thead tr>th:last-child {
     min-width: auto;
 }
 .index_table_filter >label, #index_table_filter >label {

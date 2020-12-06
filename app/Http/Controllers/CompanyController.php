@@ -261,9 +261,10 @@ class CompanyController extends Controller
 	{
 		$moduli_company = array(); 
 		$company = Company::first();
+		
 		if ($company) {
 			$company_oib = $company->oib;
-		
+			
 			if($company_oib) {
 				//konektiranje na superadmin bazu
 				$db_ext = DB::connection('mysql_external'); 
@@ -271,9 +272,9 @@ class CompanyController extends Controller
 				try {
 					/* $client_request = $db_ext->table('clients')->join('client_requests','clients.id','client_requests.client_id')->where('clients.oib', $company_oib)->select('clients.*','client_requests.modules')->orderBy('clients.updated_at','DESC')->first(); */
 					$client = $db_ext->table('clients')->where('clients.oib', $company_oib)->first();
-				
-					$client_request = $db_ext->table('client_requests')->where('client_id', $client->id)->first();
 					
+					$client_request = $db_ext->table('client_requests')->where('client_id', $client->id)->first();
+				
 					/* 	$client_request = $db_ext->table('client_requests')->join('clients','client_requests.client_id','clients.id')->select('client_requests.modules','clients.*')->where('clients.oib',$company_oib)->orderBy('client_requests.updated_at','DESC')->first(); */
 					if($client_request) { 
 						$modules = explode(',', $client_request->modules);

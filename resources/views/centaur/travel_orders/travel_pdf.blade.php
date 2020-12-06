@@ -5,7 +5,6 @@
 		<title>Putni nalog</title>
 		<style>@page { margin:20px; }</style>
 	</head>
-	
 	<body style="font-family: DejaVu Sans;">
 		<form accept-charset="UTF-8" role="form" method="post" action="{{ route('travel_orders.update', $travel->id) }}">
 			<table id="index_table" class="display table table-hover sort_1_desc">
@@ -31,6 +30,9 @@
 							<h4 style="text-transform: uppercase;">Obračun</h4>
 							<p>Za izvršeno službeno putovanje u <span class="destination">{{ $travel->destination }}</span> </p> 
 							<section class="table" >
+								@php
+									$total_sum = 0.00;
+								@endphp
 								<h5 style="text-transform: uppercase;margin:0">dnevnice</h5>
 								<table class="table" style="border:1px solid #000000;width:100%;max-width:100%;">
 									<thead class="thead" style="width:100%;max-width:100%;">
@@ -65,14 +67,12 @@
 															$dnevnice += 1; 
 														}
 													}
-													
 												}
-												$total_sum = 0.00;
+												
 												$start = date('d.m.Y H:i', strtotime($travel->start_date ));
 												$end = date('d.m.Y H:i', strtotime($travel->end_date ));
 
 												$total_sum += $dnevnice * $travel->daily_wage;
-												
 											@endphp
 											<td class="td col-2 align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $start }}</td>
 											<td class="td col-2 align_c" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $end }}</td>
@@ -96,6 +96,11 @@
 									</thead>
 									<tbody class="tbody" style="width:100%;max-width:100%;">
 										@if ( $locco )
+											@php
+												if( $travel->car['private_car'] == 1 ) {
+													$total_sum += $locco->distance * 2;
+												}
+											@endphp
 											<tr class="tr" style="width:100%;max-width:100%;">
 												<td class="td col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $locco->starting_point }}</td>
 												<td class="td col-3" style="width: 25%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $locco->destination }}</td>
@@ -103,12 +108,11 @@
 												<td class="td col-2 km_price align_r" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">{!! $travel->car['private_car'] == 1 ? 2.00 : '' !!}</td>
 												<td class="td col-2 summary align_r total_sum" style="width: 16.66666667%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{!! $travel->car['private_car'] == 1 ? number_format($locco->distance * 2, 2, '.', '') : '' !!}</td>
 											</tr>
-											
 										@endif
 										@if (count($loccos) > 0)
 											@foreach ($loccos as $locco1)
 												@php
-													if ($travel->car['private_car'] == 1) {
+													if ( $travel->car['private_car'] == 1 ) {
 														$total_sum += $locco1->distance * 2;
 													}
 												@endphp
@@ -149,9 +153,9 @@
 											$j = 0;
 										@endphp
 										@foreach ($travel->expenses as $expense)
-										@php
-											$total_sum += $expense->total_amount;
-										@endphp
+											@php
+												$total_sum += $expense->total_amount;
+											@endphp
 											<tr class="tr expences" style="width:100%;max-width:100%;">
 												<td class="td col-2" style="width: 15%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $expense->bill }}</td>
 												<td class="td col-5" style="width:45%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $expense->cost_description }}</td>

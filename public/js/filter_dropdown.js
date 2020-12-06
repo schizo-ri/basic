@@ -284,14 +284,16 @@ $(function() { // filter knowledge base
                 $('body').prepend('<div id="loader"></div>');
             },
 			success: function( response ) {
-				$( '#admin_page >main' ).load(location.href + '?date='+date + ' #admin_page >main .table-responsive',function(){
+				$( '.admin_main >section' ).load(location.href + '?date='+date + ' .admin_main >section #admin_page',function(){
 					$('#loader').remove();
+					$('.filter_loccos').find('option[value="'+date+'"]').attr('selected',true);
 					var title = $(document).prop('title'); 
 					title = title.substring(0, title.indexOf(','));
 					console.log(title);
 					title += ', ' +date;
 
 					$(document).prop('title', title);  
+					$.getScript('/../js/filter_dropdown.js');
 					$.getScript('/../restfulizer.js');
 					$.getScript('/../js/datatables.js');
 					$('.show_button').on('click',function () {

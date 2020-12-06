@@ -164,6 +164,7 @@ Route::resource('fuels', 'FuelController');
 
 // Locco
 Route::resource('loccos', 'LoccoController');
+Route::get('export_all_loccos', ['as' => 'export_all_loccos', 'uses' => 'LoccoController@exportLoccos']);
 
 // Task
 Route::resource('tasks', 'TaskController');

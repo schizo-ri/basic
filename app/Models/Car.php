@@ -22,7 +22,13 @@ class Car extends Model
 	*/
 	protected static $departmentsModel = 'App\Models\Department'; 
 	
-	
+	/*
+	* The Eloquent locco model name
+	* 
+	* @var string
+	*/
+	protected static $fuelModel = 'App\Models\Fuel'; 
+
 	/*
 	* The Eloquent locco model name
 	* 
@@ -38,9 +44,20 @@ class Car extends Model
 	
 	public function locco()
 	{
-		return $this->hasMany(static::$loccoModel,'car_id')->orderBy('created_at','DESC')->paginate(10);
-    }	
-    
+		return $this->hasMany(static::$loccoModel,'car_id')->orderBy('created_at','DESC');
+	}	
+	
+    /*
+	* Returns the locco relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function fuel ()
+	{
+		return $this->hasMany(static::$fuelModel,'car_id')->orderBy('created_at','DESC');
+	}	
+	
 	/*
 	* Returns the Users relationship
 	* 
