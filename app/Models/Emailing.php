@@ -83,6 +83,5 @@ class Emailing extends Model
 	public function updateEmailing($emailing=array())
 	{
 		return $this->update($emailing);
-	}	
-	
+	}
 }

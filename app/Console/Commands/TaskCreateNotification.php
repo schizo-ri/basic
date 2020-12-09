@@ -129,7 +129,7 @@ class TaskCreateNotification extends Command
                         'task_id'  	    => $task->id,
                         'employee_id'  	=>  $empl_id  
                     );                
-            
+                    
                     $employeeTask = new EmployeeTask();
                     $employeeTask->saveEmployeeTask($data);                     
 

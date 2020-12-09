@@ -57,13 +57,7 @@
                     <a href="{{ route('temporary_employee_requests.index') }}" class="line_height_45 admin_link {{ Request::is('temporary_employee_requests*') ? 'active_admin' : '' }}" id="temporary_employee_requests">@lang('basic.temporary_employee_requests')</a>
                 </li>
             @endif
-        <li class="first_group">
-            <span class="space" ></span> 
-            <a href="" class="line_height_45 admin_link open_menu" id="tasks_links" >@lang('basic.tasks') <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
-        </li>
-            <li class="first_group tasks_links"><span class="space" ></span> 
-                <a href="{{ route('tasks.index') }}" class="line_height_45 admin_link {{ Request::is('tasks*') ? 'active_admin' : '' }}" id="tasks">@lang('basic.tasks')</a>
-            </li>
+       
         <li class="first_group">
             <span class="space" ></span> 
             <a href="" class="line_height_45 admin_link open_menu" id="project_links" >@lang('basic.projects') <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>

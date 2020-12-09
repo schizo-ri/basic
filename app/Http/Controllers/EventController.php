@@ -499,7 +499,7 @@ class EventController extends Controller
                 $god_select = $select_day[0]; */
         
                 if (count($absences)>0) {
-                    foreach($absences as $absence) {
+                    foreach($absences->where('approve',1) as $absence) {
                         $begin = new DateTime($absence->start_date);
                         $end = new DateTime($absence->end_date);
                         $end->setTime(0,0,1);

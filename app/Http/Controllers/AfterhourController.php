@@ -101,7 +101,7 @@ class AfterhourController extends Controller
         $employees = Employee::employees_firstNameASC();
      
         $employee = Sentinel::getUser()->employee;
-        if( $employee ) {
+     /*    if( $employee ) {
             $erp_id = $employee->erp_id;
             $api = new ApiController();
             
@@ -110,8 +110,9 @@ class AfterhourController extends Controller
         } else {
             $tasks = null;
             $projects = Project::where('active',1)->get();
-        }
-       
+        } */
+        $tasks = null;
+        $projects = Project::where('active',1)->get();
         return view('Centaur::afterhours.create',['employees' => $employees,'projects' => $projects,'tasks' => $tasks]);
     }
 
@@ -158,7 +159,7 @@ class AfterhourController extends Controller
             
             if( $request_exist == 0  ) {
                 $data = array(
-                    'employee_id'  	=> $employee_id,
+                    'employee_id'  	=> $request['employee_id'],
                     'date'    		=> $request['date'],
                     'start_time'  	=> $request['start_time'],
                     'end_time'  	=> $request['end_time'],
@@ -229,7 +230,7 @@ class AfterhourController extends Controller
         $employees = Employee::employees_firstNameASC();
 
         $employee = Sentinel::getUser()->employee;
-        if( $employee ) {
+     /*    if( $employee ) {
             $erp_id = $employee->erp_id;
             $api = new ApiController();
             
@@ -238,7 +239,10 @@ class AfterhourController extends Controller
         } else {
             $tasks = null;
             $projects = Project::where('active',1)->get();
-        }
+        } */
+
+        $tasks = null;
+        $projects = Project::where('active',1)->get();
 
         return view('Centaur::afterhours.edit',['afterhour' => $afterhour,'employees' => $employees,'projects' => $projects,'tasks' => $tasks]);
     }
@@ -310,7 +314,8 @@ class AfterhourController extends Controller
             $afterHour->updateAfterhour($data);
 
             Mail::to($mail)->send(new AfterHourApproveMail($afterHour));  
-                
+            Log::info("AfterHourApproveMail:");
+            Log::info($send_to);
             foreach(array_unique($send_to) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     Mail::to($send_to_mail)->send(new AfterHourApproveMail($afterHour));     
@@ -357,7 +362,8 @@ class AfterhourController extends Controller
                         if( $mail) {
                             Mail::to( $mail )->send(new AfterHourApproveMail($afterHour)); 
                         }
-                     
+                        Log::info("AfterHourApproveMail multi:");
+		                Log::info($send_to);
                         foreach(array_unique($send_to) as $send_to_mail) {
                             if( $send_to_mail != null & $send_to_mail != '' ) {
                                 Mail::to($send_to_mail)->send(new AfterHourApproveMail($afterHour)); 
@@ -392,7 +398,8 @@ class AfterhourController extends Controller
                         }
 
                         $send_to_abs = array_diff( $send_to_abs, array(	$approve_employee )); // bez djelatnika koji odobrava
-
+                        Log::info("AbsenceConfirmMail multi:");
+		                Log::info($send_to_abs);
                       //   try { 
                             foreach(array_unique( $send_to_abs ) as $send_to_mail) {
                                 if( $send_to_mail != null & $send_to_mail != '' ) {

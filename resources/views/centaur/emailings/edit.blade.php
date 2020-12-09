@@ -1,5 +1,5 @@
 <div class="modal-header">
-	<h3 class="panel-title">@lang('basic.edit_emailings')</h3>
+	<h3 class="panel-title">@lang('basic.edit_emailing')</h3>
 </div>
 <div class="modal-body">
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('emailings.update', $emailing->id) }}" >
@@ -40,7 +40,7 @@
 			<select class="form-control" name="sent_to_empl[]" multiple >
 				<option value=""  {!! !$emailing->sent_to_empl ? 'selected' : '' !!}  ></option>
 				@foreach($employees as $employee)
-					<option name="sent_to_empl" value="{{ $employee->id}}"  {!! in_array($employee->id, explode(',',$emailing->sent_to_empl )) ? 'selected' : '' !!} >{{ $employee->user['first_name'] . ' ' . $employee->user['last_name']}}</option>
+					<option name="sent_to_empl" value="{{ $employee->id}}"  {!! in_array($employee->id, explode(',',$emailing->sent_to_empl )) ? 'selected' : '' !!} >{{ $employee->user['last_name'] . ' ' . $employee->user['first_name']}}</option>
 				@endforeach
 			</select>
 			{!! ($errors->has('sent_to_empl') ? $errors->first('sent_to_empl', '<p class="text-danger">:message</p>') : '') !!}

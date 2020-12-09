@@ -181,6 +181,7 @@ Route::get('task_list', ['as' => 'task_list', 'uses' => 'TaskController@openTask
 
 // EmployeeTask
 Route::resource('employee_tasks', 'EmployeeTaskController');
+Route::get('tasks_confirm', ['as' => 'tasks_confirm', 'uses' => 'EmployeeTaskController@tasks_confirm']); // Send absence confirmation mail
 
 // Setting
 Route::resource('settings', 'SettingController');
@@ -229,6 +230,18 @@ Route::resource('projects', 'ProjectController');
 
 // Customer
 Route::resource('customers', 'CustomerController');
+
+
+// EnergyLocation
+Route::resource('energy_locations', 'EnergyLocationController');
+
+// EnergySource
+Route::resource('energy_sources', 'EnergySourceController');
+
+// EnergyConsumption
+Route::resource('energy_consumptions', 'EnergyConsumptionController');
+Route::get('lastCounter/{id1}/{id2}', ['as' => 'lastCounter', 'uses' => 'EnergyConsumptionController@lastCounter']);
+Route::get('lastCounter_Skip/{id1}/{id2}', ['as' => 'lastCounter_Skip', 'uses' => 'EnergyConsumptionController@lastCounter_Skip']);
 
 // Afterhour
 Route::resource('afterhours', 'AfterhourController');

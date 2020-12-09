@@ -1590,7 +1590,7 @@ div#calendar ul li.active_date {
     margin-bottom: 15px;
 }
 
-.container h2> a.view_all, .main_absence a.view_all {
+.container h2> a.view_all, .main_absence a.view_all, .header_document a.view_all{
     font-weight: 600;
     font-size: 0.8125rem;
     text-align: right;
@@ -1604,7 +1604,7 @@ div#calendar ul li.active_date {
 .container h2> a.view_all:hover, .main_absence a.view_all:hover {
     color: #999999;
 }
-.main_absence a.view_all {
+.main_absence a.view_all, .header_document a.view_all {
     color: white;
 }
 .container .cal_days p.date {
@@ -8676,6 +8676,7 @@ span.img-error {
 	height: 70px;
 	line-height: 70px;
 	opacity: 0.6;
+	background-size: auto 32px;
 }
 .button_nav span.button_nav_img>svg {
 	color: #a9acb0;
@@ -8810,7 +8811,7 @@ span.button_nav_img.campaign {
 	background-position: center;
 }
 
-.benefits_button:hover span.button_nav_img.benefits{
+.benefits_button:hover span.button_nav_img.benefits, .suitabilities_button:hover span.button_nav_img.benefits{
 	background: url('../icons/benefits_blue.png') no-repeat;
 	background-size: 28px;
 	background-position: center;

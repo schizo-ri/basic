@@ -220,21 +220,24 @@ class AbsenceController extends BasicAbsenceController
 		if($request['type']) {
 			$type = $request['type'];
 		}
-		$api = new ApiController();
+		
 		$employees = Employee::employees_lastNameASC();
 		$absenceTypes = AbsenceType::get();
 	
 		$user = Sentinel::getUser();
+	
 		$employee = $user->employee;
-        if( $employee ) {
+		/* $api = new ApiController(); */
+    /*     if( $employee ) {
             $erp_id = $employee->erp_id;
            
             $tasks = $api->get_employee_project_tasks( $erp_id );
         } else {
             $tasks = null;
-		}
-		$leave_types = $api->get_available_leave_types();
-		
+		} */
+		$tasks = null;
+	/* 	$leave_types = $api->get_available_leave_types(); */
+	$leave_types = null;
 		return view('Centaur::absences.create', ['employees' => $employees, 'type' => $type, 'absenceTypes' => $absenceTypes, 'user' => $user,'tasks' => $tasks, 'leave_types' => $leave_types, 'preostali_dani' => $preostali_dani ]);
     }
 
@@ -284,7 +287,7 @@ class AbsenceController extends BasicAbsenceController
 		} else {
 				$decree = 0;
 		}
-		if($request['employee_id'] == 'svi') {
+		if($request['employee_id'] == 'all' || $request['employee_id'] == 'svi') {
 			$employees = Employee::employees_firstNameASC();
 			foreach($employees as $employee ) {
 				$data = array(
@@ -341,7 +344,7 @@ class AbsenceController extends BasicAbsenceController
 						$absence->saveAbsence($data);
 		
 						if($request['email'] == 'DA' ) {
-						/* 	$send_to = EmailingController::sendTo('absences','create');
+							$send_to = EmailingController::sendTo('absences','create');
 						
 							// mail voditelja - prvog nadređenog
 							$voditelj_mail = $absence->employee->work->firstSuperior ? $absence->employee->work->firstSuperior->email : null;
@@ -355,10 +358,9 @@ class AbsenceController extends BasicAbsenceController
 							// ako je odluka uprave mail djelatnika
 							if(isset($request['decree']) && $request['decree'] == 1 ) {
 								array_push($send_to, $absence->employee->email );
-							}  */
+							} 
 						/* 	try { */
 							Log::info("AbsenceMail");
-							$send_to = array('jelena.juras@duplico.hr');
 							Log::info(array_unique($send_to));
 								foreach(array_unique($send_to) as $send_to_mail) {
 									if( $send_to_mail != null & $send_to_mail != '' ) {
@@ -427,7 +429,7 @@ class AbsenceController extends BasicAbsenceController
 					Log::info(array_unique($send_to));
 						foreach(array_unique($send_to) as $send_to_mail) {
 							if( $send_to_mail != null & $send_to_mail != '' ) {
-							//	Mail::to($send_to_mail)->send(new AbsenceMail($absence));  
+								Mail::to($send_to_mail)->send(new AbsenceMail($absence));  
 							}
 						} 
 				/* 	} catch (\Throwable $th) {
@@ -499,15 +501,17 @@ class AbsenceController extends BasicAbsenceController
 		
 		$user = Sentinel::getUser();
 		$employee = $user->employee;
-		$api = new ApiController();
+		/* $api = new ApiController();
         if( $employee ) {
             $erp_id = $employee->erp_id;
            
             $tasks = $api->get_employee_project_tasks( $erp_id );
         } else {
             $tasks = null;
-		}
-		$leave_types = $api->get_available_leave_types();
+		} */
+		$tasks = null;
+		$leave_types = null;
+	/* 	$leave_types = $api->get_available_leave_types(); */
 		return view('Centaur::absences.edit', ['absence' => $absence,'employees' => $employees, 'absenceTypes' => $absenceTypes, 'user' => $user, 'tasks' => $tasks, 'leave_types' => $leave_types]);
 		
     }
@@ -590,7 +594,7 @@ class AbsenceController extends BasicAbsenceController
 			try {
 				foreach(array_unique($send_to) as $send_to_mail) {
 					if( $send_to_mail != null & $send_to_mail != '' ) {
-					//	Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
+						Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
 					}
 				}
 			} catch (\Throwable $th) {
@@ -639,8 +643,8 @@ class AbsenceController extends BasicAbsenceController
 				
 		$absence->updateAbsence($data);
 
-		$api = new ApiController();
-		$leave_types = $api->send_leave_request($absence);
+	/* 	$api = new ApiController();
+		$leave_types = $api->send_leave_request($absence); */
 
 		/* mail obavijest o novoj poruci */
 		$send_to = EmailingController::sendTo('absences','confirm');
@@ -656,13 +660,15 @@ class AbsenceController extends BasicAbsenceController
 			$mail_manager = $manager->email;
 			array_push($send_to, $mail_manager);
 		}
-
+		
 		$send_to = array_diff( $send_to, array(	$odobrio_user )); // bez djelatnika koji odobrava
-
+		Log::info("AbsenceConfirmMail:");
+		Log::info($send_to);
+	
 		try {
 			foreach(array_unique($send_to) as $send_to_mail) {
 				if( $send_to_mail != null & $send_to_mail != '' ) {
-				//	Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
+					Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
 				}
 			}
 		} catch (\Throwable $th) {
@@ -695,10 +701,12 @@ class AbsenceController extends BasicAbsenceController
 		if($request['email'] == 1 ){ 
 			$send_to = EmailingController::sendTo('absences','confirm');
 			array_push($send_to, $absence->employee->email );
+			Log::info("AbsenceConfirmMail");
+			Log::info($send_to);
 			try {
 				foreach(array_unique($send_to) as $send_to_mail) {
 					if( $send_to_mail != null & $send_to_mail != '' ) {
-					//	Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
+						Mail::to($send_to_mail)->send(new AbsenceConfirmMail($absence)); // mailovi upisani u mailing 
 					}
 				}
 			} catch (\Throwable $th) {
@@ -707,7 +715,7 @@ class AbsenceController extends BasicAbsenceController
 			}
 		}
 		
-	/* 	$message = session()->flash('success',  $absence->approve == 1 ? __('absence.approved') :  __('absence.refused') ); */
+		/* $message = session()->flash('success',  $absence->approve == 1 ? __('absence.approved') :  __('absence.refused') ); */
 		/* return redirect()->route('dashboard')->withFlashMessage($message); */
 		/* return redirect()->back()->withFlashMessage($message); */
 

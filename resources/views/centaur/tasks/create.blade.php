@@ -8,6 +8,9 @@
 			<input name="task" type="text" class="form-control" value="{{ old('task') }}" maxlength="191" required >
 			{!! ($errors->has('task') ? $errors->first('task', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
+		<div class="form-group">
+			<input type="checkbox" name="energy_consumptions" id="energy" value="1" ><label for="energy">Potrošnja energenata</label>
+		</div>
 		<div class="form-group clear_l {{ ($errors->has('description')) ? 'has-error' : '' }}">
 			<label>@lang('basic.description')</label>
 			<textarea name="description" class="form-control" type="text" maxlength="65535" >{{ old('description') }}</textarea>
@@ -41,7 +44,7 @@
 				<option value="once_week">Tjedno</option>
 				<option value="once_month">Mjesečno</option>
 				<option value="once_year">Godišnje</option>
-			{{-- 	<option value="customized">Prilagođeno</option> --}}
+				{{-- <option value="customized">Prilagođeno</option> --}}
 			</select>
 		</div>
 		<div class="form-group {{ ($errors->has('car_id')) ? 'has-error' : '' }}">

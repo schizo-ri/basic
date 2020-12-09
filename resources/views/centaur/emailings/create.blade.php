@@ -41,7 +41,7 @@
 				<select class="form-control" name="sent_to_empl[]" multiple >
 					<option value="" disabled selected ></option>
 					@foreach($employees as $employee)
-						<option name="sent_to_empl" value="{{ $employee->id }}" >{{ $employee->user['first_name'] . ' ' . $employee->user['last_name']}}</option>
+						<option name="sent_to_empl" value="{{ $employee->id }}" >{{ $employee->user['last_name'] . ' ' . $employee->user['first_name']}}</option>
 					@endforeach
 				</select>
 				{!! ($errors->has('sent_to_empl') ? $errors->first('sent_to_empl', '<p class="text-danger">:message</p>') : '') !!}

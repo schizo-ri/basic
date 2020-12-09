@@ -16,9 +16,9 @@ class TaskCreateMail extends Mailable
     use Queueable, SerializesModels;
     
     /**
-     * The emplyee instance.
+     * The employeeTask instance.
      *
-     * @var employee;
+     * @var employeeTask;
 
     */
     public $employeeTask;

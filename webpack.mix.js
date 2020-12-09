@@ -48,6 +48,7 @@ mix.scripts([
     'public/js/department.js',
     'public/js/documents.js',
     'public/js/efc_toggle.js',
+    'public/js/energy.js',
     'public/js/event.js',
     'public/js/event_click.js',
     'public/js/event_create_show.js',

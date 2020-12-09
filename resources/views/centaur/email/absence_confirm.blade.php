@@ -57,10 +57,10 @@
 	<body>
         <div style="width: 500px;max-width:100%;margin:auto;" id="mail_template">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="header" style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_header : '' !!}">
-               <p> Odobrenje Zahtjeva za izostanak</p>
+               <p>Status zahtjeva za izostanak</p>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="body" style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_body : '' !!}">
-                <h4>@lang('absence.request') {{ $absence->absence['name'] }}  @lang('basic.for')
+                <h4>@lang('absence.request') {{ $absence->absence['name'] }} - {{ $absence->employee->user['first_name']   . '_' . $absence->employee->user['last_name'] }}  @lang('basic.for') 
                 @if($absence->absence['mark'] != "IZL")
                     <p>{{ date("d.m.Y", strtotime($absence->start_date)) . ' do ' . date("d.m.Y", strtotime($absence->end_date)) }} </p>
                 @else

@@ -8,6 +8,9 @@
 			<input name="task" type="text" class="form-control" value="{{ $task->task }}" maxlength="191" required >
 			{!! ($errors->has('task') ? $errors->first('task', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
+		<div class="form-group">
+			<input type="checkbox" name="energy_consumptions" id="energy" value="1" {!! $task->energy_consumptions == 1 ? 'checked' : '' !!} ><label for="energy">Potrošnja energenata</label>
+		</div>
 		<div class="form-group clear_l {{ ($errors->has('description')) ? 'has-error' : '' }}">
 			<label>@lang('basic.description')</label>
 			<textarea name="description" class="form-control" type="text" maxlength="65535" >{{ $task->description }}</textarea>

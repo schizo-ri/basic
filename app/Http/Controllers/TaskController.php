@@ -11,6 +11,7 @@ use App\Models\Task;
 use App\Models\EmployeeTask;
 use Sentinel;
 use App\Mail\TaskCreateMail;
+use App\Mail\TaskInfoMail;
 use Illuminate\Support\Facades\Mail;
 use Log;
 
@@ -26,7 +27,8 @@ class TaskController extends Controller
         $employee = Sentinel::getUser()->employee;
         $employees = Employee::employees_lastNameASC();
         $date = date('Y-m-d');
-        $tasks = Task::whereDate('start_date', '>=', $date)->orderBy('start_date','ASC')->get();
+        $tasks = Task::orderBy('start_date','ASC')->get();
+    
         if(! Sentinel::inRole('administrator')) {
             $tasks = $tasks->where('to_employee_id',$employee->id );
         }
@@ -84,7 +86,8 @@ class TaskController extends Controller
             'description'       => $request['description'],
 			'start_date'  	    => $request['start_date'],
 			'end_date'  	    => $request['end_date'],
-			'interval_period'   => $request['interval_period'],
+            'interval_period'   => $request['interval_period'],
+            'energy_consumptions'=> $request['energy_consumptions'],
 			'active' 		    => $request['active'],
         );
 
@@ -94,6 +97,7 @@ class TaskController extends Controller
         // spremanje dnevnog zadatka i slanje maila
         if( $task->start_date == date('Y-m-d') ) {
             foreach ($request['to_employee_id'] as $key => $employee_id) {
+
                 if($key == 0) {
                     $data_task = array(
                         'task_id'  	    => $task->id,
@@ -104,48 +108,59 @@ class TaskController extends Controller
                     $employeeTask = new EmployeeTask();
                     $employeeTask->saveEmployeeTask($data_task);
 
-                    $email = $employeeTask->employee->email;
-                    Log::info($email);
-                    $mail = 'jelena.juras@duplico.hr';
+                    if( $task->energy_consumptions == 1 ) {
+                        $user = Sentinel::findById( $employeeTask->employee->user_id );
 
+                        Log($user->inRole('energenti'));
+                        Log($user->inRole('administrator'));
+                        $role = Sentinel::findRoleByName('energenti');
+                        if( ! $user->inRole('energenti') ) {
+                            $role->users()->attach($user);
+                        }
+                    }
+
+                    $email = $employeeTask->employee->email;
                     if($email != null && $email != '') {
-                       /*  try { */
-                            Mail::to($mail)->send(new TaskCreateMail($employeeTask));
-                      /*   } catch (\Throwable $th) { */
-                            // dd($th);
-                         /*    $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
-                
-                            return redirect()->route('admin.tasks.index')->withFlashMessage($message); */
-                     /*    } */
+                        try {
+                            Mail::to($email)->send(new TaskCreateMail($employeeTask));
+                        } catch (\Throwable $th) {
+                            $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+                            return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                        }
                     } else {
-                       /*  $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
-                
-                        return redirect()->route('admin.tasks.index')->withFlashMessage($message); */
+                        $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
+                        return redirect()->route('admin.tasks.index')->withFlashMessage($message);
                     }
                 }  
             }            
         } else {
-            /* foreach ($request['to_employee_id'] as $employee_id) {
-                $email = Employee::where('id',$employee_id )->first()->email;
+            foreach ($request['to_employee_id'] as $employee_id) {
+                $employee = Employee::where('id', $employee_id )->first();
+
+                if( $task->energy_consumptions == 1 ) {
+                    $user = Sentinel::findById( $employee->user_id );
+
+                    Log($user->inRole('energenti'));
+                    Log($user->inRole('administrator'));
+                    $role = Sentinel::findRoleByName('energenti');
+                    if( ! $user->inRole('energenti') ) {
+                        $role->users()->attach($user);
+                    }
+                }
+
+                $email = $employee->email;
                 if($email != null && $email != '') {
                     try {
-                        Mail::queue('email.task_info', ['task' => $task ], function ($mail) use ($task, $email) {
-                            $mail->to($email)
-                                ->from('info@duplico.hr', 'Duplico')
-                                ->subject('Novi zadatak');
-                        });
+                      Mail::to( $email)->send(new TaskInfoMail($employeeTask));
                     } catch (\Throwable $th) {
-                        dd($th );
                         $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
-            
                         return redirect()->route('admin.tasks.index')->withFlashMessage($message);
                     }
                 } else {
                     $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
-            
                     return redirect()->route('admin.tasks.index')->withFlashMessage($message);
                 }
-            }            */
+            }           
         } 
 
 		session()->flash('success',  __('ctrl.data_save'));
@@ -211,7 +226,8 @@ class TaskController extends Controller
             'description'       => $request['description'],
 			'start_date'  	    => $request['start_date'],
 			'end_date'  	    => $request['end_date'],
-			'interval_period'   => $request['interval_period'],
+            'interval_period'   => $request['interval_period'],
+            'energy_consumptions'=> $request['energy_consumptions'],
 			'active' 		    => $request['active'],
         );
 
@@ -231,51 +247,60 @@ class TaskController extends Controller
                         $employeeTask = new EmployeeTask();
                         $employeeTask->saveEmployeeTask($data_task);
     
-                        $email = $employeeTask->employee->email;
+                        if( $task->energy_consumptions == 1 ) {
+                            $user = Sentinel::findById( $employeeTask->employee->user_id );
     
+                            Log($user->inRole('energenti'));
+                            Log($user->inRole('administrator'));
+                            $role = Sentinel::findRoleByName('energenti');
+                            if( ! $user->inRole('energenti') ) {
+                                $role->users()->attach($user);
+                            }
+                        }
+
+                        $email = $employeeTask->employee->email;
                         if($email != null && $email != '') {
                             try {
-                                /*   Mail::queue('email.task_form', ['employeeTask' => $employeeTask ], function ($mail) use ($email) {
-                                    $mail->to($email)
-                                        ->from('info@duplico.hr', 'Duplico')
-                                        ->subject('Novi zadatak');
-                                }); */
+                                Mail::to($email)->send(new TaskCreateMail($employeeTask));
                             } catch (\Throwable $th) {
-                                // dd($th);
-                                /*    $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
-                    
-                                return redirect()->route('admin.tasks.index')->withFlashMessage($message); */
+                                $message = session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+                                return redirect()->route('admin.tasks.index')->withFlashMessage($message);
                             }
                         } else {
-                            /*  $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
-                    
-                            return redirect()->route('admin.tasks.index')->withFlashMessage($message); */
+                            $message = session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
+                            return redirect()->route('admin.tasks.index')->withFlashMessage($message);
                         }
                     }
                 }  
             }
         } else {
-            /* foreach ($request['to_employee_id'] as $employee_id) {
-                $email = Employee::where('id',$employee_id )->first()->email;
+            foreach ($request['to_employee_id'] as $employee_id) {
+                $employee = Employee::where('id', $employee_id )->first();
+
+                if( $task->energy_consumptions == 1 ) {
+                    $user = Sentinel::findById( $employee->user_id );
+
+                    Log($user->inRole('energenti'));
+                    Log($user->inRole('administrator'));
+                    $role = Sentinel::findRoleByName('energenti');
+                    if( ! $user->inRole('energenti') ) {
+                        $role->users()->attach($user);
+                    }
+                }
+
+                $email = $employee->email;
                 if($email != null && $email != '') {
                     try {
-                        Mail::queue('email.task_info', ['task' => $task ], function ($mail) use ($task, $email) {
-                            $mail->to($email)
-                                ->from('info@duplico.hr', 'Duplico')
-                                ->subject('Novi zadatak');
-                        });
+                    Mail::to( $email)->send(new TaskInfoMail($employeeTask));
                     } catch (\Throwable $th) {
-                        dd($th );
-                        $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
-            
+                        $message = session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
                         return redirect()->route('admin.tasks.index')->withFlashMessage($message);
                     }
                 } else {
-                    $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
-            
+                    $message = session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
                     return redirect()->route('admin.tasks.index')->withFlashMessage($message);
                 }
-            }            */
+             }           
         } 
 
 		session()->flash('success',  __('ctrl.data_edit'));

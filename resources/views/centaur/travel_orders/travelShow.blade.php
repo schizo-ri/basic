@@ -185,7 +185,7 @@
 											<span class="td col-5"><input name="cost_description[{{ $j }}]" type="text" value="{{ $expense->cost_description }}" class="cost_description" ></span>
 											<span class="td col-2 align_r"><input name="amount[{{ $j }}]" type="number" class="align_r amount" step="0.01" value="{{ number_format($expense->amount, 2, '.', '') }}"  ></span>
 											<span class="td col-1 align_c"><input name="currency[{{ $j }}]" type="text" class="align_c currency" value="{{ $expense->currency }}" ></span>
-											<span class="td col-2 align_r total_amount"><input name="total_amount[{{ $j }}]" type="text" class="align_r total_sum " type="number" step="0.01" value="{{ $expense->total_amount }}" ></span>
+											<span class="td col-2 align_r total_amount"><input name="total_amount[{{ $j }}]" type="text" class="align_r total_sum" type="number" step="0.01" value="{{ $expense->total_amount }}" ></span>
 										</div>
 										@php
 											$j++;
@@ -197,7 +197,7 @@
 											<span class="td col-5"><input name="cost_description[{{ $i }}]" class="cost_description" type="text"></span>
 											<span class="td col-2 align_c"><input name="amount[{{ $i }}]" class="align_r amount" type="number" step="0.01" ></span>
 											<span class="td col-1 align_c"><input name="currency[{{ $i }}]" class="align_c currency" type="text"></span>
-											<span class="td col-2 align_r total_amount"><input name="total_amount[{{ $i }}]" class="align_r total_sum " type="number" step="0.01" ></span>
+											<span class="td col-2 align_r total_amount"><input name="total_amount[{{ $i }}]" class="align_r total_sum" type="number" step="0.01" ></span>
 										</div>
 									@endfor
 								</div>
@@ -314,6 +314,7 @@
 				var total = 0;
 				var advance = $('#advance').val();
 				$( ".total_sum" ).each(function( index ) {
+					
 					var value = '';
 					if ( $( this ).val() != '') {
 						value = $( this ).val();

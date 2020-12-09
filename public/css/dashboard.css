@@ -298,7 +298,7 @@
     margin-bottom: 15px;
 }
 
-.container h2> a.view_all, .main_absence a.view_all {
+.container h2> a.view_all, .main_absence a.view_all, .header_document a.view_all{
     font-weight: 600;
     font-size: 0.8125rem;
     text-align: right;
@@ -312,7 +312,7 @@
 .container h2> a.view_all:hover, .main_absence a.view_all:hover {
     color: #999999;
 }
-.main_absence a.view_all {
+.main_absence a.view_all, .header_document a.view_all {
     color: white;
 }
 .container .cal_days p.date {

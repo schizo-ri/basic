@@ -441,7 +441,7 @@ class BasicAbsenceController extends Controller
 				}
 			}
 			if($count_kids >= 2) {
-				$day = 1;
+				$day = 2;
 			}
 			return $day;
 		}
@@ -948,7 +948,7 @@ class BasicAbsenceController extends Controller
 		*/ 
 		public static function absenceForDay ($employee_id, $date, $time1, $time2) 
 		{
-			$request = Absence::where('employee_id', $employee_id)->whereDate('start_date', $date)->first();
+			$request = Absence::where('employee_id', $employee_id)->whereDate('start_date', $date)->where('approve',1)->first();
 			
 			if( $request ) {
 				return 1;

@@ -63,11 +63,10 @@
 				<p class="">Zadatak: <b>{{ $employeeTask->task->task }}</b></p>
 				<p class="">Zaduženi djelatnik: {{ $employeeTask->employee->user->first_name . ' ' . $employeeTask->employee->user->last_name }}</p>				
 				<p class="">Status: {!! $employeeTask->task->active == 1 ? 'aktivan' : 'neaktivan' !!}</p>
-				<form name="contactform" method="post" target="_blank" action="{{ route('employee_tasks.update', $employeeTask->id ) }}">
-					<input type="hidden" name="mail_confirme" />
-					<input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="comment" required ><br>
-					{{ csrf_field() }}
-					{{ method_field('PUT') }}
+				<form name="contactform" method="get" target="_blank" action="{{ route('tasks_confirm') }}">
+					<input type="hidden" name="id" value="{{ $employeeTask->id }}" />
+					<input style="height: 34px; width: 100%;border-radius: 5px;" type="text" name="comment" required ><br>
+				
 					<input class="odobri" type="submit" value="Potvrdi izvršenje">
 				</form>
             </div>

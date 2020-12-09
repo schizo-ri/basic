@@ -191,16 +191,16 @@ class LoccoController extends Controller
 			} else {
                 $send_to = EmailingController::sendTo('loccos','create');
               
-                try {
+            /*     try { */
                     foreach(array_unique($send_to) as $send_to_mail) {
                         if( $send_to_mail != null & $send_to_mail != '' ) {
                             Mail::to($send_to_mail)->send(new CarServiceMail($locco)); // mailovi upisani u mailing 
                         }
                     }
-                } catch (\Throwable $th) {
+              /*   } catch (\Throwable $th) {
                     session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			        return redirect()->back();
-                }
+                } */
                 
             }
         }

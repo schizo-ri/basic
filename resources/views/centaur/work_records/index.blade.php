@@ -16,7 +16,7 @@
 		{{-- 	<a class="change_view2" href="{{ route('work_records.index') }}" ></a> --}}
 			<select class="change_month select_filter">
 				@foreach ($months as $month)
-					<option value="{{ $month }}">{{ date('Y m',strtotime($month))}}</option>
+					<option value="{{ $month }}" {!! $month ==  date('Y-m') ? 'selected' : ''  !!}>{{ date('Y m',strtotime($month))}}</option>
 				@endforeach
 			</select>
 		{{-- 	<select class="change_employee_work select_filter ">

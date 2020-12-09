@@ -66,7 +66,7 @@ class WorkRecordController extends Controller
             $date_after = date_format($next_month,'Y-m-' . '01');
         }
 
-        $absences = Absence::whereBetween('start_date', [$date_before, $date_after])->where('approve','<>',null)->get();
+        $absences = Absence::whereBetween('start_date', [$date_before, $date_after])->where('approve',1)->get();
         foreach ($absences as $absence) {
             $absence->days = array();
             $begin = new DateTime($absence['start_date']);

@@ -29,5 +29,4 @@
 </div>
 <script>
     $.getScript( '/../js/filter.js');
-    $.getScript( '/../js/validate.js');
 </script>
