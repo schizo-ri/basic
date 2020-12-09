@@ -161,7 +161,7 @@
 												<td class="td col-5" style="width:45%; border-bottom:1px solid #000000;border-right:1px solid #000000;">{{ $expense->cost_description }}</td>
 												<td class="td col-2 align_r" style="width: 15%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{{ number_format($expense->amount, 2, '.', '') }}</td>
 												<td class="td col-1 align_c" style="width:10%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:center;">{{ $expense->currency }}</td>
-												<td class="td col-2 align_r" style="width: 15%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{{ number_format($expense->total_amount, 2, '.', '') }}</td>
+												<td class="td col-2 align_r" style="width: 15%; border-bottom:1px solid #000000;border-right:1px solid #000000;text-align:right;">{{ number_format( floatval(str_replace(",",".",$expense->total_amount ) ), 2, '.', '') }}</td>
 											</tr>
 											@php
 												$j++;
@@ -184,7 +184,10 @@
 					</main>
 					<footer>
 						<p>Primljen predujam dana {!! $travel->advance_date ? date('d.m.Y', strtotime($travel->advance_date)) : '________' !!} u iznosu {{ number_format( $travel->advance, 2, '.', '') }} Kn</p>
-						<p>Ostaje za isplatu / povrat {{ number_format( $travel->rest_payout, 2, '.', '')}} Kn</p>
+						@php
+							$rest_payout = $total_sum - $travel->advance;
+						@endphp
+						<p>Ostaje za isplatu / povrat {{ $rest_payout }} Kn</p>
 						<p>Podnositelj obračuna {{ $travel->employee->user['first_name'] . ' ' .  $travel->employee->user['last_name'] }}
 						</p>
 					</footer>

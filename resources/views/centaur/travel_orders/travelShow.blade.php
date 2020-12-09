@@ -185,7 +185,7 @@
 											<span class="td col-5"><input name="cost_description[{{ $j }}]" type="text" value="{{ $expense->cost_description }}" class="cost_description" ></span>
 											<span class="td col-2 align_r"><input name="amount[{{ $j }}]" type="number" class="align_r amount" step="0.01" value="{{ number_format($expense->amount, 2, '.', '') }}"  ></span>
 											<span class="td col-1 align_c"><input name="currency[{{ $j }}]" type="text" class="align_c currency" value="{{ $expense->currency }}" ></span>
-											<span class="td col-2 align_r total_amount"><input name="total_amount[{{ $j }}]" type="text" class="align_r total_sum " type="number" step="0.01" value="{{ $expense->total_amount }}" ></span>
+											<span class="td col-2 align_r total_amount"><input name="total_amount[{{ $j }}]" type="text" class="align_r total_sum " type="number" step="0.01" value="{{ number_format( floatval(str_replace(",",".",$expense->total_amount ) ), 2, '.', '') }}" ></span>
 										</div>
 										@php
 											$j++;
@@ -314,13 +314,14 @@
 				var total = 0;
 				var advance = $('#advance').val();
 				$( ".total_sum" ).each(function( index ) {
+				
 					var value = '';
 					if ( $( this ).val() != '') {
 						value = $( this ).val();
 					} else if ( $( this ).text() != '') {
 						value = $( this ).text();
 					}
-				
+					console.log( value );
 					if( $.isNumeric( value ) ) {
 						total += Number( value );
 					}
