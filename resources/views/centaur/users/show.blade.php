@@ -54,7 +54,8 @@
 				</span>
 				<p class="col-6 float_l">
 					@foreach ($requests[ 'years'] as $year)
-						<span class="go go_{{ $year }}">{!! BasicAbsenceController::godisnjiGodina($user->employee, $year) ? BasicAbsenceController::godisnjiGodina($user->employee, $year) : '0'!!} ( {!! BasicAbsenceController::razmjeranGO_Godina($user->employee, $year) ? BasicAbsenceController::razmjeranGO_Godina($user->employee, $year) : '0' !!} )
+						<span class="go go_{{ $year }}">
+						{!! BasicAbsenceController::godisnjiGodina($user->employee, $year) ? BasicAbsenceController::godisnjiGodina($user->employee, $year) : '0'!!} ( {!! BasicAbsenceController::razmjeranGO_Godina($user->employee, $year) ? BasicAbsenceController::razmjeranGO_Godina($user->employee, $year) : '0' !!} )
 						</span>
 					@endforeach	
 					<span>@lang('absence.total_days') <br> ( @lang('absence.proportion') ) </span>
