@@ -16,6 +16,24 @@ class MailTemplate extends Model
 	protected static $mailStyleModel = 'App\Models\MailStyle'; 
 
 	/*
+	* The Eloquent MailText model name
+	* 
+	* @var string
+	*/
+	protected static $mailTextModel = 'App\Models\MailText'; 
+
+	/*
+	* Returns the Travel relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasOne
+	*/
+	
+	public function mailText()
+	{
+		return $this->hasOne(static::$mailTextModel,'mail_id');
+	}
+
+	/*
 	* Returns the Travel relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\hasOne

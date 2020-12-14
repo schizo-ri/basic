@@ -1,9 +1,10 @@
 $(function() { 
     $('.collapsible').on('click',function(event){ 
+        console.log("collapsible");
        if($(this).siblings().is(":visible")){ 
             $(this).siblings().css('display','none');
         } else {
-            $(this).siblings().css('display','inline-block');
+            $(this).siblings().css('display','block');
         }
      
     });

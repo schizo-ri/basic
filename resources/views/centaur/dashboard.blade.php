@@ -105,12 +105,14 @@
 										</span></a>
 									</button>
 								@endif
-								<button class="" ><a href="{{ route('task_list') }}" rel="modal:open">
-									<span>
-										<span class="img task"></span>
-										<p>@lang('calendar.tasks')</p>
-									</span></a>
-								</button>
+								@if( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasEmployeeTask) > 0 )
+									<button class="" ><a href="{{ route('task_list') }}" rel="modal:open">
+										<span>
+											<span class="img task"></span>
+											<p>@lang('calendar.tasks')</p>
+										</span></a>
+									</button>
+								@endif
 								@if(in_array('Locco vožnja', $moduli))  
 									<button class="{!! $locco_active->first() ? 'background_red' : '' !!}">
 										<a href="{!! $locco_active->first() ? route('loccos.edit', $locco_active->first()->id ) : route('loccos.create') !!}" rel="modal:open">
@@ -213,10 +215,10 @@
 										</p>
 									@endforeach
 									@foreach($tasks->take(5) as $task)
-										<p class="agenda" id="{{ $task->date }}">
+										<p class="agenda" id="{{ $task->created_at }}">
 											<span class="agenda_mark"><span class="green"></span></span>
-											<span class="agenda_time">{{ date('H:i',strtotime($task->time1)) }}<br><span>{{ date('H:i',strtotime($task->time2)) }}</span></span>
-											<span class="agenda_comment">{{ $task->title . ' - ' }} {{ $task->description }}{!! $task->car_id ? ', ' . $task->car['registration']  : '' !!}</span>
+										<!-- 	<span class="agenda_time">{{ date('H:i',strtotime($task->time1)) }}<br><span>{{ date('H:i',strtotime($task->time2)) }}</span></span> -->
+											<span class="agenda_comment">{{ $task->task->task . ' - ' }} {{ $task->task->description }}{!! $task->car_id ? ', ' . $task->car['registration']  : '' !!}</span>
 										</p>
 									@endforeach
 								@else

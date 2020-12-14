@@ -30,10 +30,10 @@ $(function(){
 		}
 		if(type == 'GO') {
 			employee_id = $('#select_employee').val();
-			console.log("employee_id " + employee_id);
+			/* console.log("employee_id " + employee_id); */
 			if( employee_id != '' && employee_id != undefined) {
 				url = location.origin + '/getDays/'+employee_id;
-				console.log(url);
+				/* console.log(url); */
 				$.ajax({
 					url: url,
 					type: "get",
@@ -142,12 +142,37 @@ $(function(){
 		if(start_date == '') {
 			$( "#start_date" ).val(end_date);
 		}
+
 		type = $( "#request_type" ).val();
 		employee_id = $('#select_employee').val();
 		if( employee_id != '' && type == 'GO' ) {
-			diff_days = date_diff_indays( start_date,end_date );
-			console.log(diff_days);
-			if( broj_dana < diff_days && user_role != 'admin' ) {
+			url = location.origin + '/daniGO';
+            console.log(url);
+            $.ajax({
+                url: url,
+                type: "get",
+                data:  { start_date: start_date, end_date: end_date},
+                success: function( days_response ) {
+					console.log("dani zahtjeva " +days_response);
+					if( (broj_dana - days_response) < 0 && user_role != 'admin' ) {
+						$('.days_request>span').text( broj_dana - days_response);
+						$('.days_request').show();
+						$('.btn-submit').hide();
+					} else {
+						$('.days_request>span').text("");
+						$('.days_request').hide();
+						$('.btn-submit').show();
+					} 
+                },
+                error: function(jqXhr, json, errorThrown) {
+                    console.log(jqXhr);
+                    console.log(json);
+                    console.log(errorThrown);
+                }
+			});
+			//diff_days = date_diff_indays( start_date,end_date );
+			
+		/* 	if( broj_dana < diff_days && user_role != 'admin' ) {
 				$('.days_request>span').text(diff_days - broj_dana);
 				$('.days_request').show();
 				$('.btn-submit').hide();
@@ -155,12 +180,12 @@ $(function(){
 				$('.days_request>span').text("");
 				$('.days_request').hide();
 				$('.btn-submit').show();
-			}
+			} */
 		}
 	});
-	
 });
 
+// ne uzima u obzir praznike
 function date_diff_indays(date1, date2) { // input given as Date objects
 	var dDate1 = new Date(date1);
 	var dDate2 = new Date(date2);

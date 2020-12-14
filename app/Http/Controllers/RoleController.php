@@ -30,7 +30,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = $this->roleRepository->createModel()->all();
+        $roles = $this->roleRepository->createModel()->orderBy('name')->get();
         $userRoleIds = Sentinel::getUser()->roles()->pluck('id');
 		$empl = Sentinel::getUser()->employee;
 		$permission_dep = array();

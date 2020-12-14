@@ -340,82 +340,6 @@ class EventController extends Controller
             return in_array($date, $v);
         }, ARRAY_FILTER_USE_BOTH);
 
-       /*  
-        $empl = Sentinel::getUser()->employee;
-        $dataArr = array();
-
-        $holidays = BasicAbsenceController::holidays_with_names();
-        
-        if(count($holidays) > 0) {
-            foreach ($holidays as $key => $holiday) {
-                if($date == $key )
-                array_push($dataArr, ['name' => 'holiday', 'type' => __('basic.holidays'), 'date' => $key, 'title' => $holiday ]);
-            }
-        }
-
-        $employees = Employee::where('id','<>',0)->where('checkout',null)->with('hasEvents')->with('hasLocco')->with('hasAbsences')->with('hasTasks')->get();
-           
-        $select_day = explode('-', $date);  //get from URL
-        $dan_select = $select_day[2];
-        $mj_select = $select_day[1];
-        $god_select = $select_day[0];
-
-        foreach($employees as $employee) {
-            $dan_birthday = $god_select . '-' . date('m-d', strtotime($employee->b_day));
-            if($dan_birthday == $date) {
-                array_push($dataArr, ['name' => 'birthday','type' => __('basic.birthday'), 'date' => $dan_birthday, 'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'], 'employee_id' => $employee->id ]);
-            }
-
-            $tasks = $employee->hasTasks->where('date', $date);    
-            
-            if(count( $tasks)>0) {
-                foreach($tasks as $task) {
-                    array_push($dataArr, ['name' => "task", 'type' => __('calendar.task'), 'date' => $task->date,'time1' => $task->time1, 'time2' => $task->time2, 'title' => $task->title, 'employee' => $task->employee->user['first_name'] . ' ' . $task->employee->user['last_name'], 'employee_id' => $task->employee_id, 'background' =>  $task->color, 'car' => $task->car['registration'] ]);
-                }
-            }
-
-            $absences = $employee->hasAbsences;    
-            if(count($absences)>0) {
-                foreach($absences as $absence) {                
-                    $begin = new DateTime($absence->start_date);
-                    $end = new DateTime($absence->end_date);
-                    $end->setTime(0,0,1);
-                    $interval = DateInterval::createFromDateString('1 day');
-                    $period = new DatePeriod($begin, $interval, $end);
-                    foreach ($period as $dan) {
-                          if(date_format($dan,'Y-m-d') == $date) {  // ako je selektirani datum
-                            array_push($dataArr, ['name' => $absence->absence['mark'],'type' => $absence->absence['name'], 'date' => date_format($dan,'Y-m-d'), 'employee' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name'], 'employee_id' => $absence->employee_id ]);
-                        }
-                    }
-                }
-            } 
-        
-            $loccos =  $employee->hasLocco;  
-           
-            $loccos = $loccos->filter(function ($locco, $key) use ($date) {
-                return date('Y-m-d',strtotime($locco->date)) == $date;
-            });
-         
-            foreach($loccos as $locco) {
-                array_push($dataArr, ['name' => 'locco',
-                                        'type' => __('basic.locco'), 
-                                        'date' => $locco->date, 
-                                        'employee' => $locco->employee ? $locco->employee->user['first_name'] . ' ' . $locco->employee->user['last_name'] : '', 
-                                        'employee_id' => $locco->employee->id, 
-                                        'title' => $locco->destination, 
-                                        'reg' => $locco->car['registration'] ]);
-            } 
-      
-            if($empl) {
-                $events = $employee->hasEvents->where('employee_id', $empl->id)->where('date', $date);  
-                if(count( $events)>0) {
-                    foreach($events as $event1) {
-                        array_push($dataArr, ['name' => "event", 'type' => __('calendar.event'), 'date' => $event1->date,'time1' => $event1->time1, 'time2' => $event1->time2, 'title' => $event1->title, 'employee' => $event1->employee->user['first_name'] . ' ' . $event1->employee->user['last_name'], 'employee_id' => $event1->employee_id ]);
-                    }
-                }
-            }
-        }
- */
         return $dataArr;
     }
 
@@ -444,11 +368,19 @@ class EventController extends Controller
                                           'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'], 
                                           'employee_id' => $employee->id ]);
                 }
+                if(date('Y-m',strtotime($employee->lijecn_pregled)) ==  $year . '-' . $month ) {
+                    $dan = date('Y-m-d', strtotime($employee->lijecn_pregled));
+                    array_push($dataArr, ['name' => 'liječnički',
+                                          'type' =>  'Liječnički pregled', 
+                                          'date' => $dan, 
+                                          'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'], 
+                                          'employee_id' => $employee->id ]);
+                }
                 $tasks = $employee->hasTasks;
                 $tasks = $tasks->filter(function ($task, $key) use ( $month, $year) {
                     return date('m',strtotime($task->start_date)) == $month && date('Y',strtotime($task->start_date)) == $year;
                 });
-            /*     $tasks = Task::whereMonth('date', $month)->whereYear('date',$year)->get(); */
+                /*  $tasks = Task::whereMonth('date', $month)->whereYear('date',$year)->get(); */
                 if(count($tasks) > 0) {
                     foreach($tasks as $task) {
                         array_push($dataArr, ['name' => "task", 
@@ -470,7 +402,7 @@ class EventController extends Controller
                     return date('m',strtotime($event->date)) == $month && date('Y',strtotime($event->date)) == $year;
                 });
         
-             /*    $events = Event::whereMonth('date',$month)->whereYear('date',$year)->where('employee_id', $empl->id)->get(); */
+                /*  $events = Event::whereMonth('date',$month)->whereYear('date',$year)->where('employee_id', $empl->id)->get(); */
                 if(count($events) > 0) {
                     foreach($events as $event1) {
                         array_push($dataArr, ['name' => "event", 
@@ -489,14 +421,6 @@ class EventController extends Controller
                 $absences = $absences->filter(function ($absence, $key) use ( $month, $year ) {
                     return (date('m',strtotime($absence->start_date)) == $month && date('Y',strtotime($absence->start_date)) == $year) || (date('m',strtotime($absence->end_date)) == $month && date('Y',strtotime($absence->end_date)) );
                 });
-               /*  $absences = Absence::whereMonth('start_date', $month)->whereYear('start_date', $year)->where('approve',1)->get();
-                $absences = $absences->merge(Absence::whereMonth('end_date', $month)->whereYear('end_date', $year)->where('approve',1)->get());
-                */
-               /*  $today = date('Y-m-d');
-                $select_day = explode('-',$today); 
-                $dan_select = $select_day[2];
-                $mj_select = $select_day[1];
-                $god_select = $select_day[0]; */
         
                 if (count($absences)>0) {
                     foreach($absences->where('approve',1) as $absence) {
@@ -525,8 +449,6 @@ class EventController extends Controller
                     return (date('m',strtotime($locco->date)) == $month && date('Y',strtotime($locco->date)) ==  $year) || (date('m',strtotime($locco->end_date)) ==  $month && date('Y',strtotime($locco->end_date)) ==  $year);
                 });
         
-                /* $loccos = Locco::whereMonth('date', $month)->whereYear('date', $year)->get();
-                $loccos = $loccos->merge(Locco::whereMonth('end_date', $month)->whereYear('end_date', $year)->get()); */
                 if(count($loccos)>0) {
                     foreach($loccos as $locco) {
                         array_push($dataArr, ['name' => 'locco',
@@ -540,8 +462,6 @@ class EventController extends Controller
                 }
             }
         }
-        
-       
 
         return $dataArr;
     }

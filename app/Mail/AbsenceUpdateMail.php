@@ -44,7 +44,7 @@ class AbsenceUpdateMail extends Mailable
         
         $employee = Employee::find($this->absence->employee_id);
         $zahtjev = array('start_date' => $this->absence['start_date'], 'end_date' => $this->absence['end_date']);
-        $dani_zahtjev = BasicAbsenceController::daniGO($zahtjev);
+        $dani_zahtjev = BasicAbsenceController::daniGO_count($zahtjev);
         $zahtjevi = BasicAbsenceController::zahtjevi($employee);
         $neiskoristeno_GO = $zahtjevi['ukupnoPreostalo']; //vraća neiskorištene dane 
         $template = Template::where('module','absence')->first();

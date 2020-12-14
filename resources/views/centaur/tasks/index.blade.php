@@ -23,13 +23,13 @@
 						</div>
 					</header>
 					@if(count($tasks) > 0)
-						<table id="index_table" class="display table table-hover">
+						<table id="index_table" class="display table table-hover sort_3_desc">
 							<thead>
 								<tr>
 									<th>@lang('basic.task') | @lang('basic.description')</th>
 									<th>@lang('basic.to_employee')</th>
-									<th>@lang('absence.start_date')</th>
-									<th>@lang('absence.end_date')</th>
+									<th class="sort_date">@lang('absence.start_date')</th>
+									<th class="sort_date">@lang('absence.end_date')</th>
 									<th>@lang('basic.interval')</th>
 									<th>Status</th>
 									<th class="not-export-column">@lang('basic.options')</th>
@@ -53,6 +53,7 @@
 											@switch($task->interval_period)
 												@case('no_repeat')
 													Bez ponavljanja
+													@if( count($task->employeeTasks) > 0 && $task->employeeTasks->first()->status == 1 ) <span class="green padd_l_15"> Izvršen</span> @endif
 													@break
 												@case('every_day')
 													Dnevno

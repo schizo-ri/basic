@@ -108,7 +108,7 @@
 										</li>
 									@endif
 								@endif --}}
-								@if(Sentinel::inRole('administrator'))
+								@if(Sentinel::inRole('administrator') || Sentinel::inRole('moderator'))
 									<li><a id="open-admin" href="{{ route('users.index') }}" title="{{ __('basic.open_admin')}}"  >
 										<img class="img_button" src="{{ URL::asset('icons/flash.png') }}" alt="messages" title="{{ __('basic.open_admin')}}" /></a>
 									</li>
@@ -185,6 +185,7 @@
 
 			<!-- Scripts -->
 			<script>
+			
 				// Check if a new cache is available on page load.
 				/* window.addEventListener('load', function(e) {
 				window.applicationCache.addEventListener('updateready', function(e) {

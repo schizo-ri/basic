@@ -26,6 +26,8 @@ body {
 	overscroll-behavior-y: contain;
 	scrollbar-width: thin;
 	display: block;
+	overflow-y: auto;
+  	-webkit-overflow-scrolling: touch;
 }
 
 body>.welcome_page {

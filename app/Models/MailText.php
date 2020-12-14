@@ -4,10 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MailStyle extends Model
+class MailText extends Model
 {
-    protected $fillable = ['mail_id','style_header','style_body','style_footer'];
-
+    protected $fillable = ['mail_id','text_header','text_body','text_footer'];
     /*
         * The Eloquent MailTemplate model name
         * 
@@ -26,26 +25,26 @@ class MailStyle extends Model
     }
     
     /*
-	* Save MailStyle
+	* Save MailText
 	* 
-	* @param array $mailStyle
+	* @param array $mailText
 	* @return void
 	*/
 	
-	public function saveMailStyle($mailStyle=array())
+	public function saveMailText($mailText=array())
 	{
-		return $this->fill($mailStyle)->save();
+		return $this->fill($mailText)->save();
 	}
 	
 	/*
-	* Update MailStyle
+	* Update MailText
 	* 
-	* @param array $mailStyle
+	* @param array $mailText
 	* @return void
 	*/
 	
-	public function updateMailStyle($mailStyle=array())
+	public function updateMailText($mailText=array())
 	{
-		return $this->update($mailStyle);
-	}
+		return $this->update($mailText);
+    }	
 }

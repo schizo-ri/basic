@@ -80,11 +80,11 @@ $(function(){
 				targets = [];
 			} else {
 				if (admin == 'true') {
-					order = [ 3, "desc" ];
-					targets = [1,3,4];
+					order = [ 2, "desc" ];
+					targets = [2,3];
 				} else {
 					order = [ 2, "desc" ];
-					targets = [0,2,3];
+					targets = [1,2];
 				}
 			}
 			try {

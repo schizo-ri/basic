@@ -43,7 +43,7 @@ class AbsenceMail extends Mailable
 
         $employee = $this->absence->employee;
         $zahtjev = array('start_date' => $this->absence['start_date'], 'end_date' => $this->absence['end_date']);
-        $dani_zahtjev = BasicAbsenceController::daniGO($zahtjev);
+        $dani_zahtjev = BasicAbsenceController::daniGO_count($zahtjev);
         $zahtjevi = BasicAbsenceController::zahtjevi($employee);
         $slobodni_dani = BasicAbsenceController::days_off($employee);
 
@@ -60,8 +60,14 @@ class AbsenceMail extends Mailable
             $view = 'Centaur::email.absence';
         }
         
+        $absence_name1 = explode(' ', $this->absence->absence->name);
+        $absence_name = '';
+        foreach ( $absence_name1 as $word ) {
+            $absence_name .= $word . ' ';
+        }
+
         return $this->view($view) 
-                    ->subject( $subject . ' ' . $this->absence->absence['name'] . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])
+                    ->subject( $subject . ' ' . $absence_name . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])
                     ->with([
                         'absence' => $this->absence,
                         'dani_zahtjev' => $dani_zahtjev,

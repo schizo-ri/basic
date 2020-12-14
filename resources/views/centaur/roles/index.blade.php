@@ -16,7 +16,7 @@
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<div class="table-responsive">
+		<div class="table-responsive roles">
 			<table id="index_table" class="display table table-hover">
 				<thead>
 					<tr>
@@ -63,23 +63,4 @@
 			</table>
 		</div>
 	</main>
-	<script>
-		$(function(){
-			
-			$('.more').click(function(){
-				$( this ).siblings('.role').toggle();
-				$( this ).hide();
-				$( this ).siblings('.hide').show();
-			});
-			$('.hide').click(function(){
-				$( this ).siblings('.role').hide();
-				$( this ).siblings('.role._0').show();
-				$( this ).siblings('.role._1').show();
-
-				$( this ).siblings('.more').show();
-				$( this ).hide();
-			});
-		});
-	
-	</script>
 @stop

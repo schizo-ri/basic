@@ -52,6 +52,9 @@
 			.marg_top_20 {
 				margin-top:20px;
 			}
+			#mail_template input {
+				text-align: inherit;
+			}
         </style>
 	</head>
 	<body>

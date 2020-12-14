@@ -229,4 +229,22 @@ $(function() { // filter knowledge base
 			}
 		});
 	});
+
+	if( $('.table-responsive.roles').length > 0) {
+		
+		$('.more').on('click',function(){
+			$( this ).siblings('.role').toggle();
+			$( this ).hide();
+			$( this ).siblings('.hide').show();
+		});
+		$('.hide').on('click',function(){
+			$( this ).siblings('.role').hide();
+			$( this ).siblings('.role._0').show();
+			$( this ).siblings('.role._1').show();
+
+			$( this ).siblings('.more').show();
+			$( this ).hide();
+		});
+	}
+
 });

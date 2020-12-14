@@ -1,6 +1,6 @@
 @extends('Centaur::admin')
 
-@section('title', __('basic.loccos') . ' ' . $car->registration )
+@section('title', __('basic.loccos') . ' ' . count($loccos)>0 ? $loccos->first()->car->registration : '' )
 
 @section('content')
 	<header class="page-header">

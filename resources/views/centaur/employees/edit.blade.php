@@ -231,13 +231,13 @@
 			</div>
 			<div class="form-group {{ ($errors->has('days_off')) ? 'has-error' : '' }}">
 				<label>Obračun prekovremenih kao: </label>
-				<select class="form-control" name="days_off" value="{{ old('days_off')}}">
+				<select class="form-control" name="days_off" value="{{ old('days_off') }}">
 					<option value="1" {!! $employee->days_off == 1 ? 'selected' : '' !!}  >Slobodni dani</option>
 					<option value="0" {!! $employee->days_off == 0 ? 'selected' : '' !!} >Isplata</option>
 				</select>
 			</div>
 			<div class="form-group">
-				<input type="checkbox" name="stranger" value="1" id="stranger" {!! $employee->stranger == 1 ? 'checked' : '' !!}  > <label for="stranger">Djelatnik je stranac</label>
+				<input type="checkbox" name="stranger" value="1" id="stranger" {!! $employee->stranger == 1 ? 'checked' : '' !!} > <label for="stranger">Djelatnik je stranac</label>
 			</div>
 			<div class="form-group"  id="dozvola">
 				<label>Datum isteka dozvole boravka u RH: </label>

@@ -84,19 +84,7 @@ class AdController extends Controller
 		$ad = new Ad();
 		$ad->saveAd($data);
 
-		$send_to_email = array();
-
-		/* Email adrese svim zaposlenika */
-		$send_to_email = Employee::getEmails();
-		try {
-			foreach ($send_to_email as $email) {
-				Mail::to($email)->send(new AdCreateMail($ad));
-			}
-		} catch (\Throwable $th) {
-			session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
-			return redirect()->back();
-		}
-
+		
         if(isset($request['fileToUpload'])) {
 			$target_dir = 'storage/';
 			if(!file_exists($target_dir)){
@@ -116,18 +104,12 @@ class AdController extends Controller
 				array_map('unlink', glob($target_file)); // ako postoji file - briše ga
 				$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]); 
 			} 
-
 			$uploadOk = 1;
 			$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));  //holds the file extension of the file (in lower case)
-			// Check if image file is a actual image or fake image
-			
-			// Check if file already exists
 			if (file_exists($target_file)) {
 				return redirect()->back()->with('error', __('basic.file_exists'));  
 				$uploadOk = 0;
 			}
-			
-			/* Check file size*/
 			if ($_FILES["fileToUpload"]["size"] > 5000000) {
 				return redirect()->back()->with('error', __('basic.file_toolarge'));  
 				$uploadOk = 0;
@@ -142,20 +124,33 @@ class AdController extends Controller
 				return redirect()->back()->with('error',  __('basic.not_allowed'));  
 				$uploadOk = 0;
 			}
-			// Check if $uploadOk is set to 0 by an error
+		
 			if ($uploadOk == 0) {
 				return redirect()->back()->with('error', __('basic.not_uploaded')); 
-			// if everything is ok, try to upload file
+		
 			} else {
 				if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                    return redirect()->route('oglasnik')->with('success', __('basic.image') . ' ' .  __('ctrl.has_uploaded'));
+                   /*  return redirect()->route('oglasnik')->with('success', __('basic.image') . ' ' .  __('ctrl.has_uploaded')); */
 
 				} else {
 					return redirect()->route('oglasnik')->with('error', __('basic.file_error')); 
 				}
 			}
 		}
-		
+
+		$send_to_email = array();
+
+		/* Email adrese svim zaposlenika */
+	 	$send_to_email = Employee::getEmails();
+		try {
+			foreach ($send_to_email as $email) {
+				Mail::to($email)->send(new AdCreateMail($ad));
+			}
+		} catch (\Throwable $th) {
+			session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+			return redirect()->back();
+		} 
+
         session()->flash('success',  __('ctrl.data_save'));
 		
         return redirect()->route('oglasnik');
@@ -212,29 +207,20 @@ class AdController extends Controller
 		$ad->updateAd($data);
 		if(isset($request['fileToUpload'])) {
 			$target_dir = 'storage/ads/' . $ad->id . '/';  //specifies the directory where the file is going to be placed	
-
-			// Create directory
 			if(!file_exists($target_dir)){
 				mkdir($target_dir);
             }
-
 			$target_file = $target_dir . '/' . basename($_FILES["fileToUpload"]["name"]); //$target_file specifies the path of the file to be uploaded
 			if(isset($request['fileToUpload']) && file_exists($target_file)){
 				array_map('unlink', glob($target_file)); // ako postoji file - briše ga
 				$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]); 
 			} 
-
 			$uploadOk = 1;
 			$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));  //holds the file extension of the file (in lower case)
-			// Check if image file is a actual image or fake image
-			
-			// Check if file already exists
 			if (file_exists($target_file)) {
 				return redirect()->back()->with('error', __('basic.file_exists'));  
 				$uploadOk = 0;
 			}
-			
-			/* Check file size*/
 			if ($_FILES["fileToUpload"]["size"] > 5000000) {
 				return redirect()->back()->with('error', __('basic.file_toolarge'));  
 				$uploadOk = 0;
@@ -249,13 +235,11 @@ class AdController extends Controller
 				return redirect()->back()->with('error',  __('basic.not_allowed'));  
 				$uploadOk = 0;
 			}
-			// Check if $uploadOk is set to 0 by an error
 			if ($uploadOk == 0) {
 				return redirect()->back()->with('error', __('basic.not_uploaded')); 
-			// if everything is ok, try to upload file
 			} else {
 				if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                    return redirect()->route('oglasnik')->with('success', __('basic.ad') . ' ' .  __('ctrl.has_uploaded'));
+                   // return redirect()->route('oglasnik')->with('success', __('basic.ad') . ' ' .  __('ctrl.has_uploaded'));
 
 				} else {
 					return redirect()->route('oglasnik')->with('error', __('basic.file_error')); 

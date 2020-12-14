@@ -117,7 +117,7 @@
                 @include('Centaur::side_nav')
             </header>
             <div class="container col-sm-12 col-md-12 col-lg-12">
-                @if(Sentinel::check() && Sentinel::inRole('administrator'))
+                @if(Sentinel::check() && (Sentinel::inRole('administrator') || Sentinel::inRole('moderator')) )
                     <div class="index_page index_admin">
                         <aside class="col-md-12 col-lg-4 col-xl-4 float_left admin_aside">
                             <section class="col-12 float_left admin_panel">

@@ -40,7 +40,7 @@
 				<div class="col-4 float_left padd_0 event_container">
 					<span class="meeting col-4"><span class="blue"></span>@lang('basic.meeting')<span>{{ $count_days['dani_event'] }}</span></span>
 					<span class="tasks col-4"><span class="orange"></span>@lang('basic.birthdays')<span>{{ $count_days['dani_rodjendani'] }}</span></span>
-					<span class="on_vacation col-4"><span class="green"></span>@lang('basic.on_vacation')<span>{{ $count_days['dani_odmor'] }}</span></span>
+					<span class="on_vacation col-4"><span class="green"></span>@lang('absence.absences')<span>{{ $count_days['dani_odmor'] }}</span></span>
 				</div>
 				<div class="col-4 float_left filtercontainer" >
 					<select class="change_view_calendar col-4">
@@ -73,7 +73,7 @@
 								@if(isset($dan))
 									<div>
 										@foreach($dataArr as $key => $data)
-											@if( $data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task' && $data['name'] != 'holiday' )
+											@if($data['name'] != 'liječnički' && $data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task' && $data['name'] != 'holiday' )
 												@if( date('N',strtotime( $data['date'] ) ) < 6 && $data['date'] == $dan && date('H', strtotime($hour)) == date('H', strtotime($data['start_time']) ) )
 													<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 show_event empl_{{ $data['employee_id'] }}" >
 														<div class="event green">
@@ -87,6 +87,15 @@
 												@if(date("m-d",strtotime($data['date'])) == date("m-d",strtotime($dan)) && $hour == "08:00" )
 													<div class="show_event empl_{{ $data['employee_id'] }} col-xs-12 col-sm-6 col-md-4 col-lg-3 " >
 														<div class="event orange">
+															{{ $data['type'] . ' - ' . $data['employee'] }}
+														</div>
+													</div>
+												@endif
+											@endif
+											@if($data['name'] == 'liječnički')
+												@if(date("m-d",strtotime($data['date'])) == date("m-d",strtotime($dan)) && $hour == "08:00" )
+													<div class="show_event empl_{{ $data['employee_id'] }} col-xs-12 col-sm-6 col-md-4 col-lg-3 " >
+														<div class="event purple">
 															{{ $data['type'] . ' - ' . $data['employee'] }}
 														</div>
 													</div>
@@ -218,7 +227,7 @@
 												</a>
 											@endforeach
 											@foreach($dataArr as $key => $data)
-												@if($data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task' && $data['name'] != 'holiday')
+												@if($data['name'] != 'liječnički' &&  $data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task' && $data['name'] != 'holiday')
 													@if(date('N',strtotime($data['date'])) < 6 )
 														@if( $data['date'] == date_format($next_date, 'Y-m-d') )
 															<div class="show_event empl_{{ $data['employee_id'] }} col-12" >
@@ -236,6 +245,15 @@
 													@if( date("m-d",strtotime($data['date'])) == date_format($next_date, 'm-d') )
 														<div class="show_event empl_{{ $data['employee_id'] }} col-12" >
 															<div class="event orange">
+																<p>{{ $data['type'] . ' - ' . $data['employee'] }}</p>
+															</div>
+														</div>
+													@endif
+												@endif
+												@if($data['name'] == 'liječnički')
+													@if( date("m-d",strtotime($data['date'])) == date_format($next_date, 'm-d') )
+														<div class="show_event empl_{{ $data['employee_id'] }} col-12" >
+															<div class="event purple">
 																<p>{{ $data['type'] . ' - ' . $data['employee'] }}</p>
 															</div>
 														</div>
@@ -385,7 +403,7 @@
 											@endif
 										@endforeach
 										@foreach($dataArr as $key => $data)
-											@if($data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task' && $data['name'] != 'holiday')
+											@if($data['name'] != 'liječnički' && $data['name'] != 'birthday' && $data['name'] != 'event' && $data['name'] != 'task' && $data['name'] != 'holiday')
 												@if(date('N',strtotime($data['date'])) < 6 )
 													@if( $data['date'] == date_format($date1, 'Y-m-d') && date('H', strtotime($hour)) == date('H', strtotime($data['start_time'])) )
 														<div class="show_event empl_{{ $data['employee_id'] }} col-12" >
@@ -403,6 +421,15 @@
 												@if(date("m-d",strtotime($data['date'])) == date_format($date1, 'm-d') && strstr($hour,':',true) == '08')
 													<div class="show_event empl_{{ $data['employee_id'] }} col-12" >
 														<div class="event orange">
+															<p>{{ $data['type'] . ' - ' . $data['employee'] }}</p>
+														</div>
+													</div>
+												@endif
+											@endif
+											@if($data['name'] == 'liječnički')
+												@if(date("m-d",strtotime($data['date'])) == date_format($date1, 'm-d') && strstr($hour,':',true) == '08')
+													<div class="show_event empl_{{ $data['employee_id'] }} col-12" >
+														<div class="event purple">
 															<p>{{ $data['type'] . ' - ' . $data['employee'] }}</p>
 														</div>
 													</div>

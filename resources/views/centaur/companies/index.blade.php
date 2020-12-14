@@ -8,6 +8,8 @@
 			<label>
 				<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 			</label>
+			<a class="page_link" href="{{ route('structure') }}">Struktura firme</a>
+
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

@@ -28,10 +28,11 @@ class TaskController extends Controller
         $employees = Employee::employees_lastNameASC();
         $date = date('Y-m-d');
         $tasks = Task::orderBy('start_date','ASC')->get();
-    
+       
         if(! Sentinel::inRole('administrator')) {
             $tasks = $tasks->where('to_employee_id',$employee->id );
         }
+        
         $permission_dep = DashboardController::getDepartmentPermission();
         return view('Centaur::tasks.index', ['tasks' => $tasks, 'employees' => $employees,'permission_dep' => $permission_dep]);
     }
@@ -106,14 +107,15 @@ class TaskController extends Controller
                     );
             
                     $employeeTask = new EmployeeTask();
-                    $employeeTask->saveEmployeeTask($data_task);
+                    $employeeTask->saveEmployeeTask( $data_task );
 
                     if( $task->energy_consumptions == 1 ) {
                         $user = Sentinel::findById( $employeeTask->employee->user_id );
-
+                      
                         Log($user->inRole('energenti'));
                         Log($user->inRole('administrator'));
-                        $role = Sentinel::findRoleByName('energenti');
+                        $role = Sentinel::findRoleBySlug('energenti');
+                      
                         if( ! $user->inRole('energenti') ) {
                             $role->users()->attach($user);
                         }
@@ -142,7 +144,7 @@ class TaskController extends Controller
 
                     Log($user->inRole('energenti'));
                     Log($user->inRole('administrator'));
-                    $role = Sentinel::findRoleByName('energenti');
+                    $role = Sentinel::findRoleBySlug('energenti');
                     if( ! $user->inRole('energenti') ) {
                         $role->users()->attach($user);
                     }
@@ -252,7 +254,7 @@ class TaskController extends Controller
     
                             Log($user->inRole('energenti'));
                             Log($user->inRole('administrator'));
-                            $role = Sentinel::findRoleByName('energenti');
+                            $role = Sentinel::findRoleBySlug('energenti');
                             if( ! $user->inRole('energenti') ) {
                                 $role->users()->attach($user);
                             }
@@ -282,7 +284,7 @@ class TaskController extends Controller
 
                     Log($user->inRole('energenti'));
                     Log($user->inRole('administrator'));
-                    $role = Sentinel::findRoleByName('energenti');
+                    $role = Sentinel::findRoleBySlug('energenti');
                     if( ! $user->inRole('energenti') ) {
                         $role->users()->attach($user);
                     }

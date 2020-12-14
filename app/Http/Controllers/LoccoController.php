@@ -55,7 +55,7 @@ class LoccoController extends Controller
     public function create(Request $request)
     {
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->get();
+        $employees = Employee::employees_lastNameASC();
 
         $reg = null;
         if( $request->get('reg')) {
@@ -77,7 +77,7 @@ class LoccoController extends Controller
     public function create_qr(Request $request)
     {
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->get();
+        $employees = Employee::employees_lastNameASC();
 
         $reg = null;
         if( $_GET['reg'] ) {
@@ -267,8 +267,8 @@ class LoccoController extends Controller
         $travel = TravelOrder::find( $locco->travel_id );
     
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->get();
-
+        $employees = Employee::employees_lastNameASC();
+        
         return view('Centaur::loccos.edit', ['locco' => $locco, 'cars' => $cars, 'travel' => $travel, 'employees' => $employees]);
     }
 

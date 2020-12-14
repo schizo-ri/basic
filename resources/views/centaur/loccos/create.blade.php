@@ -37,7 +37,7 @@
 					<label>@lang('basic.employee')</label>
 					<option value="" selected disabled></option>
 					@foreach ($employees as $employee)
-						<option value="{{ $employee->id }}" {!! Sentinel::getUser()->employee->id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['first_name'] . ' ' .  $employee->user['last_name'] }}</option>
+						<option value="{{ $employee->id }}" {!! Sentinel::getUser()->employee->id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['last_name'] . ' ' .  $employee->user['first_name'] }}</option>
 					@endforeach
 				</select>
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
@@ -104,14 +104,12 @@
 			var poc_km = $('#start_km').val();
 			var zav_km = $('#end_km').val();
 			var udaljenost = zav_km - poc_km;
+			
 			$('#distance').val(udaljenost);
-		
 			if ( udaljenost < 0 ) {
-				
 				$('#distance').css('border','1px solid red');
 				$('.btn-submit').attr('disabled', 'disabled');
 			} else {
-				console.log("udaljenost > 0" );
 				$('#distance').css('border','1px solid #F0F4FF');
 				$('.btn-submit').attr('disabled', false);
 			}
@@ -167,7 +165,5 @@
 			}
 		});
 	});
-
 	$.getScript( '/../js/validate.js');
-	
 </script>

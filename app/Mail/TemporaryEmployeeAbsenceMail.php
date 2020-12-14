@@ -41,7 +41,7 @@ class TemporaryEmployeeAbsenceMail extends Mailable
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','TemporaryEmployeeAbsenceMail')->first();
         
         $zahtjev = array('start_date' => $this->temporaryEmployeeRequest['start_date'], 'end_date' => $this->temporaryEmployeeRequest['end_date']);
-        $dani_zahtjev = BasicAbsenceController::daniGO($zahtjev);
+        $dani_zahtjev = BasicAbsenceController::daniGO_count($zahtjev);
 
         return $this->view('Centaur::email.temporaryEmployeeRequest')
                     ->subject( __('emailing.new_absence'))

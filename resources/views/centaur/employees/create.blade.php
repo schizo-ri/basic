@@ -223,7 +223,7 @@
 				</select>
 			</div>
 			<div class="form-group">
-				<input type="checkbox" name="stranger" value="1" id="stranger" > <label for="stranger">Djelatnik je stranac</label>
+				<input type="checkbox" name="stranger" value="1" id="stranger" ><label for="stranger">Djelatnik je stranac</label>
 			</div>
 			<div class="form-group" id="dozvola">
 				<label>Datum isteka dozvole boravka u RH: </label>

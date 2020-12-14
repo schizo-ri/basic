@@ -70,7 +70,7 @@ class SuitabilityController extends Controller
         $benefit->saveSuitability($data);
 
         /* upload file */
-        if($_FILES["fileToUpload"]) {
+        if($_FILES["fileToUpload"]['name'] ) {
             $target_dir = "img/benefits/";
             // Create directory
             if(!file_exists($target_dir)){
@@ -123,7 +123,7 @@ class SuitabilityController extends Controller
             }
             
         }
-        if($_FILES["docToUpload"]) {
+        if($_FILES["docToUpload"]['name'] ) {
             $target_dir = "benefits/";
             // Create directory
             if(!file_exists($target_dir)){
@@ -225,7 +225,7 @@ class SuitabilityController extends Controller
 
         $benefit->updateSuitability($data);
 
-        /* upload file */
+        /* upload logo */
         if($_FILES["fileToUpload"]['name'] ) {
             $target_dir = "img/benefits/";
             // Create directory
@@ -272,13 +272,15 @@ class SuitabilityController extends Controller
             // if everything is ok, try to upload file
             } else {
                 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                    return redirect()->back()->with('success',__('basic.image') . ' ' . basename( $_FILES["fileToUpload"]["name"]).  __('ctrl.has_uploaded'));
+                //    return redirect()->back()->with('success',__('basic.image') . ' ' . basename( $_FILES["fileToUpload"]["name"]).  __('ctrl.has_uploaded'));
                 } else {
                     return redirect()->back()->with('error',  __('ctrl.file_error')); 
                 }
             }
         }
-        if($_FILES["docToUpload"]) {
+        /* upload file */
+        if($_FILES["docToUpload"]['name'] ) {
+           
             $target_dir = "benefits/";
             // Create directory
             if(!file_exists($target_dir)){
@@ -289,9 +291,10 @@ class SuitabilityController extends Controller
                 mkdir($target_dir);
             }
             $target_file = $target_dir . basename($_FILES["docToUpload"]["name"]);
+         
             $uploadOk = 1;
             $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-            // Check if image file is a actual image or fake image
+         
             if(isset($_POST["submit"])) {
                 $check = getimagesize($_FILES["docToUpload"]["tmp_name"]);
                 if($check !== false) {
@@ -302,13 +305,12 @@ class SuitabilityController extends Controller
                     $uploadOk = 0;
                 }
             }
-            // Check if file already exists
+           
             if (file_exists($target_file)) {
                 return redirect()->back()->with('error', __('ctrl.file_exists'));  
                 $uploadOk = 0;
             }
-            // Check file size
-         /*    if ($_FILES["docToUpload"]["size"] > 5000000) {
+            /*    if ($_FILES["docToUpload"]["size"] > 5000000) {
                 return redirect()->back()->with('error',  __('ctrl.file_toolarge'));
                 $uploadOk = 0;
             } */
@@ -316,13 +318,12 @@ class SuitabilityController extends Controller
             if($imageFileType == "bin" || $imageFileType == "exe" ) {
                 return redirect()->back()->with('error', __('ctrl.not_allow'));  
                 $uploadOk = 0;
-            } 
-            // Check if $uploadOk is set to 0 by an error
+            }  
             if ($uploadOk == 0) {
                 return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
             // if everything is ok, try to upload file
             } else {
-                if (move_uploaded_file($_FILES["docToUpload"]["tmp_name"], $target_file)) {
+                if (move_uploaded_file($_FILES["docToUpload"]["name"], $target_dir)) {
                    /*  return redirect()->back()->with('success', __('basic.image') . ' ' . basename( $_FILES["docToUpload"]["name"]).  __('ctrl.has_uploaded')); */
                 } else {
                     return redirect()->back()->with('error',  __('ctrl.file_error')); 

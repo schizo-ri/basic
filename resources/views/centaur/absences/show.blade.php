@@ -65,7 +65,7 @@
 												$interval1 = $start_date->diff($end_date);
 												$zahtjev = array('start_date' => $absence->start_date, 'end_date' => $absence->end_date);
 												$array_dani_zahtjeva = BasicAbsenceController::array_dani_zahtjeva($zahtjev);
-												$dani_go = BasicAbsenceController::daniGO($absence);
+												$dani_go = BasicAbsenceController::daniGO_count($absence);
 											
 												$dana_GO_OG = count(array_intersect($array_dani_zahtjeva,($data_absence['zahtjevi'][ date('Y')])));
 												$dana_GO_PG = $dani_go - $dana_GO_OG;

@@ -13,10 +13,19 @@ $( function () {
 			kolona = 1;
 			sort = 'asc';
 		}
-		if ($('#index_table').hasClass('sort_1_desc')) {
+		if ($('#index_table').hasClass('sort_1_asc')) {
 			kolona = 1;
+			sort = 'asc';
+		}
+		if ($('#index_table').hasClass('sort_2_desc')) {
+			kolona = 2;
 			sort = 'desc';
-		}	
+		}
+		if ($('#index_table').hasClass('sort_3_desc')) {
+			kolona = 3;
+			sort = 'desc';
+		}
+		
 		var th_length = $('table.display thead th').not('.not-export-column');
 		var target = [];
 		var widths = [];
@@ -25,6 +34,7 @@ $( function () {
 				target.push(index);
 			}
 		});
+		
 		try {
 			jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 				"date-eu-pre": function ( date ) {
@@ -55,9 +65,7 @@ $( function () {
 						if ( day.length == 1 ) {
 							day = 0+day;
 						}
-				
 						return (year + month + day) * 1;
-				
 				},
 			 
 				"date-eu-asc": function ( a, b ) {
@@ -72,7 +80,7 @@ $( function () {
 		/* 	target = null; */
 		}
 		
-		if($('table.display').length >0) {
+		if($('table.display').length > 0) {
 			var table = $('table.display').not('.evidention_employee table.display', '.all_absences #index_table').DataTable( {
 				"language": {
 					"search": "",

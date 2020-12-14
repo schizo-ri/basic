@@ -9,6 +9,7 @@ use App\Models\Absence;
 use App\Models\AbsenceType;
 use App\Models\Afterhour;
 use App\Models\DayOff;
+use App\Models\Kid;
 use DateTime;
 use DateInterval;
 use DatePeriod;
@@ -136,7 +137,7 @@ class BasicAbsenceController extends Controller
 	/* ########################      DANI GODIŠENJEG ODMORA    ######################## */	
 
 		// Vraća broj dana godišnjeg ova godina    
-		public static function daysThisYear($user)
+		public static function daysThisYear( $user)
 		{
 			$all_service = BasicAbsenceController::yearsServiceAll($user);  /* ukupan staž  */
 			$date = new DateTime('now');    /* današnji dan */
@@ -157,6 +158,10 @@ class BasicAbsenceController extends Controller
 				}
 
 				$days += (int)($all_service[0]/ 4) ;
+
+				$days_for_kids = BasicAbsenceController::kids($user, $ova_godina);
+				
+				$days =  $days + $days_for_kids;
 
 				If($days > 25){
 					if($_max_days) {
@@ -232,53 +237,54 @@ class BasicAbsenceController extends Controller
 		}
 
 		/* dani GO PROŠLA godina */
-		public static function godisnjiPG($user)      /*** OK abs days */
-		{
-			$date = new DateTime('now');    /* današnji dan */
-			$year = date_format($date,'Y') - 1;
+		/* public static function godisnjiPG($user)   
+			{
+				$date = new DateTime('now');    
+				$year = date_format($date,'Y') - 1;
 
-			if($user->abs_days != null && array_key_exists($year, unserialize( $user->abs_days)) ) {
-				$absence_days = unserialize( $user->abs_days);
-				$days= $absence_days[$year];				
-			} else {
-				/* Računa ukupan staz za prošlu godinu - do 31.12.*/
-				$stazPG =  BasicAbsenceController::stazUkupnoPG($user, $year);
+				if($user->abs_days != null && array_key_exists($year, unserialize( $user->abs_days)) ) {
+					$absence_days = unserialize( $user->abs_days);
+					$days= $absence_days[$year];				
+				} else {
+					// Računa ukupan staz za prošlu godinu - do 31.12.
+					$stazPG =  BasicAbsenceController::stazUkupnoPG($user, $year);
 
-				$dana = $stazPG[2];
-				$mjeseci = $stazPG[1];
-				$godina = $stazPG[0];
+					$dana = $stazPG[2];
+					$mjeseci = $stazPG[1];
+					$godina = $stazPG[0];
 
-				if(($dana) > 30){
-					$dana = $dana -30;
-					$mjeseci += 1;
-				}
+					if(($dana) > 30){
+						$dana = $dana -30;
+						$mjeseci += 1;
+					}
 
-				if(($mjeseci) > 12){
-					$mjeseci += $mjeseci - 12;
-					$godina += 1;
-				}
+					if(($mjeseci) > 12){
+						$mjeseci += $mjeseci - 12;
+						$godina += 1;
+					}
 
-				/* Godišnji odmor - dani*/
-				$days = AbsenceType::where('mark','GO')->first()->min_days;
-				$_max_days = AbsenceType::where('mark','GO')->first()->max_days;
+					// Godišnji odmor - dani
+					$days = AbsenceType::where('mark','GO')->first()->min_days;
+					$_max_days = AbsenceType::where('mark','GO')->first()->max_days;
 
-				if(! $days) {
-					$days = 20;
-				}
-				$days += (int)($godina/ 4) ;
+					if(! $days) {
+						$days = 20;
+					}
+					$days += (int)($godina/ 4) ;
 
-				If($days > 25){
-					if($_max_days) {
-						$days = $_max_days;
-					} else {
-						$days = 25;
+					If($days > 25){
+						if($_max_days) {
+							$days = $_max_days;
+						} else {
+							$days = 25;
+						}
 					}
 				}
+			
+				return $days;
 			}
-		
-			return $days;
-		}
-
+		*/
+		 
 		/* dani GO ODREĐENA godina */
 		public static function godisnjiGodina($user, $godina)          /*** OK abs days */
 		{
@@ -329,24 +335,24 @@ class BasicAbsenceController extends Controller
 			return $days;
 		}
 
-		/*  razmjeran GO PROŠLA godina*/
-		public static function razmjeranGO_PG( $user)    
+		/*  razmjeran GO PROŠLA godina */
+		/* public static function razmjeranGO_PG( $user)    
 		{
-			$date = new DateTime('now');    /* današnji dan */
+			$date = new DateTime('now');    // današnji dan
 			$ova_godina = date_format($date,'Y');
 			$mjesec_danas = date_format($date,'m');
 			$prosla_godina = date_format($date,'Y')-1;
 			$datumPG = new DateTime($prosla_godina . '-12-31');
 			$razmjeranGO_PG = 0;
 			
-			$GO  = BasicAbsenceController::godisnjiPG($user); /* dani GO prošla godina */
+			$GO  = BasicAbsenceController::godisnjiPG($user); // dani GO prošla godina 
 
 			if($user->reg_date) {
 				$datum_prijave = $user->reg_date;
 				$datum_prijave = explode('-', $user->reg_date);
 				$prijavaGodina = $datum_prijave[0];
 				$prijava = new DateTime($user->reg_date);
-				$staz = $prijava->diff($datumPG);   /* staz u Duplicu do 31.12. prošla godina*/
+				$staz = $prijava->diff($datumPG);   // staz u Duplicu do 31.12. prošla godina
 				$mjesec = $staz->format('%m');
 				$dan = $staz->format('%d');
 
@@ -372,7 +378,7 @@ class BasicAbsenceController extends Controller
 			}
 			
 			return $razmjeranGO_PG;
-		}
+		} */
 
 		/*  razmjeran GO ODREĐENA godina*/
 		public static function razmjeranGO_Godina($user, $year)    
@@ -420,24 +426,30 @@ class BasicAbsenceController extends Controller
 						$razmjeranGO_PG = 0;
 					}
 				}
-				
 			}
-			
+			$days_for_kids = BasicAbsenceController::kids($user, $year);
+			$razmjeranGO_PG =  $razmjeranGO_PG + $days_for_kids;
+
 			return $razmjeranGO_PG;
 		}
 		
 		/* Računa dane GO za djecu*/	
-		public function kids($user){
+		public static function kids($user, $year){
 			$kids = Kid::where('employee_id', $user->id)->get();
-			$datum = new DateTime('now');  
+			$today = date('m-d');
+
+			$datum = new DateTime($year . '-' . $today);  
+
 			$day = 0;
 			$kid_age;
 			$count_kids = 0;
 			foreach($kids as $kid){
-				$b_day = new DateTime($kid->b_day);  /* datum rođenja djeteta */
-				$kid_age = $b_day->diff($datum); 
-				if((int)$kid_age->y < 7){
-					$count_kids += 1;
+				if( date('Y', strtotime($kid->b_day )) <= $year ) {
+					$b_day = new DateTime($kid->b_day);  /* datum rođenja djeteta */
+					$kid_age = $b_day->diff($datum); 
+					if((int)$kid_age->y < 7){
+						$count_kids += 1;
+					}
 				}
 			}
 			if($count_kids >= 2) {
@@ -632,7 +644,7 @@ class BasicAbsenceController extends Controller
 		}
 
 		// Računa broj radnih dana između dva datuma, ako je izlazak 
-		public static function daniGO($zahtjev)
+		public static function daniGO(  $zahtjev)
 		{
 			$holidays = BasicAbsenceController::holidays();
 
@@ -651,6 +663,28 @@ class BasicAbsenceController extends Controller
 			}
 			return $brojDana;
 		}
+
+		// Računa broj radnih dana između dva datuma, ako je izlazak 
+		public static function daniGO_count($zahtjev)
+		{
+			$holidays = BasicAbsenceController::holidays();
+
+			$begin = new DateTime($zahtjev['start_date']);
+			$end = new DateTime($zahtjev['end_date']);
+			$end->setTime(0,0,1);
+			$interval = DateInterval::createFromDateString('1 day');
+			$period = new DatePeriod($begin, $interval, $end);
+			
+			$brojDana = 0;
+			
+			foreach ($period as $dan) {
+				if(! in_array(date_format($dan,'Y-m-d'), $holidays) && date_format($dan,'N') < 6) {
+					$brojDana += 1;
+				}
+			}
+			return $brojDana;
+		}
+
 
 		// Računa broj radnih dana između dva datuma, ako je izlazak 
 		public static function array_dani_zahtjeva($zahtjev)

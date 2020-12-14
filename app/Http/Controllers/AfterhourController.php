@@ -98,7 +98,7 @@ class AfterhourController extends Controller
      */
     public function create()
     {
-        $employees = Employee::employees_firstNameASC();
+        $employees = Employee::employees_lastNameASC();
      
         $employee = Sentinel::getUser()->employee;
      /*    if( $employee ) {
@@ -227,7 +227,7 @@ class AfterhourController extends Controller
     public function edit($id)
     {
         $afterhour = Afterhour::find($id);
-        $employees = Employee::employees_firstNameASC();
+        $employees = Employee::employees_lastNameASC();
 
         $employee = Sentinel::getUser()->employee;
      /*    if( $employee ) {

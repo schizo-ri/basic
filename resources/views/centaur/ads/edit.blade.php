@@ -36,7 +36,8 @@
 			@if(isset($docs))
 				@if(file_exists($path . end($docs)) && end($docs)!= '' )
 					<span class="ad_image">{{ end($docs) }} 
-						<a class="action_confirm danger" href="{{ action('DocumentController@imageDelete', ['image' => $path . end($docs)]  ) }}" data-method="delete" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>
+						<a class="action_confirm danger" href="{{ action('DocumentController@imageDelete', ['image' => $path . end($docs)]  ) }}" method="POST" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a>
+														
 					</span>
 				@endif
 			@endif
@@ -57,4 +58,5 @@
 	$('#file').change(function(){
         $('#file_name').text( $('input[type=file]').val());
 	});
+	$.getScript( '/../restfulizer.js');
 </script>

@@ -61,7 +61,7 @@
 				</section>
 				<section class="col-xs-6 col-sm-6 col-md-6 col-lg-6 float_left" id="mail_template">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="header">
-						Lorem Ipsum
+						<input name="text_header[text]" type="text" id="text_header[text]" class="text_header" />
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="body">
 						What is Lorem Ipsum?

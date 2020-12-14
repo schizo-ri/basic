@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardController;
 use App\Models\MailTemplate;
 use App\Models\MailStyle;
+use App\Models\MailText;
 use Log;
 use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
@@ -73,6 +74,7 @@ class MailTemplateController extends Controller
      */
     public function store(Request $request)
     {
+     /*    dd($request); */
         $data = array(
 			'name'          => $request['name'],
 			'description'   => $request['description'],
@@ -91,7 +93,7 @@ class MailTemplateController extends Controller
             }
             $style[ $element ] = $style_text;
         }
-       
+     
         $data_style = array(
             'mail_id'       => $mailTemplate->id,
             'style_header'  => $style['header'],
@@ -102,6 +104,28 @@ class MailTemplateController extends Controller
         $mailStyle = new MailStyle();
         $mailStyle->saveMailStyle($data_style);
 
+        $elements2 = array('text_header', 'text_body','text_footer');
+        $text = array();
+        foreach( $elements2 as $element ) {
+            $text_mail = '';
+            if(isset( $request[ $element ]) ) {
+                foreach( $request[ $element ] as $key => $value ) {
+                    $text_mail .= ($key . ':' . $value.';');
+                }
+                $text[ $element ] = $text_mail;
+            }
+        }
+
+        $data_text = array(
+            'mail_id'       => $mailTemplate->id,
+            'text_header'  => isset($text['text_header']) ? $text['text_header'] : null,
+            'text_body'    => isset($text['text_body']) ? $text['text_body'] : null,
+            'text_footer'  => isset($text['text_footer']) ? $text['text_footer'] : null,
+        );
+      
+        $mailText = new MailText();
+        $mailText->saveMailText($data_text);
+        
         session()->flash('success',  __('ctrl.data_save'));
         return redirect()->route('mail_templates.index');
     }
@@ -134,7 +158,53 @@ class MailTemplateController extends Controller
             $docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
         }
 
-        return view('Centaur::mail_templates.edit', ['mailTemplate' => $mailTemplate,'elements' => $elements, 'docs' => $docs]);
+        $mailTemplate_style = $mailTemplate->mailStyle;
+
+        $header = array();
+        foreach( explode(';', $mailTemplate_style->style_header) as $header_style) {
+            $temp = explode(':',$header_style);
+            $key = $temp[0];
+            if(isset($temp[1] )) {
+                $val = $temp[1];
+                $header[$key] =$val;
+            }
+        }
+        $body = array();
+        foreach( explode(';', $mailTemplate_style->style_body) as $body_style) {
+            $temp = explode(':',$body_style);
+            $key = $temp[0];
+            if(isset($temp[1] )) {
+                $val = $temp[1];
+                $body[$key] =$val;
+            }
+        }
+
+        $footer = array();
+        foreach( explode(';', $mailTemplate_style->style_footer) as $footer_style) {
+            $temp = explode(':',$footer_style);
+            $key = $temp[0];
+            if(isset($temp[1] )) {
+                $val = $temp[1];
+                $footer[$key] =$val;
+            }
+        }
+        $mailTemplate_text = $mailTemplate->mailText;
+
+        $header_text = array();
+        foreach( explode(';', $mailTemplate_text->text_header) as $text_header) {
+            $temp = explode(':',$text_header);
+            $key = $temp[0];
+            if(isset($temp[1] )) {
+                $val = $temp[1];
+                $header_text[$key] = $val;
+            }
+        }
+      /*   dd(explode(';', $mailTemplate_text->text_header)); */
+      /*   dd(  $header_text ); */
+        $body_text = array();
+        $footer_text = array();
+
+        return view('Centaur::mail_templates.edit', ['mailTemplate' => $mailTemplate,'elements' => $elements, 'docs' => $docs, 'mailTemplate_style' => $mailTemplate_style, 'header' => $header, 'body' => $body, 'footer' => $footer, 'header_text' => $header_text ]);
 
     }
 

@@ -134,7 +134,6 @@ class AbsenceController extends BasicAbsenceController
 						$afterhours = $afterhours->where('approve', NULL)->where('approve','<>', '0');
 					}
 				}
-				
 			}
 			
 			if(isset($_GET['type_bol']) && $_GET['type_bol']) {
@@ -154,6 +153,8 @@ class AbsenceController extends BasicAbsenceController
 				'bolovanje' 	 => BasicAbsenceController::bolovanje( $empl ), 
 				'docs' 		 	 => DashboardController::profile_image( $empl->id ), 
 				'user_name' 	 => DashboardController::user_name( $empl->id ), 
+				'days_offUsed' => BasicAbsenceController::days_offUsed( $empl ), 
+				'afterHours_withoutOuts' => BasicAbsenceController::afterHours_withoutOuts( $empl ), 
 			);
 			
 			if($empl->work) {
@@ -760,4 +761,14 @@ class AbsenceController extends BasicAbsenceController
 	
 		return $interval->format($differenceFormat);
 	}	
+
+	public static function printRequests ( Request $request)  
+	{
+		$absence = Absence::find(  $request['id'] );
+	
+		$dani = array('start_date' =>$absence->start_date, 'end_date' =>$absence->end_date);
+		$daniGO = BasicAbsenceController::daniGO( $dani ); //vraća dane zahtjeva
+		
+		return view('Centaur::absences.print_requests', ['absence' => $absence, 'daniGO' => $daniGO]);
+	}
 }

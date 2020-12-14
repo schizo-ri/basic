@@ -62,31 +62,30 @@ if($('.index_admin').length > 0 ) {
         title = click_element.text();
         $("title").text( title ); 
         url = $(this).attr('href');
-    
+        
         // ako ima shortcut - href edit
-    try {
-        $.get( "shortcut_exist", {'url': url }, function( id ) {
-            console.log( "id: " + id );
-            if(id != null && id != '') {
-                $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
-                $('.shortcut_text').text('Ispravi prečac'); 
-            } else {
-                title = $('.admin_link.active_admin').attr('id');
+        try {
+            $.get( "shortcut_exist", {'url': url }, function( id ) {
+                console.log( "id: " + id );
+                if(id != null && id != '') {
+                    $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+                    $('.shortcut_text').text('Ispravi prečac'); 
+                } else {
+                    title = $('.admin_link.active_admin').attr('id');
 
-                $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url+'&title='+title );
-                $('.shortcut_text').text('Dodaj prečac'); 
-            }
-        });
-    } catch (error) {
-        //
-    }
+                    $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url+'&title='+title );
+                    $('.shortcut_text').text('Dodaj prečac'); 
+                }
+            });
+        } catch (error) {
+            //
+        }
 
         $('.admin_pages>li>a').removeClass('active_admin');
         $(this).addClass('active_admin');
         active_link = $('.admin_link.active_admin').attr('id');
 
         $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
-            console.log();
             window.history.replaceState({}, document.title, url);
             if ( status == "error" ) {
                 var msg = "Sorry but there was an error: ";

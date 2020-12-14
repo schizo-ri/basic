@@ -46,6 +46,7 @@ class TaskCreateNotification extends Command
     public function handle()
     {
         $today = new DateTime('now');
+        Log::info('TaskCreateNotification');
         
         $tasks = Task::whereDate('end_date', '>=', date('Y-m-d'))->where('active', 1)->get();
 
@@ -111,27 +112,28 @@ class TaskCreateNotification extends Command
                                 $empl_id = $employee_ids[$key];
                             }
                         }
-                    } else {
-                        $response =  BasicAbsenceController::absenceForDayTask($empl_id, date_format($task_date, 'Y-m-d'));  // djelatnik ima zahtjev na dan (a nije Izlazak) 
-                        if($response == false) {
-                            //odsjutan djelatnik za postavljen zadatak
-                             /*  Mail::queue('email.task_go', ['task' => $task ], function ($mail) use ($task, $email) {
-                            $mail->to($email)
-                                ->from('info@duplico.hr', 'Duplico')
-                                ->subject('Podsjetnik na zadatak');
-                        }); */
+                    } 
+
+                    $employee =  Employee::where('id', $empl_id )->first();
+
+                    if( $task->energy_consumptions == 1 ) {
+                        $user = Sentinel::findById( $employee->user_id );
+                        $role = Sentinel::findRoleBySlug('energenti');
+                      
+                        if( ! $user->inRole('energenti') ) {
+                            $role->users()->attach($user);
                         }
                     }
 
-                    $email = Employee::where('id', $empl_id )->first()->email;
-                    Log::info($email);
+                    $email = $employee->email;
+                    Log::info('TaskCreateNotification: '. $email);
                     $data = array(
                         'task_id'  	    => $task->id,
                         'employee_id'  	=>  $empl_id  
                     );                
                     
                     $employeeTask = new EmployeeTask();
-                    $employeeTask->saveEmployeeTask($data);                     
+                    $employeeTask->saveEmployeeTask( $data);                     
 
                     if( $email != null && $email != '') {
                         Mail::to($email)->send(new TaskCreateMail($employeeTask));

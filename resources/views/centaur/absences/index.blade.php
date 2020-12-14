@@ -67,6 +67,13 @@
 							@endforeach
 							<span>@lang('absence.used_unused')</span>
 						</p>
+						@if($employee->days_off == 1)
+							<p class="col-6 float_l">
+							</p>
+							<p class="col-6 float_l days_off">
+								<span>Slobodni dani {!! $data_absence['afterHours_withoutOuts']  - $data_absence['days_offUsed']  !!}</span>
+							</p>
+						@endif
 					</div>
 					<div class="col-3 info_abs">
 						<span class="title">@lang('absence.sick_leave')
@@ -87,6 +94,7 @@
 							<span>@lang('absence.this_month')</span>
 						</p>
 					</div>
+					<div></div>
 				</header>
 				<section class="overflow_auto bg_white section_main">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padd_0 position_rel height100">
@@ -156,8 +164,6 @@
 											<option value="not_approved">@lang('absence.not_approved')</option>
 										</select>
 									</div>
-									
-									
 								</div>
 							</div>
 							<div class="table-responsive" >
@@ -193,7 +199,7 @@
 														$interval1 = $start_date->diff($end_date);
 														$zahtjev = array('start_date' => $absence->start_date, 'end_date' => $absence->end_date);
 														$array_dani_zahtjeva = BasicAbsenceController::array_dani_zahtjeva($zahtjev);
-														$dani_go = BasicAbsenceController::daniGO($absence);
+														$dani_go = BasicAbsenceController::daniGO_count($zahtjev);
 
 														$dana_GO_OG = count(array_intersect($array_dani_zahtjeva,($data_absence['zahtjevi'][ $ova_godina])));
 														$dana_GO_PG = $dani_go - $dana_GO_OG;
@@ -231,11 +237,13 @@
 															@elseif($absence->approve == "0") 
 																<span class="img_denied"><span>@lang('absence.refused')</span></span>
 															@elseif($absence->approve == null) 
-																<input type="hidden" name="id[{{ $absence->id}}]" class="id" value="{{ $absence->id}}">
-																<input type="hidden" name="type[{{ $absence->id}}]" class="id" value="abs">
-																<input class="check checkinput" type="radio" name="approve[{{ $absence->id}}]" value="1" id="odobreno{{ $absence->id}}" ><label class="check check_label" for="odobreno{{ $absence->id}}">DA</label>
-																<input class="uncheck checkinput" type="radio" name="approve[{{ $absence->id}}]" value="0" id="neodobreno{{ $absence->id}}" ><label class="uncheck check_label"  for="neodobreno{{ $absence->id}}">NE</label>
-																<input class="nocheck checkinput" type="radio" name="approve[{{ $absence->id}}]" value="" id="bezodobreno{{ $absence->id}}" ><label class="uncheck check_label"  for="bezodobreno{{ $absence->id}}">-</label>
+																@if(Sentinel::inRole('administrator'))
+																	<input type="hidden" name="id[{{ $absence->id}}]" class="id" value="{{ $absence->id}}">
+																	<input type="hidden" name="type[{{ $absence->id}}]" class="id" value="abs">
+																	<input class="check checkinput" type="radio" name="approve[{{ $absence->id}}]" value="1" id="odobreno{{ $absence->id}}" ><label class="check check_label" for="odobreno{{ $absence->id}}">DA</label>
+																	<input class="uncheck checkinput" type="radio" name="approve[{{ $absence->id}}]" value="0" id="neodobreno{{ $absence->id}}" ><label class="uncheck check_label"  for="neodobreno{{ $absence->id}}">NE</label>
+																	<input class="nocheck checkinput" type="radio" name="approve[{{ $absence->id}}]" value="" id="bezodobreno{{ $absence->id}}" ><label class="uncheck check_label"  for="bezodobreno{{ $absence->id}}">-</label>
+																@endif
 															@endif
 														</td>
 														<td class="approve not_link"  style="max-width:10%;width:10%">
@@ -263,6 +271,7 @@
 																	<a href="{{ route('confirmation_show', [ 'absence_id' => $absence->id ]) }}" class="btn-edit" title="{{ __('absence.approve_absence')}}" rel="modal:open" >
 																		<i class="far fa-check-square"></i>
 																	</a>
+																	<a href="{{ route('print_requests', ['id' => $absence->id] ) }}" title="Print zahtjeva" target="_blank" ><i class="fas fa-print"></i></a> 
 																@endif
 															</td>
 														@endif
@@ -294,12 +303,14 @@
 															@elseif($afterhour->approve == '0')
 																<span class="img_denied"><span>@lang('absence.refused')</span></span>
 															@elseif($afterhour->approve == null)
-																<input type="hidden" name="id[{{ $afterhour->id}}]" class="id" value="{{ $afterhour->id}}">
-																<input type="hidden" name="type[{{ $afterhour->id}}]" class="id" value="aft">
-																<input name="approve_h[{{ $afterhour->id}}]" style="border-radius:5px;" class="odobreno_h[{{ $afterhour->id}}]" type="time" value="{!! isset( $interval ) ? $interval : '00:00' !!}" required>
-																<input class="check checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="1" id="odobreno{{ $afterhour->id}}" ><label class="check check_label" for="odobreno{{ $afterhour->id}}">DA</label>
-																<input class="uncheck checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="0" id="neodobreno{{ $afterhour->id}}" ><label class="uncheck check_label"  for="neodobreno{{ $afterhour->id}}">NE</label>
-																<input class="nocheck checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="" id="bezodobreno{{ $afterhour->id}}" ><label class="uncheck check_label"  for="bezodobreno{{ $afterhour->id}}">-</label>
+																@if(Sentinel::inRole('administrator'))
+																	<input type="hidden" name="id[{{ $afterhour->id}}]" class="id" value="{{ $afterhour->id}}">
+																	<input type="hidden" name="type[{{ $afterhour->id}}]" class="id" value="aft">
+																	<input name="approve_h[{{ $afterhour->id}}]" style="border-radius:5px;" class="odobreno_h[{{ $afterhour->id}}]" type="time" value="{!! isset( $interval ) ? $interval : '00:00' !!}" required>
+																	<input class="check checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="1" id="odobreno{{ $afterhour->id}}" ><label class="check check_label" for="odobreno{{ $afterhour->id}}">DA</label>
+																	<input class="uncheck checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="0" id="neodobreno{{ $afterhour->id}}" ><label class="uncheck check_label"  for="neodobreno{{ $afterhour->id}}">NE</label>
+																	<input class="nocheck checkinput" type="radio" name="approve[{{ $afterhour->id}}]" value="" id="bezodobreno{{ $afterhour->id}}" ><label class="uncheck check_label"  for="bezodobreno{{ $afterhour->id}}">-</label>
+																@endif
 															@endif
 														</td>
 														<td class="not_link approve" style="max-width:10%;width:10%">

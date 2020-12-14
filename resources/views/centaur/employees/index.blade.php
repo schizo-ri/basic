@@ -27,6 +27,7 @@
 							<th>@lang('basic.fl_name')</th>
 							<th>ERP ID</th>
 							<th class="sort_date">@lang('basic.b_day')</th>
+							<th>OIB</th>
 							<th>@lang('basic.work')</th>
 							<th>@lang('basic.department')</th>
 							<th class="sort_date">@lang('basic.reg_date')</th>
@@ -36,12 +37,13 @@
 					<tbody>
 						@foreach ($employees as $employee)
 							<tr class="tr_open_link "  data-href="/employees/{{ $employee->id }}" data-modal >
-								<td>{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}
+								<td>{{ $employee->user['last_name'] . ' ' . $employee->user['first_name'] }}
 									<span class="employee_color" {!! $employee->color ? 'style="background-color:' . $employee->color . '"' : '' !!}>
 									</span>
 								</td>
 								<td>{!! $employee->erp_id ? $employee->erp_id : '' !!}</td>
 								<td>{!! $employee->b_day ? date("d.m.Y",strtotime($employee->b_day)) : '' !!}</td>
+								<td>{{  $employee->oib }}</td>
 								<td>{!! $employee->work ? $employee->work['name'] : '' !!}</td>
 								<td>
 									@if($employee->hasEmployeeDepartmen && count($employee->hasEmployeeDepartmen)>0)
@@ -52,6 +54,7 @@
 								</td>
 								<td>{!! $employee->reg_date ? date("d.m.Y",strtotime($employee->reg_date)) : '' !!}</td>
 								<td class="center">
+									
 									<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['employees.update']) || in_array('employees.update', $permission_dep))
 										<a href="{{ route('employees.edit', $employee->id) }}" title="{{ __('basic.edit_employee') }}"  rel="modal:open">
@@ -66,6 +69,11 @@
 									@if(Sentinel::inRole('superadmin'))
 										<a href="{{ route('employees.destroy', $employee->id ) }}" style="display:none" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}">
 											<i class="far fa-trash-alt"></i>
+										</a>
+									@endif
+									@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep))
+										<a href="{{ route('absences.show', $employee->id) }}" title="{{ __('basic.edit_employee') }}">
+											<i class="fas fa-suitcase"></i>
 										</a>
 									@endif
 								</td>

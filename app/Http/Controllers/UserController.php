@@ -130,7 +130,7 @@ class UserController extends Controller
             }
         }
 
-        $user = User::orderBy('id','DESC')->first();
+      /*   $user = User::orderBy('id','DESC')->first();
         $data_employee = [
             'user_id' => $user->id,
             'email'   => $user->email,
@@ -147,11 +147,10 @@ class UserController extends Controller
                 'work_id'       =>  $jobInterview->work_id,
                 'comment'       =>  $jobInterview->comment,
             ];
-
         }
 
         $employee = new Employee();
-        $employee->saveEmployee( $data_employee );
+        $employee->saveEmployee( $data_employee ); */
 
         if ($request->hasFile('fileToUpload')) {
             $image = $request->file('fileToUpload');

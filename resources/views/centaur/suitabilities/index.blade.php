@@ -98,7 +98,7 @@
 										</div>
 									</div>
 									<div class="col-xs-12 col-sm-4 float_l contact_info">
-										<p>@lang('basic.contact_person')</p><p>@lang('basic.contact_person')</p>
+										<p>@lang('basic.contact_person')</p>
 										<label><i class="fas fa-user"></i> {{ $benefit->contact }}</label>
 										<p class="last">@lang('basic.contact_info')</p>
 										<label><i class="fas fa-mobile-alt"></i> {{ $benefit->phone }}</label>

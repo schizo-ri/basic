@@ -321,7 +321,7 @@ ul.nav_ul.float_right li img {
     top: 15px;
 }
 
-.topnav.nav_top  a {
+.topnav.nav_top a {
 	float: left;
     display: block;
     text-align: center;
@@ -332,7 +332,13 @@ ul.nav_ul.float_right li img {
     padding-left: 30px;
     line-height: 92px;
     text-align: center;
-    display: inline-block;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.topnav.nav_top a.link_home {
+	padding: 28px 0;
+	padding-left: 30px;
 }
   .topnav>a:first-child {
 	padding-left: 30px;
@@ -774,6 +780,7 @@ ul.nav_ul.float_right li img {
 	padding: 80px 30px 30px;
 	overflow: auto;
 	scrollbar-width: thin;
+	
 }
 
 .side_navbar a {

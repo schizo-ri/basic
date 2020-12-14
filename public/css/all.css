@@ -820,7 +820,6 @@ summary {
     padding-right: 30px;
 }
 
-
 .padd_h_10 {
     padding: 0 10px;
 }
@@ -1689,11 +1688,8 @@ div#calendar ul li.active_date {
 }
 
 .comming_agenda .agenda_mark {
-    height: 52px;
-    float: left;
-    display: block;
-    padding: 15px 0;
-    width: 2%;
+    display: inline-block;
+    align-self: center;
 }
 
 .comming_agenda .agenda_mark .green {
@@ -1737,15 +1733,18 @@ div#calendar ul li.active_date {
     width: 79%;
     text-align: left;
     white-space: inherit;
-    line-height: 1.5;
+    /* height: 52px; */
     display: inline-block;
-    vertical-align: middle;
+    /* padding: 15px; */
 }
 
 .comming_agenda .agenda {
     padding-bottom: 10px;
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
     overflow: hidden;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
 }
 
 .noticeboard .btn-new {
@@ -2163,7 +2162,7 @@ div#calendar ul li.active_date {
     height: 100%;
     font-family: Montserrat, sans-serif;
     display: flex;
-    padding: 0 10px;
+   /*  padding: 0 10px; */
 }
 .password_reset h3 {
     color: white;
@@ -2989,7 +2988,10 @@ class="select-css"
     background: #13EA90;
     cursor: default;
 }
-
+.show_event div.event.purple {
+    background:#a64dff;
+    cursor: default;
+}
 .show_event .event p {
     font-weight: 600;
     font-size: 0.75rem;
@@ -4879,7 +4881,7 @@ main.index_main.main_absence >section {
 }
 
 main.all_absences >section {
-    height: calc(100% - 160px);
+    height: calc(100% - 180px);
     background: white;
     overflow: hidden;
 }
@@ -4944,7 +4946,9 @@ main.all_absences >section {
     margin-top: 15px;
     display: block;
 }
-
+.info_abs>p>span.days_off {
+    
+}
 .info_abs .title .year_select {
     float: right;
     font-weight: 400;
@@ -5229,7 +5233,7 @@ label.add_new {
 .table tbody td {
     position: relative;
     font-weight: 500;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     line-height: 15px;
     color: #2B2B2B;
   /*   padding: 25px 10px; */
@@ -5384,10 +5388,18 @@ button.show_loccos {
     padding: 0;
     padding-left: 10px;
     margin: 5px 0;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     height: 40px;
     float: right;
     cursor: pointer;
+}
+.index_table_filter .page_link {
+    color: #606060;
+    padding-left: 15px;
+    font-size: 0.6875rem;
+    float: right;
+    cursor: pointer;
+    line-height: 35px;
 }
 .change_view_calendar:hover,
 .change_employee:hover,
@@ -5460,13 +5472,6 @@ main.index_main>section.section_evidention {
 }
 
 .index_table_filter >label, #index_table_filter >label {
-    /* margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%); */
-   
-   /*  min-width: 200px; */
     margin-left: 0;
     width: 30%;
     padding: 0;
@@ -5526,12 +5531,72 @@ s
 .table-responsive.second_view .questionnaires .thumb_name, .table-responsive.second_view .questionnaires .thumb_time  {
     color: #2B2B2B;
 }
+.structure {
+    padding: 20px;
+}
+.structure h4 {
+    border-bottom: 2px solid #f0808047;
+    margin: 0;
+    margin-bottom: .5rem;
+    padding: 5px;
+    font-size: 15px;
+}
+.structure h5{
+    border-bottom: 2px solid #7cfc0057;
+    padding: 5px;
+    font-size: 14px;
+}
+.structure h6 {
+    border-bottom: 2px solid #87cefa5c;
+    padding: 5px;
+    display: none;
+    font-size: 13px;
+    padding-left: 40px;
+    font-weight: 600;
+}
+h4 small, h5 small, h6 small, p small {
+    font-size: 0.625rem;
+    font-weight: 400;
+    float: right;
+    text-transform: uppercase;
+}
+
+.structure div {
+    padding-left: 20px;
+}
+.structure div.dep_workers {
+    display: none;
+    padding-left: 60px;
+}
+.structure p {
+    display: none;
+    font-size: 11px;
+    padding-left: 40px;
+}
+.structure span {
+   /*  display: block;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #eeeeee7d;
+    box-shadow: 3px 0 5px rgba(0, 0, 0, 0.15); */
+    display: block;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-bottom: 2px solid #ccc;
+}
 
 input[type="search"]::-webkit-search-cancel-button {
     /* Remove default */
     -webkit-appearance: none;
 }
-
+div.collaps_element {
+    display: none;
+}
 .table-responsive .table thead th {
     border: none;
     text-align: left;
@@ -5977,8 +6042,11 @@ a.modal_close {
     padding: 20px;
     font-size: 14px;
 }
-#style_items {
-   /*  visibility: hidden; */
+#mail_template input {
+    width: 100%;
+    border: none;
+    background: #eeeeee61;
+    text-align: inherit;
 }
 #style_items label>input, #style_items label>select {
     margin-left: 10px;
@@ -7767,7 +7835,7 @@ ul.nav_ul.float_right li img {
     top: 15px;
 }
 
-.topnav.nav_top  a {
+.topnav.nav_top a {
 	float: left;
     display: block;
     text-align: center;
@@ -7778,7 +7846,13 @@ ul.nav_ul.float_right li img {
     padding-left: 30px;
     line-height: 92px;
     text-align: center;
-    display: inline-block;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.topnav.nav_top a.link_home {
+	padding: 28px 0;
+	padding-left: 30px;
 }
   .topnav>a:first-child {
 	padding-left: 30px;
@@ -8220,6 +8294,7 @@ ul.nav_ul.float_right li img {
 	padding: 80px 30px 30px;
 	overflow: auto;
 	scrollbar-width: thin;
+	
 }
 
 .side_navbar a {
@@ -12732,6 +12807,8 @@ body {
 	overscroll-behavior-y: contain;
 	scrollbar-width: thin;
 	display: block;
+	overflow-y: auto;
+  	-webkit-overflow-scrolling: touch;
 }
 
 body>.welcome_page {

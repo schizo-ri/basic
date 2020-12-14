@@ -8,7 +8,11 @@
 		<section>
 			<div class="page-header header_document">
 				<a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a>
-				@lang('basic.task') {!! count($employeeTasks) > 0 ? ' - ' . $employeeTasks->first()->task->task : '' !!} 
+				@if(Sentinel::getUser()->hasAccess(['tasks.create'])  )
+					@lang('basic.task') {!! count($employeeTasks) > 0 ? ' - ' . $employeeTasks->first()->task->task : '' !!} 
+				@else
+					@lang('basic.tasks')
+				@endif
 			</div>
 			<main class="all_documents">
 				<div class="table-responsive">
@@ -23,12 +27,12 @@
 						</div>
 					</header>
 					@if(count($employeeTasks) > 0)
-						<table id="index_table" class="display table table-hover">
+						<table id="index_table" class="display table table-hover sort_3_desc">
 							<thead>
 								<tr>
 									<th>@lang('basic.task') | @lang('basic.description')</th>
 									<th>@lang('basic.employees_in_charge')</th>
-									<th>@lang('basic.date')</th>
+									<th class="sort_date">@lang('basic.date')</th>
 									<th>@lang('basic.comment')</th>
 									<th>Status</th>
 								</tr>
@@ -40,7 +44,7 @@
 										<td>{{ $employeeTask->employee->user->first_name . ' ' . $employeeTask->employee->user->last_name}}</td>
 										<td>{{ date('d.m.Y', strtotime($employeeTask->created_at )) }}</td>
 										<td>{{ $employeeTask->comment }}</td>
-										<td>{!! $employeeTask->status == 1 ? 'Izvršen' : '' !!}</td>
+										<td>{!! $employeeTask->status == 1 ? '<span class="green padd_l_15">Izvršen</span>' : '' !!}</td>
 									</tr>
 								@endforeach
 							</tbody>

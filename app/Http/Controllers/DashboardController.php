@@ -11,6 +11,7 @@ use App\Http\Controllers\PostController;
 use App\Models\Post;
 use App\Models\Event;
 use App\Models\Task;
+use App\Models\EmployeeTask;
 use App\Models\Employee;
 use App\Models\Department;
 use App\Models\Company;
@@ -34,6 +35,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
+       
+
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
             $moduli = CompanyController::getModules();  //dohvaća module firme
@@ -66,7 +69,7 @@ class DashboardController extends Controller
                 }
                 
                 $events = Event::where('employee_id',$employee->id)->where('date', $date)->orderBy('date','DESC')->get();
-                $tasks = Task::where('employee_id', $employee->id)->where('start_date', $date)->orderBy('start_date','DESC')->get();
+                $tasks = EmployeeTask::where('employee_id', $employee->id)->whereDate('created_at', $date)->orderBy('created_at','DESC')->get();
 
                 $profile_image = DashboardController::profile_image( $employee->id );
                 $user_name =  DashboardController::user_name( $employee->id );					

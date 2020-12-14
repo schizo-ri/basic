@@ -53,16 +53,22 @@ class EmployeeTaskController extends Controller
      */
     public function show($id)
     {
-        $employee = Sentinel::getUser()->employee;
+        if( Sentinel::check()) {
+            $employee = Sentinel::getUser()->employee;
 
-        if(Sentinel::inRole('administrator')) {
-            $task = Task::find($id);
-            $employeeTasks = $task->employeeTasks->sortBy('created_at');
+            if(Sentinel::inRole('administrator')) {
+                $task = Task::find($id);
+                $employeeTasks = $task->employeeTasks->sortBy('created_at');
+            } else {
+                $employeeTasks = EmployeeTask::where('employee_id', $employee->id )->get();
+            }
+
+            return view('Centaur::employee_tasks.show', ['employeeTasks'=>$employeeTasks]);
         } else {
-            $employeeTasks = EmployeeTask::where('employee_id', $employee->id )->get();
+            session()->flash('error', 'Nisi prijavljen u program. Prijavi se i pokušaj ponovno' );
+		
+		    return redirect()->back();
         }
-       
-        return view('Centaur::employee_tasks.show', ['employeeTasks'=>$employeeTasks]);
     }
 
     /**

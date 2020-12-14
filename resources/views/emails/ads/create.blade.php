@@ -61,7 +61,7 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="body" style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_body : '' !!}">
                 <p>Oglas možete pogledati na myIntranet oglasniku</p>
-                <button href="{{ $url }}" class="odobri">Vidi oglas</button>
+                <a href="{{ $url }}" class="odobri">Vidi oglas</a>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_footer : '' !!}">
 				<p>{{ config('app.name') }}</p>

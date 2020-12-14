@@ -360,4 +360,11 @@ class CompanyController extends Controller
 		return $users_number;
 
 	}
+
+	public function structure ( ) 
+	{
+		$company = Company::with('hasDepartments_level0')->with('hasDepartments_level1')->with('hasDepartments_level2')->first();
+
+		return view('Centaur::companies.structure',['company' => $company]);
+	}
 }

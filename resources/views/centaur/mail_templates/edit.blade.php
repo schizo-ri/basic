@@ -2,36 +2,6 @@
 
 @section('title', __('basic.add_mail_templates'))
 @php
-$mailTemplate_style = $mailTemplate->mailStyle;
-
-$header = array();
-foreach( explode(';', $mailTemplate_style->style_header) as $header_style) {
-	$temp = explode(':',$header_style);
-	$key = $temp[0];
-	if(isset($temp[1] )) {
-		$val = $temp[1];
-		$header[$key] =$val;
-	}
-}
-$body = array();
-foreach( explode(';', $mailTemplate_style->style_body) as $body_style) {
-	$temp = explode(':',$body_style);
-	$key = $temp[0];
-	if(isset($temp[1] )) {
-		$val = $temp[1];
-		$body[$key] =$val;
-	}
-}
-
-$footer = array();
-foreach( explode(';', $mailTemplate_style->style_footer) as $footer_style) {
-	$temp = explode(':',$footer_style);
-	$key = $temp[0];
-	if(isset($temp[1] )) {
-		$val = $temp[1];
-		$footer[$key] =$val;
-	}
-}
 
 @endphp
 @section('content')
@@ -73,6 +43,7 @@ foreach( explode(';', $mailTemplate_style->style_footer) as $footer_style) {
 								} else if( $element == 'footer') {
 									$style = $footer;
 								}
+							
 							@endphp
 							<h5>{{ ucfirst( $element) }}</h5>
 							<p>Font</p>
@@ -103,8 +74,8 @@ foreach( explode(';', $mailTemplate_style->style_footer) as $footer_style) {
 					@endforeach
 				</section>
 				<section class="col-xs-6 col-sm-6 col-md-6 col-lg-6 float_left" id="mail_template">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="header" style="{{  $mailTemplate_style->style_header }} ">
-						Lorem Ipsum
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="header" style="{{  $mailTemplate_style->style_header }} ">
+						<input name="text_header[text]" type="text" id="text_header[text]" class="text_header" value="{{ $header_text['text'] }}" />
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="body" style="{{  $mailTemplate_style->style_body }} ">
 						What is Lorem Ipsum?

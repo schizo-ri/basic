@@ -118,9 +118,9 @@
                     <p class="button_nav_text">@lang('basic.tasks')</p>
                 </a>	
             </div>
-        @else
+        @elseif ( count(Sentinel::getUser()->employee->hasEmployeeTask) > 0 )
             <div class="">
-                <a class="button_nav load_button tasks_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('employee_tasks.show',0) }}" title="{{ __('basic.tasks') }}">
+                <a class="button_nav load_button tasks_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('employee_tasks.show', 0) }}" title="{{ __('basic.tasks') }}">
                     <span class="button_nav_img img task"></span>
                     <p class="button_nav_text">@lang('basic.tasks')</p>
                 </a>	
@@ -136,13 +136,15 @@
                 </div>
             @endif
         @endif
-        @if(Sentinel::getUser()->hasAccess(['energy_consumptions.view']) || in_array('energy_consumptions.view', $permission_dep) )
-            <div class="">
-                <a class="button_nav load_button energy_consumptions_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('energy_consumptions.index') }}" title="Potrošnja energenata">
-                    <span class="button_nav_img"><i class="fas fa-plug"></i></span>
-                    <p class="button_nav_text">Energenti</p>
-                </a>	
-            </div>
+        @if( Sentinel::getUser()->hasAccess(['energy_consumptions.view']) || in_array('energy_consumptions.view', $permission_dep) )
+            @if ( count(Sentinel::getUser()->employee->hasTask->where('energy_consumptions', 1)->where('active', 1) )) > 0  )
+                <div class="">
+                    <a class="button_nav load_button energy_consumptions_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('energy_consumptions.index') }}" title="Potrošnja energenata">
+                        <span class="button_nav_img"><i class="fas fa-plug"></i></span>
+                        <p class="button_nav_text">Energenti</p>
+                    </a>	
+                </div>
+            @endif
         @endif
     </div>
 </section>

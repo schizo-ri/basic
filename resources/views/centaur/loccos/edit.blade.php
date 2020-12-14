@@ -20,7 +20,7 @@
 					<label>@lang('basic.employee')</label>
 					<option value="" selected disabled></option>
 					@foreach ($employees as $employee)
-						<option value="{{ $employee->id }}" {!! $locco->employee_id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['first_name'] . ' ' .  $employee->user['last_name'] }}</option>
+						<option value="{{ $employee->id }}" {!! $locco->employee_id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['last_name'] . ' ' .  $employee->user['first_name'] }}</option>
 					@endforeach
 				</select>
 				{!! ($errors->has('department_id') ? $errors->first('department_id', '<p class="text-danger">:message</p>') : '') !!}
@@ -93,21 +93,14 @@
 			var poc_km = $('#start_km').val();
 			var zav_km = $('#end_km').val();
 			var udaljenost = zav_km - poc_km;
-			console.log(poc_km);
-			console.log(zav_km);
-			console.log(udaljenost);
-
+			
 			$('#distance').val(udaljenost);
 			if (udaljenost < 0 ) {
-				console.log('udaljenost manja od 0');
-
 				$('#distance').css('border','1px solid red');
 				$('.btn-submit').attr('disabled', 'disabled');
 			} else {
-				console.log('udaljenost veća od 0');
 				$('#distance').css('border','1px solid #F0F4FF');
-				$('.btn-submit').removeAttr('disabled');
-				
+				$('.btn-submit').attr('disabled', false);
 			}
 		});
 
@@ -132,14 +125,14 @@
 					current_km = car.current_km;
 					$('#start_km').val(current_km);
 					$('#start_km_text').text(current_km);
-					if(car.private_car == 1) {
+					/* if(car.private_car == 1) {
 						$("#start_km_text").hide();						
 						$("#start_km").attr('type','number');
 
 					} else {
 						$("#start_km_text").show();						
 						$("#start_km").attr('type','hidden');
-					}
+					} */
 				})
 				.fail(function() {
 					alert( "Nije uspjelo" );
@@ -162,6 +155,5 @@
 			}
 		});
 	});
-
-	$.getScript( '/../js/validate.js');
+	/* $.getScript( '/../js/validate.js'); */
 </script>

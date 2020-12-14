@@ -49,6 +49,8 @@ Route::resource('roles', 'RoleController');
 
 // Company
 Route::resource('companies', 'CompanyController');
+Route::get('company/structure', ['as' => 'structure', 'uses' => 'CompanyController@structure']);
+Route::get('absence/absences_table', ['as' => 'absences_table', 'uses' => 'AbsenceController@absences_table']);
 
 // Department
 Route::resource('departments', 'DepartmentController');
@@ -81,6 +83,9 @@ Route::resource('education_articles', 'EducationArticleController');
 
 // Document
 Route::resource('documents', 'DocumentController');
+// Upload image 
+Route::get('upload_image', ['as' => 'upload', 'uses' => 'DocumentController@uploadImage']);
+Route::get('imageDelete', ['as' => 'imageDelete', 'uses' => 'DocumentController@imageDelete']);
 
 // AdCategory
 Route::resource('ad_categories', 'AdCategoryController');
@@ -140,6 +145,11 @@ Route::get('confirmation_update/{id}', ['as' => 'confirmation_update', 'uses' =>
 Route::get('absence/confirmation_show', ['as' => 'confirmation_show', 'uses' => 'AbsenceController@confirmation_show']);// Open absence confirmation page
 Route::get('absence/absences_table', ['as' => 'absences_table', 'uses' => 'AbsenceController@absences_table']);
 Route::get('absence/absences_requests', ['as' => 'absences_requests', 'uses' => 'AbsenceController@absences_requests']);
+Route::get('absence/print_requests', ['as' => 'print_requests', 'uses' => 'AbsenceController@printRequests']);
+
+Route::get('getDays/{id}', 'AbsenceController@getDays');
+Route::get('days_offUnused/{id}', 'BasicAbsenceController@days_offUnused');
+Route::get('daniGO', 'BasicAbsenceController@daniGO');
 
 // Notices
 Route::resource('notices', 'NoticeController');
@@ -278,6 +288,9 @@ Route::get('radne_upute', ['as' => 'radne_upute', 'uses' => 'InstructionControll
 Route::resource('mail_templates', 'MailTemplateController');
 Route::get('mail_test/{id}', ['as' => 'mail_test', 'uses' => 'MailTemplateController@mailTest']);
 
+// MailText
+Route::resource('mail_texts', 'MailTextController');
+
 // Oglasnik
 Route::get('oglasnik', ['as' => 'oglasnik', 'uses' => 'AdController@oglasnik']);
 Route::get('sort', ['as' => 'sort', 'uses' => 'AdController@sort']);
@@ -293,9 +306,6 @@ Route::get('sendEmail', ['as' => 'sendEmail', 'uses' => 'QuestionnaireController
 
 // User edit 
 Route::get('user/edit_user/{id}', ['as' => 'user.edit', 'uses' => 'UserController@edit_user']);
-
-// Upload image 
-Route::get('upload_image', ['as' => 'upload', 'uses' => 'DocumentController@uploadImage']);
 
 
 // Open slide show
@@ -317,7 +327,7 @@ Route::get('all_event', ['as' => 'all_event', 'uses' => 'EventController@modal_e
 
 // Start Campaign
 Route::get('startCampaign', ['as' => 'sendEmail', 'uses' => 'CampaignController@startCampaign']);
-Route::get('imageDelete', ['as' => 'imageDelete', 'uses' => 'DocumentController@imageDelete']);
+
 
 // CampaignSequence mail
 Route::get('campaign_mail', ['as' => 'campaign_mail', 'uses' => 'CampaignSequenceController@campaign_mail']);
@@ -328,9 +338,6 @@ Route::post('setOrder', ['as' => 'setOrder', 'uses' => 'CampaignSequenceControll
 // Get last km for car
 Route::post('last_km', 'CarController@last_km');
 Route::post('getMailSettings', 'SettingController@getMailSettings');
-
-Route::get('getDays/{id}', 'AbsenceController@getDays');
-Route::get('days_offUnused/{id}', 'BasicAbsenceController@days_offUnused');
 
 Route::get('/t', function () {
     event(new \App\Events\MessageSendEvent());

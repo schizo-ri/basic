@@ -9,7 +9,7 @@
 				<select class="form-control" name="employee_id" value="{{ old('employee_id') }}" size="10" autofocus required >
 					<option value="" disabled></option>
 					@foreach ($employees as $employee)
-						<option name="employee_id" value="{{ $employee->id }}" {!! $afterhour->employee_id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['last_name']  . ' ' . $employee->user['first_name'] }}</option>
+						<option name="employee_id" value="{{ $employee->id }}" {!! $afterhour->employee_id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['first_name']  . ' ' . $employee->user['last_name'] }}</option>
 					@endforeach	
 				</select>
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}

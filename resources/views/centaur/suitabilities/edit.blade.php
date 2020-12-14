@@ -17,7 +17,8 @@
 				<span id="file_name"></span>
 				@if(isset($docs))
 					@if(file_exists($path . end($docs)) && end($docs)!= '' )
-						<span class="ad_image">{{ end($docs) }} <a class="action_confirm danger" href="{{ action('DocumentController@imageDelete', ['image' => $path . end($docs)]  ) }}" data-method="delete" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a> </span>
+						<span class="ad_image">{{ end($docs) }}
+							<a class="action_confirm danger" href="{{ action('DocumentController@imageDelete', ['image' => $path . end($docs)]  ) }}" method="post" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a> </span>
 					@endif
 				@endif
 			</div>
@@ -58,7 +59,7 @@
 				<span id="doc_name"></span>
 				@if(isset($docs2) )
 					@foreach($docs2 as $doc_file )
-						<span class="ad_image">{{ $doc_file }} <a class="action_confirm danger" href="{{ action('DocumentController@imageDelete', ['image' => $file_path . $doc_file]  ) }}" data-method="delete" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a> </span>
+						<span class="ad_image">{{ $doc_file }} <a class="action_confirm danger" href="{{ action('DocumentController@imageDelete', ['image' => $file_path . $doc_file]  ) }}" method="post" data-token="{{ csrf_token() }}"><i class="far fa-trash-alt"></i></a> </span>
 					@endforeach
 				@endif
 			</div>
@@ -112,4 +113,5 @@
 	$('#file').change(function(){
         $('#file_name').text( $('input[type=file]').val());
 	});
+	$.getScript( '/../restfulizer.js');
 </script>

@@ -80,11 +80,11 @@ $(function(){
 				targets = [];
 			} else {
 				if (admin == 'true') {
-					order = [ 3, "desc" ];
-					targets = [1,3,4];
+					order = [ 2, "desc" ];
+					targets = [2,3];
 				} else {
 					order = [ 2, "desc" ];
-					targets = [0,2,3];
+					targets = [1,2];
 				}
 			}
 			try {
@@ -657,10 +657,10 @@ $(function(){
 		}
 		if(type == 'GO') {
 			employee_id = $('#select_employee').val();
-			console.log("employee_id " + employee_id);
+			/* console.log("employee_id " + employee_id); */
 			if( employee_id != '' && employee_id != undefined) {
 				url = location.origin + '/getDays/'+employee_id;
-				console.log(url);
+				/* console.log(url); */
 				$.ajax({
 					url: url,
 					type: "get",
@@ -769,12 +769,37 @@ $(function(){
 		if(start_date == '') {
 			$( "#start_date" ).val(end_date);
 		}
+
 		type = $( "#request_type" ).val();
 		employee_id = $('#select_employee').val();
 		if( employee_id != '' && type == 'GO' ) {
-			diff_days = date_diff_indays( start_date,end_date );
-			console.log(diff_days);
-			if( broj_dana < diff_days && user_role != 'admin' ) {
+			url = location.origin + '/daniGO';
+            console.log(url);
+            $.ajax({
+                url: url,
+                type: "get",
+                data:  { start_date: start_date, end_date: end_date},
+                success: function( days_response ) {
+					console.log("dani zahtjeva " +days_response);
+					if( (broj_dana - days_response) < 0 && user_role != 'admin' ) {
+						$('.days_request>span').text( broj_dana - days_response);
+						$('.days_request').show();
+						$('.btn-submit').hide();
+					} else {
+						$('.days_request>span').text("");
+						$('.days_request').hide();
+						$('.btn-submit').show();
+					} 
+                },
+                error: function(jqXhr, json, errorThrown) {
+                    console.log(jqXhr);
+                    console.log(json);
+                    console.log(errorThrown);
+                }
+			});
+			//diff_days = date_diff_indays( start_date,end_date );
+			
+		/* 	if( broj_dana < diff_days && user_role != 'admin' ) {
 				$('.days_request>span').text(diff_days - broj_dana);
 				$('.days_request').show();
 				$('.btn-submit').hide();
@@ -782,12 +807,12 @@ $(function(){
 				$('.days_request>span').text("");
 				$('.days_request').hide();
 				$('.btn-submit').show();
-			}
+			} */
 		}
 	});
-	
 });
 
+// ne uzima u obzir praznike
 function date_diff_indays(date1, date2) { // input given as Date objects
 	var dDate1 = new Date(date1);
 	var dDate2 = new Date(date2);
@@ -1656,10 +1681,11 @@ try {
 
 $(function() { 
     $('.collapsible').on('click',function(event){ 
+        console.log("collapsible");
        if($(this).siblings().is(":visible")){ 
             $(this).siblings().css('display','none');
         } else {
-            $(this).siblings().css('display','inline-block');
+            $(this).siblings().css('display','block');
         }
      
     });
@@ -1691,10 +1717,19 @@ $( function () {
 			kolona = 1;
 			sort = 'asc';
 		}
-		if ($('#index_table').hasClass('sort_1_desc')) {
+		if ($('#index_table').hasClass('sort_1_asc')) {
 			kolona = 1;
+			sort = 'asc';
+		}
+		if ($('#index_table').hasClass('sort_2_desc')) {
+			kolona = 2;
 			sort = 'desc';
-		}	
+		}
+		if ($('#index_table').hasClass('sort_3_desc')) {
+			kolona = 3;
+			sort = 'desc';
+		}
+		
 		var th_length = $('table.display thead th').not('.not-export-column');
 		var target = [];
 		var widths = [];
@@ -1703,6 +1738,7 @@ $( function () {
 				target.push(index);
 			}
 		});
+		
 		try {
 			jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 				"date-eu-pre": function ( date ) {
@@ -1733,9 +1769,7 @@ $( function () {
 						if ( day.length == 1 ) {
 							day = 0+day;
 						}
-				
 						return (year + month + day) * 1;
-				
 				},
 			 
 				"date-eu-asc": function ( a, b ) {
@@ -1750,7 +1784,7 @@ $( function () {
 		/* 	target = null; */
 		}
 		
-		if($('table.display').length >0) {
+		if($('table.display').length > 0) {
 			var table = $('table.display').not('.evidention_employee table.display', '.all_absences #index_table').DataTable( {
 				"language": {
 					"search": "",
@@ -2871,6 +2905,24 @@ $(function() { // filter knowledge base
 			}
 		});
 	});
+
+	if( $('.table-responsive.roles').length > 0) {
+		
+		$('.more').on('click',function(){
+			$( this ).siblings('.role').toggle();
+			$( this ).hide();
+			$( this ).siblings('.hide').show();
+		});
+		$('.hide').on('click',function(){
+			$( this ).siblings('.role').hide();
+			$( this ).siblings('.role._0').show();
+			$( this ).siblings('.role._1').show();
+
+			$( this ).siblings('.more').show();
+			$( this ).hide();
+		});
+	}
+
 });
 function mySearchTable() {
   $("#mySearchTbl").on('keyup',function() {
@@ -3182,6 +3234,7 @@ if(body_width < 450) {
         }
     });
 }
+
 $('.button_nav').css({
   /*   'background': '#051847',
     'color': '#ffffff' */
@@ -3254,31 +3307,30 @@ if($('.index_admin').length > 0 ) {
         title = click_element.text();
         $("title").text( title ); 
         url = $(this).attr('href');
-    
+        
         // ako ima shortcut - href edit
-    try {
-        $.get( "shortcut_exist", {'url': url }, function( id ) {
-            console.log( "id: " + id );
-            if(id != null && id != '') {
-                $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
-                $('.shortcut_text').text('Ispravi prečac'); 
-            } else {
-                title = $('.admin_link.active_admin').attr('id');
+        try {
+            $.get( "shortcut_exist", {'url': url }, function( id ) {
+                console.log( "id: " + id );
+                if(id != null && id != '') {
+                    $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+                    $('.shortcut_text').text('Ispravi prečac'); 
+                } else {
+                    title = $('.admin_link.active_admin').attr('id');
 
-                $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url+'&title='+title );
-                $('.shortcut_text').text('Dodaj prečac'); 
-            }
-        });
-    } catch (error) {
-        //
-    }
+                    $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url+'&title='+title );
+                    $('.shortcut_text').text('Dodaj prečac'); 
+                }
+            });
+        } catch (error) {
+            //
+        }
 
         $('.admin_pages>li>a').removeClass('active_admin');
         $(this).addClass('active_admin');
         active_link = $('.admin_link.active_admin').attr('id');
 
         $( '.admin_main' ).load( url + ' .admin_main>section', function( response, status, xhr ) {
-            console.log();
             window.history.replaceState({}, document.title, url);
             if ( status == "error" ) {
                 var msg = "Sorry but there was an error: ";
@@ -3327,7 +3379,6 @@ if($('.index_admin').length > 0 ) {
         return false;
     });
 }
-
 $("a[rel='modal:open']").addClass('disable');
 
 $(function() {

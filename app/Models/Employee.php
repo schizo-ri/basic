@@ -95,6 +95,13 @@ class Employee extends Model
 	protected static $shortcutModel = 'App\Models\Shortcut'; 
 
 	/*
+	* The Eloquent EmployeeTask model name
+	* 
+	* @var string
+	*/
+	protected static $employeeTaskModel = 'App\Models\EmployeeTask'; 
+
+	/*
 	* Returns the works relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -114,6 +121,28 @@ class Employee extends Model
 	public function hasShortcuts()
 	{
 		return $this->hasMany(static::$shortcutModel,'employee_id');
+	}
+
+	/*
+	* Returns the Event relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasEmployeeTask()
+	{
+		return $this->hasMany(static::$employeeTaskModel,'employee_id');
+	}
+
+	/*
+	* Returns the Event relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasTask()
+	{
+		return $this->hasMany(static::$taskModel,'to_employee_id');
 	}
 
 	/*
@@ -256,9 +285,9 @@ class Employee extends Model
 	public static function employees_lastNameASCStatus($status)
 	{
 		if($status == 0) {
-			return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout','<>',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.last_name','ASC')->get();
+			return Employee::join('users','users.id','employees.user_id')-> select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout','<>',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>', null)->orderBy('users.last_name','ASC')->get();
 		} else {
-			return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout', null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.last_name','ASC')->get();
+			return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout', null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>' ,null)->orderBy('users.last_name','ASC')->get();
 		}
 	}
 
