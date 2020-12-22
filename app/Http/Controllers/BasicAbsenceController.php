@@ -873,10 +873,70 @@ class BasicAbsenceController extends Controller
 	}
 
 
-	public static function holidays_with_names () 
+	public static function holidays_with_names() 
 	{
 		$holidays = array(
-			"2019-01-01"	=>	"Nova godina",
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-01-01", "title" => "Nova godina"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-01-06", "title" => "Sveta tri kralja"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-04-21", "title" => "Uskrs"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-04-22", "title" => "Uskrsni ponedjeljak"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-05-01", "title" => "Praznik rada"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-06-20", "title" => "Tijelovo"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-06-22", "title" => "Dan antifašističke borbe"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-06-25", "title" => "Dan državnosti"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-08-05", "title" => "Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-08-15", "title" => "Velika Gospa"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-10-08", "title" => "Dan neovisnosti"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-11-01", "title" => "Dan svih svetih"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-12-25", "title" => "Božić"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-12-26", "title" => "Sveti Stjepan"),
+			
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-01-01", "title" => "Nova godina"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-01-06", "title" => "Sveta tri kralja"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-04-12", "title" => "Uskrs"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-04-13", "title" => "Uskrsni ponedjeljak"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-05-01", "title" => "Praznik rada"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-05-30", "title" => "Dan državnosti"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-06-11", "title" => "Tijelovo"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-06-22", "title" => "Dan antifašističke borbe"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-08-05", "title" => "Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-08-15", "title" => "Velika Gospa"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-11-01", "title" => "Dan svih svetih"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-11-18", "title" => "Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-12-25", "title" => "Božić"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-12-26", "title" => "Sveti Stjepan"),
+			
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-01-01", "title" => "Nova godina"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-01-06", "title" => "Sveta tri kralja"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-04-04", "title" => "Uskrs"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-04-05", "title" => "Uskrsni ponedjeljak"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-05-01", "title" => "Praznik rada"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-05-30", "title" => "Dan državnosti"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-06-03", "title" => "Tijelovo"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-06-22", "title" => "Dan antifašističke borbe"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-08-05", "title" => "Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-08-15", "title" => "Velika Gospa"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-11-01", "title" => "Dan svih svetih"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-11-18", "title" => "Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-12-25", "title" => "Božić"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-12-26", "title" => "Sveti Stjepan"),
+			
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-01-01", "title" => "Nova godina"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-01-06", "title" => "Sveta tri kralja"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-04-17", "title" => "Uskrs"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-04-18", "title" => "Uskrsni ponedjeljak"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-05-01", "title" => "Praznik rada"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-05-30", "title" => "Dan državnosti"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-06-16", "title" => "Tijelovo"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-06-22", "title" => "Dan antifašističke borbe"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-08-05", "title" => "Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-08-15", "title" => "Velika Gospa"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-11-01", "title" => "Dan svih svetih"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-11-18", "title" => "Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-12-25", "title" => "Božić"),
+			array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-12-26", "title" => "Sveti Stjepan"),
+			
+			/*"2019-01-01"	=>	"Nova godina",
 			"2019-01-06"	=>	"Sveta tri kralja",
 			"2019-04-21"	=>	"Uskrs",
 			"2019-04-22"	=>	"Uskrsni ponedjeljak",
@@ -934,9 +994,8 @@ class BasicAbsenceController extends Controller
 			"2022-11-01"	=>	"Dan svih svetih",
 			"2022-11-18"	=>	"Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje",
 			"2022-12-25"	=>	"Božić",
-			"2022-12-26"	=>	"Sveti Stjepan",
+			"2022-12-26"	=>	"Sveti Stjepan",*/
 		);
-
 
 		return $holidays;
 	}

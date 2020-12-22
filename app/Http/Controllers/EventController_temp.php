@@ -16,8 +16,8 @@ use DateTime;
 use DateInterval;
 use DatePeriod;
 use Spatie\CalendarLinks\Link;
-use Illuminate\Support\Facades\Log;//DODAO MARKO
-use Illuminate\Support\Facades\DB;//DODAO MARKO
+use Illuminate\Support\Facades\Log;
+
 
 class EventController extends Controller
 {
@@ -28,7 +28,11 @@ class EventController extends Controller
    */
    public function __construct()
     {
+		$time_start = microtime(true); 
         $this->middleware('sentinel.auth');
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 1 - ExecutionTime: '.$execution_time);
     }
 	
 	/**
@@ -38,7 +42,7 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-		$time_start = microtime(true);
+		$time_start = microtime(true); 
         $empl = Sentinel::getUser()->employee;
         $permission_dep = array();
         if( isset($_GET['dan']) ) {
@@ -47,10 +51,10 @@ class EventController extends Controller
             $dan = date('Y-m-d');
         }
        
-		$selected = EventController::selectedDay( $dan );
+        $selected = EventController::selectedDay( $dan );
       
         if($empl) {
-			$events = Event::whereMonth('date',$selected['mj_select'])->where('employee_id', $empl->id)->get();
+            $events = Event::whereMonth('date',$selected['mj_select'])->where('employee_id', $empl->id)->get();
             foreach ( $events as $event ) {
                 $event->week = date('W',strtotime($event->date));
             }
@@ -65,17 +69,16 @@ class EventController extends Controller
                 $hours_array[] = $start->add(new DateInterval('PT1H'))->format('H:i');
             }
         }
-		
+
         $dataArr = EventController::getDataArr($selected['mj_select'], $selected['god_select']);
-        
+       
         $count_days = EventController::countDays($dataArr, $dan);
     
         $selected_day = $selected['god_select'] .'-'. $selected['mj_select'] .'-'. $selected['dan_select'];
         
-        //	$days_in_month = cal_days_in_month(CAL_GREGORIAN, $selected['mj_select'],$selected['god_select']);  // broj dana u mjesecu
         if ($selected['god_select']%4 == 0) {
             $daysInMonth = array(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-        } else{
+        }else{
             $daysInMonth = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
         }
         $days_in_month = $daysInMonth[intval($selected['mj_select'])-1];
@@ -90,12 +93,11 @@ class EventController extends Controller
         foreach ( $tasks as $task ) {
             $task->week = date('W',strtotime($task->date));
         }
-		
+    
         $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
        
         $cars = Car::get('registration');
 		
-		Log::info('dataArr_day: '.json_encode($count_days));
 		$time_end = microtime(true);
 		$execution_time = ($time_end - $time_start);
 		Log::info('Event: 2 - ExecutionTime: '.$execution_time);
@@ -130,7 +132,7 @@ class EventController extends Controller
      */
     public function create(Request $request)
     {
-       
+		$time_start = microtime(true); 
         if ($request['time1']) {
             $time = $request['time1'];
             $time2 = strtotime( $time ) + 3600;
@@ -145,6 +147,10 @@ class EventController extends Controller
             $date = date('Y-m-d');
         }
        
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 3 - ExecutionTime: '.$execution_time);
+		
         return view('Centaur::events.create', ['time' => $time,'time2' => $time2, 'date' => $date ]);
     }
 
@@ -156,6 +162,7 @@ class EventController extends Controller
      */
     public function store (EventRequest $request)
     {
+		$time_start = microtime(true); 
         $host = $_SERVER['REQUEST_URI'];
 
         $employee = Sentinel::getUser()->employee;
@@ -186,6 +193,11 @@ class EventController extends Controller
 
         */
 		session()->flash('success',  __('ctrl.data_save'));
+		
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 4 - ExecutionTime: '.$execution_time);
+		
 		if($host == '/event') {
             return redirect()->route('events.index');
         } else {
@@ -196,6 +208,7 @@ class EventController extends Controller
     /*   */
     public function store_event ( $id )
     {
+		$time_start = microtime(true); 
         $car = Car::find( $id );
         $employee = Sentinel::getUser()->employee;
         $today = new DateTime();
@@ -216,6 +229,10 @@ class EventController extends Controller
 
         session()->flash('success', "Događaj je spremljen u kalendar");
 
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 5 - ExecutionTime: '.$execution_time);
+		
         return redirect()->route('dashboard');
 
     }
@@ -227,8 +244,13 @@ class EventController extends Controller
      */
     public function show($id)
     {
+		$time_start = microtime(true); 
         $event = Event::find($id);
         
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 6 - ExecutionTime: '.$execution_time);
+		
         return view('Centaur::events.show', ['event' => $event ]);
     }
 
@@ -240,6 +262,7 @@ class EventController extends Controller
      */
     public function edit($id)
     {
+		$time_start = microtime(true); 
         $event = Event::find($id);
         $type = 'event';
 
@@ -248,6 +271,11 @@ class EventController extends Controller
                 $type = 'task';
             }
         }
+        
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 7 - ExecutionTime: '.$execution_time);
+		
         return view('Centaur::events.edit', ['event' => $event, 'type' => $type]);
     }
 
@@ -260,6 +288,7 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
+		$time_start = microtime(true); 
         $event = Event::find($id);
 
         $data = array(
@@ -274,6 +303,10 @@ class EventController extends Controller
         
         /* session()->flash('success',  __('ctrl.data_edit')); */
 	
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 8 - ExecutionTime: '.$execution_time);
+		
         return redirect()->back();
     }
 
@@ -285,10 +318,15 @@ class EventController extends Controller
      */
     public function destroy($id)
     {
+		$time_start = microtime(true); 
         $event = Event::find($id);
         $event->delete();
 
         session()->flash('success',__('ctrl.data_delete'));
+	
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 9 - ExecutionTime: '.$execution_time);
 		
         return redirect()->back();
     }
@@ -296,10 +334,11 @@ class EventController extends Controller
     /* Broji dane izostanaka, sastanaka i rođendana*/
     public static function countDays ($dataArr, $dan) 
     {
+		$time_start = microtime(true); 
         $dani_event= 0; 
         $dani_rodjendani = 0; 
         $dani_odmor = 0;
-		
+        
         foreach($dataArr as $arr) {
             if( $arr['date'] == $dan) {
                 if($arr['name'] == 'event') {
@@ -315,12 +354,17 @@ class EventController extends Controller
                 }
             }
         }
-
+	
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 10 - ExecutionTime: '.$execution_time);
+		
         return ['dani_event' => $dani_event, 'dani_odmor' => $dani_odmor, 'dani_rodjendani' => $dani_rodjendani];
     }
 
     /* Vraća selektirani dan kao array */
     public static function selectedDay ($dan) {
+		$time_start = microtime(true); 
         $select_day = explode('-',$dan);
        
         $week_day = date("D", strtotime($dan) );
@@ -329,13 +373,18 @@ class EventController extends Controller
         $tj_select = date('W',strtotime($dan));
         $mj_select = $select_day[1];
         $god_select = $select_day[0];
-
+	
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 11 - ExecutionTime: '.$execution_time);
+		
         return ['week_day' => $week_day, 'month' => $month, 'dan_select' => $dan_select, 'tj_select' => $tj_select, 'mj_select' => $mj_select, 'god_select' => $god_select];
     }
 
     /* Vraća događanje, zadatke, rođendane i izostanke za selektorani dan */
     public static function event_for_selected_day ($dataArr, $date) 
     {
+		$time_start = microtime(true); 
         $dataArr = array_filter($dataArr, function($v, $k) use ( $date ) {
             return in_array($date, $v);
         }, ARRAY_FILTER_USE_BOTH);
@@ -416,218 +465,161 @@ class EventController extends Controller
             }
         }
  */
+	
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 12 - ExecutionTime: '.$execution_time);
+		
         return $dataArr;
     }
 
     /* Vraća događanje, zadatke, rođendane i izostanke */
     public static function getDataArr ( $month, $year ) 
     {
-		$time_start = microtime(true);
+		$time_start = microtime(true); 
         $empl = Sentinel::getUser()->employee;
         $dataArr = array();
-		//**MARKO DODAO**
-        $dataInitial = array();
-		//****
         $holidays = BasicAbsenceController::holidays_with_names();
-
-		//**MARKO MAKNUO**
-        /*if(count($holidays) > 0) {
+		
+		
+        if(count($holidays) > 0) {
             foreach ($holidays as $date => $holiday) {
                 array_push($dataArr, ['name' => 'holiday', 'type' => __('basic.holidays'), 'date' => $date, 'title' => $holiday ]);
             }
-        }*/
-		//****
+        }
+    
+		//dd($holidays);
+        $employees = Employee::where('id','<>',1)->where('checkout',null)->with('hasEvents')->with('hasLocco')->with('hasAbsences')->with('hasTasks')->get();
+		//dd($employees);
+        if(count($employees)>0) {
+            foreach($employees as $employee) {
+                if(date('m', strtotime($employee->b_day)) == $month ) {
+                    $dan = $year . '-' . date('m-d', strtotime($employee->b_day));
+                    array_push($dataArr, ['name' => 'birthday',
+                                          'type' => __('basic.birthday'), 
+                                          'date' => $dan, 
+                                          'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'], 
+                                          'employee_id' => $employee->id ]);
+                }
+                $tasks = $employee->hasTasks;
+                $tasks = $tasks->filter(function ($task, $key) use ( $month, $year) {
+                    return date('m',strtotime($task->date)) == $month && date('Y',strtotime($task->date)) == $year;
+                });
+            
+                if(count($tasks) > 0) {
+                    foreach($tasks as $task) {
+                        array_push($dataArr, ['name' => "task", 
+                                              'type' => __('calendar.task'), 
+                                              'id' => $task->id,
+                                              'date' => $task->date,
+                                              'time1' => $task->time1, 
+                                              'time2' => $task->time2, 
+                                              'title' => $task->title, 
+                                              'employee' => $task->employee->user['first_name'] . ' ' . $task->employee->user['last_name'], 
+                                              'background' =>  $task->employee->color, 
+                                              'car' => $task->car['registration'], 
+                                              'employee_id' => $task->employee_id ]);
+                    }
+                }
+               
+                $events = $employee->hasEvents;
+                $events = $events->filter(function ($event, $key) use ( $month, $year ) {
+                    return date('m',strtotime($event->date)) == $month && date('Y',strtotime($event->date)) == $year;
+                });
+        
+             /*    $events = Event::whereMonth('date',$month)->whereYear('date',$year)->where('employee_id', $empl->id)->get(); */
+                if(count($events) > 0) {
+                    foreach($events as $event1) {
+                        array_push($dataArr, ['name' => "event", 
+                                              'type' => __('calendar.event'), 
+                                              'date' => $event1->date,
+                                              'id' => $event1->id,
+                                              'time1' => $event1->time1, 
+                                              'time2' => $event1->time2, 
+                                              'title' => $event1->title, 
+                                              'employee' => $event1->employee->user['first_name'] . ' ' . $event1->employee->user['last_name'], 
+                                              'employee_id' => $event1->employee_id]);
+                    }
+                }
+                
+                $absences = $employee->hasAbsences;
+                $absences = $absences->filter(function ($absence, $key) use ( $month, $year ) {
+                    return (date('m',strtotime($absence->start_date)) == $month && date('Y',strtotime($absence->start_date)) == $year) || (date('m',strtotime($absence->end_date)) == $month && date('Y',strtotime($absence->end_date)) );
+                });
+               /*  $absences = Absence::whereMonth('start_date', $month)->whereYear('start_date', $year)->where('approve',1)->get();
+                $absences = $absences->merge(Absence::whereMonth('end_date', $month)->whereYear('end_date', $year)->where('approve',1)->get());
+                */
+               /*  $today = date('Y-m-d');
+                $select_day = explode('-',$today); 
+                $dan_select = $select_day[2];
+                $mj_select = $select_day[1];
+                $god_select = $select_day[0]; */
+        
+                if (count($absences)>0) {
+                    foreach($absences as $absence) {
+                        $begin = new DateTime($absence->start_date);
+                        $end = new DateTime($absence->end_date);
+                        $end->setTime(0,0,1);
+                        $interval = DateInterval::createFromDateString('1 day');
+                        $period = new DatePeriod($begin, $interval, $end);
+                        foreach ($period as $dan) {
+                            if(date_format($dan,'Y') == $year) {  // ako je trenutna godina
+                                array_push($dataArr, ['name' => $absence->absence['mark'],
+                                                      'type' => $absence->absence['name'], 
+                                                      'date' => date_format($dan,'Y-m-d'), 
+                                                      'start_time' =>  $absence->start_time, 
+                                                      'end_time' =>  $absence->end_time, 
+                                                      'employee' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name'], 
+                                                      'employee_id' => $absence->employee_id]);
+                            }
+                        }
+                    }
+                }
+              
+                $loccos = $employee->hasLocco;  
+                   
+                $loccos = $loccos->filter(function ($locco, $key) use ( $month, $year) {
+                    return (date('m',strtotime($locco->date)) == $month && date('Y',strtotime($locco->date)) ==  $year) || (date('m',strtotime($locco->end_date)) ==  $month && date('Y',strtotime($locco->end_date)) ==  $year);
+                });
+        
+                /* $loccos = Locco::whereMonth('date', $month)->whereYear('date', $year)->get();
+                $loccos = $loccos->merge(Locco::whereMonth('end_date', $month)->whereYear('end_date', $year)->get()); */
+                if(count($loccos)>0) {
+                    foreach($loccos as $locco) {
+                        array_push($dataArr, ['name' => 'locco',
+                                                'type' => __('basic.locco'), 
+                                                'date' => $locco->date, 
+                                                'employee' => $locco->employee ? $locco->employee->user['first_name'] . ' ' . $locco->employee->user['last_name'] : "", 
+                                                'employee_id' => $locco->employee ?  $locco->employee->id : "", 
+                                                'title' => $locco->destination , 
+                                                'reg' => $locco->car['registration'] ]);
+                    }
+                }
+            }
+        }
 		
-		//**MARKO DODAO**
-		if(count($holidays) > 0)
-			$dataArr = array_merge($dataInitial, $holidays);
-		//****
-		
-		$birthdays = DB::select("SELECT
-								'birthday' AS name,
-								'".__('basic.birthday')."' AS type,
-								CONCAT('".$year."-', DATE_FORMAT(employees.b_day, '%m-%d')) AS date,
-								CONCAT(users.first_name, ' ', users.last_name) AS employee,
-								employees.id AS employee_id
-							FROM employees
-							LEFT JOIN users ON users.id = employees.user_id
-							WHERE employees.id != 1 AND employees.checkout IS NULL AND MONTH(employees.b_day) = ".$month."");
-							
-		$birthdays = json_decode(json_encode((array) $birthdays), true);
-		
-		/*$birthdays = Employee::where("employees.id", "<>", 1)->where("employees.checkout", null)->leftJoin("users", "employees.user_id", "=", "users.id")->whereMonth("employees.b_day", $month)
-					->selectSub("'birthday'", "name")
-					->selectSub("'".__('basic.birthday')."'", "type")
-					->selectSub("CONCAT('".$year."-', DATE_FORMAT(employees.b_day, '%m-%d'))", "date")
-					->selectSub("CONCAT(users.first_name, ' ', users.last_name)", "employee")
-					->selectSub("employees.id", "employee_id")
-					->get()->toArray();*/
-		
-		if(count($birthdays) > 0)
-			$dataArr = array_merge($dataArr, $birthdays);
-			
-		$tasks = DB::select("SELECT
-								'task' AS name,
-								'".__('calendar.task')."' AS type,
-								tasks.id AS id,
-								tasks.date AS date,
-								tasks.time1 AS time1,
-								tasks.time2 AS time2,
-								tasks.title AS title,
-								CONCAT(users.first_name, ' ', users.last_name) AS employee,
-								employees.color AS background,
-								cars.registration AS car,
-								employees.id AS employee_id
-							FROM employees
-							LEFT JOIN users ON users.id = employees.user_id
-							LEFT JOIN tasks ON tasks.employee_id = employees.id
-							LEFT JOIN cars ON cars.id = tasks.car_id
-							WHERE employees.id != 1 AND employees.checkout IS NULL AND MONTH(tasks.date) = ".$month." AND YEAR(tasks.date) = ".$year."");
-							
-		$tasks = json_decode(json_encode((array) $tasks), true);
-		
-		/*$tasks = 	Employee::where("employees.id", "<>", 1)->where("employees.checkout", null)->leftJoin("users", "employees.user_id", "=", "users.id")->leftJoin("tasks", "employees.id", "=", "tasks.employee_id")->leftJoin("cars", "tasks.car_id", "=", "cars.id")->whereMonth("tasks.date", $month)->whereYear("tasks.date", $year)
-					->selectSub("'task'", "name")
-					->selectSub("'".__('calendar.task')."'", "type")
-					->selectSub("tasks.id", "id")
-					->selectSub("tasks.date", "date")
-					->selectSub("tasks.time1", "time1")
-					->selectSub("tasks.time2", "time2")
-					->selectSub("tasks.title", "title")
-					->selectSub("CONCAT(users.first_name, ' ', users.last_name)", "employee")
-					->selectSub("employees.color", "background")
-					->selectSub("cars.registration", "car")
-					->selectSub("employees.id", "employee_id")					  
-					->get()->toArray();*/
-		
-		if(count($tasks) > 0)
-			$dataArr = array_merge($dataArr, $tasks);
-		
-		
-		$events = DB::select("SELECT
-								'event' AS name,
-								'".__('calendar.event')."' AS type,
-								events.id AS id,
-								events.date AS date,
-								events.time1 AS time1,
-								events.time2 AS time2,
-								events.title AS title,
-								CONCAT(users.first_name, ' ', users.last_name) AS employee,
-								employees.id AS employee_id
-							FROM employees
-							LEFT JOIN users ON users.id = employees.user_id
-							LEFT JOIN events ON events.employee_id = employees.id
-							WHERE employees.id != 1 AND employees.checkout IS NULL AND MONTH(events.date) = ".$month." AND YEAR(events.date) = ".$year."");
-							
-		$events = json_decode(json_encode((array) $events), true);
-		
-		/*$events = 	Employee::where("employees.id", "<>", 1)->where("employees.checkout", null)->leftJoin("users", "employees.user_id", "=", "users.id")->leftJoin("events", "employees.id", "=", "events.employee_id")->whereMonth("events.date", $month)->whereYear("events.date", $year)
-					->selectSub("'event'", "name")
-					->selectSub("'".__('calendar.event')."'", "type")
-					->selectSub("events.id", "id")
-					->selectSub("events.date", "date")
-					->selectSub("events.time1", "time1")
-					->selectSub("events.time2", "time2")
-					->selectSub("events.title", "title")
-					->selectSub("CONCAT(users.first_name, ' ', users.last_name)", "employee")
-					->selectSub("employees.id", "employee_id")					  
-					->get()->toArray();*/
-		
-		if(count($events) > 0)
-			$dataArr = array_merge($dataArr, $events);
-
-		$absences = DB::select("WITH RECURSIVE cte AS (
-								SELECT
-									absence_types.mark AS name,
-									absence_types.name AS type,
-									absences.start_date AS date,
-									absences.end_date AS _du,
-									absences.start_time AS start_time,
-									absences.end_time AS end_time,
-									CONCAT(users.first_name, ' ', users.last_name) AS employee,
-									employees.id AS employee_id
-								FROM employees
-								LEFT JOIN users ON users.id = employees.user_id
-								LEFT JOIN absences ON absences.employee_id = employees.id
-								LEFT JOIN absence_types ON absence_types.id = absences.type
-								WHERE employees.id != 1 AND employees.checkout IS NULL AND absences.approve IS NOT NULL AND absences.approve = 1 AND 
-								((MONTH(absences.start_date) = ".$month." AND YEAR(absences.start_date = ".$year.")) OR (MONTH(absences.end_date) = ".$month." AND YEAR(absences.end_date) = ".$year."))
-								UNION ALL
-								SELECT 
-									name,
-									type,
-									DATE_ADD(cte.date, INTERVAL 1 DAY),
-									_du,
-									start_time,
-									end_time,
-									employee,
-									employee_id
-								FROM cte 
-								WHERE DATE_ADD(date, INTERVAL 1 DAY) <= _du
-							)
-
-							SELECT 
-								name,
-								type,
-								DATE_FORMAT(date, '%Y-%m-%d') AS date,
-								start_time,
-								end_time,
-								employee,
-								employee_id
-							FROM cte
-							ORDER BY employee_id, date ASC");
-							
-		$absences = json_decode(json_encode((array) $absences), true);
-		
-		if(count($absences) > 0)
-			$dataArr = array_merge($dataArr, $absences);
-		
-		$loccos = DB::select("SELECT
-								'locco' AS name,
-								'".__('basic.locco')."' AS type,
-								loccos.date AS date,
-								CONCAT(users.first_name, ' ', users.last_name) AS employee,
-								employees.id AS employee_id,
-								loccos.destination AS title,
-								cars.registration AS reg
-							FROM employees
-							LEFT JOIN users ON users.id = employees.user_id
-							LEFT JOIN loccos ON loccos.employee_id = employees.id
-							LEFT JOIN cars ON cars.id = loccos.car_id
-							WHERE employees.id != 1 AND employees.checkout IS NULL AND 
-							((MONTH(loccos.date) = ".$month." AND YEAR(loccos.date = ".$year.")) OR (MONTH(loccos.end_date) = ".$month." AND YEAR(loccos.end_date) = ".$year."))");
-							
-		$loccos = json_decode(json_encode((array) $loccos), true);
-		
-		/*$loccos = 	Employee::where("employees.id", "<>", 1)->where("employees.checkout", null)->leftJoin("users", "employees.user_id", "=", "users.id")->leftJoin("loccos", "employees.id", "=", "loccos.employee_id")->leftJoin("cars", "loccos.car_id", "=", "cars.id")->where(function ($query) use ($month, $year) {$query->whereMonth("loccos.date", $month)->whereYear("loccos.date", $year);})->orWhere(function($query) use ($month, $year) {$query->whereMonth("loccos.end_date", $month)->whereYear("loccos.end_date", $year);})
-					->selectSub("'locco'", "name")
-					->selectSub("'".__('basic.locco')."'", "type")
-					->selectSub("loccos.date", "date")	
-					->selectSub("CONCAT(users.first_name, ' ', users.last_name)", "employee")
-					->selectSub("employees.id", "employee_id")
-					->selectSub("loccos.destination", "title")
-					->selectSub("cars.registration", "reg")	
-					->get()->toArray();*/
-		
-		if(count($loccos) > 0)
-			$dataArr = array_merge($dataArr, $loccos);
-				
 		$time_end = microtime(true);
 		$execution_time = ($time_end - $time_start);
 		Log::info('Event: 13 - ExecutionTime: '.$execution_time);
 		//dd($dataArr);
         return $dataArr;
     }
-	
+
     /* View sire calendar  */
     public function side_calendar($dan) 
     {    
+		$time_start = microtime(true); 
         return view('side_calendar'); 
+		
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 14 - ExecutionTime: '.$execution_time);
     }
 
      /* View modal izostanci  */
      public function modal_event(Request $request)
      {
+		$time_start = microtime(true); 
         $empl = Sentinel::getUser()->employee;
         $events = Event::where('employee_id', $empl->id)->get(); 
         
@@ -645,6 +637,11 @@ class EventController extends Controller
             $dan = $request['dan'];
         }
         dd($request['dataArr_day']);
+		
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		Log::info('Event: 15 - ExecutionTime: '.$execution_time);
+		
         return view('Centaur::all_event', ['dataArr_day' => $dataArr_day, 'uniqueType' => $uniqueType, 'dan' => $dan]);     
      }
 }
