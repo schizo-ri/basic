@@ -17,8 +17,7 @@ form {
 }
 
 .clearfix {
-  overflow: auto;
-  
+  overflow: auto;  
   scrollbar-width: thin;
 }
 
@@ -238,7 +237,7 @@ details .ocj {
 
 th {
 	text-align: center !important;
-	font-size: 0.75rem;
+/* 	font-size: 0.75rem; */
 }
 
 #myTable1 tr:hover{

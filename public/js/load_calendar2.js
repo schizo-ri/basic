@@ -23,7 +23,7 @@ $(function() {
     day_after();
     day_before();
 
-    var position_selected_day = $('.selected_day').position().top;
+    var position_selected_day = $('.selected_day').position().top -30;
     $('.main_calendar_month').scrollTop(position_selected_day);
    
     function day_after() {

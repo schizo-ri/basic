@@ -14,9 +14,9 @@ class AdCreateMail extends Mailable
     use Queueable, SerializesModels;
     
     /**
-     * The campaign instance.
+     * The ad instance.
      *
-     * @var Campaign
+     * @var Ad
      */
     public $ad;
 

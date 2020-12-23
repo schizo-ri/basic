@@ -15,6 +15,8 @@ use Sentinel;
 use DateTime;
 use App\Events\MessageSend;
 use Pusher;
+use App\Mail\CommentMail;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -95,7 +97,7 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.first_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+		$employees = Employee::employees_lastNameASC();
 		$departments = Department::orderBy('name','ASC')->get();
 		if(isset($request['employee_publish'])) {
 			$employee_publish = Employee::find($request['employee_publish']);
@@ -356,7 +358,7 @@ class PostController extends Controller
 		$data = array(
 			'employee_id'   => $employee->id,
 			'to_department_id'  => $post->to_department_id != null ? $post->to_department_id : null,
-			'to_employee_id'  	=> $to_employee ,
+			'to_employee_id'  	=> $to_employee,
 			'post_id'  		=>  $request->get('post_id'),
 			'content'  		=>  $request->get('content'),
 			'status'  		=> '0',
@@ -378,6 +380,10 @@ class PostController extends Controller
 			$show_alert_to_employee = null;
 		}
 		
+		$send_to = $comment->toEmployee->email;
+		$send_to = 'jelena.juras@duplico.hr';
+		Mail::to($send_to)->send(new CommentMail($comment));  
+
 		if($post->to_employee_id) {
 			event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
 		} else if($post->to_department_id) {
@@ -386,7 +392,6 @@ class PostController extends Controller
 			}
 			event(new MessageSend( __('basic.new_message'), $comment, $post->employee_id ));
 		}
-		
 
 		$message = session()->flash('success', __('basic.sent_message'));
 

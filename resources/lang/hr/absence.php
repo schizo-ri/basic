@@ -2,10 +2,12 @@
 
 return [
     'absences' 		=> 'Izostanci',
-    'absence_for_day' => 'Izostanci za dan',
+    'absence_for_day' => 'Izostanci za sutra ',
 	'absence' 		=> 'Izostanak',
     'add_absence' 	=> 'Dodaj zahtjev',
 	'edit_absence' 	=> 'Ispravi zahtjev',
+	'request_edit_absence' 	=> 'Zahtjev za izmjenom zahtjeva',
+	'request_edit' 	=> 'izmjena zahtjeva',
 	'delete_absence' => 'Obriši zahtjev',
 	'request_type' 	=> 'Tip zahtjeva',
 	'request_types' => 'Tipovi zahtjeva',
@@ -30,7 +32,8 @@ return [
 	'max_days'  	=> 'Maksimalno dana',
 	'days'  		=> 'dana',
 	'please_approve'=> 'molim da mi se odobri',
-	'sicknes'  		=> 'prijavljujem bolovanje',
+	'sicknes'  		=> 'otvaram bolovanje ',
+	'end_sicknes'  	=> 'zatvaram bolovanje ',
 	'sickne_info'  	=> 'Prijavljeno bolovanje',
 	'unused'  		=> 'Neiskorišteno',
 	'vacation_days' => 'dana godišnjeg odmora',
@@ -77,6 +80,6 @@ return [
 	'proportion' 	=> 'razmjerno',
 	'experience' 	=> 'Radni staž',
 	'yy_mm_dd' 		=> 'gg-mm-dd',
-	
+	'close_sick_leave' => 'Zatvori bolovanje'	
 ];
 ?>

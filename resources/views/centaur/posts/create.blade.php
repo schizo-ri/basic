@@ -20,7 +20,7 @@
 				<select class="form-control employee_id" name="to_employee_id" required >
 					<option selected disabled></option>
 					@foreach($employees as $employee)
-						<option value="{{ $employee->id}}" >{{ $employee->first_name . ' ' .  $employee->last_name }}</option>
+						<option value="{{ $employee->id}}" >{{ $employee->last_name . ' ' .  $employee->first_name }}</option>
 					@endforeach
 				</select>
 			@endif

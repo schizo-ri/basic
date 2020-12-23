@@ -130,8 +130,8 @@ class UserController extends Controller
             }
         }
 
-      /*   $user = User::orderBy('id','DESC')->first();
-        $data_employee = [
+        $user = User::orderBy('id','DESC')->first();
+       /*  $data_employee = [
             'user_id' => $user->id,
             'email'   => $user->email,
         ];

@@ -27,7 +27,7 @@ class JobInterviewController extends Controller
      */
     public function index()
     {
-        $job_interviews = JobInterview::get();
+        $job_interviews = JobInterview::orderBy('last_name','ASC')->get();
         $permission_dep = DashboardController::getDepartmentPermission();
 
         return view('Centaur::job_interviews.index',['job_interviews'=>$job_interviews, 'permission_dep'=>$permission_dep]);

@@ -47,19 +47,12 @@ class AbsenceConfirmMail extends Mailable
 
         $employee = Employee::find($this->absence->employee_id);
         
-        $absence_name1 = explode(' ', $this->absence->absence->name);
-        $absence_name = '';
-        foreach ( $absence_name1 as $word ) {
-            $absence_name .= $word . ' ';
-           
-        }
-
         if( $this->absence->approve == '1'){
             $odobrenje = __('absence.is_approved');
-            $title = 'Zahtjev za '. ' ' .  $absence_name .' je odobren';
+            $title = 'Zahtjev za '. ' ' .  addslashes($this->absence->absence->name) .' je odobren';
         } else {
             $odobrenje = __('absence.is_refused');
-            $title = 'Zahtjev za '. ' ' . $absence_name .' je odbijen';
+            $title = 'Zahtjev za '. ' ' . addslashes($this->absence->absence->name)  .' je odbijen';
         }
 
         return $this->view('Centaur::email.absence_confirm')

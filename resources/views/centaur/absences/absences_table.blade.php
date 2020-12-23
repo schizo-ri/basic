@@ -37,8 +37,10 @@
 										<th>Staž Duplico <br>[g-m-d]</th>
 										<th>Staž ukupno <br>[g-m-d]</th>
 										@foreach ($years as $year)
-											<th>Ukupno GO <br>{{ $year }}</th>
-											<th >Iskorišteni dani <br>{{ $year }}</th>
+											@if(  $year == date('Y') || $year == (date('Y')-1))		
+												<th>Ukupno GO <br>{{ $year }}</th>
+												<th >Iskorišteni dani <br>{{ $year }}</th>
+											@endif
 										@endforeach
 										<th>Ukupno neiskorišteno <br>dana  GO</th>
 										<th>Ukupno prekovremenih <br>sati </th>
@@ -55,7 +57,6 @@
 												'years_service'  => BasicAbsenceController::yearsServiceCompany( $employee ),  
 												'all_servise'  	 => BasicAbsenceController::yearsServiceAll( $employee ), 
 												'days_OG'  		 => BasicAbsenceController::daysThisYear( $employee ), 
-												'razmjeranGO'  	 => BasicAbsenceController::razmjeranGO( $employee ),  //razmjeran go ova godina
 												'zahtjevi' 		 => BasicAbsenceController::requestAllYear( $employee ), 
 												'afterHours' 	 => BasicAbsenceController::afterHours( $employee ), 
 												'izlasci_ukupno_h' => BasicAbsenceController::izlasci_ukupno( $employee ), 
@@ -73,9 +74,11 @@
 											<td>{!! $employee->work ? $employee->work->department->name : '' !!}</td>
 											<td>{{ $data_absence['years_service']->y .'-'.$data_absence['years_service']->m .'-'.$data_absence['years_service']->d }}</td>
 											<td>{{ $data_absence['all_servise'][0]  .'-'.$data_absence['all_servise'][1]  .'-'.$data_absence['all_servise'][2]}}</td>
-											@foreach ($years as $year)
-												<td>{!! $year == date('Y') ? '('.$data_absence['days_OG'].')': '' !!} {{ BasicAbsenceController::razmjeranGO_Godina($employee, $year) }}</td>
-												<td>{!! isset($data_absence['zahtjevi'][ $year ]) ? count($data_absence['zahtjevi'][ $year ] ): 0 !!}</td>
+											@foreach ($years as $year)	
+												@if(  $year == date('Y') || $year == (date('Y')-1))											
+													<td>{!! $year == date('Y') ? '('.$data_absence['days_OG'].')': '' !!} {{ BasicAbsenceController::razmjeranGO_Godina($employee, $year) }}</td>
+													<td>{!! isset($data_absence['zahtjevi'][ $year ]) ? count($data_absence['zahtjevi'][ $year ] ): 0 !!}</td>
+												@endif
 											@endforeach
 											<td>{{ $data_absence['neiskoristenoGO'] }}</td>
 											<td>{!! $data_absence['afterHours'] == '00:00' ? '' : round($data_absence['afterHours'],2) . ' h' !!}</td>

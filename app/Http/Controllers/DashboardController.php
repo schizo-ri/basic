@@ -20,6 +20,7 @@ use App\Models\Setting;
 use App\Models\WorkRecord;
 use App\Models\Shortcut;
 use App\Models\EmployeeTraining;
+use App\Models\Absence;
 use App\Http\Controllers\BasicAbsenceController;
 use Sentinel;
 use DateTime;
@@ -35,13 +36,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
-       
-
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
             $moduli = CompanyController::getModules();  //dohvaća module firme
             $permission_dep = DashboardController::getDepartmentPermission();
             if($employee) {
+                $sick_leave_not_approve = Absence::SickUserOpen($employee->id);
+            
                 $data_absence = BasicAbsenceController::zahtjevi( $employee ); 
                
                 $posts = Post::where('employee_id',$employee->id)->orWhere('to_employee_id', $employee->id)->orderBy('updated_at','DESC')->with('comments')->get();
@@ -82,7 +83,7 @@ class DashboardController extends Controller
                 $check = DashboardController::evidention_check();
                 $shortcuts = Shortcut::where('employee_id', $employee->id )->get();
                
-                return view('Centaur::dashboard',['locco_active' => $locco_active, 'posts' => $posts, 'events' => $events,'tasks' => $tasks,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence, 'profile_image' => $profile_image, 'user_name' => $user_name, 'count_requests' => $count_requests, 'countComment_all' => $countComment_all, 'check' => $check, 'shortcuts' => $shortcuts]);
+                return view('Centaur::dashboard',['locco_active' => $locco_active, 'posts' => $posts, 'sick_leave_not_approve' => $sick_leave_not_approve, 'events' => $events,'tasks' => $tasks,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence, 'profile_image' => $profile_image, 'user_name' => $user_name, 'count_requests' => $count_requests, 'countComment_all' => $countComment_all, 'check' => $check, 'shortcuts' => $shortcuts]);
             }   else if( Sentinel::getUser()->temporaryEmployee )  {
                     $temporaryEmployee = Sentinel::getUser()->temporaryEmployee;
 

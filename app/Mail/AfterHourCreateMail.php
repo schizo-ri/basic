@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Afterhour;
 use DateTime;
 use App\Models\MailTemplate;
+use App\Http\Controllers\ApiController;
 
 class AfterHourCreateMail extends Mailable
 {
@@ -46,12 +47,19 @@ class AfterHourCreateMail extends Mailable
         $interval = $time2->diff($time1);
         $interval = $interval->format('%H:%I');
                 
+        if( $this->afterhour->erp_task_id) {
+            $api = new ApiController();
+
+            $tasks = $api->get_employee_project_tasks( $this->afterhour->employee->erp_id, null );
+            $task = $tasks[$this->afterhour->erp_task_id];
+        }
         return $this->view('emails.afterhours.create')
                     ->subject( __('emailing.afterhour') . ' - ' . $this->afterhour->employee->user->first_name . ' ' .  $this->afterhour->employee->user->last_name)
 					->with([
 						'afterhour' =>  $this->afterhour,
 						'interval' =>  $interval,
-                        'template_mail' => $mail_template
+                        'template_mail' => $mail_template,
+                        'task' => $task
 					]);
     }
 }

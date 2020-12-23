@@ -30,7 +30,7 @@
 					<tbody>
 						@foreach ($kids as $kid)
 							<tr >
-								<td>{{ $kid->first_name . ' ' . $kid->last_name }}</td>
+								<td>{{ $kid->last_name . ' ' . $kid->first_name }}</td>
 								<td>{!! $kid->b_day ? date("d.m.Y",strtotime($kid->b_day)) : '' !!}</td>
 								<td>{{ $kid->employee->user['first_name'] . ' ' . $kid->employee->user['last_name'] }}</td>
 								<td class="center">

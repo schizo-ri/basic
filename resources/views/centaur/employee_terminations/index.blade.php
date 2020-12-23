@@ -31,7 +31,7 @@
 					<tbody>
 						@foreach ($employee_terminations as $employee_termination)
 							<tr>
-								<td>{!!  $employee_termination->employee->user ? $employee_termination->employee->user->first_name . ' ' .  $employee_termination->employee->user->last_name :  $employee_termination->employee->email!!}</td>
+								<td>{!!  $employee_termination->employee->user ? $employee_termination->employee->user->last_name . ' ' .  $employee_termination->employee->user->first_name :  $employee_termination->employee->email!!}</td>
 								<td>{{ $employee_termination->termination->name }}</td>
 								<td>{{ date('d.m.Y',strtotime($employee_termination->check_out_date ) )}}</td>
 								<td>{{ $employee_termination->notice_period }}</td>

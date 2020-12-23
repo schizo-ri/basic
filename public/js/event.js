@@ -220,7 +220,7 @@ $(function() {
                 $('.change_car').toggle();
             });
             
-            var position_selected_day = $('.selected_day').position().top;
+            var position_selected_day = $('.selected_day').position().top -30;
             $('.main_calendar_month').scrollTop(position_selected_day);
         
             select_view();

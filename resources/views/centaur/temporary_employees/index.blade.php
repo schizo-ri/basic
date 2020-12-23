@@ -35,7 +35,7 @@
 					<tbody>
 						@foreach ($temporary_employees as $temporary_employee)
 							<tr class="tr_open_link " data-href="/temporary_employee/{{ $temporary_employee->id }}" data-modal >
-								<td>{{ $temporary_employee->user['first_name'] . ' ' . $temporary_employee->user['last_name'] }}</td>
+								<td>{{ $temporary_employee->user['last_name'] . ' ' . $temporary_employee->user['first_name'] }}</td>
 								<td>{{ date('d.m.Y',strtotime($temporary_employee->reg_date)) }}</td>
 								<td>{!! $temporary_employee->checkout ? 'odjavljen' : '' !!}</td>
 								<td>{!! $temporary_employee->work ? $temporary_employee->work->name : '' !!}</td>

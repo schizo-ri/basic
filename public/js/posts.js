@@ -144,7 +144,7 @@ if( $('.posts_index').length > 0) {
                 var content3 =  $('.index_main>section',data ).get(0).outerHTML;
                 $( '.index_main' ).html( content3 );
                 $('.tabcontent#'+tab_id).show();
-                broadcastingPusher();
+                /* broadcastingPusher(); */
                 submit_form (); 
                
                 if(post_id != undefined) {
@@ -228,9 +228,6 @@ if( $('.posts_index').length > 0) {
                                 }); 
         var channel = pusher.subscribe('message_receive');
         channel.bind('my-event', function(data) {
-            console.log("data");
-            console.log(data);
-            console.log("pusher id employee " + data.show_alert_to_employee); //2
             console.log(data.comment);
             if(employee_id == data.show_alert_to_employee) {
                 $('.all_post ').load(  location.origin + '/posts .all_post .main_post');

@@ -3,14 +3,15 @@
 		<h3 class="panel-title">@lang('basic.add_afterhour')</h3>
 	</div>
 <div class="modal-body">
-	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('afterhours.store') }}" >
+	<form class="form_afterhour" accept-charset="UTF-8" role="form" method="post" action="{{ route('afterhours.store') }}" >
+		<input type="text" name="ERP_leave_type" id="request_type" value="3" hidden/> 
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.employee')</label>
-				<select class="form-control" name="employee_id[]" value="{{ old('employee_id') }}" size="10" autofocus multiple required >
+				<select class="form-control" name="employee_id[]"  id="select_employee" value="{{ old('employee_id') }}" size="10" autofocus multiple required >
 					<option value="" disabled></option>
 					@foreach ($employees as $employee)
-						<option name="employee_id" value="{{ $employee->id }}">{{ $employee->user['last_name']  . ' ' . $employee->user['first_name'] }}</option>
+						<option name="employee_id" value="{{ $employee->id }}" {!! $employee->id == Sentinel::getUser()->employee->id ? 'selected' : '' !!}>{{ $employee->user['last_name']  . ' ' . $employee->user['first_name'] }}</option>
 					@endforeach	
 				</select>
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
@@ -19,21 +20,26 @@
 			<p class="padd_10">Ja, {{ Sentinel::getUser()->first_name  . ' ' . Sentinel::getUser()->last_name }} 
 				<span class="">@lang('absence.please_approve') @lang('basic.afterhours')</span>
 			</p>
-			<input name="employee_id" type="hidden" value="{{  Sentinel::getUser()->employee->id }}" />
+			<input name="employee_id" type="hidden" id="select_employee" value="{{  Sentinel::getUser()->employee->id }}"  />
 		@endif
-		@if($projects)
+		<div class="form-group datum date1 float_l  {{ ($errors->has('date')) ? 'has-error' : '' }}" >
+			<label>@lang('basic.date')</label>
+			<input name="date" id="date" class="form-control" type="date" id="date" min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-1 day'), 'Y-m-d') : '' !!}" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
+			{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
+		</div>
+		{{-- @if($projects)
 			<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
-				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{ old('project_id') }}" id="sel1" required>
+				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{  $afterhour->project_id }}" id="sel1" required>
 					<option value="" disabled selected></option>
 					@foreach ($projects as $project)
-						<option class="project_list" name="project_id" value="{{ intval($project->id) }}">{{ $project->erp_id  . ' ' . $project->name }}</option>
+						<option class="project_list" name="project_id" value="{{ intval($project->id) }}" >{{ $project->erp_id  . ' ' . $project->name }}</option>
 					@endforeach	
-				
 				</select>
 			</div>
-		@endif
-		@if($tasks)
-			<div class="form-group {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
+		@endif --}}
+		@if(isset( $tasks ) &&  $tasks )
+			<div class="form-group tasks {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
+				<label>@lang('basic.task')</label>
 				<select id="select-state" name="erp_task_id" placeholder="Pick a state..."  value="{{ old('erp_task_id') }}" id="sel1" required>
 					<option value="" disabled selected></option>
 					@foreach ($tasks as $id => $task)
@@ -42,18 +48,13 @@
 				</select>
 			</div>
 		@endif
-		<div class="form-group datum date1 float_l  {{ ($errors->has('date')) ? 'has-error' : '' }}" >
-			<label>@lang('basic.date')</label>
-			<input name="date" id="date" class="form-control" type="date" min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-1 day'), 'Y-m-d') : '' !!}" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
-			{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
-		</div>
-		<div class="col-md-12 clear_l overflow_hidd padd_0" >
-            <div class="form-group time {{ ($errors->has('start_time')) ? 'has-error' : '' }}" >
+		<div class="col-md-12 clear_l overflow_hidd padd_0 form-group time_group" >
+            <div class="time {{ ($errors->has('start_time')) ? 'has-error' : '' }}" >
                 <label>@lang('absence.start_time')</label>
                 <input name="start_time" class="form-control" type="time" value="{!!  old('start_time') ? old('start_time') : '08:00' !!}"required>
                 {!! ($errors->has('start_time') ? $errors->first('start_time', '<p class="text-danger">:message</p>') : '') !!}
             </div>
-            <div class="form-group time {{ ($errors->has('end_time')) ? 'has-error' : '' }}"  >
+            <div class="time {{ ($errors->has('end_time')) ? 'has-error' : '' }}"  >
                 <label>@lang('absence.end_time')</label>
                 <input name="end_time" class="form-control" type="time" value="{!!  old('end_time') ? old('end_time') : '16:00' !!}"required>
                 {!! ($errors->has('end_time') ? $errors->first('end_time', '<p class="text-danger">:message</p>') : '') !!}
@@ -90,4 +91,6 @@
 			}
 		}
 	});
+
+	$.getScript('/../js/absence_create.js');
 </script>

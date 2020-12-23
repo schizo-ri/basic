@@ -726,12 +726,17 @@ input[type="time"]::-webkit-inner-spin-button {
 
 .modal .time {
 	width: 150px;
-    padding-right: 20px;
+	padding-right: 20px;
+	float: left;
 }
 
 
-.modal form.absence .form-group.time {
+.modal form.absence .form-group.time_group {
 	display: none;
+}
+
+.modal form.absence .form-group.time_group .time:nth-child(2) {
+	margin-bottom: 0;
 }
 
 .modal .form-control.date_time {
@@ -759,7 +764,9 @@ input[type="time"]::-webkit-inner-spin-button {
 .modal input[type="date"], .modal input[type="time"]  {
 	text-align: center;
 }
-
+.modal input[type="date"]:disabled {
+	color: #bbb;
+}
 .schedule_date {
 	display: none;
 }

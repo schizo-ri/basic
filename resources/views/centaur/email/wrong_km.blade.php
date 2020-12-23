@@ -52,6 +52,10 @@
 			.marg_top_20 {
 				margin-top:20px;
 			}
+			.company_logo {
+				max-height: 20px;
+    			max-width: 85px;
+			}
         </style>
 	</head>
 	<body>
@@ -64,8 +68,12 @@
                 {{ $car->registration . ' - datum vožnje: ' . date('d.m.Y',strtotime($locco->date)) }}</p>
                 <p>{{ $napomena }}</p>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_footer : '' !!}">
-				<p>{{ config('app.name') }}</p>
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_footer : '' !!}">
+				@if(file_exists('../public/storage/company_img/logo.png'))
+					<img src="{{ URL::asset('storage/company_img/logo.png')}}" alt="company_logo" class="company_logo"/>
+				@else
+					<p>{{ config('app.name') }}</p>
+				@endif
             </div>
         </div>
 	</body>

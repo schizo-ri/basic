@@ -84,7 +84,7 @@
 			</div>
 			<div class="servis form-group">
 				<label for="servis">@lang('basic.malfunction')</label>
-				<input class="" type="checkbox" name="servis"  id="servis" value=""/>
+				<input class="" type="checkbox" name="servis"  id="servis" value="1"/>
 			</div>
 			{{-- <div class="servis form-group">
 				<label for="travel">@lang('basic.create_travel')</label>
@@ -165,5 +165,5 @@
 			}
 		});
 	});
-	$.getScript( '/../js/validate.js');
+/* 	$.getScript( '/../js/validate.js'); */
 </script>

@@ -39,7 +39,9 @@ class ApiController extends Controller
     public function index()
     {
         /* $response = $this->connect_id_get(); */
-         $response = $this->get_available_leave_types();
+       /*   $response = $this->get_employee_project_tasks(33, '2020-10-01'); */
+        $response = $this->get_available_leave_types();
+        
          /*    array:4 [▼
                 "holiday" => "Godi?nji odmor"
                 2 => "Bolovanje"
@@ -52,7 +54,7 @@ class ApiController extends Controller
             ] */
         /* $response = $this->send_leave_request(); */
 
-       /*  $response = $this->get_employee_project_tasks(33); */
+       
 
         return view('Centaur::api_erp.index',['response' => $response]);
     }
@@ -181,7 +183,7 @@ class ApiController extends Controller
         return $projects;
     }
 
-    public function get_employee_project_tasks($employee_id)
+    public function get_employee_project_tasks($employee_id, $date )
     {
         $user = $this->user;
         $password = $this->password ;
@@ -205,7 +207,7 @@ class ApiController extends Controller
         $sock->setSSLVerifyPeer(0);
 
         $API = $this->API;
-
+        
         $get_available_project_tasks = new xmlrpcmsg('execute');
         $get_available_project_tasks->addParam(new xmlrpcval($dbname, "string"));
         $get_available_project_tasks->addParam(new xmlrpcval($id, "int"));
@@ -214,24 +216,26 @@ class ApiController extends Controller
         $get_available_project_tasks->addParam(new xmlrpcval("get_available_project_tasks", "string"));
         $get_available_project_tasks->addParam(new xmlrpcval($employee_id, "int"));
         $get_available_project_tasks->addParam(new xmlrpcval($project_id, "int"));
-       
+       /*  $get_available_project_tasks->addParam(new xmlrpcval($date, "string")); */
+        
         $resp = $sock->send($get_available_project_tasks);
         
         $val = $resp->value();
-     
-        $ids = $val->scalarval();
+      
         $tasks = array();
-     
-        foreach ($ids as $id) {
-           /*  dd($id); */
-            $tasks[$id->me['struct']['id']->me['int']] = $id->me['struct']['name']->me['string'];
-           /*   array_push($tasks, $id->me['struct']['name']->me['string']); */ 
+        
+        $ids = $val->scalarval();
+        
+        if( count($ids) > 0) {
+            foreach ($ids as $id) {
+                $tasks[$id->me['struct']['id']->me['int']] = $id->me['struct']['name']->me['string'];
+            }
         }
 
         return $tasks;
     }
 
-    function send_leave_request( $absence ) 
+    function send_leave_request( $absence, $abs_type ) 
     {
         $user = $this->user;
         $password = $this->password ;
@@ -251,136 +255,62 @@ class ApiController extends Controller
 
         $employee_id = intval( $absence->employee->erp_id); 
         $leave_type_id = $absence->ERP_leave_type;
-
-        if(gettype($leave_type_id) == "integer") {
+        
+        if(is_numeric($leave_type_id) ) {
             $type_id = "int";
+            $leave_type_id = intval($leave_type_id);
         } else {
             $type_id = "string";
         }
         $task_id = intval($absence->erp_task_id);
-        $date_from = $absence->start_date;
-        $date_to = $absence->end_date;
-        if( $absence->absence->mark == 'IZL' ) {
-            $date_from = $date_from . ' ' . $absence->start_time;
-            $date_to = $date_to . ' ' . $absence->end_time;
-        } 
+        if( $abs_type == 'abs' ) {
+            $date_from = $absence->start_date;
+            $date_to = $absence->end_date;
+            if( $absence->absence->mark == 'IZL' ) {
+                $date_from = $date_from . ' ' . $absence->start_time;
+                $date_to = $date_to . ' ' . $absence->end_time;
+            } 
+        }
+        if( $abs_type == 'aft' ) {
+            $date_from = $absence->date . ' ' . $absence->start_time;
+            $date_to = $absence->date . ' ' . $absence->end_time;
+        }
 
         $note = $absence->comment;
 
-        // piše su uvijek na isti projekt Interno !!!!!!!!!!!!!!!!!!!!!!!  
-        $get_available_projects = $this->get_employee_available_projects( $employee_id );
-        $project_id = key($get_available_projects);
-
-        $param['dbname'] = $dbname;
+        $method = 'vacation_request_create';
+         
+        $param['dbname'] = $this->dbname;
         $param['uid'] = $uid;
         $param['password'] = $password;
         $param['API'] = $API;
-        $param['method'] = 'vacation_request_create';
+        $param['method'] = $method;
         $param['employee_id'] = $employee_id;
         $param['leave_type_id'] = $leave_type_id;
         $param['task_id'] = $task_id;
         $param['date_from'] = $date_from;
         $param['date_to'] = $date_to;
         $param['note'] = $note;
-
-        $get_employee_available_projects = new xmlrpcmsg('execute');
-        $get_employee_available_projects->addParam(new xmlrpcval($dbname, "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval($uid, "int"));
-        $get_employee_available_projects->addParam(new xmlrpcval($password, "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval($API, "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval("vacation_request_create", "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval($employee_id, "int"));
-        $get_employee_available_projects->addParam(new xmlrpcval($task_id, "int"));
-        $get_employee_available_projects->addParam(new xmlrpcval($leave_type_id, $type_id));
-        $get_employee_available_projects->addParam(new xmlrpcval($date_from, "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval($date_to, "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval($note, "string"));
-        
-        $resp = $sock->send($get_employee_available_projects);
-        
-        $val = $resp->value();
        
-       // $ids = $val->scalarval();
+        $get_employee_available_projects = new xmlrpcmsg('execute');
+        $get_employee_available_projects->addParam(new xmlrpcval($param['dbname'], "string"));
+        $get_employee_available_projects->addParam(new xmlrpcval($param['uid'], "int"));
+        $get_employee_available_projects->addParam(new xmlrpcval($param['password'], "string"));
+        $get_employee_available_projects->addParam(new xmlrpcval($param['API'], "string"));
+        $get_employee_available_projects->addParam(new xmlrpcval($param['method'], "string"));
+        $get_employee_available_projects->addParam(new xmlrpcval($param['employee_id'], "int"));
+        $get_employee_available_projects->addParam(new xmlrpcval($param['task_id'], "int"));
+        $get_employee_available_projects->addParam(new xmlrpcval($param['leave_type_id'], $type_id));
+        $get_employee_available_projects->addParam(new xmlrpcval($param['date_from'], "string"));
+        $get_employee_available_projects->addParam(new xmlrpcval($param['date_to'], "string"));
+        $get_employee_available_projects->addParam(new xmlrpcval($param['note'], "string"));
+       
+        $resp = $sock->send($get_employee_available_projects);
 
+        $val = $resp->value();
+      
+       // $ids = $val->scalarval();
+      
         return $val;
     }
-
-      /**
-         * $client = xml-rpc handler
-         * $relation = name of the relation ex: res.partner
-         * $attribute = name of the attribute ex:code
-         * $operator = search term operator ex: ilike, =, !=
-         * $key=search for
-    */
-    function search($client,$relation,$attribute,$operator,$keys) {
-        $user = $this->user;
-        $password =  $this->password;
-        $dbname = $this->dbname;
-        $server_url = $this->server_url;
-        $userId = -1;
-
-        $key = array(new xmlrpcval(array(new xmlrpcval($attribute , "string"),
-                new xmlrpcval($operator,"string"),
-                new xmlrpcval($keys,"string")),"array"),
-            );
-
-        if($userId<=0) {
-            $this->connect_id_get();
-        }
-
-        $msg = new xmlrpcmsg('execute');
-        $msg->addParam(new xmlrpcval($dbname, "string"));
-        $msg->addParam(new xmlrpcval($userId, "int"));
-        $msg->addParam(new xmlrpcval($password, "string"));
-        $msg->addParam(new xmlrpcval($relation, "string"));
-        $msg->addParam(new xmlrpcval("search", "string"));
-        $msg->addParam(new xmlrpcval($key, "array"));
-
-        $resp = $client->send($msg);
-        $val = $resp->value();
-        $ids = $val->scalarval();
-
-        return $ids;
-    }
-
-    /**
-         * $client = xml-rpc handler
-         * $relation = name of the relation ex: res.partner
-         * $attribute = name of the attribute ex:code
-         * $operator = search term operator ex: ilike, =, !=
-         * $id = id of the record to be updated
-         * $data = data to be updated
-     */
-    function write($client,$relation,$attribute,$operator,$data,$id) {
-        
-        $user = $this->user;
-        $password =  $this->password;
-        $dbname = $this->dbname;
-        $server_url = $this->server_url;
-        $userId = -1;
-       
-
-        $id_val = array();
-        $id_val[0] = new xmlrpcval($id, "int");
-
-        if($userId<=0) {
-            $this->connect_id_get();
-        }
-
-        $msg = new xmlrpcmsg('execute');
-        $msg->addParam(new xmlrpcval($dbname, "string"));
-        $msg->addParam(new xmlrpcval($userId, "int"));
-        $msg->addParam(new xmlrpcval($password, "string"));
-        $msg->addParam(new xmlrpcval($relation, "string"));
-        $msg->addParam(new xmlrpcval("write", "string"));
-        $msg->addParam(new xmlrpcval($id, "array"));
-        $msg->addParam(new xmlrpcval($data, "struct"));
-
-        $resp = $client->send($msg);
-        $val = $resp->value();
-        $record = $val->scalarval();
-
-        return $record;
-    }
-
 }

@@ -91,12 +91,21 @@
 						</div>
 						<div class="col-md-12 padd_0 float_left layout_button ">
 							@if(isset($employee) )
-								<button class=""><a href="{{ route('absences.create') }}" rel="modal:open">
-									<span>
-										<span class="img beach"></span>
-										<p>@lang('absence.request_vacation')</p>
-									</span></a>
-								</button>
+								@if( isset($sick_leave_not_approve) && $sick_leave_not_approve ) 
+									<button class="sick_button"><a href="{{ route('absences.edit', $sick_leave_not_approve->id) }}" rel="modal:open">
+										<span>
+											<span class="img sick"></span>
+											<p>@lang('absence.close_sick_leave')</p>
+										</span></a>
+									</button>
+								@else 
+									<button class=""><a href="{{ route('absences.create') }}" rel="modal:open">
+										<span>
+											<span class="img beach"></span>
+											<p>@lang('absence.request_vacation')</p>
+										</span></a>
+									</button>
+								@endif
 								@if(in_array('Prekovremeni', $moduli))  
 									<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
 										<span>

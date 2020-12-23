@@ -325,8 +325,7 @@ form {
 }
 
 .clearfix {
-  overflow: auto;
-  
+  overflow: auto;  
   scrollbar-width: thin;
 }
 
@@ -546,7 +545,7 @@ details .ocj {
 
 th {
 	text-align: center !important;
-	font-size: 0.75rem;
+/* 	font-size: 0.75rem; */
 }
 
 #myTable1 tr:hover{
@@ -3487,8 +3486,9 @@ main.campaign_main {
 .index_main main.main_calendar_day, .index_main main.main_calendar_month, .index_main main.main_calendar_week  {
     width: 100%;
     display: block;
-    position: absolute;
-    top: 80px;
+   /*  position: absolute; */
+   /*  top: 80px; */
+   position: relative;
     overflow: auto;
     scrollbar-width: thin;
     overscroll-behavior-y: contain;
@@ -3607,7 +3607,7 @@ main.campaign_main {
 }
 
 .index_aside .day_events .day_events_data>span:first-child {
-    width: 20%;
+    width: 100%;
 }
 .day_events_data>span.event_type {
     font-weight: 500;
@@ -3988,15 +3988,8 @@ footer.ad_footer {
     vertical-align: middle;
 }
 
-.index_page table.dataTable.no-footer, .index_page table.display.table {
-   /*  border-bottom: none; */
-  /*   display: none; */
-}
 .employee_view table.dataTable {
     border: 1px solid #ccc;
-}
-.index_page table.dataTable tbody tr {
-   /*  height: 80px; */
 }
 
 .index_page table.dataTable.stripe tbody tr.odd, .index_page table.dataTable.display tbody tr.odd, .index_page table.dataTable.stripe tbody tr.even, .index_page table.dataTable.display tbody tr.even,.index_page table.dataTable.display tbody tr.odd>.sorting_1, .index_page table.dataTable.order-column.stripe tbody tr.odd>.sorting_1, .index_page table.dataTable.display tbody tr.even>.sorting_1, .index_page table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
@@ -4058,7 +4051,7 @@ footer.ad_footer {
     padding: 0 20px
 }
 
-.modal-body p.days_employee, .modal-body p.days_request {
+.modal-body p.days_employee, .modal-body p.days_request, .modal-body p.time_request {
     color: red;
     padding: 10px 20px;
 }
@@ -4150,7 +4143,7 @@ footer.ad_footer {
     padding-left: 20px;
 }
 .index_page table.dataTable  {
-    font-size: 0.75rem;
+  
     position: relative;
 }
 
@@ -5234,9 +5227,8 @@ label.add_new {
     position: relative;
     font-weight: 500;
     font-size: 0.875rem;
-    line-height: 15px;
+  
     color: #2B2B2B;
-  /*   padding: 25px 10px; */
 }
 #index_table1.table_work_record {
     border: 1px solid #ccc;
@@ -5560,6 +5552,9 @@ h4 small, h5 small, h6 small, p small {
     float: right;
     text-transform: uppercase;
 }
+p.comment_empl small {
+    float: none;
+}
 
 .structure div {
     padding-left: 20px;
@@ -5600,7 +5595,7 @@ div.collaps_element {
 .table-responsive .table thead th {
     border: none;
     text-align: left;
-    padding-left: 12px;
+  /*   padding-left: 12px; */
     border-bottom: 1px solid rgba(154, 154, 154, 0.3);
 
 }
@@ -6042,15 +6037,28 @@ a.modal_close {
     padding: 20px;
     font-size: 14px;
 }
+
+#style_items .form-group >div {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
 #mail_template input {
     width: 100%;
     border: none;
-    background: #eeeeee61;
+    background: inherit;
     text-align: inherit;
+    border: 1px dashed #ddd;
+    margin-bottom: 5px;
+    color: inherit;
 }
+
 #style_items label>input, #style_items label>select {
     margin-left: 10px;
 }
+
 #style_items input, #style_items select {
     border: 1px solid #ccc;
     background: inherit;
@@ -6071,27 +6079,60 @@ a.modal_close {
     float: left;
     font-size: 12px;
 }
+.add_line, .add_link {
+    float: right;
+    float: right;
+    font-size: 0.625rem;
+    margin-left: 20px;
+    cursor: pointer;
+}
+.odobri{
+    width:150px;
+    height:40px;
+    background-color:white;
+    border: 1px solid rgb(0, 102, 255);
+    border-radius: 5px;
+    box-shadow: 5px 5px 8px #888888;
+    text-align:center;
+    padding:10px;
+    color:black;
+    font-weight:bold;
+    font-size:12px;
+    margin:15px;
+    float:left;
+    cursor:pointer
+}
+.mail_form a {
+    display: inline-block;
+}
 .form-group {
     clear: both;
     overflow: hidden;
 }
+
 #mail_template #header, #mail_template #footer {
     height: auto;
     border: 1px dashed #eee;
     padding: 10px 15px;
-    text-align: center;
+    padding-bottom: 20px;
+    text-align: left;
+    overflow: hidden;
 }
+
 #mail_template #header {
     font-size: 12px;
 }
+
 #mail_template #footer {
     font-size: 12px;
 }
+
 #mail_template #body {
-    height: 60%;
+    height: auto;
     border: 1px dashed #eee;
-   font-size: 12px;
-   padding: 15px;
+    font-size: 12px;
+    padding: 15px;
+    overflow: hidden;
 }
 
 @media (max-width: 1200px) {
@@ -7333,7 +7374,6 @@ a.modal_close {
         width: auto;
         overflow: auto;
         scrollbar-width: thin;
-   
         display: block;
     }
     .index_page .dataTables_wrapper .dataTables_filter input {
@@ -7527,7 +7567,7 @@ img{
 }
 
 table {
-	font-size: 0.75rem;
+	font-size: 0.875rem
 }
 table thead tr {
 	font-size: 0.625rem;	
@@ -7540,7 +7580,7 @@ table.dataTable thead th {
 }
 
 table.dataTable thead th, table.dataTable thead td{
-	padding-top: 15px;
+/* 	padding-top: 15px; */
 	border: none;	
 }
 
@@ -8628,6 +8668,10 @@ span.count_post {
 	color: #071E57;
 	margin-bottom: 15px;
 	padding: 10px;
+}
+
+.info .layout_button >button.sick_button {
+    background-color: rgb(256,0,0,0.5);
 }
 
 .info .layout_button >button>a {
@@ -10688,12 +10732,17 @@ input[type="time"]::-webkit-inner-spin-button {
 
 .modal .time {
 	width: 150px;
-    padding-right: 20px;
+	padding-right: 20px;
+	float: left;
 }
 
 
-.modal form.absence .form-group.time {
+.modal form.absence .form-group.time_group {
 	display: none;
+}
+
+.modal form.absence .form-group.time_group .time:nth-child(2) {
+	margin-bottom: 0;
 }
 
 .modal .form-control.date_time {
@@ -10721,7 +10770,9 @@ input[type="time"]::-webkit-inner-spin-button {
 .modal input[type="date"], .modal input[type="time"]  {
 	text-align: center;
 }
-
+.modal input[type="date"]:disabled {
+	color: #bbb;
+}
 .schedule_date {
 	display: none;
 }
@@ -12608,10 +12659,6 @@ span.file_name {
 }
 /* @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap'); */
 
-* {
-	padding: 0;
-	margin: 0;
-}
 .row.notification {
 	display: none;
 }
@@ -12621,7 +12668,6 @@ html {
 	background-color: #fff;
 	font-family: Montserrat, sans-serif;
 	font-weight: 400;
-	font-size: 0.875rem;
 	position: relative;
 }
 .travel_section {
@@ -12780,11 +12826,11 @@ input[name=description] {
     }
 }
 /* @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap'); */
-
+/* 
 * {
 	padding: 0;
 	margin: 0;
-}
+} */
 .row.notification {
 	display: none;
 }
@@ -12794,7 +12840,6 @@ html {
 	background-color: #fff;
 	font-family: Montserrat, sans-serif;
 	font-weight: 400;
-	/* overflow: hidden; */
 	font-size: 16px;
 	position: relative;
 }

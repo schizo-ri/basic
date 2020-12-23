@@ -66,7 +66,7 @@ class AbsenceCronMail extends Mailable
                     array_push($day_absences, array(
                         'ime' => $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name'], 
                         'zahtjev' =>  $absence->absence['name'], 
-                        'period' => date('d.m.Y', strtotime($absence->start_date)) . ' - ' . $absence->absence['name'] != 'Izlazak' ? date('d.m.Y', strtotime($absence->end_date)) : '', 
+                        'period' => date('d.m.Y', strtotime($absence->start_date)) . '-'. date('d.m.Y', strtotime($absence->end_date)) . ' - ' . $absence->absence['name'] != 'Izlazak' ? date('d.m.Y', strtotime($absence->end_date)) : '', 
                         'vrijeme' => $absence->absence['name'] == 'Izlazak' ? $absence->start_time . ' - ' .  $absence->end_time : '', 
                         'napomena' => $absence->comment,
                         'dani_GO' => $dani_GO ));
@@ -113,7 +113,7 @@ class AbsenceCronMail extends Mailable
         if(count($day_absences)>0) {
             $title = __('absence.absence_for_day') . ' ' . date_format($datum,'d.m.Y');
             return $this->view('emails.absences.today_absence')
-                    ->subject( __('emailing.day_absence') . ' ' . date_format($datum,'d.m.Y'))
+                    ->subject(  $title )
                     ->with(['day_absences'    => $day_absences,
                             'title'    => $title,
                             'template_mail' => $mail_template

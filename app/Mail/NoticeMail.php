@@ -39,19 +39,13 @@ class NoticeMail extends Mailable
     {
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','NoticeMail')->first();
         
-        $title = ''; 
+        $title = 'Nova ' . ' ' .  ' obavijest';
         if($this->notice->title) {
-            $text = $this->notice->title;
-            $text = explode(" ", $text);
-            foreach ($text as $word) {
-                $title .= $word . ' ';
-            }
-        } else {
-            $title = 'Nova ' . ' ' .  ' obavijest';
-        }
+            $title .= $this->notice->title;
+        } 
 
         return $this->view('Centaur::email.notice_send1')
-                    ->subject( __('emailing.new_notice') . ' - ' . $title )
+                    ->subject( $title )
                     ->with(['notice'    => $this->notice,
                             'url'       => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']  . '/dashboard',
                             'template_mail' => $mail_template

@@ -32,7 +32,7 @@
 					<tbody>
 						@foreach ($employee_trainings as $employee_training)
 							<tr>
-								<td>{{ $employee_training->employee->user->first_name . ' ' . $employee_training->employee->user->last_name}}</td>
+								<td>{{ $employee_training->employee->user->last_name . ' ' . $employee_training->employee->user->first_name}}</td>
 								<td>{{ $employee_training->training->name }}</td>
 								<td>{{ date('d.m.Y', strtotime($employee_training->date)) }}</td>
 								<td>{{ date('d.m.Y', strtotime($employee_training->expiry_date))  }}</td>

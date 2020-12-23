@@ -74,7 +74,7 @@ class NoticeController extends Controller
     public function store(Request $request)
     {
         if( ! isset($request['to_department'])) {
-            $to_department_id = array( Department::where('level',0)->first()->id );
+            $to_department_id = array( Department::where('level1',0)->first()->id );
         }
    
         if(Sentinel::getUser()->employee) {

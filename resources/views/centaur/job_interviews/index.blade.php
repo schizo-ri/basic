@@ -32,7 +32,7 @@
 					<tbody class="">
 						@foreach ($job_interviews as $job_interview)
 							<tr class="tr_open_link panel"  data-href="/job_interviews/{{ $job_interview->id }}" data-modal >
-								<td>{{ $job_interview->first_name . ' ' .  $job_interview->last_name }} </td>
+								<td>{{ $job_interview->last_name . ' ' .  $job_interview->first_name }} </td>
 								<td>{{ date('d.m.Y.', strtotime($job_interview->date)) }}</td>
 								<td>{{ $job_interview->oib }} </td>
 								<td>{{ $job_interview->work->name }} </td>

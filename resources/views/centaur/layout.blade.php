@@ -156,7 +156,7 @@
 			<script>
 				// Enable pusher logging - don't include this in production
 				/* Pusher.logToConsole = true; */
-				var employee_id = $('#employee_id').text();
+				/* var employee_id = $('#employee_id').text();
 				var pusher = new Pusher('d2b66edfe7f581348bcc', {
 					cluster: 'eu'
 				});
@@ -165,11 +165,10 @@
 				channel.bind('my-event', function(data) {
 					if(employee_id == data.show_alert_to_employee) {
 						if(location.pathname != "/posts") {
-						/* 	alert(JSON.stringify(data)); */
 						  	$('.all_post').load(location.origin + ' .all_post>div');
 						}
 					}
-				});
+				}); */
 			</script>
 			<!-- Latest compiled and minified Bootstrap JavaScript -->
 			<!-- Bootstrap js -->

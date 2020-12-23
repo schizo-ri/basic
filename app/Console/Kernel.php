@@ -40,7 +40,7 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
        
       /*  $schedule->command('email:absence_day') 
-                   // ->dailyAt('7:00')  
+                   // ->dailyAt('12:00')  
                    ->everyMinute()
                     ->evenInMaintenanceMode(); */
       /*   $schedule->command('email:campaign')

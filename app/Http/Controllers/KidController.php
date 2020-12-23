@@ -27,7 +27,7 @@ class KidController extends Controller
      */
     public function index()
     {
-        $kids = Kid::get();
+        $kids = Kid::orderBy('last_name','ASC')->orderBy('first_name','ASC')->get();
         $permission_dep = DashboardController::getDepartmentPermission();
 
         return view('Centaur::kids.index', ['kids' => $kids,'permission_dep' => $permission_dep ]);

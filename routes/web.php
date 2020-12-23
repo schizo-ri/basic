@@ -146,6 +146,7 @@ Route::get('absence/confirmation_show', ['as' => 'confirmation_show', 'uses' => 
 Route::get('absence/absences_table', ['as' => 'absences_table', 'uses' => 'AbsenceController@absences_table']);
 Route::get('absence/absences_requests', ['as' => 'absences_requests', 'uses' => 'AbsenceController@absences_requests']);
 Route::get('absence/print_requests', ['as' => 'print_requests', 'uses' => 'AbsenceController@printRequests']);
+Route::get('getTasks', ['as' => 'getTasks', 'uses' => 'AbsenceController@getTasks']);
 
 Route::get('getDays/{id}', 'AbsenceController@getDays');
 Route::get('days_offUnused/{id}', 'BasicAbsenceController@days_offUnused');

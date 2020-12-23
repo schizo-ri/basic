@@ -13,7 +13,7 @@ img{
 }
 
 table {
-	font-size: 0.75rem;
+	font-size: 0.875rem
 }
 table thead tr {
 	font-size: 0.625rem;	
@@ -26,7 +26,7 @@ table.dataTable thead th {
 }
 
 table.dataTable thead th, table.dataTable thead td{
-	padding-top: 15px;
+/* 	padding-top: 15px; */
 	border: none;	
 }
 
@@ -1114,6 +1114,10 @@ span.count_post {
 	color: #071E57;
 	margin-bottom: 15px;
 	padding: 10px;
+}
+
+.info .layout_button >button.sick_button {
+    background-color: rgb(256,0,0,0.5);
 }
 
 .info .layout_button >button>a {

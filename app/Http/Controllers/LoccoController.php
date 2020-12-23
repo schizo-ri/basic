@@ -19,6 +19,7 @@ use App\Mail\TravelCreate;
 use Illuminate\Support\Facades\Mail;
 use Sentinel;
 use DateTime;
+use Log;
 
 class LoccoController extends Controller
 {
@@ -145,7 +146,7 @@ class LoccoController extends Controller
         }
         
         /* try { */
-            if( $request['travel']) {
+          /*   if( $request['travel']) {
                 $data_travel = array(
                     'date'  		    => $request['date'],
                     'employee_id'  	    => $request['employee_id'],
@@ -166,7 +167,7 @@ class LoccoController extends Controller
                 );
                 $locco->updateLocco($data_locco);
                
-                /* mail obavijest o novom putnom nalogu */
+                // mail obavijest o novom putnom nalogu 
                 $send_to = EmailingController::sendTo('travel_orders','create');
                 try {
                     foreach(array_unique($send_to) as $send_to_mail) { // mailovi upisani u mailing 
@@ -178,20 +179,20 @@ class LoccoController extends Controller
                     session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			        return redirect()->back();
                 }
-            }
+            } */
         /*     } catch (\Throwable $th) {
             session()->flash('error',  __('ctrl.locco_error'));
             return redirect()->back();
         } */
-      
+     
         if($request['servis']){
 			if(! $request['comment'] ){
 				$message = session()->flash('error', __('ctrl.malfunction'));
 				return redirect()->back()->withFlashMessage($message);
 			} else {
                 $send_to = EmailingController::sendTo('loccos','create');
-              
-            /*     try { */
+               
+                /* try { */
                     foreach(array_unique($send_to) as $send_to_mail) {
                         if( $send_to_mail != null & $send_to_mail != '' ) {
                             Mail::to($send_to_mail)->send(new CarServiceMail($locco)); // mailovi upisani u mailing 
@@ -212,7 +213,6 @@ class LoccoController extends Controller
             session()->flash('success',  __('ctrl.data_save'));
             return redirect()->back();
         }
-       
     }
 
     /**

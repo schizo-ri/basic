@@ -28,7 +28,7 @@
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12 users_main">
 		<div class="table-responsive">
 			@if(count($users)>0)
-				<table id="index_table" class="display table table-hover sort_1_asc">
+				<table id="index_table" class="display table table-hover ">
 					<thead>
 						<tr>
 							<th>@lang('basic.fl_name')</th>
@@ -39,7 +39,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						@foreach ($users as $user)
+						@foreach ($users->sortBy('last_name') as $user)
 							@if (! $user->inRole('superadmin'))
 								@php
 									$image_employee = '';
@@ -58,7 +58,7 @@
 										@else
 											<img class="radius50 float_l" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 										@endif	
-										<span class="float_l">{{ $user->first_name . ' ' . $user->last_name }}<br>
+										<span class="float_l">{{ $user->last_name . ' ' . $user->first_name }}<br>
 										<span class="user_mail">{{ $user->email }}</span></span>
 									</td>						
 									<td>{!! isset($user->work_id) && $works->where('id', $user->work_id)->first() ? $works->where('id', $user->work_id)->first()->department['name'] . ' - ' .  $works->where('id', $user->work_id)->first()->name : '' !!}</td>
