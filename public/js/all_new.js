@@ -4,7 +4,8 @@ $(function(){
 		var ova_godina = d.getFullYear();
 		var prosla_godina = ova_godina - 1;
 		var year = '';
-		
+		$('.info_abs>p>.go').hide();
+		$('.info_abs>p>.go.go_'+ova_godina).show();
 		if($(".all_absences").length == 0) {
 			init_absence_table ();
 		}

@@ -206,7 +206,7 @@ class UserController extends Controller
                     'razmjeranGO'  	=> BasicAbsenceController::razmjeranGO( $user->employee ),  //razmjeran go ova godina
                     'zahtjevi' 		 => BasicAbsenceController::requestAllYear( $user->employee ), 
                 );
-                
+               /*  dd( $data_absence ); */
                 $requests = BasicAbsenceController::zahtjevi($user->employee);
                 $yearsRequests = BasicAbsenceController::yearsRequests($user->employee);
                 $bolovanje =BasicAbsenceController::bolovanje($user->employee);

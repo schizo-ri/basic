@@ -37,7 +37,7 @@
 						<span class="title">@lang('absence.vacat_days')
 							<select id="year_vacation" class="year_select">
 								@foreach ( $data_absence['years'] as $year)
-									<option >{{ $year }}</option>
+									<option {!! $year == date('Y') ? 'selected' : '' !!}>{{ $year }}</option>
 								@endforeach
 							</select>
 						</span>

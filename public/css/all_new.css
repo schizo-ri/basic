@@ -1532,6 +1532,10 @@ label.schedule_set {
     color: #FFFFFF;
     text-align: center;
 }
+.label_file >span:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
 #file {
     display: none;
 }

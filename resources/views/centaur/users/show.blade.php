@@ -65,7 +65,6 @@
 						<span class="go go_{{ $year }}">
 							{!! isset($data_absence['zahtjevi'][ $year]) ? count($data_absence['zahtjevi'][ $year]) : 0 !!}
 							- {{ BasicAbsenceController::razmjeranGO_Godina($user->employee, $year) - count($data_absence['zahtjevi'][ $year])}}
-							
 						</span>
 					@endforeach
 					<span>@lang('absence.used_unused')</span>

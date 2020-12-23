@@ -111,7 +111,7 @@ class EmployeeController extends Controller
 		$abs_days = array();
 		if( $request['abs_days'] ) {
 			foreach ($request['abs_days'] as $key => $abs_day) {
-				if( $abs_day != '' && $abs_day != 0 && $request['abs_year'][$key] != '' && $request['abs_year'][$key] ) 
+				if( $abs_day != '' && $request['abs_year'][$key] != '' && $request['abs_year'][$key] ) 
 				$abs_days[$request['abs_year'][$key]] = $abs_day;
 			}
 		}
@@ -265,7 +265,7 @@ class EmployeeController extends Controller
 		$abs_days = array();
 		if( $request['abs_days']) {
 			foreach ($request['abs_days'] as $key => $abs_day) {
-				if( $abs_day != '' && $abs_day != 0 && $request['abs_year'][$key] != '' && $request['abs_year'][$key] ) 
+				if( $abs_day != ''  && $request['abs_year'][$key] != '' && $request['abs_year'][$key] ) 
 				$abs_days[$request['abs_year'][$key]] = $abs_day;
 			}
 		}

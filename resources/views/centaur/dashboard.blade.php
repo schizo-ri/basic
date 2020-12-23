@@ -10,6 +10,7 @@
 	$today->modify('-1 years');
 	$today->modify('-14 days');
 	$key = 0;
+
 @endphp
 @section('content')
 	@if (Sentinel::check())
@@ -39,6 +40,7 @@
 						<p>
 							<span>{!! isset($data_absence[$thisYear]) && count($data_absence[$thisYear]) > 0 ? $data_absence[$thisYear]['dani_zahtjeva'] : 0 !!}</span>
 							<span>@lang('absence.vacation')<br>@lang('absence.days_used') <br> @lang('absence.this_year')</span>
+							
 						</p>
 					</div>
 					@endif
