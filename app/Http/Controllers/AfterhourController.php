@@ -102,18 +102,19 @@ class AfterhourController extends Controller
      
         $employee = Sentinel::getUser()->employee;
        /*  $api = new ApiController(); */
-
-        if( $employee ) {
+       $projects = Project::where('active',1)->get();
+       $tasks = null;
+       /*  if( $employee ) {
             $erp_id = $employee->erp_id;
             
-            /* $tasks = $api->get_employee_project_tasks( $erp_id, date('Y-m-d') ); */
-            $tasks = null;
+            // $tasks = $api->get_employee_project_tasks( $erp_id, date('Y-m-d') ); 
+           // $tasks = null;
 
-            $projects = null;
+           // $projects = null;
         } else {
-            $tasks = null;
-            $projects = Project::where('active',1)->get();
-        }
+          //  $tasks = null;
+          //  $projects = Project::where('active',1)->get();
+        } */
         
        /*  $leave_types = $api->get_available_leave_types(); */
         
@@ -138,6 +139,7 @@ class AfterhourController extends Controller
                     $data = array(
                         'ERP_leave_type' => isset($request['ERP_leave_type']) ? $request['ERP_leave_type'] : null,
                         'erp_task_id'    => isset($request['erp_task_id']) ? $request['erp_task_id'] : null,
+                        'project_id'  	 => $request['project_id'],
                         'employee_id'  	 => $employee_id,
                         'date'    		 => $request['date'],
                         'start_time'  	 => $request['start_time'],
@@ -178,6 +180,7 @@ class AfterhourController extends Controller
                     'ERP_leave_type' => isset($request['ERP_leave_type']) ? $request['ERP_leave_type'] : null,
                     'erp_task_id'    => isset($request['erp_task_id']) ? $request['erp_task_id'] : null,
                     'employee_id'  	 => $request['employee_id'],
+                    'project_id'  	 => $request['project_id'],
                     'date'    		 => $request['date'],
                     'start_time'  	 => $request['start_time'],
                     'end_time'  	 => $request['end_time'],
@@ -247,17 +250,18 @@ class AfterhourController extends Controller
         $employee = Sentinel::getUser()->employee;
       /*   $api = new ApiController(); */
 
-        if( $employee ) {
+        /* if( $employee ) {
             $erp_id = $employee->erp_id;
             
-          /*   $tasks = $api->get_employee_project_tasks( $erp_id, date('Y-m-d') ); */
+            $tasks = $api->get_employee_project_tasks( $erp_id, date('Y-m-d') ); 
             $tasks = null;
             $projects = null;
         } else {
             $tasks = null;
             $projects = Project::where('active',1)->get();
-        }
-
+        } */
+        $tasks = null;
+        $projects = Project::where('active',1)->get();
      /*    $leave_types = $api->get_available_leave_types(); */
 
         return view('Centaur::afterhours.edit',['afterhour' => $afterhour,'employees' => $employees,'projects' => $projects,'tasks' => $tasks]);
@@ -278,6 +282,7 @@ class AfterhourController extends Controller
             'ERP_leave_type' => isset($request['ERP_leave_type']) ? $request['ERP_leave_type'] : null,
             'erp_task_id'    => isset($request['erp_task_id']) ? $request['erp_task_id'] : null,
             'employee_id'  	 => $request['employee_id'],
+            'project_id'  	 => $request['project_id'],
             'date'    		 => $request['date'],
             'start_time'  	 => $request['start_time'],
             'end_time'  	 => $request['end_time'],

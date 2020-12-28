@@ -27,16 +27,16 @@
 			<input name="date" id="date" class="form-control" type="date" id="date" min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-1 day'), 'Y-m-d') : '' !!}" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
 			{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-		{{-- @if($projects)
+		@if($projects)
 			<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
-				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{  $afterhour->project_id }}" id="sel1" required>
+				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{ old('project_id') }}" id="sel1" required>
 					<option value="" disabled selected></option>
 					@foreach ($projects as $project)
 						<option class="project_list" name="project_id" value="{{ intval($project->id) }}" >{{ $project->erp_id  . ' ' . $project->name }}</option>
 					@endforeach	
 				</select>
 			</div>
-		@endif --}}
+		@endif
 		@if(isset( $tasks ) &&  $tasks )
 			<div class="form-group tasks {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.task')</label>

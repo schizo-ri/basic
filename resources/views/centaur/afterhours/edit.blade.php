@@ -15,7 +15,7 @@
 			</select>
 			{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-		{{-- @if($projects)
+		@if($projects)
 			<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
 				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{  $afterhour->project_id }}" id="sel1" required>
 					<option value="" disabled selected></option>
@@ -24,7 +24,7 @@
 					@endforeach	
 				</select>
 			</div>
-		@endif --}}
+		@endif
 		@if(isset( $tasks ) &&  $tasks )
 			<div class="form-group {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
 				<select id="select-state" name="erp_task_id" placeholder="Pick a state..."  value="{{ old('erp_task_id') }}" id="sel1" required>
