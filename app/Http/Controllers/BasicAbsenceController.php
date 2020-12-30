@@ -797,7 +797,7 @@ class BasicAbsenceController extends Controller
 					}
 				}
 			}
-			\rsort($years);
+			rsort($years);
 			return $years;
 		}
 

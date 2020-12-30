@@ -3568,8 +3568,16 @@ a.modal_close {
     font-weight: 600;
     font-size: 0.8125rem;
     line-height: 16px;
-
     color: #071E57;
+}
+
+@media (max-width: 1600px) {
+    .info_abs>p>.go, .info_abs>p>.bol, .info_abs>p, .info_abs>p>.go_og, .info_abs>p>.go_pg, .info_abs>p>.bol_og, .info_abs>p>.bol_pg, .info_abs>p>.bol_om {
+        font-size: 1rem;
+    }
+    .info_abs .title {
+        font-size: 0.6875rem;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -3763,6 +3771,12 @@ a.modal_close {
     }
     .info_abs>p, .info_abs>p>.go_og, .info_abs>p>.go_pg, .info_abs>p>.bol_og, .info_abs>p>.bol_pg, .info_abs>p>.bol_om {
         font-size: 1rem;
+    }
+    .info_abs>p, .info_abs>p>.go, .info_abs>p>.go_pg, .info_abs>p>.bol, .info_abs>p>.bol_pg, .info_abs>p>.bol_om{
+        font-size: 1rem;
+    }
+    .info_abs .title {
+        font-size: 0.6875rem;
     }
     .index_page .posts .all_post article.main_post {
         padding: 10px 0;

@@ -79,4 +79,17 @@ class Absence extends Model
 	{
 		return $this->update($absence);
 	}	
+
+	public static function getYears () 
+	{
+		$absences = Absence::get();
+
+		$years = $absences->unique(function($absence){
+          return date('Y', strtotime($absence['start_date']) );
+         })->map(function($absence){
+          return date('Y', strtotime($absence['start_date']) ); 
+		 })->sort()->toArray();
+		 
+		 return $years;
+	}
 }

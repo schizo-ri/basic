@@ -249,9 +249,7 @@ ul.admin_pages li >span.image_template{
 }
 
 @media (max-width: 450px) {
-    .index_page aside > .admin_panel {
-        
-    }
+    
     .admin_main .link_back {
         top: 20px;
         left: 0;
@@ -5992,8 +5990,16 @@ a.modal_close {
     font-weight: 600;
     font-size: 0.8125rem;
     line-height: 16px;
-
     color: #071E57;
+}
+
+@media (max-width: 1600px) {
+    .info_abs>p>.go, .info_abs>p>.bol, .info_abs>p, .info_abs>p>.go_og, .info_abs>p>.go_pg, .info_abs>p>.bol_og, .info_abs>p>.bol_pg, .info_abs>p>.bol_om {
+        font-size: 1rem;
+    }
+    .info_abs .title {
+        font-size: 0.6875rem;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -11913,6 +11919,10 @@ input.form-control.date {
 @media (max-width:450px) {
 	.modal a.close-modal {
 		background-size: 12px 12px;
+	}
+	.modal.modal_user>header .user_data {
+		display: flex;
+		flex-wrap: wrap;
 	}
 	.modal_user a.back .arrow_left_wh {
 		background-size: 10px;

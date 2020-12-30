@@ -23,6 +23,7 @@ use Sentinel;
 use DateTime;
 use DB;
 use Log;
+use mysqli;
 
 class DashboardController extends Controller
 {
@@ -33,15 +34,14 @@ class DashboardController extends Controller
      */
     public function index()
     {
-      
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
             $moduli = CompanyController::getModules();  //dohvaća module firme
            
             if($employee) {
                 $data_absence = BasicAbsenceController::zahtjevi( $employee ); 
-                Log::info( "*****************".$employee->user->last_name."*****************");
-                Log::info($data_absence);
+                /* Log::info( "*****************".$employee->user->last_name."*****************");
+                Log::info($data_absence); */
                 //dohvaća dopuštenja odjela za korisnika
                 $permission_dep = DashboardController::getDepartmentPermission();
 

@@ -85,7 +85,9 @@ $('.admin_pages li>a').not('.open_menu').on('click',function(e) {
         if(body_width < 992 ) {
             $('aside.admin_aside').hide();
             $('main.admin_main').show();
-        
+            if(url.includes('/users')) {
+                $.getScript( '/../js/users.js');
+            }
             $('.link_back').on('click',function (e) {
                 e.preventDefault();
                 $('aside.admin_aside').show();

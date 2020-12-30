@@ -2355,6 +2355,29 @@ input.form-control.date {
 }
 
 @media (max-width:450px) {
+	.modal a.close-modal {
+		background-size: 12px 12px;
+	}
+	.modal.modal_user>header .user_data {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.modal_user a.back .arrow_left_wh {
+		background-size: 10px;
+	}
+	.modal.modal_user>main, .modal.modal_user>header {
+		padding: 5px;
+	}
+	.modal_user .user_img >img, .modal_user .user_data .user_name, .modal_user .user_data .days_left, .modal_user .user_data .days_used {
+		height: 52px;
+	}
+	.info_abs>p>span {
+		margin-top: 8px;
+		font-size: 8px;
+	}
+	.modal_user main .basic_info, .modal_user main .permissions {
+		width: 100%;
+	}
 	.modal.modal_notice.notice_show .modal-body {
 		padding: 10px;
 	}

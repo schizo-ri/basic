@@ -249,9 +249,7 @@ ul.admin_pages li >span.image_template{
 }
 
 @media (max-width: 450px) {
-    .index_page aside > .admin_panel {
-        
-    }
+    
     .admin_main .link_back {
         top: 20px;
         left: 0;

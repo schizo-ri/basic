@@ -36,7 +36,7 @@
 		<!-- CSS -->
 		<script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all_new.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all1.css?random=@dt') }}"/>
 	
 		{{-- Material design --}}
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -272,7 +272,7 @@
 			<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
 
 			<!-- Scripts -->
-			<script src="{{URL::asset('/../js/all_new.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/all1.js?random=@dt') }}"></script>
 
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>

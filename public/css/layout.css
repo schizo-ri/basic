@@ -1784,6 +1784,10 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
         position: sticky;
         top: 0;
 	}
+	#admin_page a.shortcut, #admin_page span.shortcut {
+		top: 0;
+		right: 10px;
+	}
 	.salary>div.shortcuts_container {
 		width: 100%;
 	}
@@ -1943,7 +1947,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		width: auto;
 	}
 	#admin_page .index_table_filter {
-		padding: 0;
+		padding: 0 10px 0 15px;
 	}
 	.topnav.responsive >div {
 		padding: 0;

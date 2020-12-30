@@ -31,7 +31,7 @@ mix.styles([
     'public/css/travel_show.css',
     'public/css/welcome.css',
     
-], 'public/css/all_new.css');
+], 'public/css/all1.css');
 mix.scripts([
     'public/js/absence.js',
     'public/js/ads.js',
@@ -86,6 +86,6 @@ mix.scripts([
     'public/js/validate_user.js',
     'public/js/validate_user_edit.js',
     'public/js/work_records.js',
-], 'public/js/all_new.js');
+], 'public/js/all1.js');
 
 /* mix.js('resources/assets/laravel-echo-setup.js', 'public/js'); */
