@@ -34,67 +34,33 @@
 						</div>
 					</section>
 					@foreach ($elements as $element)
-						<div class="form-group {{ $element }}" hidden>
-							<h5>{{ ucfirst( $element) }}</h5>
-							<p>Font</p>
-							<div>
-								<label>Boja <input name="{{ $element }}[color]" type="color" id="color[{{ $element }}]" class="color_{{ $element }}" value="#000000"/></label>
-								<label>Veličina
-									<select name="{{ $element }}[font-size]" id="font-size[{{ $element }}]" class="font-size_{{ $element }}" >
-										@for ( $i = 8; $i < 30; $i++)
-											<option value="{{ $i }}px" {!! $i== 12 ? 'selected' : '' !!}>{{ $i }}</option>
-										@endfor
-									</select>
-								</label>
-								<label>Poravnanje 
-									<select name="{{ $element }}[text-align]" id="text-align[{{ $element }}]" class="text-align_{{ $element }}" >
-										<option value="left" selected>Lijevo</option>
-										<option value="center" >Sredina</option>
-										<option value="right">Desno</option>
-									</select>
-								</label>
-								<label>Uvlaka
-									<select name="{{ $element }}[padding-left]" id="padding-left[{{ $element }}]" class="padding-left_{{ $element }}" >
-										@for ( $i = 0; $i < 50; $i++)
-											<option value="{{ $i }}px" {!! $i== 0 ? 'selected' : '' !!}>{{ $i }}</option>
-										@endfor
-									</select>
-								</label>
-							</div>
-							<p>Obrub</p>
-							<div>
-								<label>Boja <input name="{{ $element }}[border-color]" type="color" id="border-color[{{ $element }}]" class="border-color_{{ $element }}" value="#ffffff"/></label>
-								<label>Debljina<input name="{{ $element }}[border-width]" type="number" min="0" max="4" id="border-width" class="border-width_{{ $element }}" value="0"/></label>
-								<label>Stil
-									<select name="{{ $element }}[border-style]" id="border-style[{{ $element }}]" class="border-style_{{ $element }}">
-										<option value="dotted">Točkasta</option>
-										<option value="dashed" >Isprekidana</option>
-										<option value="solid">Čvrsta</option> 
-										<option value="double">Dvostruka</option> 
-										<option value="none" selected>Bez</option> 
-									</select>
-								</label>
-							</div>
-							<p>Pozadina</p>
-							<div>
-								<label>Boja <input name="{{ $element }}[background-color]" type="color" id="background-color[{{ $element }}]" class="background-color_{{ $element }}" value="#ffffff"/></label>
-							</div>
-						</div>
+						@include('Centaur::mail_templates.create_style', ['element' => $element ])
+						@foreach ($child_elements as $key => $child_element)
+							@include('Centaur::mail_templates.create_style', ['element' => $element . '_'. $child_element, 'count_input' => 0 ])
+						@endforeach
 					@endforeach
 				</section>
 				<section class="col-xs-6 col-sm-6 col-md-6 col-lg-6 float_left" id="mail_template">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="header">
-						<input name="text_header[text][1]" type="text" id="text_header[text][1]" class="text_header" />
-						<span class="add_line">Dodaj liniju</span>					
+						<input name="text_header[text][1]" type="text" id="text_header[text][1]" class="text_header" placeholder="Unesi naslov"/>
+						<span class="add_line">Dodaj liniju</span>	
+						<span class="add_link">Dodaj link</span>
+						<span class="remove_line">Ukloni liniju</span>	
+
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="body">
-						<input name="text_body[text][1]" type="text" id="text_body[text][1]" class="text_body" />
-						<span class="add_line">Dodaj liniju</span>
-					
+						<input name="text_body[text][1]" type="text" id="text_body[text][1]" class="text_body" placeholder="Unesi tekst"/>
+						<span class="add_line">Dodaj liniju</span>	
+						<span class="add_link">Dodaj link</span>
+						<span class="remove_line">Ukloni liniju</span>	
+
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer">
-						<input name="text_footer[text][1]" type="text" id="text_footer[text][1]" class="text_footer" />
-						<span class="add_line">Dodaj liniju</span>
+						<input name="text_footer[text][1]" type="text" id="text_footer[text][1]" class="text_footer" placeholder="Unesi tekst" />
+						<span class="add_line">Dodaj liniju</span>	
+						<span class="add_link">Dodaj link</span>
+						<span class="remove_line">Ukloni liniju</span>	
+
 					</div>
 				</section>
 			</div>

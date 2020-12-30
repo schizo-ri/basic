@@ -17,6 +17,7 @@ use App\Events\MessageSend;
 use Pusher;
 use App\Mail\CommentMail;
 use Illuminate\Support\Facades\Mail;
+use Log;
 
 class PostController extends Controller
 {
@@ -116,21 +117,21 @@ class PostController extends Controller
     public function store(PostRequest $request)
     {
 		$employee = Sentinel::getUser()->employee;
-		$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->get();
+		/* $posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->get(); */
 		
 		if($request['to_employee_id'] != null ) {	
+			$posts = Post::where('employee_id', $employee->id)->where('to_employee_id', $request['to_employee_id'])->first();
+			$posts2 = Post::where('employee_id',$request['to_employee_id'] )->where('to_employee_id', $employee->id)->first();
 			$data = array(
 				'employee_id'  		=> $employee->id,
 				'to_employee_id'  	=> $request['to_employee_id'],
 				'content'  			=> $request['content']
 			);
 			
-			if($posts->where('to_employee_id', $request['to_employee_id'])->first()) {
-				$post = $posts->where('to_employee_id', $request['to_employee_id'])->first();
+			if( $posts ) {
 				$post->updatePost($data);
-			} elseif($posts->where('employee_id', $request['to_employee_id'] )->first()) {
-				$post = $posts->where('employee_id', $request['to_employee_id'] )->first();
-				$post->updatePost($data);
+			} elseif(  $posts2 ) {
+				$posts2->updatePost($data);
 			} else {
 				$post = new Post();
 				$post->savePost($data);
@@ -147,7 +148,7 @@ class PostController extends Controller
 			$data1 = array(
 				'employee_id'   =>  $employee->id,
 				'to_department_id'  => $post->to_department_id != null ? $post->to_department_id : null,
-				'to_employee_id'  	=> $to_employee ,
+				'to_employee_id'  	=> $to_employee,
 				'post_id'  		=>  $post->id,
 				'content'  		=>  $request['content'],
 				'status'  		=> '0',
@@ -156,11 +157,25 @@ class PostController extends Controller
 			$comment = new Comment();
 			$comment->saveComment($data1);
 
+			$last_comment = Comment::lastComment($comment->employee_id,$comment->to_employee_id );
+			if( $last_comment  ) {
+				$datetime_last_comment = new DateTime($last_comment->created_at);
+				$now = new DateTime();
+				$diff = $datetime_last_comment->diff($now);
+			}
+			
+			if( ! $last_comment || ( isset( $diff ) && ($diff->i > 5 || $diff->h > 0 || $diff->d > 0 || $diff->y > 0) )) {
+				$send_to = $comment->toEmployee->email;
+				/* 	$send_to = 'jelena.juras@duplico.hr'; */
+				Mail::to($send_to)->send(new CommentMail($comment));  
+			}
+
 			$show_alert_to_employee =  $to_employee;
 
 			event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
 
 		}
+		
 		if($request['to_department_id'] != null) {
 			$data = array(
 				'employee_id'  		=> $employee->id,
@@ -333,7 +348,7 @@ class PostController extends Controller
 	public function storeComment(Request $request)
 	{
 		$employee = Sentinel::getUser()->employee;
-		$post = Post::find($request->get('post_id'));
+		$post = Post::find( $request->get('post_id') );
 		$to_employees = array();
 		$to_employee = null;
 
@@ -379,11 +394,20 @@ class PostController extends Controller
 		} else {
 			$show_alert_to_employee = null;
 		}
-		
-		$send_to = $comment->toEmployee->email;
-		$send_to = 'jelena.juras@duplico.hr';
-		Mail::to($send_to)->send(new CommentMail($comment));  
 
+		$last_comment = Comment::lastComment($comment->employee_id,$comment->to_employee_id );
+		if( $last_comment  ) {
+			$datetime_last_comment = new DateTime($last_comment->created_at);
+			$now = new DateTime();
+			$diff = $datetime_last_comment->diff($now);
+		}
+		
+		if( ! $last_comment || ( isset( $diff ) && ($diff->i > 5 || $diff->h > 0 || $diff->d > 0 || $diff->y > 0) )) {
+		/* 	$send_to = $comment->toEmployee->email; */
+			$send_to = 'jelena.juras@duplico.hr';
+			Mail::to($send_to)->send(new CommentMail($comment));  
+		}
+ 		
 		if($post->to_employee_id) {
 			event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
 		} else if($post->to_department_id) {
@@ -488,7 +512,8 @@ class PostController extends Controller
 			} 
 		} else {
 			$empl = $post->employee;
-			$user_name = $post->to_department->name;
+			
+			$user_name = $post->to_department ? $post->to_department->name : null;
 		}
 		
 		if( $docs ) {

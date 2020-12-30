@@ -63,7 +63,7 @@
                 <p>host:  {!! $url . "\r\n"  . "\r\n" !!} </p>
                 <p>request uri:  {!! $request_uri  !!}</p>
                 <p>exception: {!! $request['exception']  !!}</p>
-                <p> message: {!! $request['message']  !!}</p>
+                <p>message: {!! $request['message']  !!}</p>
                 <p>file: {!! $request['file']  !!}</p>
                 <p>line: {!! $request['line']  !!}</p>
                 <p>user email {!! $user_mail  !!}

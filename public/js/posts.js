@@ -14,8 +14,9 @@ if( $('.posts_index').length > 0) {
     var body_width = $('body').width();
     var mouse_is_inside = false;
     var active_tabcontent;
-    
+
     $(function() {
+       
         broadcastingPusher();
         tablink_on_click();
         submit_form (); 
@@ -47,6 +48,7 @@ if( $('.posts_index').length > 0) {
             if( url ) {
                 id = url.replace("?id=", "");
                 $('.tablink#' + id ).trigger('click');
+                history.pushState({}, "", location.origin + '/posts');
             } else {
                 $('.tablink').first().trigger('click');
             }
@@ -63,9 +65,9 @@ if( $('.posts_index').length > 0) {
                 form = $(this);
                 data = form.serialize();
                 
-                url = '/comment/store';
+                url = '/commentStore';
                 post_id = $(this).find('input[name=post_id]').val();
-                content = $(this).find('textarea[name=content]').val();
+                content = $(this).find('input[name=content]').val();
                 tab_id = '_' + post_id;
                 
                 $('.post-content').val('');
@@ -89,7 +91,7 @@ if( $('.posts_index').length > 0) {
                             var content3 =  $('.index_main>section',data ).get(0).outerHTML;
                             $( '.index_main' ).html( content3 );
                             $('.tabcontent#'+tab_id).show();
-                            broadcastingPusher();
+                          /*   broadcastingPusher(); */
                             submit_form (); 
                             refreshHeight(tab_id);
                             setPostAsRead(post_id);
@@ -144,6 +146,8 @@ if( $('.posts_index').length > 0) {
                 var content3 =  $('.index_main>section',data ).get(0).outerHTML;
                 $( '.index_main' ).html( content3 );
                 $('.tabcontent#'+tab_id).show();
+               
+                $('#'+tab_id + ' .type_message').trigger('focus');
                 /* broadcastingPusher(); */
                 submit_form (); 
                
@@ -157,8 +161,6 @@ if( $('.posts_index').length > 0) {
                     console.log("link_back");
                 });
             });
-          
-            $(active_tabcontent).find('.type_message ').trigger('focus');
         });
     }
     
@@ -233,6 +235,7 @@ if( $('.posts_index').length > 0) {
                 $('.all_post ').load(  location.origin + '/posts .all_post .main_post');
                 $( '.posts_button .button_nav_img').load( location.origin + '/posts .posts_button .button_nav_img .line_btn');
                 $( '.refresh.' + tab_id ).load( location.origin + '/posts .refresh.' + tab_id + ' .message',function(){
+                    tablink_on_click();
                 });
             }
         }); 

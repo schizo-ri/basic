@@ -23,8 +23,7 @@
 				@else
 					<p>Za pregled poruke klikni na link</p>
 				@endif
-            	
-                <a href="{{ $url }}" class="link">Vidi poruku</a>
+               	<p><a href="{{ isset($url) ? $url : '#' }}" class="link">Vidi poruku</a></p>
             </div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $mail_style ? $mail_style->style_footer : '' !!}">
 				@if(count($text_footer) > 0)

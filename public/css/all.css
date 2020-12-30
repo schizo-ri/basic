@@ -6047,14 +6047,23 @@ a.modal_close {
 
 #mail_template input {
     width: 100%;
+    display: block;
     border: none;
     background: inherit;
     text-align: inherit;
-    border: 1px dashed #ddd;
+   /*  border: 1px dashed #ddd; */
     margin-bottom: 5px;
     color: inherit;
 }
-
+#mail_template input.button {
+    width: auto;
+    padding: 5px 10px;
+    text-align: center;
+    border: 1px solid #ddd; 
+    margin-left: 50%;
+    margin-right: 50%;
+    transform: translateX(-50%);
+}
 #style_items label>input, #style_items label>select {
     margin-left: 10px;
 }
@@ -6079,9 +6088,8 @@ a.modal_close {
     float: left;
     font-size: 12px;
 }
-.add_line, .add_link {
-    float: right;
-    float: right;
+.add_line, .add_link, .remove_line {
+    float: left;
     font-size: 0.625rem;
     margin-left: 20px;
     cursor: pointer;
@@ -6114,7 +6122,7 @@ a.modal_close {
     height: auto;
     border: 1px dashed #eee;
     padding: 10px 15px;
-    padding-bottom: 20px;
+    padding-bottom: 5px;
     text-align: left;
     overflow: hidden;
 }
@@ -6132,6 +6140,7 @@ a.modal_close {
     border: 1px dashed #eee;
     font-size: 12px;
     padding: 15px;
+    padding-bottom: 5px;
     overflow: hidden;
 }
 
@@ -12414,6 +12423,9 @@ input.form-control.date {
 	.modal a.close-modal {
 		top: 5px !important;
 		right: 10px !important;
+	}
+	.modal_user .user_img >img, .modal_user .user_data .user_name, .modal_user .user_data .days_left, .modal_user .user_data .days_used {
+		height: 52px;
 	}
 	input.btn-submit, .btn-next, input.btn-submit_user_create, input.btn-submit_user_edit {
 		margin: 0px;

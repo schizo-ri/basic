@@ -37,13 +37,29 @@ class TestMail extends Mailable
      */
     public function build()
     {
-        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','TestMail')->first();
+        $mail_style = $this->mailTemplate->mailStyle;
+        $mail_style = array();
+        $template_text_header = array();
+        $template_text_body= array();
+        $template_text_footer = array();
+
+        if( $mail_template ) {
+            $mail_style = $mail_template->mailStyle;
+            $template_text_header = MailTemplate::textHeader( $mail_template );
+            $template_text_body = MailTemplate::textBody( $mail_template );
+            $template_text_footer = MailTemplate::textFooter( $mail_template );
+        }
         
+        $variable = "Ovo je varijabla!!!";
+
         return $this->view('emails.test')
                     ->subject( 'Test mail' )
                     ->with([
-						'template_mail' => $this->mailTemplate,
-                        'template_mail' => $mail_template
+                        'mail_style' => $mail_style,
+                        'text_header' => $template_text_header,
+                        'text_body' => $template_text_body,
+                        'text_footer' => $template_text_footer,
+                        'variable'  => $variable
 					]);
     }
 }

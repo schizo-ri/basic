@@ -41,6 +41,17 @@ class AbsenceUpdateMail extends Mailable
     public function build()
     {
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','AbsenceUpdateMail')->first();
+        $mail_style = array();
+        $template_text_header = array();
+        $template_text_body= array();
+        $template_text_footer = array();
+
+        if( $mail_template ) {
+            $mail_style = $mail_template->mailStyle;
+            $template_text_header = MailTemplate::textHeader( $mail_template );
+            $template_text_body = MailTemplate::textBody( $mail_template );
+            $template_text_footer = MailTemplate::textFooter( $mail_template );
+        }
         
         $employee = Employee::find($this->absence->employee_id);
         $zahtjev = array('start_date' => $this->absence['start_date'], 'end_date' => $this->absence['end_date']);
@@ -63,7 +74,10 @@ class AbsenceUpdateMail extends Mailable
                         'absence' => $this->absence,
                         'dani_zahtjev' => $dani_zahtjev,
                         'neiskoristeno_GO' => $neiskoristeno_GO,
-                        'template_mail' => $mail_template
+                        'template_mail' => $mail_template,
+                        'text_header' => $template_text_header,
+                        'text_body' => $template_text_body,
+                        'text_footer' => $template_text_footer
                     ]);
     }
 }

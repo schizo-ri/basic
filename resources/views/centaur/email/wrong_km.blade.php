@@ -2,73 +2,37 @@
 <html lang="hr">
 	<head>
         <meta charset="utf-8">
-		<style>
-			body { 
-				font-family: DejaVu Sans, sans-serif;
-			}
-            #mail_template #header, #mail_template #footer {
-                height: auto;
-                border: none;
-                padding: 10px 15px;
-				text-align: center;
-				clear: both;
-				overflow-wrap: break-word;
-            }
-			#mail_template #header {
-				font-size: 16px;
-				font-weight: bold;
-			}
-			#mail_template #footer {
-				font-size: 12px;
-			}
-            #mail_template #body {
-                height: auto;
-                border: none;
-                font-size: 14px;
-				padding: 15px;
-				clear: both;
-				overflow-wrap: break-word;
-				line-height: 16px;
-			}
-			.odobri{
-				width:150px;
-				height:40px;
-				background-color:white;
-				border: 1px solid rgb(0, 102, 255);
-				border-radius: 5px;
-				box-shadow: 5px 5px 8px #888888;
-				text-align:center;
-				padding:10px;
-				color:black;
-				font-weight:bold;
-				font-size:12px;
-				margin:15px;
-				float:left;
-				cursor:pointer
-			}
-			.marg_20 {
-				margin-bottom:20px;
-			}
-			.marg_top_20 {
-				margin-top:20px;
-			}
-			.company_logo {
-				max-height: 20px;
-    			max-width: 85px;
-			}
-        </style>
+		@include('Centaur::mail_style')
 	</head>
 	<body>
         <div style="width: 500px;max-width:100%;margin:auto;" id="mail_template">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="header" style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_header : '' !!}">
-                <p>@lang('basic.wrong_km')</p>
+                @if(count($text_header) > 0)
+					@foreach ($text_header as $text)
+						<p>{{ $text }}</p>
+					@endforeach
+				@else
+					<p>@lang('basic.wrong_km')</p>
+				@endif
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="body" style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_body : '' !!}">
-                <p>@lang('basic.employee') {{ $user->first_name . ' ' . $user->last_name . ' prijavio je pogrešne početne kilometre' }}
+                @if(count($text_body) > 0)
+					@foreach ($text_body as $text)
+						<p>{{ $text }}</p>
+					@endforeach
+				@else
+					
+				@endif
+				<p>@lang('basic.employee') {{ $user->first_name . ' ' . $user->last_name . ' prijavio je pogrešne početne kilometre' }} 
                 {{ $car->registration . ' - datum vožnje: ' . date('d.m.Y',strtotime($locco->date)) }}</p>
                 <p>{{ $napomena }}</p>
             </div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_footer : '' !!}">
+				@if(count($text_footer) > 0)
+					@foreach ($text_footer as $text)
+						<p>{{ $text }}</p>
+					@endforeach
+				@endif
 				@if(file_exists('../public/storage/company_img/logo.png'))
 					<img src="{{ URL::asset('storage/company_img/logo.png')}}" alt="company_logo" class="company_logo"/>
 				@else

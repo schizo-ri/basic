@@ -263,7 +263,7 @@
 					@if( in_array('Poruke',$moduli) && isset($posts) && count( $posts ) > 0)
 						@foreach($posts as $post)
 							<article class="main_post">
-								<a href="{{ route('posts.index',['id' =>  $post->id ]) }}">
+								<a href="{{ route('posts.index', ['id' =>  $post->id ]) }}">
 									<span class="post_empl">
 										@if($post->to_employee_id != null)
 											<span class="profile_image">

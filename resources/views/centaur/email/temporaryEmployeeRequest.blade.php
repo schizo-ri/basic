@@ -7,23 +7,35 @@
 	<body>
         <div style="width: 500px;max-width:100%;margin:auto;" id="mail_template">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="header" style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_header : '' !!}">
-                <p></p>
+                @if(count($text_header) > 0)
+					@foreach ($text_header as $text)
+						<p>{{ $text }}</p>
+					@endforeach
+				@else
+					
+				@endif
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="body" style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_body : '' !!}">
-                <h4> @lang('absence.i'), {{ $temporaryEmployeeRequest->employee->user['first_name']   . ' ' . $temporaryEmployeeRequest->employee->user['last_name'] }}</h4>
-                <h4>
+                @if(count($text_body) > 0)
+					@foreach ($text_body as $text)
+						<p>{{ $text }}</p>
+					@endforeach
+				@else
+                    <h4> @lang('absence.i'), {{ $temporaryEmployeeRequest->employee->user['first_name']   . ' ' . $temporaryEmployeeRequest->employee->user['last_name'] }}</h4>
+                    <h4>
+                        
+                        @lang('absence.please_approve')  {{ $temporaryEmployeeRequest->absence['name'] }} za
+                        {{ date("d.m.Y", strtotime($temporaryEmployeeRequest->start_date)) . ' do ' . date("d.m.Y", strtotime( $temporaryEmployeeRequest->end_date)) . ' - ' . $dani_zahtjev . ' ' . __ ('absence.days') }}
                     
-                    @lang('absence.please_approve')  {{ $temporaryEmployeeRequest->absence['name'] }} za
-                    {{ date("d.m.Y", strtotime($temporaryEmployeeRequest->start_date)) . ' do ' . date("d.m.Y", strtotime( $temporaryEmployeeRequest->end_date)) . ' - ' . $dani_zahtjev . ' ' . __ ('absence.days') }}
-                
-                    @if( $temporaryEmployeeRequest->absence['mark'] == "IZL")
-                        {{  'od ' . $temporaryEmployeeRequest->start_time  . ' - ' .  $temporaryEmployeeRequest->end_time }}
-                    @endif
-                </h4>
-                <div><b>@lang('basic.comment'): </b></div>
-                <div class="marg_20">
-                    {{ $temporaryEmployeeRequest->comment }}
-                </div>
+                        @if( $temporaryEmployeeRequest->absence['mark'] == "IZL")
+                            {{  'od ' . $temporaryEmployeeRequest->start_time  . ' - ' .  $temporaryEmployeeRequest->end_time }}
+                        @endif
+                    </h4>
+                    <div><b>@lang('basic.comment'): </b></div>
+                    <div class="marg_20">
+                        {{ $temporaryEmployeeRequest->comment }}
+                    </div>
+                @endif
                 <form name="contactform" method="get" target="_blank" action="{{ route('confirmationTemp') }}">
                     <input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="approve_reason" value=""><br>
                     <input type="hidden" name="id" value="{{ $temporaryEmployeeRequest->id }}"><br>
@@ -34,7 +46,12 @@
                 </form>
             </div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle->first() ? $template_mail->mailStyle->first()->style_footer : '' !!}">
-				@if(file_exists('../public/storage/company_img/logo.png'))
+				@if(count($text_footer) > 0)
+					@foreach ($text_footer as $text)
+						<p>{{ $text }}</p>
+					@endforeach
+                @endif
+                @if(file_exists('../public/storage/company_img/logo.png'))
 					<img src="{{ URL::asset('storage/company_img/logo.png')}}" alt="company_logo" class="company_logo"/>
 				@else
 					<p>{{ config('app.name') }}</p>
@@ -43,4 +60,3 @@
         </div>
 	</body>
 </html>
-		

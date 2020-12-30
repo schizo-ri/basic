@@ -38,23 +38,27 @@ class CampaignMail extends Mailable
      */
     public function build()
     {
-       /*  $campaign_sequences = $this->campaign->campaignSequence->toArray();
-
-        $campaign_sequences = CampaignSequence::where('campaign_id',  $this->campaign->id)->orderBy('created_at','ASC')->get();
-        $first_sequence = $campaign_sequences->first();
-                 */
-       /*  return $this->view('emails.campaign.template')
-                    ->subject($this->campaign->name)
-                    ->with([
-                        'first_sequence' => $first_sequence]); */
-
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','CampaignMail')->first();
-        
+        $mail_style = array();
+        $template_text_header = array();
+        $template_text_body= array();
+        $template_text_footer = array();
+
+        if( $mail_template ) {
+            $mail_style = $mail_template->mailStyle;
+            $template_text_header = MailTemplate::textHeader( $mail_template );
+            $template_text_body = MailTemplate::textBody( $mail_template );
+            $template_text_footer = MailTemplate::textFooter( $mail_template );
+        }
+
         return $this->view('Centaur::campaign_sequences.campaign_mail')
 					->subject($this->campaignSequence->subject )
 					->with([
 						'campaign_sequence' =>  $this->campaignSequence,
-                        'template_mail' => $mail_template
+                        'template_mail' => $mail_template,
+                        'text_header' => $template_text_header,
+                        'text_body' => $template_text_body,
+                        'text_footer' => $template_text_footer
 					]);
     }
 }

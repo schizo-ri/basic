@@ -27,6 +27,9 @@
         overflow: hidden;
         line-height: 16px;
     }
+    .Object {
+        margin-top: 20px;
+    }
     .odobri{
         min-width:100px;
         height:40px;

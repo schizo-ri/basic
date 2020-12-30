@@ -84,4 +84,11 @@ class Comment extends Model
 	{
 		return $this->update($comment);
 	}	
+
+	public static function lastComment ($employee_id, $to_employee_id) 
+	{
+		$comment = Comment::where('employee_id',$employee_id )->where('to_employee_id',$to_employee_id )->orderBy('created_at','DESC')->skip(1)->first();
+
+		return $comment;
+	}
 }

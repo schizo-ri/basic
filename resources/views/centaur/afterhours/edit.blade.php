@@ -54,7 +54,7 @@
         </div>
 		<div class="form-group clear_l {{ ($errors->has('comment')) ? 'has-error' : '' }}">
 			<label>@lang('basic.comment')</label>
-			<textarea rows="4" name="comment" type="text" class="form-control" value="" maxlength="16535" required>{{ $afterhour->comment }}</textarea>
+			<textarea rows="4" name="comment" type="text" class="form-control" value="" maxlength="16535" required >{{ $afterhour->comment }}</textarea>
 			{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		{{ csrf_field() }}

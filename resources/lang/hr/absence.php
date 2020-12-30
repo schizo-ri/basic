@@ -33,7 +33,7 @@ return [
 	'days'  		=> 'dana',
 	'please_approve'=> 'molim da mi se odobri',
 	'sicknes'  		=> 'otvaram bolovanje ',
-	'end_sicknes'  	=> 'zatvaram bolovanje ',
+	'end_sicknes'  	=> 'zatvaram bolovanje. ',
 	'sickne_info'  	=> 'Prijavljeno bolovanje',
 	'unused'  		=> 'Neiskorišteno',
 	'vacation_days' => 'dana godišnjeg odmora',

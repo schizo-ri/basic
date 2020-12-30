@@ -39,39 +39,15 @@ class CommentMail extends Mailable
     {
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','CommentMail')->first();
         $mail_style = array();
-        $mail_text = array();
         $template_text_header = array();
         $template_text_body= array();
         $template_text_footer = array();
 
-        if( $mail_template  ) {
+        if( $mail_template ) {
             $mail_style = $mail_template->mailStyle;
-            $mail_text = $mail_template->mailText;
-
-            $convert_to_array = explode(';', $mail_text->text_header);
-            
-            for($i=0; $i < count($convert_to_array ); $i++){
-                $key_value = explode(':', $convert_to_array [$i]);
-                if(  $key_value [0] && $key_value [1] ) {
-                    $template_text_header[$key_value[0]] = $key_value[1];
-                }
-            }
-
-            $convert_to_array = explode(';', $mail_text->text_body);
-            for($i=0; $i < count($convert_to_array ); $i++){
-                $key_value = explode(':', $convert_to_array [$i]);
-                if(  $key_value [0] && $key_value [1] ) {
-                    $template_text_body[$key_value[0]] = $key_value[1];
-                }
-            }
-
-            $convert_to_array = explode(';', $mail_text->text_footer);
-            for($i=0; $i < count($convert_to_array ); $i++){
-                $key_value = explode(':', $convert_to_array [$i]);
-                if(  $key_value [0] && $key_value [1] ) {
-                    $template_text_footer[$key_value[0]] = $key_value[1];
-                }
-            }
+            $template_text_header = MailTemplate::textHeader( $mail_template );
+            $template_text_body = MailTemplate::textBody( $mail_template );
+            $template_text_footer = MailTemplate::textFooter( $mail_template );
         }
         
         if(isset( $_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != 'localhost') {

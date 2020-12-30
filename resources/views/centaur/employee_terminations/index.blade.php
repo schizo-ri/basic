@@ -23,7 +23,7 @@
 						<tr>
 							<th>@lang('basic.fl_name')</th>
 							<th>@lang('basic.termination_type')</th>
-							<th>@lang('basic.checkout_date')</th>
+							<th class="sort_date">@lang('basic.checkout_date')</th>
 							<th>@lang('basic.notice_period')</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>

@@ -41,7 +41,17 @@ class TaskConfirmMail extends Mailable
     public function build()
     {
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','TaskConfirmMail')->first();
-        Log::info('TaskConfirmMail');
+        $mail_style = array();
+        $template_text_header = array();
+        $template_text_body= array();
+        $template_text_footer = array();
+
+        if( $mail_template ) {
+            $mail_style = $mail_template->mailStyle;
+            $template_text_header = MailTemplate::textHeader( $mail_template );
+            $template_text_body = MailTemplate::textBody( $mail_template );
+            $template_text_footer = MailTemplate::textFooter( $mail_template );
+        }
 
         if( $this->employeeTask->status == 1) {
             $title = 'Potvrda '.' izvršenja '.' zadatka';
@@ -52,10 +62,6 @@ class TaskConfirmMail extends Mailable
             $status = 'poništio potvrdu za';
             $status2 = 'Poništio si potvrdu za';
         } 
-        Log::info("status: ".$this->employeeTask->status);
-        Log::info('title '.$title );
-        Log::info('status1 '.$status );
-        Log::info('status2 '.$status2 );
         
         return $this->view('emails.tasks.confirm')
                     ->subject( $title )
@@ -63,7 +69,10 @@ class TaskConfirmMail extends Mailable
                         'employee_task'  => $this->employeeTask,
                         'status' => $status,
                         'status2' => $status2,
-                        'template_mail' => $mail_template
+                        'template_mail' => $mail_template,
+                        'text_header' => $template_text_header,
+                        'text_body' => $template_text_body,
+                        'text_footer' => $template_text_footer
                     ]);
     }
 }

@@ -143,7 +143,7 @@
 																{{ $post->to_department->name }} |
 															@else
 																@if( $next_empl != $comment->employee_id )
-																	{{ $comment->employee->user['first_name'] }} |
+																	{{ $comment->employee->user['first_name'] . ' ' .  $comment->employee->user['last_name']}} |
 																@endif
 															@endif
 															<small>{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans()  }}</small>
@@ -179,7 +179,7 @@
 																	$next_comment = PostController::previous($comment->id, $post->id);
 																	$next_empl = $next_comment['employee_id'];
 																@endphp
-																@if( $next_empl != $comment->employee_id && $comment->employee_id != Sentinel::getUser()->employee->id){{ $comment->employee->user['first_name'] }} | @endif 
+																@if( $next_empl != $comment->employee_id && $comment->employee_id != Sentinel::getUser()->employee->id){{ $comment->employee->user['first_name'] . ' ' .  $comment->employee->user['last_name']  }} | @endif 
 																<small>{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans()  }}</small>
 															</p>
 															<div class="content">
@@ -210,8 +210,8 @@
 								</div>
 							</div>
 						</main>
-						<form accept-charset="UTF-8" role="form" method="post" class="form_post {{ ($errors->has('content')) ? 'has-error' : '' }}" id="form_{{ $post->id }}" action="{{ route('comment.store') }}"  >
-							<textarea name="content" id="post-content_{{ $post->id }}" type="text" class="form-control type_message post-content" rows="10" cols="30" placeholder="Type message..." autocomplete="off" onkeypress="onKeyClick();">{{ old('content')  }}</textarea>
+						<form accept-charset="UTF-8" role="form" method="post" class="form_post {{ ($errors->has('content')) ? 'has-error' : '' }}" id="form_{{ $post->id }}" action="{{ route('commentStore') }}"  >
+							<input name="content" id="post-content_{{ $post->id }}" type="text" class="form-control type_message post-content" rows="10" cols="30" placeholder="Type message..." autocomplete="off" onkeypress="onKeyClick();" value="{{ old('content')  }}" />
 							<img class="smile" src="{{ URL::asset('icons/smile.png') }}" alt="Profile image"  />
 							<input type="hidden" name="post_id" value="{{ $post->id }}"  >
 							<input type="hidden" name="user_id"  value="{{ Sentinel::getUser()->employee->id }}"  >

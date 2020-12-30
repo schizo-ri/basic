@@ -93,26 +93,40 @@
 				</section>
 				<section class="col-xs-6 col-sm-6 col-md-6 col-lg-6 float_left" id="mail_template">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="header" style="{{  $mailTemplate_style->style_header }} ">
-						@foreach ($header_text as $key => $text1)
-							<input name="text_header[text][{{$key}}]" type="text" id="text_header[text][[{{$key}}]" class="text_header" value="{{ $text1 }}" />
-						@endforeach
-						<span class="add_line">Dodaj liniju</span>
+						@if(count($header_text) >0 )
+							@foreach ($header_text as $key => $text1)
+								<input name="text_header[text][{{$key}}]" type="text" id="text_header[text][[{{$key}}]" class="text_header" value="{{ $text1 }}" />
+							@endforeach
+						@else
+							<input name="text_header[text][1]" type="text" id="text_header[text][1]" class="text_header" placeholder="Unesi naslov"/>
+						@endif
+						<span class="add_line">Dodaj liniju</span>	
+						<span class="add_link">Dodaj link</span>
+						<span class="remove_line">Ukloni liniju</span>	
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="body" style="{{  $mailTemplate_style->style_body }} ">
-						@foreach ($body_text as $key => $text1)
-							<input name="text_body[text][{{$key}}]" type="text" id="text_body[text][[{{$key}}]" class="text_body" value="{{ $text1 }}" />
-						@endforeach
-						<span class="add_line">Dodaj liniju</span>
+						@if(count($body_text) >0 )
+							@foreach ($body_text as $key => $text1)
+								<input name="text_body[text][{{$key}}]" type="text" id="text_body[text][[{{$key}}]" class="text_body" value="{{ $text1 }}" />
+							@endforeach
+						@else
+							<input name="text_header[text][1]" type="text" id="text_header[text][1]" class="text_header" placeholder="Unesi text"/>
+						@endif
+						<span class="add_line">Dodaj liniju</span>	
+						<span class="add_link">Dodaj link</span>
+						<span class="remove_line">Ukloni liniju</span>	
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer" style="{{ $mailTemplate_style->style_footer }} ">
-						@if(count($footer_text))
+						@if(count($footer_text) > 0)
 							@foreach ($footer_text as $key => $text1)
 								<input name="text_footer[text][{{$key}}]" type="text" id="text_footer[text][[{{$key}}]" class="text_footer" value="{{ $text1 }}" />
 							@endforeach
 						@else
-							<input name="text_footer[text][1]" type="text" id="text_footer[text][1]" class="text_footer" />
+							<input name="text_footer[text][1]" type="text" id="text_footer[text][1]" class="text_footer"  placeholder="Unesi text" />
 						@endif
-						<span class="add_line">Dodaj liniju</span>
+						<span class="add_line">Dodaj liniju</span>	
+						<span class="add_link">Dodaj link</span>
+						<span class="remove_line">Ukloni liniju</span>	
 					</div>
 				</section>
 			</div>

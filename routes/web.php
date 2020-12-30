@@ -116,7 +116,7 @@ Route::resource('evaluations', 'EvaluationController');
 
 // Post
 Route::resource('posts', 'PostController');
-Route::post('/comment/store', ['as' => 'comment.store', 'uses' => 'PostController@storeComment', function () {
+Route::post('/commentStore', ['as' => 'commentStore', 'uses' => 'PostController@storeComment', function () {
     event(new App\Events\MessageSend($message, $comment, $id));
     return "Event has been sent!";
 }]);
@@ -288,6 +288,7 @@ Route::get('radne_upute', ['as' => 'radne_upute', 'uses' => 'InstructionControll
 // MailTemplate
 Route::resource('mail_templates', 'MailTemplateController');
 Route::get('mail_test/{id}', ['as' => 'mail_test', 'uses' => 'MailTemplateController@mailTest']);
+Route::post('create_style', ['as' => 'create_style', 'uses' => 'MailTemplateController@create_style']);
 
 // MailText
 Route::resource('mail_texts', 'MailTextController');

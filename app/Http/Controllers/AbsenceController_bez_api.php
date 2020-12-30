@@ -764,7 +764,7 @@ class AbsenceController extends BasicAbsenceController
 
 	public static function printRequests ( Request $request)  
 	{
-		$absence = Absence::find(  $request['id'] );
+		$absence = Absence::find( $request['id'] );
 	
 		$dani = array('start_date' =>$absence->start_date, 'end_date' =>$absence->end_date);
 		$daniGO = BasicAbsenceController::daniGO( $dani ); //vraća dane zahtjeva

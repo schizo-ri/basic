@@ -46,6 +46,7 @@ class MailTemplateController extends Controller
     public function create()
     {
         $elements = array('header', 'body','footer');
+        $child_elements = array('input');
 
         $path = '../app/Mail';
         $docs = '';
@@ -53,20 +54,26 @@ class MailTemplateController extends Controller
             $docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
         }
 
-        return view('Centaur::mail_templates.create', ['elements' => $elements, 'docs' => $docs]);
+        return view('Centaur::mail_templates.create', ['elements' => $elements, 'child_elements' => $child_elements,'docs' => $docs]);
     }
 
     public function mailTest ($id)
     {
-        $template_mail = MailTemplate::where('for_mail', 'AbsenceMail')->first(); 
+        $template_mail = MailTemplate::find($id); 
 
-        Mail::to('jelena.juras@duplico.hr')->send(new TestMail($template_mail ));
+        Mail::to('jelena.juras@duplico.hr')->send(new TestMail( $template_mail ));
 
         /* session()->flash('success',__('ctrl.email_send')); */
 		
        /*  return redirect()->back(); */
        return __('ctrl.email_send');
     } 
+
+    public function create_style (Request $request) 
+    {
+        return view('Centaur::mail_templates.create_style',['element' => $request['element'], 'count_input' => $request['count_input'] ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -76,7 +83,7 @@ class MailTemplateController extends Controller
     public function store(Request $request)
     {
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail',$request['for_mail'])->first();
-        
+      
         $data = array(
 			'name'          => $request['name'],
 			'description'   => $request['description'],
@@ -95,7 +102,7 @@ class MailTemplateController extends Controller
             }
             $style[ $element ] = $style_text;
         }
-     
+
         $data_style = array(
             'mail_id'       => $mailTemplate->id,
             'style_header'  => $style['header'] ? $style['header'] : null,
@@ -152,6 +159,7 @@ class MailTemplateController extends Controller
      */
     public function edit($id)
     {
+       
         $mailTemplate = MailTemplate::find($id);
         $elements = array('header', 'body','footer');
 

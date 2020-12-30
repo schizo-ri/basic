@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Absence; 
 use App\Http\Controllers\BasicAbsenceController;
 use App\Models\MailTemplate;
-
+use Log; 
 class AbsenceMail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -39,35 +39,16 @@ class AbsenceMail extends Mailable
     public function build()
     {
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','AbsenceMail')->first();
-        $mail_style = $mail_template->mailStyle;
-        $mail_text = $mail_template->mailText;
-
-        $convert_to_array = explode(';', $mail_text->text_header);
+        $mail_style = array();
         $template_text_header = array();
-        for($i=0; $i < count($convert_to_array ); $i++){
-            $key_value = explode(':', $convert_to_array [$i]);
-            if(  $key_value [0] && $key_value [1] ) {
-                $template_text_header[$key_value[0]] = $key_value[1];
-            }
-        }
-
-        $convert_to_array = explode(';', $mail_text->text_body);
         $template_text_body= array();
-        for($i=0; $i < count($convert_to_array ); $i++){
-            $key_value = explode(':', $convert_to_array [$i]);
-            if(  $key_value [0] && $key_value [1] ) {
-                $template_text_body[$key_value[0]] = $key_value[1];
-            }
-        }
-
-        $convert_to_array = explode(';', $mail_text->text_footer);
         $template_text_footer = array();
 
-        for($i=0; $i < count($convert_to_array ); $i++){
-            $key_value = explode(':', $convert_to_array [$i]);
-            if(  $key_value [0] && $key_value [1] ) {
-                $template_text_footer[$key_value[0]] = $key_value[1];
-            }
+        if( $mail_template ) {
+            $mail_style = $mail_template->mailStyle;
+            $template_text_header = MailTemplate::textHeader( $mail_template );
+            $template_text_body = MailTemplate::textBody( $mail_template );
+            $template_text_footer = MailTemplate::textFooter( $mail_template );
         }
 
         $employee = $this->absence->employee;
@@ -89,9 +70,38 @@ class AbsenceMail extends Mailable
             $view = 'Centaur::email.absence';
         }
         
+        $variable = array();
+        array_push ($variable , $this->absence->employee->user['first_name']   . ' ' . $this->absence->employee->user['last_name'] );
+        array_push ($variable , $this->absence->absence['name'] );
+        if( $this->absence->absence['mark'] !=  "BOL") {
+            if( $this->absence->absence['mark'] == "IZL") {
+                array_push ($variable, 'za ' . date("d.m.Y", strtotime($this->absence->start_date)) . ' od ' . $this->absence->start_time  . ' - ' .  $this->absence->end_time );
+            } else {
+                array_push ($variable, 'za ' . date("d.m.Y", strtotime($this->absence->start_date)) . ' do ' . date("d.m.Y", strtotime( $this->absence->end_date)) . ' - ' . $dani_zahtjev . ' ' . __ ('absence.days') );
+            }
+        } else {
+            if( $this->absence->end_date ) {
+                array_push ($variable, __('absence.end_sicknes') . ' Zadnji dan je ' .  date("d.m.Y", strtotime($this->absence->end_date))   );
+            } else {
+                array_push ($variable, __ ('absence.sicknes') . ' od ' . date("d.m.Y", strtotime( $this->absence->start_date)) );
+            }
+        }
+
+        $comment = $this->absence->comment;
+        if($this->absence->absence['mark'] == "GO") {
+            $comment .= '. '. PHP_EOL  . __('absence.unused') . ' - ' .$neiskoristeno_GO . ' - ' . __('absence.vacation_days');
+        }
+        if($this->absence->absence['mark'] == "SLD") {
+            $comment .= '. '. PHP_EOL  . __('absence.unused') .' '. $slobodni_dani .' '. __('absence.days_off');
+        }
+        
+        array_push ($variable , $comment);
+        Log::info($variable );
+        Log::info($template_text_body );
         return $this->view($view) 
                     ->subject( $subject . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])
                     ->with([
+                        'variable' => $variable,
                         'absence' => $this->absence,
                         'dani_zahtjev' => $dani_zahtjev,
                         'slobodni_dani' => $slobodni_dani,
