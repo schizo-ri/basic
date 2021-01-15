@@ -35,6 +35,7 @@
 				<input class="form-control" name="end_date" type="datetime-local" required value="{!! $locco->end_date ? date('Y-m-d\TH:i', strtotime($locco->end_date )) : '' !!}"  />
 				{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<p class="days_request clear_l" style="display: none"></p>
 			<div class="form-group {{ ($errors->has('starting_point')) ? 'has-error' : '' }}">
 				<label>@lang('basic.starting_point')</label>
 				<input class="form-control" placeholder="{{ __('basic.starting_point') }}" name="starting_point" type="text" value="{{ $locco->starting_point }}" required />
@@ -67,7 +68,7 @@
 			</div>
 			<div class="servis form-group">
 				<label for="servis">@lang('basic.malfunction')</label>
-				<input class="" type="checkbox" name="servis" id="servis" value=""/>
+				<input class="" type="checkbox" name="servis" id="servis" value="1"/>
 			</div>
 			
 			{{-- @if ( $travel )
@@ -152,6 +153,46 @@
 				$("#start_km").val( current_km );
 				$("#start_km").attr('type','hidden');
 				$( '#comment').attr('required', 'false');
+			}
+		});
+
+		$( "#date" ).on('change',function() {
+			start_date = $( this ).val();
+			end_date = $( "#end_date" ).val();
+		
+			var StartDate = new Date(start_date);
+			var EndDate = new Date(end_date);
+
+			if(EndDate != 'Invalid Date' &&  EndDate < StartDate) {
+				$('.days_request').text('Nemoguće spremiti vožnju. Završni datum / vrijeme ne može biti prije početnog');
+				$('.days_request').show();
+				$('.btn-submit').hide();
+			} else {
+				$('.days_request').text('');
+				$('.days_request').hide();
+				$('.btn-submit').show();
+			}
+		});
+
+		$( "#end_date" ).on('change',function() {
+			start_date = $( "#date" ).val();
+			end_date = $( this ).val();
+			console.log(start_date);
+			console.log(end_date);
+
+			var StartDate = new Date(start_date);
+			var EndDate = new Date(end_date);
+			console.log(StartDate);
+			console.log(EndDate);
+
+			if(EndDate != 'Invalid Date' &&  EndDate < StartDate) {
+				$('.days_request').text('Nemoguće spremiti vožnju. Završni datum / vrijeme ne može biti prije početnog');
+				$('.days_request').show();
+				$('.btn-submit').hide();
+			} else {
+				$('.days_request').text('');
+				$('.days_request').hide();
+				$('.btn-submit').show();
 			}
 		});
 	});

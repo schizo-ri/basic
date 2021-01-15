@@ -8,6 +8,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Employee;
 use App\Models\MailTemplate;
+use Log;
+
 
 class BirthDayMail extends Mailable
 {
@@ -39,6 +41,7 @@ class BirthDayMail extends Mailable
     public function build()
     {
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','BirthDayMail')->first();
+        
         $mail_style = array();
         $template_text_header = array();
         $template_text_body= array();
@@ -55,6 +58,7 @@ class BirthDayMail extends Mailable
                     ->subject( __('basic.b_day_employee') . ' - ' .  $this->employee->first_name . ' ' .  $this->employee->last_name)
                     ->with([
                         'employee' =>  $this->employee,
+                        'mail_style' => $mail_style,
                         'template_mail' => $mail_template,
                         'text_header' => $template_text_header,
                         'text_body' => $template_text_body,

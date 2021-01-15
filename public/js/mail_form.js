@@ -18,6 +18,7 @@ if($('.mail_form').length > 0) {
 
     function parentClick() {
         $("#mail_template>div").on('click',function( ){ 
+            console.log('mail_template>div');
             parent = $(this);
             parent_id = parent[0]['id'];
             $("#mail_template>div").removeClass('activeElement');
@@ -38,6 +39,7 @@ if($('.mail_form').length > 0) {
 
     function inputClick() {
         $('#mail_template>div>input').on('click',function(){ 
+            console.log('mail_template>input');
             $("#mail_template>div").removeClass('activeElement');
             $('#mail_template>div>input').removeClass('activeElement');
             $(this).addClass('activeElement');
@@ -75,9 +77,6 @@ if($('.mail_form').length > 0) {
                 parentClick();
             }
         });
-
-       
-
     });
    
     $('.add_link').on('click',function() {

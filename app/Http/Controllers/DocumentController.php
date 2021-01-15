@@ -10,6 +10,7 @@ use App\Models\Employee;
 use Sentinel;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
+use Log;
 
 class DocumentController extends Controller
 {
@@ -36,7 +37,7 @@ class DocumentController extends Controller
         if(isset($empl)) {
             $user_name = DashboardController::user_name( $empl->id );
             if(Sentinel::inRole('administrator')) {
-                $documents = Document::get();
+                $documents = Document::where('path','like','%/documents/%')->get();
             } else {
                 $documents = Document::where('path','like','%'.$user_name .'/documents/%')->orWhere('path','like','%svi/documents/%')->get();
             }
@@ -139,10 +140,11 @@ class DocumentController extends Controller
         if (!file_exists($path)) {
           mkdir($path);
         }
-
+        
         if ($request->hasFile('fileToUpload')) {
           $images = $request->file('fileToUpload');
-          
+        
+      
         if (is_array($images)) {
             foreach ($images as $item) {
             //  Storage::putFileAs($path, new File($item), 'photo.jpg');  // snimi u storage folder
@@ -155,8 +157,12 @@ class DocumentController extends Controller
               if($imageType == "exe" || $imageType == "bin") {                             // Allow certain file formats
                 return redirect()->back()->with('error', __('ctrl.not_allow'));  
               } 
+             /*  if(  $imageSize > 1000000) {  // server ne pušta veće slike !!! provjeriti!!!
+                return redirect()->back()->with('error',  __('ctrl.file_toolarge'));  
+              } */
               $docType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));    //file extension 
               $item->move($path, $imageName);
+             
               if( $docType  == 'jpg' ||  $docType  ==  'png' ||  $docType  ==  'gif' ||  $docType  ==  'jpeg') {
                 DocumentController::createResizedImage($path . $imageName, $path . pathinfo($imageName)['filename'] . '_small.' . pathinfo($imageName)['extension'], 200, 250 );
               }
@@ -295,18 +301,18 @@ class DocumentController extends Controller
   // promjena veličina slika, slika kao thumbnail - vraća putanju)
   public static function createResizedImage(string $imagePath = '', string $newPath = '', int $newWidth = 0, int $newHeight = 0, string $outExt = 'DEFAULT') 
     {    
-
       $image_size = getimagesize($imagePath);
       $width = $image_size[0];
       $height = $image_size[1];
       $newWidth = $width;
       $newHeight = $height;
 
+      Log::info( 'width-height' . $width . '-' . $height);
 
       if ($width <  $newWidth &&  $height < $newHeight ) {
           $newWidth = $width;
           $newHeight = $height;
-        } else {
+      } else {
           $omjer_w = $width  / $height * 100;
           $omjer_h = $height / $width  * 100;
           
@@ -317,17 +323,20 @@ class DocumentController extends Controller
           } else {
             $newHeight = $newWidth;
           }
-        }
+      }
       
+    Log::info( 'newWidth-newHeight' . $newWidth . '-' . $newHeight);
     if (  $newPath === '' or  file_exists($imagePath) === false) {
         return null;
     }
 
     $type = DocumentController::imagetype($imagePath);
-
+    Log::info( 'type' . $type);
+    Log::info( 'imagePath' . $imagePath);
     list($width, $height) = getimagesize($imagePath);
 
     $outBool = in_array($outExt, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']);
+ 
     $degrees = 270;
 
       switch (true)
@@ -382,23 +391,25 @@ class DocumentController extends Controller
                  $newImage = imagerotate($source, $degrees, 0);
                }
       }
-    
+  
+      if( $newHeight > 250 ) {
+        $percent_resize = 250/$newHeight;
+        $newHeight = $newHeight * $percent_resize;
+        $newWidth =$newWidth * $percent_resize;
+      }
+
       try {
         $newImage = imagecreatetruecolor($newWidth, $newHeight);       
       } catch (\Throwable $th) {
         return null;
       }
-
       //TRANSPARENT BACKGROUND
       $color = imagecolorallocatealpha($newImage, 0, 0, 0, 127); //fill transparent back
       imagefill($newImage, 0, 0, $color);
       imagesavealpha($newImage, true);
-
       //ROUTINE
       imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-    
-      
-   
+     
         switch (true)
         {
             case in_array($outExt, ['jpg', 'jpeg']) === true: $success = imagejpeg($newImage, $newPath);
@@ -411,7 +422,7 @@ class DocumentController extends Controller
                 break;
             case  $outExt === 'webp': $success = imagewebp($newImage, $newPath);
         }
-    
+        Log::info( 'success' . $success);
       if ($success === false)
       {
           return null;

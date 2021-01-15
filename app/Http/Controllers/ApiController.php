@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use xmlrpc_client;
 use xmlrpcmsg;
 use xmlrpcval;
+use App\Models\Afterhour;
+use App\Models\Absence;
 
 class ApiController extends Controller
 {
@@ -25,7 +27,6 @@ class ApiController extends Controller
     public function __construct()
     {
         include('../phpxmlrpc-4.4.1/lib/xmlrpc.inc');
-       
 
         $this->middleware('sentinel.auth');
         $this->user = 'employee_portal_admin';
@@ -38,23 +39,31 @@ class ApiController extends Controller
     
     public function index()
     {
-        /* $response = $this->connect_id_get(); */
-       /*   $response = $this->get_employee_project_tasks(33, '2020-10-01'); */
-        $response = $this->get_available_leave_types();
-        
-         /*    array:4 [▼
-                "holiday" => "Godi?nji odmor"
+        /*   $response = $this->connect_id_get(); */
+
+         /*   $response = $this->get_available_leave_types(); */
+        /*   array:4 [▼
+                "holiday" => "Godišnji odmor"
                 2 => "Bolovanje"
                 3 => "Kompenzacijska naknada dana"
-                4 => "Nepla?eno"
-            ] */
-        /*  $response = $this->get_employee_available_projects(33);  */
-           /*  array:1 [▼
-                58 => "[P-000] 000 Implementacija Odoo ERP-a, [0001] Duplico d.o.o."
-            ] */
-        /* $response = $this->send_leave_request(); */
+                4 => "Neplaćeno"
+                61 => "Izlazak"
+            ] 
+        */
 
-       
+        /*   $response = $this->get_employee_available_projects(33);  */
+        /*   array:1 [▼
+                58 => "[P-000] 000 Implementacija Odoo ERP-a, [0001] Duplico d.o.o."
+            ] 
+        */
+
+        /*   $response = $this->get_employee_project_tasks(33, '2021-01-11');  */
+        /*  array:2 [▼
+            72 => "Kategorizacija artikala za ERP"
+            1117 => "Rekapitulacija projekta - proučiti"
+        ] */
+
+        $response = $this->send_leave_request( Absence::find(3658), 'abs' ); 
 
         return view('Centaur::api_erp.index',['response' => $response]);
     }
@@ -262,14 +271,15 @@ class ApiController extends Controller
         } else {
             $type_id = "string";
         }
-        $task_id = intval($absence->erp_task_id);
+        $task_id = $absence->erp_task_id;
         if( $abs_type == 'abs' ) {
-            $date_from = $absence->start_date;
+            $date_from = $absence->start_date;           
+         
             $date_to = $absence->end_date;
-            if( $absence->absence->mark == 'IZL' ) {
+           /*  if( $absence->absence->mark == 'IZL' ) { */
                 $date_from = $date_from . ' ' . $absence->start_time;
                 $date_to = $date_to . ' ' . $absence->end_time;
-            } 
+           /*  }  */
         }
         if( $abs_type == 'aft' ) {
             $date_from = $absence->date . ' ' . $absence->start_time;
@@ -277,7 +287,7 @@ class ApiController extends Controller
         }
 
         $note = $absence->comment;
-
+        
         $method = 'vacation_request_create';
          
         $param['dbname'] = $this->dbname;
@@ -304,11 +314,10 @@ class ApiController extends Controller
         $get_employee_available_projects->addParam(new xmlrpcval($param['date_from'], "string"));
         $get_employee_available_projects->addParam(new xmlrpcval($param['date_to'], "string"));
         $get_employee_available_projects->addParam(new xmlrpcval($param['note'], "string"));
-       
         $resp = $sock->send($get_employee_available_projects);
-
+       
         $val = $resp->value();
-      
+        
        // $ids = $val->scalarval();
       
         return $val;

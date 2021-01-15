@@ -275,7 +275,7 @@
 											</span>
 										@endif
 										<span class="post_send">									
-											@if($post->to_employee_id != null)
+											@if($post && $post->to_employee_id != null)
 												@if( Sentinel::getUser()->employee->id == $post->to_employee_id )
 													{{ $post->employee->user['first_name'] . ' ' . $post->employee->user['last_name'] }}
 												@else
@@ -295,9 +295,11 @@
 									<span class="post_time">{{ date('d.m. H:i',strtotime( $post->updated_at )) }}</span>
 									</span>
 									<span class="post_text">
-										{!! $post->post_comment->to_employee_id == Sentinel::getUser()->employee->id || $post->to_department_id == Sentinel::getUser()->employee->work->department->id ? '<i class="fas fa-long-arrow-alt-left red"></i>' : '<i class="fas fa-long-arrow-alt-right green"></i>' !!} 
-										{{$post->post_comment->content }}	
-										{!! $post->to_employee_id && $post->post_comment->status == 1 ? '<i class="fas fa-check green"></i>' : '' !!}
+										@if($post->post_comment)
+											{!! $post->post_comment->to_employee_id == Sentinel::getUser()->employee->id || $post->to_department_id == Sentinel::getUser()->employee->work->department->id ? '<i class="fas fa-long-arrow-alt-left red"></i>' : '<i class="fas fa-long-arrow-alt-right green"></i>' !!} 
+											{{$post->post_comment->content }}	
+											{!! $post->to_employee_id && $post->post_comment->status == 1 ? '<i class="fas fa-check green"></i>' : '' !!}
+										@endif
 									</span>
 									@if ($post->to_department_id != null && $post->employee_id == Sentinel::getUser()->employee->id  )
 										<span class="read_post">

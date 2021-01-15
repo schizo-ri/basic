@@ -72,7 +72,7 @@
 										</a>
 									@endif
 									@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep))
-										<a href="{{ route('absences.show', $employee->id) }}" title="{{ __('basic.edit_employee') }}">
+										<a href="{{ route('absences.show', $employee->id) }}" title="{{ __('absence.absences') }}">
 											<i class="fas fa-suitcase"></i>
 										</a>
 									@endif

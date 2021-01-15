@@ -219,17 +219,17 @@
 															@if( Sentinel::inRole('administrator') )
 																<td style="max-width:10%;width:10%">{{ $absence->employee->user['last_name'] . ' ' . $absence->employee->user['first_name'] }}</td>
 															@endif
-															{{-- <td>{{ date('d.m.Y.',strtotime($absence->created_at)) }}</td> --}}
+															{{-- <td>{{ date('d.m.Y',strtotime($absence->created_at)) }}</td> --}}
 															<td style="max-width:10%;width:10%">{{ '[' . $absence->absence['mark'] . '] ' . $absence->absence['name'] }}</td>
-															<td style="max-width:7%;width:7%">{{ date('d.m.Y.',strtotime($absence->start_date))  }}</td>
-															<td class="absence_end_date" style="max-width:7%;width:7%">{{  date('d.m.Y.',strtotime($absence->end_date))  }}</td>
+															<td style="max-width:7%;width:7%">{{ date('d.m.Y',strtotime($absence->start_date))  }}</td>
+															<td class="absence_end_date" style="max-width:7%;width:7%">{{  date('d.m.Y',strtotime($absence->end_date))  }}</td>
 															<!--<td>xx dana</td>-->
 															<td class="absence_time" style="max-width:7%;width:7%" >{!! $absence->absence['mark'] == 'IZL' ? date('H:i',strtotime($absence->start_time)) . '-' .  date('H:i',strtotime($absence->end_time)) :'' !!}</td>
 															<td style="max-width:30%;width:30%">
 																@if( $absence->absence['mark'] != 'IZL' )
-																	[{{ $dani_go }} @lang('absence.days')  {!! $dana_GO_PG ? '| PG: ' .$dana_GO_PG : '' !!} ] 
+																	[{!! $absence->approve == 0 ? 0 : $dani_go !!} @lang('absence.days') {!! $absence->approve == 1 && $dana_GO_PG ? '| PG: ' .$dana_GO_PG : '' !!} ] 
 																@else
-																	[{{ $hours . ' h, ' . $minutes . ' m'}}]
+																	[ {!! $absence->approve == 0 ? '00:00' : $hours . ' h, ' . $minutes . ' m' !!} ]
 																@endif
 																{{ $absence->comment }}
 															</td>
@@ -298,9 +298,9 @@
 													@endphp
 													<tr class="tr_open_link tr" data-href="/absences/{{ $afterhour->employee->id }} empl_{{ $afterhour->employee_id}}" >
 														<td style="max-width:10%;width:10%">{{ $afterhour->employee->user['last_name'] . ' ' . $afterhour->employee->user['first_name'] }}</td>
-														{{-- <td>{{ date('d.m.Y.',strtotime($afterhour->created_at)) }}</td> --}}
+														{{-- <td>{{ date('d.m.Y',strtotime($afterhour->created_at)) }}</td> --}}
 														<td style="max-width:10%;width:10%">Prekovremeni sati</td>
-														<td style="max-width:7%;width:7%">{{ date('d.m.Y.',strtotime($afterhour->date))  }}</td>
+														<td style="max-width:7%;width:7%">{{ date('d.m.Y',strtotime($afterhour->date))  }}</td>
 														<td class="absence_end_date" style="max-width:10%;width:10%">-</td>
 														<td class="absence_time" style="max-width:7%;width:7%">{{ date('H:i',strtotime($afterhour->start_time)) . '-' .  date('H:i',strtotime($afterhour->end_time)) }}</td>
 														<td style="max-width:30%;width:30%">		

@@ -34,7 +34,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 		<script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all1.css?random=@dt') }}"/>
 	  
 		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/>
 		<!-- ICON -->
@@ -74,7 +74,7 @@
 								<img src="{{ URL::asset('icons/intranet_logo.png')}}" alt="company_logo"/>
 							@endif
 						</a>
-						<!-- <a class="" href="{{ route('api_erp.index') }}" ><span>api</span></a> -->
+						{{-- <a class="" href="{{ route('api_erp.index') }}" ><span>api</span></a> --}}
 						<ul class="nav_ul float_right">
 							@if (Sentinel::check())
 								@if( Sentinel::getUser()->employee && $_SERVER['REQUEST_URI'] != '/dashboard')
@@ -203,7 +203,7 @@
 				 */
 				
 			</script>
-			<script src="{{URL::asset('/../js/all.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/all1.js?random=@dt') }}"></script>
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
 			<!-- Datatables -->

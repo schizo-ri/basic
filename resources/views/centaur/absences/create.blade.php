@@ -80,7 +80,7 @@
 			</div>
 			<p class="time_request clear_l" style="display: none">Nemoguće poslati zahtjev. Završno vrijeme je manje od početnog</p>
 		</div>
-		<p class="days_request clear_l" style="display: none">Nemoguće poslati zahtjev. Broj dana zahtjeva je veći od broja neiskorištenih dana za <span clas="days"></span> dana </p>
+		<p class="days_request clear_l" style="display: none">{{-- Nemoguće poslati zahtjev. Broj dana zahtjeva je veći od broja neiskorištenih dana za --}} <span clas="days"></span> dana </p>
 		
 		<div class="form-group clear_l {{ ($errors->has('comment')) ? 'has-error' : '' }}">
 			<label>@lang('basic.comment')</label>

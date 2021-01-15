@@ -39,6 +39,7 @@ class GreetingCardMail extends Mailable
     public function build()
     {
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','GreetingCardMail')->first();
+
         $mail_style = array();
         $template_text_header = array();
         $template_text_body= array();
@@ -54,6 +55,7 @@ class GreetingCardMail extends Mailable
         return $this->view('emails.employees.greeting_card')
                     ->subject( 'Čestitka!' )
                     ->with([
+                        'mail_style' =>  $mail_style,
                         'employee' =>  $this->employee,
                         'template_mail' => $mail_template,
                         'text_header' => $template_text_header,

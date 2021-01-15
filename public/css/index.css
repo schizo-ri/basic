@@ -2261,7 +2261,9 @@ form.after_form  {
     padding-bottom: 20px;
     overflow: auto;
 }
-
+.all_absences .table-responsive {
+    height: calc( 100% - 78px);
+}
 .table-responsive .dataTables_wrapper {
     overflow: auto;
     scrollbar-width: thin;
@@ -3909,12 +3911,15 @@ a.modal_close {
     margin-left: 10px;
 }
 
-#style_items input, #style_items select {
+#style_items input, #style_items select, #style_items textarea {
     border: 1px solid #ccc;
     background: inherit;
     border-radius: 5px;
     padding: 0 10px;
- 
+    font-size: 12px;
+}
+#style_items textarea {
+    padding: 6px 10px;
 }
 #style_items p {
     margin-bottom: 5px;
@@ -4324,6 +4329,7 @@ a.modal_close {
     }
     .index_page a.add_new i, .index_page a.add_new svg {
         margin-right: 5px;
+        vertical-align: middle;
     }
     .main_absence .select_filter {
         margin-right: 0;
@@ -4338,7 +4344,7 @@ a.modal_close {
         display: none;
     }
     .main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years {
-        margin-right: 10px;
+       /*  margin-right: 10px; */
     }
     .index_page.posts_index .index_main  {
         display: none;
@@ -4548,7 +4554,13 @@ a.modal_close {
         padding: 0;
         left: 0;
     }
-    
+    .approve_buttons>div {
+        min-width: 25%;
+        padding-right: 0;
+    }
+    .all_absences .table-responsive {
+        height: auto;
+    }
     .main_benefits_body .btn-edit {
         margin-top: 0;
         margin-right: 0;
@@ -4640,10 +4652,12 @@ a.modal_close {
     }
     .main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years, .main_absence .select_filter.filter_employees, .main_absence .select_filter.filter_approve {
         height: 30px;
+        padding: 0;
     }
     .index_page #index_table_filter.dataTables_filter>label, .index_page .dataTables_filter >div {
         width: 100%;
-        margin-bottom: 5px ;
+        margin-bottom: 5px;
+        padding: 0;
     }
     .index_page a.add_new, .btn-new.btn-approve {
         line-height: 29px;
@@ -4768,6 +4782,7 @@ a.modal_close {
     }
     .table-responsive .table thead th {
         min-width: 33%;
+        padding-right: 21px;
     }
     .index_page .index_aside {
         width: 100%;
@@ -5260,6 +5275,7 @@ a.modal_close {
     .index_page .all_absences .dataTables_filter a.add_new {
        /*  right: 10px; */
       /*   transform: translateY(-50%); */
+      padding: 0 5px;
     }
    
     .index_main.main_noticeboard .header_noticeboard {

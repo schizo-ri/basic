@@ -45,8 +45,6 @@ class BirthdayCommand extends Command
     public function handle()
     {
         $send_to = EmailingController::sendTo('employees','cron');
-      /*   $send_to = array('uprava@duplico.hr'); */ 
-        array_push($send_to , 'jelena.juras@duplico.hr');
 
         $datum = new DateTime('now');
         $employees = Employee::employeesBday($datum);
@@ -55,11 +53,12 @@ class BirthdayCommand extends Command
             foreach(array_unique($send_to) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     Mail::to($send_to_mail)->send(new BirthDayMail( $employee )); 
+                    Mail::to($send_to_mail)->send(new GreetingCardMail( $employee ));   /// IZBACITI !!!!!!!!!!!!
                 }
             }
-
-            $employee_mail = $employee->email;
-            Mail::to($employee_mail)->send(new GreetingCardMail( $employee )); 
+           
+          /*   $employee_mail = $employee->email;
+            Mail::to($employee_mail)->send(new GreetingCardMail( $employee ));  */
         }
     }
 }

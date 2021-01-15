@@ -42,24 +42,21 @@ class Kernel extends ConsoleKernel
       /*  $schedule->command('email:absence_day') 
                    // ->dailyAt('12:00')  
                    ->everyMinute()
-                    ->evenInMaintenanceMode(); */
-      /*   $schedule->command('email:campaign')
+                    ->evenInMaintenanceMode();
+        $schedule->command('email:campaign')
                    ->dailyAt('7:00') 
                    ->evenInMaintenanceMode();
         $schedule->command('notice')
                   ->dailyAt('7:00') 
                   ->evenInMaintenanceMode(); 
-         $schedule->command('check_out')
+        $schedule->command('check_out')
                   ->dailyAt('7:00') 
                   ->evenInMaintenanceMode(); 
-         $schedule->command('car_registration')
-                  ->dailyAt('7:00') 
-                  ->evenInMaintenanceMode();  */
-       /*   $schedule->command('anniversary') */
-       /*           ->everyMinute() */
-       /*           // ->dailyAt('7:00')  */
-       /*            ->evenInMaintenanceMode();  */
-      /*    $schedule->command('medicalExamination')
+        $schedule->command('anniversary')
+                  ->everyMinute()
+                  // ->dailyAt('7:00') 
+                   ->evenInMaintenanceMode();
+        $schedule->command('medicalExamination')
                   ->dailyAt('7:00') 
                   ->evenInMaintenanceMode(); 
          $schedule->command('checkout_employee')
@@ -71,15 +68,22 @@ class Kernel extends ConsoleKernel
          $schedule->command('probation')
                   ->dailyAt('7:00') 
                   ->evenInMaintenanceMode(); 
-        $schedule->command('birthday')
-                  ->dailyAt('7:00') 
-                  ->evenInMaintenanceMode(); 
         $schedule->command('stranger')
                   ->dailyAt('7:00') 
-                  ->evenInMaintenanceMode(); */
+                  ->evenInMaintenanceMode();
         $schedule->command('task')
                     ->everyMinute()
-                    ->evenInMaintenanceMode(); 
+                    ->evenInMaintenanceMode();  
+        $schedule->command('car_registration')
+                   //->everyMinute() 
+                   ->everyMinute()
+                   ->evenInMaintenanceMode();*/
+        $schedule->command('birthday')
+                   //->dailyAt('7:00') 
+                   ->everyMinute()
+                   ->evenInMaintenanceMode(); 
+                  
+        
     }
 
     /**

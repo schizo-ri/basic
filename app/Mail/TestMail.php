@@ -43,11 +43,11 @@ class TestMail extends Mailable
         $template_text_body= array();
         $template_text_footer = array();
 
-        if( $mail_template ) {
-            $mail_style = $mail_template->mailStyle;
-            $template_text_header = MailTemplate::textHeader( $mail_template );
-            $template_text_body = MailTemplate::textBody( $mail_template );
-            $template_text_footer = MailTemplate::textFooter( $mail_template );
+        if( $this->mailTemplate ) {
+            $mail_style = $this->mailTemplate->mailStyle;
+            $template_text_header = MailTemplate::textHeader( $this->mailTemplate );
+            $template_text_body = MailTemplate::textBody( $this->mailTemplate );
+            $template_text_footer = MailTemplate::textFooter( $this->mailTemplate );
         }
         
         $variable = "Ovo je varijabla!!!";
@@ -55,6 +55,7 @@ class TestMail extends Mailable
         return $this->view('emails.test')
                     ->subject( 'Test mail' )
                     ->with([
+                        'mail_style' => $mail_style,
                         'mail_style' => $mail_style,
                         'text_header' => $template_text_header,
                         'text_body' => $template_text_body,

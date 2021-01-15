@@ -1621,7 +1621,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	font-size: 0.6875rem;
 	cursor: pointer;
 	padding-right: 15px;
-	
+	max-width: 300px;
 }
 
 .slide_show_open {
@@ -2112,6 +2112,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.topnav >div {
 	  display: none;
 	}
+	.topnav.nav_top a.link_home {
+		padding: 0;
+	}
 	.shortcuts_container .profile_images {
 		height: 75px;
 	}
@@ -2251,7 +2254,8 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		padding: 9px 0;
 	}
 	.nav_top img {
-		max-height: 40px;
+		max-height: 20px;
+		min-height: 20px;
 	}
 	
 	ul.nav_ul.float_right li {

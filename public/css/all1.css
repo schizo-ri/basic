@@ -1117,6 +1117,7 @@ div#calendar ul.dates{
     white-space: nowrap;
     display: flex;
     scrollbar-width: none;
+    padding: 0;
 }
  
 /** overall width = width+padding-right**/
@@ -6070,12 +6071,15 @@ a.modal_close {
     margin-left: 10px;
 }
 
-#style_items input, #style_items select {
+#style_items input, #style_items select, #style_items textarea {
     border: 1px solid #ccc;
     background: inherit;
     border-radius: 5px;
     padding: 0 10px;
- 
+    font-size: 12px;
+}
+#style_items textarea {
+    padding: 6px 10px;
 }
 #style_items p {
     margin-bottom: 5px;
@@ -9197,7 +9201,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	font-size: 0.6875rem;
 	cursor: pointer;
 	padding-right: 15px;
-	
+	max-width: 300px;
 }
 
 .slide_show_open {

@@ -11,7 +11,7 @@
         overflow-wrap: break-word;
     }
     #mail_template #header {
-        font-size: 16px;
+        font-size: 15px;
         font-weight: bold;
     }
     #mail_template #footer {
@@ -20,31 +20,36 @@
     #mail_template #body {
         height: auto;
         border: none;
-        font-size: 14px;
+        font-size: 13px;
         padding: 15px;
         clear: both;
         overflow-wrap: break-word;
         overflow: hidden;
         line-height: 16px;
     }
-    .Object {
-        margin-top: 20px;
-    }
+    .MsgBody .Object {
+				margin: 0;
+    			display: inline-block;
+			}
+			.MsgBody .Object-hover {
+				margin:0;
+			}
     .odobri{
-        min-width:100px;
-        height:40px;
-        background-color:white;
+        min-width: 100px;
+        height: auto;
+        background-color: white;
         border: 1px solid #cccccc;
         border-radius: 5px;
         box-shadow: 5px 5px 8px #cccccc;
         text-align: center !important;
-        padding:10px;
-        color:#007cc3 !important;
-        font-weight:bold;
-        font-size:12px;
-        margin:15px;
-        float:left;
-        cursor:pointer
+        padding: 10px;
+        background: #007cc3 !important;
+        color: white !important;
+        font-weight: bold;
+        font-size: 12px;
+        margin: 10px;
+        float: left;
+        margin-left: 0;
     }
     .link{
         min-width:100px;

@@ -59,7 +59,7 @@ class CommentMail extends Mailable
         $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $host  . '/posts';
 
         return $this->view('emails.comments.create')
-                    ->subject('Dobio si novu poruku na myIntranet')
+                    ->subject('Nova poruka')
                     ->with([
                         'comment' =>  $this->comment,
                         'url' =>  $url,

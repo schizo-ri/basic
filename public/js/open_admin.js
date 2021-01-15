@@ -80,7 +80,7 @@ if($('.index_admin').length > 0 ) {
         } catch (error) {
             //
         }
-
+       
         $('.admin_pages>li>a').removeClass('active_admin');
         $(this).addClass('active_admin');
         active_link = $('.admin_link.active_admin').attr('id');

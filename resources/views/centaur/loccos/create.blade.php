@@ -37,21 +37,22 @@
 					<label>@lang('basic.employee')</label>
 					<option value="" selected disabled></option>
 					@foreach ($employees as $employee)
-						<option value="{{ $employee->id }}" {!! Sentinel::getUser()->employee->id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['last_name'] . ' ' .  $employee->user['first_name'] }}</option>
+						<option value="{{ $employee->id }}" {!! Sentinel::getUser()->employee && Sentinel::getUser()->employee->id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['last_name'] . ' ' .  $employee->user['first_name'] }}</option>
 					@endforeach
 				</select>
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('date')) ? 'has-error' : '' }}">
 				<label for="">@lang('basic.date')</label>
-				<input class="form-control" name="date" type="datetime-local" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d\TH:i') !!}" required />
+				<input class="form-control" name="date" type="datetime-local" id="date" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d\TH:i') !!}" required />
 				{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('end_date')) ? 'has-error' : '' }}">
 				<label for="">@lang('absence.end_date')</label>
-				<input class="form-control" name="end_date" type="datetime-local" value="{{ old('end_date') }}" />
+				<input class="form-control" name="end_date" type="datetime-local" id="end_date" value="{{ old('end_date') }}" />
 				{!! ($errors->has('end_date') ? $errors->first('end_date', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<p class="days_request clear_l" style="display: none"></p>
 			<div class="form-group {{ ($errors->has('starting_point')) ? 'has-error' : '' }}">
 				<label>@lang('basic.starting_point')</label>
 				<input class="form-control" placeholder="{{ __('basic.starting_point') }}" name="starting_point" type="text" value="{{ old('starting_point') }}" required />
@@ -162,6 +163,46 @@
 				$("#start_km").val( current_km );
 				$("#start_km").attr('type','hidden');
 				$( '#comment').attr('required', 'false');
+			}
+		});
+
+		$( "#date" ).on('change',function() {
+			start_date = $( this ).val();
+			end_date = $( "#end_date" ).val();
+		
+			var StartDate = new Date(start_date);
+			var EndDate = new Date(end_date);
+
+			if(EndDate != 'Invalid Date' &&  EndDate < StartDate) {
+				$('.days_request').text('Nemoguće spremiti vožnju. Završni datum / vrijeme ne može biti prije početnog');
+				$('.days_request').show();
+				$('.btn-submit').hide();
+			} else {
+				$('.days_request').text('');
+				$('.days_request').hide();
+				$('.btn-submit').show();
+			}
+		});
+
+		$( "#end_date" ).on('change',function() {
+			start_date = $( "#date" ).val();
+			end_date = $( this ).val();
+			console.log(start_date);
+			console.log(end_date);
+
+			var StartDate = new Date(start_date);
+			var EndDate = new Date(end_date);
+			console.log(StartDate);
+			console.log(EndDate);
+
+			if(EndDate != 'Invalid Date' &&  EndDate < StartDate) {
+				$('.days_request').text('Nemoguće spremiti vožnju. Završni datum / vrijeme ne može biti prije početnog');
+				$('.days_request').show();
+				$('.btn-submit').hide();
+			} else {
+				$('.days_request').text('');
+				$('.days_request').hide();
+				$('.btn-submit').show();
 			}
 		});
 	});

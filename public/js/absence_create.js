@@ -3,6 +3,8 @@ $(function(){
 	var type;
 	var start_date;
 	var end_date;
+	var StartDate;
+	var EndDate;
 	var start_time;
 	var end_time;
 	var time_diff
@@ -11,7 +13,7 @@ $(function(){
 	var broj_dana;
 	var date = new Date();
 	var today = date.getFullYear() + '-' + ( '0' + (date.getMonth()+1) ).slice( -2 ) + '-' + ( '0' + (date.getDate()) ).slice( -2 );
-	var user_role = $('#user_role').text();	
+	var user_role;	
 
 	if($('form.absence').length > 0) {
 		$( "#request_type" ).on('change',function() {
@@ -66,11 +68,11 @@ $(function(){
 				$('.days_employee').hide();
 				$('.btn-submit').show();
 			}
-			console.log("type "+type);
+		
 			if(type == 'BOL' || type == 2 || type == 'IZL' || type == 61) { 
 				$('.datum.date2').hide();
 				if(type == 'BOL' || type == 2) {
-					console.log('bolovanje');
+				
 					$('#end_date').val(null);
 					$('#end_date').prop('required', false);
 				} else {
@@ -84,7 +86,6 @@ $(function(){
 				employee_id = $('#select_employee').val();
 
 				url = location.origin + '/days_offUnused/'+employee_id;
-				console.log(url);
 				$.ajax({
 					url: url,
 					type: "get",
@@ -109,7 +110,6 @@ $(function(){
 		});
 		
 		$( "#select_employee" ).on('change',function() {
-			console.log("select_employee");
 			employee_id = $(this).val();
 			type = $( "#request_type" ).val();
 			
@@ -119,19 +119,25 @@ $(function(){
 		});	
 		
 		$( "#start_date" ).on('change',function() {
-			console.log("start_date");
 			start_date = $( this ).val();
 			end_date = $( "#end_date" );
+			
+
 			if(type == 'BOL' || type == 2) {
 				end_date.val(null);
 			} else {
 				end_date.val(start_date);
 			}
 			
+			StartDate = new Date(start_date);
+			EndDate = new Date(end_date);
+			if(EndDate != 'Invalid Date' &&  EndDate < StartDate) {
+				$('.days_request').text('Nemoguće poslati zahtjev. Završni datum ne može biti prije početnog');
+				$('.days_request').show();
+			} 
 		
 			employee_id = $('#select_employee').val();
 			// na promjenu tipa zahtjeva sa erpa dohvatiti taskove ako je IZLAZAK
-			console.log("type "+type)
 			if(type == 'IZL' || type == 61) {
 				/* $('.tasks').remove();
 				getTask(employee_id, start_date); */
@@ -139,39 +145,53 @@ $(function(){
 		});
 		
 		$( "#end_date" ).on('change',function() {
-			console.log("end_date");
 			start_date = $( "#start_date" ).val();
 			end_date = $( this ).val();
-			if(start_date == '') {
-				$( "#start_date" ).val(end_date);
-			}
-
-			type = $( "#request_type" ).val();
-			employee_id = $('#select_employee').val();
-			if( employee_id != '' && (type == 'GO' || type == 'holiday') ) {
-				url = location.origin + '/daniGO';
-				$.ajax({
-					url: url,
-					type: "get",
-					data:  { start_date: start_date, end_date: end_date},
-					success: function( days_response ) {
-						console.log( days_response );
-						if( (broj_dana - days_response) < 0 && user_role != 'admin' ) {
-							$('.days_request>span').text( broj_dana - days_response);
-							$('.days_request').show();
-							$('.btn-submit').hide();
-						} else {
-							$('.days_request>span').text("");
-							$('.days_request').hide();
-							$('.btn-submit').show();
-						} 
-					},
-					error: function(jqXhr, json, errorThrown) {
-						console.log(jqXhr);
-						console.log(json);
-						console.log(errorThrown);
-					}
-				});
+			
+			StartDate = new Date(start_date);
+			EndDate = new Date(end_date);
+			if(EndDate != 'Invalid Date' &&  EndDate < StartDate) {
+				$('.days_request').text('Nemoguće poslati zahtjev. Završni datum ne može biti prije početnog');
+				$('.days_request').show();
+				$('.btn-submit').hide();
+			} else {
+				$('.days_request').text("");
+				$('.days_request>span').text("");
+				$('.days_request').hide();
+				$('.btn-submit').show();
+				if(start_date == '') {
+					$( "#start_date" ).val(end_date);
+				}
+	
+				type = $( "#request_type" ).val();
+				employee_id = $('#select_employee').val();
+				if( employee_id != '' && (type == 'GO' || type == 'holiday') ) {
+					url = location.origin + '/daniGO';
+					$.ajax({
+						url: url,
+						type: "get",
+						data:  { start_date: start_date, end_date: end_date},
+						success: function( days_response ) {
+							user_role = $('#user_role').text();	
+							if( (broj_dana - days_response) < 0 && user_role != 'admin' ) {
+								$('.days_request').text('Nemoguće poslati zahtjev. Broj dana zahtjeva je veći od broja neiskorištenih dana za');
+								$('.days_request>span').text( broj_dana - days_response);
+								$('.days_request').show();
+								$('.btn-submit').hide();
+							} else {
+								$('.days_request>span').text("");
+								$('.days_request').hide();
+								$('.btn-submit').show();
+							} 
+						},
+						error: function(jqXhr, json, errorThrown) {
+							console.log(jqXhr);
+							console.log(json);
+							console.log(errorThrown);
+						}
+					});
+				
+				}
 			}
 		});
 	}
@@ -179,16 +199,14 @@ $(function(){
 		$( "#date" ).on('change',function() {
 			start_date = $( this ).val();
 			employee_id = $('#select_employee').val();
-			console.log("employee_id "+employee_id);
-			console.log("start_date "+start_date);
+		
 			
 			/* getTask(employee_id, start_date); */
 		});
 		$( "#select_employee" ).on('change',function() {
 			employee_id = $(this).val();
 			start_date = $( "#date" ).val();
-			console.log("employee_id "+employee_id);
-			console.log("start_date "+start_date);
+		
 
 			if( employee_id != '' &&  employee_id != undefined ) {
 			/* 	getTask(employee_id, start_date); */
@@ -201,13 +219,13 @@ $(function(){
 function getTask(employee_id, start_date)
 {
 	url = location.origin + '/getTasks';
-	console.log("getTask");
+	
 	$.ajax({
 		url: url,
 		type: "get",
 		data:  { employee_id: employee_id, start_date: start_date},
 		success: function( tasks ) {
-			console.log(tasks);
+		
 			if($.map(tasks, function(n, i) { return i; }).length > 0 ) {
 				var select_tasks = '<div class="form-group tasks"><label>Zadatak</label><select id="select-state" name="erp_task_id" placeholder="Izaberi zadatak..." required><option value="" disabled selected></option>';
 				$.each(tasks, function( id, task ) {
@@ -229,7 +247,7 @@ function getTask(employee_id, start_date)
 
 function getDays( employee_id )
 {
-	console.log("getDays");
+	user_role = $('#user_role').text();	
 	url = location.origin + '/getDays/'+employee_id;
 	$.ajax({
 		url: url,

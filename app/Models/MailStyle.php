@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MailStyle extends Model
 {
-    protected $fillable = ['mail_id','style_header','style_body','style_footer'];
+    protected $fillable = ['mail_id','style_header','style_body','style_footer','style_header_input','style_body_input','style_footer_input'];
 
     /*
         * The Eloquent MailTemplate model name

@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Absence; 
 use App\Http\Controllers\BasicAbsenceController;
 use App\Models\MailTemplate;
-use Log; 
+
 class AbsenceMail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -39,6 +39,7 @@ class AbsenceMail extends Mailable
     public function build()
     {
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','AbsenceMail')->first();
+       
         $mail_style = array();
         $template_text_header = array();
         $template_text_body= array();
@@ -55,7 +56,8 @@ class AbsenceMail extends Mailable
         $zahtjev = array('start_date' => $this->absence['start_date'], 'end_date' => $this->absence['end_date']);
         $dani_zahtjev = BasicAbsenceController::daniGO_count($zahtjev);
         $zahtjevi = BasicAbsenceController::zahtjevi($employee);
-        $slobodni_dani = BasicAbsenceController::days_off($employee);
+        $slobodni_dani = new BasicAbsenceController();
+        $slobodni_dani =  $slobodni_dani->days_offUnused($employee->id);
 
         $neiskoristeno_GO = $zahtjevi['ukupnoPreostalo']; //vraća neiskorištene dane 
         if($this->absence->decree == 1) {
@@ -94,10 +96,11 @@ class AbsenceMail extends Mailable
         if($this->absence->absence['mark'] == "SLD") {
             $comment .= '. '. PHP_EOL  . __('absence.unused') .' '. $slobodni_dani .' '. __('absence.days_off');
         }
-        
-        array_push ($variable , $comment);
-        Log::info($variable );
-        Log::info($template_text_body );
+        array_push ($variable , $comment );
+
+        Log::info($variable);
+        Log::info($text_body);
+       
         return $this->view($view) 
                     ->subject( $subject . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])
                     ->with([
@@ -107,6 +110,7 @@ class AbsenceMail extends Mailable
                         'slobodni_dani' => $slobodni_dani,
                         'neiskoristeno_GO' => $neiskoristeno_GO,
                         'mail_style' => $mail_style,
+                        'template_mail' => $mail_template,
                         'text_header' => $template_text_header,
                         'text_body' => $template_text_body,
                         'text_footer' => $template_text_footer

@@ -137,7 +137,7 @@ class AfterhourController extends Controller
 
                 if( $request_exist == 0 ) {
                     $data = array(
-                        'ERP_leave_type' => isset($request['ERP_leave_type']) ? $request['ERP_leave_type'] : null,
+                        'ERP_leave_type' => isset($request['ERP_leave_type']) ? $request['ERP_leave_type'] : 3,
                         'erp_task_id'    => isset($request['erp_task_id']) ? $request['erp_task_id'] : null,
                         'project_id'  	 => $request['project_id'],
                         'employee_id'  	 => $employee_id,
@@ -279,7 +279,7 @@ class AfterhourController extends Controller
         $afterhour = Afterhour::find($id);
 
         $data = array(
-            'ERP_leave_type' => isset($request['ERP_leave_type']) ? $request['ERP_leave_type'] : null,
+            'ERP_leave_type' => isset($request['ERP_leave_type']) ? $request['ERP_leave_type'] : 3,
             'erp_task_id'    => isset($request['erp_task_id']) ? $request['erp_task_id'] : null,
             'employee_id'  	 => $request['employee_id'],
             'project_id'  	 => $request['project_id'],

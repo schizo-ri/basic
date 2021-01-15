@@ -289,6 +289,7 @@ Route::get('radne_upute', ['as' => 'radne_upute', 'uses' => 'InstructionControll
 Route::resource('mail_templates', 'MailTemplateController');
 Route::get('mail_test/{id}', ['as' => 'mail_test', 'uses' => 'MailTemplateController@mailTest']);
 Route::post('create_style', ['as' => 'create_style', 'uses' => 'MailTemplateController@create_style']);
+Route::post('edit_style', ['as' => 'edit_style', 'uses' => 'MailTemplateController@edit_style']);
 
 // MailText
 Route::resource('mail_texts', 'MailTextController');

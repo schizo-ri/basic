@@ -28,7 +28,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
         <script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all1.css?random=@dt') }}"/>
 		
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
@@ -183,7 +183,7 @@
             <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
            
             <!-- Scripts -->
-			<script src="{{URL::asset('/../js/all.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/all1.js?random=@dt') }}"></script>
 	
 			<!-- Datatables -->
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>

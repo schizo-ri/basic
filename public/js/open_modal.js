@@ -227,6 +227,4 @@ $(function() {
 		console.log(url);
         window.location = url;
     });
-
-
 });

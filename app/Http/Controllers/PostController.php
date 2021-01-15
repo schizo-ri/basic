@@ -121,7 +121,7 @@ class PostController extends Controller
 		
 		if($request['to_employee_id'] != null ) {	
 			$posts = Post::where('employee_id', $employee->id)->where('to_employee_id', $request['to_employee_id'])->first();
-			$posts2 = Post::where('employee_id',$request['to_employee_id'] )->where('to_employee_id', $employee->id)->first();
+			$posts2 = Post::where('employee_id', $request['to_employee_id'] )->where('to_employee_id', $employee->id)->first();
 			$data = array(
 				'employee_id'  		=> $employee->id,
 				'to_employee_id'  	=> $request['to_employee_id'],
@@ -129,8 +129,8 @@ class PostController extends Controller
 			);
 			
 			if( $posts ) {
-				$post->updatePost($data);
-			} elseif(  $posts2 ) {
+				$posts->updatePost($data);
+			} elseif( $posts2 ) {
 				$posts2->updatePost($data);
 			} else {
 				$post = new Post();
@@ -157,8 +157,8 @@ class PostController extends Controller
 			$comment = new Comment();
 			$comment->saveComment($data1);
 
-			$last_comment = Comment::lastComment($comment->employee_id,$comment->to_employee_id );
-			if( $last_comment  ) {
+			$last_comment = Comment::lastComment($comment->employee_id, $comment->to_employee_id );
+			if( $last_comment ) {
 				$datetime_last_comment = new DateTime($last_comment->created_at);
 				$now = new DateTime();
 				$diff = $datetime_last_comment->diff($now);
@@ -207,6 +207,19 @@ class PostController extends Controller
 					$comment = new Comment();
 					$comment->saveComment($data1);
 	
+					$last_comment = Comment::lastComment($comment->employee_id, $comment->to_employee_id );
+					if( $last_comment ) {
+						$datetime_last_comment = new DateTime($last_comment->created_at);
+						$now = new DateTime();
+						$diff = $datetime_last_comment->diff($now);
+					}
+					
+					if( ! $last_comment || ( isset( $diff ) && ($diff->i > 5 || $diff->h > 0 || $diff->d > 0 || $diff->y > 0) )) {
+						$send_to = $comment->toEmployee->email;
+						/* 	$send_to = 'jelena.juras@duplico.hr'; */
+						Mail::to($send_to)->send(new CommentMail($comment));  
+					}
+
 					$show_alert_to_employee =  $comment->to_employee_id;
 	
 					event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
@@ -395,16 +408,17 @@ class PostController extends Controller
 			$show_alert_to_employee = null;
 		}
 
-		$last_comment = Comment::lastComment($comment->employee_id,$comment->to_employee_id );
-		if( $last_comment  ) {
+		$last_comment = Comment::lastComment($comment->employee_id, $comment->to_employee_id );
+		
+		if( $last_comment ) {
 			$datetime_last_comment = new DateTime($last_comment->created_at);
 			$now = new DateTime();
 			$diff = $datetime_last_comment->diff($now);
 		}
 		
 		if( ! $last_comment || ( isset( $diff ) && ($diff->i > 5 || $diff->h > 0 || $diff->d > 0 || $diff->y > 0) )) {
-		/* 	$send_to = $comment->toEmployee->email; */
-			$send_to = 'jelena.juras@duplico.hr';
+			$send_to = $comment->toEmployee->email;
+			/* 	$send_to = 'jelena.juras@duplico.hr'; */
 			Mail::to($send_to)->send(new CommentMail($comment));  
 		}
  		

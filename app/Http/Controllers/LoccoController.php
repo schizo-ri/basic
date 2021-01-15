@@ -56,7 +56,12 @@ class LoccoController extends Controller
     public function create(Request $request)
     {
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::employees_lastNameASC();
+        if(Sentinel::inRole('administrator')) {
+            $employees = Employee::employees_lastNameASC();
+        } else {
+             $employees = Employee::where('id', Sentinel::getUser()->employee->id )->get();
+        }
+       
 
         $reg = null;
         if( $request->get('reg')) {
@@ -267,8 +272,13 @@ class LoccoController extends Controller
         $travel = TravelOrder::find( $locco->travel_id );
     
         $cars = Car::orderBy('registration','ASC')->get();
-        $employees = Employee::employees_lastNameASC();
-        
+
+        if(Sentinel::inRole('administrator')) {
+            $employees = Employee::employees_lastNameASC();
+        } else {
+             $employees = Employee::where('id', Sentinel::getUser()->employee->id )->get();
+        }
+       
         return view('Centaur::loccos.edit', ['locco' => $locco, 'cars' => $cars, 'travel' => $travel, 'employees' => $employees]);
     }
 
@@ -377,24 +387,25 @@ class LoccoController extends Controller
         $message = '';
         if($request['servis']){
 			if(! $request['comment'] ){
-				$message =  __('ctrl.malfunction');
-				/* return redirect()->back()->withFlashMessage($message); */
+				$message = session()->flash('error', __('ctrl.malfunction'));
+				return redirect()->back()->withFlashMessage($message);
 			} else {
                 $send_to = EmailingController::sendTo('loccos','create');
-              
-                try {
+               
+                /* try { */
                     foreach(array_unique($send_to) as $send_to_mail) {
                         if( $send_to_mail != null & $send_to_mail != '' ) {
                             Mail::to($send_to_mail)->send(new CarServiceMail($locco)); // mailovi upisani u mailing 
                         }
                     }
-                } catch (\Throwable $th) {
+              /*   } catch (\Throwable $th) {
                     session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			        return redirect()->back();
-                }
+                } */
+                
             }
         }
-       
+
         session()->flash('success',  __('ctrl.data_edit') .  ' ' . $message );
 		return redirect()->back();
     }

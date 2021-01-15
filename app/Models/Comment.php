@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use Log;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
@@ -87,8 +88,8 @@ class Comment extends Model
 
 	public static function lastComment ($employee_id, $to_employee_id) 
 	{
-		$comment = Comment::where('employee_id',$employee_id )->where('to_employee_id',$to_employee_id )->orderBy('created_at','DESC')->skip(1)->first();
-
+		
+		$comment = Comment::where('employee_id', $employee_id )->where('to_employee_id', $to_employee_id )->orderBy('created_at','DESC')->skip(1)->first();
 		return $comment;
 	}
 }

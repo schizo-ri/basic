@@ -1,10 +1,10 @@
-<div class="form-group {{ $element }}{!! isset($count_input) ? ($count_input) : '' !!}" hidden>
+<div class="form-group {{ $element }}{!! isset( $count_input) ? ($count_input) : '' !!}" hidden>
     <h5>{{ ucfirst( $element) }}  {!! isset($count_input) ? ($count_input+1) : '' !!}</h5>
     <p>Font</p>
     <div>
         <label>Boja <input name="{{ $element }}{!! str_contains($element, 'input') ? '['.$count_input.']' : '' !!}[color]" type="color" id="color[{{ $element }}]" class="color_{{ $element }}{!! str_contains($element, 'input') ? $count_input : '' !!}" value="#000000"/></label>
         <label>Veličina
-            <select name="{{ $element }}{!! str_contains($element, 'input') ? '[0]': '' !!}[font-size]" id="font-size[{{ $element }}]" class="font-size_{{ $element }}{!! str_contains($element, 'input') ? $count_input : '' !!}" >
+            <select name="{{ $element }}{!! str_contains($element, 'input') ? '['.$count_input.']' : '' !!}[font-size]" id="font-size[{{ $element }}]" class="font-size_{{ $element }}{!! str_contains($element, 'input') ? $count_input : '' !!}" >
                 @for ( $i = 8; $i < 30; $i++)
                     <option value="{{ $i }}px" {!! $i== 12 ? 'selected' : '' !!}>{{ $i }}</option>
                 @endfor
@@ -26,8 +26,10 @@
         </label>
         <label>Uvlaka
             <select name="{{ $element }}{!! str_contains($element, 'input') ? '['.$count_input.']' : '' !!}[padding-left]" id="padding-left[{{ $element }}]" class="padding-left_{{ $element }}{!! str_contains($element, 'input') ? $count_input : '' !!}" >
-                @for ( $i = 0; $i < 50; $i++)
-                    <option value="{{ $i }}px" {!! $i== 0 ? 'selected' : '' !!}>{{ $i }}</option>
+                @for ( $i = 0; $i <= 100; $i++)
+                    @if( ($i % 5) == 0 )
+                        <option value="{{ $i }}px" {!! $i== 10 ? 'selected' : '' !!}>{{ $i }}</option>
+                    @endif
                 @endfor
             </select>
         </label>

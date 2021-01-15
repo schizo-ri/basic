@@ -19,7 +19,7 @@
 							{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<div class="form-group {{ ($errors->has('description')) ? 'has-error' : '' }}">
-							<textarea class="form-control" name="description" type="text" value="{{ old('description') }}" placeholder="{{ __('basic.description') }}" required ></textarea>
+							<textarea class="form-control" name="description" type="text" value="{{ old('description') }}" placeholder="{{ __('basic.description') }}" rows="3" required ></textarea>
 							{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 						</div>
 						<div class="form-group {{ ($errors->has('for_mail')) ? 'has-error' : '' }}">
@@ -46,7 +46,6 @@
 						<span class="add_line">Dodaj liniju</span>	
 						<span class="add_link">Dodaj link</span>
 						<span class="remove_line">Ukloni liniju</span>	
-
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="body">
 						<input name="text_body[text][1]" type="text" id="text_body[text][1]" class="text_body" placeholder="Unesi tekst"/>

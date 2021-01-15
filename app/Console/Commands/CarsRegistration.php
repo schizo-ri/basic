@@ -46,15 +46,16 @@ class CarsRegistration extends Command
         $send_to = EmailingController::sendTo('cars','cron');
         $today = new DateTime();
         $today->modify('-1 years');
-        $today->modify('-14 days');
-      
-        Log::info('CarsRegistration' . ' | '.$today->format('Y-m-d') );
+        $today->modify('+14 days');
+        Log::info('CarsRegistration ' . $today->format('Y-m-d'));
 
         $cars = Car::where('last_registration',$today->format('Y-m-d') )->get();
         if( count($cars) > 0) {
             foreach(array_unique($send_to ) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     foreach($cars as $car) {
+                        Log::info('CarsRegistration ' .  $car->registration );
+                       
                         Mail::to($send_to_mail)->send(new CarsRegistrationMail( $car )); // mailovi upisani u mailing 
                     }
                 }

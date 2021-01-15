@@ -74,6 +74,12 @@ class MailTemplateController extends Controller
         return view('Centaur::mail_templates.create_style',['element' => $request['element'], 'count_input' => $request['count_input'] ]);
     }
 
+    public function edit_style (Request $request) 
+    {
+        return view('Centaur::mail_templates.edit_style',['element' => $request['element'], 'count_input' => $request['count_input'] ]);
+    }
+
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -82,60 +88,106 @@ class MailTemplateController extends Controller
      */
     public function store(Request $request)
     {
-        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail',$request['for_mail'])->first();
-      
-        $data = array(
-			'name'          => $request['name'],
-			'description'   => $request['description'],
-			'for_mail'      => $request['for_mail'],
-		);
-		
-		$mailTemplate = new MailTemplate();
-        $mailTemplate->saveMailTemplate($data);
-       
-        $elements = array('header', 'body','footer');
-        $style = array();
-        foreach( $elements as $element ) {
-            $style_text = '';
-            foreach(  $request[ $element ] as $key => $value ) {
-                $style_text .= ($key . ':' . $value.';');
-            }
-            $style[ $element ] = $style_text;
-        }
-
-        $data_style = array(
-            'mail_id'       => $mailTemplate->id,
-            'style_header'  => $style['header'] ? $style['header'] : null,
-            'style_body'    => $style['body'] ? $style['body'] : null,
-            'style_footer'  => $style['footer'] ? $style['footer'] : null,
-        );
-
-        $mailStyle = new MailStyle();
-        $mailStyle->saveMailStyle($data_style);
-
-        $text_elements = array('text_header', 'text_body','text_footer');
-        $text = array();
-        foreach( $text_elements as $element ) {
-            $element_text = '';
-            foreach(  $request[ $element ] as $key => $value ) {
-                foreach(  $value as $key2 => $p_element ) {
-                    if($p_element)
-                    $element_text .= ($key2 . ':' . $p_element.';');
-                }
-            }
-            $text[ $element ] = $element_text;
-        }
-     
-        $data_text = array(
-            'mail_id'       => $mailTemplate->id,
-            'text_header'  => $text['text_header'] ? $text['text_header'] : null,
-            'text_body'    => $text['text_body'] ? $text['text_body'] : null,
-            'text_footer'  => $text['text_footer'] ? $text['text_footer'] : null,
-        );
-      
-        $mailText = new MailText();
-        $mailText->saveMailText($data_text);
+        $mailTemplate = MailTemplate::orderBy('created_at','DESC')->where('for_mail', $request['for_mail'])->first();
         
+        // Tempalte maila
+            $data = array(
+                'name'          => $request['name'],
+                'description'   => $request['description'],
+                'for_mail'      => $request['for_mail'],
+            );
+            
+            if( $mailTemplate ) {
+                $mailTemplate->updateMailTemplate($data);
+            } else {
+                $mailTemplate = new MailTemplate();
+                $mailTemplate->saveMailTemplate($data);
+            }
+        // Kraj Tempalte maila 
+
+        if($mailTemplate) {
+            // Stil maila
+                $mailStyle = $mailTemplate->mailStyle;
+
+                $elements = array('header', 'body','footer');
+                $style = array();
+                foreach( $elements as $element ) {
+                    $style_text = '';
+                    foreach(  $request[ $element ] as $key => $value ) {
+                        $style_text .= ($key . ':' . $value.';');
+                    }
+                    $style[ $element ] = $style_text;
+                }
+
+                // stil input polja
+                $input_elements = array('header_input', 'body_input','footer_input');
+                $style_input = array();
+               
+                foreach( $input_elements as $key => $inputs ) {
+                    $value_input = array();
+                    foreach(  $request[ $inputs ] as $key_input => $input ) {
+                        $style_text = '';
+                        foreach( $input as $key_value => $value  ) {
+                            $style_text .= ($key_value . ':' . $value.';');
+                        }
+                        $value_input[$key_input] = $style_text;
+                    }
+                    $style_input[ $inputs ] = implode( '|', $value_input);
+                }
+
+                $data_style = array(
+                    'mail_id'       => $mailTemplate->id,
+                    'style_header'  => $style['header'] ? $style['header'] : null,
+                    'style_body'    => $style['body'] ? $style['body'] : null,
+                    'style_footer'  => $style['footer'] ? $style['footer'] : null,
+                    'style_header_input'  => $style_input['header_input'] ? $style_input['header_input'] : null,
+                    'style_body_input'    => $style_input['body_input'] ? $style_input['body_input'] : null,
+                    'style_footer_input'  => $style_input['footer_input'] ? $style_input['footer_input'] : null,
+                );
+
+                if(  $mailStyle ) {
+                    $mailStyle->updateMailStyle($data_style);
+                } else {
+                    $mailStyle = new MailStyle();
+                    $mailStyle->saveMailStyle($data_style);
+                }
+            // Kraj Stil maila
+
+            // Tekst maila
+                $mailText = $mailTemplate->mailText;
+
+                $text_elements = array('text_header', 'text_body','text_footer');
+                $text = array();
+                foreach( $text_elements as $element ) {
+                    $element_text = '';
+                    $count = 0;
+                    foreach(  $request[ $element ] as $key => $value ) {
+                        foreach(  $value as $key2 => $p_element ) {
+                            if($p_element) {
+                                $element_text .= ($count . ':' . $p_element.';');
+                                $count++;
+                            }
+                        }
+                    }
+                    $text[ $element ] = $element_text;
+                }
+
+                $data_text = array(
+                    'mail_id'       => $mailTemplate->id,
+                    'text_header'  => $text['text_header'] ? $text['text_header'] : null,
+                    'text_body'    => $text['text_body'] ? $text['text_body'] : null,
+                    'text_footer'  => $text['text_footer'] ? $text['text_footer'] : null,
+                );
+
+                if ( $mailText ) {
+                    $mailText->updateMailText($data_text);
+                } else {
+                    $mailText = new MailText();
+                    $mailText->saveMailText($data_text);
+                }
+            // Kraj Tekst maila
+        }
+
         session()->flash('success',  __('ctrl.data_save'));
         return redirect()->route('mail_templates.index');
     }
@@ -159,9 +211,9 @@ class MailTemplateController extends Controller
      */
     public function edit($id)
     {
-       
         $mailTemplate = MailTemplate::find($id);
         $elements = array('header', 'body','footer');
+        $child_elements = array('input');
 
         $path = '../app/Mail';
         $docs = '';
@@ -169,72 +221,135 @@ class MailTemplateController extends Controller
             $docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
         }
 
-        $mailTemplate_style = $mailTemplate->mailStyle;
+        // Mail style
+            $mailTemplate_style = $mailTemplate->mailStyle;
+            $header = array();
+            $body = array();
+            $footer = array();
+            $header_input = array();
+            $body_input = array();
+            $footer_input = array();
+            $header_input_style = array();
+            $body_input_style = array();
+            $footer_input_style = array();
 
-        $header = array();
-        foreach( explode(';', $mailTemplate_style->style_header) as $header_style) {
-            $temp = explode(':',$header_style);
-            $key = $temp[0];
-            if(isset($temp[1] )) {
-                $val = $temp[1];
-                $header[$key] =$val;
-            }
-        }
-        $body = array();
-        foreach( explode(';', $mailTemplate_style->style_body) as $body_style) {
-            $temp = explode(':',$body_style);
-            $key = $temp[0];
-            if(isset($temp[1] )) {
-                $val = $temp[1];
-                $body[$key] =$val;
-            }
-        }
-
-        $footer = array();
-        foreach( explode(';', $mailTemplate_style->style_footer) as $footer_style) {
-            $temp = explode(':',$footer_style);
-            $key = $temp[0];
-            if(isset($temp[1] )) {
-                $val = $temp[1];
-                $footer[$key] =$val;
-            }
-        }
-        $mailTemplate_text = $mailTemplate->mailText;
-
-        $header_text = array();
-        $body_text = array();
-        $footer_text = array();
-        if( $mailTemplate_text ) {
-            foreach( explode(';', $mailTemplate_text->text_header) as $text_header) {
-                $temp = explode(':', $text_header);
-              
-                $key = $temp[0];
-                if(isset($temp[1] )) {
-                    $val = $temp[1];
-                    $header_text[$key] = $val;
+            if( $mailTemplate_style ) {
+                // header
+                foreach( explode(';', $mailTemplate_style->style_header) as $header_style) {
+                    $temp = explode(':',$header_style);
+                    $key = $temp[0];
+                    if(isset($temp[1] )) {
+                        $val = $temp[1];
+                        $header[$key] =$val;
+                    }
                 }
-            }       
-            foreach( explode(';', $mailTemplate_text->text_body) as $text_body) {
-                $temp = explode(':', $text_body);
-              
-                $key = $temp[0];
-                if(isset($temp[1] )) {
-                    $val = $temp[1];
-                    $body_text[$key] = $val;
+                $header_input_style =  explode('|', $mailTemplate_style->style_header_input);
+                foreach($header_input_style  as $input_style) {
+                    $temp = explode(';', $input_style );
+                    $temp2 = array();
+                    foreach(  $temp as $key => $style) {
+                        $temp3 = explode(':', $style);
+                        $key = $temp3[0];
+                        if(isset($temp3[1] )) {
+                            $val = $temp3[1];
+                            $temp2[$key] = $val;
+                        }
+                    }
+                    array_push($header_input, $temp2);
                 }
-            }
-            foreach( explode(';', $mailTemplate_text->text_footer) as $text_footer) {
-                $temp = explode(':', $text_footer);
-              
-                $key = $temp[0];
-                if(isset($temp[1] )) {
-                    $val = $temp[1];
-                    $footer_text[$key] = $val;
-                }
-            }
-        }
+                // kraj header
 
-        return view('Centaur::mail_templates.edit', ['mailTemplate' => $mailTemplate,'elements' => $elements, 'docs' => $docs, 'mailTemplate_style' => $mailTemplate_style, 'header' => $header, 'body' => $body, 'footer' => $footer, 'header_text' => $header_text,'body_text' => $body_text,'footer_text' => $footer_text ]);
+                // body
+                foreach( explode(';', $mailTemplate_style->style_body) as $body_style) {
+                    $temp = explode(':',$body_style);
+                    $key = $temp[0];
+                    if(isset($temp[1] )) {
+                        $val = $temp[1];
+                        $body[$key] =$val;
+                    }
+                }
+                $body_input_style = explode('|', $mailTemplate_style->style_body_input);
+                foreach( $body_input_style as $input_style) {
+                    $temp = explode(';', $input_style );
+                    $temp2 = array();
+                    foreach(  $temp as $key => $style) {
+                        $temp3 = explode(':', $style);
+                        $key = $temp3[0];
+                        if(isset($temp3[1] )) {
+                            $val = $temp3[1];
+                            $temp2[$key] = $val;
+                        }
+                    }
+                    array_push($body_input, $temp2);
+                }
+                // kraj body
+
+                // footer
+                foreach( explode(';', $mailTemplate_style->style_footer) as $footer_style) {
+                    $temp = explode(':',$footer_style);
+                    $key = $temp[0];
+                    if(isset($temp[1] )) {
+                        $val = $temp[1];
+                        $footer[$key] =$val;
+                    }
+                }
+                $footer_input_style = explode('|', $mailTemplate_style->style_footer_input);
+                foreach( $footer_input_style as $input_style) {
+                    $temp = explode(';', $input_style );
+                    $temp2 = array();
+                    foreach(  $temp as $key => $style) {
+                        $temp3 = explode(':', $style);
+                        $key = $temp3[0];
+                        if(isset($temp3[1] )) {
+                            $val = $temp3[1];
+                            $temp2[$key] = $val;
+                        }
+                    }
+                    array_push($footer_input, $temp2);
+                }
+                // Kraj footer
+            }
+            
+        // Kraj Mail style
+
+        // Mail text
+            $mailTemplate_text = $mailTemplate->mailText;
+
+            $header_text = array();
+            $body_text = array();
+            $footer_text = array();
+            if( $mailTemplate_text ) {
+                foreach( explode(';', $mailTemplate_text->text_header) as $text_header) {
+                    $temp = explode(':', $text_header);
+                
+                    $key = $temp[0];
+                    if(isset($temp[1] )) {
+                        $val = $temp[1];
+                        $header_text[$key] = $val;
+                    }
+                }       
+                foreach( explode(';', $mailTemplate_text->text_body) as $text_body) {
+                    $temp = explode(':', $text_body);
+                
+                    $key = $temp[0];
+                    if(isset($temp[1] )) {
+                        $val = $temp[1];
+                        $body_text[$key] = $val;
+                    }
+                }
+                foreach( explode(';', $mailTemplate_text->text_footer) as $text_footer) {
+                    $temp = explode(':', $text_footer);
+                
+                    $key = $temp[0];
+                    if(isset($temp[1] )) {
+                        $val = $temp[1];
+                        $footer_text[$key] = $val;
+                    }
+                }
+            }
+        // Mail text
+
+        return view('Centaur::mail_templates.edit', ['mailTemplate' => $mailTemplate,'elements' => $elements,'child_elements' => $child_elements,  'docs' => $docs, 'mailTemplate_style' => $mailTemplate_style, 'header' => $header, 'body' => $body, 'footer' => $footer,'header_input' => $header_input, 'body_input' => $body_input, 'footer_input' => $footer_input,'header_input_style' => $header_input_style, 'body_input_style' => $body_input_style, 'footer_input_style' => $footer_input_style, 'header_text' => $header_text,'body_text' => $body_text,'footer_text' => $footer_text ]);
 
     }
 
@@ -248,65 +363,96 @@ class MailTemplateController extends Controller
     public function update(Request $request, $id)
     {
         $mailTemplate = MailTemplate::find($id);
+
         $mailStyle =  $mailTemplate->mailStyle;
         $mailText =  $mailTemplate->mailText;
-        $data = array(
-			'name'          => $request['name'],
-			'description'   => $request['description'],
-			'for_mail'      => $request['for_mail'],
-		);
-		
-        $mailTemplate->updateMailTemplate($data);
-       
-        $elements = array('header', 'body','footer');
-        $style = array();
-        foreach( $elements as $element ) {
-            $style_text = '';
-            foreach(  $request[ $element ] as $key => $value ) {
-                $style_text .= ($key . ':' . $value.';');
-            }
-            $style[ $element ] = $style_text;
-        }
-       
-        $data_style = array(
-            'mail_id'       => $mailTemplate->id,
-            'style_header'  => $style['header'] ? $style['header'] : null,
-            'style_body'    => $style['body'] ? $style['body'] : null,
-            'style_footer'  => $style['footer'] ? $style['footer'] : null,
-        );
-        if( $mailStyle ) {
-            $mailStyle->updateMailStyle($data_style);
-        } else {
-            $mailStyle = new MailStyle();
-            $mailStyle->saveMailStyle($data_style);
-        }
-       
-        $text_elements = array('text_header', 'text_body','text_footer');
-        $text = array();
-        foreach( $text_elements as $element ) {
-            $element_text = '';
-            foreach(  $request[ $element ] as $key => $value ) {
-                foreach(  $value as $key2 => $p_element ) {
-                    if($p_element)
-                    $element_text .= ($key2 . ':' . $p_element.';');
+
+        // Tempalte maila
+            $data = array(
+                'name'          => $request['name'],
+                'description'   => $request['description'],
+                'for_mail'      => $request['for_mail'],
+            );
+            
+            $mailTemplate->updateMailTemplate($data);
+        // Kraj Tempalte maila
+
+        // Stil maila
+            $mailStyle = $mailTemplate->mailStyle;
+            $elements = array('header', 'body','footer');
+            $style = array();
+            foreach( $elements as $element ) {
+                $style_text = '';
+                foreach(  $request[ $element ] as $key => $value ) {
+                    $style_text .= ($key . ':' . $value.';');
                 }
+                $style[ $element ] = $style_text;
             }
-            $text[ $element ] = $element_text;
-        }
-     
-        $data_text = array(
-            'mail_id'       => $mailTemplate->id,
-            'text_header'  => $text['text_header'] ? $text['text_header'] : null,
-            'text_body'    => $text['text_body'] ? $text['text_body'] : null,
-            'text_footer'  => $text['text_footer'] ? $text['text_footer'] : null,
-        );
-      
-        if($mailText) {
-            $mailText->updateMailText($data_text);
-        } else {
-            $mailText = new MailText();
-            $mailText->saveMailText($data_text);
-        }
+
+            // stil input polja
+            $input_elements = array('header_input', 'body_input','footer_input');
+            $style_input = array();
+            foreach( $input_elements as $key => $inputs ) {
+                $value_input = array();
+                foreach(  $request[ $inputs ] as $key_input => $input ) {
+                    $style_text = '';
+                    foreach( $input as $key_value => $value  ) {
+                        $style_text .= ($key_value . ':' . $value.';');
+                    }
+                    $value_input[$key_input] = $style_text;
+                }
+                $style_input[ $inputs ] = implode( '|', $value_input);
+            }
+
+            $data_style = array(
+                'mail_id'       => $mailTemplate->id,
+                'style_header'  => $style['header'] ? $style['header'] : null,
+                'style_body'    => $style['body'] ? $style['body'] : null,
+                'style_footer'  => $style['footer'] ? $style['footer'] : null,
+                'style_header_input'  => $style_input['header_input'] ? $style_input['header_input'] : null,
+                'style_body_input'    => $style_input['body_input'] ? $style_input['body_input'] : null,
+                'style_footer_input'  => $style_input['footer_input'] ? $style_input['footer_input'] : null,
+            );
+
+            if(  $mailStyle ) {
+                $mailStyle->updateMailStyle($data_style);
+            } else {
+                $mailStyle = new MailStyle();
+                $mailStyle->saveMailStyle($data_style);
+            }
+        // Kraj Stil maila
+        
+        // Tekst maila
+            $text_elements = array('text_header', 'text_body','text_footer');
+            $text = array();
+            foreach( $text_elements as $element ) {
+                $element_text = '';
+                $count = 1;
+                foreach(  $request[ $element ] as $key => $value ) {
+                    foreach(  $value as $key2 => $p_element ) {
+                        if($p_element) {
+                            $element_text .= ($count . ':' . $p_element.';');
+                            $count++;
+                        }
+                    }
+                }
+                $text[ $element ] = $element_text;
+            }
+
+            $data_text = array(
+                'mail_id'       => $mailTemplate->id,
+                'text_header'  => $text['text_header'] ? $text['text_header'] : null,
+                'text_body'    => $text['text_body'] ? $text['text_body'] : null,
+                'text_footer'  => $text['text_footer'] ? $text['text_footer'] : null,
+            );
+
+            if ( $mailText ) {
+                $mailText->updateMailText($data_text);
+            } else {
+                $mailText = new MailText();
+                $mailText->saveMailText($data_text);
+            }
+        // Kraj Tekst maila
 
         session()->flash('success',  __('ctrl.data_save'));
         return redirect()->route('mail_templates.index');

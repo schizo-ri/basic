@@ -1,6 +1,6 @@
 <div class="modal-body">
     <form action="{{ route('documents.store') }}" class="box" method="post" id="form_submit" enctype="multipart/form-data" >
-        @if (! $profileIMG)
+        @if (! $profileIMG )
             <div class="form-group ">
                 <label>@lang('basic.name')</label>
                 <input type='text' name="title" class="form-control" required />

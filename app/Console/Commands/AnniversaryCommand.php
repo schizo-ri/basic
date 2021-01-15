@@ -44,13 +44,15 @@ class AnniversaryCommand extends Command
     public function handle()
     {
         $send_to = EmailingController::sendTo('employees','cron');
-        array_push($send_to , 'jelena.juras@duplico.hr');
         
         // godišnjica na današnji dan
         $datum = new DateTime('now');
        
         $employees = Employee::employeesAnniversary( $datum );
+        
         if(count($employees) > 0) {
+            Log::info('godišnjica danas: ');
+            Log::info($employees);
             foreach ($employees as $employee) {
                 $date1 = new DateTime($employee->reg_date); 
                 $interval = $date1->diff($datum); 
@@ -72,6 +74,8 @@ class AnniversaryCommand extends Command
 		
         $employees = Employee::employeesAnniversary( $datum2 );
         if(count($employees) > 0) {
+            Log::info('godišnjica za 5 dana: ');
+            Log::info($employees);
             foreach ($employees as $employee) {
                 $date1 = new DateTime($employee->reg_date); 
                 $interval = $date1->diff($datum2); 

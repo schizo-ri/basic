@@ -70,7 +70,7 @@
 		</div>
 		<div class="form-group datum date2 float_r {{ ($errors->has('end_date')) ? 'has-error' : '' }}" >
 			<label>@lang('absence.end_date')</label>
-			<input name="end_date" id="end_date" class="form-control" type="date" value="{!! $absence->end_date ? $absence->end_date : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
+			<input name="end_date" id="end_date" class="form-control" type="date" value="{!! $absence->end_date != null ? $absence->end_date : Carbon\Carbon::now()->format('Y-m-d') !!}" required >
 			{!! ($errors->has('end_date') ? $errors->first('end_date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group col-md-12 clear_l overflow_hidd padd_0 time_group" >
@@ -84,7 +84,9 @@
 				<input name="end_time" class="form-control" type="time" value="{{ $absence->end_time }}"required>
 				{!! ($errors->has('end_time') ? $errors->first('end_time', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<p class="time_request clear_l" style="display: none">Nemoguće poslati zahtjev. Završno vrijeme je manje od početnog</p>
 		</div>
+		<p class="days_request clear_l" style="display: none">{{-- Nemoguće poslati zahtjev. Broj dana zahtjeva je veći od broja neiskorištenih dana za --}} <span clas="days"></span> dana </p>
 		<div class="form-group {{ ($errors->has('comment')) ? 'has-error' : '' }}">
 			<label>@lang('basic.comment')</label>
 			<textarea rows="4" name="comment" type="text" class="form-control" value="{{ old('comment') }}" maxlength="16535" required>{{ $absence->comment }}</textarea>
