@@ -291,6 +291,17 @@ class AfterhourController extends Controller
        
         $afterhour->updateAfterhour($data);
 
+        $send_to = EmailingController::sendTo('afterhours', 'create');
+                
+       /*  $send_to = array('jelena.juras@duplico.hr'); */
+        Log::info("Prekovremeni poslan na mail: ".implode(', ',array_unique($send_to)));
+                        
+        foreach(array_unique($send_to) as $send_to_mail) {
+            if( $send_to_mail != null & $send_to_mail != '' ) {
+                Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterhour)); 
+            }
+        }
+
         session()->flash('success',  __('ctrl.data_edit'));
 		
         return redirect()->back();

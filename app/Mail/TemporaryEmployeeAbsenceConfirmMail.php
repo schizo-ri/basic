@@ -54,7 +54,7 @@ class TemporaryEmployeeAbsenceConfirmMail extends Mailable
         $odobrio_user = Sentinel::getUser();
 		$odobrio = $odobrio_user->first_name . ' ' . $odobrio_user->last_name;
         
-        if( $this->temporaryEmployeeRequest->approve == '1'){
+        if( $this->temporaryEmployeeRequest->approve == '1' ){
             $odobrenje = __('absence.is_approved');
         } else {
             $odobrenje = __('absence.not_approved');

@@ -40,7 +40,7 @@ class AfterHourCreateMail extends Mailable
     public function build()
     {
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','AfterHourCreateMail')->first();
-        $ $mail_style = array();
+        $mail_style = array();
         $template_text_header = array();
         $template_text_body= array();
         $template_text_footer = array();
@@ -57,7 +57,7 @@ class AfterHourCreateMail extends Mailable
         
         $interval = $time2->diff($time1);
         $interval = $interval->format('%H:%I');
-                
+          $task = null;      
         if( $this->afterhour->erp_task_id) {
             $api = new ApiController();
 
@@ -70,6 +70,7 @@ class AfterHourCreateMail extends Mailable
 						'afterhour' =>  $this->afterhour,
 						'interval' =>  $interval,
                         'template_mail' => $mail_template,
+                        'mail_style' => $mail_style,
                         'task' => $task,
                         'text_header' => $template_text_header,
                         'text_body' => $template_text_body,

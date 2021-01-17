@@ -61,6 +61,7 @@ class BirthDayMail extends Mailable
                         'mail_style' => $mail_style,
                         'template_mail' => $mail_template,
                         'text_header' => $template_text_header,
+                        'mail_style' => $mail_style,
                         'text_body' => $template_text_body,
                         'text_footer' => $template_text_footer
                     ]);

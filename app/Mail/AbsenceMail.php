@@ -98,8 +98,6 @@ class AbsenceMail extends Mailable
         }
         array_push ($variable , $comment );
 
-        Log::info($variable);
-        Log::info($text_body);
        
         return $this->view($view) 
                     ->subject( $subject . ' - ' . $this->absence->employee->user['first_name']   . '_' . $this->absence->employee->user['last_name'])

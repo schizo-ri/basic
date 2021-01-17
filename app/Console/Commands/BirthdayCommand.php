@@ -53,12 +53,12 @@ class BirthdayCommand extends Command
             foreach(array_unique($send_to) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     Mail::to($send_to_mail)->send(new BirthDayMail( $employee )); 
-                    Mail::to($send_to_mail)->send(new GreetingCardMail( $employee ));   /// IZBACITI !!!!!!!!!!!!
+                   
                 }
             }
            
-          /*   $employee_mail = $employee->email;
-            Mail::to($employee_mail)->send(new GreetingCardMail( $employee ));  */
+            $employee_mail = $employee->email;
+            Mail::to($employee_mail)->send(new GreetingCardMail( $employee )); 
         }
     }
 }

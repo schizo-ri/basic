@@ -73,6 +73,7 @@ class AbsenceConfirmMail extends Mailable
                         'odobrenje' => $odobrenje,
                         'odobrio' => $odobrio,
                         'template_mail' => $mail_template,
+                        'mail_style' => $mail_style,
                         'text_header' => $template_text_header,
                         'text_body' => $template_text_body,
                         'text_footer' => $template_text_footer
