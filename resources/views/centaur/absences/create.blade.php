@@ -90,8 +90,8 @@
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group">
 				<label for="email">@lang('absence.email_send')</label>
-				<span><input type="radio" name="email" value="DA" checked /> @lang('basic.send_mail') </span>
-				<span><input type="radio" name="email" value="NE" /> @lang('basic.dont_send_mail')</span>
+				<span><input type="radio" name="email" value="DA" id="email_da" checked /> <label for="email_da">@lang('basic.send_mail')</label> </span>
+				<span><input type="radio" name="email" value="NE" id="email_ne"  /> <label for="email_ne">@lang('basic.dont_send_mail')</label></span>
 			</div>
 		@else
 			<input type="hidden" name="email" value="DA">

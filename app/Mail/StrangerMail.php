@@ -57,8 +57,9 @@ class StrangerMail extends Mailable
         $interval = $date1->diff($date2); 
         $days = $interval->format('%a');
 
+        $subject = __('basic.stranger') . ' - ' . $this->employee->user->first_name . ' ' .  $this->employee->user->last_name;
         return $this->view('emails.employees.stranger')
-                    ->subject( __('basic.stranger') . ' - ' . $this->employee->user->first_name . ' ' .  $this->employee->user->last_name )
+                    ->subject($subject )
                     ->with([
                         'employee'  => $this->employee,
                         'days'      => $days,

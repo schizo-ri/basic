@@ -13,18 +13,22 @@
 					<i class="fas fa-plus"></i>
 				</a>
 			@endif
-			<select id="filter_month" class="select_filter change_month_afterhour" >
-				{{-- <option value="all">@lang('basic.all_month')</option> --}}
-					@foreach ($dates as $date)
-						<option value="{{ $date }}">{{ $date }}</option>
-					@endforeach
-			</select>
-			<select class="change_employee_afterhour select_filter ">
-				<option value="all" selected>{{ __('basic.view_all')}} </option>
-					@foreach ($employees as $employee)
-						<option value="empl_{{ $employee->id }}">{{ $employee->last_name . ' ' . $employee->first_name }}</option>
-					@endforeach
-			</select>
+			<div class="div_select2">
+				<select id="filter_month" class="select_filter change_month_afterhour" >
+					{{-- <option value="all">@lang('basic.all_month')</option> --}}
+						@foreach ($dates as $date)
+							<option value="{{ $date }}">{{ $date }}</option>
+						@endforeach
+				</select>
+			</div>
+			<div class="div_select2">
+				<select class="change_employee_afterhour select_filter ">
+					<option value="all" selected>{{ __('basic.view_all')}} </option>
+						@foreach ($employees as $employee)
+							<option value="empl_{{ $employee->id }}">{{ $employee->last_name . ' ' . $employee->first_name }}</option>
+						@endforeach
+				</select>
+			</div>
 		</div>
 	{{-- 	<a class="btn-new" href="{{ route('afterhours_approve') }}" >
 			<i class="far fa-calendar-check"></i>

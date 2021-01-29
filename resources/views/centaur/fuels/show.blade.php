@@ -22,7 +22,7 @@
 						<td>{{ date('d.m.Y', strtotime($fuel->date)) }}</td>
 						<td>{{ $fuel->liters }}</td>
 						<td>{{ $fuel->km }}</td>
-						<td>{!! $fuel_prev ? round($fuel->liters / ($fuel->km - $fuel_prev->km)  * 100,2) : 0 !!}</td>
+						<td>{!! $fuel_prev && $fuel->km - $fuel_prev->km > 0? round($fuel->liters / ($fuel->km - $fuel_prev->km)  * 100,2) : 0 !!}</td>
 						<td>
 							@if(Sentinel::getUser()->hasAccess(['fuels.view']) || in_array('fuels.view', $permission_dep))
 								<a href="{{ route('fuels.edit',$fuel->id ) }}" class="edit_service btn-edit" title="{{ __('basic.fuel')}}" rel="modal:open">

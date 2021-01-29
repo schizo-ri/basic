@@ -11,6 +11,7 @@ use App\Models\Campaign;
 use App\Models\Template;
 use App\Mail\SequenceMail;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ErrorMail;
 use Sentinel;
 
 class CampaignSequenceController extends Controller
@@ -232,6 +233,10 @@ class CampaignSequenceController extends Controller
                 Mail::to($send_to)->send(new SequenceMail( $sequence ));   
                 
             } catch (\Throwable $th) {
+                $email = 'jelena.juras@duplico.hr';
+                $url = $_SERVER['REQUEST_URI'];
+                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+                
                 $message = session()->flash('error', __('emailing.not_send'));
 		        return redirect()->back()->withFlashMessage($message);
             }

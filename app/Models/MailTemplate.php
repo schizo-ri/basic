@@ -73,8 +73,7 @@ class MailTemplate extends Model
 	{
 		$mail_text = $mail_template->mailText;
 		$template_text_header = array();
-		Log::info( "mail_text: " );
-		Log::info( $mail_text );
+
 		if( $mail_text ) {
 			$convert_to_array = explode(';', $mail_text->text_header);
 			for($i=0; $i <= count($convert_to_array ); $i++){
@@ -86,7 +85,7 @@ class MailTemplate extends Model
 				}
 			}
 		}
-		Log::info( $template_text_header );
+
 		return $template_text_header;
 	}
 

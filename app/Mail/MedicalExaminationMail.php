@@ -57,8 +57,10 @@ class MedicalExaminationMail extends Mailable
         $interval = $date1->diff($date2); 
         $days = $interval->format('%a');
         
+        $subject = __('basic.medical_examination') . ' - ' . $this->employee->first_name . ' ' .  $this->employee->last_name;
+
         return $this->view('emails.employees.medical_examination')
-                    ->subject( __('basic.medical_examination') . ' - ' . $this->employee->first_name . ' ' .  $this->employee->last_name )
+                    ->subject( $subject )
                     ->with([
                         'employee' => $this->employee,
                         'days' => $days,

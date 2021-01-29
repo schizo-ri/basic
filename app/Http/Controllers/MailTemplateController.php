@@ -32,7 +32,7 @@ class MailTemplateController extends Controller
     public function index()
     {
 
-        $mail_templates = MailTemplate::get();
+        $mail_templates = MailTemplate::orderBy('name','ASC')->get();
         $permission_dep = DashboardController::getDepartmentPermission();
 
         return view('Centaur::mail_templates.index', ['mail_templates' => $mail_templates,'permission_dep' => $permission_dep ]);
@@ -53,7 +53,7 @@ class MailTemplateController extends Controller
         if(file_exists($path)){
             $docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
         }
-
+        
         return view('Centaur::mail_templates.create', ['elements' => $elements, 'child_elements' => $child_elements,'docs' => $docs]);
     }
 

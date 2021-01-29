@@ -51,8 +51,6 @@ class AnniversaryCommand extends Command
         $employees = Employee::employeesAnniversary( $datum );
         
         if(count($employees) > 0) {
-            Log::info('godišnjica danas: ');
-            Log::info($employees);
             foreach ($employees as $employee) {
                 $date1 = new DateTime($employee->reg_date); 
                 $interval = $date1->diff($datum); 
@@ -74,8 +72,6 @@ class AnniversaryCommand extends Command
 		
         $employees = Employee::employeesAnniversary( $datum2 );
         if(count($employees) > 0) {
-            Log::info('godišnjica za 5 dana: ');
-            Log::info($employees);
             foreach ($employees as $employee) {
                 $date1 = new DateTime($employee->reg_date); 
                 $interval = $date1->diff($datum2); 

@@ -9,6 +9,7 @@ use App\Models\Instruction;
 use App\Models\Department;
 use App\Mail\IstructionMail;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ErrorMail;
 use Sentinel;
 
 class InstructionController extends Controller
@@ -31,7 +32,7 @@ class InstructionController extends Controller
     public function index()
     {
         $instructions = Instruction::orderBy('title','ASC')->get();
-
+       
         $permission_dep = DashboardController::getDepartmentPermission();
 
         return view('Centaur::instructions.index', ['instructions' => $instructions,'permission_dep' => $permission_dep]);
@@ -41,14 +42,14 @@ class InstructionController extends Controller
     {
         $employee = Sentinel::getUser()->employee;
         if ( $employee ) {
-            $employee_departments = $employee->employeesDepartment( $employee );
+            $employee_departments = $employee->employeesDepartment();
         } else {
             $employee_departments = array();
         }
-
+       
         $permission_dep = DashboardController::getDepartmentPermission();
         $instructions = Instruction::orderBy('title','ASC')->where('active',1)->get();
-      
+     
         return view('Centaur::radne_upute', ['instructions' => $instructions,'permission_dep' => $permission_dep,'employee_departments' => $employee_departments]);
     }
     
@@ -88,14 +89,18 @@ class InstructionController extends Controller
         //    array_push( $prima, Department::allDepartmentsEmployeesEmail( $department_id ));
         }
         
-      /*   try { */
+        try {
             foreach (array_unique($send_to) as $send_to_mail) {
                 Mail::to($send_to_mail)->send(new IstructionMail($instruction)); 
             }                    
-      /*   } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
             $message = session()->flash('success',  __('emailing.not_send'));
             return redirect()->back()->withFlashMessage($message);
-        } */
+        }
 
         session()->flash('success',  __('ctrl.data_save') .' ' . __('ctrl.sent_message') );
         return redirect()->back();

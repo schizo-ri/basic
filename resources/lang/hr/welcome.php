@@ -19,6 +19,10 @@ return [
 	'hello' 			=> 'Pozdrav',
 	'logged' 			=> 'Prijavljen si.',
 	'admin_panel' 		=> 'Upravljačka ploča',
+	'get_started' 		=> 'Započni',
+    'use_mail' 		    => 'Upotrijebite svoj e-mail i lozinku za prijavu',
+	'agree' 			=> 'Prijavom se slažete s Intranet',
+	'terms_conditions'  => 'uvjetima i odredbama'
 ];
 
 ?>

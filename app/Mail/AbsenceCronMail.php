@@ -61,7 +61,12 @@ class AbsenceCronMail extends Mailable
 
         foreach($absences as $absence){			
             $begin = new DateTime($absence->start_date);
-            $end = new DateTime($absence->end_date);
+            if( ! $absence->end_date ) {
+                $end = new DateTime( date_format($datum,'Y-m-d'));
+            } else {
+                $end = new DateTime($absence->end_date);
+            }
+            
             $end->setTime(0,0,1);
             $interval = DateInterval::createFromDateString('1 day');
             $period = new DatePeriod($begin, $interval, $end);

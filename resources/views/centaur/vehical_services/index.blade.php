@@ -13,24 +13,34 @@
 					<i class="fas fa-plus"></i>
 				</a>
 			@endif
-			<select id="filter_car" class="select_filter filter_fuels" >
-				<option value="all">@lang('basic.all_cars')</option>
-				@foreach ($cars as $car)
-					<option value="{{ $car->registration }}">{{ $car->registration }}</option>
-				@endforeach
-			</select>
-			<select id="filter_month" class="select_filter filter_fuels" >
-				<option value="all">@lang('basic.all_years')</option>
-				@foreach ($dates as $date)
-					<option value="{{ $date }}">{{ $date }}</option>
-				@endforeach
-			</select>
+			<div class="div_select2">
+				<select id="filter_car" class="select_filter filter_fuels" >
+					<option value="all">@lang('basic.all_cars')</option>
+					@foreach ($cars as $car)
+						<option value="{{ $car->id }}">{{ $car->registration }}</option>
+					@endforeach
+				</select>
+			</div>
+			<div class="div_select2">
+				<select id="filter_month" class="select_filter filter_fuels" >
+					<option value="all">@lang('basic.all_years')</option>
+					@foreach ($dates as $date)
+						<option value="{{ $date }}"  {!! $date == date('Y') ? 'selected' : '' !!}>{{ $date }}</option>
+					@endforeach
+				</select>
+			</div>
+			<span class="show_button_upload" title="Upload"><i class="fas fa-upload"></i></span>
+			<form class="upload_file" action="{{ action('VehicalServiceController@importService') }}" method="POST" enctype="multipart/form-data">
+				<button class="btn-new">Upload</button>
+				<input type="file" name="file" required />
+				@csrf
+			</form>
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="table-responsive">
 			@if (count($vehicalServices) > 0)
-				<table id="table_id" class="display table table-hover sort_1_desc">
+				<table id="table_id" class="display table table-hover sort_0_desc">
 					<thead>
 						<tr>
 							<th class="sort_date">@lang('basic.date')</th>
@@ -72,12 +82,4 @@
 			@endif
 		</div>
 	</main>
-	<script>
-		$(function(){
-			$.getScript( '/../js/filter_table.js')
-			$.getScript( '/../js/filter_dropdown.js');
-			$.getScript( '/../js/open_modal.js');
-			 $.getScript( '/../restfulizer.js');
-		});
-	</script>
 @stop

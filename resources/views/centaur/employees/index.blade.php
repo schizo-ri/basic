@@ -12,10 +12,12 @@
 					<i class="fas fa-plus"></i>
 				</a>
 			@endif
-			<select id="filter_types" class="select_filter filter_checkout" >
-				<option value="checkin" selected>Prijavljeni</option>
-				<option value="checkout"  >Odjavljeni</option>
-			</select>
+			<div class="div_select2">
+				<select id="filter_types" class="select_filter filter_checkout" >
+					<option value="checkin" selected>Prijavljeni</option>
+					<option value="checkout"  >Odjavljeni</option>
+				</select>
+			</div>
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

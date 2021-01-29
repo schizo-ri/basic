@@ -17,6 +17,7 @@ use App\Models\WorkRecord;
 use App\Mail\CarServiceMail;
 use App\Mail\TravelCreate;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ErrorMail;
 use Sentinel;
 use DateTime;
 use Log;
@@ -62,7 +63,6 @@ class LoccoController extends Controller
              $employees = Employee::where('id', Sentinel::getUser()->employee->id )->get();
         }
        
-
         $reg = null;
         if( $request->get('reg')) {
             $reg = $request->get('reg');
@@ -108,7 +108,7 @@ class LoccoController extends Controller
 			'travel_id'      => $request['travel_id'] ? $request['travel_id'] : null,
 			'employee_id'    => $request['employee_id'],
 			'date'  	     => $request['date'],
-            'end_date'  	 => $request['end_date'] ? $request['end_date'] : null,
+            'end_date'  	 => $request['end_date'] ? date('Y-m-d H:i', strtotime($request['end_date'])) : null,
             'starting_point' => $request['starting_point'],
 			'destination'    => $request['destination'],
 			'start_km'  	 => $request['start_km'],
@@ -181,11 +181,18 @@ class LoccoController extends Controller
                         }
                     }
                 } catch (\Throwable $th) {
+                    $email = 'jelena.juras@duplico.hr';
+                    $url = $_SERVER['REQUEST_URI'];
+                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
                     session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			        return redirect()->back();
                 }
             } */
         /*     } catch (\Throwable $th) {
+             $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
             session()->flash('error',  __('ctrl.locco_error'));
             return redirect()->back();
         } */
@@ -197,16 +204,20 @@ class LoccoController extends Controller
 			} else {
                 $send_to = EmailingController::sendTo('loccos','create');
                
-                /* try { */
+                try {
                     foreach(array_unique($send_to) as $send_to_mail) {
                         if( $send_to_mail != null & $send_to_mail != '' ) {
                             Mail::to($send_to_mail)->send(new CarServiceMail($locco)); // mailovi upisani u mailing 
                         }
                     }
-              /*   } catch (\Throwable $th) {
+                } catch (\Throwable $th) {
+                    $email = 'jelena.juras@duplico.hr';
+                    $url = $_SERVER['REQUEST_URI'];
+                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+                    
                     session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			        return redirect()->back();
-                } */
+                }
                 
             }
         }
@@ -299,7 +310,7 @@ class LoccoController extends Controller
 			'travel_id'     => $request['travel_id'] ? $request['travel_id'] : null,
 			'employee_id'   => $request['employee_id'],
 			'date'  	    => $request['date'],
-            'end_date'  	=> $request['end_date'] ? $request['end_date'] : null,
+            'end_date'  	 => $request['end_date'] ? date('Y-m-d H:i', strtotime($request['end_date'])) : null,
             'starting_point'=> $request['starting_point'],
 			'destination'   => $request['destination'],
 			'start_km'  	=> $request['start_km'],
@@ -407,6 +418,7 @@ class LoccoController extends Controller
         }
 
         session()->flash('success',  __('ctrl.data_edit') .  ' ' . $message );
+        
 		return redirect()->back();
     }
 

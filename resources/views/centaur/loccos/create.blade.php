@@ -172,8 +172,10 @@
 		
 			var StartDate = new Date(start_date);
 			var EndDate = new Date(end_date);
-
-			if(EndDate != 'Invalid Date' &&  EndDate < StartDate) {
+			
+			if( start_date == 'Invalid Date') {
+				console.log( 'Invalid Date');
+			} else if(EndDate != 'Invalid Date' && EndDate < StartDate) {
 				$('.days_request').text('Nemoguće spremiti vožnju. Završni datum / vrijeme ne može biti prije početnog');
 				$('.days_request').show();
 				$('.btn-submit').hide();

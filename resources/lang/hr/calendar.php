@@ -5,7 +5,7 @@ return [
     'your_agenda' 	=> 'Tvoj dnevni raspored',
     'events'        => 'Događaji',
     'event'         => 'Događaj',
-    'task'         => 'Zadatak',
+    'task'          => 'Zadatak',
     'tasks'         => 'Zadaci',
     'add_event'     => 'Dodaj događaj',
     'edit_event'    => 'Ispravi događaj',
@@ -45,12 +45,12 @@ return [
     'friday1'		=> 'pet',
     'saturday1'		=> 'sub',
     'sunday1'		=> 'ned',
-    'add_task'		    => 'Dodajte zadatak',
-    'edit_task'		    => 'Ispravi zadatak',
+    'add_task'		=> 'Dodajte zadatak',
+    'edit_task'		=> 'Ispravi zadatak',
     'create_your_event'	=> 'Kreirajte svoj događaj',
     'save_any_task'	    => 'Spremite zadatak kako ga ne biste propustili',
-    'week'	    => 'Tjedan',
-    'wk'	    => 'tj',
+    'week'	        => 'Tjedan',
+    'wk'	        => 'tj',
     
 ];
 ?>

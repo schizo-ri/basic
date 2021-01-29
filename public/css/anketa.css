@@ -29,6 +29,8 @@ form {
 	color:green;
 	font-size: 20px;
 	font-weight:bold;
+	-moz-border-radius: 5px;
+    -webkit-border-radius:5px;
 	border-radius: 5px;
 	display:block;
 	float:right;
@@ -75,6 +77,8 @@ a>.fa-edit  {
 
 .date-own {
 	padding: 5px;
+	-moz-border-radius: 5px;
+    -webkit-border-radius:5px;
 	border-radius:5px;
 	margin-left:10px;
 }
@@ -364,8 +368,6 @@ summary {
 
 .tbl_ocjene tbody  tr td:not(.question_description ){
 	border-bottom: 1px solid #ccc;
-	
-	
 }
 
 .tbl_ocjene tfoot  tr td{
@@ -375,6 +377,8 @@ summary {
 }
 
 .target, .comment, .rating {
+	-moz-border-radius: 5px;
+    -webkit-border-radius:5px;
 	border-radius:5px;
 	padding: 2px 0;
 }

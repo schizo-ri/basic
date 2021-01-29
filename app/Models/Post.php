@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Sentinel;
 
 class Post extends Model
 {	
@@ -104,7 +105,6 @@ class Post extends Model
 	
 	public static function PostToEmployee($employee)
 	{
-	
 		$employee_work = $employee->work;
 		$employee_department = $employee_work->department;
 			
@@ -134,4 +134,27 @@ class Post extends Model
 			
 		return $posts;
 	}	
+	
+	public static function countComment_all()
+	{
+		$comment_count = 0;
+		
+		if( Sentinel::getUser() ) {
+			$employee = Sentinel::getUser()->employee;
+			if( $employee ){
+				if($employee->work) {
+					$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->orWhere('to_department_id',$employee->work->department->id)->get();
+				} else {
+					$posts = Post::where('employee_id', $employee->id)->orWhere('to_employee_id', $employee->id)->get();
+	
+				}
+				foreach($posts as $post) {
+					$count = $post->comments->where('to_employee_id', $employee->id)->where('status',0)->count();
+					$comment_count += $count;
+				}
+			} 
+	
+		}
+		return $comment_count;
+	}
 }

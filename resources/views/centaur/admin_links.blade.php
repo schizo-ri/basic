@@ -64,6 +64,11 @@
                     <a href="{{ route('afterhours.index') }}" class="line_height_45 admin_link {{ Request::is('afterhours*') ? 'active_admin' : '' }}" id="afterhours">@lang('basic.afterhours')</a>
                 </li>
             @endif
+            @if(in_array('Dnevnik', $moduli) && Sentinel::getUser()->hasAccess(["work_diaries.view"]))
+                <li class="first_group abs_links"><span class="space" ></span>
+                    <a href="{{ route('work_diaries.index') }}" class="line_height_45 admin_link {{ Request::is('work_diaries*') ? 'active_admin' : '' }}" id="work_diaries">@lang('basic.work_diary')</a>
+                </li>
+            @endif
             @if(in_array('Privremeni', $moduli) && Sentinel::getUser()->hasAccess(["temporary_employee_requests.view"]))
                 <li class="first_group abs_links"><span class="space" ></span>
                     <a href="{{ route('temporary_employee_requests.index') }}" class="line_height_45 admin_link {{ Request::is('temporary_employee_requests*') ? 'active_admin' : '' }}" id="temporary_employee_requests">@lang('basic.temporary_employee_requests')</a>
@@ -156,6 +161,11 @@
             @if(Sentinel::getUser()->hasAccess(["absence_types.view"]))
                 <li class="first_group basic_links"><span class="space" ></span>
                     <a href="{{ route('absence_types.index') }}"  class="line_height_45 admin_link {{ Request::is('absence_types*') ? 'active_admin' : '' }}" id="absence_types">@lang('absence.abs_types')</a>
+                </li>
+            @endif
+            @if(Sentinel::getUser()->hasAccess(["work_tasks.view"]))
+                <li class="first_group basic_links"><span class="space" ></span>
+                    <a href="{{ route('work_tasks.index') }}"  class="line_height_45 admin_link {{ Request::is('work_tasks*') ? 'active_admin' : '' }}" id="work_tasks">@lang('basic.work_tasks')</a>
                 </li>
             @endif
             @if(in_array('Oglasnik', $moduli) && Sentinel::getUser()->hasAccess(["ad_categories.view"]))

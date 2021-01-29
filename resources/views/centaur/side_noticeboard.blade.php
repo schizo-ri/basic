@@ -2,7 +2,6 @@
     use App\Http\Controllers\DashboardController;
     use App\Http\Controllers\NoticeController;
 	
-    $permission_dep = DashboardController::getDepartmentPermission();
     $notices_user = NoticeController::getNoticeDashboard();
 @endphp
 <section class="col-12 float_left noticeboard">

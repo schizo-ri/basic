@@ -18,6 +18,9 @@ Route::get('/', function () {
     }
 });
 
+// Layout 
+Route::get('layout', ['as' => 'layout', 'uses' => 'LayoutController@index']);
+
 // Authorization
 Route::get('login', 'Auth\SessionController@getLogin')->name('auth.login.form');
 Route::post('login', 'Auth\SessionController@postLogin')->name('auth.login.attempt');
@@ -67,6 +70,15 @@ Route::resource('works', 'WorkController');
 //WorkRecords
 Route::resource('work_records', 'WorkRecordController');
 Route::get('work_records_table', ['as' => 'work_records_table', 'uses' => 'WorkRecordController@workRecordsTable']);
+
+//WorkTask
+Route::resource('work_tasks', 'WorkTaskController');
+
+//WorkDiary
+Route::resource('work_diaries', 'WorkDiaryController');
+
+//WorkDiaryItem
+Route::resource('work_diary_items', 'WorkDiaryItemController');
 
 // Employee
 Route::resource('employees', 'EmployeeController');
@@ -181,6 +193,7 @@ Route::resource('cars', 'CarController');
 
 // Fuel
 Route::resource('fuels', 'FuelController');
+Route::post('importFuel', 'FuelController@importFuel')->name('importFuel'); 
 
 // Locco
 Route::resource('loccos', 'LoccoController');
@@ -199,6 +212,7 @@ Route::resource('settings', 'SettingController');
 
 // VehicalService
 Route::resource('vehical_services', 'VehicalServiceController');
+Route::post('importService', 'VehicalServiceController@importService')->name('importService'); 
 
 // Template
 Route::resource('templates', 'TemplateController');
@@ -208,13 +222,12 @@ Route::resource('day_offs', 'DayOffController');
 
 // Dashboard 
 Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
+Route::get('change_lang/{lang}', ['as' => 'change_lang', 'uses' => 'DashboardController@change_lang']);
+
 /*
 Route::get('dashboard', function () {
     return view('Centaur::dashboard');
 })->name('dashboard');*/
-
-// Layout 
-Route::get('layout', ['as' => 'layout', 'uses' => 'LayoutController@index']);
 
 // TravelOrder
 Route::resource('travel_orders', 'TravelOrderController');
@@ -222,6 +235,7 @@ Route::get('close_travel', ['as' => 'close_travel', 'uses' => 'TravelOrderContro
 Route::get('travelShow/{id}', ['as' => 'travelShow', 'uses' => 'TravelOrderController@travelShow']);
 Route::post('travelFilter', ['as' => 'travelFilter', 'uses' => 'TravelOrderController@travelFilter']);
 Route::get('pdfTravel/{id}',array('as'=>'pdfTravel','uses'=>'TravelOrderController@pdfTravel'));
+
 
 //TravelExpenses
 Route::resource('travel_expenses', 'TravelExpensesController');
@@ -238,6 +252,7 @@ Route::resource('employee_terminations', 'EmployeeTerminationController');
 
 // Project
 Route::resource('projects', 'ProjectController');
+Route::post('importProject', 'ProjectController@importProject')->name('importProject'); 
 
 // Customer
 Route::resource('customers', 'CustomerController');
@@ -362,3 +377,5 @@ Route::get('/down', function(){
 });
 
 Route::get('contacts', ['as' => 'contacts', 'uses' => 'EmployeeController@contacts']);
+
+Route::resource('android', 'ConnectController');

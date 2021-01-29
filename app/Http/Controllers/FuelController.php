@@ -9,7 +9,11 @@ use App\Models\Fuel;
 use App\Models\Car;
 use App\Models\Locco;
 use Sentinel;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\FuelImport;
 use DateTime;
+use App\Mail\ErrorMail;
+use Illuminate\Support\Facades\Mail;
 
 class FuelController extends Controller
 {
@@ -28,22 +32,40 @@ class FuelController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $permission_dep = DashboardController::getDepartmentPermission();
    
-        $cars = Car::get('registration');
-
-        $fuels = Fuel::get();
-
+        /* $cars = Car::get('registration'); */
+        $cars = Car::orderBy('registration', 'ASC')->get();
+        $fuels = Fuel::orderBy('date','DESC')->get();
+        $prev_fuels =  $fuels;
         $dates = array();
         foreach (array_keys($fuels->groupBy('date')->toArray()) as $date) {
-            array_push($dates, date('m.Y',strtotime($date)) );
+            array_push($dates, date('Y-m',strtotime($date)) );
         }
-      
         $dates = array_unique($dates);
-     
-        return view('Centaur::fuels.index', ['fuels' => $fuels,'cars' => $cars, 'dates' => array_unique($dates), 'permission_dep' => $permission_dep]);
+        rsort($dates);
+
+        if(isset( $request['date'] )  ) {
+            $date = $request['date'];
+        } else {
+            $date = date('Y-m');
+        }
+        if(  $date != null &&  $date != 'null') {
+            $fuels = $fuels->filter(function ($fuel, $key) use ($date) {
+                return date('Y-m',strtotime( $fuel->date)) == $date /* && $locco->car_id == $id */;
+            });
+        }
+
+        if( isset( $request['car']) && $request['car'] != null && $request['car'] != 'null') {
+            $car_id =  $request['car'];
+            $fuels = $fuels->filter(function ($fuel, $key) use ( $car_id ) {
+                return $fuel->car_id == $car_id;
+            });
+        } 
+
+        return view('Centaur::fuels.index', ['fuels' => $fuels,'prev_fuels' => $prev_fuels,'cars' => $cars, 'dates' => array_unique($dates), 'permission_dep' => $permission_dep]);
     
     }
 
@@ -161,5 +183,23 @@ class FuelController extends Controller
         session()->flash('success',__('ctrl.data_delete'));
 		
         return redirect()->back();
+    }
+
+    public function importFuel ()
+    {
+        try {
+            Excel::import(new FuelImport, request()->file('file'));
+            
+            session()->flash('success',  __('ctrl.uploaded'));
+            return redirect()->back();
+
+        } catch (Throwable $th) {
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
+            session()->flash('error',  __('ctrl.file_error'));
+            return redirect()->back();
+        }  
     }
 }

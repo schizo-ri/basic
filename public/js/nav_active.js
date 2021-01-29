@@ -1,6 +1,6 @@
 var prev_url = location.href;
 var url_modul;
-
+var date;
 
 /* $(function() {
     var body_width = $('body').width();
@@ -154,3 +154,32 @@ if(body_width < 450) {
         }
     });
 }
+
+$('body').on($.modal.OPEN, function(event, modal) {
+    if( $('input[type=datetime-local]').length > 0 ) {
+        $('input[type=datetime-local]').on('change',function(){
+            date = new Date( $(this).val());
+
+            if( date == 'Invalid Date') {
+                $( '<div class="error_date danger">Neispravan unos datuma. Molim provjeri!</div>' ).modal();
+                $('.btn-submit').attr('disabled', 'disabled');
+            } else {
+                $('.btn-submit').attr('disabled', false);
+                $('.error_date').remove();
+            }
+        });
+    }
+    if( $('input[type=date]').length > 0 ) {
+        $('input[type=date]').on('change',function(){
+            date = new Date( $(this).val());
+
+            if( date == 'Invalid Date') {
+                $( '<div class="error_date danger">Neispravan unos datuma. Molim provjeriti</div>' ).modal();
+                $('.btn-submit').attr('disabled', 'disabled');
+            } else {
+                $('.btn-submit').attr('disabled', false);
+                $('.error_date').remove();
+            }
+        });
+    }
+});

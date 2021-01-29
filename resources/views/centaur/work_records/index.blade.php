@@ -14,11 +14,13 @@
 				</a>
 			@endif
 		{{-- 	<a class="change_view2" href="{{ route('work_records.index') }}" ></a> --}}
-			<select class="change_month select_filter">
-				@foreach ($months as $month)
-					<option value="{{ $month }}" {!! $month ==  date('Y-m') ? 'selected' : ''  !!}>{{ date('Y m',strtotime($month))}}</option>
-				@endforeach
-			</select>
+			<div class="div_select2">
+				<select class="change_month select_filter js-example-basic-single" name="state" >
+					@foreach ($months as $month)
+						<option value="{{ $month }}" {!! $month ==  date('Y-m') ? 'selected' : ''  !!}>{{ date('Y m',strtotime($month))}}</option>
+					@endforeach
+				</select>
+			</div>
 		{{-- 	<select class="change_employee_work select_filter ">
 				<option value="" selected>{{ __('basic.view_all')}} </option>
 				@foreach ($employees as $employee)

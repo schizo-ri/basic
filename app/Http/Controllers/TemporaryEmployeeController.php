@@ -10,6 +10,7 @@ use App\User;
 use App\Models\Work;
 use App\Models\Employee;
 use App\Mail\TemporaryEmployeeMail;
+use App\Mail\ErrorMail;
 use Illuminate\Support\Facades\Mail;
 
 class TemporaryEmployeeController extends Controller
@@ -97,6 +98,10 @@ class TemporaryEmployeeController extends Controller
                 Mail::to($send_to_mail)->send(new TemporaryEmployeeMail($temporaryEmployee)); 
             }
         } catch (\Throwable $th) {
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
             session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			return redirect()->back();
         }

@@ -65,7 +65,7 @@
 		@endif --}}
 		<div class="form-group datum date1 float_l {{ ($errors->has('start_date')) ? 'has-error' : '' }}" >
 			<label>@lang('absence.start_date')</label>
-			<input name="start_date" id="start_date" class="form-control" type="date" value="{{ $absence->start_date }}" required  {!! $absence->absence->mark == 'BOL' ? 'disabled' : '' !!} >
+			<input name="start_date" id="start_date" class="form-control" type="date" value="{{ $absence->start_date }}" required  {!! $absence->absence->mark == 'BOL' ? 'readonly' : '' !!} >
 			{!! ($errors->has('start_date') ? $errors->first('start_date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group datum date2 float_r {{ ($errors->has('end_date')) ? 'has-error' : '' }}" >
@@ -138,5 +138,6 @@ $( document ).ready(function() {
 		var end_date = $( "#end_date" );
 		end_date.val(start_date);
 	});
+	$.getScript('/../js/absence_create.js');
 });
 </script>

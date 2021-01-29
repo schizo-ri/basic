@@ -29,6 +29,7 @@ $(function(){
         
         // ako ima shortcut - href edit
         try {
+            url_location = location.href;
             $.get( location.origin+"/shortcut_exist", {'url': url_location }, function( id ) {
                 if(id != null && id != '') {
                     $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
@@ -42,7 +43,9 @@ $(function(){
         } catch (error) {
             //
         }
-       
+    }
+    if( $('.select_filter').not('.sort').length > 0 ) {
+        selectSearch ();
     }
 });
 
@@ -62,12 +65,10 @@ if($('.index_admin').length > 0 ) {
         title = click_element.text();
         $("title").text( title ); 
         url = $(this).attr('href');
-        
         // ako ima shortcut - href edit
         try {
-            $.get( "shortcut_exist", {'url': url }, function( id ) {
-                console.log( "id: " + id );
-                if(id != null && id != '') {
+            $.get( location.origin+"/shortcut_exist", {'url': url }, function( id ) {
+                if(id != null && id != '' && id) {
                     $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
                     $('.shortcut_text').text('Ispravi prečac'); 
                 } else {
@@ -91,10 +92,20 @@ if($('.index_admin').length > 0 ) {
                 var msg = "Sorry but there was an error: ";
                 $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
             }
+            if ($('.show_button_upload').length > 0 )  {
+                $('.show_button_upload').on('click', function(){
+                    $('form.upload_file').modal();
+                    $('form.upload_file').show();
+                });
+            }
             $.getScript( '/../restfulizer.js');
             $.getScript( '/../js/filter_dropdown.js');
             $.getScript( '/../js/open_modal.js');
             $.getScript( '/../js/datatables.js');
+            $.getScript('/../select2-develop/dist/js/select2.min.js');
+            if( $('.select_filter').not('.sort').length > 0 ) {
+                selectSearch ();
+            }
             if (url.includes('/work_records')) {
                 $.getScript( '/../js/work_records.js');
             } else if(url.includes('/loccos')) {
@@ -111,10 +122,20 @@ if($('.index_admin').length > 0 ) {
                             var msg = "Sorry but there was an error: ";
                             $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
                         }
+                        if ($('.show_button_upload').length > 0 )  {
+                            $('.show_button_upload').on('click', function(){
+                                $('form.upload_file').modal();
+                                $('form.upload_file').show();
+                            });
+                        }
                         $.getScript( '/../restfulizer.js');
                         $.getScript( '/../js/filter_dropdown.js');
                         $.getScript( '/../js/datatables.js');
                         $.getScript( '/../js/open_modal.js');
+                        $.getScript('/../select2-develop/dist/js/select2.min.js');
+                        if( $('.select_filter').not('.sort').length > 0 ) {
+                            selectSearch ();
+                        }
                     });
                     return false;
                 });
@@ -133,4 +154,11 @@ if($('.index_admin').length > 0 ) {
         });
         return false;
     });
+   
+    if ($('.show_button_upload').length > 0 )  {
+        $('.show_button_upload').on('click', function(){
+            $('form.upload_file').modal();
+            $('form.upload_file').show();
+        });
+    }
 }

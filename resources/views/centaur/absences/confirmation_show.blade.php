@@ -59,10 +59,12 @@
 				employee_id =  $('#filter_employees').val();
 				url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
 				token = $( this ).attr('data-token');
+				id = $('input[name=id]').val();
 
-				/* console.log(url);
+				console.log(url);
 				console.log(form_data);
-				console.log(url_load); */
+				console.log(url_load);
+				/* console.log(type); */
 				$.ajaxSetup({
 					headers: {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -76,10 +78,19 @@
 						$('body').prepend('<div id="loader"></div>');
 					},
 					success: function( response ) {
-						$('tbody').load(url_load + " tbody>tr",function(){
+						$('tr#requestAbs_'+id).load(url_load + " tr#requestAbs_"+id+" td",function(){
+							if( type == 3) {
+								$('.absence_end_date').hide();
+								$('.absence_time').show();
+							} else if( type != 'all' &&  type != 3) {
+								$('.absence_end_date').show();
+								$('.absence_time').hide();
+							}
+
 							$('#loader').remove();
 							$.modal.close();
 							$('<div class="modal"><div class="modal-header">'+response+'</div></div>').appendTo('body').modal();
+
 						});
 					}, 
 					error: function(xhr,textStatus,thrownError) {

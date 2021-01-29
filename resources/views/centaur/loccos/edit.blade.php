@@ -48,8 +48,8 @@
 			</div>
 			<div class="form-group {{ ($errors->has('start_km'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.start_km')</label>
-				<input class="form-control" name="start_km" type="{!! $locco->car->private_car == 1 ? 'text' : 'hidden' !!}" id="start_km" required value="{{ $locco->start_km }}" />	
-				<p id="start_km_text" style="display:{!! $locco->car->private_car != 1 ? 'block' : 'none' !!}">{{ $locco->start_km }}</p>
+				<input class="form-control" name="start_km" type="text" id="start_km" required value="{{ $locco->start_km }}" />	
+				
 				{!! ($errors->has('start_km') ? $errors->first('start_km', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('end_km'))  ? 'has-error' : '' }}">
@@ -159,7 +159,8 @@
 		$( "#date" ).on('change',function() {
 			start_date = $( this ).val();
 			end_date = $( "#end_date" ).val();
-		
+			is_date = new Date(start_date);
+			console.log(is_date);
 			var StartDate = new Date(start_date);
 			var EndDate = new Date(end_date);
 

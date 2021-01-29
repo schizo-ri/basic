@@ -17,6 +17,8 @@ a, button {
     width: 100%;
     background: #ffffff;
     box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15); 
+    -moz-border-radius: 5px;
+    -webkit-border-radius:5px;
     border-radius: 5px;
     overflow: auto;
 }
@@ -177,6 +179,7 @@ ul.admin_pages li >span.image_template{
     display: flex;
     justify-content: center;
     align-items: center;
+    display: none;
 }
 #admin_page table span.role {
     display: none;
@@ -255,6 +258,7 @@ ul.admin_pages li >span.image_template{
     .index_main #admin_page header {
         padding: 10px;
         height: auto;
+        z-index: 1;
     }
     .admin_main .index_table_filter input {
         height: 30px;
@@ -273,19 +277,35 @@ ul.admin_pages li >span.image_template{
     }
 }
 
+@media (max-width: 768px) {
+    #admin_page .index_table_filter {
+        padding: 0;
+    }
+}
 @media (max-width: 450px) {
+    #admin_page .index_table_filter {
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
     #admin_page {
         height: 100%;
         overflow: auto;
     }
     .index_page aside > .admin_panel, .index_page .index_main.admin_main {
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
         border-radius: 0;
     }
     .admin_main .link_back {
         padding: 10px;
         top: 20px;
+        left: 10px;
         padding: 0;
         margin: 0;
+        z-index: 2;
+        height: 30px;
     }
     ul.admin_pages {
         padding: 0;
@@ -337,6 +357,8 @@ form {
 	color:green;
 	font-size: 20px;
 	font-weight:bold;
+	-moz-border-radius: 5px;
+    -webkit-border-radius:5px;
 	border-radius: 5px;
 	display:block;
 	float:right;
@@ -383,6 +405,8 @@ a>.fa-edit  {
 
 .date-own {
 	padding: 5px;
+	-moz-border-radius: 5px;
+    -webkit-border-radius:5px;
 	border-radius:5px;
 	margin-left:10px;
 }
@@ -672,8 +696,6 @@ summary {
 
 .tbl_ocjene tbody  tr td:not(.question_description ){
 	border-bottom: 1px solid #ccc;
-	
-	
 }
 
 .tbl_ocjene tfoot  tr td{
@@ -683,6 +705,8 @@ summary {
 }
 
 .target, .comment, .rating {
+	-moz-border-radius: 5px;
+    -webkit-border-radius:5px;
 	border-radius:5px;
 	padding: 2px 0;
 }
@@ -1021,6 +1045,15 @@ summary {
 button {
     cursor: pointer;
     
+}
+
+pre {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.hidden {
+    display: none;
 }
 div#calendar{
     padding: 0 30px;
@@ -2241,7 +2274,17 @@ div#calendar ul li.active_date {
     height: 100%;
     overflow: auto;
 }
+.task_name {
+    font-size: 12px; 
+}
 
+.show_hidden {
+    cursor: pointer;
+    margin-right: 20px;
+}
+.show_hidden svg, .show_hidden i{
+    margin-left: 20px;
+}
 .index_page aside {
     height: 100%;
     margin: 0;
@@ -2439,7 +2482,7 @@ main.index_main.locco_create_main>section >main {
 }
 .index_main.admin_main header  {
     height: 78px;
-    padding-left: 60px;
+    padding-left: 30px;
 }
 
 .index_main.main_noticeboard  {
@@ -2512,7 +2555,7 @@ main.index_main.locco_create_main>section >main {
     margin: 0;
     position: relative;
     border-radius: 5px 5px 0 0; 
-    border-bottom: 1px solid #e9ecf3;
+    border: 1px solid #e9ecf3;
     background: #F8FAFF;
 
 }
@@ -2532,6 +2575,7 @@ img.doc_icons {
     height: 100%;
     border-radius: 0 0 5px 5px;
     border:none;
+    box-shadow: none;
     padding: 0 30px;
     line-height: 70px;
     font-weight: normal;
@@ -3239,7 +3283,7 @@ class="select-css"
     font-style: normal;
     font-size: 0.813rem;
     margin-bottom: 7px;
-    color: white;
+    color: black;
 }
 .month_event.week {
     color: black;
@@ -3855,6 +3899,10 @@ footer.ad_footer {
     padding: 10px 0;
 }
 
+.upload_file {
+    display: none;
+}
+
 .modal_campaign .index_table_filter {
     background: #ffffff;
     float: none;
@@ -3871,6 +3919,14 @@ footer.ad_footer {
     display: inline-block;
     margin: 0;
 }
+svg-inline--fa fa-caret-down fa-w-10 {
+    cursor: pointer;
+}
+.svg-inline--fa.fa-globe-americas {
+    width: auto;
+    height: 20px;
+    vertical-align: -5px;
+}
 .main_absence  {
     height: 100%;
 }
@@ -3880,7 +3936,15 @@ footer.ad_footer {
 .modal_campaign .index_table_filter >label input {
     padding-left: 40px;
 }
-.header_ads .index_table_filter .select_filter, .notice_filter .select_filter, .fuel_header .select_filter, .travel_header .select_filter, .work_record_header .select_filter, .main_absence .select_filter, .select_filter.filter_checkout  {
+table ul {
+    list-style: none;
+    padding: 0;
+}
+.diary_header .select_filter {
+    width: 10%;
+}
+
+.select_filter, .select2-selection {
     width: auto;
     height: 38px;
     float: right;
@@ -3894,17 +3958,21 @@ footer.ad_footer {
     outline: none;
     -moz-appearance: none;
     /* -webkit-appearance: none; */
-    /* background: url(../icons/arrow_down1.png) no-repeat; */
-    /* background-position: 98%; */
-    /* appearance: none; */
-    padding-right: 30px;
-    margin-right: -5px;
+    background: url(../icons/arrow_down1.png) no-repeat;
+    background-position: 98%;
+    appearance: none;
+    padding-right: 10px;
     margin-left: 20px;
     cursor: pointer;
     background-color: white;
     border: 1px solid rgba(7, 30, 86, 0.1);
     border-radius: 5px;
 }
+.select2.select2-container {
+
+}
+
+
 .header_ads .index_table_filter .select_filter:hover,
  .notice_filter .select_filter:hover, 
  .fuel_header .select_filter:hover, 
@@ -3923,8 +3991,42 @@ footer.ad_footer {
     width: fit-content;
     
 }
+.select2-container:not(.select2) { 
+    box-shadow: 3px 0 6px rgba(0, 0, 0, 0.15), -3px 0 6px rgba(0, 0, 0, 0.15);
+    margin-left: 0;
+    margin-top: 40px;
+    background: white;
+    z-index: 2;
+  
+}   
 
-.main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years, .main_absence .select_filter.filter_employees, .main_absence .select_filter.filter_approve{
+.select2-results__options{
+    background-color: white;
+    padding: 0 10px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    max-height: 300px;
+    overflow: auto;
+    border-top: 1px solid #ccc;
+}
+.select2-results__option.select2-results__option--selectable {
+    list-style: none;
+    padding: 3px 0;
+    cursor: pointer;
+}
+.select2-results__option.select2-results__option--selectable:hover {
+    background-color: #eee;
+}
+.select2-selection__rendered {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.select2-search__field {
+    border: none;
+    width: 100%;
+}
+.main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years, .main_absence .select_filter.filter_employees, .main_absence .select_filter.filter_approve, input#filter_employees, .select2-selection{
     background-position: 98%;
     background-color: white;
     width: 100%;
@@ -3939,8 +4041,29 @@ footer.ad_footer {
     font-size: 0.75rem;
     color: #606060;
     padding-left: 10px;
-    padding-right: 20px;
+    padding-right: 15px;
     
+}
+.ads_index .div_select2 {
+    margin-right: 15px;
+}
+
+input#filter_employees {
+    background: url(../icons/arrow_down1.png) no-repeat;
+    background-position: 98%;
+    background-color: white;
+    box-shadow: none;
+}
+
+datalist#list_employees {
+    font-size: 12px;
+    line-height: 12px;
+}
+datalist option {
+    line-height: normal;
+    height: 12px;
+    min-height:12px ;
+    max-height: 12px;
 }
 .main_absence .select_filter.filter_types:hover,
 .main_absence .select_filter.filter_years:hover, 
@@ -3955,12 +4078,25 @@ footer.ad_footer {
 .index_table_filter>div {
     position: relative;
     /* height: 100%; */
-    float: left;
+    float: right;
     width: 50%;
     flex: 0 0 50%;
     max-width: 50%;
     padding: 0;
 }
+.index_table_filter div.div_select2, .filtercontainer div.div_select2 {
+    width: auto;
+    min-width: 80px;
+    float: left;
+    /* margin-right: 15px; */
+}
+
+.index_table_filter>div:first-child {
+    float: left;
+    padding-right: 15px;
+}
+
+
 .header_ads .index_table_filter>div>img.img_search, .header_benefits .index_table_filter>div>img.img_search, .header_campaign .index_table_filter>div>img.img_search{
     position: absolute;
     top: 50%;
@@ -3977,13 +4113,9 @@ footer.ad_footer {
 }
 
 .header_ads .add_ads {
- /*   top: 50%;
-    bottom: 50%;
-    position: absolute;
-    transform: translateY(-50%);*/
     right: 0;
     height: 100%;
-    padding: 6px 0 6px 40px;
+    padding: 0 0 0 40px;
     padding-left: 40px;
     line-height: 35px;
     vertical-align: middle;
@@ -4025,8 +4157,10 @@ footer.ad_footer {
     position: relative;
     position: sticky;
     top: 0;
-    z-index: 1;
     padding: 20px;
+}
+.select2-hidden-accessible {
+    display: none;
 }
 .index_page .dataTables_filter  >div {
     height: -webkit-fill-available;
@@ -4067,6 +4201,7 @@ footer.ad_footer {
     float: right;
     margin: 0;
     cursor: pointer;
+    padding: 10px 0;
 } 
 .all_absences.table_absences span.show_button {
     float: right;
@@ -4080,13 +4215,14 @@ footer.ad_footer {
     cursor: pointer;
 }
 
-.index_table_filter span.show_button  {
+.index_table_filter span.show_button, .index_table_filter span.show_button_upload  {
     width: auto;
     height: auto;
     z-index: 2;
     cursor: pointer;
     float: right;
     line-height: 35px;
+    margin-left: 15px;
 }
 .header_benefits .index_table_filter span.show_button, .noticeboard_index .index_table_filter span.show_button, .main_campaign .index_table_filter span.show_button, .all_notices span.show_button {
     display: none;
@@ -4765,32 +4901,40 @@ main.index_main.main_absence >section {
 }
 
 .arrow_left_wh {
-    background: url('../icons/arrow_wh_left.png') no-repeat;
+    background: url('../icons/arrow_wh_left.png') no-repeat 13px 21px;
     width: 13px;
-    height: 21px;
+    height: 100%;
+    min-height: 21px;
+    background-position: center;
     display: inline-block;
     margin-left: 5px;
     vertical-align: middle;
 }
 .curve_arrow_left {
-    background: url('../icons/curve_arrow_left.png') no-repeat;
+    background: url(../icons/curve_arrow_left.png) no-repeat 22px 14px;
     width: 22px;
-    height: 14px;
+    height: 100%;
+    min-height: 14px;
     display: inline-block;
     margin-right: 20px;
     vertical-align: middle;
+    background-position: center;
 }
 .curve_arrow_left_grey {
-    background: url('../icons/curve_arrow_left_grey.png') no-repeat;
+    background: url('../icons/curve_arrow_left_grey.png') no-repeat 22px 14px;
     width: 22px;
-    height: 14px;
+    height: 100%;
+    min-height: 14px;
+    background-position: center;
     display: inline-block;
     vertical-align: middle;
 }
 .curve_arrow_left_blue {
-    background: url('../icons/curve_arrow_left_blue1.png') no-repeat;
+    background: url('../icons/curve_arrow_left_blue1.png') no-repeat 22px 14px;
     width: 22px;
-    height: 14px;
+    height: 100%;
+    min-height: 14px;
+    background-position: center;
     display: inline-block;
     margin-right: 20px;
     vertical-align: middle;
@@ -4804,9 +4948,11 @@ main.index_main.main_absence >section {
     width: auto;
 }
 .arrow_left1 {
-    background: url(../icons/arrow_left.png) no-repeat;
+    background: url(../icons/arrow_left.png) no-repeat 7px 15px;
     width: 7px;
-    height: 15px;
+    height: 100%;
+    min-height: 15px;
+    background-position: center;
     display: inline-block;
     margin-right: 20px;
     float: right;
@@ -5308,7 +5454,9 @@ table.dataTable#index_table tbody td:last-child > a {
 }
 .main_calendar_week table tbody tr td:not(:last-child), .main_calendar_week table thead tr th:not(:last-child) {
     border-right: 1px solid rgba(0, 0, 0, 0.1);
+    z-index: 1;
 }
+
 .main_calendar_week table tbody tr td:first-child, .main_calendar_week table thead th:first-child {
     padding-left: 0;
     text-align: left;
@@ -5380,13 +5528,15 @@ button.show_loccos {
     border: 1px solid rgba(7, 30, 86, 0.1);
     box-sizing: border-box;
     border-radius: 5px;
-    padding: 0;
-    padding-left: 10px;
+   /*  padding: 0;
+    padding-left: 10px; */
     margin: 5px 0;
     font-size: 0.6875rem;
     height: 40px;
-    float: right;
+    /* float: right; */
     cursor: pointer;
+    float: left;
+    padding: 0;
 }
 .index_table_filter .page_link {
     color: #606060;
@@ -5470,6 +5620,7 @@ main.index_main>section.section_evidention {
     margin-left: 0;
     width: 30%;
     padding: 0;
+    float: left;
 }
 
 .not_scheduled {
@@ -5490,7 +5641,7 @@ main.index_main>section.section_evidention {
  .index_table_filter >label.button_container a.add_new svg {
     margin: 0;
 }
-.index_table_filter input:not(.btn-new), #index_table_filter input:not(.btn-new),.all_absences.table_absences #mySearchTbl   {
+.index_table_filter input:not(.btn-new), #index_table_filter input:not(.btn-new):not(#filter_employees),.all_absences.table_absences #mySearchTbl   {
     width: 100%;
     height: 38px;
     border: none;
@@ -6174,6 +6325,10 @@ a.modal_close {
         box-shadow: none;
         font-size: 0.875rem;
     }
+    .index_main header.ad_header {
+        height: 200px;
+    }
+
     .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-year, .pignose-calendar .pignose-calendar-top .pignose-calendar-top-month, .index_page .calender_view .pignose-calendar .pignose-calendar-top .pignose-calendar-top-month {
         font-size: 1.2em;
     }
@@ -6503,9 +6658,7 @@ a.modal_close {
     .dataTables_filter span.show_button {
         display: none;
     }
-    .main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years {
-       /*  margin-right: 10px; */
-    }
+    
     .index_page.posts_index .index_main  {
         display: none;
         height: 100%;
@@ -6590,7 +6743,7 @@ a.modal_close {
     .index_table_filter {
         padding:0 ;
     }
-    .index_page aside:not(.latest_messages, .calendar_aside), .index_page.index_documents {
+    .index_page aside:not(.latest_messages):not(.calendar_aside):not(.admin_aside):not(.index_page.index_documents ){
         display: none;
     }
     .index_main .tabcontent {
@@ -6710,9 +6863,55 @@ a.modal_close {
 }
 
 @media (max-width: 450px) {
+    .index_table_filter >label, #index_table_filter >label {
+        float: left;
+        margin: 0;
+        left: 10px;
+        padding-right: 10px;
+        width: 80%;
+    }
+    .index_table_filter div.div_select2, .filtercontainer div.div_select2 {
+        flex: 0 0 20%;
+        margin: 0;
+    }
+    #admin_page .btn-new, .index_table_filter div.div_select2  {
+        margin-left: 10px;
+        margin-bottom: 5px;
+    }
+    .select_filter, .select2-selection {
+        height: 30px;
+        background: none;
+    }
+    .index_table_filter >label, #index_table_filter >label, .index_table_filter > a.add_new {
+        position: relative;
+        transform: none;
+        display: inline-block;
+        top: auto;
+        margin-bottom: 5px;
+    }
+    .index_table_filter span.show_button {
+        line-height: 30px;
+        margin-right: 10px;
+    }
+    .index_table_filter span.show_button_upload {
+        display: none;
+    }
+    .index_table_filter >label:nth-child(2) {
+        margin-top: 10px;
+    }
     .index_page #index_table_filter.dataTables_filter>label {
         padding: 0;
         left: 0;
+    }
+    .table tbody td span  {
+        padding: 0;
+
+    }
+    .index_main.admin_main header  {
+        padding-left: 60px;
+    }
+    .sequence_links > a, .notice_links > a {
+        font-size: 12px;
     }
     .approve_buttons>div {
         min-width: 25%;
@@ -6726,18 +6925,19 @@ a.modal_close {
         margin-right: 0;
     }
     .index_main main.main_ads {
-        height: calc(100% - 97px);
+        /* height: calc(100% - 97px); */
+        height: auto;
     }
     .header_ads .index_table_filter .select_filter, .notice_filter .select_filter, .fuel_header .select_filter, .travel_header .select_filter, .work_record_header .select_filter, .main_absence .select_filter {
         padding: 0;
         padding-right: 18px;
         height: 30px;
         margin: 0;
+        margin-right: 10px;
     }
     .index_main main.main_benefits {
-        height: auto;
+        height: calc(100% - 45px);
     }
-    
     .index_page.ads_index .index_main .btn-new {
 		width: 30px;
 		height: 30px;
@@ -6778,9 +6978,8 @@ a.modal_close {
     .index_main header.ad_header > img.placeholder_image {
         display:none;
     }
-    .index_table_filter input:not(.btn-new), #index_table_filter input:not(.btn-new),.all_absences.table_absences #mySearchTbl{
+    .index_table_filter input:not(.btn-new), #index_table_filter input:not(.btn-new):not(#filter_employees),.all_absences.table_absences #mySearchTbl{
         height: 30px;
-
     }
     
     main.index_main>section {
@@ -7197,16 +7396,21 @@ a.modal_close {
    
     .index_table_filter>div {
         height: auto;
-        float: none;
+        margin-top:10px ;
+        clear: both;
         width: 100%;
         flex: 0 0 100%;
         max-width: 100%;
         overflow: hidden;
     }
     .header_ads .index_table_filter>div {
-        width: 50%;
-        flex: 0 0 50%;
-        float: left;
+        width: 100%;
+        flex: 0 0 100%;
+        float: none;
+        
+    }
+    .header_ads .index_table_filter>div:first-child {
+        margin-bottom: 10px;
     }
     .header_ads .add_ads {
         padding: 0;
@@ -7232,21 +7436,13 @@ a.modal_close {
         width: 20%;
         max-width: 20%;
     }
-    .index_table_filter >label,
-    #index_table_filter >label, 
-    .index_table_filter > a.add_new {
-        position: relative;
-        transform: none;
-        display: inline-block;
-        top: auto;
+  
+    .diary_header .select_filter {
+        width: 15%;
     }
-    .index_table_filter >label,  #index_table_filter >label{
-        float: left;
-        margin: 0;
-        left: 10px;
-        width: 50%;
+    .select_filter {
+        height: 30px;
     }
-    
     .show_button {
         display: none;
     }
@@ -7602,7 +7798,7 @@ table.dataTable thead th {
 	position: sticky;
 	top: 0;
 	background: white;
-    z-index: 1;
+   /*  z-index: 1; */
 }
 
 table.dataTable thead th, table.dataTable thead td{
@@ -7792,6 +7988,75 @@ ul.nav_ul.float_right li {
 	display: flex;
 	justify-content: center;
 }
+.change_lang li {
+	clear: both;
+	position: relative;
+}
+
+
+.dropbtn {
+	background-color: inherit;
+    color: #98abde;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+	display: none;
+    position: fixed;
+    background-color: inherit;
+    border: 1px solid #98abde;
+    min-width: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 3;
+    line-height: normal;
+    width: 70px;
+    padding: 5px;
+}
+.dropdown_empl .dropdown-content{
+	height: 500px;
+    width: auto;
+    overflow: auto;
+    background: white;
+    font-size: 12px;
+    position: static;
+}
+.dropdown_empl .dropdown-content span {
+	display: inline-block;
+}
+.dropdown-content a {
+	color: #98abde;
+    padding: 4px 12px;
+    text-decoration: none;
+    display: block;
+	font-size: 12px;
+	width: 100%;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+
+.nav_ul.float_right a img.img_flag {
+	width: 100%;
+    height: auto;
+    position: static;
+    transform: none;
+    min-height: auto;
+}
+}
 ul.nav_ul.float_right li:hover {
 	background-color:#082877;
 }
@@ -7889,6 +8154,7 @@ ul.nav_ul.float_right li img {
 	max-height: 90%;
     max-width: 80%;
 }
+
 .header_nav .section_top_nav .close_topnav svg {
 	margin: 0;
 	float: right;
@@ -7901,24 +8167,27 @@ ul.nav_ul.float_right li img {
     top: 15px;
 }
 
-.topnav.nav_top a {
-	float: left;
+.topnav.nav_top a:not(.lang_link) {
+    float: left;
     display: block;
     text-align: center;
     text-decoration: none;
-    color: rgba(96, 96, 96, 0.6);
     overflow: hidden;
     height: 100%;
-    padding-left: 30px;
-    line-height: 92px;
+    min-width: 30px;
+    padding: 0;
+	line-height: normal;
     text-align: center;
-	display: flex;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 .topnav.nav_top a.link_home {
 	padding: 28px 0;
 	padding-left: 30px;
+}
+.topnav.nav_top a>svg {
+	margin-right: 5px;
 }
   .topnav>a:first-child {
 	padding-left: 30px;
@@ -9292,6 +9561,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	color: red;
 }
 
+.change_lang {
+	float: left;
+}
 @media (max-height: 1000px) {
 	.user_header .info>div:first-child {
 		padding: 5px 0;
@@ -9692,6 +9964,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.topnav >div {
 	  display: none;
 	}
+	.topnav.nav_top a:not(.lang_link) {
+		padding: 0;
+	}
 	.topnav.nav_top a.link_home {
 		padding: 0;
 	}
@@ -9943,9 +10218,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		display: block;
 		width: auto;
 	}
-	#admin_page .index_table_filter {
-		padding: 0;
-	}
+	
 	.topnav.responsive >div {
 		padding: 0;
 	}
@@ -10046,16 +10319,20 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	height: 12px !important;
 	padding: 10px;
 }
+
+.upload_file.modal a.close-modal {
+	top: 10px !important;
+	right: 10px !important;
+}
+
 .modal-body p.error-modal {
 	color: red;
 	font-weight: 600;
 	text-align: center;
 	padding: 20px 0;
+	clear: both;
 }
 
-.modal.modal_travel_show {
-	
-}
 .modal.modal_notice, .modal.modal_questionnaire, .modal_user  {
 	position: fixed;
     float: right;
@@ -10323,7 +10600,7 @@ span.work {
 	-webkit-overflow-scrolling:touch;
 	color: #898989; 
 	text-transform: initial;
-	padding:20px 35px 25px 35px; 
+	padding:20px 35px 20px 35px; 
 	height: auto; 
 	max-height: 100%; 
 	max-width: 575px;
@@ -10534,7 +10811,7 @@ span.work {
 	width: 100%;
 }
 .modal-body label:not(.label_file, .container_radio) {
-	width: 100%;
+/* 	width: 100%; */
 }
 
 .modal-body .form-group.datum {
@@ -10749,17 +11026,22 @@ select option {
 	line-height: 45px;
 }
 
+.form_work_diary input[type="time"]:not(.time_input), .edit_form_work_diary input[type="time"]:not(.time_input) {
+	margin-bottom: 10px;
+}
+
 .modal input:active, .modal input:focus, .modal input:hover {
 	outline-color: inherit;
 }
 
-input[type="date"]::-webkit-inner-spin-button,
+
+/* input[type="date"]::-webkit-inner-spin-button,
 .modal input.schedule_date::-webkit-inner-spin-button,
 input[type="time"]::-webkit-inner-spin-button {
     display: none;
     -webkit-appearance: none;
 }
-
+ */
 .modal .time {
 	width: 150px;
 	padding-right: 20px;
@@ -10767,7 +11049,7 @@ input[type="time"]::-webkit-inner-spin-button {
 }
 
 
-.modal form.absence .form-group.time_group {
+.modal form.absence .form-group.time_group, .modal form.form_work_diary .form-group.time_group {
 	display: none;
 }
 
@@ -11035,7 +11317,7 @@ option::selection {
 	background-color: #ffffff;
     font-weight: 600;
     font-size: 1.75rem;
-    line-height: 1.5rem;
+    line-height: 1.8rem;
     text-align: center;
     color: #071E57;
     margin-top: 60px;
@@ -11051,16 +11333,19 @@ option::selection {
 }
 
 .modal-footer .btn_all {
-	width: 128px;
-	height: 41px;
-	background: #F7F9FF;
-	border: 1px solid #F0F4FF;
-	box-sizing: border-box;
-	border-radius: 5px;
-	color: #1594F0;
-	font-weight: 500;
-	font-size: 0.625rem;
-	margin-right: 20px;
+    width: 128px;
+    height: 41px;
+    background: #F7F9FF;
+    border: 1px solid #F0F4FF;
+    box-sizing: border-box;
+    border-radius: 5px;
+    color: #1594F0;
+    font-weight: 500;
+    font-size: 0.625rem;
+    margin-right: 20px;
+    text-align: center;
+    white-space: break-spaces;
+    overflow: hidden;
 }
 
 .modal-footer .done {

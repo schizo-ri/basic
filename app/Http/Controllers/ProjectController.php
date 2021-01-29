@@ -8,6 +8,10 @@ use App\Http\Controllers\DashboardController;
 use App\Models\Project;
 use App\Models\Customer;
 use App\Models\Employee;
+use App\Imports\ProjectsImport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Mail\ErrorMail;
+use Illuminate\Support\Facades\Mail;
 use Sentinel;
 
 class ProjectController extends Controller
@@ -141,5 +145,23 @@ class ProjectController extends Controller
         $message = session()->flash('success',  __('ctrl.data_delete'));
 		
 		return redirect()->back()->withFlashMessage($message);
+    }
+
+    public function importProject ()
+    {
+        try {
+            Excel::import(new ProjectsImport, request()->file('file'));
+            
+            session()->flash('success',  __('ctrl.uploaded'));
+            return redirect()->back();
+
+        } catch (Throwable $th) {
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
+            session()->flash('error',  __('ctrl.file_error'));
+            return redirect()->back();
+        }  
     }
 }

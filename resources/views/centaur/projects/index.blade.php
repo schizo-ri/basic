@@ -8,12 +8,18 @@
 			<label>
 				<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 			</label>
+			@if(Sentinel::getUser()->hasAccess(['projects.create']) || in_array('projects.create', $permission_dep))
+				<a class="btn-new" href="{{ route('projects.create') }}" rel="modal:open">
+					<i class="fas fa-plus"></i>
+				</a>
+			@endif
+			<span class="show_button_upload" title="Upload"><i class="fas fa-upload"></i></span>
+			<form class="upload_file" action="{{ action('ProjectController@importProject') }}" method="POST" enctype="multipart/form-data">
+				<button class="btn-new">Upload</button>
+				<input type="file" name="file" required />
+				@csrf
+			</form>
 		</div>
-		@if(Sentinel::getUser()->hasAccess(['projects.create']) || in_array('projects.create', $permission_dep))
-			<a class="btn-new" href="{{ route('projects.create') }}" rel="modal:open">
-				<i class="fas fa-plus"></i>
-			</a>
-		@endif
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="table-responsive">

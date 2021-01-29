@@ -14,7 +14,6 @@
 		<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 		<meta http-equiv="pragma" content="no-cache" />
 
-
 		<title>@yield('title')</title>
         <!-- Bootstrap - Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/bootstrap/dist/css/bootstrap.min.css') }}"/>
@@ -35,7 +34,6 @@
 		<script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
 		<link rel="stylesheet" href="{{ URL::asset('/../css/all1.css?random=@dt') }}"/>
-	  
 		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/>
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
@@ -43,20 +41,20 @@
 		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
 		<script src="{{ URL::asset('/../js/jquery-ui.js') }}"></script>
 		<script src="{{ URL::asset('/../node_modules/chart.js/dist/Chart.min.js') }}"></script>
+		
+		{{--  Select find --}}
+		<link href="{{ URL::asset('/../select2-develop/dist/css/select2.min.css') }}" />
 		<!-- Pusher -->
 		<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 		@stack('stylesheet')
     </head>
     <body >
 		<?php 
-            use App\Http\Controllers\PostController;
             use App\Http\Controllers\DashboardController;
-			use App\Http\Controllers\CompanyController;
-			use App\Models\Shortcut;
-            $permission_dep = DashboardController::getDepartmentPermission();
-            $moduli = CompanyController::getModules();
+			use App\Models\Post;
+			$checked_user = Sentinel::getUser();
            /*  $check = DashboardController::evidention_check(); */
-			$countComment_all = PostController::countComment_all();
+			$countComment_all = Post::countComment_all();
 			$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
         ?>
 		@if (Sentinel::check())
@@ -76,17 +74,27 @@
 						</a>
 						{{-- <a class="" href="{{ route('api_erp.index') }}" ><span>api</span></a> --}}
 						<ul class="nav_ul float_right">
+							@if( in_array('Čestitka UKR', $checked_user->employee->employeesDepartmentName()) || Sentinel::inRole('administrator') )
+								<li class="change_lang dropdown">
+									<button class="dropbtn"><i class="fas fa-globe-americas"></i></button>
+									<div class="dropdown-content">
+										<a class="lang_link" href="{{ action('DashboardController@change_lang', ['lang' => 'en']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-en.png') }}" alt="flag en" title="EN" /></a>
+										{{-- <a class="lang_link" href="{{ action('DashboardController@change_lang', ['lang' => 'uk']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-uk.png') }}" alt="flag en" title="UK" /></a> --}}
+										<a class="lang_link"  href="{{ action('DashboardController@change_lang', ['lang' => 'hr']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-hr.png') }}" alt="flag hr" title="HR" /></a>
+									</div>
+								</li>
+							@endif
 							@if (Sentinel::check())
-								@if( Sentinel::getUser()->employee && $_SERVER['REQUEST_URI'] != '/dashboard')
+								@if( $checked_user->employee && $_SERVER['REQUEST_URI'] != '/dashboard')
 									<li>
-										@if (Shortcut::where('url', $url)->first() )
-										<a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i> <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
+										@if ( $checked_user->employee->hasShortcuts->where('url', $url)->first() )
+										<a class="shortcut" href="{{ route('shortcuts.edit', $checked_user->employee->hasShortcuts->where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i> <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
 									@else
 										<a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
 									@endif
 									</li>
 								@endif
-							{{-- 	@if(in_array('Evidencija', $moduli))  
+								{{-- 	@if(in_array('Evidencija', $moduli))  
 									@if(! $check )
 										<li class="evidention_check">
 											<form  title="{{__('basic.entry') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}" >
@@ -107,13 +115,13 @@
 											</form>
 										</li>
 									@endif
-								@endif --}}
+								@endif --}}						  
 								@if(Sentinel::inRole('administrator') || Sentinel::inRole('moderator'))
 									<li><a id="open-admin" href="{{ route('users.index') }}" title="{{ __('basic.open_admin')}}"  >
 										<img class="img_button" src="{{ URL::asset('icons/flash.png') }}" alt="messages" title="{{ __('basic.open_admin')}}" /></a>
 									</li>
 								@endif
-								<li><a href="{{ action('UserController@edit_user', Sentinel::getUser('id')) }}" class="{!! !Sentinel::getUser()->employee ? 'isDisabled' : '' !!}" title="{{ __('basic.user_data')}}" >
+								<li><a href="{{ action('UserController@edit_user', $checked_user->id ) }}" class="{!! !$checked_user->employee ? 'isDisabled' : '' !!}" title="{{ __('basic.user_data')}}" >
 									<img class="img_button" src="{{ URL::asset('icons/settings.png') }}" alt="messages"/></a>
 								</li>
 								<li><a href="{{ route('auth.logout') }}" title="{{ __('welcome.logout')}}" >
@@ -132,8 +140,7 @@
 				</header>
 				<div class="container col-sm-12 col-md-12 col-lg-12">
 					@if(Sentinel::check())				
-						@if(Sentinel::getUser()->employee || Sentinel::getUser()->temporaryEmployee )
-							
+						@if( $checked_user->employee || $checked_user->temporaryEmployee )
 							@yield('content')
 						@else
 							<section class="padd_20">
@@ -143,7 +150,6 @@
 					@endif
 				</div>
 				<span hidden class="locale" >{{ App::getLocale() }}</span>
-				<span id="hiddenId"></span>
 				@include('Centaur::notifications', ['modal' => 'true'])
 			</section>
 		@else
@@ -151,7 +157,7 @@
 				@yield('content')
 			</div>
 		@endif
-		<span hidden id="employee_id">{!!  Sentinel::getUser() && Sentinel::getUser()->employee ? Sentinel::getUser()->employee->id : null !!}</span>
+		<span hidden id="employee_id">{!! $checked_user && $checked_user->employee ? $checked_user->employee->id : null !!}</span>
 		<!-- Scripts -->
 			<script>
 				// Enable pusher logging - don't include this in production
@@ -184,7 +190,6 @@
 
 			<!-- Scripts -->
 			<script>
-			
 				// Check if a new cache is available on page load.
 				/* window.addEventListener('load', function(e) {
 				window.applicationCache.addEventListener('updateready', function(e) {
@@ -206,6 +211,10 @@
 			<script src="{{URL::asset('/../js/all1.js?random=@dt') }}"></script>
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
+
+			{{--  Select find --}}
+			<script src="{{ URL::asset('/../select2-develop/dist/js/select2.min.js') }}"></script>
+		
 			<!-- Datatables -->
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>

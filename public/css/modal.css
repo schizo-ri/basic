@@ -10,16 +10,20 @@
 	height: 12px !important;
 	padding: 10px;
 }
+
+.upload_file.modal a.close-modal {
+	top: 10px !important;
+	right: 10px !important;
+}
+
 .modal-body p.error-modal {
 	color: red;
 	font-weight: 600;
 	text-align: center;
 	padding: 20px 0;
+	clear: both;
 }
 
-.modal.modal_travel_show {
-	
-}
 .modal.modal_notice, .modal.modal_questionnaire, .modal_user  {
 	position: fixed;
     float: right;
@@ -287,7 +291,7 @@ span.work {
 	-webkit-overflow-scrolling:touch;
 	color: #898989; 
 	text-transform: initial;
-	padding:20px 35px 25px 35px; 
+	padding:20px 35px 20px 35px; 
 	height: auto; 
 	max-height: 100%; 
 	max-width: 575px;
@@ -498,7 +502,7 @@ span.work {
 	width: 100%;
 }
 .modal-body label:not(.label_file, .container_radio) {
-	width: 100%;
+/* 	width: 100%; */
 }
 
 .modal-body .form-group.datum {
@@ -713,17 +717,22 @@ select option {
 	line-height: 45px;
 }
 
+.form_work_diary input[type="time"]:not(.time_input), .edit_form_work_diary input[type="time"]:not(.time_input) {
+	margin-bottom: 10px;
+}
+
 .modal input:active, .modal input:focus, .modal input:hover {
 	outline-color: inherit;
 }
 
-input[type="date"]::-webkit-inner-spin-button,
+
+/* input[type="date"]::-webkit-inner-spin-button,
 .modal input.schedule_date::-webkit-inner-spin-button,
 input[type="time"]::-webkit-inner-spin-button {
     display: none;
     -webkit-appearance: none;
 }
-
+ */
 .modal .time {
 	width: 150px;
 	padding-right: 20px;
@@ -731,7 +740,7 @@ input[type="time"]::-webkit-inner-spin-button {
 }
 
 
-.modal form.absence .form-group.time_group {
+.modal form.absence .form-group.time_group, .modal form.form_work_diary .form-group.time_group {
 	display: none;
 }
 
@@ -999,7 +1008,7 @@ option::selection {
 	background-color: #ffffff;
     font-weight: 600;
     font-size: 1.75rem;
-    line-height: 1.5rem;
+    line-height: 1.8rem;
     text-align: center;
     color: #071E57;
     margin-top: 60px;
@@ -1015,16 +1024,19 @@ option::selection {
 }
 
 .modal-footer .btn_all {
-	width: 128px;
-	height: 41px;
-	background: #F7F9FF;
-	border: 1px solid #F0F4FF;
-	box-sizing: border-box;
-	border-radius: 5px;
-	color: #1594F0;
-	font-weight: 500;
-	font-size: 0.625rem;
-	margin-right: 20px;
+    width: 128px;
+    height: 41px;
+    background: #F7F9FF;
+    border: 1px solid #F0F4FF;
+    box-sizing: border-box;
+    border-radius: 5px;
+    color: #1594F0;
+    font-weight: 500;
+    font-size: 0.625rem;
+    margin-right: 20px;
+    text-align: center;
+    white-space: break-spaces;
+    overflow: hidden;
 }
 
 .modal-footer .done {

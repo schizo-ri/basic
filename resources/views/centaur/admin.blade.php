@@ -18,41 +18,46 @@
         <![endif]-->
         <![endif]-->
 		
-		<!--Awesome icons -->
+		{{-- Awesome icons --}}
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/css/all.min.css') }}"/>
 		
-		<!-- Datatables -->
+		{{--  Datatables --}}
 		<link rel="stylesheet" href="{{ URL::asset('/../dataTables/datatables.css') }}"/>
-		<!-- JS modal -->
+		{{--  JS modal --}}
 		<link rel="stylesheet" href="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
         <script>var dt = new Date().getTime();</script>
-		<!-- CSS -->
+		{{--  CSS --}}
 		<link rel="stylesheet" href="{{ URL::asset('/../css/all1.css?random=@dt') }}"/>
-		
-		<!-- ICON -->
+		{{--  Select find --}}
+		<link href="{{ URL::asset('/../select2-develop/dist/css/select2.min.css') }}" />
+		{{-- ICON --}}
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
         <script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
-		<!--Jquery -->
+		{{-- Jquery --}}
 		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
 
 		<script src="{{ URL::asset('/../js/jquery-ui.js') }}"></script>
         <script src="{{ URL::asset('/../node_modules/chart.js/dist/Chart.js') }}"></script>
       
-		<!-- Pusher -->
+		{{--  Select find --}}
+		<link href="{{ URL::asset('/../select2-develop/dist/css/select2.min.css') }}" />
+		{{--  Pusher --}}
         <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
        
 		@stack('stylesheet')
     </head>
     <body>
         <?php 
-            use App\Http\Controllers\PostController;
+            /* use App\Http\Controllers\PostController; */
             use App\Http\Controllers\DashboardController;
             use App\Http\Controllers\CompanyController;
             use App\Models\Shortcut;
+            use App\Models\Post;
+            $user = Sentinel::getUser();
             $moduli = CompanyController::getModules();
             /* $check = DashboardController::evidention_check(); */
-            $countComment_all = PostController::countComment_all();
+            $countComment_all = Post::countComment_all();
             $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
         ?>
         <section >
@@ -69,7 +74,7 @@
                         @endif
                     </a>
                     <ul class="nav_ul float_right">
-                        @if( Sentinel::getUser()->employee)
+                        @if( $user->employee)
                             <li><a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a></li>
                         @endif
                         @if (Sentinel::check())
@@ -99,7 +104,7 @@
                                     <img class="img_button" src="{{ URL::asset('icons/flash.png') }}" alt="messages" title="{{ __('basic.open_admin')}}" /></a>
                                 </li>
                             @endif
-                            <li><a href="{{ action('UserController@edit_user', Sentinel::getUser('id')) }}" class="{!! !Sentinel::getUser()->employee ? 'isDisabled' : '' !!}" title="{{ __('basic.user_data')}}" >
+                            <li><a href="{{ action('UserController@edit_user', $user->id ) }}" class="{!! !$user->employee ? 'isDisabled' : '' !!}" title="{{ __('basic.user_data')}}" >
                                 <img class="img_button" src="{{ URL::asset('icons/settings.png') }}" alt="messages"/></a>
                             </li>
                             <li><a href="{{ route('auth.logout') }}" title="{{ __('welcome.logout')}}" >
@@ -142,12 +147,10 @@
                 @endif
             </div> 
             <span hidden class="locale" >{{ App::getLocale() }}</span>
-            <span id="hiddenId"></span>
             @include('Centaur::notifications', ['modal' => 'true'])
         </section>
-   {{--      --}}
-    <span hidden id="employee_id">{!! Sentinel::getUser()->employee ? Sentinel::getUser()->employee->id : null !!}</span>
-		<!-- Scripts -->
+    <span hidden id="employee_id">{!! $user->employee ? $user->employee->id : null !!}</span>
+		{{-- Scripts --}}
 			<script>
 				// Enable pusher logging - don't include this in production
 			  /*   Pusher.logToConsole = true; */
@@ -169,28 +172,28 @@
 					}
                 });
 			</script>
-			<!-- Latest compiled and minified Bootstrap JavaScript -->
-			<!-- Bootstrap js -->
+			{{-- Latest compiled and minified Bootstrap JavaScript --}}
+			{{-- Bootstrap js --}}
 			<script src="{{ URL::asset('/../node_modules/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 			<script src="{{ URL::asset('/../node_modules/popper.js/dist/umd/popper.min.js') }}"></script>
-			<!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
+			{{-- Restfulizer.js - A tool for simulating put,patch and delete requests --}}
 			<script src="{{ asset('/../restfulizer.js') }}"></script>
-			
-			<!--Awesome icons -->
+			{{--Awesome icons --}}
 			<script src="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/js/all.min.js') }}"></script>
-		
-			<!-- Jquery modal -->
+            {{--  Select find --}}
+            <link href="{{ URL::asset('/../select2-develop/dist/css/select2.min.css') }}" />
+			{{-- Jquery modal --}}
             <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
-           
-            <!-- Scripts -->
+            {{-- Scripts --}}
 			<script src="{{URL::asset('/../js/all1.js?random=@dt') }}"></script>
-	
-			<!-- Datatables -->
+			{{-- Datatables --}}
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
-			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-			<!-- tinymce js -->
+            <script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
+            {{--  Select find --}}
+			<script src="{{ URL::asset('/../select2-develop/dist/js/select2.min.js') }}"></script>
+			{{-- tinymce js --}}
 			<script src="{{ URL::asset('/node_modules/tinymce/tinymce.min.js') }}" ></script>
 			@if(session()->has('modal'))
 				<script>
@@ -199,7 +202,7 @@
 					$('#schedule_modal').modal();
 				</script>
 			@endif
-		<!-- End Scripts -->
+		{{-- End Scripts --}}
 		@stack('script')		
     </body>
 </html>

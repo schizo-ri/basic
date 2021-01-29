@@ -15,6 +15,7 @@ use App\Models\Template;
 use Sentinel;
 use App\Mail\NoticeMail;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ErrorMail;
 use Illuminate\Support\Facades\Storage;
 use Log;
 
@@ -168,15 +169,20 @@ class NoticeController extends Controller
                                     $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
                                     $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
                                 }
-                                Log::info($all_dep_employee);
-                                foreach (array_unique($all_dep_employee) as $mail) {
-                                    Mail::to($mail)->send(new NoticeMail($notice1));
-                                }   
-                                /*   try {               
+                               
+                                try {   
+                                    Log::info($all_dep_employee);
+                                    foreach (array_unique($all_dep_employee) as $mail) {
+                                        Mail::to($mail)->send(new NoticeMail($notice1));
+                                    }   
                                 } catch (\Throwable $th) {
+                                    $email = 'jelena.juras@duplico.hr';
+                                    $url = $_SERVER['REQUEST_URI'];
+                                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
                                     $message = session()->flash('success',  __('emailing.not_send'));
                                     return redirect()->back()->withFlashMessage($message);
-                                } */
+                                }
                             }
                         
                             return redirect()->back()->with('success', __('ctrl.notice_saved'));
@@ -196,15 +202,20 @@ class NoticeController extends Controller
                         $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
                         $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
                     }
-                    Log::info($all_dep_employee);
-                    foreach (array_unique($all_dep_employee) as $mail) {
-                       Mail::to($mail)->send(new NoticeMail($notice1));
-                    }   
-                    /*   try {               
+                     
+                    try {   
+                        Log::info($all_dep_employee);
+                        foreach (array_unique($all_dep_employee) as $mail) {
+                            Mail::to($mail)->send(new NoticeMail($notice1));
+                        }              
                     } catch (\Throwable $th) {
+                        $email = 'jelena.juras@duplico.hr';
+                        $url = $_SERVER['REQUEST_URI'];
+                        Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
                         $message = session()->flash('success',  __('emailing.not_send'));
                         return redirect()->back()->withFlashMessage($message);
-                    } */
+                    }
                 }
                
                 $message = session()->flash('success', __('ctrl.notice_saved'));
@@ -379,15 +390,20 @@ class NoticeController extends Controller
                                 $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
                                 $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
                             }
-                            Log::info($all_dep_employee);
-                            foreach (array_unique($all_dep_employee) as $mail) {
-                                Mail::to($mail)->send(new NoticeMail($notice1));
-                            }   
-                            /*   try {               
+                            
+                            try {   
+                                Log::info($all_dep_employee);
+                                foreach (array_unique($all_dep_employee) as $mail) {
+                                    Mail::to($mail)->send(new NoticeMail($notice1));
+                                }              
                             } catch (\Throwable $th) {
+                                $email = 'jelena.juras@duplico.hr';
+                                $url = $_SERVER['REQUEST_URI'];
+                                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+                                
                                 $message = session()->flash('success',  __('emailing.not_send'));
                                 return redirect()->back()->withFlashMessage($message);
-                            } */
+                            }
                         }
                     
                         return redirect()->back()->with('success', __('ctrl.notice_saved'));
@@ -405,15 +421,20 @@ class NoticeController extends Controller
                     $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
                     $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
                 }
-                Log::info($all_dep_employee);
-                foreach (array_unique($all_dep_employee) as $mail) {
-                    Mail::to($mail)->send(new NoticeMail($notice1));
-                }   
-                /*   try {               
+               
+                try {    
+                    Log::info($all_dep_employee);
+                    foreach (array_unique($all_dep_employee) as $mail) {
+                        Mail::to($mail)->send(new NoticeMail($notice1));
+                    }   
                 } catch (\Throwable $th) {
+                    $email = 'jelena.juras@duplico.hr';
+                    $url = $_SERVER['REQUEST_URI'];
+                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
                     $message = session()->flash('success',  __('emailing.not_send'));
                     return redirect()->back()->withFlashMessage($message);
-                } */
+                }
             }
  
             $message = session()->flash('success', __('ctrl.notice_saved'));
@@ -559,6 +580,10 @@ class NoticeController extends Controller
             try {
                 Mail::to($send_to)->send(new NoticeMail($notice)); 
             } catch (\Throwable $th) {
+                $email = 'jelena.juras@duplico.hr';
+                $url = $_SERVER['REQUEST_URI'];
+                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
                 $message = session()->flash('error', __('emailing.not_send'));
 		        return redirect()->back()->withFlashMessage($message);
             }

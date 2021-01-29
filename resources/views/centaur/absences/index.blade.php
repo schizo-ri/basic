@@ -4,6 +4,7 @@
 @php
 	use App\Http\Controllers\BasicAbsenceController;
 @endphp
+<link href="{{ URL::asset('/../select2-develop/dist/css/select2.min.css') }}" />
 @section('content')
 <span id="user_admin" hidden>{{ Sentinel::inRole('administrator') ? 'true' : '' }}</span>
 <div class="index_page index_absence">
@@ -71,7 +72,7 @@
 							<p class="col-6 float_l">
 							</p>
 							<p class="col-6 float_l days_off">
-								<span>Slobodni dani {!! $data_absence['afterHours_withoutOuts']  - $data_absence['days_offUsed']  !!}</span>
+								<span>@lang('basic.days_off') {!! $data_absence['afterHours_withoutOuts']  - $data_absence['days_offUsed']  !!}</span>
 							</p>
 						@endif
 					</div>
@@ -105,29 +106,38 @@
 								</label>
 								<div class="col-md-12 col-lg-4 col-xl-4 float_left approve_area">
 									{{-- @if( count( $absences->where('approve', null) ) > 0 && (isset( $afterhours ) && count( $afterhours->where('approve', null) )> 0 )) --}}
-										<div class="approve_buttons">
-											<div class="col-3 col-sm-3 col-md-3 float_left">
-												<span class="approve_button" id="checkall"><i class="fas fa-check green"></i> Označi sve <span class="approve_span">DA</span></span>
+										@if(Sentinel::inRole('administrator'))
+											<div class="approve_buttons">
+												<div class="col-3 col-sm-3 col-md-3 float_left">
+													<span class="approve_button" id="checkall"><i class="fas fa-check green"></i> Označi sve <span class="approve_span">DA</span></span>
+												</div>
+												<div class="col-3 col-sm-3 col-md-3 float_left">
+													<span class="approve_button" id="uncheckall" ><i class="fas fa-times red"></i> Označi sve <span class="approve_span">NE</span> </span>
+												</div>
+												<div class="col-3 col-sm-3 col-md-3 float_left">
+													<span class="approve_button" id="nocheckall" >Ukloni oznake</span>
+												</div>
+												<div class="col-3 col-sm-3 col-md-3 float_left">
+													<input class="btn-new btn-approve" type="submit" value="Obradi">
+													{{ csrf_field() }}
+												</div>
 											</div>
-											<div class="col-3 col-sm-3 col-md-3 float_left">
-												<span class="approve_button" id="uncheckall" ><i class="fas fa-times red"></i> Označi sve <span class="approve_span">NE</span> </span>
-											</div>
-											<div class="col-3 col-sm-3 col-md-3 float_left">
-												<span class="approve_button" id="nocheckall" >Ukloni oznake</span>
-											</div>
-											<div class="col-3 col-sm-3 col-md-3 float_left">
-												<input class="btn-new btn-approve" type="submit" value="Obradi">
-												{{ csrf_field() }}
-											</div>
-										</div>
+										@endif
 									{{-- @endif --}}
 								</div>
 								<div class="col-md-12 col-lg-6 col-xl-6 float_left filter_area">
 									<div class="float_right padd_l_10">
 										<a class="add_new" href="{{ route('absences.create') }}" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('basic.add')</a>
 									</div>
-									<div class="width_20 float_right padd_l_10">
-										<select id="filter_employees" class="select_filter filter_employees" >
+									<div class="width_20 float_right padd_l_10 dropdown_empl">
+										{{-- <input id="filter_employees" list="list_employees" autocomplete="off" value="SVI djelatnici" >
+										<datalist id="list_employees">
+											<option data-id="all" value="SVI djelatnici" selected />
+												@foreach ($employees as $r_employee)
+													<option value="{{ $r_employee->user->last_name . ' ' .$r_employee->user->first_name }}" data-id="{{ $r_employee->id }}" style="height: 12px"/>
+												@endforeach
+										</datalist> --}}
+										<select id="filter_employees" class="js-example-basic-single select_filter filter_employees" name="state" >
 											@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
 												<option value="all" selected >SVI djelatnici</option>
 												@foreach ($employees as $r_employee)
@@ -160,9 +170,11 @@
 									<div class="width_20 float_right padd_l_10">
 										<select id="filter_approve" class="select_filter filter_approve" >
 											<option value="all">@lang('absence.all_requests') </option>
-											<option value="approved">@lang('absence.approved')</option>
-											<option value="refused">@lang('absence.refused')</option>
-											<option value="not_approved">@lang('absence.not_approved')</option>
+											@if(Sentinel::inRole('administrator'))
+												<option value="approved">@lang('absence.approved')</option>
+												<option value="refused">@lang('absence.refused')</option>
+												<option value="not_approved">@lang('absence.not_approved')</option>
+											@endif
 										</select>
 									</div>
 								</div>
@@ -215,14 +227,14 @@
 															$interval = $interval->format('%H:%I');
 												
 														@endphp
-														<tr class="tr_open_link tr {!! $absence->absence->mark == 'BOL' ? 'bol bol-'.date('Y',strtotime($absence->start_date)) : '' !!}" data-href="/absences/{{ $absence->employee->id }} empl_{{ $absence->employee_id}}" >
+														<tr class="tr_open_link tr {!! $absence->absence->mark == 'BOL' ? 'bol bol-'.date('Y',strtotime($absence->start_date)) : '' !!}" data-href="/absences/{{ $absence->employee->id }} empl_{{ $absence->employee_id}}" id="requestAbs_{{ $absence->id}}" >
 															@if( Sentinel::inRole('administrator') )
 																<td style="max-width:10%;width:10%">{{ $absence->employee->user['last_name'] . ' ' . $absence->employee->user['first_name'] }}</td>
 															@endif
 															{{-- <td>{{ date('d.m.Y',strtotime($absence->created_at)) }}</td> --}}
 															<td style="max-width:10%;width:10%">{{ '[' . $absence->absence['mark'] . '] ' . $absence->absence['name'] }}</td>
 															<td style="max-width:7%;width:7%">{{ date('d.m.Y',strtotime($absence->start_date))  }}</td>
-															<td class="absence_end_date" style="max-width:7%;width:7%">{{  date('d.m.Y',strtotime($absence->end_date))  }}</td>
+															<td class="absence_end_date" style="max-width:7%;width:7%">{!! $absence->end_date ? date('d.m.Y',strtotime($absence->end_date)) : '' !!}</td>
 															<!--<td>xx dana</td>-->
 															<td class="absence_time" style="max-width:7%;width:7%" >{!! $absence->absence['mark'] == 'IZL' ? date('H:i',strtotime($absence->start_time)) . '-' .  date('H:i',strtotime($absence->end_time)) :'' !!}</td>
 															<td style="max-width:30%;width:30%">
@@ -296,7 +308,7 @@
 														$interval = $time2->diff($time1);
 														$interval = $interval->format('%H:%I');
 													@endphp
-													<tr class="tr_open_link tr" data-href="/absences/{{ $afterhour->employee->id }} empl_{{ $afterhour->employee_id}}" >
+													<tr class="tr_open_link tr" data-href="/absences/{{ $afterhour->employee->id }} empl_{{ $afterhour->employee_id}}"  id="requestAft_{{ $afterhour->id}}" >
 														<td style="max-width:10%;width:10%">{{ $afterhour->employee->user['last_name'] . ' ' . $afterhour->employee->user['first_name'] }}</td>
 														{{-- <td>{{ date('d.m.Y',strtotime($afterhour->created_at)) }}</td> --}}
 														<td style="max-width:10%;width:10%">Prekovremeni sati</td>
@@ -375,15 +387,13 @@
 			</main>
 		</section>
 	</main>
-	<span  class="selected_employee" style="visibility: hidden;"></span>
-	<span  class="selected_type" style="visibility: hidden;"></span>
-	<span  class="selected_approve" style="visibility: hidden;"></span>
-	<span  class="selected_month" style="visibility: hidden;"></span>
 </div>
 <div id="login-modal" class="modal">
-		
+	
 </div>
-<script>
+<span class="selected_employee" hidden>{{ $selected_employee->user->last_name . ' ' . $selected_employee->user->first_name }}</span>
+<script>	
 	$.getScript('/../js/absence_create.js');
+
 </script>
 @stop

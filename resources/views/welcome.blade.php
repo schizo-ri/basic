@@ -38,8 +38,8 @@
 		<section class="welcome_page">
 			<section class="col-sm-7 col-md-7 col-lg-7 col-xl-7 float_left welcome">
 				<div class="">
-					<h2 class="title">Get Started</h2>
-					<h4>Use your e-mail and password to log in</h4>
+					<h2 class="title">@lang('welcome.get_started')</h2>
+					<h4>@lang('welcome.use_mail')</h4>
 					<form class="form_login" accept-charset="UTF-8" role="form" method="post" action="{{ route('auth.login.attempt') }}">
 						<div class="form-group {{ ($errors->has('email')) ? 'has-error' : '' }}"><img class="" src="{{ URL::asset('icons/email.png') }}" alt="email"  />
 							<input class="form-control form_email" placeholder="E-mail" name="email" type="email" value="{{ old('email') }}">
@@ -59,7 +59,7 @@
 						{{ csrf_field() }}
 						<input class="btn-login" type="submit" value="{{ __('welcome.login') }}">
 					</form>
-					<p class="terms">By log in you agree to Intranets <span>terms and conditions</span></p>
+					<p class="terms">@lang('welcome.agree') <span>@lang('welcome.terms_conditions')</span></p>
 					@if (count(User::get()) == 0 )
 						<a href="{{ route('auth.register.form') }}" rel="modal:open" >@lang('welcome.register')</a></li>
 					@endif

@@ -59,9 +59,12 @@ $(function() {
                         var year = date[0]['_i'].split('-')[0];
                         var datum = year + '-' + month + '-' + day;
                         view = $('.change_view_calendar').val();
-                        var url = url_basic + '?dan=' + datum;
-                      
-                        get_url(url, datum);
+                       
+                        if( datum != 'Invalid Date') {
+                            var url = url_basic + '?dan=' + datum;
+                            get_url(url, datum);
+                        } 
+                       
 
                      /*    if(body_width < 768) {
                             $('.index_main.index_event').modal();
@@ -91,11 +94,11 @@ $(function() {
                 var searchDate = year + '-' + ('0' + (month_before) ).slice(-2) + '-' + ('0' + (day)).slice(-2);
                 
                /*  $('.pignose-calendar-unit-date').find('[data-date="' + searchDate + '"] > a' ).click(); */
-
-                var url = url_basic + '?dan=' + searchDate;
-               
-                get_url(url, searchDate);
-
+               if( searchDate != 'Invalid Date') {
+                    var url = url_basic + '?dan=' + searchDate;
+                
+                    get_url(url, searchDate);
+               }
             },
             next: function(info, context) {
                 /**
@@ -122,10 +125,11 @@ $(function() {
                 var currentDate = new Date(year + '-' + month + '-' + day);
                 var month_after = currentDate.getMonth() +1; 
                 var searchDate = year + '-' + ('0' + (month_after) ).slice(-2) + '-' + ('0' + (day)).slice(-2);                
-               
-                var url = url_basic + '?dan=' + searchDate;
+                if( searchDate != 'Invalid Date') {
+                    var url = url_basic + '?dan=' + searchDate;
 
-                get_url(url, searchDate);
+                    get_url(url, searchDate);
+                }
             }   
         });
    }

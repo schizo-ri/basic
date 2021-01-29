@@ -38,7 +38,7 @@ class Car extends Model
 	
 	public function locco()
 	{
-		return $this->hasMany(static::$loccoModel,'car_id')->orderBy('created_at','DESC')->paginate(10);
+		return $this->hasMany(static::$loccoModel,'car_id')->orderBy('created_at','DESC');
     }	
     
 	/*

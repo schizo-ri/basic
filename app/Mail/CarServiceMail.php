@@ -54,7 +54,7 @@ class CarServiceMail extends Mailable
         }
 
         $car = Car::find($this->locco->car_id);
-        Log::info("CarServiceMail");
+       
         return $this->view('centaur.email.car_service')
                     ->subject( __('basic.malfunction') . ' - ' . $car->registration)
                     ->with([

@@ -12,6 +12,7 @@ use App\Models\EmployeeTask;
 use Sentinel;
 use App\Mail\TaskCreateMail;
 use App\Mail\TaskInfoMail;
+use App\Mail\ErrorMail;
 use Illuminate\Support\Facades\Mail;
 use Log;
 
@@ -126,6 +127,10 @@ class TaskController extends Controller
                         try {
                             Mail::to($email)->send(new TaskCreateMail($employeeTask));
                         } catch (\Throwable $th) {
+                            $email = 'jelena.juras@duplico.hr';
+                            $url = $_SERVER['REQUEST_URI'];
+                            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
                             $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
                             return redirect()->route('admin.tasks.index')->withFlashMessage($message);
                         }
@@ -155,6 +160,10 @@ class TaskController extends Controller
                     try {
                       Mail::to( $email)->send(new TaskInfoMail($employeeTask));
                     } catch (\Throwable $th) {
+                        $email = 'jelena.juras@duplico.hr';
+                        $url = $_SERVER['REQUEST_URI'];
+                        Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
                         $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
                         return redirect()->route('admin.tasks.index')->withFlashMessage($message);
                     }
@@ -265,6 +274,10 @@ class TaskController extends Controller
                             try {
                                 Mail::to($email)->send(new TaskCreateMail($employeeTask));
                             } catch (\Throwable $th) {
+                                $email = 'jelena.juras@duplico.hr';
+                                $url = $_SERVER['REQUEST_URI'];
+                                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
                                 $message = session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
                                 return redirect()->route('admin.tasks.index')->withFlashMessage($message);
                             }
@@ -295,6 +308,10 @@ class TaskController extends Controller
                     try {
                     Mail::to( $email)->send(new TaskInfoMail($employeeTask));
                     } catch (\Throwable $th) {
+                        $email = 'jelena.juras@duplico.hr';
+                        $url = $_SERVER['REQUEST_URI'];
+                        Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+                        
                         $message = session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
                         return redirect()->route('admin.tasks.index')->withFlashMessage($message);
                     }

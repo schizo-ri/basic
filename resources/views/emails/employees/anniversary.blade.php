@@ -38,7 +38,8 @@
 			.MsgBody .Object-hover {
 				margin:0;
 			}
-            .odobri, .link {
+            .odobri, .link { 
+				cursor: pointer;
                 min-width: 100px;
                 height: auto;
                 background-color: white;
@@ -99,6 +100,10 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="body" style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_body : '' !!}">
 				@if( isset($text_body) && $text_body && count($text_body) > 0)
+					@php
+						$change_key = 0;
+						$count_vars = 0;
+					@endphp
 					@foreach ($text_body as $key => $text)
 						@php
 							$style = '';
@@ -106,14 +111,36 @@
 								$el_style = explode('|', $mail_style->style_body_input );
 							}
 							if( isset($el_style) ) {
-								if( count($el_style) > 0 && isset($el_style[ $key ])) {
+								if( count($el_style) > 0 && isset($el_style[ $key ])) {	
 									$style = $el_style[ $key ];
 								} else {
 									$style = $el_style[0];
 								}
 							}
 						@endphp
-						<p style="{{ $style }}">{{ $text }}</p>
+						@if( isset($variable[ $key ]) && substr_count($text, '%') > 0 )
+							@if ( substr_count($text, '%') == 1)
+								<p style="{{ $style }}">{{sprintf($text, $variable[$key + $change_key ]) }}</p>
+								
+							@else
+								@php
+									$count_vars = substr_count($text, '%');
+								@endphp
+								@if( $count_vars == 2  ) 
+									@php
+										$change_key =  $count_vars - 1;
+									@endphp
+									<p style="{{ $style }}">{{sprintf($text, $variable[$key], $variable[$key+1] ) }}</p>
+								@elseif( $count_vars == 3 )
+									@php
+										$change_key =  $count_vars - 2;
+									@endphp
+									<p style="{{ $style }}">{{sprintf($text, $variable[$key], $variable[$key+2], $variable[$key+3]  ) }}</p>
+								@endif
+							@endif
+						@else
+							<p style="{{ $style }}">{{ $text }}</p>
+						@endif
 					@endforeach
 				@else
 					<p>Djelatnik {{ $employee->first_name . ' ' . $employee->last_name }} ima {{ $dana }} {{ $years }}. godišnjicu rada u firmi!</p> 

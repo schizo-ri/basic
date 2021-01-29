@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmailingController;
 use App\Http\Controllers\AbsenceController;
-use App\Http\Controllers\PostController;
 use App\Models\Post;
 use App\Models\Event;
 use App\Models\Task;
@@ -21,6 +20,9 @@ use App\Models\WorkRecord;
 use App\Models\Shortcut;
 use App\Models\EmployeeTraining;
 use App\Models\Absence;
+use App\Models\Car;
+use App\Models\MailTemplate;
+use Log;
 use App\Http\Controllers\BasicAbsenceController;
 use Sentinel;
 use DateTime;
@@ -35,14 +37,12 @@ class DashboardController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-       
+    {        
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
-            $moduli = CompanyController::getModules();  //dohvaća module firme
-            $permission_dep = DashboardController::getDepartmentPermission();
+          
             if($employee) {
-                $sick_leave_not_approve = Absence::SickUserOpen($employee->id);
+                $sick_leave_not_approve = Absence::SickUserOpen( $employee->id );
             
                 $data_absence = BasicAbsenceController::zahtjevi( $employee ); 
                
@@ -80,19 +80,18 @@ class DashboardController extends Controller
                 //Broj neodobrenih zahtjeva
                 $count_requests =  AbsenceController::countRequest();
                 //Broj nepročitanih poruka
-                $countComment_all = PostController::countComment_all();
+                $countComment_all = Post::countComment_all();
                 $check = DashboardController::evidention_check();
                 $shortcuts = Shortcut::where('employee_id', $employee->id )->get();
                
-                return view('Centaur::dashboard',['locco_active' => $locco_active, 'posts' => $posts, 'sick_leave_not_approve' => $sick_leave_not_approve, 'events' => $events,'tasks' => $tasks,'moduli' => $moduli,'permission_dep' => $permission_dep,'employee' => $employee, 'data_absence' => $data_absence, 'profile_image' => $profile_image, 'user_name' => $user_name, 'count_requests' => $count_requests, 'countComment_all' => $countComment_all, 'check' => $check, 'shortcuts' => $shortcuts]);
+                return view('Centaur::dashboard',['locco_active' => $locco_active, 'posts' => $posts, 'sick_leave_not_approve' => $sick_leave_not_approve, 'events' => $events,'tasks' => $tasks,'employee' => $employee, 'data_absence' => $data_absence, 'profile_image' => $profile_image, 'user_name' => $user_name, 'count_requests' => $count_requests, 'countComment_all' => $countComment_all, 'check' => $check, 'shortcuts' => $shortcuts]);
             }   else if( Sentinel::getUser()->temporaryEmployee )  {
                     $temporaryEmployee = Sentinel::getUser()->temporaryEmployee;
 
-                    return view('Centaur::dashboard', ['moduli' => $moduli,'permission_dep' => $permission_dep, 'temporaryEmployee' => $temporaryEmployee]);
+                    return view('Centaur::dashboard', ['temporaryEmployee' => $temporaryEmployee]);
             } else {
 
-                $permission_dep = array();
-                return view('Centaur::dashboard',['moduli' => $moduli,'permission_dep' => $permission_dep]);
+                return view('Centaur::dashboard');
             }
         } else {
             return view('welcome');
@@ -201,10 +200,14 @@ class DashboardController extends Controller
         } else {
             $record = null;
         }
-      
-
-       
-    
         return $record;
+    }
+
+    public function change_lang($lang)
+    {
+        if(in_array($lang,['en','de','hr','uk'])){
+          session(['locale'=> $lang]);
+        }
+        return back();
     }
 }

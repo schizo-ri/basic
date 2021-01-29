@@ -19,6 +19,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        'last_km'
+        'last_km',
+        'https://duplico.myintranet.io/android',
     ];
 }

@@ -997,7 +997,8 @@ class BasicAbsenceController extends Controller
 		*/ 
 		public static function absenceForDay ($employee_id, $date, $time1, $time2) 
 		{
-			$request = Absence::where('employee_id', $employee_id)->whereDate('start_date', $date)->where('approve',1)->first();
+			/* $request = Absence::where('employee_id', $employee_id)->whereDate('start_date', $date)->where('approve',1)->first(); */
+			$request = Absence::where('employee_id', $employee_id)->whereDate('start_date', $date)->first(); 
 			
 			if( $request ) {
 				return 1;
@@ -1114,8 +1115,8 @@ class BasicAbsenceController extends Controller
 		public static function afterhoursForDay ($employee_id, $date, $time1, $time2) 
 		{
 			/* $request = Afterhour::where('employee_id', $employee_id)->whereDate('date', $date)->whereTime('start_time', $time1)->first(); */
+			/* $request = Afterhour::where('approve', null)->orWhere('approve', 1)->where('employee_id', $employee_id)->whereDate('date', $date)->first(); */
 			$request = Afterhour::where('employee_id', $employee_id)->whereDate('date', $date)->first();
-			
 			if( $request ) {
 				return 1;
 			} else {

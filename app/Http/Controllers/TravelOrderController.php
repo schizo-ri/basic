@@ -18,6 +18,7 @@ use PDF;
 use App;
 use App\Mail\TravelClose;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ErrorMail;
 
 class TravelOrderController extends Controller
 {
@@ -300,6 +301,10 @@ class TravelOrderController extends Controller
                 }
             }
         } catch (\Throwable $th) {
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+            
             $message = "Mail nije poslan, moguće da je onemogućeno spajanje na mail server.";
         }
 

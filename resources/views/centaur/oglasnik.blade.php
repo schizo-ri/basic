@@ -28,22 +28,26 @@ use App\Models\Ads;
 							@endif
 						</div>
 						{{-- <span class="arrow_left1"></span> --}}
-						<select id="filter" class="select_filter" >
-							<option value="all">@lang('basic.view_all')</option>
-							@foreach($ads->unique('category_id') as $ad)
-								<option value="{{  $ad->category['name'] }}">{{ $ad->category['name'] }}</option>
-							@endforeach
-						</select>
+						<div class="div_select2">
+							<select id="filter" class="select_filter" >
+								<option value="all">@lang('basic.view_all')</option>
+								@foreach($ads->unique('category_id') as $ad)
+									<option value="{{  $ad->category['name'] }}">{{ $ad->category['name'] }}</option>
+								@endforeach
+							</select>
+						</div>
 						@if (count($ads) >0)
 							{{-- <span class="arrow_left1"></span> --}}
-							<select id="filter1" class="select_filter sort" >
-								<option class="sort_desc" value="{{ route('oglasnik', ['sort' => 'DESC'])}}">
-									@lang('basic.new_first')
-								</option>
-								<option class="sort_asc" value="{{ route('oglasnik', ['sort' => 'ASC']) }} ">
-									@lang('basic.old_first')
-								</option>
-							</select>
+							<div class="div_select2">
+								<select id="filter1" class="select_filter sort" >
+									<option class="sort_desc" value="{{ route('oglasnik', ['sort' => 'DESC'])}}">
+										@lang('basic.new_first')
+									</option>
+									<option class="sort_asc" value="{{ route('oglasnik', ['sort' => 'ASC']) }} ">
+										@lang('basic.old_first')
+									</option>
+								</select>
+							</div>
 						@endif
 					</div>
 				</div>

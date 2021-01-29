@@ -2,7 +2,7 @@
 	<h3 class="panel-title">@lang('basic.edit_work_records')</h3>
 </div>
 <div class="modal-body">
-	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.update',$work_record->id) }}" >
+	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.update', $work_record->id) }}" >
 		<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 			<label>@lang('basic.employee')</label>
 			<select class="form-control" name="employee_id" value="{{ $work_record->employee_id }}" autofocus required >
@@ -24,7 +24,7 @@
 		</div>
 		<input type="hidden" name="checkout" id="entry" value="checkout">
 		{{ csrf_field() }}
-			{{ method_field('PUT') }}
+		{{ method_field('PUT') }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">
 	</form>
 </div>

@@ -80,15 +80,29 @@ class Absence extends Model
 		return $this->update($absence);
 	}	
 
+
 	/*
-		* Absence Type
+		* Absence Type - get 
+		* 
+		* @param $type
+		* @return - type 
+	*/
+	public static function getType( $type ) 
+	{
+		$type = AbsenceType::where('mark', $type)->first();
+		
+		return $type;
+	}
+
+	/*
+		* Absence for Type 
 		* 
 		* @param $user_id, $type
 		* @return - zahtjevi Izlasci za djelatnika
 	*/
 	public static function AllAbsenceUser($user_id, $type)
 	{
-		return Absence::where('employee_id',$user_id)->where('type', AbsenceType::where('mark',$type)->first()->id )->get();
+		return Absence::where('employee_id',$user_id)->where('type', AbsenceType::where('mark', $type)->first()->id )->get();
 	}
 
 	/*
@@ -109,7 +123,18 @@ class Absence extends Model
 		return $sick_leave_not_approve;
 	}
 
-
+	/*
+		* Absence Bolovanje - otvoreni na dan
+		* 
+		* @param $user_id, $type
+		* @return - zahtjevi Bolovanje na dan
+	*/
+	public static function SickUserOpenToday()
+	{
+		$sick_leave_open = Absence::where('type', static::getType('BOL')->id )->where('end_date',null)->get();
+	
+		return $sick_leave_open;
+	}
 
 	/*
 		* Absence - za traženi mjesec i traženi tip

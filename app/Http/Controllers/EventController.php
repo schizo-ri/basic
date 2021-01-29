@@ -38,7 +38,7 @@ class EventController extends Controller
     public function index(Request $request)
     {
         $empl = Sentinel::getUser()->employee;
-        $permission_dep = array();
+       
         if( isset($_GET['dan']) ) {
             $dan = $_GET['dan'];
         } else {
@@ -52,10 +52,7 @@ class EventController extends Controller
             foreach ( $events as $event ) {
                 $event->week = date('W',strtotime($event->date));
             }
-            if( $empl->work && $empl->work->department && $empl->work->department->departmentRole ) {
-                $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-            }
-        
+           
             $start = new DateTime('00:00');
             $times = 24;
 
@@ -93,12 +90,12 @@ class EventController extends Controller
         if(count($events)>0) {
             $events_day = $events->where('date', $dan);
         }
-        $tasks_day = TaskController::task_for_selected_day( $dan );
+     
         $tasks = Task::whereMonth('start_date', $mj_select )->get();
         foreach ( $tasks as $task ) {
             $task->week = date('W',strtotime($task->start_date));
         }
-    
+       
         $employees = Employee::employees_firstNameASC();
         $cars = Car::get('registration');
 
@@ -108,8 +105,7 @@ class EventController extends Controller
                                                 'days_in_month'=> $days_in_month,
                                                 'employees'=>$employees,
                                                 'events'=>$events,
-                                                'tasks'=>$tasks, 
-                                                'permission_dep' => $permission_dep,
+                                                'tasks'=>$tasks,
                                                 'hours_array' => $hours_array,
                                                 'selected' => $selected,
                                                 'selected_day' => $selected_day,
@@ -357,7 +353,7 @@ class EventController extends Controller
         }
     
         $employees = Employee::where('id','<>',0)->where('checkout',null)->with('hasEvents')->with('hasLocco')->with('hasAbsences')->with('hasTasks')->get();
-        //$employees = Employee::whereMonth('b_day', $month)->where('id','<>',1)->where('checkout',null)->get();
+        
         if(count($employees)>0) {
             foreach($employees as $employee) {
                 if(date('m',strtotime($employee->b_day)) == $month ) {
@@ -402,7 +398,6 @@ class EventController extends Controller
                     return date('m',strtotime($event->date)) == $month && date('Y',strtotime($event->date)) == $year;
                 });
         
-                /*  $events = Event::whereMonth('date',$month)->whereYear('date',$year)->where('employee_id', $empl->id)->get(); */
                 if(count($events) > 0) {
                     foreach($events as $event1) {
                         array_push($dataArr, ['name' => "event", 
@@ -416,7 +411,7 @@ class EventController extends Controller
                                               'employee_id' => $event1->employee_id]);
                     }
                 }
-                
+              
                 $absences = $employee->hasAbsences;
                 $absences = $absences->filter(function ($absence, $key) use ( $month, $year ) {
                     return (date('m',strtotime($absence->start_date)) == $month && date('Y',strtotime($absence->start_date)) == $year) || (date('m',strtotime($absence->end_date)) == $month && date('Y',strtotime($absence->end_date)) );

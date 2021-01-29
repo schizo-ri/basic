@@ -13,6 +13,10 @@ $( function () {
 			kolona = 1;
 			sort = 'asc';
 		}
+		if ($('#index_table').hasClass('sort_0_desc')) {
+			kolona = 0;
+			sort = 'desc';
+		}
 		if ($('#index_table').hasClass('sort_1_asc')) {
 			kolona = 1;
 			sort = 'asc';
@@ -257,16 +261,16 @@ $( function () {
 					}
 				]
 			});
-		}
-	
+			
 		if($(".index_table_filter .show_button").length == 0) {
 			$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 		}
 	
 		$('.show_button').on('click',function () {
-			console.log("dt-buttons");
-			$('.dt-buttons').toggle();
-		})
+			$('.dt-buttons').show();
+		});
+		}
+	
 		$('table.display').show();
 	}
 });

@@ -248,8 +248,22 @@ $(function(){
 			end_date.val(start_date);
 		});
 		
+		$('#filter_employees').on('click', function(){
+			$(this).val(""); 
+			
+		});
+	
 		$('#filter_employees').on('change',function() {
-			employee_id =  $(this).val();
+			if( $('datalist#list_employees').length > 0 ) {
+				var value = $(this).val();  
+				employee_id = $('#list_employees').find("[value='" + value + "']").attr('data-id'); 
+			} else if ( $('select#filter_employees').length > 0) {
+				employee_id =  $(this).val(); 
+			}
+			if ( employee_id == undefined) {
+				employee_id == 'all';
+			}
+			/* $( this ).text(value); */
 			if( $('#filter_types').length>0) {
 				type = $('#filter_types').val();
 				type_text = $('#filter_types').find('option:selected').text();
@@ -268,7 +282,8 @@ $(function(){
 			}
 
 			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
-
+			console.log(url);
+			console.log
 			$.ajax({
 				url: url,
 				type: "get",
@@ -296,7 +311,9 @@ $(function(){
 							$('.table-responsive .table tbody td.absence_time').css('display','none');
 						}
 						$.getScript('/../js/absence.js');
-					
+						$.getScript('/../select2-develop/dist/js/select2.min.js');
+						selectSearch ();
+								
 						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
@@ -315,14 +332,13 @@ $(function(){
 			type = $( this ).val();
 		
 			type_text = $( this ).find('option:selected').text();
-			console.log(type_text);
 			if( $('#filter_years').length>0) {
 				month =  $('#filter_years').val();
 			} else {
 				month = null;
 			}
-			if( $('#filter_employees').length>0) {
-				employee_id =  $('#filter_employees').val();
+			if( $('#filter_employees').length > 0) {
+				employee_id = $('#filter_employees').val();
 			} else {
 				employee_id = null;
 			}
@@ -331,9 +347,8 @@ $(function(){
 			} else {
 				approve = null;
 			}
-
+		
 			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
-			/* console.log(url); */
 
 			$.ajax({
 				url: url,
@@ -361,15 +376,17 @@ $(function(){
 							$('.table-responsive .table thead th.absence_time').css('display','none');
 							$('.table-responsive .table tbody td.absence_time').css('display','none');
 						}
+						
+						select_width();
 						$.getScript('/../js/absence.js');
-					
-						$(this).find('option[value="'+type+'"]').attr('selected',true);
+						$.getScript('/../select2-develop/dist/js/select2.min.js');
+						selectSearch ();
+
+						/* $.getScript( '/../restfulizer.js'); */
+						$(this).find('option[value="'+type+'"]').attr('selected',true);						
 						$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
-						select_width();
-					
-						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
 				error: function(jqXhr, json, errorThrown) {
@@ -424,10 +441,12 @@ $(function(){
 							$('.table-responsive .table tbody td.absence_time').css('display','none');
 						}
 						$.getScript('/../js/absence.js');
-					
-						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
+						$.getScript('/../select2-develop/dist/js/select2.min.js');
+						selectSearch ();
+
+						$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
-						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
+						$(this).find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
 						select_width();
 						/* $.getScript( '/../restfulizer.js'); */
@@ -474,11 +493,13 @@ $(function(){
 							$('.table-responsive .table tbody td.absence_time').css('display','none');
 						}
 						$.getScript('/../js/absence.js');
-					
-						$(this).find('option[value="'+employee_id+'"]').attr('selected',true);
+						$.getScript('/../select2-develop/dist/js/select2.min.js');
+						selectSearch ();
+
+						$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
-						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+						$(this).find('option[value="'+approve+'"]').attr('selected',true);
 						select_width();
 						/* $.getScript( '/../restfulizer.js'); */
 					});
@@ -497,17 +518,19 @@ $(function(){
 			/* 	console.log("show_button"); */
 			})
 		}
-		
+
 		$('span#checkall').on('click',function(){
 			$('.check.checkinput').prop('checked',true);
 			$('.uncheck.checkinput').prop('checked',false);
 
 		});
+
 		$('span#uncheckall').on('click',function(){
 			$('.check.checkinput').prop('checked',false);
 			$('.uncheck.checkinput').prop('checked',true);
 			
 		});
+
 		$('span#nocheckall').on('click',function(){
 			$('.check.checkinput').prop('checked',false);
 			$('.uncheck.checkinput').prop('checked',false);
@@ -553,12 +576,14 @@ $(function(){
 				});
 			}
 		}); 
+
 		$('tr.tr_open_link td:not(.not_link)').on('click', function(e) {
 			e.preventDefault();
 			url = location.origin + $( this ).parent().attr('data-href');
 			console.log(url);
 			window.location = url;
 		});
+		
 		function delete_request () {
 			$('.action_confirm.btn-delete').on('click', function(e) {
 				if (! confirm("Sigurno želiš obrisati zahtjev?")) {
@@ -599,14 +624,18 @@ $(function(){
 				}
 			});
 		}
+
+		selectSearch ();
+
 	}
 	function select_width() {
-		$('.selected_employee').text($('#filter_employees').find('option[value="'+employee_id+'"]').text());
+		console.log(employee_id);
+		/* $('.selected_employee').text($('#filter_employees').find('option[value="'+employee_id+'"]').text());
 		$('.selected_type').text($('#filter_types').find('option[value="'+type+'"]').text());
 		$('.selected_approve').text($('#filter_approve').find('option[value="'+approve+'"]').text());
-		$('.selected_month').text($('#filter_years').find('option[value="'+month+'"]').text());
+		$('.selected_month').text($('#filter_years').find('option[value="'+month+'"]').text()); */
 		
-		$('#filter_types').css('width', $('.selected_type').width() +50); 
+	/* 	$('#filter_types').css('width', $('.selected_type').width() +50); 
 		$('#filter_employees').css('width', $('.selected_employee').width() + 50); 
 		$('#filter_approve').css('width',$('.selected_approve').width() + 50); 
 		$('#filter_years').css('width',$('.selected_month').width() + 50); 
@@ -622,6 +651,22 @@ $(function(){
 		$('#filter_types').parent().css('width', $('.selected_type').width() +60); 
 		$('#filter_employees').parent().css('width', $('.selected_employee').width() + 60); 
 		$('#filter_approve').parent().css('width',$('.selected_approve').width() + 60); 
-		$('#filter_years').parent().css('width',$('.selected_month').width() + 60);
+		$('#filter_years').parent().css('width',$('.selected_month').width() + 60); */
 	}
 });
+
+function selectSearch () {
+	$(function(){
+		
+		if( $('.select_filter').length > 0 ) {
+			$('.select_filter').select2({
+				dropdownParent: $('.index_page>main'),
+				width: 'resolve',
+				placeholder: {
+					id: '-1', // the value of the option
+				  },
+				theme: "classic",
+			});
+		}
+	});
+}

@@ -44,6 +44,7 @@
                         @endif-->
                         <button class="done"><a href="#close" rel="modal:close" style="text-decoration: none;">@lang('absence.done')</a></button>
                     </div>
+                    
                 </div>
             </div>
 <?php

@@ -6,6 +6,8 @@ use App\Http\Requests\CompanyRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\Department;
+use App\Mail\ErrorMail;
+use Illuminate\Support\Facades\Mail;
 use DB;
 use Sentinel;
 
@@ -286,7 +288,12 @@ class CompanyController extends Controller
 					
 					}
 				} catch (Exception $e) {
-					echo 'Caught exception: ',  $e->getMessage(), "\n";
+					$email = 'jelena.juras@duplico.hr';
+                    $url = $_SERVER['REQUEST_URI'];
+					Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+					
+					session()->flash('error', __('ctrl.error'));
+					return redirect()->back();
 				}
 			}
 		}

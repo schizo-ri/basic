@@ -4,7 +4,7 @@
 	</div>
 <div class="modal-body">
 	<form class="form_afterhour" accept-charset="UTF-8" role="form" method="post" action="{{ route('afterhours.update', $afterhour->id) }}" >
-		<input type="text" name="ERP_leave_type" id="request_type" value="3" hidden/> 
+		<input type="text" name="ERP_leave_type" id="request_type" value="67" hidden/> 
 		<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 			<label>@lang('basic.employee')</label>
 			<select class="form-control" name="employee_id" id="select_employee" value="{{ old('employee_id') }}" size="10" autofocus required >

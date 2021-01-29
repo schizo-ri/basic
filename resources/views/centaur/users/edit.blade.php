@@ -4,7 +4,7 @@
 </div>
 <div class="modal-body">
     <form accept-charset="UTF-8" class="form_edit_user form_user" role="form" method="post" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data" >
-        @if (Sentinel::inRole('administrator'))
+        @if (Sentinel::inRole('administrator') )
             <div class="first_tab">
                 <div class="form-group upload_user_photo">
                     <label class="label_file" for="file">@lang('basic.upload_photo')

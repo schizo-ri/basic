@@ -33,7 +33,7 @@
             }
 			}
 
-            .odobri, .link {
+            .odobri, .link { cursor: pointer;
                 min-width: 100px;
                 height: auto;
                 background-color: white;

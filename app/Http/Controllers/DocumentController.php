@@ -11,6 +11,8 @@ use Sentinel;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use Log;
+use App\Mail\ErrorMail;
+use Illuminate\Support\Facades\Mail;
 
 class DocumentController extends Controller
 {
@@ -214,7 +216,11 @@ class DocumentController extends Controller
               return redirect()->back()->with('success', __('ctrl.uploaded'));
 
             } catch (\Throwable $th) {
-              return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
+                $email = 'jelena.juras@duplico.hr';
+                $url = $_SERVER['REQUEST_URI'];
+                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
+                return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
             }
           }
         }

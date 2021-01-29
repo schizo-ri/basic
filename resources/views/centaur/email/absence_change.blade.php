@@ -39,7 +39,7 @@
 			.MsgBody .Object-hover {
 				margin:0;
 			}
-			.odobri, .link {
+			.odobri, .link { cursor: pointer;
 				min-width: 100px;
 				height: auto;
 				background-color: white;

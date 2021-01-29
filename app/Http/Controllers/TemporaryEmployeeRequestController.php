@@ -14,6 +14,7 @@ use Sentinel;
 use App\Mail\TemporaryEmployeeAbsenceMail;
 use App\Mail\TemporaryEmployeeAbsenceConfirmMail;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ErrorMail;
 
 class TemporaryEmployeeRequestController extends Controller
 {
@@ -85,6 +86,10 @@ class TemporaryEmployeeRequestController extends Controller
                 }
             }
         } catch (\Throwable $th) {
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
             session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			return redirect()->back();
         }
@@ -184,6 +189,10 @@ class TemporaryEmployeeRequestController extends Controller
                 }
             } 
         } catch (\Throwable $th) {
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+            
             session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			return redirect()->back();
         }

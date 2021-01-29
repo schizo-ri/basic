@@ -12,6 +12,7 @@ use App\Models\Employee;
 use App\Models\Notice;
 use App\Models\Department;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ErrorMail;
 use App\Mail\AdCreateMail;
 use Sentinel;
 
@@ -147,6 +148,9 @@ class AdController extends Controller
 				Mail::to($email)->send(new AdCreateMail($ad));
 			}
 		} catch (\Throwable $th) {
+			$email = 'jelena.juras@duplico.hr';
+			$url = $_SERVER['REQUEST_URI'];
+			Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
 			session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			return redirect()->back();
 		} 

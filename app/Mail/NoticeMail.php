@@ -52,7 +52,7 @@ class NoticeMail extends Mailable
         
         $title = 'Nova ' . ' ' .  ' obavijest';
         if($this->notice->title) {
-            $title .= $this->notice->title;
+            $title .= ' - ' . $this->notice->title;
         } 
 
         return $this->view('Centaur::email.notice_send1')

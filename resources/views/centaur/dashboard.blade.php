@@ -2,9 +2,6 @@
 
 @section('title',config('app.name'))
 @php
-	use App\Http\Controllers\PostController;
-	
-	$thisYear = date('Y');
  	$today = new DateTime();
 	$today->modify('-1 years');
 	$today->modify('-14 days');
@@ -36,7 +33,7 @@
 							<span>@lang('absence.vacation')<br>@lang('absence.days_left')</span>
 						</p>
 						<p>
-							<span>{!! isset($data_absence[$thisYear]) && count($data_absence[$thisYear]) > 0 ? $data_absence[$thisYear]['dani_zahtjeva'] : 0 !!}</span>
+							<span>{!! isset($data_absence[ date('Y')]) && count($data_absence[ date('Y')]) > 0 ? $data_absence[ date('Y')]['dani_zahtjeva'] : 0 !!}</span>
 							<span>@lang('absence.vacation')<br>@lang('absence.days_used') <br> @lang('absence.this_year')</span>
 						</p>
 					</div>
@@ -72,7 +69,7 @@
 												<a href="{{ route('shortcuts.destroy', $shortcut->id) }}" class="action_confirm btn-delete danger icon_delete" title="{{ __('basic.delete')}}" data-method="delete" data-token="{{ csrf_token() }}">
 													<i class="fas fa-minus-square "></i>
 												</a>
-												<a class="" href="{{ $shortcut->url }}"  title="{{ __('basic.new_post')}}">
+												<a class="" href="{{ $shortcut->url }}"  title="{{ __('basic.shortcut')}}">
 													{{ $shortcut->title }}
 												</a>
 											</span>
@@ -92,30 +89,62 @@
 						<div class="col-md-12 padd_0 float_left layout_button ">
 							@if(isset($employee) )
 								@if( isset($sick_leave_not_approve) && $sick_leave_not_approve ) 
-									<button class="sick_button"><a href="{{ route('absences.edit', $sick_leave_not_approve->id) }}" rel="modal:open">
+									<button class="sick_button"><a href="{{ route('absences.edit', $sick_leave_not_approve->id) }}" rel="modal:open" title="{{ __('absence.add_absence')}}" >
 										<span>
 											<span class="img sick"></span>
 											<p>@lang('absence.close_sick_leave')</p>
 										</span></a>
 									</button>
 								@else 
-									<button class=""><a href="{{ route('absences.create') }}" rel="modal:open">
+									<button class=""><a href="{{ route('absences.create') }}" rel="modal:open" title="{{ __('absence.add_absence') }}">
 										<span>
 											<span class="img beach"></span>
 											<p>@lang('absence.request_vacation')</p>
 										</span></a>
 									</button>
 								@endif
-								@if(in_array('Prekovremeni', $moduli))  
-									<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
-										<span>
-											<span class="img clock"></span>
-											<p>@lang('basic.add_afterhour')</p>
-										</span></a>
-									</button>
-								@endif
+								@if( strtotime(date('Y-m-d')) >= strtotime(date('2021-02-01'))  )  
+									@if( in_array('Radiona', $employee->employeesDepartmentName()) || in_array('Monteri', $employee->employeesDepartmentName()) || Sentinel::inRole('administrator')  )
+										@if(in_array('Dnevnik', $moduli))
+											<button class=""><a href="{{ route('work_diaries.create') }}" rel="modal:open">
+												<span>
+													<span class="img clock"></span>
+													<p>@lang('basic.add_work_diary')</p>
+												</span></a>
+											</button>
+										@endif
+									@else
+										@if(in_array('Prekovremeni', $moduli))
+											<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
+												<span>
+													<span class="img clock"></span>
+													<p>@lang('basic.add_afterhour')</p>
+												</span></a>
+											</button>
+										@endif
+									@endif
+								@else
+									@if( Sentinel::inRole('administrator')  )
+										@if(in_array('Dnevnik', $moduli))
+											<button class=""><a href="{{ route('work_diaries.create') }}" rel="modal:open">
+												<span>
+													<span class="img clock"></span>
+													<p>@lang('basic.add_work_diary')</p>
+												</span></a>
+											</button>
+										@endif
+									@endif
+									@if(in_array('Prekovremeni', $moduli))
+										<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
+											<span>
+												<span class="img clock"></span>
+												<p>@lang('basic.add_afterhour')</p>
+											</span></a>
+										</button>
+									@endif		
+								@endif								
 								@if( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasEmployeeTask) > 0 )
-									<button class="" ><a href="{{ route('task_list') }}" rel="modal:open">
+									<button class="" ><a href="{{ route('task_list') }}" rel="modal:open" title="{{ __('basic.tasks') }}">
 										<span>
 											<span class="img task"></span>
 											<p>@lang('calendar.tasks')</p>
@@ -124,7 +153,7 @@
 								@endif
 								@if(in_array('Locco vožnja', $moduli))  
 									<button class="{!! $locco_active->first() ? 'background_red' : '' !!}">
-										<a href="{!! $locco_active->first() ? route('loccos.edit', $locco_active->first()->id ) : route('loccos.create') !!}" rel="modal:open">
+										<a href="{!! $locco_active->first() ? route('loccos.edit', $locco_active->first()->id ) : route('loccos.create') !!}" rel="modal:open"  title="{{ __('basic.add_locco') }}">
 										<span>
 											<span class="img car "></span>
 												<p>{!! $locco_active->first()  ? __('basic.finish_locco') : __('basic.add_locco') !!}</p>
@@ -132,7 +161,7 @@
 									</button>
 								@endif
 								@if(in_array('Putni nalozi', $moduli))  
-									<button class="" ><a href="{{ route('travel_orders.show', $employee->id) }}" class="travel_show" rel="modal:open">
+									<button class="" ><a href="{{ route('travel_orders.show', $employee->id) }}" class="travel_show" rel="modal:open"  title="{{ __('basic.travelorders') }}">
 										<span>
 											<span class="img travel"></span>
 												<p>{{  __('basic.travel_orders') }}</p>
@@ -150,7 +179,7 @@
 									</button> --}}
 								@endif
 								<button class="button_absence" >
-									<a href="{{ route('absences.index') }}" >
+									<a href="{{ route('absences.index') }}"  title="{{ __('absence.absences') }}">
 										<span>
 											<span class="img all_req"></span>
 												<p>{{  __('absence.view_all_request') }}</p>
@@ -165,7 +194,7 @@
 									</a>
 								</button>
 							@elseif(in_array('Privremeni', $moduli) && isset($temporaryEmployee))
-								<button class=""><a href="{{ route('temporary_employee_requests.create') }}" rel="modal:open">
+								<button class=""><a href="{{ route('temporary_employee_requests.create') }}" rel="modal:open" title="{{ __('absence.add_absence') }}"> 
 									<span>
 										<span class="img beach"></span>
 										<p>@lang('absence.request_vacation')</p>
@@ -173,7 +202,7 @@
 								</button>
 							@endif
 							<button class="">
-								<a href="{{ route('radne_upute') }}" >
+								<a href="{{ route('radne_upute') }}" title="{{ __('basic.instructions') }}">
 									<span>
 										<span class="img books"></span>
 										<p>@lang('basic.instructions')</p>
@@ -209,7 +238,7 @@
 					<section>
 						@if(in_array('Kalendar', $moduli))
 							@if(isset($employee))
-								<a class="btn btn-primary btn-lg btn-new" href="{{ route('events.create') }}" rel="modal:open">
+								<a class="btn btn-primary btn-lg btn-new" href="{{ route('events.create') }}" rel="modal:open" title="{{ __('calendar.add_event')}} ">
 									<i style="font-size:11px" class="fa">&#xf067;</i>
 								</a>
 							@endif
@@ -239,7 +268,6 @@
 							</div>
 						@endif
 					</section>
-					
 				</div>
 			</div>
 		</section>

@@ -20,6 +20,7 @@ use App\Http\Controllers\BasicAbsenceController;
 use Illuminate\Support\Facades\Mail;
 use Centaur\Mail\CentaurWelcomeEmail;
 use App\Mail\UserCreateMail;
+use App\Mail\ErrorMail;
 
 class UserController extends Controller
 {
@@ -51,10 +52,10 @@ class UserController extends Controller
     public function index()
     {
         $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->where('active',1)->get();
-        $employees = Employee::employees_firstNameASC();
-		$departmentRoles = DepartmentRole::get();
-		$works = Work::get();
-		$empl = Sentinel::getUser()->employee;
+		/* $departmentRoles = DepartmentRole::get(); */
+        $empl = Sentinel::getUser()->employee;
+        /* dd(Sentinel::getUser()->employee->work->department->departmentRole->first()->permissions); */
+        
         $permission_dep = array();
 		if($empl) {
             if($empl->work && $empl->work->department) {
@@ -63,7 +64,7 @@ class UserController extends Controller
         } 
         $roles = app()->make('sentinel.roles')->createModel()->all();
 
-        return view('Centaur::users.index', ['users' => $users, 'employees' => $employees, 'works' => $works, 'departmentRoles' => $departmentRoles,'permission_dep' => $permission_dep]);
+        return view('Centaur::users.index', ['users' => $users,'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -119,6 +120,10 @@ class UserController extends Controller
             try {
                 Mail::to($email)->queue(new CentaurWelcomeEmail($email, $code));
             } catch (\Throwable $th) {
+                $email = 'jelena.juras@duplico.hr';
+                    $url = $_SERVER['REQUEST_URI'];
+                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
                 return redirect()->back()->with('error',  __('ctrl.no_valid_email')); 
             }            
         }
@@ -178,11 +183,15 @@ class UserController extends Controller
                 $request->file('fileToUpload')->move($path, $docName);
                 DocumentController::createResizedImage($path . $docName, $path . pathinfo($docName)['filename'] . '_small.' . pathinfo($docName)['extension'], 200, 250);
 
-            /*     return redirect()->back()->with('success', __('ctrl.uploaded')); */
+             /*     return redirect()->back()->with('success', __('ctrl.uploaded')); */
   
-              } catch (\Throwable $th) {
+            } catch (\Throwable $th) {
+                $email = 'jelena.juras@duplico.hr';
+                $url = $_SERVER['REQUEST_URI'];
+                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
                 return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
-              }
+            }
         }
         
         /* Poruku korisniku */
@@ -359,6 +368,10 @@ class UserController extends Controller
             /*     return redirect()->back()->with('success', __('ctrl.uploaded')); */
   
               } catch (\Throwable $th) {
+                $email = 'jelena.juras@duplico.hr';
+                $url = $_SERVER['REQUEST_URI'];
+                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+                
                 return redirect()->back()->with('error',  __('ctrl.not_uploaded')); 
               }
         }

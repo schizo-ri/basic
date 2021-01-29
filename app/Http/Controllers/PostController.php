@@ -452,7 +452,7 @@ class PostController extends Controller
 		return $comment_count;
 	}
 	
-	static function countComment_all () 
+	/* static function countComment_all () 
 	{
 		$comment_count = 0;
 		
@@ -473,10 +473,9 @@ class PostController extends Controller
 	
 		}
 		
-		
 		return $comment_count;
 	}
-	
+	 */
 	static function countPost ($post_id)
 	{
 		$user = Sentinel::getUser();

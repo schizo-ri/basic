@@ -17,6 +17,8 @@ a, button {
     width: 100%;
     background: #ffffff;
     box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15); 
+    -moz-border-radius: 5px;
+    -webkit-border-radius:5px;
     border-radius: 5px;
     overflow: auto;
 }
@@ -177,6 +179,7 @@ ul.admin_pages li >span.image_template{
     display: flex;
     justify-content: center;
     align-items: center;
+    display: none;
 }
 #admin_page table span.role {
     display: none;
@@ -255,6 +258,7 @@ ul.admin_pages li >span.image_template{
     .index_main #admin_page header {
         padding: 10px;
         height: auto;
+        z-index: 1;
     }
     .admin_main .index_table_filter input {
         height: 30px;
@@ -273,19 +277,35 @@ ul.admin_pages li >span.image_template{
     }
 }
 
+@media (max-width: 768px) {
+    #admin_page .index_table_filter {
+        padding: 0;
+    }
+}
 @media (max-width: 450px) {
+    #admin_page .index_table_filter {
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
     #admin_page {
         height: 100%;
         overflow: auto;
     }
     .index_page aside > .admin_panel, .index_page .index_main.admin_main {
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
         border-radius: 0;
     }
     .admin_main .link_back {
         padding: 10px;
         top: 20px;
+        left: 10px;
         padding: 0;
         margin: 0;
+        z-index: 2;
+        height: 30px;
     }
     ul.admin_pages {
         padding: 0;

@@ -35,8 +35,8 @@
 				{!! ($errors->has('approved_reason') ? $errors->first('approved_reason', '<p class="text-danger">:message</p>') : '') !!}	
 			</div>
 			<div class="form-group">
-				<input type="radio" name="approve" id="approve" value="1" checked> <label for="approve">@lang('absence.approved')</label>
-				<input type="radio" name="approve" id="not_approve" value="0" > <label for="not_approve">@lang('absence.is_not_approved')</label><br>
+				<input type="radio" name="approve" id="approve" value="1" {!! $afterHour->approve == 1 ? 'checked' : '' !!}> <label for="approve">@lang('absence.approved')</label>
+				<input type="radio" name="approve" id="not_approve" value="0"  {!! $afterHour->approve == 0 ? 'checked' : '' !!}> <label for="not_approve">@lang('absence.is_not_approved')</label><br>
 			</div>
 			<div class="form-group">
 				<label for="email">@lang('absence.email_send')</label><br>
@@ -51,49 +51,52 @@
 </div>
 <script>
 $('#da').click(function(){
-		$('.odobrenje').show();
-		$('.confirmation_update_form').on('submit',function(e){
-			if (! confirm("Sigurno želiš promijeniti odobrenje zahtjeve?")) {
-				return false;
-			} else {
-				e.preventDefault();
-				url = $(this).attr('action');
-				form_data = $(this).serialize(); 
-			
-				approve = $( '#filter_approve' ).val();
-				type = $('#filter_types').val();
-				month = $('#filter_years').val();
-				employee_id =  $('#filter_employees').val();
-				url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
-				token = $( this ).attr('data-token');
+	$('.odobrenje').show();
+	$('.confirmation_update_form').on('submit',function(e){
+		if (! confirm("Sigurno želiš promijeniti odobrenje zahtjeve?")) {
+			return false;
+		} else {
+			e.preventDefault();
+			url = $(this).attr('action');
+			form_data = $(this).serialize(); 
+		
+			approve = $( '#filter_approve' ).val();
+			type = $('#filter_types').val();
+			month = $('#filter_years').val();
+			employee_id =  $('#filter_employees').val();
+			url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
+			token = $( this ).attr('data-token');
+			id = $('input[name=id]').val();
+			console.log(url);
+			console.log(form_data);
+			console.log(url_load);
 
-				/* console.log(url);
-				console.log(form_data);
-				console.log(url_load); */
-				$.ajaxSetup({
-					headers: {
-						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-					}
-				});
-				$.ajax({
-					url: url,
-					type : 'get',
-					data: form_data,
-					beforeSend: function(){
-						$('body').prepend('<div id="loader"></div>');
-					},
-					success: function( response ) {
-						$('tbody').load(url_load + " tbody>tr",function(){
-							$('#loader').remove();
-							$.modal.close();
-							$('<div class="modal"><div class="modal-header">'+response+'</div></div>').appendTo('body').modal();
-						});
-					}, 
-					error: function(xhr,textStatus,thrownError) {
-						console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError);                            
-					}
-				});
-			}
-		}); 
-	});
+			console.log(id);
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+			$.ajax({
+				url: url,
+				type : 'get',
+				data: form_data,
+				beforeSend: function(){
+					$('body').prepend('<div id="loader"></div>');
+				},
+				success: function( response ) {
+					$('tr#requestAft_'+id).load(url_load + " tr#requestAft_"+id+" td",function(){
+						$('#loader').remove();
+						$('tr#requestAft_'+id).find('.absence_end_date').hide();
+						$.modal.close();
+						$('<div class="modal"><div class="modal-header">'+response+'</div></div>').appendTo('body').modal();
+					});
+				}, 
+				error: function(xhr,textStatus,thrownError) {
+					console.log("validate eror " + xhr + "\n" + textStatus + "\n" + thrownError);                            
+				}
+			});
+		}
+	}); 
+});
 </script>

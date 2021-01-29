@@ -32,7 +32,7 @@
 								<td>{{ $department->first()->name }}</td>
 								<td>
 									@foreach ($department as $employee_department)
-										<span class="col-3 float_l">{{ $employee_department->last_name . ' ' . $employee_department->first_name }}</span>
+										<span class="col-xs-3 col-sm-4 col-md-12 col-lg-12 float_l">{{ $employee_department->last_name . ' ' . $employee_department->first_name }}</span>
 									@endforeach
 								</td>
 								<td>

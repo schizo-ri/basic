@@ -14,12 +14,14 @@
 					<i class="fas fa-plus"></i>
 				</a>
 			@endif 
-			<select id="filter_month" class="select_filter filter_loccos" >
-				{{-- <option value="all">@lang('basic.all_month')</option> --}}
-				@foreach ($dates as $date)
-					<option value="{{ $date }}">{{ $date }}</option>
-				@endforeach
-			</select>
+			<div class="div_select2">
+				<select id="filter_month" class="select_filter filter_loccos" >
+					{{-- <option value="all">@lang('basic.all_month')</option> --}}
+					@foreach ($dates as $date)
+						<option value="{{ $date }}">{{ $date }}</option>
+					@endforeach
+				</select>
+			</div>
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -50,7 +52,7 @@
 							<td>{{ $locco->start_km }}</td>
 							<td>{{ $locco->end_km }}</td>
 							<td>{{ $locco->distance }}</td>
-							<td>{{ $locco->comment }} </td>
+							<td>{{ date('H:i', strtotime($locco->date)) . '-'. date('H:i', strtotime($locco->end_date))  }} {{ $locco->comment }} </td>
 							<td >
 								<!-- <button class="collapsible option_dots float_r"></button> -->
 								@if( ! $locco->travel && (Sentinel::getUser()->hasAccess(['loccos.delete']) || in_array('loccos.delete', $permission_dep))  )

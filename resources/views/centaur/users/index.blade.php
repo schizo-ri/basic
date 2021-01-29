@@ -33,7 +33,7 @@
 						<tr>
 							<th>@lang('basic.fl_name')</th>
 							<th>@lang('basic.work')</th>
-							<th>@lang('basic.dep_permissions')</th>
+							{{-- <th>@lang('basic.dep_permissions')</th> --}}
 							<th>@lang('basic.permissions')</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
@@ -47,9 +47,9 @@
 										$image_employee = DashboardController::profile_image($user->employee->id);
 										$user_name = DashboardController::user_name($user->employee->id);
 									}
-									if(isset($user->work_id) && $departmentRoles->where('department_id', $user->work_id)->first()) {
+								/* 	if(isset($user->work_id) && $departmentRoles->where('department_id', $user->work_id)->first()) {
 										$dep_roles = explode(  ',', $departmentRoles->where('department_id', $user->work_id)->first()->permissions);
-									}
+									} */
 								@endphp
 								<tr class="tr_open_link" data-href="/users/{{ $user->id }}" data-modal >
 									<td>
@@ -61,8 +61,8 @@
 										<span class="float_l">{{ $user->last_name . ' ' . $user->first_name }}<br>
 										<span class="user_mail">{{ $user->email }}</span></span>
 									</td>						
-									<td>{!! isset($user->work_id) && $works->where('id', $user->work_id)->first() ? $works->where('id', $user->work_id)->first()->department['name'] . ' - ' .  $works->where('id', $user->work_id)->first()->name : '' !!}</td>
-									<td>
+									<td>{!! $user->employee && $user->employee->work ? $user->employee->work->department->name . ' - ' . $user->employee->work->name : '' !!}</td>
+									{{-- <td>
 										@if(isset($dep_roles))
 											@for ($i = 0; $i < count($dep_roles); $i++)
 												<span class="role _{{ $i }}">{{ $dep_roles[$i] }} </span>
@@ -70,7 +70,7 @@
 											<span class="more"> + {{ count($dep_roles)-2 }} @lang('basic.more')</span>
 											<span class="hide">@lang('basic.hide')</span>
 										@endif
-									</td>
+									</td> --}}
 									<td>
 										@if ($user->roles->count() > 0)
 											{{ $user->roles->implode('name', ', ') }}
@@ -85,17 +85,17 @@
 													<i class="far fa-edit"></i>
 											</a>
 										@endif
-										@if(Sentinel::getUser()->hasAccess(['employees.create']) && ! $employees->where('user_id',$user->id)->first())
+										@if(Sentinel::getUser()->hasAccess(['employees.create']) && ! $user->employee)
 											<a href="{{ route('employees.create', ['user_id' => $user->id] ) }}" class="" title="{{ __('basic.add_employee') }}" rel="modal:open">
 												<i class="fas fa-user-plus"></i>
 											</a>
 										@endif
-										@if(Sentinel::getUser()->hasAccess(['employees.update']) && $employees->where('user_id',$user->id)->first())
-											<a href="{{ route('employees.edit',$employees->where('user_id',$user->id)->first()->id ) }}" class="" title="{{ __('basic.edit_employee') }}" rel="modal:open">
+										@if(Sentinel::getUser()->hasAccess(['employees.update']) && $user->employee)
+											<a href="{{ route('employees.edit', $user->employee->id ) }}" class="" title="{{ __('basic.edit_employee') }}" rel="modal:open">
 												<i class="fas fa-user-cog"></i>
 											</a>
 										@endif
-										@if(Sentinel::getUser()->hasAccess(['users.delete'])&& ! $employees->where('user_id',$user->id)->first())
+										@if(Sentinel::getUser()->hasAccess(['users.delete']) && ! $user->employee)
 											<a href="{{ route('users.destroy', $user->id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" >
 												<i class="far fa-trash-alt"></i>
 											</a>
@@ -109,7 +109,6 @@
 				</table>
 			@endif
 		</div>
-		
 		<div class="second_view">
 			<div class="user_filter">
 				<img class="img_search" src="{{ URL::asset('icons/filter.png')  }}" alt="Filter"/>
@@ -138,9 +137,9 @@
 								$image_employee = DashboardController::profile_image($user->employee->id);
 								$user_name = DashboardController::user_name($user->employee->id);
 							}
-							if(isset($user->work_id) && $departmentRoles->where('department_id', $user->work_id)->first()) {
+							/* if(isset($user->work_id) && $departmentRoles->where('department_id', $user->work_id)->first()) {
 								$dep_roles = explode(  ',', $departmentRoles->where('department_id', $user->work_id)->first()->permissions);
-							}
+							} */
 						@endphp
 						<div class="user_card" title="{{  $user->last_name }}">
 							<div>
@@ -151,17 +150,17 @@
 												<i class="far fa-edit"></i>
 											</a>
 										@endif
-										@if(Sentinel::getUser()->hasAccess(['employees.create']) && ! $employees->where('user_id',$user->id)->first())
+										@if(Sentinel::getUser()->hasAccess(['employees.create']) &&  ! $user->employee)
 											<a href="{{ route('employees.create', ['user_id' => $user->id] ) }}" class="edit_user" title="{{ __('basic.add_employee') }}" rel="modal:open">
 												<i class="fas fa-user-plus"></i>
 											</a>
 										@endif
-										@if(Sentinel::getUser()->hasAccess(['employees.update']) && $employees->where('user_id',$user->id)->first())
-											<a href="{{ route('employees.edit',$employees->where('user_id',$user->id)->first()->id ) }}" class="edit_user" title="{{ __('basic.edit_employee') }}" rel="modal:open">
+										@if(Sentinel::getUser()->hasAccess(['employees.update'])  && $user->employee)
+											<a href="{{ route('employees.edit', $user->employee->id ) }}" class="edit_user" title="{{ __('basic.edit_employee') }}" rel="modal:open">
 												<i class="fas fa-user-cog"></i>
 											</a>
 										@endif
-										@if(Sentinel::getUser()->hasAccess(['users.delete'])&& !$employees->where('user_id',$user->id)->first())
+										@if(Sentinel::getUser()->hasAccess(['users.delete']) && ! $user->employee)
 											<a href="{{ route('users.destroy', $user->id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" >
 												<i class="far fa-trash-alt"></i>
 											</a>

@@ -37,7 +37,7 @@ class EducationController extends Controller
             $employee = Sentinel::getUser()->employee;
            
             if( $employee ) {
-                $user_departments_id = Employee::employeesDepartment( $employee);
+                $user_departments_id =  $employee->employeesDepartment();
                 $education_employee = collect();
 
                 if( count( $user_departments_id ) > 0 ) {

@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Sentinel;
+use Log;
 use App\Models\MailTemplate;
 
 class ErrorMail extends Mailable
@@ -43,13 +44,14 @@ class ErrorMail extends Mailable
             $template_text_body = MailTemplate::textBody( $mail_template );
             $template_text_footer = MailTemplate::textFooter( $mail_template );
         }
-        
+        Log::info( Sentinel::getUser());
+
         if(is_array($this->request)) {
             return $this->view('emails.error.new_error')
             ->subject( "Prijava " . " greške" )
              ->with([
                  'request' =>  $this->request,
-                 'user' => Sentinel::getUser()->first_name .' '. Sentinel::getUser()->last_name,
+                 'user' => Sentinel::getUser() ? Sentinel::getUser()->first_name .' '. Sentinel::getUser()->last_name : 'cron_job',
                  'user_mail' => Sentinel::getUser()->email,
                  'request_uri' => $this->request_uri,
                  'url' => $_SERVER['HTTP_HOST'],
@@ -64,7 +66,7 @@ class ErrorMail extends Mailable
             ->subject( "Prijava " . " greške" )
              ->with([
                  'request' =>  $this->request,
-                 'user' => Sentinel::getUser()->first_name .' '. Sentinel::getUser()->last_name,
+                 'user' => Sentinel::getUser() ? Sentinel::getUser()->first_name .' '. Sentinel::getUser()->last_name : 'cron_job',
                  'user_mail' => Sentinel::getUser()->email,
                  'request_uri' => $this->request_uri,
                  'url' => $_SERVER['HTTP_HOST'],

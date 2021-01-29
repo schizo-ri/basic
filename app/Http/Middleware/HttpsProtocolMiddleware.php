@@ -16,6 +16,12 @@ class HttpsProtocolMiddleware
      */
     public function handle($request, Closure $next)
     {
+        if(is_null(session('locale')))
+        {
+            session(['locale'=> "hr"]);
+        }
+        app()->setLocale(session('locale'));
+
         if (!$request->secure() &&  App::environment() != 'local') {
             return redirect()->secure($request->getRequestUri());
         }

@@ -18,6 +18,7 @@ use DateTime;
 use Sentinel;
 use App\Mail\QuestionnaireSend;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ErrorMail;
 use App\Models\Emailing;
 use App\Models\Department;
 
@@ -358,6 +359,10 @@ class QuestionnaireController extends Controller
 					}
 				}
 			} catch (\Throwable $th) {
+				$email = 'jelena.juras@duplico.hr';
+				$url = $_SERVER['REQUEST_URI'];
+				Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+				
 				session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 				return redirect()->back();
 			}

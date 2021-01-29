@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Employee;
 use DateTime;
 use App\Models\MailTemplate;
+use Log;
 
 class AnniversaryMail extends Mailable
 {
@@ -70,13 +71,20 @@ class AnniversaryMail extends Mailable
         } else {
             $dana =  'za ' . $br_dana . ' dana';
         } 
-            
+
+        $variable = array();
+        array_push ($variable , $this->employee->user['first_name']   . ' ' . $this->employee->user['last_name'] );
+        array_push ($variable , $dana );
+        array_push ($variable , date("d.m.Y", strtotime($this->employee->reg_date)) );
+        /* Log::info($variable);
+        Log::info($template_text_body); */
         return $this->view('emails.employees.anniversary')
                     ->subject( __('basic.anniversary') . ' - ' .  $this->employee->first_name . ' ' .  $this->employee->last_name)
                     ->with([
                         'employee' =>  $this->employee,
                         'dana' =>  $dana,
                         'years' =>  $years,
+                        'variable' =>  $variable,
                         'template_mail' => $mail_template,
                         'mail_style' => $mail_style,
                         'text_header' => $template_text_header,

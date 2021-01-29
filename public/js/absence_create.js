@@ -15,6 +15,20 @@ $(function(){
 	var today = date.getFullYear() + '-' + ( '0' + (date.getMonth()+1) ).slice( -2 ) + '-' + ( '0' + (date.getDate()) ).slice( -2 );
 	var user_role;	
 
+	$('.btn-submit').on('click',function(){
+		$( this ).hide();
+	});
+	
+	$('input').on('change',function(){
+		$('.btn-submit').show();
+	});
+	$('select').on('change',function(){
+		$('.btn-submit').show();
+	});
+	$('textarea').on('change',function(){
+		$('.btn-submit').show();
+	});
+
 	if($('form.absence').length > 0) {
 		$( "#request_type" ).on('change',function() {
 			$('input[name=start_date]').prop('disabled', false);
@@ -24,7 +38,7 @@ $(function(){
 			type = $(this).val();
 			employee_id = $('#select_employee').val();
 
-			if(type == 'IZL' || type == 61) {
+			if(type == 'IZL' || type == 63) {
 				start_date = $( "#start_date" ).val();
 				end_date = $( "#end_date" );
 				end_date.val(start_date);			
@@ -35,8 +49,6 @@ $(function(){
 				$('#start_date').val(today);
 				$('.form-group.time_group').show();
 				$('.form-group.date2').hide();
-
-				/* 	getTask(employee_id, start_date); */
 
 				$('input[name=end_time]').on('blur',function(){
 					start_time = $('input[name=start_time]').val();
@@ -69,7 +81,7 @@ $(function(){
 				$('.btn-submit').show();
 			}
 		
-			if(type == 'BOL' || type == 2 || type == 'IZL' || type == 61) { 
+			if(type == 'BOL' || type == 2 || type == 'IZL' || type == 63) { 
 				$('.datum.date2').hide();
 				if(type == 'BOL' || type == 2) {
 				
@@ -82,7 +94,7 @@ $(function(){
 				$('.datum.date2').show();
 			}
 
-			if(type == 'SLD') {
+			if(type == 'SLD' || type == 66) {
 				employee_id = $('#select_employee').val();
 
 				url = location.origin + '/days_offUnused/'+employee_id;
@@ -137,11 +149,7 @@ $(function(){
 			} 
 		
 			employee_id = $('#select_employee').val();
-			// na promjenu tipa zahtjeva sa erpa dohvatiti taskove ako je IZLAZAK
-			if(type == 'IZL' || type == 61) {
-				/* $('.tasks').remove();
-				getTask(employee_id, start_date); */
-			}
+			
 		});
 		
 		$( "#end_date" ).on('change',function() {
@@ -150,7 +158,8 @@ $(function(){
 			
 			StartDate = new Date(start_date);
 			EndDate = new Date(end_date);
-			if(EndDate != 'Invalid Date' &&  EndDate < StartDate) {
+		
+			if(EndDate != 'Invalid Date' && EndDate < StartDate) {
 				$('.days_request').text('Nemoguće poslati zahtjev. Završni datum ne može biti prije početnog');
 				$('.days_request').show();
 				$('.btn-submit').hide();
@@ -195,24 +204,21 @@ $(function(){
 			}
 		});
 	}
-	if($('form.form_afterhour').length > 0) {
-		$( "#date" ).on('change',function() {
+	if($('form.form_afterhour').length > 0 || $('form.form_work_diary').length > 0) {
+		/* $( "#date" ).on('change',function() {
 			start_date = $( this ).val();
 			employee_id = $('#select_employee').val();
-		
 			
-			/* getTask(employee_id, start_date); */
+			getTask(employee_id, start_date);
 		});
 		$( "#select_employee" ).on('change',function() {
 			employee_id = $(this).val();
 			start_date = $( "#date" ).val();
-		
 
 			if( employee_id != '' &&  employee_id != undefined ) {
-			/* 	getTask(employee_id, start_date); */
+				getTask(employee_id, start_date);
 			}
-		});	
-
+		});	 */
 	}
 });
 
@@ -234,7 +240,12 @@ function getTask(employee_id, start_date)
 				});
 				select_tasks += '</select></div>';
 				$('.tasks').remove();
-				$('.time_group').before(select_tasks);
+				if ($('form.form_afterhour').length > 0 ) {
+					$('.time_group').before(select_tasks);
+				}
+				if ($('form.form_work_diary').length > 0 ) {
+					$('.work_task_group').before(select_tasks);
+				}
 			}
 		},
 		error: function(jqXhr, json, errorThrown) {

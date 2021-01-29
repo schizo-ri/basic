@@ -72,3 +72,11 @@ Artisan::command('stranger', function () {
 Artisan::command('task', function () {
     $this->info("Novi zadatak!");
 });
+
+Artisan::command('idCard', function () {
+    $this->info("Istek osobne iskaznice!");
+});
+
+Artisan::command('sickLeave', function () {
+    $this->info("Bolovanje upis u Odoo!");
+});

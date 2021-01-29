@@ -7,6 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\VehicalService;
 use App\Models\Car;
 use Sentinel;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\VehicalServiceImport;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ErrorMail;
 use DateTime;
 
 class VehicalServiceController extends Controller
@@ -26,7 +30,7 @@ class VehicalServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
@@ -34,14 +38,36 @@ class VehicalServiceController extends Controller
 		if($empl) {
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
         } 
-        $cars = Car::get('registration');
-
         $vehicalServices = VehicalService::orderBy('date','DESC')->get();
+        
+        $cars = Car::orderBy('registration', 'ASC')->get();
         $dates = array();
         foreach (array_keys($vehicalServices->groupBy('date')->toArray()) as $date) {
             array_push($dates, date('Y',strtotime($date)) );
         }
-       
+        $dates = array_unique($dates);
+        rsort($dates);
+        
+        if(isset( $request['date'] )  ) {
+            $date = $request['date'];
+        } else {
+            $date = date('Y');
+        }
+        
+        if(  $date != null &&  $date != 'null') {
+          
+            $vehicalServices = $vehicalServices->filter(function ($vehicalService, $key) use ($date) {
+                return date('Y',strtotime( $vehicalService->date )) == $date;
+            });
+        }
+      
+        if( isset( $request['car']) && $request['car'] != null && $request['car'] != 'null') {
+            $car_id =  $request['car'];
+            $vehicalServices = $vehicalServices->filter(function ($vehicalService, $key) use ( $car_id ) {
+                return $vehicalService->car_id == $car_id;
+            });
+        } 
+     
         return view('Centaur::vehical_services.index', ['vehicalServices' => $vehicalServices, 'cars' => $cars,'dates' => array_unique($dates),'permission_dep' => $permission_dep]);
     }
 
@@ -161,5 +187,23 @@ class VehicalServiceController extends Controller
         session()->flash('success',__('ctrl.data_delete'));		
         return redirect()->back();
 
+    }
+
+    public function importService ()
+    {
+        try {
+            Excel::import(new VehicalServiceImport, request()->file('file'));
+            
+            session()->flash('success',  __('ctrl.uploaded'));
+            return redirect()->back();
+
+        } catch (Throwable $th) {
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+            
+            session()->flash('error',  __('ctrl.file_error'));
+            return redirect()->back();
+        }
     }
 }
