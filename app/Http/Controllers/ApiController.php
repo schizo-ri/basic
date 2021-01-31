@@ -32,28 +32,20 @@ class ApiController extends Controller
         $this->middleware('sentinel.auth');
         $this->user = 'employee_portal_admin';
         $this->password = 'duplico1234';
-        /* $this->dbname = 'duplico_test';
+       /*  $this->dbname = 'duplico_test';
         $this->server_url = 'https://test.odoo.eur.hr:8016/xmlrpc/'; */
         $this->dbname = 'duplico';
-        /* $this->server_url = 'https://194.36.47.181:8025/xmlrpc/'; */
         $this->server_url = 'https://sv019erp.intranet.duplico.hr:8025/xmlrpc/';
         $this->API = 'employee.portal.api';     
     }
     
     public function index()
     {
-       /*  $response = $this->connect_id_get(); */
+        /* $response = $this->connect_id_get(); */
 
         /*  $response = $this->get_available_leave_types(); */
-        /*   array:4 [▼
-                "holiday" => "Godišnji odmor"
-                2 => "Bolovanje"
-                3 => "Kompenzacijska naknada dana"
-                4 => "Neplaćeno"
-                61 => "Izlazak"
-            ] 
-        */
-       /*  array:9 [▼
+       
+        /*  array:9 [▼
             "holiday" => "Godišnji odmor"
             2 => "Bolovanje"
             3 => "Kompenzacijska naknada dana"
@@ -64,14 +56,14 @@ class ApiController extends Controller
             66 => "Slobodan dan"
             67 => "Prekovremeni sati"
         ]
- */
-       /*    $response = $this->get_employee_available_projects(33);  */
+        */
+         /*  $response = $this->get_employee_available_projects(33);  */
         /*   array:1 [▼
                 58 => "[P-000] 000 Implementacija Odoo ERP-a, [0001] Duplico d.o.o."
             ] 
         */
 
-       /*    $response = $this->get_employee_project_tasks(33, '2021-01-25');  */
+        $response = $this->get_employee_project_tasks(43, '2021-01-29'); 
         /*  array:2 [▼
             72 => "Kategorizacija artikala za ERP"
             1117 => "Rekapitulacija projekta - proučiti"

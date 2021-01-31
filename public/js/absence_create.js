@@ -217,8 +217,8 @@ $(function(){
 
 			if( employee_id != '' &&  employee_id != undefined ) {
 				getTask(employee_id, start_date);
-			}
-		});	 */
+			} 
+		});	*/
 	}
 });
 

@@ -25,6 +25,8 @@ use Log;
 
 class AbsenceController extends BasicAbsenceController
 {
+	private $api_erp;
+
     /**
 		*
 		* Set middleware to quard controller.
@@ -32,7 +34,8 @@ class AbsenceController extends BasicAbsenceController
 	*/
     public function __construct()
     {
-        $this->middleware('sentinel.auth');
+		$this->middleware('sentinel.auth');
+		$this->api_erp = false;
     }
 	
 	/**
@@ -387,12 +390,13 @@ class AbsenceController extends BasicAbsenceController
 								session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 								return redirect()->back();
 							}
+					    }
+					    if ( $this->api_erp ) {
+							if( $request['type'] == 'BOL') {
+								$api = new ApiController();
+								$leave_types = $api->send_leave_request($absence, 'abs');
+							}
 					   }
-					  /*  if( $request['type'] == 'BOL') {
-							$api = new ApiController();
-							$leave_types = $api->send_leave_request($absence, 'abs');
-						} */
-					   
 					} else {
 						session()->flash('error',  __('ctrl.request_exist'));
 						return redirect()->back();
@@ -462,11 +466,13 @@ class AbsenceController extends BasicAbsenceController
 					$message = session()->flash('success', __('ctrl.request_sent'));
 		
 					return redirect()->back()->with('modal','true')->with('absence','true')->withFlashMessage($message);
-			   	}
-				/* if( $request['type'] == 'BOL') {
-					$api = new ApiController();
-					$leave_types = $api->send_leave_request($absence, 'abs');
-				} */
+				    }
+				    if ( $this->api_erp ) {
+						if( $request['type'] == 'BOL') {
+							$api = new ApiController();
+							$leave_types = $api->send_leave_request($absence, 'abs');
+						}
+					}
 		    } else {
 				session()->flash('error',  __('ctrl.request_exist'));
 				return redirect()->back();
@@ -672,22 +678,24 @@ class AbsenceController extends BasicAbsenceController
 			$absence->updateAbsence($data);
 
 			// slanje zahtjeva u Odoo
-			/* try {
-				$api = new ApiController();
-				$send_leave_request = $api->send_leave_request($absence, 'abs');
-				if($send_leave_request == true) {
-					$message_erp = ' Zahtjev je uspješno zapisan u Odoo.';
-				} else {
-					$message_erp = ' Zahtjev NIJE zapisan u Odoo.';
+			if( $this->api_erp ) {
+				try {
+					$api = new ApiController();
+					$send_leave_request = $api->send_leave_request($absence, 'abs');
+					if($send_leave_request == true) {
+						$message_erp = ' Zahtjev je uspješno zapisan u Odoo.';
+					} else {
+						$message_erp = ' Zahtjev NIJE zapisan u Odoo.';
+					}
+				} catch (\Throwable $th) {
+					$email = 'jelena.juras@duplico.hr';
+					$url = $_SERVER['REQUEST_URI'];
+					Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+	
+					session()->flash('error', __('ctrl.error') );
+					return redirect()->back();
 				}
-			} catch (\Throwable $th) {
-				$email = 'jelena.juras@duplico.hr';
-				$url = $_SERVER['REQUEST_URI'];
-				Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
-
-				session()->flash('error', __('ctrl.error') );
-				return redirect()->back();
-			} */
+			}
 				
 			/* mail obavijest */
 			$send_to = EmailingController::sendTo('absences','confirm');

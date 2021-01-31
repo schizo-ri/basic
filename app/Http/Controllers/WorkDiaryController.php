@@ -14,6 +14,8 @@ use Sentinel;
 
 class WorkDiaryController extends Controller
 {
+    private $api_erp;
+
     /**
 	*
 	* Set middleware to quard controller.
@@ -21,7 +23,8 @@ class WorkDiaryController extends Controller
 	*/
 	public function __construct()
 	{
-		$this->middleware('sentinel.auth');
+        $this->middleware('sentinel.auth');
+        $this->api_erp = false;
     }
     
     /**
@@ -94,13 +97,15 @@ class WorkDiaryController extends Controller
         }
 
         if( $employee ) {
-           /*  $api = new ApiController();
-            $erp_id = $employee->erp_id;
-            $tasks = $api->get_employee_project_tasks( $erp_id, $date );
-            $projects = null;
-            */
-            $tasks = null;
-            $projects = Project::where('active',1)->get();
+            if( $this->api_erp ) {
+                $api = new ApiController();
+                $erp_id = $employee->erp_id;
+                $tasks = $api->get_employee_project_tasks( $erp_id, $date );
+                $projects = null;
+            } else {
+                $tasks = null;
+                $projects = Project::where('active',1)->get();
+            }
         }
       
         return view('Centaur::work_diaries.create', ['workTasks' => $workTasks, 'employees' => $employees,'projects' => $projects,'tasks' => $tasks]);
@@ -194,13 +199,15 @@ class WorkDiaryController extends Controller
         $tasks = null;
         
         if( $employee ) {
-            /* $api = new ApiController();
-            $erp_id = $employee->erp_id;
-            $tasks = $api->get_employee_project_tasks( $erp_id, $date );
-            $projects = null; */
-            
-            $tasks = null;
-            $projects = Project::where('active',1)->get();
+            if( $this->api_erp ) {
+                $api = new ApiController();
+                $erp_id = $employee->erp_id;
+                $tasks = $api->get_employee_project_tasks( $erp_id, $date );
+                $projects = null;
+            } else {
+                $tasks = null;
+                $projects = Project::where('active',1)->get();
+            }
         }
 
         return view('Centaur::work_diaries.edit', ['workDiary' => $workDiary, 'sum' => $sum, 'workTasks' => $workTasks,'projects' => $projects,'tasks' => $tasks, 'employees' => $employees]);
