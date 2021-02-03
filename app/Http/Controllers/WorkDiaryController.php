@@ -11,10 +11,12 @@ use App\Models\Project;
 use App\Models\WorkDiaryItem;
 use App\Http\Controllers\ApiController;
 use Sentinel;
+use Log;
 
 class WorkDiaryController extends Controller
 {
     private $api_erp;
+    private $api_project;
 
     /**
 	*
@@ -24,7 +26,8 @@ class WorkDiaryController extends Controller
 	public function __construct()
 	{
         $this->middleware('sentinel.auth');
-        $this->api_erp = false;
+        $this->api_erp = true;
+        $this->api_project = true;
     }
     
     /**
@@ -37,7 +40,7 @@ class WorkDiaryController extends Controller
         $workDiaries_date = WorkDiary::get();
 
         $workTasks = WorkTask::get()->pluck('name','id');
-        $employees = Employee::employees_getNameASC();
+        
         $hours = 0;
         $task = null;
         $employee_id = null;
@@ -52,6 +55,9 @@ class WorkDiaryController extends Controller
         $projects = new WorkDiary();
         $projects = $projects->getProjects( $workDiaries_date ); 
 
+        $employees = new WorkDiary();
+        $employees = $employees->getEmployees( $workDiaries_date ); 
+        
         if(isset( $request['date'])) {
             $date = $request['date'];
         } else {
@@ -98,17 +104,24 @@ class WorkDiaryController extends Controller
 
         if( $employee ) {
             if( $this->api_erp ) {
-                $api = new ApiController();
                 $erp_id = $employee->erp_id;
-                $tasks = $api->get_employee_project_tasks( $erp_id, $date );
-                $projects = null;
+                Log::info('employee' . $erp_id);               
+                
+                $api = new ApiController();
+                $projects_erp = $api->get_employee_available_projects( $erp_id, $date );
+
+                $api = new ApiController();
+                $tasks = $api->get_employee_project_tasks( $erp_id, $date, array_keys($projects_erp)[0]);
+               
+               /*  $projects = null; */
             } else {
                 $tasks = null;
+                $projects_erp = null;
                 $projects = Project::where('active',1)->get();
             }
         }
-      
-        return view('Centaur::work_diaries.create', ['workTasks' => $workTasks, 'employees' => $employees,'projects' => $projects,'tasks' => $tasks]);
+        
+        return view('Centaur::work_diaries.create', ['workTasks' => $workTasks, 'employees' => $employees,'projects' => $projects,'projects_erp' => $projects_erp,'tasks' => $tasks]);
     }
 
     /**
@@ -121,16 +134,34 @@ class WorkDiaryController extends Controller
     {
         $seconds = 0;
 
-        $request_exist = WorkDiary::where('employee_id',$request['employee_id'])->where('date',$request['date'])->first();
+        $employee =  Employee::find($request['employee_id']);
+        $request_exist = WorkDiary::where('employee_id', $employee->id )->where('date',$request['date'])->first();
+        
+        /*** Projekt */
+            if( $this->api_project ) {
+                $erp_employee = $employee->erp_id;
+                
+                $api = new ApiController();
+                $projects_erp = $api->get_employee_available_projects( $erp_employee, $request['date'] );
+              
+                $project_erp = $projects_erp[$request['project_id'] ];
+              
+                $erp_id = str_replace("]","", str_replace("[","",strstr( $project_erp," ", true )));
             
+                $project = $erp_id ? Project::where('erp_id', $erp_id)->first() : null;
+                $project_id = $project ? $project->id : null;
+            }
+       
+        /*** Projekt */
+     
         if( $request_exist  ) {
             session()->flash('error',  __('ctrl.record_exist'));
             return redirect()->back();
         } else {
             $data = array(
                 'date'  	    => $request['date'],
-                'employee_id'   => $request['employee_id'],
-                'project_id'    => $request['project_id'] ? $request['project_id'] : null,
+                'employee_id'   => $employee->id,
+                'project_id'    => $this->api_project ? $project_id : ($request['project_id'] ? $request['project_id'] : null),
                 'erp_task_id'   => isset($request['erp_task_id']) ? $request['erp_task_id'] : null,
                 'start_time'  	=> isset($request['start_time'] ) ? $request['start_time'] : null,
                 'end_time'  	=> isset($request['end_time']) ? $request['end_time'] : null,
@@ -172,12 +203,62 @@ class WorkDiaryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $id // employee_id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show( $id, Request $request )
     {
-        //
+        if( Sentinel::inRole('administrator')) {
+            $workDiaries_date = WorkDiary::get();
+          /*   $employees = Employee::employees_getNameASC(); */
+            $employee_id = null;
+        } else {
+          /*   $employees = Employee::where('id', Sentinel::getUser()->employee->id)->get();  */
+            $employee =  Sentinel::getUser()->employee; 
+            $workDiaries_date = WorkDiary::where('employee_id', $employee->id)->get();
+            $employee_id = $employee->id;
+        }
+        
+        $workTasks = WorkTask::get()->pluck('name','id');
+        
+        $task = null;
+        $project= null;
+        
+        $dates = array();
+		foreach (array_keys($workDiaries_date->groupBy('date')->toArray()) as $workDiary_date) {
+            array_push($dates, date('Y-m',strtotime($workDiary_date)) );
+        }
+        $dates = array_unique( $dates);
+        rsort( $dates );
+
+        $projects = new WorkDiary();
+        $projects = $projects->getProjects( $workDiaries_date ); 
+
+        $employees = new WorkDiary();
+        $employees = $employees->getEmployees( $workDiaries_date ); 
+
+        if(isset( $request['date'])) {
+            $date = $request['date'];
+        } else {
+            $date = date('Y-m');
+        }
+        
+        if ( isset( $request[ 'task']) && $request[ 'task'] != 'null' ) {
+            $task = $request[ 'task']; 
+        }
+        if ( isset( $request[ 'employee_id']) && $request[ 'employee_id'] != 'null' ) {
+            $employee_id = $request[ 'employee_id']; 
+        }
+        if ( isset( $request[ 'project']) && $request[ 'project'] != 'null' ) {
+            $project = $request[ 'project']; 
+        }
+
+        $workDiaries = new WorkDiary();
+        $workDiaries = $workDiaries->getTasks( $date, $task, $employee_id, $project );
+    
+        $sum_time = WorkDiary::sumTasks( $workDiaries ); 
+
+        return view('Centaur::work_diaries.show', ['workDiaries' => $workDiaries,'dates' => $dates,'projects' => $projects, 'employees' => $employees, 'sum_time' => $sum_time, 'workTasks' => $workTasks]);
     }
 
     /**

@@ -13,17 +13,17 @@
 				@if (Sentinel::inRole('administrator') || Sentinel::inRole('superadmin')	)
 					<p>@lang('absence.all_requests') 
 						<a href="{{ route('absences_table') }}" class="view_all" title="{{ __('absence.absences')}}" >vidi izračune</a>
+						<a href="{{ route('absencesYears', ['employee_id' => $employee->id ]) }}" class="view_all" title="{{ __('absence.absences')}}" >vidi izostanke po godinama</a>
 						{{-- <a href="{{ route('absences_requests') }}" class="view_all" title="{{ __('absence.absences')}}" >vidi zahtjeve za mjesec</a> --}}
 					</p>
 				@endif
 			</header>
 			<main class="all_absences all_absences_employee">
 				{{-- <header class="main_header">
-				
 				</header> --}}
 				<section class="overflow_auto bg_white section_main">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padd_0 position_rel height100">
-						<div id="index_table_filter" class="dataTables_filter">
+						<div id="index_table_filter" class="dataTables_filter ">
 							<label class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 float_left">
 								<input type="search" placeholder="Search" onkeyup="mySearchTableAbsence()" id="mySearchTbl">
 							</label>
@@ -35,11 +35,12 @@
 									@endforeach
 									<option value="afterhour" >Prekovremeni sati</option>
 								</select>	
-							</div>		
+							</div>	
+							<span class="show_button" style="padding: 0"><i class="fas fa-download"></i></span>	
 						</div>
 						<div class="table-responsive" >
 							@if(count( $absences ) > 0 || isset( $afterhours ) && count( $afterhours )> 0)
-								<table id="index_table" class="display table table-hover sort_1_desc">
+								<table id="index_table" class="display table table-hover sort_1_desc ">
 									<thead>
 										<tr>
 											<th>@lang('basic.fl_name')</th>
@@ -63,20 +64,25 @@
 												$start_date = new DateTime($absence->start_date . $absence->start_time);
 												$end_date = new DateTime($absence->end_date . $absence->end_time );
 												$interval1 = $start_date->diff($end_date);
-												$zahtjev = array('start_date' => $absence->start_date, 'end_date' => $absence->end_date);
-												$array_dani_zahtjeva = BasicAbsenceController::array_dani_zahtjeva($zahtjev);
 												$dani_go = BasicAbsenceController::daniGO_count($absence);
 											
-												$dana_GO_OG = count(array_intersect($array_dani_zahtjeva,($data_absence['zahtjevi'][ date('Y')])));
-												$dana_GO_PG = $dani_go - $dana_GO_OG;
-												
 												$hours   = $interval1->format('%h'); 
 												$minutes = $interval1->format('%i');
+
+												$end_date->setTime(8,0,1);
+												$go = array();
+												$interval = DateInterval::createFromDateString('1 day');
+												$period = new DatePeriod($start_date, $interval, $end_date);
 												
-												$time1 = new DateTime($absence->start_time );
-												$time2 = new DateTime($absence->end_time );
-												$interval = $time2->diff($time1);
-												$interval = $interval->format('%H:%I');
+												foreach ( $zahtjevi['years'] as $year) {
+													$go[$year] = array();
+													foreach ($period as $dan) {
+													
+														if(in_array(date_format($dan,'Y-m-d'), $zahtjevi[$year]['zahtjevi'] ) ) {
+															array_push($go[$year], date_format($dan,'Y-m-d'));
+														}
+													}
+												}
 											@endphp	
 											<tr class="empl_{{ $absence->employee_id}}">
 												<td>{{ $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name'] }}</td>
@@ -91,7 +97,23 @@
 													@endif
 												</td>
 												<td>{{ $absence->start_time . '-' .  $absence->end_time }}</td>
-												<td>{{ $absence->comment }}</td>
+												<td>
+													@if($absence->absence['mark'] == 'GO')
+														@foreach ($go as $godina => $dani)
+															@if ( count($dani) >0 )
+																[ {{ $godina . ': ' . count($dani) }} ]
+															@endif
+														@endforeach
+													
+													@endif
+													
+													{{ $absence->comment }}
+												</td>
+
+
+
+
+
 												<td>{!! $absence->approve == 1 ? 'DA' : 'NE' !!} {!! $absence->approve_reason ? ' - ' . $absence->approve_reason : '' !!}</td>
 												<td>{{ $absence->approved['first_name'] . ' ' . $absence->approved['last_name'] }}</td>
 												<td>{{ $absence->approved_date }}</td>
@@ -153,5 +175,6 @@
 </div>
 <script>
 	$.getScript('/../js/absence_create.js');
+	
 </script>
 @stop

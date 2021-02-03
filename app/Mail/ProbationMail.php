@@ -58,8 +58,9 @@ class ProbationMail extends Mailable
         $interval = $date1->diff($date2); 
         $days = $interval->format('%a');
 
+        $subject =  __('basic.probation') . ' - ' . $this->employee->user->first_name . ' ' .  $this->employee->user->last_name;
         return $this->view('emails.employees.probation')
-                    ->subject( __('basic.probation') . ' - ' . $this->employee->user->first_name . ' ' .  $this->employee->user->last_name )
+                    ->subject($subject )
                     ->with([
                         'employee'  => $this->employee,
                         'days'      => $days,

@@ -122,7 +122,7 @@
 						za projekt: {{ $afterhour->project->erp_id . ' - ' . $afterhour->project->name }}<br>
 					@endif
 					@if($afterhour->erp_task_id)
-						za zadatak {{ $task }}
+						za zadatak na projektu {{ $task }}
 					@endif
 					za {{ date("d.m.Y", strtotime($afterhour->date)) . ' od ' . $afterhour->start_time  . ' do ' .  $afterhour->end_time }}</h4>
 				<div><b>Napomena: </b></div>

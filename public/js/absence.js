@@ -381,7 +381,9 @@ $(function(){
 						$.getScript('/../js/absence.js');
 						$.getScript('/../select2-develop/dist/js/select2.min.js');
 						selectSearch ();
-
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').show();
+						});
 						/* $.getScript( '/../restfulizer.js'); */
 						$(this).find('option[value="'+type+'"]').attr('selected',true);						
 						$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
@@ -657,7 +659,6 @@ $(function(){
 
 function selectSearch () {
 	$(function(){
-		
 		if( $('.select_filter').length > 0 ) {
 			$('.select_filter').select2({
 				dropdownParent: $('.index_page>main'),

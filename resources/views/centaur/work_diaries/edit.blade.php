@@ -55,7 +55,7 @@
 					<p class="task_description hidden">{!! trim($task->description) !!}</p>
 					<input type="hidden" name="task_id[]" value="{{  $task->id }}" >
 					<input type="time" name="time[]" class="task_time" value="{!! $item && $item->time ?  $item->time : '00:00' !!}" min="00:00" max="12:00" required >
-					<textarea name="description[]" type="text" class="form-control" rows="3" placeholder="Opis rada">{!! $item && $item->description ? $item->description : '00:00' !!}</textarea>
+					<textarea name="description[]" type="text" class="form-control" rows="3" placeholder="Opis rada">{!! $item && $item->description ? $item->description : '' !!}</textarea>
 					
 				</div>
 			@endforeach

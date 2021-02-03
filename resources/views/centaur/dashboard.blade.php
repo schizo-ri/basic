@@ -103,37 +103,16 @@
 										</span></a>
 									</button>
 								@endif
-								@if( strtotime(date('Y-m-d')) >= strtotime(date('2021-02-01'))  )  
-									@if( in_array('Radiona', $employee->employeesDepartmentName()) || in_array('Monteri', $employee->employeesDepartmentName()) || Sentinel::inRole('administrator')  )
-										@if(in_array('Dnevnik', $moduli))
-											<button class=""><a href="{{ route('work_diaries.create') }}" rel="modal:open">
-												<span>
-													<span class="img clock"></span>
-													<p>@lang('basic.add_work_diary')</p>
-												</span></a>
-											</button>
-										@endif
-									@else
-										@if(in_array('Prekovremeni', $moduli))
-											<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
-												<span>
-													<span class="img clock"></span>
-													<p>@lang('basic.add_afterhour')</p>
-												</span></a>
-											</button>
-										@endif
+								@if( in_array('Radiona', $employee->employeesDepartmentName()) || in_array('Monteri', $employee->employeesDepartmentName()) || Sentinel::inRole('administrator')  )
+									@if(in_array('Dnevnik', $moduli))
+										<button class=""><a href="{{ route('work_diaries.create') }}" rel="modal:open">
+											<span>
+												<span class="img clock"></span>
+												<p>@lang('basic.add_work_diary')</p>
+											</span></a>
+										</button>
 									@endif
 								@else
-									@if( Sentinel::inRole('administrator')  )
-										@if(in_array('Dnevnik', $moduli))
-											<button class=""><a href="{{ route('work_diaries.create') }}" rel="modal:open">
-												<span>
-													<span class="img clock"></span>
-													<p>@lang('basic.add_work_diary')</p>
-												</span></a>
-											</button>
-										@endif
-									@endif
 									@if(in_array('Prekovremeni', $moduli))
 										<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
 											<span>
@@ -141,8 +120,16 @@
 												<p>@lang('basic.add_afterhour')</p>
 											</span></a>
 										</button>
-									@endif		
-								@endif								
+									@endif
+								@endif
+								@if( Sentinel::getUser()->id == 9) 
+									<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
+										<span>
+											<span class="img clock"></span>
+											<p>@lang('basic.add_afterhour')</p>
+										</span></a>
+									</button>
+								@endif							
 								@if( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasEmployeeTask) > 0 )
 									<button class="" ><a href="{{ route('task_list') }}" rel="modal:open" title="{{ __('basic.tasks') }}">
 										<span>

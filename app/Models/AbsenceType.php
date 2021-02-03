@@ -10,7 +10,7 @@ class AbsenceType extends Model
 	*
 	* @var array
 	*/
-    protected $fillable = ['erp_id','name','mark','min_days','max_days','temp'];
+    protected $fillable = ['erp_id','name','mark','min_days','max_days','temp','active'];
 	
 	/*
 	* Save AbsenceType

@@ -33,7 +33,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 		<script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all1.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all2.css?random=@dt') }}"/>
 		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/>
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
@@ -208,7 +208,7 @@
 				 */
 				
 			</script>
-			<script src="{{URL::asset('/../js/all1.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/all2.js?random=@dt') }}"></script>
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
 
@@ -222,6 +222,7 @@
 			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
 			<!-- tinymce js -->
 			<script src="{{ URL::asset('/node_modules/tinymce/tinymce.min.js') }}" ></script>
+		
 			@if(session()->has('modal'))
 				<script>
 					$("#modal_notification").modal();

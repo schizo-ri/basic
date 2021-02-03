@@ -60,7 +60,9 @@ $(function() {
                         var datum = year + '-' + month + '-' + day;
                         view = $('.change_view_calendar').val();
                        
-                        if( datum != 'Invalid Date') {
+                        var d = new Date(datum);
+
+                        if( d != 'Invalid Date') {
                             var url = url_basic + '?dan=' + datum;
                             get_url(url, datum);
                         } 
@@ -92,13 +94,13 @@ $(function() {
                 var prevDate = new Date(year + '-' + month + '-' + day);
                 var month_before = prevDate.getMonth()+1; 
                 var searchDate = year + '-' + ('0' + (month_before) ).slice(-2) + '-' + ('0' + (day)).slice(-2);
-                
+                var d = new Date(searchDate);
                /*  $('.pignose-calendar-unit-date').find('[data-date="' + searchDate + '"] > a' ).click(); */
-               if( searchDate != 'Invalid Date') {
+                if( d != 'Invalid Date') {
                     var url = url_basic + '?dan=' + searchDate;
                 
                     get_url(url, searchDate);
-               }
+                }
             },
             next: function(info, context) {
                 /**
@@ -125,7 +127,8 @@ $(function() {
                 var currentDate = new Date(year + '-' + month + '-' + day);
                 var month_after = currentDate.getMonth() +1; 
                 var searchDate = year + '-' + ('0' + (month_after) ).slice(-2) + '-' + ('0' + (day)).slice(-2);                
-                if( searchDate != 'Invalid Date') {
+                var d = new Date(searchDate);
+                if( d != 'Invalid Date') {
                     var url = url_basic + '?dan=' + searchDate;
 
                     get_url(url, searchDate);

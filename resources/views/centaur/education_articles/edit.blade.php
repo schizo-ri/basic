@@ -37,40 +37,5 @@
 <link href="{{ URL::asset('node_modules/summernote/summernote-lite.css') }}" rel="stylesheet">
 <script src="{{ URL::asset('node_modules/summernote/summernote-lite.min.js') }}" ></script>
 <script>
-/* $(document).ready(function() {
-  $('#summernote').summernote();
-}); */
-
-	if( $('#tinymce_textarea').length >0 ) {
-		tinymce.init({
-			selector: '#tinymce_textarea',
-			height : 300,	
-			plugins: "image",
-			menubar: 'file edit insert view format table tools help',
-			toolbar: [
-				{
-				name: 'history', items: [ 'undo', 'redo' ]
-				},
-				{
-				name: 'formatting', items: [ 'bold', 'italic', 'forecolor', 'backcolor' ]
-				},
-				{
-				name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify']
-				},
-				{
-				name: 'indentation', items: [ 'outdent', 'indent' ]
-				},
-				{
-				name: 'image', items: [ 'image','url' ]
-				},
-				{
-				name: 'styles', items: [ 'styleselect' ]
-				},
-			],
-	
-		});
-		$('body').on($.modal.CLOSE, function(event, modal) {
-			$.getScript('/../node_modules/tinymce/tinymce.min.js');
-		});
-	}
+	$.getScript( '/../js/tinymce.js'); 
 </script>

@@ -78,8 +78,10 @@ class AnniversaryMail extends Mailable
         array_push ($variable , date("d.m.Y", strtotime($this->employee->reg_date)) );
         /* Log::info($variable);
         Log::info($template_text_body); */
+
+        $subject =  __('basic.anniversary') . ' - ' .  $this->employee->first_name . ' ' .  $this->employee->last_name;
         return $this->view('emails.employees.anniversary')
-                    ->subject( __('basic.anniversary') . ' - ' .  $this->employee->first_name . ' ' .  $this->employee->last_name)
+                    ->subject( $subject )
                     ->with([
                         'employee' =>  $this->employee,
                         'dana' =>  $dana,

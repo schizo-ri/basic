@@ -38,7 +38,8 @@
 			.MsgBody .Object-hover {
 				margin:0;
 			}
-            .odobri, .link { cursor: pointer;
+            .odobri, .link { 
+                cursor: pointer;
                 min-width: 100px;
                 height: auto;
                 background-color: white;
@@ -117,7 +118,7 @@
 					@endforeach
 				@else
                     <p>{!! $instruction->title !!}</p>
-                    <button href="{{ $link }}" class="odobri" >Vidi detalje</button>
+                    <a href="{{ $link }}" class="odobri" >Vidi detalje</a>
                 @endif
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_footer : '' !!}">

@@ -40,8 +40,8 @@
 			<div class="div_select2">
 				<select id="filter_project" class="select_filter filter_project" >
 					<option value="all" selected >SVI projekti</option>
-					@foreach ($projects as $key => $project)
-						<option value="{{  $key  }}" >{{  $project }}</option>
+					@foreach ($projects as $project)
+						<option value="{{  $project->id  }}" >{{ '['.$project->erp_id .'] '. $project->name }}</option>
 					@endforeach
 				</select>
 			</div>
@@ -68,7 +68,7 @@
 								<tr>
 									<td>{{ $workDiary->employee->user->last_name . ' ' . $workDiary->employee->user->first_name }}</td>
 									<td>{{ date('d.m.Y', strtotime($workDiary->date)) }}</td>
-									<td>{!! $workDiary->project ? $workDiary->project->name : '' !!}</td>
+									<td>{!! $workDiary->project ?  '['.$workDiary->project->erp_id .'] '. $workDiary->project->name : '' !!}</td>
 									<td>{{ $item->workTask->name }}</td>
 									<td>{{ date('H:i', strtotime($item->time) ) }}</td>
 									<td>{{ $item->description }}</td>

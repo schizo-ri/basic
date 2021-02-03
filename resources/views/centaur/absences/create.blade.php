@@ -114,4 +114,17 @@
 		$( this ).hide();
 	});
 	$.getScript('/../js/absence_create.js');
+	selectSearch ();
+	function selectSearch () {
+	$(function(){
+		if( $('select.form-control').length > 0 ) {
+			$('select.form-control').select2({
+				placeholder: {
+					id: '-1', // the value of the option
+				  },
+				theme: "classic",
+			});
+		}
+	});
+}
 </script>

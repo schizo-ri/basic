@@ -124,7 +124,7 @@ class WorkDiary extends Model
 
         return $workDiaries;
 	}
-
+	
 	public function getProjects ($workDiaries)
 	{
 		$projects_array = array();
@@ -135,9 +135,22 @@ class WorkDiary extends Model
 		$projects = $all_projects->filter(function ($project, $key) use ($projects_array) {
 			return in_array($project->id, $projects_array);
 		});
-		$projects = $projects->pluck('name','id');
 		
         return $projects;
+	}
+
+	public function getEmployees ($workDiaries)
+	{
+		$employees_array = array();
+		foreach (array_keys($workDiaries->groupBy('employee_id')->toArray()) as $workDiary_project) {
+            array_push($employees_array, $workDiary_project );
+		}
+		$all_employees = Employee::employees_lastNameASC();
+		$employees = $all_employees->filter(function ($employee, $key) use ($employees_array) {
+			return in_array($employee->id, $employees_array);
+		});
+		
+        return $employees;
 	}
 	
 	/***

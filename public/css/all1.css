@@ -1055,6 +1055,16 @@ pre {
 .hidden {
     display: none;
 }
+
+.notice_show li {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding-left: 20px;
+}
+.notice_show li span {
+    display:block;
+}
+
 div#calendar{
     padding: 0 30px;
     width: 100%;
@@ -3755,9 +3765,9 @@ main.main_ads.main_instructions {
     color: #FFFFFF;
 }
 
-.index_page .index_main .btn-new i:not(.user_interest  .btn-new i), .index_page .index_main .btn-new svg:not(.user_interest  .btn-new svg) {
+/* .index_page .index_main .btn-new i:not(.user_interest  .btn-new i), .index_page .index_main .btn-new svg:not(.user_interest  .btn-new svg) {
     margin-right: 15px;
-}
+} */
 
 .index_page.ads_index .index_main .btn-new {
     width: auto;
@@ -3996,7 +4006,7 @@ table ul {
     margin-left: 0;
     margin-top: 40px;
     background: white;
-    z-index: 2;
+    z-index: 3;
   
 }   
 
@@ -4088,7 +4098,13 @@ datalist option {
     width: auto;
     min-width: 80px;
     float: left;
-    /* margin-right: 15px; */
+  
+}
+#admin_page .index_table_filter div.div_select2, #admin_page .filtercontainer div.div_select2 {
+    margin-left: 15px ;
+}
+.diary_header .index_table_filter div.div_select2 {
+    margin-left: 15px;
 }
 
 .index_table_filter>div:first-child {
@@ -9285,7 +9301,8 @@ span.button_nav_img.campaign {
 	background-size: 28px;
 	background-position: center;
 }
-.button_nav.active span.button_nav_img.contacts>svg, .button_nav.active span.button_nav_img.instructions>svg, .button_nav.active span.button_nav_img.educations>svg {
+
+.button_nav.active span.button_nav_img.contacts>svg, .button_nav.active span.button_nav_img.instructions>svg, .button_nav.active span.button_nav_img.educations>svg, .button_nav.active span.button_nav_img.work_diaries>svg {
 	color: #071e57;
 }
 
@@ -12890,7 +12907,7 @@ span.file_name {
 	border-top: 1px solid #F0F4FF;
 }
 .modal .tox .tox-menubar {
-	background: none;
+	background: white;
 	border-bottom: 1px solid #F0F4FF;
 }
 .modal .tox .tox-toolbar__primary {

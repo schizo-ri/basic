@@ -2581,7 +2581,7 @@ span.file_name {
 	border-top: 1px solid #F0F4FF;
 }
 .modal .tox .tox-menubar {
-	background: none;
+	background: white;
 	border-bottom: 1px solid #F0F4FF;
 }
 .modal .tox .tox-toolbar__primary {

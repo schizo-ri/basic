@@ -381,7 +381,9 @@ $(function(){
 						$.getScript('/../js/absence.js');
 						$.getScript('/../select2-develop/dist/js/select2.min.js');
 						selectSearch ();
-
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').show();
+						});
 						/* $.getScript( '/../restfulizer.js'); */
 						$(this).find('option[value="'+type+'"]').attr('selected',true);						
 						$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
@@ -657,13 +659,14 @@ $(function(){
 
 function selectSearch () {
 	$(function(){
-		
 		if( $('.select_filter').length > 0 ) {
 			$('.select_filter').select2({
+				dropdownParent: $('.index_page>main'),
+				width: 'resolve',
 				placeholder: {
 					id: '-1', // the value of the option
 				  },
-				theme: "classic"
+				theme: "classic",
 			});
 		}
 	});
@@ -693,13 +696,17 @@ $(function(){
 	$('input').on('change',function(){
 		$('.btn-submit').show();
 	});
+
 	$('select').on('change',function(){
 		$('.btn-submit').show();
 	});
+
 	$('textarea').on('change',function(){
 		$('.btn-submit').show();
 	});
-
+	$('.show_button').on('click',function () {
+		$('.dt-buttons').show();
+	});
 	if($('form.absence').length > 0) {
 		$( "#request_type" ).on('change',function() {
 			$('input[name=start_date]').prop('disabled', false);
@@ -709,7 +716,7 @@ $(function(){
 			type = $(this).val();
 			employee_id = $('#select_employee').val();
 
-			if(type == 'IZL' || type == 61) {
+			if(type == 'IZL' || type == 63) {
 				start_date = $( "#start_date" ).val();
 				end_date = $( "#end_date" );
 				end_date.val(start_date);			
@@ -752,7 +759,7 @@ $(function(){
 				$('.btn-submit').show();
 			}
 		
-			if(type == 'BOL' || type == 2 || type == 'IZL' || type == 61) { 
+			if(type == 'BOL' || type == 2 || type == 'IZL' || type == 63) { 
 				$('.datum.date2').hide();
 				if(type == 'BOL' || type == 2) {
 				
@@ -765,7 +772,7 @@ $(function(){
 				$('.datum.date2').show();
 			}
 
-			if(type == 'SLD') {
+			if(type == 'SLD' || type == 66) {
 				employee_id = $('#select_employee').val();
 
 				url = location.origin + '/days_offUnused/'+employee_id;
@@ -870,29 +877,142 @@ $(function(){
 							console.log(errorThrown);
 						}
 					});
-				
 				}
 			}
 		});
 	}
+
 	if($('form.form_afterhour').length > 0 || $('form.form_work_diary').length > 0) {
-	/* 	$( "#date" ).on('change',function() {
-			start_date = $( this ).val();
-			employee_id = $('#select_employee').val();
-			
-			getTask(employee_id, start_date);
-		});
-		$( "#select_employee" ).on('change',function() {
-			employee_id = $(this).val();
-			start_date = $( "#date" ).val();
-
-			if( employee_id != '' &&  employee_id != undefined ) {
-				getTask(employee_id, start_date);
-			}
-		});	 */
+		select_employee ();
+		select_project ();
+		dateChange ();
 	}
-});
+	function dateChange () {
+		$('#date').on('change', function(){
+			employee_id = $( '#select_employee' ).val();
+			start_date =  $( '#date' ).val();
+			if( employee_id != '' && employee_id != undefined ) {
+				getProjectEmpl ( employee_id, start_date );
+			}
+		});
+	}
 
+	function select_employee () {
+		$('#select_employee').on('change', function(){
+			employee_id = $( '#select_employee' ).val();
+			start_date =  $( '#date' ).val();
+			
+			console.log("employee_id " + employee_id);
+			console.log("start_date " + start_date);
+
+			getProjectEmpl ( employee_id, start_date );
+		});
+	}
+
+	function select_project () {
+		$('#select_project').on('change', function(){
+			employee_id = $( '#select_employee' ).val();
+			start_date =  $( '#date' ).val();
+			project = $( this ).val();
+			console.log(url);
+			console.log("employee_id " + employee_id);
+			console.log("project " + project);
+			console.log("start_date " + start_date);
+			
+			getTasksEmpl ( employee_id, start_date, project );
+		});
+	}
+
+	function getProjectEmpl ( employee_id, start_date ) {
+		url = location.origin + '/getProject';
+		console.log(url);
+		$.ajax({
+			url: url,
+			type: "get",
+			data:  { employee_id: employee_id, start_date: start_date },
+			success: function( projects ) {
+				console.log(projects);
+				console.log(Object.keys(projects)[0]);
+				if($.map(projects, function(n, i) { return i; }).length > 0 ) {
+					projectElement(projects);
+				}
+				getTasksEmpl ( employee_id, start_date, Object.keys(projects)[0] );
+
+			},
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr);
+				console.log(json);
+				console.log(errorThrown);
+			}
+		}); 
+	}
+	
+	function getTasksEmpl ( employee_id, start_date, project )	{
+		url = location.origin + '/getTasks';
+		console.log(url);
+		$.ajax({
+			url: url,
+			type: "get",
+			data:  { employee_id: employee_id, start_date: start_date, project:project },
+			success: function( tasks ) {
+				console.log( tasks);
+				if($.map(tasks, function(n, i) { return i; }).length > 0 ) {
+					tastElement(tasks);
+				} else {
+					$('.tasks select option').not('.disabled').remove();
+				}
+			},
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr);
+				console.log(json);
+				console.log(errorThrown);
+			}
+		}); 
+	}
+
+	function projectElement(projects) {
+		var select_projects = '<option value="" disabled selected>Izaberi projekt</option>';
+		$.each(projects, function( id, project ) {
+			select_projects += '<option class="project_list" name="erp_task_id" value="'+id+'">'+project+'</option>';
+		});
+		
+		$('#select_project option').remove();
+		if ($('#select_project').length > 0 ) {
+			$('#select_project').prepend(select_projects);
+		}
+	}
+	
+	function tastElement(tasks) {
+		var select_tasks = '<option value="" disabled selected>Izaberi zadatak</option>';
+		$.each(tasks, function( id, task ) {
+			select_tasks += '<option class="project_list" name="erp_task_id" value="'+id+'">'+task+'</option>';
+		});
+		select_tasks += '</select></div>';
+		$('#select_task option').remove();
+		if ($('#select_task').length > 0 ) {
+			$('#select_task').prepend(select_tasks);
+		}
+	}
+});	
+
+/* if($('form.form_afterhour').length > 0 || $('form.form_work_diary').length > 0) {
+	$( "#date" ).on('change',function() {
+		start_date = $( this ).val();
+		employee_id = $('#select_employee').val();
+		
+		getTask(employee_id, start_date);
+	});
+	$( "#select_employee" ).on('change',function() {
+		employee_id = $(this).val();
+		start_date = $( "#date" ).val();
+
+		if( employee_id != '' &&  employee_id != undefined ) {
+			getTask(employee_id, start_date);
+		} 
+	});	
+} */
+
+/* 
 function getTask(employee_id, start_date)
 {
 	url = location.origin + '/getTasks';
@@ -907,7 +1027,6 @@ function getTask(employee_id, start_date)
 				var select_tasks = '<div class="form-group tasks"><label>Zadatak</label><select id="select-state" name="erp_task_id" placeholder="Izaberi zadatak..." required><option value="" disabled selected></option>';
 				$.each(tasks, function( id, task ) {
 					select_tasks += '<option class="project_list" name="erp_task_id" value="'+id+'">'+task+'</option>';
-
 				});
 				select_tasks += '</select></div>';
 				$('.tasks').remove();
@@ -955,8 +1074,9 @@ function getDays( employee_id )
 			console.log(json);
 			console.log(errorThrown);
 		}
-	});
+	}); 
 }
+*/
 
 if($('.main_ads').length >0) {
     $('.select_filter.sort').on('change',function () {
@@ -2088,7 +2208,8 @@ $( function () {
 		if($(".index_table_filter .show_button").length == 0) {
 			$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 		}
-	
+		
+		
 		$('.show_button').on('click',function () {
 			$('.dt-buttons').show();
 		});
@@ -2544,7 +2665,9 @@ $(function() {
                         var datum = year + '-' + month + '-' + day;
                         view = $('.change_view_calendar').val();
                        
-                        if( datum != 'Invalid Date') {
+                        var d = new Date(datum);
+
+                        if( d != 'Invalid Date') {
                             var url = url_basic + '?dan=' + datum;
                             get_url(url, datum);
                         } 
@@ -2576,13 +2699,13 @@ $(function() {
                 var prevDate = new Date(year + '-' + month + '-' + day);
                 var month_before = prevDate.getMonth()+1; 
                 var searchDate = year + '-' + ('0' + (month_before) ).slice(-2) + '-' + ('0' + (day)).slice(-2);
-                
+                var d = new Date(searchDate);
                /*  $('.pignose-calendar-unit-date').find('[data-date="' + searchDate + '"] > a' ).click(); */
-               if( searchDate != 'Invalid Date') {
+                if( d != 'Invalid Date') {
                     var url = url_basic + '?dan=' + searchDate;
                 
                     get_url(url, searchDate);
-               }
+                }
             },
             next: function(info, context) {
                 /**
@@ -2609,7 +2732,8 @@ $(function() {
                 var currentDate = new Date(year + '-' + month + '-' + day);
                 var month_after = currentDate.getMonth() +1; 
                 var searchDate = year + '-' + ('0' + (month_after) ).slice(-2) + '-' + ('0' + (day)).slice(-2);                
-                if( searchDate != 'Invalid Date') {
+                var d = new Date(searchDate);
+                if( d != 'Invalid Date') {
                     var url = url_basic + '?dan=' + searchDate;
 
                     get_url(url, searchDate);
@@ -2907,15 +3031,26 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main table',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 				
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-				});
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
@@ -2968,14 +3103,25 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-				});
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main table',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
@@ -3021,14 +3167,25 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-				});
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main table',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
@@ -3158,15 +3315,26 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					/* $('.show_button').on('click',function () {
-						console.log("show_button click 3");
-                        $('.dt-buttons').toggle();
-                    }) */
-					$.getScript('/../restfulizer.js');
-				});
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main table',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							console.log("show_button click 3");
+							$('.dt-buttons').toggle();
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
@@ -3789,6 +3957,31 @@ if($('.index_admin').length > 0 ) {
 $("a[rel='modal:open']").addClass('disable');
 
 $(function() {
+  
+/* 
+    $('body').on($.modal.OPEN, function(event, modal) {
+        modal_selectSearch ();
+        console.log( $('select.form-control').length );
+    });
+
+    function modal_selectSearch () {
+        $(function(){
+            if( $('select.form-control').length > 0 ) {
+                console.log($('select.form-control').attr('id'));
+                $('select.form-control').select2({
+                  
+                    dropdownParent: $('body'),
+                    width: 'resolve',
+                    placeholder: {
+                        id: '-1', // the value of the option
+                      },
+                    theme: "classic",
+                });
+            }
+        });
+    }
+
+ */
     $("a[rel='modal:open']").removeClass('disable');
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
@@ -3980,7 +4173,7 @@ $(function() {
     $('tr[data-modal] td:not(:last-child)').on("click", function(e) {
         e.preventDefault();
         var href = location.origin + $(this).parent().data('href');
-        console.log(href);
+       
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -4923,33 +5116,62 @@ if( $('#tinymce_textarea').length >0 ) {
     tinymce.init({
         selector: '#tinymce_textarea',
         height : 300,	
-        plugins: "image",
-        menubar: 'file edit insert view format table tools help',
-        toolbar: [
-            {
-            name: 'history', items: [ 'undo', 'redo' ]
-            },
-            {
-            name: 'formatting', items: [ 'bold', 'italic', 'forecolor', 'backcolor' ]
-            },
-            {
-            name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
-            },
-            {
-            name: 'indentation', items: [ 'outdent', 'indent' ]
-            },
-            {
-            name: 'image', items: [ 'image','url' ]
-            },
-            {
-            name: 'styles', items: [ 'styleselect' ]
-            },
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste imagetools wordcount'
         ],
+        menubar: 'file edit insert view format table tools help',
+        toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+        /* enable title field in the Image dialog*/
+        image_title: true,
+        /* enable automatic uploads of images represented by blob or data URIs*/
+        automatic_uploads: true,
+        /*
+            URL of our upload handler (for more details check: https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_url)
+            images_upload_url: 'postAcceptor.php',
+            here we add custom filepicker only to Image dialog
+        */
+        file_picker_types: 'image',
+        /* and here's our custom image picker*/
+        file_picker_callback: function (cb, value, meta) {
+            var input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
 
-        image_list: [
-            {title: 'My image 1', value: 'https://www.example.com/my1.gif'},
-            {title: 'My image 2', value: 'http://www.moxiecode.com/my2.gif'}
-        ]		
+            /*
+            Note: In modern browsers input[type="file"] is functional without
+            even adding it to the DOM, but that might not be the case in some older
+            or quirky browsers like IE, so you might want to add it to the DOM
+            just in case, and visually hide it. And do not forget do remove it
+            once you do not need it anymore.
+            */
+
+            input.onchange = function () {
+            var file = this.files[0];
+
+            var reader = new FileReader();
+            reader.onload = function () {
+                /*
+                Note: Now we need to register the blob in TinyMCEs image blob
+                registry. In the next release this part hopefully won't be
+                necessary, as we are looking to handle it internally.
+                */
+                var id = 'blobid' + (new Date()).getTime();
+                var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+                var base64 = reader.result.split(',')[1];
+                var blobInfo = blobCache.create(id, file, base64);
+                blobCache.add(blobInfo);
+
+                /* call the callback and populate the Title field with the file name */
+                cb(blobInfo.blobUri(), { title: file.name });
+            };
+            reader.readAsDataURL(file);
+            };
+
+            input.click();
+        },
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
     });
     $('body').on($.modal.CLOSE, function(event, modal) {
         $.getScript('/../node_modules/tinymce/tinymce.min.js');
@@ -5988,39 +6210,3 @@ $(function() {
         $( this ).addClass('abs_'+  $.trim($( this ).text()));
     });
 });
-if( $('#tinymce_textarea').length >0 ) {
-    tinymce.init({
-        selector: '#tinymce_textarea',
-        height : 300,	
-        plugins: "image",
-        menubar: 'file edit insert view format table tools help',
-        toolbar: [
-            {
-            name: 'history', items: [ 'undo', 'redo' ]
-            },
-            {
-            name: 'formatting', items: [ 'bold', 'italic', 'forecolor', 'backcolor' ]
-            },
-            {
-            name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
-            },
-            {
-            name: 'indentation', items: [ 'outdent', 'indent' ]
-            },
-            {
-            name: 'image', items: [ 'image','url' ]
-            },
-            {
-            name: 'styles', items: [ 'styleselect' ]
-            },
-        ],
-
-        image_list: [
-            {title: 'My image 1', value: 'https://www.example.com/my1.gif'},
-            {title: 'My image 2', value: 'http://www.moxiecode.com/my2.gif'}
-        ]		
-    });
-    $('body').on($.modal.CLOSE, function(event, modal) {
-        $.getScript('/../node_modules/tinymce/tinymce.min.js');
-    });
-}

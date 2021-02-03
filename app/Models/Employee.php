@@ -64,7 +64,14 @@ class Employee extends Model
 	* 
 	* @var string
 	*/
-	protected static $workRecordModel = 'App\Models\WorkRecord'; 
+	protected static $workRecordModel = 'App\Models\WorkRecord';
+
+	/*
+	* The Eloquent WorkDiary model name
+	* 
+	* @var string
+	*/
+	protected static $workDiaryModel = 'App\Models\WorkDiary'; 
 
 	/*
 	* The Eloquent works model name
@@ -113,7 +120,7 @@ class Employee extends Model
 	}
 	
 	/*
-	* Returns the Event relationship
+	* Returns the hortcuts relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
 	*/
@@ -124,7 +131,18 @@ class Employee extends Model
 	}
 
 	/*
-	* Returns the Event relationship
+	* Returns the hortcuts relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasDiary()
+	{
+		return $this->hasMany(static::$workDiaryModel,'employee_id');
+	}
+
+	/*
+	* Returns the EmployeeTask relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
 	*/
@@ -414,17 +432,21 @@ class Employee extends Model
 	public function employeesDepartmentName (/*  $employee */ ) 
 		{
 			$employee_departments = $this->hasEmployeeDepartmen;
-		
+			
 			$departments = array();
 			foreach ($employee_departments as $employee_department) {
-				array_push($departments, $employee_department->department->name);
-				if( $employee_department->department->level1 == 2 ) {
-					$department_level_1 = Department::find($employee_department->department->level2);
-					array_push($departments, $department_level_1->name); // u array nadređeni odjel-  level 1
-					if( $department_level_1->level1 == 1) {
-						array_push($departments, Department::find($department_level_1->level2)->name); // u array krovni odjel-  level 0
-					}
-				} else if( $employee_department->department->level1 == 1 ) {
+				if($employee_department->department) {
+					array_push($departments, $employee_department->department->name);
+					if( $employee_department->department->level1 == 2 ) {
+						$department_level_1 = Department::find($employee_department->department->level2);
+						array_push($departments, $department_level_1->name); // u array nadređeni odjel-  level 1
+						if( $department_level_1->level1 == 1) {
+							array_push($departments, Department::find($department_level_1->level2)->name); // u array krovni odjel-  level 0
+						}
+				}
+
+				
+				} else if( $employee_department->department && $employee_department->department->level1 == 1 ) {
 					array_push($departments,$employee_department->department->name); // u array nadređeni odjel-  level 0
 				}
 			}

@@ -27,13 +27,22 @@
 			<input name="date" id="date" class="form-control" type="date" id="date" min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-2 day'), 'Y-m-d') : '' !!}" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
 			{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-		@if($projects)
-			<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
+		
+		@if(isset($projects) || isset($projects_erp) )
+			<div class="form-group select_project {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
+				<label>@lang('basic.project')</label>
 				<select id="select_project" name="project_id" placeholder="Izaberi projekt..."  value="{{ old('project_id') }}" id="sel1" required>
 					<option value="" disabled selected></option>
-					@foreach ($projects as $project)
-						<option class="project_list" name="project_id" value="{{ intval($project->id) }}" >{{ $project->erp_id  . ' ' . $project->name }}</option>
-					@endforeach	
+					@if(isset($projects) &&  $projects)
+						@foreach ($projects as $project)
+							<option class="project_list" name="project_id" value="{{ intval($project->id) }}" >{{ $project->erp_id  . ' ' . $project->name }}</option>
+						@endforeach	
+					@endif
+					@if(isset($projects_erp) && $projects_erp )
+						@foreach ($projects_erp as $id => $project)
+							<option class="project_list" name="project_id" value="{{ $id }}">{{ $project  }}</option>
+						@endforeach	
+					@endif
 				</select>
 			</div>
 		@endif
@@ -47,7 +56,7 @@
 					@endforeach	
 				</select>
 			</div>
-		@endif
+		@endif 
 		<div class="col-md-12 clear_l overflow_hidd padd_0 form-group time_group" >
             <div class="time {{ ($errors->has('start_time')) ? 'has-error' : '' }}" >
                 <label>@lang('absence.start_time')</label>
@@ -72,4 +81,6 @@
 </div>
 <script>
 	$.getScript('/../js/absence_create.js');
+
+
 </script>

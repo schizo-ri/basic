@@ -77,6 +77,16 @@
                 </div>
             @endif
         @endif
+        @if(in_array('Dnevnik', $moduli))
+            @if( count(Sentinel::getUser()->employee->hasDiary) > 0 || Sentinel::inRole('administrator') )
+                <div class="">
+                    <a class="button_nav load_button work_diaries_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('work_diaries.show', 1) }}" title="{{ __('basic.work_diary') }}">
+                        <span class="button_nav_img work_diaries "><i class="fas fa-book"></i></span>
+                        <p class="button_nav_text">@lang('basic.work_diary')</p>
+                    </a>
+                </div>
+            @endif
+        @endif
         @if(in_array('Kampanje', $moduli) && $countCampaign > 0 && ! Sentinel::inRole('administrator'))
             @if(Sentinel::getUser()->hasAccess(['campaigns.view']) || in_array('campaigns.view', $permission_dep) )
                 <div class="">
@@ -114,14 +124,14 @@
         @if(Sentinel::getUser()->hasAccess(['tasks.create']) || in_array('tasks.create', $permission_dep) )
             <div class="">
                 <a class="button_nav load_button tasks_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('tasks.index') }}" title="{{ __('basic.tasks') }}">
-                    <span class="button_nav_img img task"></span>
+                    <span class="button_nav_img tasks"><i class="fas fa-tasks"></i></span>
                     <p class="button_nav_text">@lang('basic.tasks')</p>
                 </a>	
             </div>
         @elseif ( count(Sentinel::getUser()->employee->hasEmployeeTask) > 0 )
             <div class="">
                 <a class="button_nav load_button tasks_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('employee_tasks.show', 0) }}" title="{{ __('basic.tasks') }}">
-                    <span class="button_nav_img img task"></span>
+                    <span class="button_nav_img tasks"><i class="fas fa-tasks"></i></span>
                     <p class="button_nav_text">@lang('basic.tasks')</p>
                 </a>	
             </div>

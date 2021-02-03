@@ -57,13 +57,8 @@ class AfterHourCreateMail extends Mailable
         
         $interval = $time2->diff($time1);
         $interval = $interval->format('%H:%I');
-          $task = null;      
-        if( $this->afterhour->erp_task_id) {
-            $api = new ApiController();
-
-            $tasks = $api->get_employee_project_tasks( $this->afterhour->employee->erp_id, null );
-            $task = $tasks[$this->afterhour->erp_task_id];
-        }
+        $task = $this->afterhour->project->name;
+        
         return $this->view('emails.afterhours.create')
                     ->subject( __('emailing.afterhour') . ' - ' . $this->afterhour->employee->user->first_name . ' ' .  $this->afterhour->employee->user->last_name)
 					->with([

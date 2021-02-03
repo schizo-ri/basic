@@ -215,9 +215,6 @@
 															$array_dani_zahtjeva = BasicAbsenceController::array_dani_zahtjeva($zahtjev);
 															$dani_go = BasicAbsenceController::daniGO_count($zahtjev);
 
-															$dana_GO_OG = count(array_intersect($array_dani_zahtjeva,($data_absence['zahtjevi'][ $ova_godina])));
-															$dana_GO_PG = $dani_go - $dana_GO_OG;
-															
 															$hours   = $interval1->format('%h'); 
 															$minutes = $interval1->format('%i');
 															
@@ -225,7 +222,6 @@
 															$time2 = new DateTime($absence->end_time );
 															$interval = $time2->diff($time1);
 															$interval = $interval->format('%H:%I');
-												
 														@endphp
 														<tr class="tr_open_link tr {!! $absence->absence->mark == 'BOL' ? 'bol bol-'.date('Y',strtotime($absence->start_date)) : '' !!}" data-href="/absences/{{ $absence->employee->id }} empl_{{ $absence->employee_id}}" id="requestAbs_{{ $absence->id}}" >
 															@if( Sentinel::inRole('administrator') )
@@ -239,7 +235,7 @@
 															<td class="absence_time" style="max-width:7%;width:7%" >{!! $absence->absence['mark'] == 'IZL' ? date('H:i',strtotime($absence->start_time)) . '-' .  date('H:i',strtotime($absence->end_time)) :'' !!}</td>
 															<td style="max-width:30%;width:30%">
 																@if( $absence->absence['mark'] != 'IZL' )
-																	[{!! $absence->approve == 0 ? 0 : $dani_go !!} @lang('absence.days') {!! $absence->approve == 1 && $dana_GO_PG ? '| PG: ' .$dana_GO_PG : '' !!} ] 
+																	[{!! $absence->approve == 0 ? 0 : $dani_go !!} @lang('absence.days')] 
 																@else
 																	[ {!! $absence->approve == 0 ? '00:00' : $hours . ' h, ' . $minutes . ' m' !!} ]
 																@endif

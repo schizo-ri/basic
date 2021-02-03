@@ -265,7 +265,8 @@ $( function () {
 		if($(".index_table_filter .show_button").length == 0) {
 			$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 		}
-	
+		
+		
 		$('.show_button').on('click',function () {
 			$('.dt-buttons').show();
 		});

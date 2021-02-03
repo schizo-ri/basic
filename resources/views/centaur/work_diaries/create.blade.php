@@ -9,7 +9,7 @@
 				<select class="form-control" name="employee_id" value="{{ old('employee_id') }}" id="select_employee" required >
 					<option value="" disabled selected ></option>
 					@foreach($employees as $employee)
-						<option value="{{ $employee->id}}" >{{ $employee->user->last_name . ' ' . $employee->user->first_name }}</option>
+						<option value="{{ $employee->id}}" {!! $employee->id == Sentinel::getUser()->employee->id ? 'selected' : '' !!} >{{ $employee->user->last_name . ' ' . $employee->user->first_name }}</option>
 					@endforeach
 				</select>
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
@@ -22,22 +22,29 @@
 			<input name="date" id="date" class="form-control" type="date" value="{!!  old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}"  min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-1 day'), 'Y-m-d') : '' !!}" required >
 			{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-		@if($projects)
-			<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
+		@if(isset($projects) || isset($projects_erp) )
+			<div class="form-group select_project {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.project')</label>
-				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{ old('project_id') }}" id="sel1" required>
-					<option value="" disabled selected></option>
-					@foreach ($projects as $project)
-						<option class="project_list" name="project_id" value="{{ intval($project->id) }}" >{{ $project->erp_id  . ' ' . $project->name }}</option>
-					@endforeach	
+				<select id="select_project" name="project_id" placeholder="Izaberi projekt..."  value="{{ old('project_id') }}" id="sel1" required>
+					<option value="" disabled selected>Izaberi projekt</option>
+					@if(isset($projects) &&  $projects)
+						@foreach ($projects as $project)
+							<option class="project_list" name="project_id" value="{{ intval($project->id) }}" >{{ $project->erp_id  . ' ' . $project->name }}</option>
+						@endforeach	
+					@endif
+					@if(isset($projects_erp) && $projects_erp )
+						@foreach ($projects_erp as $id => $project)
+							<option class="project_list" name="project_id" value="{{ $id }}">{{ $project  }}</option>
+						@endforeach	
+					@endif
 				</select>
 			</div>
 		@endif
 		@if(isset( $tasks ) && $tasks )
 			<div class="form-group tasks {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.task')</label>
-				<select id="select-state" name="erp_task_id" placeholder="Pick a state..."  value="{{ old('erp_task_id') }}" id="sel1" required>
-					<option value="" disabled selected></option>
+				<select id="select_task" name="erp_task_id" placeholder="Izaberi zadatak..."  value="{{ old('erp_task_id') }}" id="sel1" required>
+					<option value="" disabled selected>Izaberi zadatak</option>
 					@foreach ($tasks as $id => $task)
 						<option class="project_list" name="erp_task_id" value="{{ $id }}">{{ $task  }}</option>
 					@endforeach	
@@ -48,7 +55,7 @@
 			<label>@lang('basic.work_tasks')</label>
 			@foreach($workTasks as $workTask)
 				<div class="form-group {{ ($errors->has('task_id')) ? 'has-error' : '' }}" >
-					<span class="task_name show_hidden">{{  $workTask->name }}<i class="fas fa-caret-down"></i></span>
+					<span class="task_name show_hidden">{{ $workTask->name }}<i class="fas fa-caret-down"></i></span>
 					<p class="task_description hidden">{!! trim($workTask->description) !!}</p>
 					<input type="hidden" name="task_id[]" value="{{  $workTask->id }}" >
 					<input type="time" name="time[]" class="task_time" value="{!! old('time') ? old('time') : '00:00' !!}" min="00:00" max="12:00" required >
@@ -113,7 +120,7 @@
 				$('input[name=start_time]').val('15:00');
 				start_time = $('input[name=start_time]').val();
 			}
-			console.log(start_time);
+			console.log("start_time "+ start_time);
 			afterhour_min = total_minute - (8*60);
 
 			start_time_Arr = start_time.split(':');
@@ -135,4 +142,17 @@
 	});
 
 	$.getScript('/../js/absence_create.js');
+	
+/* 	$.getScript('/../js/absence_create.js');
+	if( $('select.form-control').length > 0 ) {
+		$('select#select_project').select2({
+		
+			dropdownParent: $('div.select_project'),
+			width: 'resolve',
+			placeholder: {
+				id: '-1', // the value of the option
+			},
+			theme: "classic",
+		});
+	} */
 </script>

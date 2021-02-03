@@ -157,8 +157,10 @@ Route::get('confirmation_update/{id}', ['as' => 'confirmation_update', 'uses' =>
 Route::get('absence/confirmation_show', ['as' => 'confirmation_show', 'uses' => 'AbsenceController@confirmation_show']);// Open absence confirmation page
 Route::get('absence/absences_table', ['as' => 'absences_table', 'uses' => 'AbsenceController@absences_table']);
 Route::get('absence/absences_requests', ['as' => 'absences_requests', 'uses' => 'AbsenceController@absences_requests']);
+Route::get('absence/absencesYears', ['as' => 'absencesYears', 'uses' => 'AbsenceController@absencesYears']);
 Route::get('absence/print_requests', ['as' => 'print_requests', 'uses' => 'AbsenceController@printRequests']);
 Route::get('getTasks', ['as' => 'getTasks', 'uses' => 'AbsenceController@getTasks']);
+Route::get('getProject', ['as' => 'getProject', 'uses' => 'AbsenceController@getProject']);
 
 Route::get('getDays/{id}', 'AbsenceController@getDays');
 Route::get('days_offUnused/{id}', 'BasicAbsenceController@days_offUnused');
@@ -276,6 +278,7 @@ Route::post('confirmationAfterHoursMultiple', ['as' => 'confirmationAfterHoursMu
 Route::get('afterhours_approve', ['as' => 'afterhours_approve', 'uses' => 'AfterhourController@afterhours_approve']);
 Route::get('afterhours/confirmation_show_after/{id}', ['as' => 'confirmation_show_after', 'uses' => 'AfterhourController@confirmation_show_after']);
 Route::get('confirmation_update_after/{id}', ['as' => 'confirmation_update_after', 'uses' => 'AfterhourController@storeConf_update']);
+Route::post('paidHours', ['as' => 'paidHours', 'uses' => 'AfterhourController@paidHours']);
 
 // JobInterview
 Route::resource('job_interviews', 'JobInterviewController');

@@ -28,6 +28,7 @@
 						<tr>
 							<th>@lang('basic.name')</th>
 							<th>@lang('absence.mark')</th>
+							<th>@lang('basic.active')</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
 					</thead>
@@ -36,6 +37,7 @@
 							<tr>
 								<td>{{ $absenceType->name }}</td>
 								<td>{{ $absenceType->mark }}</td>
+								<td>{!! $absenceType->active ? __('basic.active') : __('basic.inactive') !!}</td>
 								<td class="center">
 									<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['absence_types.update']) || in_array('absence_types.update', $permission_dep))

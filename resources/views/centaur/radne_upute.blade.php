@@ -39,7 +39,7 @@
 											<span class="ad_content"><b>{{ $instruction->title }}</b> <br></span>
 										</main>
 										<footer class="ad_footer">
-											<span><small>{{ str_limit($instruction->description, 200) }}</small></span>
+											<span><small>{!! str_limit(strip_tags($instruction->description), 200) !!}</small></span>
 										</footer>
 									</div>
 								</a>

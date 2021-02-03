@@ -10,7 +10,7 @@
 		</div>
 		<div class="form-group {{ ($errors->has('erp_id'))  ? 'has-error' : '' }}">
 			<label>ERP ID</label>
-			<input name="erp_id" type="text" class="form-control" maxlength="10" value="{{ old('erp_id') }}" required >
+			<input name="erp_id" type="text" class="form-control" maxlength="10" value="{{ old('erp_id') }}"  >
 			{!! ($errors->has('erp_id') ? $errors->first('erp_id', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<div class="form-group {{ ($errors->has('mark'))  ? 'has-error' : '' }}">
@@ -32,6 +32,11 @@
 			<label>Zahtjev - privremeni djelatnici </label>
 			<input name="temp" type="checkbox" value="1">
 			{!! ($errors->has('temp') ? $errors->first('temp', '<p class="text-danger">:message</p>') : '') !!}
+		</div>
+		<div class="form-group {{ ($errors->has('active'))  ? 'has-error' : '' }}">
+			<label>@@lang('basic.active') </label>
+			<input name="active" type="checkbox" value="1">
+			{!! ($errors->has('active') ? $errors->first('active', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		{{ csrf_field() }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1">

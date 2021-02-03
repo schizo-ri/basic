@@ -104,15 +104,26 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main table',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 				
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-				});
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
@@ -165,14 +176,25 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-				});
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main table',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
@@ -218,14 +240,25 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-				});
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main table',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
@@ -355,15 +388,26 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					/* $('.show_button').on('click',function () {
-						console.log("show_button click 3");
-                        $('.dt-buttons').toggle();
-                    }) */
-					$.getScript('/../restfulizer.js');
-				});
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main table',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							console.log("show_button click 3");
+							$('.dt-buttons').toggle();
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);

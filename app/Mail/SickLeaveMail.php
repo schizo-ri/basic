@@ -8,7 +8,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Absence; 
 use App\Models\MailTemplate; 
-use App\Http\Controllers\ApiController;
 use Log;
 
 class SickLeaveMail extends Mailable
@@ -52,19 +51,9 @@ class SickLeaveMail extends Mailable
             $template_text_footer = MailTemplate::textFooter( $mail_template );
         }
 
-       /*  $api = new ApiController();
-        $send_leave_request = $api->send_leave_request($this->absence, 'abs');
-        if($send_leave_request == true) {
-            $message_erp = ' Zahtjev ' . $this->absence->id . ' je uspješno zapisan u Odoo.';
-        } else {
-            $message_erp = ' Zahtjev  ' . $this->absence->id . ' NIJE zapisan u Odoo. Došlo je do neke greške';
-        } */
-        Log::info($message_erp);
-
         return $this->view('emails.absences.sick_today')
                     ->subject('Upis bolovanja u erp')
                     ->with([
-                        'variable' => $variable,
                         'absence' => $this->absence,
                         'mail_style' => $mail_style,
                         'template_mail' => $mail_template,

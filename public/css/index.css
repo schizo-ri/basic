@@ -7,6 +7,10 @@
 .password_reset h3 {
     color: white;
 }
+
+.add_project {
+    te
+}
 .form-control.color {
     width: 100px;
 }
@@ -1562,9 +1566,9 @@ main.main_ads.main_instructions {
     color: #FFFFFF;
 }
 
-.index_page .index_main .btn-new i:not(.user_interest  .btn-new i), .index_page .index_main .btn-new svg:not(.user_interest  .btn-new svg) {
+/* .index_page .index_main .btn-new i:not(.user_interest  .btn-new i), .index_page .index_main .btn-new svg:not(.user_interest  .btn-new svg) {
     margin-right: 15px;
-}
+} */
 
 .index_page.ads_index .index_main .btn-new {
     width: auto;
@@ -1803,7 +1807,7 @@ table ul {
     margin-left: 0;
     margin-top: 40px;
     background: white;
-    z-index: 2;
+    z-index: 3;
   
 }   
 
@@ -1894,8 +1898,15 @@ datalist option {
 .index_table_filter div.div_select2, .filtercontainer div.div_select2 {
     width: auto;
     min-width: 80px;
+    max-width: 15%;
     float: left;
     /* margin-right: 15px; */
+}
+#admin_page .index_table_filter div.div_select2, #admin_page .filtercontainer div.div_select2 {
+    margin-left: 15px ;
+}
+.diary_header .index_table_filter div.div_select2 {
+    margin-left: 15px;
 }
 
 .index_table_filter>div:first-child {
@@ -3556,7 +3567,7 @@ div.collaps_element {
 .table-responsive .table thead th {
     border: none;
     text-align: left;
-  /*   padding-left: 12px; */
+    z-index: 1;
     border-bottom: 1px solid rgba(154, 154, 154, 0.3);
 
 }

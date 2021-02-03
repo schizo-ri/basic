@@ -26,6 +26,7 @@ use Log;
 class AbsenceController extends BasicAbsenceController
 {
 	private $api_erp;
+	private $test_mail;
 
     /**
 		*
@@ -35,7 +36,8 @@ class AbsenceController extends BasicAbsenceController
     public function __construct()
     {
 		$this->middleware('sentinel.auth');
-		$this->api_erp = false;
+		$this->api_erp = true;
+		$this->test_mail = false;  // true - test na jelena.juras@duplco.hr
     }
 	
 	/**
@@ -174,8 +176,19 @@ class AbsenceController extends BasicAbsenceController
 			$message = session()->flash('error',  __('ctrl.path_not_allow'));
 			return redirect()->back()->withFlashMessage($message);
 		}
-    }
+	}
+	
+	public function absencesYears(Request $request)
+	{
+		$empl = Employee::find($request['employee_id']);
 
+		$zahtjevi =  BasicAbsenceController::zahtjevi( $empl );
+		
+		$absences = Absence::AllAbsenceUser($empl->id, 'GO');
+
+		return view('Centaur::absences.absencesYears',['employee'=> $empl, 'zahtjevi' => $zahtjevi, 'absences' => $absences] );
+	}
+	
 	public function absences_table(Request $request)
     {
 		$employees = Employee::employees_lastNameASC();
@@ -229,7 +242,7 @@ class AbsenceController extends BasicAbsenceController
 		}
 			
 		$employees = Employee::employees_lastNameASC();
-		$absenceTypes = AbsenceType::get();
+		$absenceTypes = AbsenceType::where('active',1)->get();
 
 		/* $api = new ApiController();
 		$leave_types = $api->get_available_leave_types(); */
@@ -238,6 +251,25 @@ class AbsenceController extends BasicAbsenceController
 		return view('Centaur::absences.create', ['employees' => $employees,'type' => $type, 'absenceTypes' => $absenceTypes, 'user' => $user,'leave_types' => $leave_types, 'preostali_dani' => $preostali_dani ]);
 	}
 	
+	public function getProject ( Request $request )
+	{
+		$employee = Employee::where( 'id', $request['employee_id'] )->first();
+		
+		$tasks = null;
+	
+        if( $employee ) {
+			Log::info('erp_id' . $employee);
+			$api = new ApiController();
+			$erp_id = $employee->erp_id;
+			Log::info('erp_id' . $erp_id);
+			$projects = $api->get_employee_available_projects( $erp_id, $request['start_date'] );
+        } else {
+            $projects = null;
+		}
+
+		return $projects;
+	}
+
 	public function getTasks ( Request $request )
 	{
 		$employee = Employee::where( 'id', $request['employee_id'] )->first();
@@ -248,7 +280,7 @@ class AbsenceController extends BasicAbsenceController
 			$api = new ApiController();
 			$erp_id = $employee->erp_id;
 			
-			$tasks = $api->get_employee_project_tasks( $erp_id, $request['start_date'] );
+			$tasks = $api->get_employee_project_tasks( $erp_id, $request['start_date'], $request['project']);
         } else {
             $tasks = null;
 		}
@@ -359,31 +391,33 @@ class AbsenceController extends BasicAbsenceController
 						$absence->saveAbsence($data);
 		
 						if($request['email'] == 'DA' ) {
-							$send_to = EmailingController::sendTo('absences','create');
-						
-							// mail voditelja - prvog nadređenog
-							$voditelj_mail = $absence->employee->work->firstSuperior ? $absence->employee->work->firstSuperior->email : null;
-							if($voditelj_mail) {
-								array_push($send_to, $voditelj_mail);
+							if( $this->test_mail ) {
+								$send_to = 'jelena.juras@duplico.hr';
 							} else {
-								$manager = $absence->employee->work->employee; // voditelj odjela
-								$mail_manager = $manager->email;
-								array_push($send_to, $mail_manager);
+								$send_to = EmailingController::sendTo('absences','create');
+							
+								// mail voditelja - prvog nadređenog
+								$voditelj_mail = $absence->employee->work->firstSuperior ? $absence->employee->work->firstSuperior->email : null;
+								if($voditelj_mail) {
+									array_push($send_to, $voditelj_mail);
+								} else {
+									$manager = $absence->employee->work->employee; // voditelj odjela
+									$mail_manager = $manager->email;
+									array_push($send_to, $mail_manager);
+								}
+								// ako je odluka uprave mail djelatnika
+								if(isset($request['decree']) && $request['decree'] == 1 ) {
+									array_push($send_to, $absence->employee->email );
+								} 
 							}
-							// ako je odluka uprave mail djelatnika
-							if(isset($request['decree']) && $request['decree'] == 1 ) {
-								array_push($send_to, $absence->employee->email );
-							} 
 							try {
-								// $send_to = array('jelena.juras@duplico.hr');
 								Log::info("Izostanak poslan na mail: ".implode(', ', array_unique($send_to)));
 								foreach(array_unique($send_to) as $send_to_mail) {
 									if( $send_to_mail != null & $send_to_mail != '' ) {
 										Mail::to($send_to_mail)->send(new AbsenceMail($absence));
 									}
 								}
-							 } catch (\Throwable $th) {
-								$email = 'jelena.juras@duplico.hr';
+							} catch (\Throwable $th) {
 								$url = $_SERVER['REQUEST_URI'];
 							  	Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
 
@@ -432,24 +466,28 @@ class AbsenceController extends BasicAbsenceController
 				$absence->saveAbsence($data);
 
 				if($request['email'] == 'DA' ) {
-					$send_to = EmailingController::sendTo('absences','create');
-				
-					// mail voditelja - prvog nadređenog
-					$voditelj_mail = $absence->employee->work->firstSuperior ? $absence->employee->work->firstSuperior->email : null;
-					if($voditelj_mail) {
-						array_push($send_to, $voditelj_mail);
+					if( $this->test_mail ) {
+						$send_to = 'jelena.juras@duplico.hr';
 					} else {
-						$manager = $absence->employee->work->employee; // voditelj odjela
-						$mail_manager = $manager->email;
-						array_push($send_to, $mail_manager);
-					}
+						$send_to = EmailingController::sendTo('absences','create');
+				
+						// mail voditelja - prvog nadređenog
+						$voditelj_mail = $absence->employee->work->firstSuperior ? $absence->employee->work->firstSuperior->email : null;
+						if($voditelj_mail) {
+							array_push($send_to, $voditelj_mail);
+						} else {
+							$manager = $absence->employee->work->employee; // voditelj odjela
+							$mail_manager = $manager->email;
+							array_push($send_to, $mail_manager);
+						}
 
-					// ako je odluka uprave mail djelatnika
-					if(isset($request['decree']) && $request['decree'] == 1 ) {
-						array_push($send_to, $absence->employee->email );
-					} 
+						// ako je odluka uprave mail djelatnika
+						if(isset($request['decree']) && $request['decree'] == 1 ) {
+							array_push($send_to, $absence->employee->email );
+						} 
+					}
+					
 					try {
-						// $send_to = array('jelena.juras@duplico.hr'); 
 						Log::info("AbsenceMail: " . implode(',', array_unique($send_to)) );
 						foreach(array_unique($send_to) as $send_to_mail) {
 							if( $send_to_mail != null & $send_to_mail != '' ) {
@@ -466,13 +504,13 @@ class AbsenceController extends BasicAbsenceController
 					$message = session()->flash('success', __('ctrl.request_sent'));
 		
 					return redirect()->back()->with('modal','true')->with('absence','true')->withFlashMessage($message);
-				    }
-				    if ( $this->api_erp ) {
-						if( $request['type'] == 'BOL') {
-							$api = new ApiController();
-							$leave_types = $api->send_leave_request($absence, 'abs');
-						}
+				}
+				if ( $this->api_erp ) {
+					if( $absence->absence->mark == 'BOL') {
+						$api = new ApiController();
+						$leave_types = $api->send_leave_request($absence, 'abs');
 					}
+				}
 		    } else {
 				session()->flash('error',  __('ctrl.request_exist'));
 				return redirect()->back();
@@ -488,17 +526,15 @@ class AbsenceController extends BasicAbsenceController
      */
     public function show($id)
     {
-        $empl = Employee::find($id);
+		$empl = Employee::find($id);
+		
 		if($empl) {
 			$absences = Absence::where('employee_id',$empl->id)->get();
 			$afterhours = Afterhour::where('employee_id',$empl->id)->get();
-			if($empl->work) {
-				$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-			}
+			
 		} else {
 			$absences = array();
 			$afterhours = array();
-			$permission_dep = array();
 		}
 		$types = AbsenceType::get();
 		
@@ -512,12 +548,10 @@ class AbsenceController extends BasicAbsenceController
 				$afterhours = collect();
 			}
 		}
-		
-		$data_absence = array(
-			'zahtjevi' 		 => BasicAbsenceController::requestAllYear( $empl ), 
-		);
 
-		return view('Centaur::absences.show', ['absences' => $absences,'afterhours' => $afterhours,'types' => $types,'data_absence' => $data_absence,'permission_dep' => $permission_dep]);
+		$zahtjevi =  BasicAbsenceController::zahtjevi( $empl );
+	
+		return view('Centaur::absences.show', ['employee' => $empl,'absences' => $absences,'afterhours' => $afterhours,'types' => $types,'zahtjevi' => $zahtjevi]);
     }
 
     /**
@@ -530,7 +564,7 @@ class AbsenceController extends BasicAbsenceController
     {
         $absence = Absence::find($id);
 		$employees = Employee::employees_lastNameASC();
-		$absenceTypes = AbsenceType::get();
+		$absenceTypes = AbsenceType::where('active',1)->get();
 		
 		$user = Sentinel::getUser();
 		$tasks = null;
@@ -571,7 +605,7 @@ class AbsenceController extends BasicAbsenceController
 		} else {
 			$absenceType = AbsenceType::where('mark',$request['type'])->first();
 			$absenceType_id = $absenceType->id;
-			$ERP_leave_type = null;
+			$ERP_leave_type = $absenceType->erp_id;
 		}
 
 		if(isset($request['decree'])) {
@@ -605,11 +639,23 @@ class AbsenceController extends BasicAbsenceController
 	
 		$absence->updateAbsence($data);
 
+		if ( $this->api_erp ) {
+			Log::info($absence->absence->mark);
+			if( $absence->absence->mark == 'BOL') {
+				$api = new ApiController();
+				$leave_types = $api->send_leave_request($absence, 'abs');
+			}
+		}
+
 		if($request['email'] == 'DA') {
 			/* Ako je djelatnik radione poruka ide na g.Peklića */
 			/* if( Sentinel::getUser()->employee->hasEmployeeDepartmen->where('department_id', Department::where('name','Radiona')->first()->id )->first()) {
 				$send_to = array('borislav.peklic@duplico.hr');
-			} else { */
+			}  */
+
+			if( $this->test_mail ) {
+				$send_to = 'jelena.juras@duplico.hr';
+			} else {
 				$send_to = EmailingController::sendTo('absences','create');
 
 				$firstSuperior = $absence->employee->work->firstSuperior; // prvi nadređeni
@@ -621,11 +667,10 @@ class AbsenceController extends BasicAbsenceController
 					$mail_manager = $manager->email;
 					array_push($send_to, $mail_manager);
 				}
-			/* } */
-			try {
-				// $send_to = array('jelena.juras@duplico.hr'); 
-				Log::info("AbsenceMail edit : " . implode(',', array_unique($send_to)) );
+			}
 			
+			try {
+				Log::info("AbsenceMail edit : " . implode(',', array_unique($send_to)) );
 				foreach(array_unique($send_to) as $send_to_mail) {
 					if( $send_to_mail != null & $send_to_mail != '' ) {
 						Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
@@ -698,22 +743,26 @@ class AbsenceController extends BasicAbsenceController
 			}
 				
 			/* mail obavijest */
-			$send_to = EmailingController::sendTo('absences','confirm');
-			$employee_mail = $absence->employee->email;
-			array_push($send_to, $employee_mail ); // mail zaposlenika
-
-			$firstSuperior = $absence->employee->work->firstSuperior; // prvi nadređeni
-			if($firstSuperior) {
-				$mail_firstSuperior = $firstSuperior->email;
-				array_push($send_to, $mail_firstSuperior);
+			if( $this->test_mail ) {
+				$send_to = 'jelena.juras@duplico.hr';
 			} else {
-				$manager = $absence->employee->work->employee; // voditelj odjela
-				$mail_manager = $manager->email;
-				array_push($send_to, $mail_manager);
+				$send_to = EmailingController::sendTo('absences','confirm');
+				$employee_mail = $absence->employee->email;
+				array_push($send_to, $employee_mail ); // mail zaposlenika
+
+				$firstSuperior = $absence->employee->work->firstSuperior; // prvi nadređeni
+				if($firstSuperior) {
+					$mail_firstSuperior = $firstSuperior->email;
+					array_push($send_to, $mail_firstSuperior);
+				} else {
+					$manager = $absence->employee->work->employee; // voditelj odjela
+					$mail_manager = $manager->email;
+					array_push($send_to, $mail_manager);
+				}
+				
+				$send_to = array_diff( $send_to, array(	$odobrio_user )); // bez djelatnika koji odobrava 
 			}
 			
-			$send_to = array_diff( $send_to, array(	$odobrio_user )); // bez djelatnika koji odobrava 
-			/* $send_to = array('jelena.juras@duplico.hr'); */
 			Log::info("Potvrda Izostanaka poslana na mail: ". implode(', ',array_unique($send_to)));
 
 			try {
@@ -760,10 +809,14 @@ class AbsenceController extends BasicAbsenceController
 		$absence->updateAbsence($data);
 
 		if($request['email'] == 1 ){ 
-			$send_to = EmailingController::sendTo('absences','confirm');
-			array_push($send_to, $absence->employee->email );
+			if( $this->test_mail ) {
+				$send_to = 'jelena.juras@duplico.hr';
+			} else {
+				$send_to = EmailingController::sendTo('absences','confirm');
+				array_push($send_to, $absence->employee->email );
+			}
+			
 			Log::info("AbsenceConfirmMail update: " . implode(', ',array_unique($send_to) ));
-			//$send_to = array('jelena.juras@duplico.hr');
 
 			try {
 				foreach(array_unique($send_to) as $send_to_mail) {

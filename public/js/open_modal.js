@@ -1,6 +1,31 @@
 $("a[rel='modal:open']").addClass('disable');
 
 $(function() {
+  
+/* 
+    $('body').on($.modal.OPEN, function(event, modal) {
+        modal_selectSearch ();
+        console.log( $('select.form-control').length );
+    });
+
+    function modal_selectSearch () {
+        $(function(){
+            if( $('select.form-control').length > 0 ) {
+                console.log($('select.form-control').attr('id'));
+                $('select.form-control').select2({
+                  
+                    dropdownParent: $('body'),
+                    width: 'resolve',
+                    placeholder: {
+                        id: '-1', // the value of the option
+                      },
+                    theme: "classic",
+                });
+            }
+        });
+    }
+
+ */
     $("a[rel='modal:open']").removeClass('disable');
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
@@ -192,7 +217,7 @@ $(function() {
     $('tr[data-modal] td:not(:last-child)').on("click", function(e) {
         e.preventDefault();
         var href = location.origin + $(this).parent().data('href');
-        console.log(href);
+       
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`

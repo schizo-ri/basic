@@ -135,6 +135,11 @@ ul.admin_pages li >span.image_template{
     margin-left: 15px;
     padding: 0 16px;
 }
+#admin_page .btn-new.btn-store {
+    width: auto;
+}
+
+
 #admin_page .btn-new:hover {
     color: #fff;
     background-color: #0069d9;

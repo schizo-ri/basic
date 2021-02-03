@@ -1509,7 +1509,8 @@ span.button_nav_img.campaign {
 	background-size: 28px;
 	background-position: center;
 }
-.button_nav.active span.button_nav_img.contacts>svg, .button_nav.active span.button_nav_img.instructions>svg, .button_nav.active span.button_nav_img.educations>svg {
+
+.button_nav.active span.button_nav_img.contacts>svg, .button_nav.active span.button_nav_img.instructions>svg, .button_nav.active span.button_nav_img.educations>svg, .button_nav.active span.button_nav_img.work_diaries>svg {
 	color: #071e57;
 }
 

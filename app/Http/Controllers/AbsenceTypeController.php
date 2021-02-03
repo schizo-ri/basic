@@ -61,6 +61,7 @@ class AbsenceTypeController extends Controller
         $data = array(
 			'erp_id'  	=> $request['erp_id'],
 			'name'  	=> $request['name'],
+			'active'  	=> $request['active'] ? $request['active'] : 0,
 			'temp'  	=> $request['temp'], // za privremene djelatnike
 			'mark'  	=> str_replace(" ","_",trim(strtoupper($request['mark'])))
 		);
@@ -116,6 +117,7 @@ class AbsenceTypeController extends Controller
 		
 		 $data = array(
             'erp_id'  	=> $request['erp_id'],
+			'active'  	=> $request['active'] ? $request['active'] : 0,
             'name'  	=> $request['name'],
             'temp'  	=> $request['temp'], // za privremene djelatnike
 			'mark'  	=> str_replace(" ","_",trim(strtoupper($request['mark'])))
