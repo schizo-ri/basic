@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Sentinel;
 class WorkDiary extends Model
 {
     /**
@@ -110,8 +110,12 @@ class WorkDiary extends Model
 		
         if( $employee_id != null) {
             $workDiaries = $workDiaries->filter(function ($workDiary, $key) use ( $employee_id ) {
+				/* dd($workDiary->project->employee_id); */
+				$project_empl = $workDiary->project ? $workDiary->project->employee_id : null;
+				$project_empl2 = $workDiary->project ? $workDiary->project->employee_id2 : null;
 				
-                return $workDiary->employee_id == $employee_id;
+				return $workDiary->employee_id == $employee_id || $project_empl ==  $employee_id || $project_empl2 ==  $employee_id;
+				/* || $workDiary->project ? $workDiary->project->employee_id == $employee_id : '' || $workDiary->project ? $workDiary->project->employee_id2 == $employee_id : '' */
             });
 		}
 
@@ -127,15 +131,18 @@ class WorkDiary extends Model
 	
 	public function getProjects ($workDiaries)
 	{
+		$employee =  Sentinel::getUser()->employee;
+		
 		$projects_array = array();
 		foreach (array_keys($workDiaries->groupBy('project_id')->toArray()) as $workDiary_project) {
             array_push($projects_array, $workDiary_project );
 		}
-		$all_projects = Project::where('active',1)->get();
-		$projects = $all_projects->filter(function ($project, $key) use ($projects_array) {
-			return in_array($project->id, $projects_array);
-		});
 		
+		$all_projects = Project::where('active',1)->get();
+		$projects = $all_projects->filter(function ($project, $key) use ($projects_array, $employee) {
+			return in_array($project->id, $projects_array) || $project->employee_id == $employee->id  || $project->employee_id2 == $employee->id;
+		});
+
         return $projects;
 	}
 

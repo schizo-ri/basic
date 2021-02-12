@@ -31,6 +31,7 @@
 							<th>@lang('basic.name')</th>
 							<th>@lang('basic.object')</th>
 							<th>@lang('basic.manager')</th>
+							<th>@lang('basic.site_manager')</th>
 							<th>@lang('basic.customer')</th>
 							<th>oib</th>
 							<th>@lang('basic.options')</th>
@@ -43,10 +44,11 @@
 								<td>{{ $project->name }}</td>
 								<td>{{ $project->object }}</td>
 								<td>{!! $project->employee_id && $project->employee ? $project->employee->user->first_name . ' ' .  $project->employee->user->last_name : '' !!}</td>
+								<td>{!! $project->employee_id2 && $project->employee2 ? $project->employee2->user->first_name . ' ' .  $project->employee2->user->last_name : '' !!}</td>
 								<td>{!! $project->customer ? $project->customer->name : '' !!}
 									{!! $project->customer_oib && $customers->where('oib',filter_var($project->customer_oib , FILTER_SANITIZE_NUMBER_INT))->first() ? $customers->where('oib',filter_var($project->customer_oib , FILTER_SANITIZE_NUMBER_INT))->first()->name : '' !!}
 								</td>
-								<td> {{ filter_var($project->customer_oib , FILTER_SANITIZE_NUMBER_INT) }}</td>
+								<td>{{ filter_var($project->customer_oib, FILTER_SANITIZE_NUMBER_INT) }}</td>
 								<td class="center">
 									<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['projects.update']) || in_array('projects.update', $permission_dep))

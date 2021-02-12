@@ -105,8 +105,7 @@ class TemporaryEmployeeController extends Controller
             session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			return redirect()->back();
         }
-      
-            
+                  
         session()->flash('success',  __('ctrl.data_save'));
 		return redirect()->back();
     }
@@ -178,6 +177,21 @@ class TemporaryEmployeeController extends Controller
         );
         
         $temporaryEmployee->updateTemporaryEmployee($data);
+        
+        $send_to = EmailingController::sendTo('temporary_employees', 'create');
+        try {
+            foreach(array_unique($send_to) as $send_to_mail) {
+                if( $send_to_mail != null & $send_to_mail != '' )
+                Mail::to($send_to_mail)->send(new TemporaryEmployeeMail($temporaryEmployee)); 
+            }
+        } catch (\Throwable $th) {
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
+            session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+			return redirect()->back();
+        }
         
         session()->flash('success',  __('ctrl.data_edit'));
         return redirect()->back();

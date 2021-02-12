@@ -139,6 +139,7 @@
 					@endforeach
 				@endif
 				<p class="">Zadatak: <b>{{ $task->task }}</b></p>
+				<p class="">Opis: <b>{{ $task->description }}</b></p>
 				<p class="">
                     @php
 						$employee_ids = explode(",", $task->to_employee_id);

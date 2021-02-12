@@ -54,14 +54,18 @@
 }
 
 .align_l {
-    text-align: left;
+    text-align: left !important;
 }
 .padd_0 {
     padding: 0;
 }
 
+.padd_10 {
+    padding: 10px;
+}
+
 .padd_20 {
-    padding: 20;
+    padding: 20px;
 }
 
 .padd_tb_5 {
@@ -153,7 +157,9 @@
 .clear_r {
     clear: right;
 }
-
+.opacity_04 {
+    opacity: 0.4;
+}
 .clear_l {
     clear: left;
 }
@@ -168,6 +174,9 @@
 }
 .font_14 {
     font-size: 0.875rem;
+}
+.font_15 {
+    font-size: 0.9375rem;
 }
 .font_8 {
     font-size: 0.5rem !important;
@@ -188,15 +197,15 @@
     font-size: 0.6875rem;
 }
 
-  .overflow_hidd {
-      overflow: hidden;
-  }
+.overflow_hidd {
+    overflow: hidden;
+}
 
-  .overflow_auto {
-      overflow: auto;
-      
-      scrollbar-width: thin;
-  }
+.overflow_auto {
+    overflow: auto;
+    
+    scrollbar-width: thin;
+}
 
 .bold {
     font-weight: bold;
@@ -210,12 +219,26 @@
 .bg_ccc {
     background-color: #ccc !important;
 }
-
+.bg_bbb {
+    background-color: #bbb !important;
+}
+.bg_darkgrey {
+    background-color: #606060 !important;
+}
+.bg_darkblue {
+    background-color: #071e57 !important;
+}
+.bg_blue {
+    background-color: #1694f0 !important;
+}
 .green {
     color: green;
 }
 .red {
     color: red;
+}
+.crimson {
+    color: crimson;
 }
 .post_unread {
     background: rgba(0,0,0,0.1);
@@ -291,9 +314,12 @@
     }
 }
 
+.cursor {
+    cursor: pointer;
+}
+
 button {
     cursor: pointer;
-    
 }
 
 pre {
@@ -312,4 +338,8 @@ pre {
 }
 .notice_show li span {
     display:block;
+}
+
+.font_white {
+    color:white;
 }

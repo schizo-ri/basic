@@ -24,23 +24,35 @@
 				<input class="form-control" name="object" maxlength="50" type="text" value="{{ old('object') }}"  />
 				{!! ($errors->has('object') ? $errors->first('object', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="">
-				<label for="active_1">@lang('basic.active')</label>
-				<input name="active" type="radio" id="active_1" value="1" checked />
-				<label for="active_0">@lang('basic.inactive')</label>
-				<input  name="active" type="radio" id="active_0" value="0" />
-			</div>
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.manager')</label>
 				<select class="form-control" name="employee_id" value="{{ old('employee_id') }}" >
 					<option value="" selected disabled></option>
 					@foreach ($employees as $employee)
 						@if ($employee->user)
-							<option name="employee_id" value="{{ $employee->id }}">{{ $employee->user->first_name . ' ' . $employee->user->last_name }}</option>
+							<option name="employee_id" value="{{ $employee->id }}">{{ $employee->user->last_name . ' ' . $employee->user->first_name }}</option>
 						@endif
 					@endforeach	
 				</select>
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="form-group {{ ($errors->has('employee_id2')) ? 'has-error' : '' }}">
+				<label>@lang('basic.site_manager')</label>
+				<select class="form-control" name="employee_id2" value="{{ old('employee_id2') }}" >
+					<option value="" selected disabled></option>
+					@foreach ($employees as $employee)
+						@if ($employee->user)
+							<option name="employee_id2" value="{{ $employee->id }}">{{ $employee->user->last_name . ' ' . $employee->user->first_name }}</option>
+						@endif
+					@endforeach	
+				</select>
+				{!! ($errors->has('employee_id2') ? $errors->first('employee_id2', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="">
+				<label for="active_1">@lang('basic.active')</label>
+				<input name="active" type="radio" id="active_1" value="1" checked />
+				<label for="active_0">@lang('basic.inactive')</label>
+				<input  name="active" type="radio" id="active_0" value="0" />
 			</div>
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">

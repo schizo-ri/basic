@@ -79,7 +79,7 @@ class AnniversaryMail extends Mailable
         /* Log::info($variable);
         Log::info($template_text_body); */
 
-        $subject =  __('basic.anniversary') . ' - ' .  $this->employee->first_name . ' ' .  $this->employee->last_name;
+        $subject =  __('basic.anniversary') . ' - ' .  $this->employee->first_name . ' ' . ' ' .  $this->employee->last_name;
         return $this->view('emails.employees.anniversary')
                     ->subject( $subject )
                     ->with([

@@ -57,10 +57,10 @@ class AfterHourCreateMail extends Mailable
         
         $interval = $time2->diff($time1);
         $interval = $interval->format('%H:%I');
-        $task = $this->afterhour->project->name;
-        
+        $task = $this->afterhour->project ? $this->afterhour->project->name : '';
+        $sublect = __('emailing.afterhour') . ' - ' . $this->afterhour->employee->user->first_name . ' ' .  $this->afterhour->employee->user->last_name;
         return $this->view('emails.afterhours.create')
-                    ->subject( __('emailing.afterhour') . ' - ' . $this->afterhour->employee->user->first_name . ' ' .  $this->afterhour->employee->user->last_name)
+                    ->subject( $sublect )
 					->with([
 						'afterhour' =>  $this->afterhour,
 						'interval' =>  $interval,

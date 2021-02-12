@@ -80,3 +80,7 @@ Artisan::command('idCard', function () {
 Artisan::command('sickLeave', function () {
     $this->info("Bolovanje upis u Odoo!");
 });
+
+Artisan::command('diary', function () {
+    $this->info("Dnevnik rada!");
+});

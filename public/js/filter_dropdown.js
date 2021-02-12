@@ -6,7 +6,7 @@ $(function() { // filter knowledge base
 	var task = null;
 	var url;
 	var project;
-
+/* 
 	$('.change_month_afterhour').on('change',function(){
 		date =  $(this).val().toLowerCase();
 		employee_id =  $('.change_employee_afterhour').val();
@@ -30,6 +30,11 @@ $(function() { // filter knowledge base
                         $('.dt-buttons').toggle();		
                     })
 					$.getScript('/../restfulizer.js');
+					if( $('tbody tr').length == 0)  {
+						$('.btn-store').hide();
+					} else {
+						$('.btn-store').show();
+					}
 				});
 			},
 			error: function(jqXhr, json, errorThrown) {
@@ -60,13 +65,18 @@ $(function() { // filter knowledge base
                         $('.dt-buttons').toggle();		
                     })
 					$.getScript('/../restfulizer.js');
+					if( $('tbody tr').length == 0)  {
+						$('.btn-store').hide();
+					} else {
+						$('.btn-store').show();
+					}
 				});
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
 			}
 		});
-	});
+	}); */
 
 	$('.filter_employees').not('.main_absence .filter_employees').on('change',function(){
 		employee_id = $( this ).val();
@@ -105,7 +115,7 @@ $(function() { // filter knowledge base
 			},
 			success: function( response ) {
 				if( url.includes('work_diaries/1')) {
-					$( '.page-main' ).load(url + ' .page-main table',function(){
+					$( '.page-main' ).load(url + ' .page-main .diary_project',function(){
 						$('#loader').remove();
 						$.getScript('/../js/datatables.js');
 						$('.show_button').on('click',function () {
@@ -356,6 +366,14 @@ $(function() { // filter knowledge base
 			}
 			url = url + '&task='+task;
 		}
+		if( $('#change_employee_afterhour').length > 0) { 
+			employee_id = $('#change_employee_afterhour').val();
+			if( employee_id == 'all') {
+				employee_id = null;
+			}
+			url = url + '&employee_id='+employee_id;
+		}
+		 
 		if( $('#filter_employees').length > 0) { 
 			employee_id = $('#filter_employees').val();
 			if( employee_id == 'all') {
@@ -389,13 +407,19 @@ $(function() { // filter knowledge base
 			},
 			success: function( response ) {
 				if( url.includes('work_diaries/1')) {
-					$( '.page-main' ).load(url + ' .page-main table',function(){
+					$( '.page-main' ).load(url + ' .page-main>.diary_project',function(){
+						console.log("work_diaries");
+						console.log(url);
+						console.log(location.href );
 						$('#loader').remove();
 						$.getScript('/../js/datatables.js');
+						$.getScript('/../js/collaps.js');
+						
 						$('.show_button').on('click',function () {
 							$('.dt-buttons').toggle();		
 						})
-						$.getScript('/../restfulizer.js');
+						
+					$.getScript('/../restfulizer.js');
 					});
 				} else {
 					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){

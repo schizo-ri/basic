@@ -59,6 +59,7 @@
 												'days_OG'  		 => BasicAbsenceController::daysThisYear( $employee ), 
 												'zahtjevi' 		 => BasicAbsenceController::requestAllYear( $employee ), 
 												'afterHours' 	 => BasicAbsenceController::afterHours( $employee ), 
+												'afterHoursNoPaid' 	 => BasicAbsenceController::afterHoursNoPaid( $employee ), 												
 												'izlasci_ukupno_h' => BasicAbsenceController::izlasci_ukupno( $employee ), 
 												'slobodni_dani' 	=> BasicAbsenceController::slobodni_dani( $employee ), //izlasci u danima
 												'days_off' 		 => BasicAbsenceController::days_off( $employee ), 
@@ -81,7 +82,14 @@
 												@endif
 											@endforeach
 											<td>{{ $data_absence['neiskoristenoGO'] }}</td>
-											<td>{!! $data_absence['afterHours'] == '00:00' ? '' : round($data_absence['afterHours'],2) . ' h' !!}</td>
+											<td>
+												@if ($employee->days_off == 1)
+													{!! $data_absence['afterHours'] == '00:00' ? '' : round($data_absence['afterHours'],2) . ' h' !!}
+												@else
+													{!! $data_absence['afterHoursNoPaid'] == '00:00' ? '' : round($data_absence['afterHoursNoPaid'],2) . ' h' !!}
+												@endif
+												
+											</td>
 											<td>{!! $data_absence['izlasci_ukupno_h']  == '0:0' ? '' : $data_absence['izlasci_ukupno_h'] . ' h ['.$data_absence['slobodni_dani']. ']' !!} </td>
 											<td>{!! $employee->days_off == 1 ? $data_absence['afterHours_withoutOuts'] : '' !!}</td>
 											<td>{!! $employee->days_off == 1 ? $data_absence['days_offUsed'] : '' !!}</td>

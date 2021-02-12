@@ -189,13 +189,13 @@
 										@php
 											$next_date = date_modify($date_modify, '+ 1day');
 										@endphp
-										<td class="date_cell {!! date_format($next_date, 'Y-m-d') == $selected_day ? 'today ' : '' !!}{!! date_format($next_date, 'Y-m-d') == $selected_day ? 'selected_day' : '' !!}{!! $next_date < $start_date || $next_date > $end_date ? 'out_month' : '' !!}" data-date="{{ date_format($next_date, 'Y-m-d') }}">
+										<td class="date_cell {!! date_format($next_date, 'Y-m-d') == $selected_day ? 'today ' : '' !!}{!! date_format($next_date, 'Y-m-d') == $selected_day ? 'selected_day' : '' !!}{!! $next_date < $start_date || $next_date > $end_date ? 'out_month' : '' !!}" data-date="{{ date_format($next_date, 'Y-m-d') }}" >
 											<span class="day_of_month">{{ date_format($next_date, 'd') }}</span>
 												@foreach ($events->where('date', date_format($next_date, 'Y-m-d') ) as $event)
 													<a href="{{ route('events.show', $event->id) }}" rel="modal:open">
-														<div class="show_event empl_{{  $event->employee_id }} col-12" >
+														<div class="show_event empl_{{ $event->employee_id }} col-12" >
 															<div class="event blue">
-																<p>{{ date('H:i',strtotime($event->time1)) . ' - ' . date('G:i',strtotime($event->time2)) }} {{ $event->title }}
+																<p>{{ date('H:i',strtotime($event->time1)) . ' - ' . date('G:i',strtotime($event->time2)) . ' - ' . $event->employee->user->first_name . ' ' . $event->employee->user->last_name  . ' - ' . $event->title }}
 																	{{-- <a href="{{ route('events.edit', $event->id) }}" class="btn-edit" rel="modal:open" >
 																		<i class="far fa-edit"></i>
 																	</a>
@@ -271,7 +271,6 @@
 														@endif
 													@endif
 												@endforeach
-										
 										</td>
 									@endfor
 								</tr>

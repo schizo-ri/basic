@@ -997,10 +997,10 @@ class BasicAbsenceController extends Controller
 		*/ 
 		public static function absenceForDay ($employee_id, $date, $time1, $time2) 
 		{
-			/* $request = Absence::where('employee_id', $employee_id)->whereDate('start_date', $date)->where('approve',1)->first(); */
-			$request = Absence::where('employee_id', $employee_id)->whereDate('start_date', $date)->first(); 
+			$request = Absence::where('employee_id', $employee_id)->whereDate('start_date', $date)->where('approve', 1)->first();
+			$request1 = Absence::where('employee_id', $employee_id)->whereDate('start_date', $date)->where('approve', null)->first();
 			
-			if( $request ) {
+			if( $request ||  $request1 ) {
 				return 1;
 			} else {
 				return 0;
@@ -1068,6 +1068,39 @@ class BasicAbsenceController extends Controller
 			}
 			return $hours;
 		}	
+
+		/* 
+			Vraća broj odobrenih prekovremenih sati za djelatnika 
+			vraća zbroj sati kao decimalan broj 
+		*/
+		public static function afterHoursNoPaid($user) 
+		{
+			/* Log::info($user->id); */
+			$afterHours = Afterhour::where('employee_id', $user->id)->where('paid',null)->orWhere('paid',0)->where('approve',1)->get();
+		/* 	Log::info(count($afterHours)); */
+			$hours = 0;
+			foreach ($afterHours as $afterHour) {
+				if($afterHour->approve_h) {
+					$hm = explode(":",  $afterHour->approve_h);
+					$odobreni_sati = $hm[0] + ($hm[1]/60);
+					$dan_prekovremeni = new DateTime($afterHour->date);
+	
+					if(date_format($dan_prekovremeni,'N') == 6) {
+						$odobreni_sati = $odobreni_sati * 1.3;
+					} elseif (date_format($dan_prekovremeni,'N') == 7) {
+						$odobreni_sati = $odobreni_sati * 1.4;
+					} else {
+						$odobreni_sati = $odobreni_sati;
+					}
+	
+					$hours += $odobreni_sati;
+				}
+				
+			}
+			/* Log::info('afterHoursNoPaid ' . $hours); */
+			return $hours;
+		}	
+
 
 		/* 
 			Vraća broj odobrenih prekovremenih sati za djelatnika 

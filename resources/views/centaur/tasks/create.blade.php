@@ -19,7 +19,7 @@
 		<div class="form-group {{ ($errors->has('to_employee_id')) ? 'has-error' : '' }}">
 			<label for="">@lang('basic.employees_in_charge')</label>
 			<select class="form-control" name="to_employee_id[]" value="{{ old('to_employee_id') }}" size="10" multiple required >
-				<option selected disabled></option>
+				<option disabled></option>
 				@foreach ($employees as $employee)
 					<option value="{{ $employee->id }}">{{ $employee->last_name . ' ' .  $employee->first_name }}</option>
 				@endforeach
@@ -38,7 +38,7 @@
 		</div>
 		<div class="form-group {{ ($errors->has('interval'))  ? 'has-error' : '' }} clear_l" id="period">
 			<label class="label_period">Period ponavljanja</label>
-			<select class="form-control period" name="interval_period" value="{{ old('interval_period') }}" required >
+			<select class=" period" name="interval_period" value="{{ old('interval_period') }}" required >
 				<option class="no_repeat" value="no_repeat">Bez ponavljanja</option>
 				<option value="every_day">Dnevno</option>
 				<option value="once_week">Tjedno</option>

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-    protected $fillable = ['id','erp_id','customer_oib','investitor_id','customer_id','name','object','employee_id','active'];
+    protected $fillable = ['id','erp_id','customer_oib','investitor_id','customer_id','name','object','employee_id','employee_id2','active'];
 	
 	/*
 	* The Eloquent customer model name
@@ -44,6 +44,13 @@ class Project extends Model
 	protected static $employeeModel = 'App\Models\Employee'; 	
 	
 	/*
+	* The Eloquent employee model name
+	* 
+	* @var string
+	*/
+	protected static $diaryModel = 'App\Models\WorkDiary'; 	
+
+	/*
 	* Returns the locco relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -54,6 +61,17 @@ class Project extends Model
 		return $this->hasMany(static::$loccoModel,'project_id')->orderBy('created_at','DESC');
 	}	
 	
+	/*
+	* Returns the locco relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasDiary()
+	{
+		return $this->hasMany(static::$diaryModel,'project_id')->orderBy('date','DESC');
+	}	
+
 	/*
 	* Returns the locco relationship
 	* 
@@ -88,6 +106,17 @@ class Project extends Model
 	}
 	
 	/*
+	* Returns the employee relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function employee2()
+	{
+		return $this->belongsTo(static::$employeeModel,'employee_id2');
+	}
+
+	/*
 	* Returns the investitor relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -121,4 +150,6 @@ class Project extends Model
 	{
 		return $this->update($project);
 	}
+
+	
 }

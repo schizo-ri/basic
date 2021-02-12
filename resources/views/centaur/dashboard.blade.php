@@ -122,14 +122,6 @@
 										</button>
 									@endif
 								@endif
-								@if( Sentinel::getUser()->id == 9) 
-									<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
-										<span>
-											<span class="img clock"></span>
-											<p>@lang('basic.add_afterhour')</p>
-										</span></a>
-									</button>
-								@endif							
 								@if( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasEmployeeTask) > 0 )
 									<button class="" ><a href="{{ route('task_list') }}" rel="modal:open" title="{{ __('basic.tasks') }}">
 										<span>
@@ -188,14 +180,16 @@
 									</span></a>
 								</button>
 							@endif
-							<button class="">
-								<a href="{{ route('radne_upute') }}" title="{{ __('basic.instructions') }}">
-									<span>
-										<span class="img books"></span>
-										<p>@lang('basic.instructions')</p>
-									</span>
-								</a>
-							</button>
+							@if(in_array('Radne upute', $moduli) )
+								<button class="">
+									<a href="{{ route('radne_upute') }}" title="{{ __('basic.instructions') }}">
+										<span>
+											<span class="img books"></span>
+											<p>@lang('basic.instructions')</p>
+										</span>
+									</a>
+								</button>
+							@endif
 						</div>
 					</div>
 				@endif

@@ -15,26 +15,35 @@
 			</select>
 			{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-		@if($projects)
-			<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
-				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{  $afterhour->project_id }}" id="sel1" required>
+		@if(isset($projects) || isset($projects_erp) )
+			<div class="form-group select_project {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
+				<label>@lang('basic.project')</label>
+				<select id="select_project" name="project_id" placeholder="Izaberi projekt..."  value="{{ old('project_id') }}" required>
 					<option value="" disabled selected></option>
-					@foreach ($projects as $project)
-						<option class="project_list" name="project_id" value="{{ intval($project->id) }}" {!! $afterhour->project_id == $project->id ? 'selected' : '' !!}>{{ $project->erp_id  . ' ' . $project->name }}</option>
-					@endforeach	
+					@if(isset($projects) &&  $projects)
+						@foreach ($projects as $project)
+							<option class="project_list" name="project_id" value="{{ intval($project->id) }}" {!! $afterhour->project_id == $project->id ? 'selected' : '' !!}>{{ $project->erp_id  . ' ' . $project->name }}</option>
+						@endforeach	
+					@endif
+					@if(isset($projects_erp) && $projects_erp )
+						@foreach ($projects_erp as $id => $project)
+							<option class="project_list" name="project_id" value="{{ $id }}" {!! $afterhour->project_id == $id ? 'selected' : '' !!}>{{ $project  }}</option>
+						@endforeach	
+					@endif
 				</select>
 			</div>
 		@endif
-		@if(isset( $tasks ) &&  $tasks )
-			<div class="form-group {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
-				<select id="select-state" name="erp_task_id" placeholder="Pick a state..."  value="{{ old('erp_task_id') }}" id="sel1" required>
-					<option value="" disabled selected></option>
+		<div class="form-group tasks {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
+			<label>@lang('basic.task')</label>
+			<select id="select_task" name="erp_task_id" placeholder="Izaberi zadatak..."  value="{{ old('erp_task_id') }}" {{-- required --}}>
+				<option value="" disabled selected></option>
+				@if(isset( $tasks ) && count($tasks)>0 )
 					@foreach ($tasks as $id => $task)
-						<option class="project_list" name="erp_task_id" value="{{ $id }}" {!! $afterhour->erp_task_id == $id ? 'selected' : '' !!}>{{ $task  }}</option>
+						<option class="project_list" name="erp_task_id" value="{{ $id }}" {!! $afterhour->erp_task_id == $id ? 'selected' : '' !!}>{{ $task }}</option>
 					@endforeach	
-				</select>
-			</div>
-		@endif
+				@endif 
+			</select>
+		</div>
 		<div class="form-group datum date1 float_l  {{ ($errors->has('date')) ? 'has-error' : '' }}" >
 			<label>@lang('basic.date')</label>
 			<input name="date" id="date" class="form-control" type="date" value="{{ $afterhour->date }}" required>

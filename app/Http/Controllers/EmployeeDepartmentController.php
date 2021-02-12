@@ -57,25 +57,27 @@ class EmployeeDepartmentController extends Controller
     public function store(Request $request)
     {
         $employeeDepartments = EmployeeDepartment::where('department_id', $request['department_id'])->get();
-
-        foreach ($request['employee_id'] as $employee_id) {
-            if( ! $employeeDepartments->where('employee_id', $employee_id)->first() ) {
-                $data_department = array(
-                    'department_id' => $request['department_id'],
-                    'employee_id' => $employee_id,
-                );
-                $employeeDepartment = new EmployeeDepartment();
-                $employeeDepartment->saveEmployeeDepartment($data_department);
+        if( is_array($request['employee_id']) &&  count($request['employee_id']) > 0) {
+            foreach ($request['employee_id'] as $employee_id) {
+                if( ! $employeeDepartments->where('employee_id', $employee_id)->first() ) {
+                    $data_department = array(
+                        'department_id' => $request['department_id'],
+                        'employee_id' => $employee_id,
+                    );
+                    $employeeDepartment = new EmployeeDepartment();
+                    $employeeDepartment->saveEmployeeDepartment($data_department);
+                }
             }
-        }
-        foreach ($employeeDepartments as $employeeDepartment) {
-            if( ! in_array( $employeeDepartment->employee_id , $request['employee_id'] )) {
-                $employeeDepartment->delete();
+            foreach ($employeeDepartments as $employeeDepartment) {
+                if( ! in_array( $employeeDepartment->employee_id , $request['employee_id'] )) {
+                    $employeeDepartment->delete();
+                }
             }
+    
+            $message = session()->flash('success', 'Djelatnici su snimljeni u odjele');
+        } else {
+            $message = session()->flash('error', 'Nije označen ni jedan djelatnik.');
         }
-	
-
-		$message = session()->flash('success', 'Djelatnici su snimljeni u odjele');
 		
 		return redirect()->back()->withFlashMessage($message);
     }

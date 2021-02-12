@@ -1,22 +1,79 @@
 function mySearchTable() {
   $("#mySearchTbl").on('keyup',function() {
     var value = $(this).val().toLowerCase();
-    
+    var search_Array = value.split(" ");
+
     $("#index_table tbody tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      if( search_Array.length == 1 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1);
+      } else if( search_Array.length == 2 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1);
+      } else if( search_Array.length == 3 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1);
+      } else if( search_Array.length == 4 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[3]) > -1);
+      } else if( search_Array.length == 5 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[4]) > -1);
+      }
     });
-    $("#index_table1 tbody tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    if($("#index_table1 tbody tr").length > 0 ) {
+      $("#index_table1 tbody tr").filter(function() {
+        if( search_Array.length == 1 ) {
+          $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1);
+        } else if( search_Array.length == 2 ) {
+          $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1);
+        } else if( search_Array.length == 3 ) {
+          $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1);
+        } else if( search_Array.length == 4 ) {
+          $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[3]) > -1);
+        } else if( search_Array.length == 5 ) {
+          $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[4]) > -1);
+        }
+      });
+    }
+    
+  });
+}
+
+function mySearch() {
+  $("#mySearch").on('keyup',function() {
+    var value = $(this).val().toLowerCase();
+    var search_Array = value.split(" ");
+
+    $(".panel").filter(function() {
+      /* $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) */
+      if( search_Array.length == 1 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1);
+      } else if( search_Array.length == 2 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1);
+      } else if( search_Array.length == 3 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1);
+      } else if( search_Array.length == 4 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[3]) > -1);
+      } else if( search_Array.length == 5 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[4]) > -1);
+      }
     });
+  
   });
 }
 
 function mySearchTableAbsence() {
   $("#mySearchTbl").on('keyup',function() {
     var value = $(this).val().toLowerCase();
-
+    var search_Array = value.split(" ");
     $("#index_table tbody tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      if( search_Array.length == 1 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1);
+      } else if( search_Array.length == 2 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1);
+      } else if( search_Array.length == 3 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1);
+      } else if( search_Array.length == 4 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[3]) > -1);
+      } else if( search_Array.length == 5 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[4]) > -1);
+      }
     });
   });
 }
@@ -33,7 +90,7 @@ function mySearchDoc() {
   });
 }
 
-function mySearch_col1() {
+/* function mySearch_col1() {
   // Declare variables
   var input, filter, ul, li, a, i;
   input = document.getElementById("mySearch");
@@ -52,7 +109,7 @@ function mySearch_col1() {
 		}
 	}
   }
-}
+} */
 
 function mySearchElement() {
   $("#mySearchElement").on('keyup', function() {

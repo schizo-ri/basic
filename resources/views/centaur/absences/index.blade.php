@@ -312,8 +312,9 @@
 														<td class="absence_end_date" style="max-width:10%;width:10%">-</td>
 														<td class="absence_time" style="max-width:7%;width:7%">{{ date('H:i',strtotime($afterhour->start_time)) . '-' .  date('H:i',strtotime($afterhour->end_time)) }}</td>
 														<td style="max-width:30%;width:30%">		
-															{!! $afterhour->approve_h && $afterhour->approve == 1 ? 'Odobreno: '. $afterhour->approve_h : '' !!} [Traženo: {{ $interval }}]
-															{{ $afterhour->comment }}
+															{!! $afterhour->approve_h && $afterhour->approve == 1 ? 'Odobreno: '. $afterhour->approve_h : '' !!} [Traženo: {{ $interval }}] 
+															{!! $afterhour->project ? $afterhour->project->erp_id . ' - '. $afterhour->project->name  : '' !!}
+															{{ $afterhour->comment }} 
 														</td>
 														<td class="not_link approve" style="max-width:15%;width:15%">
 															@if($afterhour->approve == 1) 
@@ -390,6 +391,5 @@
 <span class="selected_employee" hidden>{{ $selected_employee->user->last_name . ' ' . $selected_employee->user->first_name }}</span>
 <script>	
 	$.getScript('/../js/absence_create.js');
-
 </script>
 @stop

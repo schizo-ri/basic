@@ -15,8 +15,8 @@ use App\Http\Requests\EventRequest;
 use DateTime;
 use DateInterval;
 use DatePeriod;
-use Spatie\CalendarLinks\Link;
-
+/* use Spatie\CalendarLinks\Link; */
+/* use DiegoSouza\Zimbra\Facades\Zimbra; */
 
 class EventController extends Controller
 {
@@ -37,6 +37,8 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
+      /*   $result = Zimbra::getAllCos(); */
+
         $empl = Sentinel::getUser()->employee;
        
         if( isset($_GET['dan']) ) {
@@ -48,7 +50,12 @@ class EventController extends Controller
         $selected = EventController::selectedDay( $dan );
       
         if($empl) {
-            $events = Event::whereMonth('date',$selected['mj_select'])->where('employee_id', $empl->id)->get();
+            if( Sentinel::inRole('administrator')) {
+                $events = Event::whereMonth('date',$selected['mj_select'])->get();
+            } else {
+                $events = Event::whereMonth('date',$selected['mj_select'])->where('employee_id', $empl->id)->get();
+            }
+
             foreach ( $events as $event ) {
                 $event->week = date('W',strtotime($event->date));
             }
@@ -168,9 +175,8 @@ class EventController extends Controller
         $event = new Event();
 
 		$event->saveEvent($data);
-
-        /*
-        $from = DateTime::createFromFormat('Y-m-d H:i', $event->date . ' ' . $event->time1 );
+        
+        /* $from = DateTime::createFromFormat('Y-m-d H:i', $event->date . ' ' . $event->time1 );
         $to = DateTime::createFromFormat('Y-m-d H:i',  $event->date . ' ' . $event->time2 );
 
         $link = Link::create($event->title, $from, $to)
@@ -179,8 +185,8 @@ class EventController extends Controller
         
         // Generate a link to create an event on Google calendar
         echo $link->google();
-
         */
+       
 		session()->flash('success',  __('ctrl.data_save'));
 		if($host == '/event') {
             return redirect()->route('events.index');
@@ -385,7 +391,7 @@ class EventController extends Controller
                                               'date' => $task->start_date,
                                               'time1' => $task->time1, 
                                               'time2' => $task->time2, 
-                                              'title' => $task->title, 
+                                              'title' => $task->task . ': ' . $task->description, 
                                               'employee' => $task->employee->user['first_name'] . ' ' . $task->employee->user['last_name'], 
                                               'background' =>  $task->employee->color, 
                                               'car' => $task->car['registration'], 
@@ -393,7 +399,8 @@ class EventController extends Controller
                     }
                 }
                
-                $events = $employee->hasEvents;
+                $events = $employee->hasEvents;               
+               
                 $events = $events->filter(function ($event, $key) use ( $month, $year ) {
                     return date('m',strtotime($event->date)) == $month && date('Y',strtotime($event->date)) == $year;
                 });

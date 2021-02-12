@@ -2,6 +2,7 @@
     use App\Models\Questionnaire;
     use App\Http\Controllers\DashboardController;
     use App\Models\Campaign;
+    use App\Models\Project;
 	$countQuestionnaire =  Questionnaire::countQuestionnaire();
     $countCampaign = Campaign::countCampaign();
     $permission_dep = DashboardController::getDepartmentPermission();
@@ -78,7 +79,7 @@
             @endif
         @endif
         @if(in_array('Dnevnik', $moduli))
-            @if( count(Sentinel::getUser()->employee->hasDiary) > 0 || Sentinel::inRole('administrator') )
+            @if( count(Sentinel::getUser()->employee->hasDiary) > 0 || Sentinel::inRole('administrator') || count( Project::where('employee_id',Sentinel::getUser()->employee->id)->get() ) > 0 )
                 <div class="">
                     <a class="button_nav load_button work_diaries_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('work_diaries.show', 1) }}" title="{{ __('basic.work_diary') }}">
                         <span class="button_nav_img work_diaries "><i class="fas fa-book"></i></span>
@@ -113,13 +114,15 @@
                 <p class="button_nav_text">@lang('basic.contacts')</p>
             </a>	
         </div>
-       @if(Sentinel::getUser()->hasAccess(['instructions.view']) || in_array('instructions.view', $permission_dep) )
-        <div class="">
-            <a class="button_nav load_button radne_upute_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('radne_upute') }}" title="{{ __('basic.instructions') }}">
-                <span class="button_nav_img instructions"><i class="fas fa-book-open"></i></span>
-                <p class="button_nav_text">@lang('basic.instructions')</p>
-            </a>	
-        </div>
+        @if(in_array('Radne upute', $moduli) )
+            @if(Sentinel::getUser()->hasAccess(['instructions.view']) || in_array('instructions.view', $permission_dep) )
+                    <div class="">
+                        <a class="button_nav load_button radne_upute_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('radne_upute') }}" title="{{ __('basic.instructions') }}">
+                            <span class="button_nav_img instructions"><i class="fas fa-book-open"></i></span>
+                            <p class="button_nav_text">@lang('basic.instructions')</p>
+                        </a>	
+                    </div>
+                @endif
         @endif
         @if(Sentinel::getUser()->hasAccess(['tasks.create']) || in_array('tasks.create', $permission_dep) )
             <div class="">
@@ -147,7 +150,7 @@
             @endif
         @endif
         @if( Sentinel::getUser()->hasAccess(['energy_consumptions.view']) || in_array('energy_consumptions.view', $permission_dep) )
-            @if ( count(Sentinel::getUser()->employee->hasTask->where('energy_consumptions', 1)->where('active', 1) )) > 0  )
+            @if ( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasTask->where('energy_consumptions', 1)->where('active', 1) )) > 0  )
                 <div class="">
                     <a class="button_nav load_button energy_consumptions_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('energy_consumptions.index') }}" title="Potrošnja energenata">
                         <span class="button_nav_img"><i class="fas fa-plug"></i></span>

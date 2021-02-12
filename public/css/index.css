@@ -7,9 +7,11 @@
 .password_reset h3 {
     color: white;
 }
-
+.show_task {
+    display: none;
+}
 .add_project {
-    te
+   
 }
 .form-control.color {
     width: 100px;
@@ -1810,7 +1812,15 @@ table ul {
     z-index: 3;
   
 }   
-
+.remove_project {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 2px 5px;
+    float: right;
+    width: auto;
+    box-shadow: 3px 3px 3px #ddd;
+    margin-right: 5px;
+}
 .select2-results__options{
     background-color: white;
     padding: 0 10px;
@@ -1831,7 +1841,10 @@ table ul {
 .select2-selection__rendered {
     width: 100%;
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 .select2-search__field {
     border: none;
@@ -1841,6 +1854,7 @@ table ul {
     background-position: 98%;
     background-color: white;
     width: 100%;
+    min-width: 80px;
     white-space: nowrap;
     overflow: hidden ;
     text-overflow: ellipsis;
@@ -1901,6 +1915,7 @@ datalist option {
     max-width: 15%;
     float: left;
     /* margin-right: 15px; */
+    flex: none;
 }
 #admin_page .index_table_filter div.div_select2, #admin_page .filtercontainer div.div_select2 {
     margin-left: 15px ;
@@ -2355,17 +2370,28 @@ form.after_form  {
     margin: auto;
     display: block;
   }
-  .latest_messages  div.search_input  {
+
+.latest_messages  div.search_input  {
     /* margin: 25px 0; */
-  }
-  .search_post {
+}
+
+.search_post {
     background: url(/icons/search.png) no-repeat;
     height: 21px;
     width: 21px;
     float: right;
     cursor: pointer;
     margin: 5px 27px 5px 0;
-  }
+}
+
+.diary_project {
+    margin-bottom: 20px;
+}
+
+.project_table {
+    display: none;
+    margin-bottom: 20px;
+}
 
 .table-responsive  {
     position: relative;
@@ -2375,20 +2401,25 @@ form.after_form  {
     padding-bottom: 20px;
     overflow: auto;
 }
+
 .all_absences .table-responsive {
     height: calc( 100% - 78px);
 }
-.table-responsive .dataTables_wrapper {
-    overflow: auto;
-    scrollbar-width: thin;
-    height: 100%;
+
+.diary_table .table-responsive .dataTables_wrapper:not(.page-main>.dataTables_wrapper) {
+    display: none;
+}
+.diary_table table td:not(:first-child):not(:last-child), .diary_table table th:not(:first-child):not(:last-child) {
+    width: calc(10%);   
 }
 .second_view {
     display: none;
 }
+
 .main_work_records .second_view {
     display: block;
 }
+
 main.users_main .second_view {
     position: relative;
     padding: 0 10px 35px 10px;
@@ -4177,7 +4208,7 @@ a.modal_close {
         min-height: 70px
     }
     .index_main main.main_calendar, .index_main main.main_calendar_month, .index_main main.main_calendar_week {
-        top: 80px
+        top: 0;
     }
     .index_page aside.latest_messages header.post_header {
         height: 65px;
@@ -4699,6 +4730,10 @@ a.modal_close {
     .select_filter, .select2-selection {
         height: 30px;
         background: none;
+        min-width: unset;
+        white-space: break-spaces;
+        padding: 0;
+        text-align: center;
     }
     .index_table_filter >label, #index_table_filter >label, .index_table_filter > a.add_new {
         position: relative;

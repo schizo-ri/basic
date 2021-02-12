@@ -39,7 +39,7 @@ class AfterhourController extends Controller
         $this->middleware('sentinel.auth');
         $this->api_erp = true;
         $this->api_project = true;
-        $this->test_mail = false;  // true - test na jelena.juras@duplco.hr
+        $this->test_mail = false;  // true - test na jelena.juras@duplico.hr
     }
     
     /**
@@ -50,6 +50,7 @@ class AfterhourController extends Controller
     public function index( Request $request)
     {
         $permission_dep = DashboardController::getDepartmentPermission();
+
         if( isset($request['date'])) {
             $date = explode('-', $request['date']);
             $month = $date[1];
@@ -58,7 +59,7 @@ class AfterhourController extends Controller
             $month = date('m');
             $year = date('Y');
         }
-     
+      
         if( isset($request['employee_id']) && $request['employee_id'] ) {
             $employee_id = $request['employee_id'];
            
@@ -66,13 +67,11 @@ class AfterhourController extends Controller
             $employee_id = null;
         }
 
-        $employees = array();
-        
         $afterhours = Afterhour::get();
         
         $employees = Employee::employees_lastNameASC();
 
-        if(  $employee_id != null && $employee_id != 'all' ) {
+        if(  $employee_id != 'null' && $employee_id != null && $employee_id != 'all' ) {
             $afterhours = $afterhours->where('employee_id', $employee_id);
         }
         
@@ -125,8 +124,10 @@ class AfterhourController extends Controller
         $projects_erp = null;
 
         if( $request_empl ) {
-            if( $this->api_erp ) {
-                $erp_id = $request_empl->erp_id;
+            $erp_id = $request_empl->erp_id;
+            
+            if( $this->api_erp && $erp_id ) {
+               
                 $api = new ApiController();
                 $projects_erp = $api->get_employee_available_projects( $erp_id, $date );
 
@@ -155,20 +156,25 @@ class AfterhourController extends Controller
       
         $employee =  Employee::find($request['employee_id']);
         $request_exist = BasicAbsenceController::afterhoursForDay( $employee->id, $request['date'], $request['start_time'], $request['end_time'] );
-             
         /*** Projekt */
-            if( $this->api_project ) {
-                $erp_employee = $employee->erp_id;
-                
-                $api = new ApiController();
-                $projects_erp = $api->get_employee_available_projects( $erp_employee, $request['date'] );
-            
-                $project_erp = $projects_erp[$request['project_id'] ];
-            
-                $erp_id = str_replace("]","", str_replace("[","",strstr( $project_erp," ", true )));
-            
-                $project = $erp_id ? Project::where('erp_id', $erp_id)->first() : null;
-                $project_id = $project ? $project->id : null;
+            if( $employee->erp_id ) {
+                if( $this->api_project ) {
+                    $erp_employee = $employee->erp_id;
+                    
+                    $api = new ApiController();
+                    $projects_erp = $api->get_employee_available_projects( $erp_employee, $request['date'] );
+                    try {
+                        $project_erp = $projects_erp[$request['project_id']];
+                        $erp_id = str_replace("]","", str_replace("[","",strstr( $project_erp," ", true )));
+                    } catch (\Throwable $th) {
+                        //throw $th;
+                    }
+
+                    $project = isset($erp_id) && $erp_id ? Project::where('erp_id', $erp_id)->first() : null;
+                    $project_id = $project ? $project->id : null;
+                }
+            } else {
+                $project_id = $request['project_id'];
             }
         /*** Projekt */
 
@@ -177,7 +183,7 @@ class AfterhourController extends Controller
                 'ERP_leave_type' => isset($request['ERP_leave_type']) ? $request['ERP_leave_type'] : 67,
                 'erp_task_id'    => isset($request['erp_task_id']) ? $request['erp_task_id'] : null,
                 'employee_id'  	 => $request['employee_id'],
-                'project_id'  	 =>  $this->api_project ? $project_id : ($request['project_id'] ? $request['project_id'] : null),
+                'project_id'  	 => $this->api_project ? $project_id : ($request['project_id'] ? $request['project_id'] : null),
                 'date'    		 => $request['date'],
                 'start_time'  	 => $request['start_time'],
                 'end_time'  	 => $request['end_time'],
@@ -225,10 +231,11 @@ class AfterhourController extends Controller
         return redirect()->back();
     }
 
-    public static function storeAfterHour ( $afterHour) 
+    public static function storeAfterHour ( $afterHour ) 
     {
         $data = array(
             'ERP_leave_type' => 67,
+            'diary_id'       => $afterHour->id,
             'erp_task_id'    => $afterHour->erp_task_id,
             'employee_id'  	 => $afterHour->employee_id,
             'project_id'  	 => $afterHour->project_id,
@@ -241,12 +248,13 @@ class AfterhourController extends Controller
         $afterHour = new Afterhour();
         $afterHour->saveAfterhour($data);
 
-      
-        /*  $send_to = array('jelena.juras@duplico.hr');  */
-       
-        Mail::to($afterHour->employee->email)->send(new AfterHourSendMail($afterHour));
+       /*  $send_to_empl = array('jelena.juras@duplico.hr');  */
+         $send_to_empl = $afterHour->employee->email;
+        Mail::to($send_to_empl)->send(new AfterHourSendMail($afterHour));
 
         $send_to = EmailingController::sendTo('afterhours', 'create');
+      /*   $send_to = array('jelena.juras@duplico.hr'); */
+
         Log::info("Prekovremeni poslan na mail: ".implode(', ',array_unique($send_to)));
                         
         foreach(array_unique($send_to) as $send_to_mail) {
@@ -290,19 +298,16 @@ class AfterhourController extends Controller
         $employee = $afterhour->employee;
         $projects = null;
         $tasks = null;
-        
-        if( isset($request['date'])) {
-            $date = $request['date'];
-        } else {
-            $date = date('Y-m-d');
-        }
-
+      
         if( $employee ) {
-            if( $this->api_erp ) {
-                $erp_id = $employee->erp_id;
+            $erp_id = $employee->erp_id;
+            
+            if( $this->api_erp && $erp_id ) {
                 $api = new ApiController();
-                $tasks = $api->get_employee_project_tasks( $erp_id, $date );
-                $projects = null;
+                $projects_erp = $api->get_employee_available_projects( $erp_id, $afterhour->date );
+
+                $api = new ApiController();
+                $tasks = $api->get_employee_project_tasks( $erp_id, $afterhour->date, array_keys($projects_erp)[0]);
             } else {
                 $tasks = null;
                 $projects = Project::where('active',1)->get();
@@ -311,7 +316,7 @@ class AfterhourController extends Controller
        
      /*    $leave_types = $api->get_available_leave_types(); */
 
-        return view('Centaur::afterhours.edit',['afterhour' => $afterhour,'employees' => $employees,'projects' => $projects,'tasks' => $tasks]);
+        return view('Centaur::afterhours.edit',['afterhour' => $afterhour,'employees' => $employees,'projects' => $projects,'projects_erp' => $projects_erp,'tasks' => $tasks]);
     }
 
     /**
@@ -394,22 +399,24 @@ class AfterhourController extends Controller
 
             if( $this->api_erp ) {
                 // slanje zahtjeva u Odoo
-                 try {
-                    $api = new ApiController();
-                    $send_leave_request = $api->send_leave_request($afterHour, 'aft');
-                    if($send_leave_request == true) {
-                        $message_erp = 'Zahtjev je uspješno zapisan u Odoo.';
-                    } else {
-                        $message_erp = 'Zahtjev NIJE zapisan u Odoo.';
+                if( $afterHour->approve == 1) {
+                    try {
+                        $api = new ApiController();
+                        $send_leave_request = $api->send_leave_request($afterHour, 'aft');
+                        if($send_leave_request == true) {
+                            $message_erp = 'Zahtjev je uspješno zapisan u Odoo.';
+                        } else {
+                            $message_erp = 'Zahtjev NIJE zapisan u Odoo.';
+                        }
+
+                    } catch (\Throwable $th) {
+                        $email = 'jelena.juras@duplico.hr';
+                        $url = $_SERVER['REQUEST_URI'];
+                        Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
+                        session()->flash('error', __('ctrl.error') );
+                        return redirect()->back();
                     }
-
-                } catch (\Throwable $th) {
-                    $email = 'jelena.juras@duplico.hr';
-                    $url = $_SERVER['REQUEST_URI'];
-                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
-
-                    session()->flash('error', __('ctrl.error') );
-                    return redirect()->back();
                 }
             }
             if( $this->test_mail ) {
@@ -461,22 +468,24 @@ class AfterhourController extends Controller
                     
                         $afterHour->updateAfterhour($data);
                         
-                        if ( $this->api_erp) {
-                            try {
-                                $api = new ApiController();
-                                $send_leave_request = $api->send_leave_request($afterHour, 'aft');
-                                if($send_leave_request == true) {
-                                    $message_erp = ' Zahtjev je uspješno zapisan u Odoo.';
-                                } else {
-                                    $message_erp = ' Zahtjev NIJE zapisan u Odoo.';
+                        if( $afterHour->approve == 1) {
+                            if ( $this->api_erp) {
+                                try {
+                                    $api = new ApiController();
+                                    $send_leave_request = $api->send_leave_request($afterHour, 'aft');
+                                    if($send_leave_request == true) {
+                                        $message_erp = ' Zahtjev je uspješno zapisan u Odoo.';
+                                    } else {
+                                        $message_erp = ' Zahtjev NIJE zapisan u Odoo.';
+                                    }
+                                } catch (\Throwable $th) {
+                                    $email = 'jelena.juras@duplico.hr';
+                                    $url = $_SERVER['REQUEST_URI'];
+                                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+        
+                                    session()->flash('error', __('ctrl.error') );
+                                    return redirect()->back();
                                 }
-                            } catch (\Throwable $th) {
-                                $email = 'jelena.juras@duplico.hr';
-                                $url = $_SERVER['REQUEST_URI'];
-                                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
-    
-                                session()->flash('error', __('ctrl.error') );
-                                return redirect()->back();
                             }
                         }
                         
@@ -513,23 +522,24 @@ class AfterhourController extends Controller
                         );
                                 
                         $absence->updateAbsence($data);
-
-                        if( $this->api_erp) {
-                            try {
-                                $api = new ApiController();
-                                $send_leave_request = $api->send_leave_request($absence, 'abs');
-                                if($send_leave_request == true) {
-                                    $message_erp = ' Zahtjev je uspješno zapisan u Odoo.';
-                                } else {
-                                    $message_erp = ' Zahtjev NIJE zapisan u Odoo.';
+                        if( $absence->approve == 1) {
+                            if( $this->api_erp) {
+                                try {
+                                    $api = new ApiController();
+                                    $send_leave_request = $api->send_leave_request($absence, 'abs');
+                                    if($send_leave_request == true) {
+                                        $message_erp = ' Zahtjev je uspješno zapisan u Odoo.';
+                                    } else {
+                                        $message_erp = ' Zahtjev NIJE zapisan u Odoo.';
+                                    }
+                                } catch (\Throwable $th) {
+                                    $email = 'jelena.juras@duplico.hr';
+                                    $url = $_SERVER['REQUEST_URI'];
+                                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+        
+                                    session()->flash('error', __('ctrl.error') );
+                                    return redirect()->back();
                                 }
-                            } catch (\Throwable $th) {
-                                $email = 'jelena.juras@duplico.hr';
-                                $url = $_SERVER['REQUEST_URI'];
-                                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
-    
-                                session()->flash('error', __('ctrl.error') );
-                                return redirect()->back();
                             }
                         }
                         if( $this->test_mail ) {
@@ -638,8 +648,9 @@ class AfterhourController extends Controller
     
     public function paidHours (Request $request) 
 	{
-		foreach ($request['id'] as $key => $id) {
-			$afterHour = Afterhour::find($id);
+       
+        foreach ($request['id'] as $key => $id) {
+            $afterHour = Afterhour::find($id);
 			if( isset($request['paid'][$key] )) {
 				$paid = $request['paid'][$key];
 			} else {
@@ -650,7 +661,7 @@ class AfterhourController extends Controller
 			);
 			$afterHour->updateAfterhour($data);
 		}
-
+        
 		$message = session()->flash('success', 'Podaci su spremljeni');
 		
 		return redirect()->back()->withFlashMessage($message);

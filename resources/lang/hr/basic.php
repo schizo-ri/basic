@@ -244,6 +244,7 @@ return [
 	'decree'				=> 'Odluka uprave',
 	'department_manager'	=> 'Voditelj odjela',
 	'manager'				=> 'Voditelj',
+	'site_manager'			=> 'Voditelj gradilišta',
 	'manufacturer'			=> 'Proizvođač',
 	'marital'				=> 'Bračno stanje',
 	'married'				=> 'U braku',
@@ -461,6 +462,7 @@ return [
 	'work_diary'			=> 'Dnevnik rada',
 	'work_task'				=> 'Radni zadatak',
 	'work_tasks'			=> 'Radni zadaci',
+	'paid'					=> 'Isplaćeno',
 		
 ];	
 

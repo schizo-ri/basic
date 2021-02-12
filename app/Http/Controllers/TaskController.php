@@ -100,7 +100,7 @@ class TaskController extends Controller
         if( $task->start_date == date('Y-m-d') ) {
             foreach ($request['to_employee_id'] as $key => $employee_id) {
 
-                if($key == 0) {
+                /* if($key == 0) { */
                     $data_task = array(
                         'task_id'  	    => $task->id,
                         'employee_id'  	=> $employee_id,
@@ -126,20 +126,22 @@ class TaskController extends Controller
                     if($email != null && $email != '') {
                         try {
                             Mail::to($email)->send(new TaskCreateMail($employeeTask));
+                            $ja = 'jelena.juras@duplico.hr';
+                            Mail::to($ja)->send(new TaskCreateMail($employeeTask));
                         } catch (\Throwable $th) {
                             $email = 'jelena.juras@duplico.hr';
                             $url = $_SERVER['REQUEST_URI'];
                             Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
 
-                            $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
-                            return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                            session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+                            return redirect()->back();
                         }
                     } else {
-                        $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
-                        return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                        session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
+                        return redirect()->back();
                     }
                 }  
-            }            
+            /* }   */          
         } else {
             foreach ($request['to_employee_id'] as $employee_id) {
                 $employee = Employee::where('id', $employee_id )->first();
@@ -158,18 +160,21 @@ class TaskController extends Controller
                 $email = $employee->email;
                 if($email != null && $email != '') {
                     try {
-                      Mail::to( $email)->send(new TaskInfoMail($employeeTask));
+                      Mail::to( $email)->send(new TaskInfoMail($task));
+                      $ja = 'jelena.juras@duplico.hr';
+                      Mail::to( $ja)->send(new TaskInfoMail($task));
                     } catch (\Throwable $th) {
                         $email = 'jelena.juras@duplico.hr';
                         $url = $_SERVER['REQUEST_URI'];
                         Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
 
-                        $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
-                        return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                        session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+
+                        return redirect()->back();
                     }
                 } else {
-                    $message = session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
-                    return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                    session()->flash('error', 'Uspješno je spremljen novi zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
+                    return redirect()->back();
                 }
             }           
         } 
@@ -221,9 +226,9 @@ class TaskController extends Controller
     public function update(Request $request, $id)
     {
         if(! $request['to_employee_id']) {
-            $message = session()->flash('error', 'Nemoguće spremiti zadatak bez upisanih djelatnika!');
+            session()->flash('error', 'Nemoguće spremiti zadatak bez upisanih djelatnika!');
             
-            return redirect()->back()->withFlashMessage($message);
+            return redirect()->back();
         } 
         $employee = Sentinel::getUser()->employee;
         $task = Task::find( $id );
@@ -246,7 +251,7 @@ class TaskController extends Controller
         // spremanje dnevnog zadatka i slanje maila
         if( $task->start_date == date('Y-m-d') ) {
             foreach ($request['to_employee_id'] as $key => $employee_id) {
-                if($key == 0) {
+                /* if($key == 0) { */
                     $employeeTask = EmployeeTask::where('employee_id', $employee_id)->where('task_id', $task->id )->whereDate('created_at',date('Y-m-d'))->first();
                     if(! $employeeTask) {
                         $data_task = array(
@@ -273,21 +278,24 @@ class TaskController extends Controller
                         if($email != null && $email != '') {
                             try {
                                 Mail::to($email)->send(new TaskCreateMail($employeeTask));
+                                $ja = 'jelena.juras@duplico.hr';
+                                 Mail::to($ja)->send(new TaskCreateMail($employeeTask));
+
                             } catch (\Throwable $th) {
                                 $email = 'jelena.juras@duplico.hr';
                                 $url = $_SERVER['REQUEST_URI'];
                                 Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
 
-                                $message = session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
-                                return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                                session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+                                return redirect()->back();
                             }
                         } else {
-                            $message = session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
-                            return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                            session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
+                            return redirect()->back();
                         }
                     }
                 }  
-            }
+          /*   } */
         } else {
             foreach ($request['to_employee_id'] as $employee_id) {
                 $employee = Employee::where('id', $employee_id )->first();
@@ -312,12 +320,12 @@ class TaskController extends Controller
                         $url = $_SERVER['REQUEST_URI'];
                         Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
                         
-                        $message = session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
-                        return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                        session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+                        return redirect()->back();
                     }
                 } else {
-                    $message = session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
-                    return redirect()->route('admin.tasks.index')->withFlashMessage($message);
+                    session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
+                    return redirect()->back();
                 }
              }           
         } 

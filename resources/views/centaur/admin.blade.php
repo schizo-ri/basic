@@ -28,7 +28,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
         <script>var dt = new Date().getTime();</script>
 		{{--  CSS --}}
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all2.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all1_js.css?random=@dt') }}"/>
 		{{--  Select find --}}
 		<link href="{{ URL::asset('/../select2-develop/dist/css/select2.min.css') }}" />
 		{{-- ICON --}}
@@ -185,7 +185,7 @@
 			{{-- Jquery modal --}}
             <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
             {{-- Scripts --}}
-			<script src="{{URL::asset('/../js/all2.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/all1_js.js?random=@dt') }}"></script>
 			{{-- Datatables --}}
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
@@ -193,6 +193,7 @@
             <script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
             {{--  Select find --}}
 			<script src="{{ URL::asset('/../select2-develop/dist/js/select2.min.js') }}"></script>
+            <script src="{{ URL::asset('/../select2-develop/dist/js/i18n/hr.js') }}"></script>
 			{{-- tinymce js --}}
 			<script src="{{ URL::asset('/node_modules/tinymce/tinymce.min.js') }}" ></script>
 			@if(session()->has('modal'))

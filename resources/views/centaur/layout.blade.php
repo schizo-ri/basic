@@ -33,7 +33,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 		<script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all2.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all1_js.css?random=@dt') }}"/>
 		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/>
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
@@ -208,13 +208,13 @@
 				 */
 				
 			</script>
-			<script src="{{URL::asset('/../js/all2.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/all1_js.js?random=@dt') }}"></script>
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
 
 			{{--  Select find --}}
 			<script src="{{ URL::asset('/../select2-develop/dist/js/select2.min.js') }}"></script>
-		
+			<script src="{{ URL::asset('/../select2-develop/dist/js/i18n/hr.js') }}"></script>
 			<!-- Datatables -->
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>

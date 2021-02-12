@@ -49,7 +49,7 @@ class ProjectController extends Controller
     public function create()
     {
         $customers = Customer::orderBy('name','ASC')->get();
-        $employees = Employee::employees_firstNameASC();
+        $employees = Employee::employees_lastNameASC();
 
         return view('Centaur::projects.create',['customers' =>  $customers, 'employees' =>  $employees]);
     }
@@ -67,6 +67,7 @@ class ProjectController extends Controller
 			'erp_id'  		=> $request['erp_id'],
 			'customer_oib'  => $request['customer_oib'],
 			'employee_id'  => $request['employee_id'],
+			'employee_id2'  => $request['employee_id2'],
 			'object'  		=> $request['object'],
 			'active'        => $request['active'],
         );
@@ -100,7 +101,7 @@ class ProjectController extends Controller
         $project = Project::find( $id );
 
         $customers = Customer::orderBy('name','ASC')->get();
-        $employees = Employee::employees_firstNameASC();
+        $employees = Employee::employees_lastNameASC();
 
         return view('Centaur::projects.edit',['project' =>  $project, 'customers' =>  $customers, 'employees' =>  $employees]);
     }
@@ -120,7 +121,8 @@ class ProjectController extends Controller
 			'name'  		=> $request['name'],
 			'erp_id'  		=> $request['erp_id'],
 			'customer_oib'  => $request['customer_oib'],
-			'employee_id'  => $request['employee_id'],
+            'employee_id'  => $request['employee_id'],
+			'employee_id2'  => $request['employee_id2'],
 			'object'  		=> $request['object'],
 			'active'        => $request['active'],
         );

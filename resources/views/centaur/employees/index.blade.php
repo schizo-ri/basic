@@ -45,7 +45,7 @@
 								</td>
 								<td>{!! $employee->erp_id ? $employee->erp_id : '' !!}</td>
 								<td>{!! $employee->b_day ? date("d.m.Y",strtotime($employee->b_day)) : '' !!}</td>
-								<td>{{  $employee->oib }}</td>
+								<td>{{  strval($employee->oib) }}</td>
 								<td>{!! $employee->work ? $employee->work['name'] : '' !!}</td>
 								<td>
 									@if($employee->hasEmployeeDepartmen && count($employee->hasEmployeeDepartmen)>0)

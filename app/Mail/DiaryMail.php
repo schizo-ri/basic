@@ -6,30 +6,30 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Models\Employee; 
-use DateTime;
 use App\Models\MailTemplate;
+use App\Models\WorkTask;
+use Log;
 
-class ProbationMail extends Mailable
+
+class DiaryMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-     /**
-     * The emplyee instance.
+    /**
+     * The workDiaries instance.
      *
-     * @var employee;
-
+     * @var workDiaries
      */
-    public $employee;
+    public $workDiaries;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Employee $employee)
+    public function __construct($workDiaries)
     {
-        $this->employee = $employee;
+        $this->workDiaries = $workDiaries;
     }
 
     /**
@@ -39,7 +39,7 @@ class ProbationMail extends Mailable
      */
     public function build()
     {
-        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','ProbationMail')->first();
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','DiaryMail')->first();
         $mail_style = array();
         $template_text_header = array();
         $template_text_body= array();
@@ -51,20 +51,15 @@ class ProbationMail extends Mailable
             $template_text_body = MailTemplate::textBody( $mail_template );
             $template_text_footer = MailTemplate::textFooter( $mail_template );
         }
-        
-        $date1 = new DateTime( $this->employee->reg_date); 
-        $date1->modify('+6 month');
-        $date2 = new DateTime("now");
-        $interval = $date1->diff($date2); 
-        $days = $interval->format('%a');
-
-        $subject =  __('basic.probation') . ' - ' . $this->employee->user->first_name . ' ' . ' ' . $this->employee->user->last_name;
-        return $this->view('emails.employees.probation')
-                    ->subject($subject )
+       
+        $workTasks = WorkTask::get();
+       
+        return $this->view('emails.work_diaries.report')
+                    ->subject('Dnevnik rada - izvještaj')
                     ->with([
-                        'employee'  => $this->employee,
-                        'days'      => $days,
-                        'template_mail' => $mail_template,
+                        'workDiaries' => $this->workDiaries,   
+                        'workTasks' => $workTasks,   
+                        'template_mail' => $mail_template,                     
                         'mail_style' => $mail_style,
                         'text_header' => $template_text_header,
                         'text_body' => $template_text_body,

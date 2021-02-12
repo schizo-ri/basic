@@ -2,6 +2,8 @@ var prev_url = location.href;
 var url_modul;
 var date;
 
+
+
 /* $(function() {
     var body_width = $('body').width();
     var body_height = $('body').height();

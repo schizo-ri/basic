@@ -125,7 +125,7 @@
                     <p>Upute za korištenje možete naći na Portalu klikom na link "Dokumenti"</p>
                     <p>Za sva pitanja javite se na email {{ $podrska }}</p>
                     <p>Poralu pristupate putem slijedećeg linka</p>
-                    <button href="{{ $link }}" class="odobri">MyIntranet</button>
+                    <a href="{{ $link }}" class="odobri">MyIntranet</a>
                 @endif
             </div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_footer : '' !!}">

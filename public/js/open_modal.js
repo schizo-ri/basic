@@ -2,30 +2,6 @@ $("a[rel='modal:open']").addClass('disable');
 
 $(function() {
   
-/* 
-    $('body').on($.modal.OPEN, function(event, modal) {
-        modal_selectSearch ();
-        console.log( $('select.form-control').length );
-    });
-
-    function modal_selectSearch () {
-        $(function(){
-            if( $('select.form-control').length > 0 ) {
-                console.log($('select.form-control').attr('id'));
-                $('select.form-control').select2({
-                  
-                    dropdownParent: $('body'),
-                    width: 'resolve',
-                    placeholder: {
-                        id: '-1', // the value of the option
-                      },
-                    theme: "classic",
-                });
-            }
-        });
-    }
-
- */
     $("a[rel='modal:open']").removeClass('disable');
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
@@ -252,4 +228,74 @@ $(function() {
 		console.log(url);
         window.location = url;
     });
+
+    $('body').on($.modal.OPEN , function(event, modal) {
+        $.getScript('/../select2-develop/dist/js/select2.min.js');
+      /*   selectSearchModal (); */
+    });
+
+  /*   function selectSearchModal () {
+		$(function(){
+			if( $('select.form-control').length > 0 ) {
+				$('select.form-control').select2({
+					dropdownParent: $('body'),
+					width: 'resolve',
+					placeholder: {
+						id: '-1', // the value of the option
+					},
+                    language: 'hr',
+                    matcher: matchCustom,
+                 
+				});
+			}
+		});
+	} */
+/*     function matchCustom(params, data) {
+       
+        // If there are no search terms, return all of the data
+        if ($.trim(params.term) === '') {
+          return data;
+        }
+    
+        // Do not display the item if there is no 'text' property
+        if (typeof data.text === 'undefined') {
+          return null;
+        }
+    
+        // `params.term` should be the term that is used for searching
+        // `data.text` is the text that is displayed for the data object
+        var value = params.term;
+        var search_Array = value.split(" ");
+       
+        if( search_Array.length == 1 ) {
+            if (data.text.toLowerCase().indexOf(search_Array[0]) > -1) {
+                var modifiedData = $.extend({}, data, true);
+                return modifiedData;
+            }
+        } else if( search_Array.length == 2 ) {
+            if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1) {
+                var modifiedData = $.extend({}, data, true);
+                return modifiedData;
+            }
+        } else if( search_Array.length == 3 ) {
+            if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1) {
+                var modifiedData = $.extend({}, data, true);
+                return modifiedData;
+            }
+        } else if( search_Array.length == 4 ) {
+            if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1  && data.text.toLowerCase().indexOf(search_Array[3]) > -1) {
+                var modifiedData = $.extend({}, data, true);
+                return modifiedData;
+            }
+        }  else if( search_Array.length == 5 ) {
+            if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1  && data.text.toLowerCase().indexOf(search_Array[3]) > -1 && data.text.toLowerCase().indexOf(search_Array[4]) > -1) {
+                var modifiedData = $.extend({}, data, true);
+                return modifiedData;
+            }
+        } 
+   
+        // Return `null` if the term should not be displayed
+        return null;
+        
+    } */
 });

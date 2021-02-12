@@ -6,7 +6,7 @@
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.employee')</label>
-				<select class="form-control" id="select_employee" name="employee_id[]" value="{{ old('employee_id') }}" size="10" autofocus multiple required >
+				<select class="form-control js-example-basic-multiple js-states" id="select_employee" name="employee_id[]" value="{{ old('employee_id') }}" size="10" autofocus  multiple="multiple" required >
 					<option value="" disabled></option>
 					<option value="all" >@lang('basic.all_employees')</option>
 					@foreach ($employees as $employee)
@@ -37,9 +37,7 @@
 				<select class="form-control" name="type" value="{{ old('type') }}" id="request_type" required >
 					<option disabled selected value></option>
 					@foreach($absenceTypes as $absenceType)
-						@if( $absenceType->mark != 'afterhour' && ( $absenceType->mark != 'SLD' ||  ($absenceType->mark == 'SLD' && Sentinel::inRole('administrator')) || Sentinel::getUser()->employee->days_off == 1 ) )
-							<option value="{{ $absenceType->mark }}" {!! $type ==  $absenceType->mark ? 'selected' : '' !!}>{{ $absenceType->name}}</option>
-						@endif
+						<option value="{{ $absenceType->mark }}" {!! $type ==  $absenceType->mark ? 'selected' : '' !!} {!! $absenceType->mark == 'SLD' && $preostali_dani != 0 ? 'hidden' : '' !!}>{{ $absenceType->name}}</option>
 					@endforeach
 				</select> 
 			@endif
@@ -70,12 +68,12 @@
 		<div class="form-group col-md-12 clear_l overflow_hidd padd_0 time_group" >
             <div class="time float_l {{ ($errors->has('start_time')) ? 'has-error' : '' }}" >
                 <label>@lang('absence.start_time')</label>
-                <input name="start_time" class="form-control " type="time" value="{!!  old('start_time') ? old('start_time') : '08:00' !!}" required>
+                <input name="start_time" class="form-control " type="time" value="{!!  old('start_time') ? old('start_time') : '07:00' !!}" required>
                 {!! ($errors->has('start_time') ? $errors->first('start_time', '<p class="text-danger">:message</p>') : '') !!}
             </div>
             <div class="time float_l {{ ($errors->has('end_time')) ? 'has-error' : '' }}"  >
                 <label>@lang('absence.end_time')</label>
-                <input name="end_time" class="form-control" type="time" value="{!!  old('end_time') ? old('end_time') : '16:00' !!}" required>
+                <input name="end_time" class="form-control" type="time" value="{!!  old('end_time') ? old('end_time') : '15:00' !!}" required>
                 {!! ($errors->has('end_time') ? $errors->first('end_time', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<p class="time_request clear_l" style="display: none">Nemoguće poslati zahtjev. Završno vrijeme je manje od početnog</p>
@@ -102,7 +100,6 @@
 				<input class="margin_l_20" type="checkbox" name="decree" value="1" id="decree" />
 			</div>
 		@endif
-	
 		{{ csrf_field() }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1" >
 		<a href="#" rel="modal:close" class="btn-close">@lang('basic.cancel')</a>
@@ -113,18 +110,6 @@
 	$('.btn-submit').on('click',function(){
 		$( this ).hide();
 	});
+	
 	$.getScript('/../js/absence_create.js');
-	selectSearch ();
-	function selectSearch () {
-	$(function(){
-		if( $('select.form-control').length > 0 ) {
-			$('select.form-control').select2({
-				placeholder: {
-					id: '-1', // the value of the option
-				  },
-				theme: "classic",
-			});
-		}
-	});
-}
 </script>

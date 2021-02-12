@@ -39,6 +39,13 @@ class Employee extends Model
 	protected static $eventModel = 'App\Models\Event'; 
 
 	/*
+	* The Eloquent project model name
+	* 
+	* @var string
+	*/
+	protected static $projectModel = 'App\Models\Project'; 
+
+	/*
 	* The Eloquent task model name
 	* 
 	* @var string
@@ -120,7 +127,7 @@ class Employee extends Model
 	}
 	
 	/*
-	* Returns the hortcuts relationship
+	* Returns the shortcuts relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
 	*/
@@ -128,6 +135,28 @@ class Employee extends Model
 	public function hasShortcuts()
 	{
 		return $this->hasMany(static::$shortcutModel,'employee_id');
+	}
+
+	/*
+	* Returns the project relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasProject()
+	{
+		return $this->hasMany(static::$projectModel,'employee_id');
+	}
+
+	/*
+		* Returns the project relationship
+		* 
+		* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasProject2()
+	{
+		return $this->hasMany(static::$projectModel,'employee_id2');
 	}
 
 	/*
@@ -359,6 +388,7 @@ class Employee extends Model
 	{
 		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.lijecn_pregled', date_format($date,'Y'))->whereMonth('employees.lijecn_pregled', date_format($date,'m'))->whereDay('employees.lijecn_pregled', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
 	}
+
 	public static function employeesIDCardExpired( $date )
 	{
 		return Employee::join('users','users.id','employees.user_id')
@@ -370,6 +400,7 @@ class Employee extends Model
 				->orderBy('users.last_name','ASC')
 				->get();
 	}
+	
 	public static function employeeStranger( $date )
 	{
 		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.permission_date', date_format($date,'Y'))->whereMonth('employees.permission_date', date_format($date,'m'))->whereDay('employees.permission_date', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();

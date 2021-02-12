@@ -34,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
             $permission_dep = array();
         }
         $moduli = CompanyController::getModules();
+
         view()->share('permission_dep', $permission_dep);
         view()->share('moduli', $moduli);
 

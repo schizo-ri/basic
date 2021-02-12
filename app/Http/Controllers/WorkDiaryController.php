@@ -112,6 +112,7 @@ class WorkDiaryController extends Controller
 
                 $api = new ApiController();
                 $tasks = $api->get_employee_project_tasks( $erp_id, $date, array_keys($projects_erp)[0]);
+                $projects = Project::where('active',1)->get();
                
                /*  $projects = null; */
             } else {
@@ -132,66 +133,75 @@ class WorkDiaryController extends Controller
      */
     public function store(Request $request)
     {
+    
         $seconds = 0;
+        $project_overtime = null;
 
         $employee =  Employee::find($request['employee_id']);
+        $erp_employee = $employee->erp_id;   
         $request_exist = WorkDiary::where('employee_id', $employee->id )->where('date',$request['date'])->first();
         
-        /*** Projekt */
-            if( $this->api_project ) {
-                $erp_employee = $employee->erp_id;
-                
-                $api = new ApiController();
-                $projects_erp = $api->get_employee_available_projects( $erp_employee, $request['date'] );
-              
-                $project_erp = $projects_erp[$request['project_id'] ];
-              
-                $erp_id = str_replace("]","", str_replace("[","",strstr( $project_erp," ", true )));
-            
-                $project = $erp_id ? Project::where('erp_id', $erp_id)->first() : null;
-                $project_id = $project ? $project->id : null;
-            }
-       
-        /*** Projekt */
-     
         if( $request_exist  ) {
             session()->flash('error',  __('ctrl.record_exist'));
             return redirect()->back();
         } else {
-            $data = array(
-                'date'  	    => $request['date'],
-                'employee_id'   => $employee->id,
-                'project_id'    => $this->api_project ? $project_id : ($request['project_id'] ? $request['project_id'] : null),
-                'erp_task_id'   => isset($request['erp_task_id']) ? $request['erp_task_id'] : null,
-                'start_time'  	=> isset($request['start_time'] ) ? $request['start_time'] : null,
-                'end_time'  	=> isset($request['end_time']) ? $request['end_time'] : null,
-             /*    'description'  	=> $request['description'], */
-            );
-    
-            $workDiary = new WorkDiary();
-            $workDiary->saveWorkDiary($data);
-    
-            foreach ( $request['task_id'] as $key => $task_id ) {
-                if($request['time'][$key] != '' && $request['time'][$key] != '00:00') {
-                    $dataItem = array(
-                        'diary_id'  	=> $workDiary->id,
-                        'task_id'  	    => $task_id,
-                        'time'  	    => $request['time'][$key],
-                        'description'  	=> $request['description'][$key],
-                    );
-                    $workDiaryItem = new WorkDiaryItem();
-                    $workDiaryItem->saveWorkDiaryItem($dataItem);
-    
-                    list($hour,$minute) = explode(':', $workDiaryItem->time);
-                    $seconds += $hour*3600;
-                    $seconds += $minute*60;
+            foreach ( $request['project_id'] as $proj_key => $proj_id ) {
+                /*** Projekt */
+                if( $this->api_project && $erp_employee ) {
+                    $api = new ApiController();
+                    $projects_erp = $api->get_employee_available_projects( $erp_employee, $request['date'] );
+                    $project_erp = $projects_erp [$proj_id ];
+                    $erp_id = str_replace("]","", str_replace("[","",strstr( $project_erp," ", true )));
+                    $project = $erp_id ? Project::where('erp_id', $erp_id)->first() : null;
+                    $project_id = $project ? $project->id : null;
+                }
+
+                $data = array(
+                    'date'  	    => $request['date'],
+                    'employee_id'   => $employee->id,
+                    'project_id'    => $this->api_project ? $project_id : ($request['project_id'] ? $request['project_id'] : null),
+                    'erp_task_id'   => isset($request['erp_task_id']) ? $request['erp_task_id'][$proj_key] : null,
+                    'start_time'  	=> isset($request['start_time'] ) ? $request['start_time'] : null,
+                    'end_time'  	=> isset($request['end_time']) ? $request['end_time'] : null,
+                );
+        
+                $workDiary = new WorkDiary();
+                $workDiary->saveWorkDiary($data);
+
+                if(isset($request['project_overtime'] ) && $request['project_overtime']) {
+                    if( $this->api_project && $erp_employee ) {                        
+                        $project_erp = $projects_erp [ $request['project_overtime'] ];
+                        $erp_id = str_replace("]","", str_replace("[","",strstr( $project_erp," ", true )));
+                        $project = $erp_id ? Project::where('erp_id', $erp_id)->first() : null;
+                        $project_id_overtime = $project ? $project->id : null;
+                    }
+                    if( $project_id_overtime ==  $workDiary->project_id) {
+                        $project_overtime = $workDiary;
+                    }
+
+                }
+                foreach ( $request['task_id'][$proj_key] as $key => $task_id ) {
+                    if($request['time'][$proj_key][$key] != null && $request['time'][$proj_key][$key] != '' && $request['time'][$proj_key][$key] != '00:00') {
+                        $dataItem = array(
+                            'diary_id'  	=> $workDiary->id,
+                            'task_id'  	    => $task_id,
+                            'time'  	    => $request['time'][$proj_key][$key],
+                            'description'  	=> $request['description'][$proj_key][$key],
+                        );
+                        $workDiaryItem = new WorkDiaryItem();
+                        $workDiaryItem->saveWorkDiaryItem($dataItem);
+        
+                        list($hour,$minute) = explode(':', $workDiaryItem->time);
+                        $seconds += $hour*3600;
+                        $seconds += $minute*60;
+                    }
                 }
             }
-    
+            
             $afterhours =  $seconds - 28800;
             $send_afterhourRequest = '';
-            if( $afterhours > 0) {
-                $send_afterhourRequest = AfterhourController::storeAfterHour($workDiary);
+            if( $afterhours > 0 && $project_overtime) {
+                $send_afterhourRequest = AfterhourController::storeAfterHour( $project_overtime );
             } 
     
             session()->flash('success', __('ctrl.data_save') . " Spremljeno je ukupno " .  gmdate("H:i:s", $seconds)  . ' sati rada. ' . $send_afterhourRequest);
@@ -208,24 +218,29 @@ class WorkDiaryController extends Controller
      */
     public function show( $id, Request $request )
     {
-        if( Sentinel::inRole('administrator')) {
-            $workDiaries_date = WorkDiary::get();
-          /*   $employees = Employee::employees_getNameASC(); */
-            $employee_id = null;
+        if(isset( $request['date'])) {
+            $date = $request['date'];
         } else {
-          /*   $employees = Employee::where('id', Sentinel::getUser()->employee->id)->get();  */
+            $date = date('Y-m');
+        }
+
+        $workDiaries_date = WorkDiary::whereMonth('date', date('m', strtotime($date .'-01') ))->whereYear('date', date('Y', strtotime($date .'-01') ))->get();
+      
+        $employee_id = null;
+        
+        if( ! Sentinel::inRole('administrator') ) {           
             $employee =  Sentinel::getUser()->employee; 
-            $workDiaries_date = WorkDiary::where('employee_id', $employee->id)->get();
+            $workDiaries_date = WorkDiary::where('employee_id', $employee->id)->whereMonth('date', date('m', strtotime($date .'-01') ))->whereYear('date', date('Y', strtotime($date .'-01') ))->get();
             $employee_id = $employee->id;
         }
-        
+      
         $workTasks = WorkTask::get()->pluck('name','id');
         
         $task = null;
         $project= null;
         
         $dates = array();
-		foreach (array_keys($workDiaries_date->groupBy('date')->toArray()) as $workDiary_date) {
+		foreach (array_keys(WorkDiary::get()->groupBy('date')->toArray()) as $workDiary_date) {
             array_push($dates, date('Y-m',strtotime($workDiary_date)) );
         }
         $dates = array_unique( $dates);
@@ -233,16 +248,10 @@ class WorkDiaryController extends Controller
 
         $projects = new WorkDiary();
         $projects = $projects->getProjects( $workDiaries_date ); 
-
+       
         $employees = new WorkDiary();
         $employees = $employees->getEmployees( $workDiaries_date ); 
 
-        if(isset( $request['date'])) {
-            $date = $request['date'];
-        } else {
-            $date = date('Y-m');
-        }
-        
         if ( isset( $request[ 'task']) && $request[ 'task'] != 'null' ) {
             $task = $request[ 'task']; 
         }
@@ -255,12 +264,12 @@ class WorkDiaryController extends Controller
 
         $workDiaries = new WorkDiary();
         $workDiaries = $workDiaries->getTasks( $date, $task, $employee_id, $project );
-    
+      
         $sum_time = WorkDiary::sumTasks( $workDiaries ); 
 
         return view('Centaur::work_diaries.show', ['workDiaries' => $workDiaries,'dates' => $dates,'projects' => $projects, 'employees' => $employees, 'sum_time' => $sum_time, 'workTasks' => $workTasks]);
     }
-
+  
     /**
      * Show the form for editing the specified resource.
      *
@@ -278,20 +287,42 @@ class WorkDiaryController extends Controller
         $employees = Employee::employees_lastNameASC();
         $projects = null;
         $tasks = null;
-        
+
+        if( isset($request['date'])) {
+            $date = $request['date'];
+        } else {
+            $date = date('Y-m-d');
+        }
+
         if( $employee ) {
-            if( $this->api_erp ) {
-                $api = new ApiController();
+            if( $this->api_erp ) {               
                 $erp_id = $employee->erp_id;
-                $tasks = $api->get_employee_project_tasks( $erp_id, $date );
-                $projects = null;
+                $api = new ApiController();
+                $projects_erp = $api->get_employee_available_projects( $erp_id, $workDiary->date );
+                $project = Project::find($workDiary->project_id);
+               /*  dd($project->erp_id); //P-2871 */
+                if(  $project->erp_id ) {
+                    $project_erp = array_filter($projects_erp, function($value) use ($project) {
+                        return strpos($value, $project->erp_id) !== false;
+                    });
+                }
+               
+                if( isset(array_keys($project_erp)[0])) {
+                    $key_project =  array_keys($project_erp)[0];
+                } else {
+                    $key_project = null;
+                }
+               
+                $api = new ApiController();
+                $tasks = $api->get_employee_project_tasks( $erp_id, $workDiary->date,  $key_project);
+               
             } else {
                 $tasks = null;
                 $projects = Project::where('active',1)->get();
             }
         }
 
-        return view('Centaur::work_diaries.edit', ['workDiary' => $workDiary, 'sum' => $sum, 'workTasks' => $workTasks,'projects' => $projects,'tasks' => $tasks, 'employees' => $employees]);
+        return view('Centaur::work_diaries.edit', ['workDiary' => $workDiary, 'sum' => $sum, 'workTasks' => $workTasks,'projects' => $projects,'projects_erp' => $projects_erp,'tasks' => $tasks, 'employees' => $employees, 'key_project' => $key_project]);
     }
 
     /**
@@ -304,11 +335,30 @@ class WorkDiaryController extends Controller
     public function update(Request $request, $id)
     {
         $workDiary = WorkDiary::find($id);
+        $employee = $workDiary->employee;
         $seconds = 0;
+
+        /*** Projekt */
+           if( $this->api_project ) {
+            $erp_employee = $employee->erp_id;
+            
+            $api = new ApiController();
+            $projects_erp = $api->get_employee_available_projects( $erp_employee, $request['date'] );
+          
+            $project_erp = $projects_erp[$request['project_id'] ];
+          
+            $erp_id = str_replace("]","", str_replace("[","",strstr( $project_erp," ", true )));
+        
+            $project = $erp_id ? Project::where('erp_id', $erp_id)->first() : null;
+            $project_id = $project ? $project->id : null;
+        }
+   
+        /*** Projekt */
+
         $data = array(
             'date'  	    => $request['date'],
             'employee_id'   => $request['employee_id'],
-            'project_id'    => $request['project_id'] ? $request['project_id'] : null,
+            'project_id'    => $this->api_project ? $project_id : ($request['project_id'] ? $request['project_id'] : null),
             'erp_task_id'   => isset($request['erp_task_id']) ? $request['erp_task_id'] : null,
             'start_time'  	=> isset($request['start_time'] ) ? $request['start_time'] : null,
             'end_time'  	=> isset($request['end_time']) ? $request['end_time'] : null,
@@ -320,7 +370,7 @@ class WorkDiaryController extends Controller
         foreach ( $request['task_id'] as $key => $task_id ) {
             $workDiaryItem = WorkDiaryItem::where( 'diary_id', $workDiary->id )->where( 'task_id', $task_id )->first();
            
-            if($request['time'][$key] != '' && $request['time'][$key] != '00:00') {
+            if($request['time'][$key] != null && $request['time'][$key] != '' && $request['time'][$key] != '00:00') {
                 $dataItem = array(
                     'diary_id'  	=> $workDiary->id,
                     'task_id'  	    => $task_id,
@@ -347,10 +397,10 @@ class WorkDiaryController extends Controller
         $send_afterhourRequest = '';
         if( $request_exist == 0  ) {
             if( $afterhours > 0) {
-                $send_afterhourRequest = AfterhourController::storeAfterHour($workDiary);
+               // $send_afterhourRequest = AfterhourController::storeAfterHour($workDiary);
             } 
         } else {
-            $send_afterhourRequest = "Zahtjev za prekovremene sate već postoji.";
+          //  $send_afterhourRequest = "Zahtjev za prekovremene sate već postoji.";
         }
 
         session()->flash('success', __('ctrl.data_save') . " Spremljeno je ukupno " .  gmdate("H:i:s", $seconds)  . ' sati rada. ' . $send_afterhourRequest);

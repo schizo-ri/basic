@@ -117,6 +117,7 @@
 					@endforeach
 				@else
 					<p class="">Zadatak: <b>{{ $employeeTask->task->task }}</b></p>
+					<p class="">Opis: <b>{{ $employeeTask->task->description }}</b></p>
 					<p class="">Zaduženi djelatnik: {{ $employeeTask->employee->user->first_name . ' ' . $employeeTask->employee->user->last_name }}</p>				
 					<p class="">Status: {!! $employeeTask->task->active == 1 ? 'aktivan' : 'neaktivan' !!}</p>
 				@endif

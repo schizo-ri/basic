@@ -116,7 +116,7 @@
 						<p style="{{ $style }}">{{ $text }}</p>
 					@endforeach
                 @endif
-               <p>Bolovanje za {{ $absence->employee->user->last_name }} je upisano u Odoo za danas</p>
+               <p>Bolovanje za {{ $absence->employee->user->last_name }} je upisano u Odoo za sutra</p>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_footer : '' !!}">
                 @if( isset($text_footer) && $text_footer && count($text_footer) > 0)

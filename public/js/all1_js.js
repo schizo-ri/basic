@@ -318,7 +318,6 @@ $(function(){
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
-						select_width();
 						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
@@ -377,11 +376,12 @@ $(function(){
 							$('.table-responsive .table tbody td.absence_time').css('display','none');
 						}
 						
-						select_width();
 						$.getScript('/../js/absence.js');
 						$.getScript('/../select2-develop/dist/js/select2.min.js');
 						selectSearch ();
-
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').show();
+						});
 						/* $.getScript( '/../restfulizer.js'); */
 						$(this).find('option[value="'+type+'"]').attr('selected',true);						
 						$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
@@ -448,7 +448,6 @@ $(function(){
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
 						$(this).find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
-						select_width();
 						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
@@ -500,7 +499,6 @@ $(function(){
 						$('#filter_types').find('option[value="'+type+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$(this).find('option[value="'+approve+'"]').attr('selected',true);
-						select_width();
 						/* $.getScript( '/../restfulizer.js'); */
 					});
 				},
@@ -626,50 +624,8 @@ $(function(){
 		}
 
 		selectSearch ();
-
-	}
-	function select_width() {
-		console.log(employee_id);
-		/* $('.selected_employee').text($('#filter_employees').find('option[value="'+employee_id+'"]').text());
-		$('.selected_type').text($('#filter_types').find('option[value="'+type+'"]').text());
-		$('.selected_approve').text($('#filter_approve').find('option[value="'+approve+'"]').text());
-		$('.selected_month').text($('#filter_years').find('option[value="'+month+'"]').text()); */
-		
-	/* 	$('#filter_types').css('width', $('.selected_type').width() +50); 
-		$('#filter_employees').css('width', $('.selected_employee').width() + 50); 
-		$('#filter_approve').css('width',$('.selected_approve').width() + 50); 
-		$('#filter_years').css('width',$('.selected_month').width() + 50); 
-		$('#filter_types').css('max-width', $('.selected_type').width() +50); 
-		$('#filter_employees').css('max-width', $('.selected_employee').width() + 50); 
-		$('#filter_approve').css('max-width',$('.selected_approve').width() + 50); 
-		$('#filter_years').css('max-width',$('.selected_month').width() + 50); 
-
-		$('#filter_types').parent().css('max-width', $('.selected_type').width() +60); 
-		$('#filter_employees').parent().css('max-width', $('.selected_employee').width() + 60); 
-		$('#filter_approve').parent().css('max-width',$('.selected_approve').width() + 60); 
-		$('#filter_years').parent().css('max-width',$('.selected_month').width() + 60);
-		$('#filter_types').parent().css('width', $('.selected_type').width() +60); 
-		$('#filter_employees').parent().css('width', $('.selected_employee').width() + 60); 
-		$('#filter_approve').parent().css('width',$('.selected_approve').width() + 60); 
-		$('#filter_years').parent().css('width',$('.selected_month').width() + 60); */
 	}
 });
-
-function selectSearch () {
-	$(function(){
-		if( $('.select_filter').length > 0 ) {
-			$('.select_filter').select2({
-				dropdownParent: $('.index_page>main'),
-				width: 'resolve',
-				placeholder: {
-					id: '-1', // the value of the option
-				  },
-				theme: "classic",
-			});
-		}
-	});
-}
-
 $(function(){
     var employee_id;
 	var type;
@@ -686,6 +642,7 @@ $(function(){
 	var date = new Date();
 	var today = date.getFullYear() + '-' + ( '0' + (date.getMonth()+1) ).slice( -2 ) + '-' + ( '0' + (date.getDate()) ).slice( -2 );
 	var user_role;	
+	var parent;
 
 	$('.btn-submit').on('click',function(){
 		$( this ).hide();
@@ -694,13 +651,17 @@ $(function(){
 	$('input').on('change',function(){
 		$('.btn-submit').show();
 	});
+
 	$('select').on('change',function(){
 		$('.btn-submit').show();
 	});
+
 	$('textarea').on('change',function(){
 		$('.btn-submit').show();
 	});
-
+	$('.show_button').on('click',function () {
+		$('.dt-buttons').show();
+	});
 	if($('form.absence').length > 0) {
 		$( "#request_type" ).on('change',function() {
 			$('input[name=start_date]').prop('disabled', false);
@@ -875,87 +836,147 @@ $(function(){
 			}
 		});
 	}
+
 	if($('form.form_afterhour').length > 0 || $('form.form_work_diary').length > 0) {
-		/* $( "#date" ).on('change',function() {
-			start_date = $( this ).val();
-			employee_id = $('#select_employee').val();
-			
-			getTask(employee_id, start_date);
-		});
-		$( "#select_employee" ).on('change',function() {
-			employee_id = $(this).val();
-			start_date = $( "#date" ).val();
-
-			if( employee_id != '' &&  employee_id != undefined ) {
-				getTask(employee_id, start_date);
-			} 
-		});	 */
+		select_employee ();
+		select_project ();
+		dateChange ();
 	}
-});
 
-function getTask(employee_id, start_date)
-{
-	url = location.origin + '/getTasks';
+	function dateChange () {
+		$('#date').on('change', function(){
+			employee_id = $( '#select_employee' ).val();
+			start_date =  $( '#date' ).val();
+			/* console.log('dateChange: ' + 'employee_id '+employee_id + ' start_date '+start_date); */
+			if( employee_id != '' && employee_id != undefined && start_date != '' && start_date != undefined ) {
+				getProjectEmpl ( employee_id, start_date );
+			}
+		});
+	}
+
+	function select_employee () {
+		$('#select_employee').on('change', function(){
+			employee_id = $( '#select_employee' ).val();
+			start_date =  $( '#date' ).val();
+			/* console.log('select_employee: ' + 'employee_id '+employee_id + ' start_date '+start_date); */
+			if( employee_id != '' && employee_id != undefined && start_date != '' && start_date != undefined ) {
+				getProjectEmpl ( employee_id, start_date );
+			}
+		});
+	}
+
+	function select_project () {
+		$('select[id^="select_project"]').on('change', function(){
+			parent = $(this).parent().parent();
+			employee_id = $( '#select_employee' ).val();
+			start_date =  $( '#date' ).val();
+			project = $( this ).val();
+			/* console.log('select_project: ' + 'employee_id '+employee_id + ' start_date '+start_date+ ' project '+project); */
+			getTasksEmpl ( employee_id, start_date, project, parent );
+		});
+	}
+
+	function getProjectEmpl ( employee_id, start_date ) {
+		url = location.origin + '/getProject';
 	
-	$.ajax({
-		url: url,
-		type: "get",
-		data:  { employee_id: employee_id, start_date: start_date},
-		success: function( tasks ) {
-		
-			if($.map(tasks, function(n, i) { return i; }).length > 0 ) {
-				var select_tasks = '<div class="form-group tasks"><label>Zadatak</label><select id="select-state" name="erp_task_id" placeholder="Izaberi zadatak..." required><option value="" disabled selected></option>';
-				$.each(tasks, function( id, task ) {
-					select_tasks += '<option class="project_list" name="erp_task_id" value="'+id+'">'+task+'</option>';
-				});
-				select_tasks += '</select></div>';
-				$('.tasks').remove();
-				if ($('form.form_afterhour').length > 0 ) {
-					$('.time_group').before(select_tasks);
+		$.ajax({
+			url: url,
+			type: "get",
+			data:  { employee_id: employee_id, start_date: start_date },
+			success: function( projects ) {
+				console.log(projects);
+				if($.map(projects, function(n, i) { return i; }).length > 0 ) {
+					projectElement(projects);
 				}
-				if ($('form.form_work_diary').length > 0 ) {
-					$('.work_task_group').before(select_tasks);
-				}
+			/* 	getTasksEmpl ( employee_id, start_date, Object.keys(projects)[0] ); */
+			},
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr);
+				console.log(json);
+				console.log(errorThrown);
 			}
-		},
-		error: function(jqXhr, json, errorThrown) {
-			console.log(jqXhr);
-			console.log(json);
-			console.log(errorThrown);
-		}
-	}); 
-}
+		}); 
+	}
+	
+	function getTasksEmpl ( employee_id, start_date, project, parent )	{
+		url = location.origin + '/getTasks';
+		/* console.log('getTasksEmpl: ' + 'employee_id '+employee_id + ' start_date '+start_date+ ' project '+project); */
+		$.ajax({
+			url: url,
+			type: "get",
+			data:  { employee_id: employee_id, start_date: start_date, project:project },
+			success: function( tasks ) {
+				if($.map(tasks, function(n, i) { return i; }).length > 0 ) {
+					tastElement(tasks, parent);
+				} else {
+					$(parent).find('.tasks select option').not('.disabled').remove();
+				}
+			},
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr);
+				console.log(json);
+				console.log(errorThrown);
+			}
+		}); 
+	}
 
-function getDays( employee_id )
-{
-	user_role = $('#user_role').text();	
-	url = location.origin + '/getDays/'+employee_id;
-	$.ajax({
-		url: url,
-		type: "get",
-		success: function( days_response ) {
-			broj_dana = days_response;
-			
-			if( broj_dana == 0 && user_role != 'admin') {
-				$('.days_employee').text("Nemoguće poslati zahtjev. Svi su dani iskorišteni!");
-				$('input[name=start_date]').prop('disabled', true);
-				$('input[name=end_date]').prop('disabled', true);
-				$('.btn-submit').hide();
-			} else {
-				$('.days_employee').text("Neiskorišteno "+broj_dana+" dana razmjernog godišnjeg odmora");
-				$('input[name=start_date]').prop('disabled', false);
-				$('input[name=end_date]').prop('disabled', false);
-				$('.btn-submit').show();
-			}
-			$('.days_employee').show();
-		},
-		error: function(jqXhr, json, errorThrown) {
-			console.log(jqXhr);
-			console.log(json);
-			console.log(errorThrown);
+	function projectElement(projects) {
+		var select_projects = '<option value="" disabled selected>Izaberi projekt</option>';
+		$.each(projects, function( id, project ) {
+			select_projects += '<option class="project_list" name="erp_task_id" value="'+id+'">'+project+'</option>';
+		});
+		
+		$('select[id^="select_project"] option').remove();
+		if ($('select[id^="select_project"]').length > 0 ) {
+			$('select[id^="select_project"]').prepend(select_projects);
 		}
-	});
-}
+	}
+	
+	function tastElement(tasks, parent) {
+		var select_tasks = '<option value="" disabled selected>Izaberi zadatak</option>';
+
+		$.each(tasks, function( id, task ) {
+			select_tasks += '<option class="project_list" name="erp_task_id" value="'+id+'">'+task+'</option>';
+		});
+		select_tasks += '</select></div>';
+	
+		$(parent).children('div.form-group.tasks').find('select[id^="select_task"]').children('option').remove();
+		$(parent).children('div.form-group.tasks').find('select[id^="select_task"]').prepend(select_tasks);
+		if( select_tasks == '') {
+			$(parent).children('div.form-group.tasks').find('select[id^="select_task"]').prop('required', false);
+		}
+	}
+	
+	function getDays( employee_id )	{
+		user_role = $('#user_role').text();	
+		url = location.origin + '/getDays/'+employee_id;
+		$.ajax({
+			url: url,
+			type: "get",
+			success: function( days_response ) {
+				broj_dana = days_response;
+				
+				if( broj_dana == 0 && user_role != 'admin') {
+					$('.days_employee').text("Nemoguće poslati zahtjev. Svi su dani iskorišteni!");
+					$('input[name=start_date]').prop('disabled', true);
+					$('input[name=end_date]').prop('disabled', true);
+					$('.btn-submit').hide();
+				} else {
+					$('.days_employee').text("Neiskorišteno "+broj_dana+" dana razmjernog godišnjeg odmora");
+					$('input[name=start_date]').prop('disabled', false);
+					$('input[name=end_date]').prop('disabled', false);
+					$('.btn-submit').show();
+				}
+				$('.days_employee').show();
+			},
+			error: function(jqXhr, json, errorThrown) {
+				console.log(jqXhr);
+				console.log(json);
+				console.log(errorThrown);
+			}
+		}); 
+	}
+});	
 if($('.main_ads').length >0) {
     $('.select_filter.sort').on('change',function () {
         $('main.main_ads').load($(this).val() + ' main.main_ads article');
@@ -2086,7 +2107,8 @@ $( function () {
 		if($(".index_table_filter .show_button").length == 0) {
 			$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 		}
-	
+		
+		
 		$('.show_button').on('click',function () {
 			$('.dt-buttons').show();
 		});
@@ -2780,28 +2802,26 @@ $('.event_show .type_other').on('click',function(){
     $('#event_type').val('other');
     $('.event_show').hide();
 });
-$( document ).ready(function(){
-	$("#mySearch").keyup( function() {
+$(function() {
+	$("#mySearch").on( 'keyup', function() {
 		var value = $(this).val().toLowerCase();
 		$(".panel").filter(function() {
 			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
 		});
 	});
-	$("#mySearch1").keyup( function() {
+	$("#mySearch1").on( 'keyup',function() {
 		var value = $(this).val().toLowerCase();
 		$(".panel1").filter(function() {
 			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
 		});
 	});
-	$("#mySearch_noticeboard").keyup( function() {
+	$("#mySearch_noticeboard").on( 'keyup',function() {
 		var value = $(this).val().toLowerCase();
 		$(".panel").parent().filter(function() {
 			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
 		});
 	});
 });
-
-
 $(function() { // filter knowledge base
 	var value = null;
 	var date = null;
@@ -2810,7 +2830,7 @@ $(function() { // filter knowledge base
 	var task = null;
 	var url;
 	var project;
-
+/* 
 	$('.change_month_afterhour').on('change',function(){
 		date =  $(this).val().toLowerCase();
 		employee_id =  $('.change_employee_afterhour').val();
@@ -2834,6 +2854,11 @@ $(function() { // filter knowledge base
                         $('.dt-buttons').toggle();		
                     })
 					$.getScript('/../restfulizer.js');
+					if( $('tbody tr').length == 0)  {
+						$('.btn-store').hide();
+					} else {
+						$('.btn-store').show();
+					}
 				});
 			},
 			error: function(jqXhr, json, errorThrown) {
@@ -2864,13 +2889,18 @@ $(function() { // filter knowledge base
                         $('.dt-buttons').toggle();		
                     })
 					$.getScript('/../restfulizer.js');
+					if( $('tbody tr').length == 0)  {
+						$('.btn-store').hide();
+					} else {
+						$('.btn-store').show();
+					}
 				});
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
 			}
 		});
-	});
+	}); */
 
 	$('.filter_employees').not('.main_absence .filter_employees').on('change',function(){
 		employee_id = $( this ).val();
@@ -2908,15 +2938,26 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main .diary_project',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 				
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-				});
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
@@ -2969,14 +3010,25 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-				});
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main table',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
@@ -3022,14 +3074,25 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-				});
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main table',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
@@ -3127,6 +3190,14 @@ $(function() { // filter knowledge base
 			}
 			url = url + '&task='+task;
 		}
+		if( $('#change_employee_afterhour').length > 0) { 
+			employee_id = $('#change_employee_afterhour').val();
+			if( employee_id == 'all') {
+				employee_id = null;
+			}
+			url = url + '&employee_id='+employee_id;
+		}
+		 
 		if( $('#filter_employees').length > 0) { 
 			employee_id = $('#filter_employees').val();
 			if( employee_id == 'all') {
@@ -3159,15 +3230,32 @@ $(function() { // filter knowledge base
 				$('body').prepend('<div id="loader"></div>');
 			},
 			success: function( response ) {
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					/* $('.show_button').on('click',function () {
-						console.log("show_button click 3");
-                        $('.dt-buttons').toggle();
-                    }) */
+				if( url.includes('work_diaries/1')) {
+					$( '.page-main' ).load(url + ' .page-main>.diary_project',function(){
+						console.log("work_diaries");
+						console.log(url);
+						console.log(location.href );
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$.getScript('/../js/collaps.js');
+						
+						$('.show_button').on('click',function () {
+							$('.dt-buttons').toggle();		
+						})
+						
 					$.getScript('/../restfulizer.js');
-				});
+					});
+				} else {
+					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
+						$('#loader').remove();
+						$.getScript('/../js/datatables.js');
+						$('.show_button').on('click',function () {
+							console.log("show_button click 3");
+							$('.dt-buttons').toggle();
+						})
+						$.getScript('/../restfulizer.js');
+					});
+				}
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
@@ -3276,22 +3364,79 @@ $(function() { // filter knowledge base
 function mySearchTable() {
   $("#mySearchTbl").on('keyup',function() {
     var value = $(this).val().toLowerCase();
-    
+    var search_Array = value.split(" ");
+
     $("#index_table tbody tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      if( search_Array.length == 1 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1);
+      } else if( search_Array.length == 2 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1);
+      } else if( search_Array.length == 3 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1);
+      } else if( search_Array.length == 4 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[3]) > -1);
+      } else if( search_Array.length == 5 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[4]) > -1);
+      }
     });
-    $("#index_table1 tbody tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    if($("#index_table1 tbody tr").length > 0 ) {
+      $("#index_table1 tbody tr").filter(function() {
+        if( search_Array.length == 1 ) {
+          $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1);
+        } else if( search_Array.length == 2 ) {
+          $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1);
+        } else if( search_Array.length == 3 ) {
+          $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1);
+        } else if( search_Array.length == 4 ) {
+          $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[3]) > -1);
+        } else if( search_Array.length == 5 ) {
+          $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[4]) > -1);
+        }
+      });
+    }
+    
+  });
+}
+
+function mySearch() {
+  $("#mySearch").on('keyup',function() {
+    var value = $(this).val().toLowerCase();
+    var search_Array = value.split(" ");
+
+    $(".panel").filter(function() {
+      /* $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) */
+      if( search_Array.length == 1 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1);
+      } else if( search_Array.length == 2 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1);
+      } else if( search_Array.length == 3 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1);
+      } else if( search_Array.length == 4 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[3]) > -1);
+      } else if( search_Array.length == 5 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[4]) > -1);
+      }
     });
+  
   });
 }
 
 function mySearchTableAbsence() {
   $("#mySearchTbl").on('keyup',function() {
     var value = $(this).val().toLowerCase();
-
+    var search_Array = value.split(" ");
     $("#index_table tbody tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      if( search_Array.length == 1 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1);
+      } else if( search_Array.length == 2 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1);
+      } else if( search_Array.length == 3 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1);
+      } else if( search_Array.length == 4 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[3]) > -1);
+      } else if( search_Array.length == 5 ) {
+        $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[1]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[2]) > -1 && $(this).text().toLowerCase().indexOf(search_Array[4]) > -1);
+      }
     });
   });
 }
@@ -3308,7 +3453,7 @@ function mySearchDoc() {
   });
 }
 
-function mySearch_col1() {
+/* function mySearch_col1() {
   // Declare variables
   var input, filter, ul, li, a, i;
   input = document.getElementById("mySearch");
@@ -3327,7 +3472,7 @@ function mySearch_col1() {
 		}
 	}
   }
-}
+} */
 
 function mySearchElement() {
   $("#mySearchElement").on('keyup', function() {
@@ -3432,6 +3577,8 @@ $('.side_navbar a.link3').on("click",function(e){
 var prev_url = location.href;
 var url_modul;
 var date;
+
+
 
 /* $(function() {
     var body_width = $('body').width();
@@ -3632,6 +3779,74 @@ var title;
 url_modul = url_modul.replace("/","");
 url_modul = url_modul.split('/')[0];
 
+function selectSearch () {
+    $(function(){
+        if( $('.select_filter').length > 0 ) {
+            $('.select_filter').select2({
+                dropdownParent: $('.index_page>main'),
+                matcher: matchCustom,
+                width: 'resolve',
+                placeholder: {
+                    id: '-1', // the value of the option
+                },
+                theme: "classic",
+                
+            });
+        }
+    });
+}
+function matchCustom(params, data) {
+  /*   console.log(params);
+    console.log(params.term);
+    
+    console.log(data);
+    console.log(data.text); */
+    // If there are no search terms, return all of the data
+    if ($.trim(params.term) === '') {
+      return data;
+    }
+
+    // Do not display the item if there is no 'text' property
+    if (typeof data.text === 'undefined') {
+      return null;
+    }
+
+    // `params.term` should be the term that is used for searching
+    // `data.text` is the text that is displayed for the data object
+    var value = params.term;
+    var search_Array = value.split(" ");
+    /* console.log(value);
+    console.log(search_Array); */
+    if( search_Array.length == 1 ) {
+        if (data.text.toLowerCase().indexOf(search_Array[0]) > -1) {
+            var modifiedData = $.extend({}, data, true);
+            return modifiedData;
+        }
+    } else if( search_Array.length == 2 ) {
+        if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1) {
+            var modifiedData = $.extend({}, data, true);
+            return modifiedData;
+        }
+    } else if( search_Array.length == 3 ) {
+        if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1) {
+            var modifiedData = $.extend({}, data, true);
+            return modifiedData;
+        }
+    } else if( search_Array.length == 4 ) {
+        if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1  && data.text.toLowerCase().indexOf(search_Array[3]) > -1) {
+            var modifiedData = $.extend({}, data, true);
+            return modifiedData;
+        }
+    }  else if( search_Array.length == 5 ) {
+        if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1  && data.text.toLowerCase().indexOf(search_Array[3]) > -1 && data.text.toLowerCase().indexOf(search_Array[4]) > -1) {
+            var modifiedData = $.extend({}, data, true);
+            return modifiedData;
+        }
+    } 
+    // Return `null` if the term should not be displayed
+    return null;
+}
+
 $(function(){
     if($('.index_admin').length > 0 ) {
         var class_open;
@@ -3791,30 +4006,6 @@ $("a[rel='modal:open']").addClass('disable');
 
 $(function() {
   
-/* 
-    $('body').on($.modal.OPEN, function(event, modal) {
-        modal_selectSearch ();
-        console.log( $('select.form-control').length );
-    });
-
-    function modal_selectSearch () {
-        $(function(){
-            if( $('select.form-control').length > 0 ) {
-                console.log($('select.form-control').attr('id'));
-                $('select.form-control').select2({
-                  
-                    dropdownParent: $('body'),
-                    width: 'resolve',
-                    placeholder: {
-                        id: '-1', // the value of the option
-                      },
-                    theme: "classic",
-                });
-            }
-        });
-    }
-
- */
     $("a[rel='modal:open']").removeClass('disable');
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
@@ -4041,6 +4232,76 @@ $(function() {
 		console.log(url);
         window.location = url;
     });
+
+    $('body').on($.modal.OPEN , function(event, modal) {
+        $.getScript('/../select2-develop/dist/js/select2.min.js');
+      /*   selectSearchModal (); */
+    });
+
+  /*   function selectSearchModal () {
+		$(function(){
+			if( $('select.form-control').length > 0 ) {
+				$('select.form-control').select2({
+					dropdownParent: $('body'),
+					width: 'resolve',
+					placeholder: {
+						id: '-1', // the value of the option
+					},
+                    language: 'hr',
+                    matcher: matchCustom,
+                 
+				});
+			}
+		});
+	} */
+/*     function matchCustom(params, data) {
+       
+        // If there are no search terms, return all of the data
+        if ($.trim(params.term) === '') {
+          return data;
+        }
+    
+        // Do not display the item if there is no 'text' property
+        if (typeof data.text === 'undefined') {
+          return null;
+        }
+    
+        // `params.term` should be the term that is used for searching
+        // `data.text` is the text that is displayed for the data object
+        var value = params.term;
+        var search_Array = value.split(" ");
+       
+        if( search_Array.length == 1 ) {
+            if (data.text.toLowerCase().indexOf(search_Array[0]) > -1) {
+                var modifiedData = $.extend({}, data, true);
+                return modifiedData;
+            }
+        } else if( search_Array.length == 2 ) {
+            if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1) {
+                var modifiedData = $.extend({}, data, true);
+                return modifiedData;
+            }
+        } else if( search_Array.length == 3 ) {
+            if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1) {
+                var modifiedData = $.extend({}, data, true);
+                return modifiedData;
+            }
+        } else if( search_Array.length == 4 ) {
+            if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1  && data.text.toLowerCase().indexOf(search_Array[3]) > -1) {
+                var modifiedData = $.extend({}, data, true);
+                return modifiedData;
+            }
+        }  else if( search_Array.length == 5 ) {
+            if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1  && data.text.toLowerCase().indexOf(search_Array[3]) > -1 && data.text.toLowerCase().indexOf(search_Array[4]) > -1) {
+                var modifiedData = $.extend({}, data, true);
+                return modifiedData;
+            }
+        } 
+   
+        // Return `null` if the term should not be displayed
+        return null;
+        
+    } */
 });
 // on load
 if( $('.posts_index').length > 0) {

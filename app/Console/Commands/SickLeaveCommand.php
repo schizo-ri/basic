@@ -44,32 +44,37 @@ class SickLeaveCommand extends Command
      */
     public function handle()
     {
-        $absences = Absence::SickUserOpenToday();
-        Log::info($absences);
-        foreach( $absences as $absence ) {
-            if( $absence->start_date != date('Y-m-d') ) {
-               /*  try { */
-                    $api = new ApiController();
-                    $send_leave_request = $api->send_leave_request($absence, 'abs');
-                    if($send_leave_request == true) {
-                        $message_erp = ' Zahtjev ' . $absence->id . ' je uspješno zapisan u Odoo.';
-                    } else {
-                        $message_erp = ' Zahtjev  ' . $absence->id . ' NIJE zapisan u Odoo. Došlo je do neke greške';
-                    }
-                    Log::info($message_erp);
+        Log::info(date('N' ));
 
-                    $send_to_mail = 'jelena.juras@duplico.hr';
+        if( date('N' < 6 )) {
+            $absences = Absence::SickUserOpenToday();
+            Log::info('************* SickLeaveCommand *************');
+            Log::info($absences);
+            foreach( $absences as $absence ) {
+                if( $absence->start_date != date('Y-m-d') ) {
+                   /*  try { */
+                        $api = new ApiController();
+                        $send_leave_request = $api->send_leave_request($absence, 'abs');
+                        if($send_leave_request == true) {
+                            $message_erp = ' Zahtjev ' . $absence->id . ' je uspješno zapisan u Odoo.';
+                        } else {
+                            $message_erp = ' Zahtjev  ' . $absence->id . ' NIJE zapisan u Odoo. Došlo je do neke greške';
+                        }
+                        Log::info($message_erp);
     
+                        $send_to_mail = 'jelena.juras@duplico.hr';
+        
                     Mail::to($send_to_mail)->send(new SickLeaveMail( $absence ));
-
-				/* } catch (\Throwable $th) {
-					$email = 'jelena.juras@duplico.hr';
-					$url = '';
-					Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
-	
-					session()->flash('error', __('ctrl.error') );
-					return redirect()->back();
-                } */
+    
+                    /* } catch (\Throwable $th) {
+                        $email = 'jelena.juras@duplico.hr';
+                        $url = '';
+                        Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+        
+                        session()->flash('error', __('ctrl.error') );
+                        return redirect()->back();
+                    } */
+                }
             }
         }
     }

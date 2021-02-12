@@ -76,7 +76,7 @@
 	<body>
         <div style="width: 500px;max-width:100%;margin:auto;" id="mail_template">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="header" style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_header : '' !!}">
-                <@if(count($text_header) > 0)
+                @if(count($text_header) > 0)
                     @foreach ($text_header as $key => $text)
                         @php
                             $style = '';
@@ -116,29 +116,16 @@
 						<p style="{{ $style }}">{{ $text }}</p>
 					@endforeach
 				@else
-                    <h4> @lang('absence.i'), {{ $temporaryEmployeeRequest->employee->user['first_name']   . ' ' . $absence->employee->user['last_name'] }}</h4>
-                    <h4>
-                        
-                        @lang('absence.please_approve')  {{ $temporaryEmployeeRequest->absence['name'] }} za
-                        {{ date("d.m.Y", strtotime($temporaryEmployeeRequest->start_date)) . ' do ' . date("d.m.Y", strtotime( $temporaryEmployeeRequest->end_date)) . ' - ' . $dani_zahtjev . ' ' . __ ('absence.days') }}
-                    
-                        @if( $absence->absence['mark'] == "IZL")
-                            {{  'od ' . $temporaryEmployeeRequest->start_time  . ' - ' .  $temporaryEmployeeRequest->end_time }}
-                        @endif
-                    </h4>
-                    <div><b>@lang('basic.comment'): </b></div>
-                    <div class="marg_20">
-                        {{ $temporaryEmployeeRequest->comment }}
+                    <h4>{{ __ ('emailing.with_day') . ' ' . date("d.m.Y", strtotime($temporaryEmployee->reg_date)) . ' ' . __ ('emailing.employed_temp_worker') . ' ' . $temporaryEmployee->user['first_name'] . ' ' . $temporaryEmployee->user['last_name'] . ' ' .  __ ('emailing.in_the_workplace') . ' ' . $temporaryEmployee->work['name'] }}</h4>
+                    <br/>
+                    <div style="margin-bottom: 20px">
+                        <p><b>@lang('basic.comment'): </b></p>
+                        <p style="padding-left: 20px">{{ $temporaryEmployee->comment }}</p>
+                    </div>
+                    <div style="margin-bottom: 20px">
+                        <p><b>IT odjel: </b>Molim kontaktirati {{ $temporaryEmployee->user['first_name'] . ' ' . $temporaryEmployee->user['last_name'] }} za sve potrebne informacije.</p>
                     </div>
                 @endif
-                <form name="contactform" method="get" target="_blank" action="{{ route('confirmationTemp') }}">
-                    <input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="approve_reason" value=""><br>
-                    <input type="hidden" name="id" value="{{ $absence->id }}"><br>
-                    <input type="radio" name="approve" value="1" checked> @lang('absence.approved')
-                    <input type="radio" name="approve" value="0" style="padding-left:20px;">  @lang('absence.not_approved')<br>
-                    <input type="hidden" name="email" value="1" checked><br>
-                    <input class="odobri marg_top_20" type="submit" value="{{ __('basic.send_mail') }}">
-                </form>
             </div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_footer : '' !!}">
 				@if( isset($text_footer) && $text_footer && count($text_footer) > 0)

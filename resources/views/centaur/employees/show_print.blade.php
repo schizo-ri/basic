@@ -27,7 +27,7 @@
 					<div><label class="show_empl_label" for="">@lang('basic.maiden_name')</label>
 						<p class="show_empl_p" >{{  $employee->maiden_name  }}</p></div>
 					<div><label class="show_empl_label" for="">OIB</label>
-						<p class="show_empl_p" >{{ $employee->oib }}</p></div>
+						<p class="show_empl_p" >{{  strval($employee->oib) }}</p></div>
 					<div><label class="show_empl_label" for="">@lang('basic.oi')</label>
 						<p class="show_empl_p" >{{ $employee->oi }}</p></div>
 					<div><label class="show_empl_label" for="">@lang('basic.oi_expiry')</label>

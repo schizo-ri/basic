@@ -1,6 +1,6 @@
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <div class="modal-header">
-	<h3 class="panel-title">@lang('basic.add_employee')</h3>
+	<h3 class="panel-title">@lang('basic.edit_employee')</h3>
 </div>
 <div class="modal-body">
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('temporary_employees.update', $temporaryEmployee->id) }}">

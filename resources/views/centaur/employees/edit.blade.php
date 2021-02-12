@@ -59,7 +59,7 @@
 			</div>
 			<div class="form-group {{ ($errors->has('oib')) ? 'has-error' : '' }}">
 				<label>@lang('basic.oib')</label>
-				<input class="form-control" placeholder="{{ __('basic.oib')}}" name="oib" type="text" maxlength="20" value="{{ $employee->oib }}" required />
+				<input class="form-control" placeholder="{{ __('basic.oib')}}" name="oib" type="text" maxlength="20" value="{{ strval($employee->oib) }}" required />
 				{!! ($errors->has('oib') ? $errors->first('oib', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('oi')) ? 'has-error' : '' }}">

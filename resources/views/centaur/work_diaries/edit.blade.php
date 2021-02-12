@@ -2,11 +2,11 @@
 	<h3 class="panel-title">@lang('basic.add_work_diary')</h3>
 </div>
 <div class="modal-body">
-	<form class="edit_form_work_diary" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_diaries.update', $workDiary->id ) }}">
+	<form class="form_work_diary" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_diaries.update', $workDiary->id ) }}">
 		@if( Sentinel::inRole('administrator'))
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}" >
 				<label>@lang('basic.employee')</label>
-				<select class="form-control" name="employee_id" required value="{{ old('employee_id') }}" required >
+				<select class="form-control" name="employee_id" required value="{{ old('employee_id') }}" id="select_employee" required >
 					<option value="" disabled selected ></option>
 					@foreach($employees as $employee)
 						<option value="{{ $employee->id }}" {!! $workDiary->employee_id ==  $employee->id ? 'selected' : '' !!}>{{ $employee->user->last_name . ' ' . $employee->user->first_name }}</option>
@@ -15,14 +15,44 @@
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 		@else
-			<input type="hidden" name="employee_id" value="{{ Sentinel::getUser()->employee->id }}" >
+			<input type="hidden" name="employee_id"  id="select_employee" value="{{ Sentinel::getUser()->employee->id }}" >
 		@endif
 		<div class="form-group datum date1 float_l  {{ ($errors->has('date')) ? 'has-error' : '' }}" >
 			<label>@lang('basic.date')</label>
 			<input name="date" id="date" class="form-control" type="date" value="{{ $workDiary->date }}"  min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-1 day'), 'Y-m-d') : '' !!}" required >
 			{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-		@if($projects)
+		@if(isset($projects) || isset($projects_erp) )
+			<div class="form-group select_project {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
+				<label>@lang('basic.project')</label>
+				<select id="select_project" name="project_id" placeholder="Izaberi projekt..."  value="{{ old('project_id') }}" required>
+					<option value="" disabled selected>Izaberi projekt</option>
+					@if(isset($projects) &&  $projects)
+						@foreach ($projects as $project)
+							<option class="project_list" name="project_id" value="{{ intval($project->id) }}" >{{ $project->erp_id  . ' ' . $project->name }}</option>
+						@endforeach	
+					@endif
+					@if(isset($projects_erp) && $projects_erp )
+						@foreach ($projects_erp as $id => $project)
+							<option class="project_list" name="project_id" value="{{ $id }}"  {!! $id == $key_project ? 'selected' : '' !!}>{{ $project  }}</option>
+						@endforeach	
+					@endif
+				</select>
+			</div>
+		@endif
+		<div class="form-group tasks {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
+			<label>@lang('basic.task')</label>
+			<select id="select_task" name="erp_task_id" placeholder="Izaberi zadatak..."  value="{{ old('erp_task_id') }}" id="sel1" required>
+				<option value="" disabled >Izaberi zadatak</option>
+				@if(isset( $tasks ) && $tasks )
+					@foreach ($tasks as $id => $task)
+						<option class="project_list" name="erp_task_id" value="{{ $id }}" selected >{{ $task  }}</option>
+					@endforeach	
+				@endif
+			</select>
+		</div>
+
+	{{-- 	@if($projects)
 			<div class="form-group {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.project')</label>
 				<select id="select-state" name="project_id" placeholder="Pick a state..."  value="{{ old('project_id') }}" id="sel1" required>
@@ -43,7 +73,7 @@
 					@endforeach	
 				</select>
 			</div>
-		@endif
+		@endif --}}
 		<div class="form-group {{ ($errors->has('task_id')) ? 'has-error' : '' }}" >
 			<label>@lang('basic.work_tasks')</label>
 			@foreach($workTasks as $task)
@@ -103,7 +133,7 @@
 
 		start_time = $('input[name=start_time]').val();
 		start_time_Arr = start_time.split(':');
-		console.log(start_time_Arr);
+		/* console.log(start_time_Arr); */
 		end_time_minute = end_time_minute + parseInt((start_time_Arr[0] * 60));
 		end_time_minute  = end_time_minute + parseInt(start_time_Arr[1]);
 		end_time = afterhour_min + end_time_minute;
@@ -126,22 +156,23 @@
 
 			total_minute = total_minute + parseInt((time_array[0] * 60));
 			total_minute  = total_minute + parseInt(time_array[1]);
-			console.log(total_minute);
+			/* console.log(total_minute); */
 			
 		});
 		if( total_minute > (8*60) ) {
-			console.log(" total_minute > (8*60) ");
+			/* console.log(" total_minute > (8*60) "); */
 			$('p.alert').remove();
 			$('.time_group').append('<p class="alert error-modal">Upisano je vrijeme veće od 8 radnih sati. Obavezan upis vremena za prekovremeni rad!</p>');
 			$('.time_group').find('input').attr('disabled',false);
-			console.log( $('.time_group').lenght );
+			/* console.log( $('.time_group').lenght ); */
 			
 			$('.time_group').show();
 		} else {
-			console.log(" total_minute < (8*60) ");
+			/* console.log(" total_minute < (8*60) "); */
 			$('.time_group').hide();
 			$('.time_group').find('input').attr('disabled',true);
 			$('p.alert').remove();
 		}
 	}
+	$.getScript('/../js/absence_create.js');
 </script>
