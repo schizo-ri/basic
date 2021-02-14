@@ -103,7 +103,7 @@
 										</span></a>
 									</button>
 								@endif
-								@if( in_array('Radiona', $employee->employeesDepartmentName()) || in_array('Monteri', $employee->employeesDepartmentName()) || Sentinel::inRole('administrator')  )
+								@if( in_array('Radiona', $employee->employeesDepartmentName()) || in_array('Monteri', $employee->employeesDepartmentName())   )
 									@if(in_array('Dnevnik', $moduli))
 										<button class=""><a href="{{ route('work_diaries.create') }}" rel="modal:open">
 											<span>

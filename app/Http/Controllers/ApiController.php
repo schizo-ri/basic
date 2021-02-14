@@ -48,7 +48,7 @@ class ApiController extends Controller
     {
         /* $response = $this->connect_id_get(); */
 
-        /*  $response = $this->get_available_leave_types(); */
+         $response = $this->get_available_leave_types();
 
         /*  array:9 [▼
             "holiday" => "Godišnji odmor"
@@ -78,10 +78,10 @@ class ApiController extends Controller
             1117 => "Rekapitulacija projekta - proučiti"
         ] */
 
-           $response = $this->send_leave_request( Absence::find(3673), 'abs' ); // izostanak
+       /*     $response = $this->send_leave_request( Absence::find(3673), 'abs' ); // izostanak */
         /*  $response = $this->send_leave_request( Absence::find(3709), 'abs' ); // izostanak
           $response = $this->send_leave_request( Absence::find(3711), 'abs' ); // izostanak */
-         /*   $response = $this->send_leave_request( Afterhour::find(3368), 'aft' ); // Afterhour */
+         /*   $response = $this->send_leave_request( Afterhour::find(3444), 'aft' );  */// Afterhour
 
         return view('Centaur::api_erp.index',['response' => $response]);
     }
@@ -352,7 +352,7 @@ class ApiController extends Controller
             $end->modify('+'.$hour.'hours');
             $end->modify('+'.$minute.'minutes');
            
-            $date_to = date_format($end,'Y-m-d H:i');
+            $date_to = date_format($end,'Y-m-d H:i:s');
 
            /*  $date_to = $absence->date . ' ' . $absence->end_time; */
         }
@@ -390,7 +390,7 @@ class ApiController extends Controller
         $get_employee_available_projects->addParam(new xmlrpcval($param['date_to'], "string"));
         $get_employee_available_projects->addParam(new xmlrpcval($param['note'], "string"));
         $resp = $sock->send($get_employee_available_projects);
-     
+        /* dd($resp) */
         $val = $resp->value();
      
         Log::info('***************** API ERP kraj ***********************');
