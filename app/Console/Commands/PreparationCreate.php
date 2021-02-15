@@ -67,7 +67,6 @@ class PreparationCreate extends Command
         $email = 'matija.rendulic@duplico.hr';
         if(count($new_projects) > 0) {
             Mail::to($email)->send(new PreparationCreateMail($new_projects));
-            Mail::to('jelena.juras@duplico.hr')->send(new PreparationCreateMail($new_projects));
         }
     }
 }

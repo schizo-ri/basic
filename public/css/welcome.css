@@ -7,7 +7,9 @@ html {
 	width: 100vw;
 	margin: 0;
 }
-
+.contract_info_show {
+	cursor: pointer;
+}
 body {
     height: 100%;
     overflow: hidden;
@@ -18,6 +20,7 @@ input {
     padding: 0 5px;
     border-radius: 5px;
 }
+
 
 .delivered_items {
 	display: inline-block;
@@ -30,7 +33,9 @@ input {
 	padding: 10px 0;
 	left: 8px;
 }
-
+.contracts div {
+	padding: 0;
+}
 .create_item_siemens input, .create_item input {
 	padding: 5px;
 }
@@ -126,6 +131,15 @@ a.close, body .modal a.close-modal{
 .align_center {
 	text-align: center;
 }
+
+.align_right {
+	text-align: right;
+}
+
+.align_left {
+	text-align: left;
+}
+
 .vertical_align_m {
 	vertical-align: middle;
 }
@@ -297,6 +311,10 @@ a.btn-delete:hover {
 	text-align: left;
 }
 
+.font_bold {
+	font-weight: bold;
+}
+
 .modal-footer.projectEmployees h5 {
 	font-weight:bold;
 	text-decoration: underline;
@@ -348,6 +366,9 @@ a.btn-delete:hover {
 	border: 2px solid red !important;
 }
 
+.float_right {
+	float: right;
+}
 label.filter_employee, label.filter_project {
 	float: right;
 	line-height: 20px;
@@ -659,9 +680,6 @@ span.text_preparation.option_input {
 	width: 5%;
 	min-width: 90px;
 }
-span.text_preparation.option_input {
-	/* display: none;*/
-} 
 span.text_preparation.equipment_input {
 	position: relative;
 	padding-bottom: 25px;
@@ -753,6 +771,13 @@ span.th:nth-child(2),  span.td:nth-child(2), span.input_preparation:nth-child(2)
 	overflow-wrap: break-word;
 	width: 10%;
 }
+span.input_preparation.name_input, span.input_preparation.customer_input{
+	width: 20%;
+}
+span.input_preparation.comment_input  {
+	width: 40%;
+}
+
 span.th:nth-child(6),  span.td:nth-child(6), span.input_preparation:nth-child(6){
 	width: 10%;
 }
@@ -831,7 +856,10 @@ select#designer_filter {
     overflow: auto;
 }
 .table.preparation_list {
-	overflow: visible;
+	overflow: auto;
+}
+.table.preparation_list > div {
+	padding: 0;
 }
 .table .thead, .table .tbody {
 	width: 100%;
@@ -1036,7 +1064,7 @@ input[type="date"]::-webkit-inner-spin-button {
 	background-color: rgba(256,256,0,0.2);
 }
 
-.equipment_lists_mark.green {
+.equipment_lists_mark.green, .background_green {
 	background-color: rgba(50, 205, 50,0.2);
 }
 
@@ -1123,17 +1151,51 @@ input[type="date"]::-webkit-inner-spin-button {
     border-radius: 5px;
     box-shadow: 3px 3px 3px #ccc;
 }
-.show_active {
-/* 	display: none; */
+.contract_info {
+    width: 800px;
+    max-width: 100%;
+	margin: auto;
+	font-size: 12px;
+	display: none;
+}
+.contract_info table {
+	width: 100%;
+	border: 1px solid #ccc;
+	
 }
 
+.contract_info thead, .contract_info td {
+	border-bottom: 1px solid #ccc;
+}
+
+.contract_info thead, .contract_info tfoot {
+	background-color: #2454bf;
+	color: white;
+}
+.contract_info td:not(:last-child), .contract_info th:not(:last-child)  {
+	border-right: 1px solid #ccc;
+}
+.contract_info td, .contract_info th {
+	padding: 5px;
+}
+
+@media (min-width: 1024px) {
+	.contract_info {
+		font-size: 14px;
+	}
+}
+@media (min-width: 1500px) {
+	.contract_info {
+		font-size: 16px;
+	}
+}
 .table_projects td span.value {
 	line-height: 34px;
     height: 34px;
     display: inline-block;
   
 }
-.table_projects td input {
+.table_projects td input, .table_projects td select  {
 	height: 34px;
     padding: 6px 12px;
     font-size: 14px;
@@ -1142,7 +1204,9 @@ input[type="date"]::-webkit-inner-spin-button {
     background-color: #fff;
     background-image: none;
     border: 1px solid #ccc;
-    border-radius: 4px;
+	border-radius: 4px;
+	outline: none;
+	width: 100%;
 }
 
 @media only screen and (max-width: 600px) {
@@ -1152,6 +1216,12 @@ input[type="date"]::-webkit-inner-spin-button {
 	}
 	body > section {
 		padding: 0 10px;
+	}
+	.table.preparation_list {
+		border:none;
+	}
+	.table-responsive {
+		border:none;
 	}
 	.calendar_main main, .calendar_main aside {
 		padding: 0;
@@ -1186,11 +1256,11 @@ input[type="date"]::-webkit-inner-spin-button {
 		margin: 10px 0;
 	 }
 	 .h1, h1 {
-		 font-size: 25px;
+		 font-size: 20px;
 		 clear: both;
 	 }
 	 .h2, h2 {
-		font-size: 20px;
+		font-size: 18px;
 	 }
 	 .h3, h3 {
 		font-size: 16px;
@@ -1202,10 +1272,7 @@ input[type="date"]::-webkit-inner-spin-button {
 		 padding: 0;
 	 }
 	 .btn, .form-control {
-		 font-size: 12px;
-	 }
-	 {
-		 padding: 15px;
+		 font-size: 11px;
 	 }
 	 .modal-header  {
 		 padding: 10px;
@@ -1533,7 +1600,7 @@ select.select_employee {
   }
 
   .projects_list  .table-responsive, .preparation .table-responsive {
-	overflow: visible;
+	overflow: auto;
   }
 
   .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
@@ -1650,6 +1717,9 @@ select.select_employee {
 	min-width: 150px;
 	width: 8%;
 	padding: 10px 0;
+}
+.table>thead>tr>th {
+	vertical-align: middle;
 }
 
 /* Original Solution found on Stackoverflow here:

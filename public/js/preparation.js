@@ -8,7 +8,7 @@ var data_to_send=[];
     });
 }); */
 
-$('#mySearch_preparation').keyup(function() {
+$('#mySearch_preparation').on('keyup',function() {
     var trazi = $( this ).val().toLowerCase();
     $('.open_project').filter(function() {
         $(this).toggle($(this).text().toLowerCase().indexOf(trazi) > -1)

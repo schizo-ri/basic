@@ -68,6 +68,9 @@
                             @if(Sentinel::getUser()->hasAccess(['preparations.view']))
                                 <li class="{{ Request::is('preparations*') ? 'active' : '' }}"><a href="{{ route('preparations.index') }}">Proizvodnja</a></li>
                             @endif
+                            @if(Sentinel::getUser()->hasAccess(['contracts.view']))
+                                <li class="{{ Request::is('contracts*') ? 'active' : '' }}"><a href="{{ route('contracts.index') }}">OEM Ugovori</a></li>
+                            @endif
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             @if (Sentinel::check())

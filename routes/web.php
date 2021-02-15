@@ -101,6 +101,22 @@ Route::get('save/{employee?}/{date?}/{project?}/{all_days?}', ['as' => 'save', '
 Route::get('brisi/{project?}', ['as' => 'brisi', 'uses' => 'ProjectEmployeeController@brisi']);
 Route::get('uskladi/{project?}', ['as' => 'uskladi', 'uses' => 'ProjectEmployeeController@uskladi']);
 
+// Contract
+Route::resource('contracts', 'ContractController');
+Route::get('contract/agglomerations', ['as' => 'agglomerations', 'uses' => 'ContractController@agglomerations']);
+
+// Agglomeration
+Route::resource('agglomerations', 'AgglomerationController');
+Route::post('updateAgglomeration', ['as' => 'updateAgglomeration', 'uses' => 'AgglomerationController@updateAgglomeration']);
+
+// Agglomeration
+Route::resource('agglomeration_stations', 'AgglomerationStationController');
+Route::post('updateStation', ['as' => 'updateStation', 'uses' => 'AgglomerationStationController@updateStation']);
+
+// AgglomerationStationList
+Route::resource('agglomeration_station_lists', 'AgglomerationStationListController');
+Route::post('updateList', ['as' => 'updateList', 'uses' => 'AgglomerationStationListController@updateList']);
+
 // Dashboard
  /*
 Route::get('dashboard', function () {
@@ -121,8 +137,6 @@ Route::get('errorMessage', ['as' => 'errorMessage', 'uses' => 'ErrorController@e
 
 // Android
 Route::resource('android', 'ConnectController');
-
-
 
 Route::get('delete_file', 'DesigningController@delete_file')->name('delete_file');
  

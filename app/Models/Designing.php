@@ -75,6 +75,4 @@ class Designing extends Model
 	{
 		return $this->update($designing);
 	}
-	
-
 }

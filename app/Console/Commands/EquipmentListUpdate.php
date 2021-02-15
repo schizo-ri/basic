@@ -192,7 +192,7 @@ class EquipmentListUpdate extends Command
 
                     }
                 }
-                $mails = array('jelena.juras@duplico.hr');
+                $mails = array();
                 if($preparation->manager) {
                     array_push($mails,$preparation->manager->email);
                 }
