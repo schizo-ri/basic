@@ -1,12 +1,19 @@
 // kalendar dashboard
 $( function () {
+    var locale = $('.locale').text();
     $('.dates li').first().addClass('active_date');
-
     var div_width = $( '.dates').width();
     var all_width = 69;
     var dates = $('.box-content').find('.dates');
-    var day_of_week = new Array("SUN","MON","TUE","WED","THU","FRI","SAT");
-    var monthNames = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+
+    if(locale == 'en' || locale == 'uk' ) {
+        var day_of_week = new Array("SUN","MON","TUE","WED","THU","FRI","SAT");
+        var monthNames = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+    } else if(locale == 'hr')  {
+        var day_of_week = new Array("ned","pon","uto","sri","čet","pet","sub");
+        var monthNames = new Array("sij","velj","ožu","tra","svi","lip","srp","kol","ruj","lis","stu","pro");
+    }
+   
     var today = new Date();
     var date_today = today.getFullYear() + '-' +  ('0' + (today.getMonth() +1) ).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
     var broj_dana = div_width / all_width;

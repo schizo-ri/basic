@@ -46,7 +46,6 @@ class TaskCreateNotification extends Command
     public function handle()
     {
         $today = new DateTime('now');
-        Log::info('TaskCreateNotification');
         
         $tasks = Task::whereDate('end_date', '>=', date('Y-m-d'))->where('active', 1)->get();
 
@@ -59,7 +58,7 @@ class TaskCreateNotification extends Command
             }
             
             // switch period
-            switch ( $task->interval ) {
+            switch ( $task->interval_period ) {
                 case 'no_repeat':                       
                     $task_date =  $task_date;
                     break;
@@ -143,7 +142,10 @@ class TaskCreateNotification extends Command
                         );                
                         
                         $employeeTask = new EmployeeTask();
-                        $employeeTask->saveEmployeeTask( $data);                     
+                        $employeeTask->saveEmployeeTask( $data);  
+                        
+                        Log::info($employeeTask);       
+
                         foreach ($emails as $email) {
                             if( $email != null && $email != '') {
                                 Mail::to($email)->send(new TaskCreateMail($employeeTask));

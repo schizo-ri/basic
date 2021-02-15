@@ -15,24 +15,22 @@
 			</select>
 			{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-		@if(isset($projects) || isset($projects_erp) )
-			<div class="form-group select_project {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
-				<label>@lang('basic.project')</label>
-				<select id="select_project" name="project_id" placeholder="Izaberi projekt..."  value="{{ old('project_id') }}" required>
-					<option value="" disabled selected></option>
-					@if(isset($projects) &&  $projects)
-						@foreach ($projects as $project)
-							<option class="project_list" name="project_id" value="{{ intval($project->id) }}" {!! $afterhour->project_id == $project->id ? 'selected' : '' !!}>{{ $project->erp_id  . ' ' . $project->name }}</option>
-						@endforeach	
-					@endif
-					@if(isset($projects_erp) && $projects_erp )
-						@foreach ($projects_erp as $id => $project)
-							<option class="project_list" name="project_id" value="{{ $id }}" {!! $afterhour->project_id == $id ? 'selected' : '' !!}>{{ $project  }}</option>
-						@endforeach	
-					@endif
-				</select>
-			</div>
-		@endif
+		<div class="form-group select_project {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
+			<label>@lang('basic.project')</label>
+			<select id="select_project" name="project_id" placeholder="Izaberi projekt..."  value="{{ old('project_id') }}" required>
+				<option value="" disabled selected></option>
+				@if(isset($projects) &&  $projects)
+					@foreach ($projects as $project)
+						<option class="project_list" name="project_id" value="{{ intval($project->id) }}" {!! $afterhour->project_id == $project->id ? 'selected' : '' !!}>{{ $project->erp_id  . ' ' . $project->name }}</option>
+					@endforeach	
+				@endif
+				@if(isset($projects_erp) && $projects_erp )
+					@foreach ($projects_erp as $id => $project)
+						<option class="project_list" name="project_id" value="{{ $id }}" {!! $afterhour->project_id == $id ? 'selected' : '' !!}>{{ $project  }}</option>
+					@endforeach	
+				@endif
+			</select>
+		</div>
 		<div class="form-group tasks {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
 			<label>@lang('basic.task')</label>
 			<select id="select_task" name="erp_task_id" placeholder="Izaberi zadatak..."  value="{{ old('erp_task_id') }}" {{-- required --}}>

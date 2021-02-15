@@ -127,12 +127,15 @@ class AfterhourController extends Controller
             $erp_id = $request_empl->erp_id;
             
             if( $this->api_erp && $erp_id ) {
-               
                 $api = new ApiController();
                 $projects_erp = $api->get_employee_available_projects( $erp_id, $date );
 
                 $api = new ApiController();
-                $tasks = $api->get_employee_project_tasks( $erp_id, $date, array_keys($projects_erp)[0]);
+                if( $projects_erp != null && count($projects_erp) > 0) {
+                    $tasks = $api->get_employee_project_tasks( $erp_id, $date, array_keys($projects_erp)[0]);
+                } else {
+                    $projects = Project::where('active',1)->get();
+                }
             } else {
                 $tasks = null;
                 $projects = Project::where('active',1)->get();
@@ -200,14 +203,7 @@ class AfterhourController extends Controller
                 Mail::to($afterHour->employee->email)->send(new AfterHourSendMail($afterHour));
 
                 $send_to = EmailingController::sendTo('afterhours', 'create');
-                // za djelatnike Inženjeringa mail ide voditelju - Željko Rendulić
-                if( $afterHour->employee->work->department == 'Inženjering') {
-                    $voditelj =  $afterHour->employee->work ? $afterHour->employee->work->employee : null;
-                    if( $voditelj ) {
-                        Log::info( 'Prekovremeni - info mail ide na  ' . $voditelj->user->first_name . ' '. $voditelj->user->last_name );
-                        Mail::to( $voditelj->email)->send(new AfterHourInfoMail($afterHour)); 
-                    }
-                }
+               
             }
 
             Log::info("Prekovremeni poslan na mail: ".implode(', ',array_unique($send_to)));
@@ -216,11 +212,21 @@ class AfterhourController extends Controller
                     Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterHour)); 
                 }
             }
-
-            /* ZA SADA NE !!!!!   $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
-            if($superior) {
-                Mail::to( $superior->email)->send(new AfterHourInfoMail($afterHour)); 
-            }  */
+            // za djelatnike Inženjeringa mail ide voditelju - Željko Rendulić
+            if( $afterHour->employee->work->department == 'Inženjering') {
+                $voditelj =  $afterHour->employee->work ? $afterHour->employee->work->employee : null;
+                if( $voditelj ) {
+                    Log::info( 'Prekovremeni - info mail ide na  ' . $voditelj->user->first_name . ' '. $voditelj->user->last_name );
+                    Mail::to( $voditelj->email )->send(new AfterHourInfoMail($afterHour)); 
+                }
+            }
+            // za djelatnike IT mail ide voditelju - Novosel
+            if ($afterHour->employee->work->department == 'IT odjel') {
+                $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
+                if( $superior ) {
+                    Mail::to( $superior->email)->send(new AfterHourInfoMail($afterHour)); 
+                } 
+            }
         } else {
             session()->flash('error',  __('ctrl.request_exist'));
             return redirect()->back();
@@ -249,7 +255,7 @@ class AfterhourController extends Controller
         $afterHour->saveAfterhour($data);
 
        /*  $send_to_empl = array('jelena.juras@duplico.hr');  */
-         $send_to_empl = $afterHour->employee->email;
+        $send_to_empl = $afterHour->employee->email;
         Mail::to($send_to_empl)->send(new AfterHourSendMail($afterHour));
 
         $send_to = EmailingController::sendTo('afterhours', 'create');
@@ -270,7 +276,13 @@ class AfterhourController extends Controller
                 Mail::to( $voditelj->email)->send(new AfterHourInfoMail($afterHour)); 
             }
         }
-
+        // za djelatnike IT mail ide voditelju - Novosel
+        if ($afterHour->employee->work->department == 'IT odjel') {
+            $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
+            if( $superior ) {
+                Mail::to( $superior->email)->send(new AfterHourInfoMail($afterHour)); 
+            } 
+        }
         return "Zahtjev za prekovremene sate je poslan.";
     }
     /**
@@ -299,15 +311,25 @@ class AfterhourController extends Controller
         $projects = null;
         $tasks = null;
       
+        if( isset($request['date'])) {
+            $date = $request['date'];
+        } else {
+            $date = $afterhour->date;
+        }
+
         if( $employee ) {
             $erp_id = $employee->erp_id;
             
             if( $this->api_erp && $erp_id ) {
                 $api = new ApiController();
-                $projects_erp = $api->get_employee_available_projects( $erp_id, $afterhour->date );
+                $projects_erp = $api->get_employee_available_projects( $erp_id, $date );
 
                 $api = new ApiController();
-                $tasks = $api->get_employee_project_tasks( $erp_id, $afterhour->date, array_keys($projects_erp)[0]);
+                if( $projects_erp != null && count($projects_erp) > 0) {
+                    $tasks = $api->get_employee_project_tasks( $erp_id, $date, array_keys($projects_erp)[0]);
+                } else {
+                    $projects = Project::where('active',1)->get();
+                }
             } else {
                 $tasks = null;
                 $projects = Project::where('active',1)->get();
@@ -352,7 +374,7 @@ class AfterhourController extends Controller
         Log::info("Prekovremeni poslan na mail: ".implode(', ',array_unique($send_to)));
         foreach(array_unique($send_to) as $send_to_mail) {
             if( $send_to_mail != null & $send_to_mail != '' ) {
-                Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterhour)); 
+             //   Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterhour)); 
             }
         }
 

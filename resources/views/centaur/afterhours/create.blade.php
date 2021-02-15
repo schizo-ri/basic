@@ -27,35 +27,33 @@
 			<input name="date" id="date" class="form-control" type="date" min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-2 day'), 'Y-m-d') : '' !!}" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
 			{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
-		@if(isset($projects) || isset($projects_erp) )
-			<div class="form-group select_project {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
-				<label>@lang('basic.project')</label>
-				<select class="form-control" id="select_project" name="project_id" placeholder="Izaberi projekt..."  value="{{ old('project_id') }}" required>
-					<option value="" disabled selected></option>
-					@if(isset($projects) &&  $projects)
-						@foreach ($projects as $project)
-							<option class="project_list" name="project_id" value="{{ intval($project->id) }}" >{{ $project->erp_id  . ' ' . $project->name }}</option>
-						@endforeach	
-					@endif
-					@if(isset($projects_erp) && $projects_erp )
-						@foreach ($projects_erp as $id => $project)
-							<option class="project_list" name="project_id" value="{{ $id }}">{{ $project  }}</option>
-						@endforeach	
-					@endif
-				</select>
-			</div>
-		@endif
-		@if(isset( $tasks ) && count($tasks)>0 )
-			<div class="form-group tasks {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
-				<label>@lang('basic.task')</label>
-				<select id="select_task" name="erp_task_id" placeholder="Izaberi zadatak..."  value="{{ old('erp_task_id') }}" id="sel1" {{-- required --}}>
-					<option value="" disabled selected></option>
+		<div class="form-group select_project {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
+			<label>@lang('basic.project')</label>
+			<select class="form-control" id="select_project" name="project_id" placeholder="Izaberi projekt..."  value="{{ old('project_id') }}" required>
+				<option value="" disabled selected></option>
+				@if(isset($projects) &&  $projects)
+					@foreach ($projects as $project)
+						<option class="project_list" name="project_id" value="{{ intval($project->id) }}" >{{ $project->erp_id  . ' ' . $project->name }}</option>
+					@endforeach	
+				@endif
+				@if(isset($projects_erp) && $projects_erp )
+					@foreach ($projects_erp as $id => $project)
+						<option class="project_list" name="project_id" value="{{ $id }}">{{ $project  }}</option>
+					@endforeach	
+				@endif
+			</select>
+		</div>
+		<div class="form-group tasks {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
+			<label>@lang('basic.task')</label>
+			<select id="select_task" name="erp_task_id" placeholder="Izaberi zadatak..."  value="{{ old('erp_task_id') }}" id="sel1" {{-- required --}}>
+				<option value="" disabled selected></option>
+				@if(isset( $tasks ) && count($tasks)>0 )
 					@foreach ($tasks as $id => $task)
 						<option class="project_list" name="erp_task_id" value="{{ $id }}">{{ $task }}</option>
 					@endforeach	
-				</select>
-			</div>
-		@endif 
+				@endif 
+			</select>
+		</div>
 		<div class="col-md-12 clear_l overflow_hidd padd_0 form-group time_group" >
             <div class="time {{ ($errors->has('start_time')) ? 'has-error' : '' }}" >
                 <label>@lang('absence.start_time')</label>

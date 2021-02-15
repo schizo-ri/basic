@@ -17,6 +17,7 @@ use DateInterval;
 use DatePeriod;
 /* use Spatie\CalendarLinks\Link; */
 /* use DiegoSouza\Zimbra\Facades\Zimbra; */
+use DiegoSouza\Zimbra\Facades\Zimbra;
 
 class EventController extends Controller
 {
@@ -37,8 +38,9 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-      /*   $result = Zimbra::getAllCos(); */
-
+       /*  $result = Zimbra::getAllCos();
+        dd(  $result ); */
+     
         $empl = Sentinel::getUser()->employee;
        
         if( isset($_GET['dan']) ) {
@@ -324,14 +326,17 @@ class EventController extends Controller
     /* Vraća selektirani dan kao array */
     public static function selectedDay ($dan) {
         $select_day = explode('-',$dan);
+        
+        setlocale(LC_TIME, "hr_HR");
+     
+        $week_day = iconv('ISO-8859-2', 'UTF-8',strftime("%a", strtotime($dan)));
        
-        $week_day = date("D", strtotime($dan) );
-        $month =  date("F",  strtotime($dan) );
+        $month =  iconv('ISO-8859-2', 'UTF-8',strftime("%B", strtotime($dan)));
         $dan_select = $select_day[2];
         $tj_select = date('W',strtotime($dan));
         $mj_select = $select_day[1];
         $god_select = $select_day[0];
-
+     
         return ['week_day' => $week_day, 'month' => $month, 'dan_select' => $dan_select, 'tj_select' => $tj_select, 'mj_select' => $mj_select, 'god_select' => $god_select];
     }
 

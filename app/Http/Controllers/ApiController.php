@@ -78,10 +78,11 @@ class ApiController extends Controller
             1117 => "Rekapitulacija projekta - proučiti"
         ] */
 
-       /*     $response = $this->send_leave_request( Absence::find(3673), 'abs' ); // izostanak */
+        /*  $response = $this->send_leave_request( Absence::find(3673), 'abs' ); // izostanak */
         /*  $response = $this->send_leave_request( Absence::find(3709), 'abs' ); // izostanak
           $response = $this->send_leave_request( Absence::find(3711), 'abs' ); // izostanak */
-         /*   $response = $this->send_leave_request( Afterhour::find(3444), 'aft' );  */// Afterhour
+        /*    $response = $this->send_leave_request( Afterhour::find(3444), 'aft' ); // Afterhour */
+        /*    $response = $this->send_leave_request( Afterhour::find(3480), 'aft' );  */
 
         return view('Centaur::api_erp.index',['response' => $response]);
     }
@@ -199,22 +200,23 @@ class ApiController extends Controller
         $get_employee_available_projects->addParam(new xmlrpcval( $param['API'] , "string"));
         $get_employee_available_projects->addParam(new xmlrpcval( $param['method'], "string"));
         $get_employee_available_projects->addParam(new xmlrpcval($param['employee_id'], "int"));
-       /*  $get_employee_available_projects->addParam(new xmlrpcval($date, "string")); */
+        $get_employee_available_projects->addParam(new xmlrpcval($date, "string"));
         $resp = $sock->send($get_employee_available_projects);
 
         $val = $resp->value();
     
-        $ids = $val->scalarval();
         $projects = array();
-        
-        foreach ($ids as $id) {
-            $projects[$id->me['struct']['id']->me['int']] = $id->me['struct']['name']->me['string'];
-           /*  array_push($projects, $id->me['struct']['name']->me['string']); */
-        }
 
-            /*  array:1 [▼
-                58 => "[P-000] 000 Implementacija Odoo ERP-a, [0001] Duplico d.o.o."
-            ] */
+        if(! is_int($val)){
+            $ids = $val->scalarval();
+            foreach ($ids as $id) {
+                $projects[$id->me['struct']['id']->me['int']] = $id->me['struct']['name']->me['string'];
+               /*  array_push($projects, $id->me['struct']['name']->me['string']); */
+            }
+        } 
+        /*  array:1 [▼
+            58 => "[P-000] 000 Implementacija Odoo ERP-a, [0001] Duplico d.o.o."
+        ] */
 
         return $projects;
     }

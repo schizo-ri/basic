@@ -1263,19 +1263,20 @@ div.clear{
 #calendar a.scroll_right_cal,
 #calendar a.scroll_left_cal  {
     width: 8.5px;
-    height:  1.625rem;
+    height:  auto;
     background-position: center;
     border-radius: 50%;
     float: right;
     border: none;
     margin-right: 30px;
-    line-height: 26px;
     background-color: inherit;
     outline: none;
+    line-height: 20px;
 }
 #calendar button.scroll_right_cal img,
 #calendar button.scroll_left_cal img {
     height: 12px;
+    max-width: initial;
 }
 
 .dates::-webkit-scrollbar {
@@ -2994,7 +2995,7 @@ class="select-css"
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-unit {
     position: relative;
-    height: 50px;
+    margin-bottom: 10px;
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-unit .pignose-calendar-button-schedule-container {
@@ -3002,6 +3003,7 @@ class="select-css"
     right: 14px;
     top: 5px;
     bottom: 0;
+    height: fit-content;
 }
 .employee_color {
     display: inline-block;
@@ -3207,6 +3209,7 @@ class="select-css"
 
 .header_calendar>div>span.month_year {
     line-height: 50px;
+    text-transform: capitalize;
 }
 
 .main_calendar_month table, .index_event_week table {
@@ -4086,6 +4089,7 @@ table ul {
     list-style: none;
     padding: 0;
     margin: 0;
+    align-self: center;
 }
 .select2-search__field {
     border: none;
@@ -8275,6 +8279,7 @@ ul.nav_ul.float_right li img {
     display: flex;
     justify-content: center;
     align-items: center;
+	padding: 0 10px;
 }
 .topnav.nav_top a.link_home {
 	padding: 28px 0;
@@ -9017,9 +9022,11 @@ span.count_post {
 .efc_show {
 	display: block;
 }
+
 .efc_hide {
 	display: none;
 }
+
 .user_header .efc_show img, .user_header .efc_hide img {
 	color: #2B2B2B;
     width: 8.4px;
@@ -9043,9 +9050,9 @@ span.count_post {
 
 .info .layout_button >button {
 	height: 100%;
-	max-width: calc((100% / 6) - 15px);
-	width: calc((100% / 6) - 15px);
-	min-width: calc((100% / 6) - 15px);
+	max-width: calc((100% / 7) - 15px);
+	width: calc((100% / 7) - 15px);
+	min-width: calc((100% / 7) - 15px);
     background: #F4F7FF;
     border: none;
     border-radius: 3px;
@@ -13110,6 +13117,7 @@ span.file_name {
     display: block;
     color: #000000;
     margin-bottom: 5px;
+	font-size: 0.75rem;
 }
 /* @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap'); */
 

@@ -753,7 +753,7 @@ class="select-css"
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-unit {
     position: relative;
-    height: 50px;
+    margin-bottom: 10px;
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-unit .pignose-calendar-button-schedule-container {
@@ -761,6 +761,7 @@ class="select-css"
     right: 14px;
     top: 5px;
     bottom: 0;
+    height: fit-content;
 }
 .employee_color {
     display: inline-block;
@@ -966,6 +967,7 @@ class="select-css"
 
 .header_calendar>div>span.month_year {
     line-height: 50px;
+    text-transform: capitalize;
 }
 
 .main_calendar_month table, .index_event_week table {
@@ -1845,6 +1847,7 @@ table ul {
     list-style: none;
     padding: 0;
     margin: 0;
+    align-self: center;
 }
 .select2-search__field {
     border: none;

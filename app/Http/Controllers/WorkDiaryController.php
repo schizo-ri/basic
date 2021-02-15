@@ -111,7 +111,9 @@ class WorkDiaryController extends Controller
                 $projects_erp = $api->get_employee_available_projects( $erp_id, $date );
 
                 $api = new ApiController();
-                $tasks = $api->get_employee_project_tasks( $erp_id, $date, array_keys($projects_erp)[0]);
+                if( $projects_erp != null && count($projects_erp) > 0) {
+                    $tasks = $api->get_employee_project_tasks( $erp_id, $date, array_keys($projects_erp)[0]);
+                }
                 $projects = Project::where('active',1)->get();
                
                /*  $projects = null; */
@@ -397,10 +399,10 @@ class WorkDiaryController extends Controller
         $send_afterhourRequest = '';
         if( $request_exist == 0  ) {
             if( $afterhours > 0) {
-               // $send_afterhourRequest = AfterhourController::storeAfterHour($workDiary);
+               $send_afterhourRequest = AfterhourController::storeAfterHour($workDiary);
             } 
         } else {
-          //  $send_afterhourRequest = "Zahtjev za prekovremene sate već postoji.";
+            $send_afterhourRequest = "Zahtjev za prekovremene sate već postoji.";
         }
 
         session()->flash('success', __('ctrl.data_save') . " Spremljeno je ukupno " .  gmdate("H:i:s", $seconds)  . ' sati rada. ' . $send_afterhourRequest);

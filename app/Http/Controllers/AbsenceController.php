@@ -755,6 +755,7 @@ class AbsenceController extends BasicAbsenceController
 	public function storeConf(Request $request)
     {
 		$absence = Absence::find($request['id']);
+		$message_erp = '';
 		if( $absence ) {
 			$odobrio_user = Sentinel::getUser()->employee;
 
@@ -786,6 +787,8 @@ class AbsenceController extends BasicAbsenceController
 						session()->flash('error', __('ctrl.error') );
 						return redirect()->back();
 					}
+				} else {
+					$message_erp = ' Zahtjev NIJE zapisan u Odoo.';
 				}
 			}
 				
@@ -825,18 +828,17 @@ class AbsenceController extends BasicAbsenceController
 			}
 
 			if($absence->approve == 1) {
-				$message = session()->flash('success', __('absence.approved'));
+				$message = session()->flash('success', __('absence.approved') . ' ' . $message_erp);
 			} else {
-				$message = session()->flash('success', __('absence.not_approve'));
+				$message = session()->flash('success', __('absence.not_approve') . ' ' . $message_erp);
 			}
 			
-			return redirect()->route('dashboard')->withFlashMessage($message );
+			return redirect()->route('dashboard')->withFlashMessage( $message );
 		} else {
 			$message = session()->flash('success',__('ctrl.request_deleted'));
 		
 			return redirect()->route('dashboard')->withFlashMessage($message );
 		}
-		
 	}
 
 	public function storeConf_update( Request $request, $id)

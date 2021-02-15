@@ -158,19 +158,20 @@ div.clear{
 #calendar a.scroll_right_cal,
 #calendar a.scroll_left_cal  {
     width: 8.5px;
-    height:  1.625rem;
+    height:  auto;
     background-position: center;
     border-radius: 50%;
     float: right;
     border: none;
     margin-right: 30px;
-    line-height: 26px;
     background-color: inherit;
     outline: none;
+    line-height: 20px;
 }
 #calendar button.scroll_right_cal img,
 #calendar button.scroll_left_cal img {
     height: 12px;
+    max-width: initial;
 }
 
 .dates::-webkit-scrollbar {

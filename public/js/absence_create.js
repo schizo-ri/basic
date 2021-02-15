@@ -260,6 +260,8 @@ $(function(){
 				if($.map(projects, function(n, i) { return i; }).length > 0 ) {
 					projectElement(projects);
 				}
+				console.log("projects.length "+projects.length);
+			
 			/* 	getTasksEmpl ( employee_id, start_date, Object.keys(projects)[0] ); */
 			},
 			error: function(jqXhr, json, errorThrown) {
@@ -272,12 +274,13 @@ $(function(){
 	
 	function getTasksEmpl ( employee_id, start_date, project, parent )	{
 		url = location.origin + '/getTasks';
-		/* console.log('getTasksEmpl: ' + 'employee_id '+employee_id + ' start_date '+start_date+ ' project '+project); */
+		console.log('getTasksEmpl: ' + 'employee_id '+employee_id + ' start_date '+start_date+ ' project '+project);
 		$.ajax({
 			url: url,
 			type: "get",
 			data:  { employee_id: employee_id, start_date: start_date, project:project },
 			success: function( tasks ) {
+				console.log(tasks);
 				if($.map(tasks, function(n, i) { return i; }).length > 0 ) {
 					tastElement(tasks, parent);
 				} else {

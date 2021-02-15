@@ -405,6 +405,7 @@ ul.nav_ul.float_right li img {
     display: flex;
     justify-content: center;
     align-items: center;
+	padding: 0 10px;
 }
 .topnav.nav_top a.link_home {
 	padding: 28px 0;
@@ -1147,9 +1148,11 @@ span.count_post {
 .efc_show {
 	display: block;
 }
+
 .efc_hide {
 	display: none;
 }
+
 .user_header .efc_show img, .user_header .efc_hide img {
 	color: #2B2B2B;
     width: 8.4px;
@@ -1173,9 +1176,9 @@ span.count_post {
 
 .info .layout_button >button {
 	height: 100%;
-	max-width: calc((100% / 6) - 15px);
-	width: calc((100% / 6) - 15px);
-	min-width: calc((100% / 6) - 15px);
+	max-width: calc((100% / 7) - 15px);
+	width: calc((100% / 7) - 15px);
+	min-width: calc((100% / 7) - 15px);
     background: #F4F7FF;
     border: none;
     border-radius: 3px;

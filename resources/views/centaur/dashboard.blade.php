@@ -6,6 +6,7 @@
 	$today->modify('-1 years');
 	$today->modify('-14 days');
 	$key = 0;
+
 @endphp
 @section('content')
 	@if (Sentinel::check())
@@ -118,6 +119,16 @@
 											<span>
 												<span class="img clock"></span>
 												<p>@lang('basic.add_afterhour')</p>
+											</span></a>
+										</button>
+									@endif
+								@endif
+								@if(Sentinel::getUser()->id == 9) 
+									@if(in_array('Dnevnik', $moduli))
+										<button class=""><a href="{{ route('work_diaries.create') }}" rel="modal:open">
+											<span>
+												<span class="img clock"></span>
+												<p>@lang('basic.add_work_diary')</p>
 											</span></a>
 										</button>
 									@endif

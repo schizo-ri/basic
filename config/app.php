@@ -235,8 +235,6 @@ return [
 		'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Pusher' => Pusher\Pusher::class,
-        'Zimbra' => DiegoSouza\Zimbra\ZimbraApiClient::class,
-      
     ],
 
 ];

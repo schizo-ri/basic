@@ -32,6 +32,8 @@
 							<th>OIB</th>
 							<th>@lang('basic.work')</th>
 							<th>@lang('basic.department')</th>
+							<th>Stručna sprema</th>
+							<th>Struka</th>
 							<th class="sort_date">@lang('basic.reg_date')</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
@@ -54,6 +56,8 @@
 										@endforeach
 									@endif
 								</td>
+								<td>{{ $employee->qualifications }}</td>
+								<td>{{ $employee->title }}</td>
 								<td>{!! $employee->reg_date ? date("d.m.Y",strtotime($employee->reg_date)) : '' !!}</td>
 								<td class="center">
 									
