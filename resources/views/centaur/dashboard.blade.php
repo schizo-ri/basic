@@ -188,14 +188,16 @@
 									</span></a>
 								</button>
 							@endif
-							<button class="">
-								<a href="{{ route('radne_upute') }}" title="{{ __('basic.instructions') }}">
-									<span>
-										<span class="img books"></span>
-										<p>@lang('basic.instructions')</p>
-									</span>
-								</a>
-							</button>
+							@if(in_array('Radne upute', $moduli) )
+								<button class="">
+									<a href="{{ route('radne_upute') }}" title="{{ __('basic.instructions') }}">
+										<span>
+											<span class="img books"></span>
+											<p>@lang('basic.instructions')</p>
+										</span>
+									</a>
+								</button>
+							@endif
 						</div>
 					</div>
 				@endif

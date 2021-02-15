@@ -113,13 +113,15 @@
                 <p class="button_nav_text">@lang('basic.contacts')</p>
             </a>	
         </div>
-       @if(Sentinel::getUser()->hasAccess(['instructions.view']) || in_array('instructions.view', $permission_dep) )
-        <div class="">
-            <a class="button_nav load_button radne_upute_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('radne_upute') }}" title="{{ __('basic.instructions') }}">
-                <span class="button_nav_img instructions"><i class="fas fa-book-open"></i></span>
-                <p class="button_nav_text">@lang('basic.instructions')</p>
-            </a>	
-        </div>
+        @if(in_array('Radne upute', $moduli) )
+            @if(Sentinel::getUser()->hasAccess(['instructions.view']) || in_array('instructions.view', $permission_dep) )
+                    <div class="">
+                        <a class="button_nav load_button radne_upute_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('radne_upute') }}" title="{{ __('basic.instructions') }}">
+                            <span class="button_nav_img instructions"><i class="fas fa-book-open"></i></span>
+                            <p class="button_nav_text">@lang('basic.instructions')</p>
+                        </a>	
+                    </div>
+                @endif
         @endif
         @if(Sentinel::getUser()->hasAccess(['tasks.create']) || in_array('tasks.create', $permission_dep) )
             <div class="">

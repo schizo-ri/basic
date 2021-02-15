@@ -263,7 +263,6 @@ $(function(){
 					projectElement(projects);
 				}
 				getTasksEmpl ( employee_id, start_date, Object.keys(projects)[0] );
-
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr);
@@ -320,6 +319,8 @@ $(function(){
 		}
 	}
 });	
+
+
 
 /* if($('form.form_afterhour').length > 0 || $('form.form_work_diary').length > 0) {
 	$( "#date" ).on('change',function() {

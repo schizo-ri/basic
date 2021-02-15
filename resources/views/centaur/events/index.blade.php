@@ -48,13 +48,17 @@
 							<option value="empl_{{ $employee->id }}">{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}</option>
 						@endforeach
 					</select>
-					<select class="change_car col-4">
-						<option value="" selected>{{ __('basic.view_all') }}</option>
-						@foreach ($cars as $car)
-							<option value="{{ $car->registration }}">{{ $car->registration }}</option>
-						@endforeach
-					</select>
-					<button class="show_loccos col-2"><i class="fas fa-car"></i></button>
+					@if(count($cars )>0)
+						<select class="change_car col-4">
+							<option value="" selected>{{ __('basic.view_all') }}</option>
+							@foreach ($cars as $car)
+								<option value="{{ $car->registration }}">{{ $car->registration }}</option>
+							@endforeach
+						</select>
+					@endif
+					@if(in_array('Locco vožnja', $moduli))  
+						<button class="show_loccos col-2"><i class="fas fa-car"></i></button>
+					@endif
 				</div>
 			</header>
 			<main class="main_calendar main_calendar_day" >
@@ -133,13 +137,15 @@
 													</div>
 												@endif
 											@endif
-											@if($data['name'] == 'locco')
-												@if(date("Y-m-d",strtotime($data['date'])) == date("Y-m-d",strtotime($selected_day)) && $hour == date("H:i",strtotime($data['date'])) )
-													<div class="show_locco col-xs-12 col-sm-6 col-md-4 col-lg-3 " >
-														<div class=" ">
-															{{  $data['reg'] . ' ' .$data['title'] . ' ' . $data['employee']  }}
+											@if(in_array('Locco vožnja', $moduli))  
+												@if($data['name'] == 'locco')
+													@if(date("Y-m-d",strtotime($data['date'])) == date("Y-m-d",strtotime($selected_day)) && $hour == date("H:i",strtotime($data['date'])) )
+														<div class="show_locco col-xs-12 col-sm-6 col-md-4 col-lg-3 " >
+															<div class=" ">
+																{{  $data['reg'] . ' ' .$data['title'] . ' ' . $data['employee']  }}
+															</div>
 														</div>
-													</div>
+													@endif
 												@endif
 											@endif
 										@endforeach
@@ -261,13 +267,15 @@
 															</div>
 														@endif
 													@endif
-													@if($data['name'] == 'locco')
-														@if( date("Y-m-d",strtotime($data['date'])) == date_format($next_date, 'Y-m-d') )
-															<div class="show_locco col-xs-12">
-																<div class="locco">
-																	<p>{{  $data['reg'] . ' ' .$data['title'] . ' ' . $data['employee']  }}</p>
+													@if(in_array('Locco vožnja', $moduli))  
+														@if($data['name'] == 'locco')
+															@if( date("Y-m-d",strtotime($data['date'])) == date_format($next_date, 'Y-m-d') )
+																<div class="show_locco col-xs-12">
+																	<div class="locco">
+																		<p>{{  $data['reg'] . ' ' .$data['title'] . ' ' . $data['employee']  }}</p>
+																	</div>
 																</div>
-															</div>
+															@endif
 														@endif
 													@endif
 												@endforeach
@@ -427,13 +435,15 @@
 													</div>
 												@endif
 											@endif
-											@if($data['name'] == 'locco')
-												@if(date("Y-m-d",strtotime($data['date'])) ==  date_format($date1, 'Y-m-d') && $hour == date("H:i",strtotime($data['date'])) )		
-													<div class="show_locco col-12 " >
-														<div class=" ">
-															{{  $data['reg'] . ' ' .$data['title'] . ' ' . $data['employee']  }}
+											@if(in_array('Locco vožnja', $moduli))  
+												@if($data['name'] == 'locco')
+													@if(date("Y-m-d",strtotime($data['date'])) ==  date_format($date1, 'Y-m-d') && $hour == date("H:i",strtotime($data['date'])) )		
+														<div class="show_locco col-12 " >
+															<div class=" ">
+																{{  $data['reg'] . ' ' .$data['title'] . ' ' . $data['employee']  }}
+															</div>
 														</div>
-													</div>
+													@endif
 												@endif
 											@endif
 										@endforeach

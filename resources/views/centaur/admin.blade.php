@@ -28,7 +28,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
         <script>var dt = new Date().getTime();</script>
 		{{--  CSS --}}
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all2.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all.css?random=@dt') }}"/>
 		{{--  Select find --}}
 		<link href="{{ URL::asset('/../select2-develop/dist/css/select2.min.css') }}" />
 		{{-- ICON --}}
@@ -156,7 +156,7 @@
 			  /*   Pusher.logToConsole = true; */
 				var employee_id = $('#employee_id').text();
 
-				var pusher = new Pusher('d2b66edfe7f581348bcc', {
+				var pusher = new Pusher('85ecd08599f3f45c3254', {
 										cluster: 'eu'
 										});
 
@@ -185,7 +185,7 @@
 			{{-- Jquery modal --}}
             <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
             {{-- Scripts --}}
-			<script src="{{URL::asset('/../js/all2.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/all.js?random=@dt') }}"></script>
 			{{-- Datatables --}}
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>

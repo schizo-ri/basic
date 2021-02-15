@@ -50,10 +50,12 @@
                     <a href="{{ route('day_offs.index') }}" class="line_height_45 admin_link {{ Request::is('day_offs*') ? 'active_admin' : '' }}" id="day_offs">@lang('basic.days_off')</a>
                 </li>
             @endif
-        <li class="first_group">
-            <span class="space" ></span> 
-            <a href="" class="line_height_45 admin_link open_menu" id="abs_links" >EVIDENCIJA<span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
-        </li>
+        @if(in_array('Evidencija', $moduli) || in_array('Prekovremeni', $moduli) || in_array('Dnevnik', $moduli))
+            <li class="first_group">
+                <span class="space" ></span> 
+                <a href="" class="line_height_45 admin_link open_menu" id="abs_links" >EVIDENCIJA<span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
+            </li>
+        @endif
             @if(in_array('Evidencija', $moduli) && Sentinel::getUser()->hasAccess(["work_records.view"]))
                 <li class="first_group abs_links"><span class="space" ></span>
                     <a href="{{ route('work_records.index') }}" class="line_height_45 admin_link {{ Request::is('work_records*') ? 'active_admin' : '' }}" id="work_records">@lang('basic.work_records')</a>
@@ -74,7 +76,7 @@
                     <a href="{{ route('temporary_employee_requests.index') }}" class="line_height_45 admin_link {{ Request::is('temporary_employee_requests*') ? 'active_admin' : '' }}" id="temporary_employee_requests">@lang('basic.temporary_employee_requests')</a>
                 </li>
             @endif
-        <li class="first_group">
+      {{--   <li class="first_group">
             <span class="space" ></span> 
             <a href="" class="line_height_45 admin_link open_menu" id="project_links" >@lang('basic.projects') <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
         </li>
@@ -87,11 +89,12 @@
                 <li class="first_group project_links"><span class="space" ></span> 
                     <a href="{{ route('customers.index') }}" class="line_height_45 admin_link {{ Request::is('customers*') ? 'active_admin' : '' }}" id="customers">@lang('basic.customers')</a>
                 </li>
-            @endif
-        <li class="first_group">
-            <span class="space" ></span> 
-            <a href="" class="line_height_45 admin_link open_menu" id="car_links" >LOCCO VOŽNJE <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
-        </li>  
+            @endif --}}
+        @if(in_array('Locco vožnja', $moduli))
+            <li class="first_group">
+                <span class="space" ></span> 
+                <a href="" class="line_height_45 admin_link open_menu" id="car_links" >LOCCO VOŽNJE <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
+            </li>  
             @if(in_array('Locco vožnja', $moduli))
                 @if(Sentinel::getUser()->hasAccess(["cars.view"]))
                     <li class="first_group car_links">
@@ -124,6 +127,7 @@
                     </li>
                 @endif
             @endif
+        @endif
         <li class="first_group">
             <span class="space" ></span> 
             <a href="" class="line_height_45 admin_link open_menu" id="basic_links" >OPĆI PODACI  <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
@@ -190,18 +194,19 @@
                 <a href="{{ route('emailings.index') }}" class="line_height_61 admin_link {{ Request::is('emailings*') ? 'active_admin' : '' }}" id="emailings">@lang('basic.emailings')</a>
             </li>
         @endif
-        @if(Sentinel::getUser()->hasAccess(["mail_templates.view"]))
+      {{--   @if(Sentinel::getUser()->hasAccess(["mail_templates.view"]))
             <li class="">
                 <span class="space" ></span>
                 <a href="{{ route('mail_templates.index') }}" class="line_height_45 admin_link {{ Request::is('mail_templates*') ? 'active_admin' : '' }}" id="mail_templates">@lang('basic.mail_templates')</a>
             </li> 
-        @endif
+        
         @if(Sentinel::getUser()->hasAccess(["templates.view"]))
             <li class="">
                 <span class="image_template" ><i class="far fa-clone"></i></span> 
                 <a href="{{ route('templates.index') }}" class="line_height_61 admin_link {{ Request::is('templates*') ? 'active_admin' : '' }}" id="templates">@lang('basic.templates')</a>
             </li>  
         @endif 
+        @endif --}}
     @endif
     @if(Sentinel::inRole('superadmin') )
         <li class="">

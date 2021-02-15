@@ -292,7 +292,7 @@ class Employee extends Model
 	*/
 	public static function getEmails()
 	{
-		return Employee::where('id','<>',0)->where('checkout',null)->where('user_id','<>',null)->where('employees.id','<>',0)->get()->pluck('email')->toArray();
+		return Employee::where('id','<>',0)->where('checkout',null)->where('user_id','<>',null)->where('employees.id','<>',1)->get()->pluck('email')->toArray();
 	}
 
 	/*
@@ -303,9 +303,9 @@ class Employee extends Model
 	public static function employees_lastNameASCStatus($status)
 	{
 		if($status == 0) {
-			return Employee::join('users','users.id','employees.user_id')-> select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout','<>',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>', null)->orderBy('users.last_name','ASC')->get();
+			return Employee::join('users','users.id','employees.user_id')-> select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout','<>',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>', null)->orderBy('users.last_name','ASC')->get();
 		} else {
-			return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout', null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>' ,null)->orderBy('users.last_name','ASC')->get();
+			return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout', null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>' ,null)->orderBy('users.last_name','ASC')->get();
 		}
 	}
 
@@ -316,7 +316,7 @@ class Employee extends Model
 	*/
 	public static function employees_firstNameASC()
 	{
-		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.first_name','ASC')->get();
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.first_name','ASC')->get();
 	}
 
 	/*
@@ -326,7 +326,7 @@ class Employee extends Model
 	*/
 	public static function employees_getNameASC()
 	{
-		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.last_name','ASC')->select('users.last_name', 'users.first_name', 'employees.id')->get();
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.last_name','ASC')->select('users.last_name', 'users.first_name', 'employees.id')->get();
 	}
 
 	/*
@@ -336,34 +336,34 @@ class Employee extends Model
 	*/
 	public static function employees_lastNameASC()
 	{
-		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.last_name','ASC')->get();
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>',null)->orderBy('users.last_name','ASC')->get();
 	}
 
 
 	public static function employeesAnniversary( $date )
 	{
-		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereMonth('employees.reg_date', date_format($date,'m'))->whereDay('employees.reg_date', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereMonth('employees.reg_date', date_format($date,'m'))->whereDay('employees.reg_date', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
 	}
 
 	public static function employeesBday( $date )
 	{
-		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereMonth('employees.b_day', date_format($date,'m'))->whereDay('employees.b_day', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereMonth('employees.b_day', date_format($date,'m'))->whereDay('employees.b_day', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
 	}
 
 	public static function employeesProbation( $date )
 	{
-		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.reg_date', date_format($date,'Y'))->whereMonth('employees.reg_date', date_format($date,'m'))->whereDay('employees.reg_date', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.reg_date', date_format($date,'Y'))->whereMonth('employees.reg_date', date_format($date,'m'))->whereDay('employees.reg_date', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
 	}
 
 	public static function employeesMedicalExamination( $date )
 	{
-		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.lijecn_pregled', date_format($date,'Y'))->whereMonth('employees.lijecn_pregled', date_format($date,'m'))->whereDay('employees.lijecn_pregled', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.lijecn_pregled', date_format($date,'Y'))->whereMonth('employees.lijecn_pregled', date_format($date,'m'))->whereDay('employees.lijecn_pregled', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
 	}
 	public static function employeesIDCardExpired( $date )
 	{
 		return Employee::join('users','users.id','employees.user_id')
 				->select('employees.*','users.first_name','users.last_name')
-				->where('employees.id','<>',0)
+				->where('employees.id','<>',1)
 				->where('employees.checkout',null)
 				->where('employees.user_id','<>',null)
 				->whereDate('employees.oi_expiry', date_format($date,'Y-m-d'))		
@@ -372,7 +372,7 @@ class Employee extends Model
 	}
 	public static function employeeStranger( $date )
 	{
-		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.permission_date', date_format($date,'Y'))->whereMonth('employees.permission_date', date_format($date,'m'))->whereDay('employees.permission_date', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
+		return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout',null)->where('employees.user_id','<>',null)->whereYear('employees.permission_date', date_format($date,'Y'))->whereMonth('employees.permission_date', date_format($date,'m'))->whereDay('employees.permission_date', date_format($date,'d'))->orderBy('users.last_name','ASC')->get();
 	}
 
 	/*
@@ -384,7 +384,7 @@ class Employee extends Model
 	{
 		$employees = Employee::join('users','users.id','employees.user_id')
 						->select('employees.*','users.first_name','users.last_name')
-						->where('employees.id','<>',0)
+						->where('employees.id','<>',1)
 						->whereYear('employees.checkout', $year)
 						->whereMonth('employees.checkout', $month)
 						->whereYear('employees.checkout', $year)

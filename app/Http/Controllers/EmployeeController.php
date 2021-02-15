@@ -82,7 +82,7 @@ class EmployeeController extends Controller
      */
     public function create(Request $request)
     {
-		$users = User::where('active', 1)->orderBy('last_name','ASC')->get();
+		$users = User::where('active', 1)->where('id','<>', 1)->orderBy('last_name','ASC')->get();
 		$departments = Department::orderBy('name','ASC')->get();
 	 	$works = Work::orderBy('name','ASC')->get();
 		$employees = Employee::employees_lastNameASC();

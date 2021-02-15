@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://duplico.myintranet.io'),
+    'url' => env('APP_URL', 'https://humanandmore.myintranet.io'),
 
     'asset_url' => env('ASSET_URL', null),
 

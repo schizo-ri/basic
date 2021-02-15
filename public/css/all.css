@@ -5568,6 +5568,7 @@ button.show_loccos {
     float: left;
     padding: 0;
 }
+
 .index_table_filter .page_link {
     color: #606060;
     padding-left: 15px;
@@ -5576,11 +5577,12 @@ button.show_loccos {
     cursor: pointer;
     line-height: 35px;
 }
+
 .change_view_calendar:hover,
 .change_employee:hover,
 .change_employee_work:hover,
 .change_employee_afterhour:hover,
-.change_car, .change_month:hover,
+.change_car,.change_month:hover,
 .change_month_afterhour:hover {
     color: #999999;
 }
@@ -5592,7 +5594,7 @@ button.show_loccos {
     margin: 0;
     margin-left: 15px;
 }
-.change_employee,.change_car {
+.change_employee, .change_car, .change_view_calendar {
     margin-right: 15px;
 }
 .change_employee_work, .change_employee_afterhour {

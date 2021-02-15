@@ -119,11 +119,11 @@
                     <p>Pristupni podaci:</p>
                     <p>korisničko ime: {{ $user->email }}</p>
                     <p>lozinka: {{ $password}}</p>
-                    <p>Obavezno pročitajte Radne upute koje se nalaze Portalu zaposlenika na linku "Radne upute" koje sadrže osnovne informacije i obaveze za svakog zaposlenika tvrtke Duplico.</p>
+                    {{-- <p>Obavezno pročitajte Radne upute koje se nalaze Portalu zaposlenika na linku "Radne upute" koje sadrže osnovne informacije i obaveze za svakog zaposlenika tvrtke Duplico.</p> --}}
                     <p>Nakon prvog pristupa stranici obavezno promijenite lozinku.</p>
                     <p>Svoje pristupne podatke nemojte odavati drugiom osobama.</p>
-                    <p>Upute za korištenje možete naći na Portalu klikom na link "Dokumenti"</p>
-                    <p>Za sva pitanja javite se na email {{ $podrska }}</p>
+                  {{--   <p>Upute za korištenje možete naći na Portalu klikom na link "Dokumenti"</p> --}}
+                  {{--   <p>Za sva pitanja javite se na email {{ $podrska }}</p> --}}
                     <p>Poralu pristupate putem slijedećeg linka</p>
                     <button href="{{ $link }}" class="odobri">MyIntranet</button>
                 @endif

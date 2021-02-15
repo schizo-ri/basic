@@ -263,6 +263,7 @@ class CompanyController extends Controller
 	{
 		$moduli_company = array(); 
 		$company = Company::first();
+		
 		if ($company) {
 			$company_oib = $company->oib;
 		

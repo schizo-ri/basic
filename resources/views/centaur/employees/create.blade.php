@@ -16,11 +16,11 @@
 				</select>
 				{!! ($errors->has('user_id') ? $errors->first('user_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group  {{ ($errors->has('erp_id'))  ? 'has-error' : '' }}" style="padding-top: 10px">
+			{{-- <div class="form-group  {{ ($errors->has('erp_id'))  ? 'has-error' : '' }}" style="padding-top: 10px">
 				<label>ERP ID</label>
 				<input class="form-control " type="text" name="erp_id" value="{{ old('erp_id') }}" maxlength="10" >
 				{!! ($errors->has('color') ? $errors->first('color', '<p class="text-danger">:message</p>') : '') !!}
-			</div>
+			</div> --}}
 			<div class="form-group  {{ ($errors->has('color'))  ? 'has-error' : '' }}" style="padding-top: 10px">
 				<label>@lang('basic.color') </label>
 				<input class="form-control color" type="color" name="color" value="{!! old('color') ? old('color') : '#ffffff'  !!}" >
@@ -195,7 +195,7 @@
 				<textarea class="form-control" maxlength="65535" name="comment"></textarea>
 				{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('lijecn_pregled')) ? 'has-error' : '' }}">
+			{{-- <div class="form-group {{ ($errors->has('lijecn_pregled')) ? 'has-error' : '' }}">
 				<label>@lang('basic.lijecn_pregled')</label>
 				<input class="form-control" placeholder="{{ __('basic.lijecn_pregled')}}" name="lijecn_pregled" type="date" value="{{ old('lijecn_pregled') }}" required />
 				{!! ($errors->has('lijecn_pregled') ? $errors->first('lijecn_pregled', '<p class="text-danger">:message</p>') : '') !!}
@@ -204,7 +204,7 @@
 				<label>@lang('basic.znr')</label>
 				<input class="form-control" placeholder="{{ __('basic.znr')}}" name="znr" type="date" value="{{ old('znr') }}" required />
 				{!! ($errors->has('znr') ? $errors->first('znr', '<p class="text-danger">:message</p>') : '') !!}
-			</div>
+			</div> --}}
 			<div class="form-group {{ ($errors->has('size')) ? 'has-error' : '' }}">
 				<label>@lang('basic.size')</label>
 				<input name="size" type="text" class="form-control" maxlength="10" value="{{ old('size') }}"   >
