@@ -101,7 +101,6 @@
 <script>
 	$(function() {
 		var current_km;
-
 		$('#end_km').change(function() {
 			var poc_km = $('#start_km').val();
 			var zav_km = $('#end_km').val();
@@ -115,7 +114,6 @@
 				$('.btn-submit').attr('disabled', 'false');
 			}
 		});
-
 		$('#car_id').change(function(){
 			var car_id = $( this ).val();
 			try {

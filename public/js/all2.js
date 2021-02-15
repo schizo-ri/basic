@@ -2298,49 +2298,47 @@ $(function() { // filter knowledge base
 	});	
 
 	$('.filter_travel').on('change',function() {
-		var employee_id = $('#filter_employee').val().toLowerCase();
-		var date = $('#filter_date').val().toLowerCase();
-		var url = location.origin + '/travel_orders';
-
-		if(employee_id == 'all' ) {
-			employee_id = '';
-		} 
-		if(date == 'all') {
-			date = '';
+		
+		url = location.origin + '/travel_orders';
+		
+		if( $('#filter_date').length > 0) { 
+			date = $('#filter_date').val();
+			if(date == 'all') {
+				date = '';
+			}
+			url = url + '?date='+date;
 		}
-
-		if(employee_id == '' && date == ''){
-			$('.panel').show();
-		} else {
-			$('.panel').filter(function() {
-				$(this).toggle($(this).text().toLowerCase().indexOf(date) > -1 && $(this).text().toLowerCase().indexOf(employee_id) > -1);
-			});
+		if( $('#filter_employee').length > 0) { 
+			employee_id = $('#filter_employee').val();
+			if(employee_id == 'all') {
+				employee_id = '';
+			}
+			url = url + '&employee_id='+employee_id;
 		}
-		/* $.ajax({
-			url: url,
+		console.log(url);
+
+		
+		$.ajax({
+			url:url,
 			type: "get",
 			data: { 'employee_id': employee_id,'date': date},
+			beforeSend: function(){
+				$('body').prepend('<div id="loader"></div>');
+			},
 			success: function( response ) {
-				console.log(response);
-				$( '#admin_page' ).load( url + '?employee_id='+employee_id+'&date='+date, function( response, status, xhr ) {
-					 
-					if ( status == "error" ) {
-						  var msg = "Sorry but there was an error: ";
-						  $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
-					  }
-					
-					  $('#filter_employee option.id_'+ employee_id).attr('selected','selected');
-					  $('#filter_date option.date_'+ date).attr('selected','selected');
-					  $.getScript( '/../restfulizer.js');
-				  });
-				
+				$('#admin_page>main' ).load(url + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
+					$.getScript('/../js/datatables.js');
+					$('.show_button').on('click',function () {
+						$('.dt-buttons').toggle();		
+					})
+					$.getScript('/../restfulizer.js');
+				});
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
 			}
-		}); */
-	/* 	$('#filter_employee option.id_'+ employee_id).attr('selected','selected');
-		$('#filter_date option.date_'+ date).attr('selected','selected'); */
+		});
 	});	
 });
 function mySearchTable() {
@@ -2620,8 +2618,6 @@ $('.form_evidention').on('submit',function(e){
             $('.header_nav').load(location.href + ' .header_nav .topnav',function(){
                 $.getScript('/../js/nav_active.js');
             });
-            
-            
         }, 
         error: function(jqXhr, json, errorThrown) {
             console.log(jqXhr.responseJSON);
@@ -2632,7 +2628,7 @@ $('.form_evidention').on('submit',function(e){
                                 'line':  jqXhr.responseJSON.line };
             $.modal.close();
             $.ajax({
-                url: 'errorMessage',
+                url: location.origin + '/errorMessage',
                 type: "get",
                 data: data_to_send,
                 success: function( response ) {
@@ -2647,13 +2643,43 @@ $('.form_evidention').on('submit',function(e){
     });
 });
 
-/* document.addEventListener("visibilitychange", function() {
-    if (document.hidden){
-    } else {
-        location.reload();
+if(body_width < 450) {
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden){
+        } else {
+            location.reload();
+        }
+    });
+}
+ 
+$('body').on($.modal.OPEN, function(event, modal) {
+    if( $('input[type=datetime-local]').length > 0 ) {
+        $('input[type=datetime-local]').on('change',function(){
+            date = new Date( $(this).val());
+
+            if( date == 'Invalid Date') {
+                $( '<div class="error_date danger">Neispravan unos datuma. Molim provjeri!</div>' ).modal();
+                $('.btn-submit').attr('disabled', 'disabled');
+            } else {
+                $('.btn-submit').attr('disabled', false);
+                $('.error_date').remove();
+            }
+        });
+    }
+    if( $('input[type=date]').length > 0 ) {
+        $('input[type=date]').on('change',function(){
+            date = new Date( $(this).val());
+
+            if( date == 'Invalid Date') {
+                $( '<div class="error_date danger">Neispravan unos datuma. Molim provjeriti</div>' ).modal();
+                $('.btn-submit').attr('disabled', 'disabled');
+            } else {
+                $('.btn-submit').attr('disabled', false);
+                $('.error_date').remove();
+            }
+        });
     }
 });
- */
 $('.button_nav').css({
   /*   'background': '#051847',
     'color': '#ffffff' */
@@ -3010,6 +3036,22 @@ $(function(){
         $('.'+class_open).toggle();
     });
     $(".admin_pages a.admin_link").removeClass('disable');
+    // ako ima shortcut - href edit
+    try {
+        url_location = location.href;
+        $.get( location.origin+"/shortcut_exist", {'url': url_location }, function( id ) {
+            if(id != null && id != '') {
+                $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+                $('.shortcut_text').text('Ispravi prečac'); 
+            } else {
+                title = $('.admin_link.active_admin').attr('id');
+                $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url_location+'&title='+title );
+                $('.shortcut_text').text('Dodaj prečac'); 
+            }
+        });
+    } catch (error) {
+        //
+    }
 });
 
 if($(".index_table_filter .show_button").length == 0) {
@@ -3027,7 +3069,24 @@ $('.admin_pages li>a').not('.open_menu').on('click',function(e) {
     title = click_element.text();
     $("title").text( title ); 
     url = $(this).attr('href');
-   
+    
+    // ako ima shortcut - href edit
+    try {
+        $.get( location.origin+"/shortcut_exist", {'url': url }, function( id ) {
+            if(id != null && id != '' && id) {
+                $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+                $('.shortcut_text').text('Ispravi prečac'); 
+            } else {
+                title = $('.admin_link.active_admin').attr('id');
+
+                $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url+'&title='+title );
+                $('.shortcut_text').text('Dodaj prečac'); 
+            }
+        });
+    } catch (error) {
+        //
+    }
+
     $('.admin_pages>li>a').removeClass('active_admin');
     $(this).addClass('active_admin');
     active_link = $('.admin_link.active_admin').attr('id');
@@ -4303,7 +4362,9 @@ if(locale == 'en') {
 } else {
     saved = "Podaci su spremljeni";
 }
+
 $('.close_travel').on('click',function(e){
+    var parent_id = $(this).parent().parent().attr('id');
     e.preventDefault();
     $.ajaxSetup({
         headers: {
@@ -4315,7 +4376,7 @@ $('.close_travel').on('click',function(e){
         url: url,
         type: "get",
         success: function( response ) {
-            $('tbody').load(location.origin + '/travel_orders' + ' tbody>tr',function(){
+            $('#'+parent_id).load(location.origin + '/travel_orders' + ' #'+ parent_id + '>td',function(){
                 $.getScript( '/../restfulizer.js');
                 $.getScript( '/../js/travel.js');
             });
@@ -4323,9 +4384,7 @@ $('.close_travel').on('click',function(e){
         },
         error: function(jqXhr, json, errorThrown) {
             console.log(jqXhr.responseJSON); 
-            
-            alert("Nešto je pošlo krivo!");
-
+            alert("Nešto je pošlo krivo! Nalog nije zatvoren");
             location.reload();
         }
     });
@@ -4612,10 +4671,10 @@ $('.btn-submit').on('click',function(event){
     var pathname = window.location.pathname;
     validate_user_form (form);
 
-    console.log(url_load);
-    console.log(url); 
-    console.log(form_data);
-    console.log(validate);
+    /* console.log(url_load); */
+    /* console.log(url);  */
+    /* console.log(form_data) */;
+    /* console.log(validate); */
 
     if(validate.includes("block") ) {
        event.preventDefault();

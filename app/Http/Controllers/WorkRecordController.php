@@ -81,7 +81,7 @@ class WorkRecordController extends Controller
 					$list[]=date('Y-m-d D', $time);
 			}
         }
-        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->get();
+        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',0)->where('checkout',null)->orderBy('users.first_name')->get();
 
         return view('Centaur::work_records.index', ['work_records' => $work_records, 'permission_dep' => $permission_dep, 'list' => $list,'employees' => $employees,'months' => $months]);
     }
@@ -173,7 +173,7 @@ class WorkRecordController extends Controller
 			}
         }
 
-        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->with('hasWorkingRecord')->with('hasAbsences')->get();
+        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',0)->where('checkout',null)->orderBy('users.first_name')->with('hasWorkingRecord')->with('hasAbsences')->get();
         if(  $employee_id != null) {
             $employees = $employees->where('id', $employee_id);
         }
@@ -190,7 +190,7 @@ class WorkRecordController extends Controller
      */
     public function create()
     {
-       $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->get();
+       $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',0)->where('checkout',null)->orderBy('users.first_name')->get();
 
        return view('Centaur::work_records.create', ['employees' => $employees]);
     }
@@ -397,7 +397,7 @@ class WorkRecordController extends Controller
     public function edit($id)
     {
         $work_record = WorkRecord::find($id);
-        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',1)->where('checkout',null)->orderBy('users.first_name')->get();
+        $employees = Employee::join('users','users.id','employees.user_id')->select('users.first_name','users.last_name','employees.*')->where('employees.id','<>',0)->where('checkout',null)->orderBy('users.first_name')->get();
 
         return view('Centaur::work_records.edit', ['work_record' => $work_record,'employees' => $employees]);
     }

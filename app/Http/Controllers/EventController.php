@@ -453,7 +453,7 @@ class EventController extends Controller
                                               'title' => $task->title, 
                                               'employee' => $task->employee->user['first_name'] . ' ' . $task->employee->user['last_name'], 
                                               'background' =>  $task->employee->color, 
-                                              'car' => $task->car['registration'], 
+                                              'car' => $task->car['model'] . ' - '. $task->car['car_index'], 
                                               'employee_id' => $task->employee_id ]);
                     }
                 }

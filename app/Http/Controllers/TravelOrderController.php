@@ -39,21 +39,36 @@ class TravelOrderController extends Controller
     public function index(Request $request)
     {
         $travel_orders = TravelOrder::get();
-
-        if(isset($request['date']) && $request['date'] != 'all') {
-            $travel_orders = TravelOrder::where('date','like', $request['date'].'%')->get();
-        } 
-        if(isset($request['employee_id']) &&  $request['employee_id'] != 'all') {
-            $travel_orders = $travel_orders->where('employee_id',$request['employee_id'] );
-        } 
-    
-        $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name', 'users.last_name')->where('employees.checkout',null)->where('employees.id','<>',1)->orderBy('users.first_name')->get();
         $dates = array();
-        foreach (array_keys(  $travel_orders->groupBy('date')->toArray()) as $date) {
-            array_push($dates, date('m.Y',strtotime($date)) );
+        foreach (array_keys( $travel_orders->groupBy('start_date')->toArray()) as $date) {
+            array_push($dates, date('Y-m',strtotime($date)) );
         }
+       
         $dates = array_unique($dates);
         rsort( $dates );
+       
+        if(isset( $request['date']) && $request['date'] != null) {
+            $date = $request['date'];
+           /*  $date_arr = explode('.', $request['date']);
+            $date =  $date_arr[1] . '-'.$date_arr[0]; */
+        } else {
+            $date = $dates[0];
+        }
+      
+        $travel_orders = $travel_orders->filter(function ($travel_order, $key) use ($date) {
+            return date('Y-m', strtotime( $travel_order->start_date)) == $date;
+        });
+        
+        /* 
+        if(isset($request['date']) && $request['date'] != 'all') {
+            $travel_orders = TravelOrder::where('date','like', $request['date'].'%')->get();
+        }  */
+        if(isset($request['employee_id']) &&  $request['employee_id'] != '') {
+            $travel_orders = $travel_orders->where('employee_id', $request['employee_id'] );
+        } 
+    
+        $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name', 'users.last_name')->where('employees.checkout',null)->where('employees.id','<>',0)->orderBy('users.first_name')->get();
+          
         $empl = Sentinel::getUser()->employee;
 		$permission_dep = array();
         
@@ -313,7 +328,7 @@ class TravelOrderController extends Controller
        $travel = TravelOrder::find($id);
        $company = Company::first();
        $cars = Car::orderBy('registration','ASC')->get();
-       $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+       $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
        $locco1 = $travel->locco; // locco prema zapisanom id u travel
      
        $loccos = $travel->loccos; // locco iz travel_loccos

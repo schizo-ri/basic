@@ -778,7 +778,7 @@ class="select-css"
 }
 
 .show_event > .blue {
-    background: #1292EE;
+    background: #204cc7;
 }
 
 .show_event div.event.orange {
@@ -1010,7 +1010,7 @@ a.btn1 {
 	background: #EA9413;
 }
 .header_calendar .blue {
-	background:#1390EA;
+	background:#204cc7;
 }
 
 .header_calendar>div:nth-child(2) >span span:nth-child(2) {

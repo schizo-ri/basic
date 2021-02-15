@@ -19,6 +19,24 @@ class ShortcutController extends Controller
 	{
 		$this->middleware('sentinel.auth');
     }
+
+    public function shortcutExist (Request $request) 
+    {
+        $employee = Sentinel::getUser()->employee;
+        if( $employee ) {
+            $shortcut = Shortcut::where('employee_id', $employee->id)->where('url', $request['url'])->first();
+            if( $shortcut ) {
+                $shortcut_id = $shortcut->id;
+            } else {
+                $shortcut_id = null;
+            }
+    
+        } else {
+            $shortcut_id = null;
+        }
+       
+        return $shortcut_id;
+    }
     
     /**
      * Display a listing of the resource.

@@ -29,7 +29,7 @@
         
         <script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all1.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all2.css?random=@dt') }}"/>
 	  
 		
 		<!-- ICON -->
@@ -52,6 +52,7 @@
             use App\Http\Controllers\DashboardController;
             use App\Http\Controllers\CompanyController;
             use App\Models\Shortcut;
+            $user = Sentinel::getUser();
             $moduli = CompanyController::getModules();
             $check = DashboardController::evidention_check();
             $countComment_all = PostController::countComment_all();
@@ -73,20 +74,22 @@
                     </a>
                     <ul class="nav_ul float_right">
                         @if (Sentinel::check())
-                           {{--  @if (Shortcut::where('url', $url)->first() )
-                                <a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i>  <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
-                            @else
-                                <a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
-                            @endif --}}
+                            @if( $user->employee)
+                                @if ( $user->employee->hasShortcuts->where('url', $url)->first() )
+                                    <a class="shortcut" href="{{ route('shortcuts.edit', $user->employee->hasShortcuts->where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i> <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
+								@else
+                                    <li><a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a></li>
+                                @endif
+                            @endif
                             @if(! $check )
-                                <li class="evidention_check">
-                                    <form  title="{{__('basic.entry') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}" >
-                                        <input type="hidden" name="entry" value="entry">
-                                        <input type="hidden" name="checkout" value="false">
-                                        @csrf
-                                        <button class="entry" type="submit"><i class="far fa-clock" style="color: green"></i></button>
-                                    </form>
-                                </li>
+                            <li class="evidention_check">
+                                <form  title="{{__('basic.entry') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}" >
+                                    <input type="hidden" name="entry" value="entry">
+                                    <input type="hidden" name="checkout" value="false">
+                                    @csrf
+                                    <button class="entry" type="submit"><i class="far fa-clock" style="color: green"></i></button>
+                                </form>
+                            </li>
                             @elseif($check && $check->end == null)
                                 <li class="evidention_check">
                                     <form title="{{__('basic.checkout') }}" class="form_evidention" accept-charset="UTF-8" role="form" method="post" action="{{ route('work_records.store') }}"  >
@@ -304,11 +307,6 @@
                         <main class="col-md-12 col-lg-8 col-xl-8 index_main float_right admin_main">
                             <section>
                                 <div id="admin_page">
-                                    @if (Shortcut::where('url', $url)->first() )
-                                        <a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i>  <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
-                                    @else
-                                        <a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
-                                    @endif
                                     <a class="link_back" href="{{  url()->previous() }}"><span class="curve_arrow_left_grey"></span></a>
                                     @yield('content')
                                 </div>
@@ -359,7 +357,7 @@
             <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
            
             <!-- Scripts -->
-			<script src="{{URL::asset('/../js/all1.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/all2.js?random=@dt') }}"></script>
 
 			<!-- Datatables -->
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>

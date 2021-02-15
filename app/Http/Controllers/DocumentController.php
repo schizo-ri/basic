@@ -229,22 +229,27 @@ class DocumentController extends Controller
     public function destroy($id)
     {        
         $document = Document::find($id);
+        if( $document )
+        {
+          $link = $document->path . $document->title;
 
-        $link = $document->path . $document->title;
-
-        $link_small = $document->path . pathinfo($link)['filename'] . '_small' . '.' . pathinfo($link)['extension'];
-        if (file_exists($link)) {
-          unlink($link);
+          $link_small = $document->path . pathinfo($link)['filename'] . '_small' . '.' . pathinfo($link)['extension'];
+          if (file_exists($link)) {
+            unlink($link);
+          }
+        
+          if (file_exists($link_small)) {
+            unlink($link_small);
+          }
+     
+          $document->delete();
+  
+          $message = session()->flash('success',  __('ctrl.data_delete'));
+      
+        } else {
+          $message = 'Dokumenat je već obrisan';
         }
       
-        if (file_exists($link_small)) {
-          unlink($link_small);
-        }
-   
-        $document->delete();
-
-        $message = session()->flash('success',  __('ctrl.data_delete'));
-		
 		    return redirect()->back()->withFlashMessage($message);
 	  }
   

@@ -523,7 +523,9 @@ span.img-success {
 		padding: 0 8px;
 		height: auto;
 	}
-	
+	html {
+		height: auto;
+	}
 	html, body{
 		font-size: 10px;
 	}

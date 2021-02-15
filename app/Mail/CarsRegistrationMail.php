@@ -37,13 +37,14 @@ class CarsRegistrationMail extends Mailable
     public function build()
     {
         if(isset( $_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != 'localhost') {
-        /*     $host =  $_SERVER['HTTP_HOST']; */
-     /*    } else {
-            $host = 'localhost:8000';
-        } */
+            /*     $host =  $_SERVER['HTTP_HOST']; */
+            /*    } else {
+                $host = 'localhost:8000';
+            } */
+        }
 
-        $host = 'https://ru-ve.myintranet.io/';
-        $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $host  . '/store_event/'.$this->car->id;
+        $host = 'https://ru-ve.myintranet.io';
+        $url =  $host  . '/store_event/'.$this->car->id;
 
         return $this->view('centaur.email.car_registrations')
                     ->subject( __('basic.vehicle_registration') . ' - ' . $this->car->registration)

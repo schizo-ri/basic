@@ -149,10 +149,10 @@ $('.btn-submit').on('click',function(event){
     var pathname = window.location.pathname;
     validate_user_form (form);
 
-    console.log(url_load);
-    console.log(url); 
-    console.log(form_data);
-    console.log(validate);
+    /* console.log(url_load); */
+    /* console.log(url);  */
+    /* console.log(form_data) */;
+    /* console.log(validate); */
 
     if(validate.includes("block") ) {
        event.preventDefault();

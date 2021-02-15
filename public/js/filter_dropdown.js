@@ -325,48 +325,46 @@ $(function() { // filter knowledge base
 	});	
 
 	$('.filter_travel').on('change',function() {
-		var employee_id = $('#filter_employee').val().toLowerCase();
-		var date = $('#filter_date').val().toLowerCase();
-		var url = location.origin + '/travel_orders';
-
-		if(employee_id == 'all' ) {
-			employee_id = '';
-		} 
-		if(date == 'all') {
-			date = '';
+		
+		url = location.origin + '/travel_orders';
+		
+		if( $('#filter_date').length > 0) { 
+			date = $('#filter_date').val();
+			if(date == 'all') {
+				date = '';
+			}
+			url = url + '?date='+date;
 		}
-
-		if(employee_id == '' && date == ''){
-			$('.panel').show();
-		} else {
-			$('.panel').filter(function() {
-				$(this).toggle($(this).text().toLowerCase().indexOf(date) > -1 && $(this).text().toLowerCase().indexOf(employee_id) > -1);
-			});
+		if( $('#filter_employee').length > 0) { 
+			employee_id = $('#filter_employee').val();
+			if(employee_id == 'all') {
+				employee_id = '';
+			}
+			url = url + '&employee_id='+employee_id;
 		}
-		/* $.ajax({
-			url: url,
+		console.log(url);
+
+		
+		$.ajax({
+			url:url,
 			type: "get",
 			data: { 'employee_id': employee_id,'date': date},
+			beforeSend: function(){
+				$('body').prepend('<div id="loader"></div>');
+			},
 			success: function( response ) {
-				console.log(response);
-				$( '#admin_page' ).load( url + '?employee_id='+employee_id+'&date='+date, function( response, status, xhr ) {
-					 
-					if ( status == "error" ) {
-						  var msg = "Sorry but there was an error: ";
-						  $( "#error" ).html( msg + xhr.status + " " + xhr.statusText );
-					  }
-					
-					  $('#filter_employee option.id_'+ employee_id).attr('selected','selected');
-					  $('#filter_date option.date_'+ date).attr('selected','selected');
-					  $.getScript( '/../restfulizer.js');
-				  });
-				
+				$('#admin_page>main' ).load(url + ' #admin_page >main .table-responsive',function(){
+					$('#loader').remove();
+					$.getScript('/../js/datatables.js');
+					$('.show_button').on('click',function () {
+						$('.dt-buttons').toggle();		
+					})
+					$.getScript('/../restfulizer.js');
+				});
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
 			}
-		}); */
-	/* 	$('#filter_employee option.id_'+ employee_id).attr('selected','selected');
-		$('#filter_date option.date_'+ date).attr('selected','selected'); */
+		});
 	});	
 });

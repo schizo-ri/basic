@@ -17,14 +17,14 @@
 				<option value="all">@lang('basic.all_employees')</option>
 				@foreach ($employees as $employee)
 					@if(count($employee->hasTravels) >0)
-						<option value="{{ $employee->first_name . ' ' .  $employee->last_name }}" class="id_{{ $employee->id }}">{{ $employee->first_name . ' ' .  $employee->last_name }}</option>
+						<option value="{{ $employee->id }}" class="id_{{ $employee->id }}">{{ $employee->first_name . ' ' .  $employee->last_name }}</option>
 					@endif
 				@endforeach
 			</select>
 			<select id="filter_date" class="select_filter filter_travel" >
 				<option value="all">@lang('basic.all_month')</option>
-				@foreach ($dates as $date)
-					<option value="{{ $date }}" class="date_{{ $date }}">{{ $date }}</option>
+				@foreach ($dates as $key => $date)
+					<option value="{{ $date }}" class="date_{{ $date }}" {!! $key == 0 ? 'selected' : '' !!}>{{ $date }}</option>
 				@endforeach
 			</select>
 		</div>
@@ -47,7 +47,7 @@
 					</thead>
 					<tbody>
 						@foreach ($travel_orders as $travel)
-							<tr class="panel">
+							<tr class="panel" id="travel_{{ $travel->id }}">
 								<td>{{ date('d.m.Y.',strtotime($travel->date)) }}</td>
 								<td>{{ $travel->employee->user['first_name'] . ' ' .  $travel->employee->user['last_name'] }}</td>
 								<td>{{ date('d.m.Y.',strtotime($travel->start_date)) }}</td>
@@ -99,9 +99,9 @@
 	</main>
 	<script>
 		$(function(){
-			$.getScript( '/../js/filter_dropdown.js');
+			/* $.getScript( '/../js/filter_dropdown.js');
 			$.getScript( '/../js/filter_table.js');
-			$.getScript( '/../js/travel.js');
+			$.getScript( '/../js/travel.js'); */
 			/* $.getScript( '/../restfulizer.js'); */
 		});
 	</script>

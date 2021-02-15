@@ -30,11 +30,9 @@ header {
     height: calc(100% - 81px);
 }
 main {
-  /*   height: calc(100% - 90px); */
   position: relative;
   height: 100%;
   overflow: hidden;
-  min-height: 100%;
 }
 p.modal_form_group_danger {
 	margin: 5px;

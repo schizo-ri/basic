@@ -68,6 +68,7 @@ class AbsenceController extends BasicAbsenceController
 			$absences = $absences->where('type', $type->id);
 		}
 		if($empl) {
+			
 			if(Sentinel::inRole('administrator')) {
 				$years = Absence::getYears();
 			} else {

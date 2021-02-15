@@ -119,8 +119,6 @@ $('.form_evidention').on('submit',function(e){
             $('.header_nav').load(location.href + ' .header_nav .topnav',function(){
                 $.getScript('/../js/nav_active.js');
             });
-            
-            
         }, 
         error: function(jqXhr, json, errorThrown) {
             console.log(jqXhr.responseJSON);
@@ -131,7 +129,7 @@ $('.form_evidention').on('submit',function(e){
                                 'line':  jqXhr.responseJSON.line };
             $.modal.close();
             $.ajax({
-                url: 'errorMessage',
+                url: location.origin + '/errorMessage',
                 type: "get",
                 data: data_to_send,
                 success: function( response ) {
@@ -146,10 +144,40 @@ $('.form_evidention').on('submit',function(e){
     });
 });
 
-/* document.addEventListener("visibilitychange", function() {
-    if (document.hidden){
-    } else {
-        location.reload();
+if(body_width < 450) {
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden){
+        } else {
+            location.reload();
+        }
+    });
+}
+ 
+$('body').on($.modal.OPEN, function(event, modal) {
+    if( $('input[type=datetime-local]').length > 0 ) {
+        $('input[type=datetime-local]').on('change',function(){
+            date = new Date( $(this).val());
+
+            if( date == 'Invalid Date') {
+                $( '<div class="error_date danger">Neispravan unos datuma. Molim provjeri!</div>' ).modal();
+                $('.btn-submit').attr('disabled', 'disabled');
+            } else {
+                $('.btn-submit').attr('disabled', false);
+                $('.error_date').remove();
+            }
+        });
+    }
+    if( $('input[type=date]').length > 0 ) {
+        $('input[type=date]').on('change',function(){
+            date = new Date( $(this).val());
+
+            if( date == 'Invalid Date') {
+                $( '<div class="error_date danger">Neispravan unos datuma. Molim provjeriti</div>' ).modal();
+                $('.btn-submit').attr('disabled', 'disabled');
+            } else {
+                $('.btn-submit').attr('disabled', false);
+                $('.error_date').remove();
+            }
+        });
     }
 });
- */

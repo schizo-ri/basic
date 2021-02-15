@@ -6,7 +6,9 @@ if(locale == 'en') {
 } else {
     saved = "Podaci su spremljeni";
 }
+
 $('.close_travel').on('click',function(e){
+    var parent_id = $(this).parent().parent().attr('id');
     e.preventDefault();
     $.ajaxSetup({
         headers: {
@@ -18,7 +20,7 @@ $('.close_travel').on('click',function(e){
         url: url,
         type: "get",
         success: function( response ) {
-            $('tbody').load(location.origin + '/travel_orders' + ' tbody>tr',function(){
+            $('#'+parent_id).load(location.origin + '/travel_orders' + ' #'+ parent_id + '>td',function(){
                 $.getScript( '/../restfulizer.js');
                 $.getScript( '/../js/travel.js');
             });
@@ -26,9 +28,7 @@ $('.close_travel').on('click',function(e){
         },
         error: function(jqXhr, json, errorThrown) {
             console.log(jqXhr.responseJSON); 
-            
-            alert("Nešto je pošlo krivo!");
-
+            alert("Nešto je pošlo krivo! Nalog nije zatvoren");
             location.reload();
         }
     });

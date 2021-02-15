@@ -28,11 +28,10 @@ $(function() {
             } else {
                 $('.index_aside .day_events').height(calendar_aside_height -calendar_main_height - 60 );
             }
-                   
         },
         scheduleOptions: {
             colors: {
-                event: '#1390EA',
+                event: '#204cc7',
                 task: '#eb0e0e',
                 birthday: '#EA9413',
                 GO: '#13EA90',
@@ -66,7 +65,6 @@ $(function() {
                         }  
                     }
                 }
-                
             },
             prev: function(info, context) {
                 // This is clicked arrow button element.

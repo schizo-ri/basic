@@ -39,7 +39,7 @@ class EmailingController extends Controller
 		
 		$emailings = Emailing::join('tables','emailings.model','tables.id')->select('emailings.*','tables.name')->orderBy('tables.name','ASC')->get();
 		$departments = Department::orderBy('name', 'ASC')->get();
-        $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+        $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->where('employees.id','<>',0)->where('employees.checkout',null)->get();
         
         $tables1 = Table::get();
 		$models = array();
@@ -93,7 +93,7 @@ class EmailingController extends Controller
 
 
         $departments = Department::where('email','<>', null)->orderBy('name', 'ASC')->get();
-        $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+        $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->where('employees.id','<>',0)->where('employees.checkout',null)->get();
 		return view('Centaur::emailings.create', ['models' => $models, 'departments' => $departments, 'employees' => $employees, 'methods' => $methods]);
 		
     }
@@ -159,7 +159,7 @@ class EmailingController extends Controller
         $emailing = Emailing::find($id);
         $departments = Department::where('email','<>', null)->orderBy('name', 'ASC')->get();
       
-        $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+        $employees = Employee::join('users','employees.user_id','users.id')->select('employees.*', 'users.first_name', 'users.last_name')->orderBy('last_name','ASC')->where('employees.id','<>',0)->where('employees.checkout',null)->get();
         $tables1 = Table::get();
 		$models = array();
 		

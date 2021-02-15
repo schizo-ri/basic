@@ -45,18 +45,21 @@ class CarsRegistration extends Command
     {
         $send_to = EmailingController::sendTo('cars','cron');
         array_push( $send_to, 'jelena.juras@duplico.hr');
-       
+        
+
         $today = new DateTime();
         $today->modify('-1 years');
-        $today->modify('-14 days');
-       
-        $cars = Car::where('last_registration',$today->format('Y-m-d') )->get();
+        $today->modify('+14 days');
+        Log::info("Cron job CarsRegistration " . $today->format('Y-m-d') );
+        Log::info($send_to);
+
+        $cars = Car::where('last_registration', $today->format('Y-m-d') )->get();
+
         if( count($cars) > 0) {
-           
             foreach($send_to as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     foreach($cars as $car) {
-                        Log::info("Cron job CarsRegistration send_to_mail");
+                        Log::info("Cron job CarsRegistration " . $car->id);
                         Mail::to(trim($send_to_mail))->send(new CarsRegistrationMail( $car )); // mailovi upisani u mailing 
                     }
                 }

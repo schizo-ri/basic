@@ -85,7 +85,7 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.first_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.first_name','ASC')->where('employees.id','<>',0)->where('employees.checkout',null)->get();
 		$departments = Department::orderBy('name','ASC')->get();
 		if(isset($request['employee_publish'])) {
 			$employee_publish = Employee::find($request['employee_publish']);
@@ -185,21 +185,22 @@ class PostController extends Controller
 			foreach ($works as $work) {
 				$workers = $work->workers;
 				foreach ($workers as $worker) {
-					$data1 = array(
-						'employee_id'    => $employee->id,
-						'to_employee_id' => $worker->id,
-						'post_id'  		=>  $post->id,
-						'content'  		=>  $request['content'],
-						'status'  		=> '0',
-					);
-					
-					$comment = new Comment();
-					$comment->saveComment($data1);
-
-					$show_alert_to_employee =  $comment->to_employee_id;
-
-					event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
-
+					if ($worker->checkout == null) {
+						$data1 = array(
+							'employee_id'    => $employee->id,
+							'to_employee_id' => $worker->id,
+							'post_id'  		=>  $post->id,
+							'content'  		=>  $request['content'],
+							'status'  		=> '0',
+						);
+						
+						$comment = new Comment();
+						$comment->saveComment($data1);
+	
+						$show_alert_to_employee =  $comment->to_employee_id;
+	
+						event(new MessageSend( __('basic.new_message'), $comment, $show_alert_to_employee ));
+					}
 				}
 			}
 		}
@@ -248,7 +249,7 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 		
-		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name', 'users.last_name')->orderBy('users.last_name','ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+		$employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name', 'users.last_name')->orderBy('users.last_name','ASC')->where('employees.id','<>',0)->where('employees.checkout',null)->get();
 	
 		return view('Centaur::posts.edit',['post' => $post, 'employees' => $employees]);
     }
@@ -318,15 +319,17 @@ class PostController extends Controller
 			foreach ($works as $work) {
 				$workers = $work->workers;
 				foreach ($workers as $worker) {
-					array_push( $to_employees, $worker->employee_id);
+					if($worker->employee->checkout == null) {
+						array_push( $to_employees, $worker->id);
+					}
 				}
 			}
 		}
 
 		$data = array(
 			'employee_id'   => $employee->id,
-			'to_department_id'  => $post->to_department_id != null ? $post->to_department_id : null,
-			'to_employee_id'  	=> $to_employee ,
+			'to_department_id' => $post->to_department_id != null ? $post->to_department_id : null,
+			'to_employee_id'  => $to_employee ,
 			'post_id'  		=>  $request->get('post_id'),
 			'content'  		=>  $request->get('content'),
 			'status'  		=> '0',

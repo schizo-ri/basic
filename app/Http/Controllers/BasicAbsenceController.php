@@ -9,7 +9,6 @@ use App\Models\Absence;
 use App\Models\AbsenceType;
 use App\Models\Afterhour;
 use App\Models\DayOff;
-
 use DateTime;
 use DateInterval;
 use DatePeriod;
@@ -142,6 +141,7 @@ class BasicAbsenceController extends Controller
 		public static function daysThisYear( $user)
 		{
 			$all_service = BasicAbsenceController::yearsServiceAll($user);  /* ukupan staž  */
+			
 			$date = new DateTime('now');    /* današnji dan */
 			$ova_godina = date_format($date,'Y');
 
@@ -149,6 +149,13 @@ class BasicAbsenceController extends Controller
 				if( array_key_exists($ova_godina, unserialize( $user->abs_days))) {
 					$absence_days = unserialize( $user->abs_days);
 					$days = intval($absence_days[$ova_godina]);
+				} else {
+					$days = AbsenceType::where('mark','GO')->first()->min_days;
+					$_max_days = AbsenceType::where('mark','GO')->first()->max_days;
+
+					if(! $days) {
+						$days = 20;
+					}
 				}
 			} else {
 				/* Godišnji odmor - dani*/
@@ -162,7 +169,7 @@ class BasicAbsenceController extends Controller
 				$days += (int)($all_service[0]/ 4);
 
 				
-				If($days > 25){
+				if($days > 25){
 					if($_max_days) {
 						$days = $_max_days;
 					} else {
@@ -435,7 +442,7 @@ class BasicAbsenceController extends Controller
 					}
 				}
 			}
-			
+		/* 	Log::info($year . ' ' . $razmjeranGO_PG); */
 			return $razmjeranGO_PG;
 		}
 		
@@ -487,7 +494,7 @@ class BasicAbsenceController extends Controller
 				$ukupno_dana_GO += $razmjerni_dani;
 				$ukupno_dana_zahtjevi += $ukupno_dana_zahtjevi;
 
-				if($year == $ova_godina || ($year == $prosla_godina && strtotime(date('Y-m-d') < strtotime(date($ova_godina.'-30-6'))))) {
+				if($year == $ova_godina || ($year == $prosla_godina && strtotime(date('Y-m-d') < strtotime(date($ova_godina.'-06-30'))))) {
 					$array_godine['ukupnoPreostalo'] += $preostali_dani;
 				}
 				
@@ -776,7 +783,7 @@ class BasicAbsenceController extends Controller
 				if($first_year < '2019') {
 					$first_year = '2019';
 				}
-				while ($first_year <= $this_year+1) {
+				while ($first_year <= $this_year) {
 					array_push($years, strval($first_year));
 					$first_year++;
 				}
@@ -807,15 +814,15 @@ class BasicAbsenceController extends Controller
 			$requestsArray = array();
 			$requests_next_year = array();
 			$requests_previous_year = array();
-
+			
 			$years = BasicAbsenceController::yearsRequests($user); // sve godine zahtjeva
 			$holidays = BasicAbsenceController::holidays();
-
+			/* Log::info('requestAllYear'); */
+		
 			$requests = Absence::join('absence_types', 'absence_types.id', 'absences.type')->select('absences.*', 'absence_types.mark' )->where('employee_id', $user->id)->where('approve',1)->orderBy('start_date','ASC')->get(); // svi zahtjevi djelatnika
 			asort($years);
-		
+			/* Log::info($years); */
 			foreach ($years as $year) {
-			
 				if($year >= '2018') {
 					$requestsArray[$year] = array();
 					$GO_dani = BasicAbsenceController::razmjeranGO_Godina($user, $year); // razmjerni dani za godinu

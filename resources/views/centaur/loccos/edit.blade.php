@@ -95,7 +95,7 @@
 			console.log(poc_km);
 			console.log(zav_km);
 			console.log(udaljenost);
-
+			
 			$('#distance').val(udaljenost);
 			if (udaljenost < 0 ) {
 				console.log('udaljenost manja od 0');

@@ -218,7 +218,7 @@
 						<select class="form-control" name="calculate_employee" >
 						<option selected disabled></option>
 						@foreach ($employees as $employee)
-							<option value="{{ $employee->id }}" {!! $travel->calculate_employee == $employee->id ? 'selected' : '' !!}>{{ $employee->user['first_name'] . ' ' .  $employee->user['last_name'] }}</option>
+							<option value="{{ $employee->id }}" {!! $travel->employee->id == $employee->id ? 'selected' : '' !!}>{{ $employee->user['first_name'] . ' ' .  $employee->user['last_name'] }}</option>
 						@endforeach
 						</select>
 						, {{ $company->city }}, Direktor  Zrinka Runje Klasan

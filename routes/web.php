@@ -196,6 +196,7 @@ Route::resource('travel_expenses', 'TravelExpensesController');
 
 //Shortcut
 Route::resource('shortcuts', 'ShortcutController');
+Route::get('shortcut_exist', ['as' => 'shortcut_exist', 'uses' => 'ShortcutController@shortcutExist']);
 
 /*
 Route::get('dashboard', function () {

@@ -24,6 +24,22 @@ $(function(){
         $('.'+class_open).toggle();
     });
     $(".admin_pages a.admin_link").removeClass('disable');
+    // ako ima shortcut - href edit
+    try {
+        url_location = location.href;
+        $.get( location.origin+"/shortcut_exist", {'url': url_location }, function( id ) {
+            if(id != null && id != '') {
+                $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+                $('.shortcut_text').text('Ispravi prečac'); 
+            } else {
+                title = $('.admin_link.active_admin').attr('id');
+                $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url_location+'&title='+title );
+                $('.shortcut_text').text('Dodaj prečac'); 
+            }
+        });
+    } catch (error) {
+        //
+    }
 });
 
 if($(".index_table_filter .show_button").length == 0) {
@@ -41,7 +57,24 @@ $('.admin_pages li>a').not('.open_menu').on('click',function(e) {
     title = click_element.text();
     $("title").text( title ); 
     url = $(this).attr('href');
-   
+    
+    // ako ima shortcut - href edit
+    try {
+        $.get( location.origin+"/shortcut_exist", {'url': url }, function( id ) {
+            if(id != null && id != '' && id) {
+                $('.shortcut').attr('href', location.origin +'/shortcuts/'+id+'/edit/');
+                $('.shortcut_text').text('Ispravi prečac'); 
+            } else {
+                title = $('.admin_link.active_admin').attr('id');
+
+                $('.shortcut').attr('href', location.origin +'/shortcuts/create/?url='+url+'&title='+title );
+                $('.shortcut_text').text('Dodaj prečac'); 
+            }
+        });
+    } catch (error) {
+        //
+    }
+
     $('.admin_pages>li>a').removeClass('active_admin');
     $(this).addClass('active_admin');
     active_link = $('.admin_link.active_admin').attr('id');

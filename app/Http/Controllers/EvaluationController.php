@@ -42,7 +42,7 @@ class EvaluationController extends Controller
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 		} 
 		
-		$employees = Employee::join('users','employees.user_id', '=', 'users.id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name','ASC')->where('checkout',null)->where('employees.id','<>',1)->get();
+		$employees = Employee::join('users','employees.user_id', '=', 'users.id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name','ASC')->where('checkout',null)->where('employees.id','<>',0)->get();
 		
 		$questionnaires = Questionnaire::get();
 		$evaluationCategories = EvaluationCategory::get();

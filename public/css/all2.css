@@ -250,7 +250,7 @@ ul.admin_pages li >span.image_template{
 
 @media (max-width: 450px) {
     .index_page aside > .admin_panel {
-        
+        border-radius: 0;
     }
     .admin_main .link_back {
         top: 20px;
@@ -3200,7 +3200,7 @@ class="select-css"
 }
 
 .show_event > .blue {
-    background: #1292EE;
+    background:#204cc7;
 }
 
 .show_event div.event.orange {
@@ -3432,7 +3432,7 @@ a.btn1 {
 	background: #EA9413;
 }
 .header_calendar .blue {
-	background:#1390EA;
+	background:#204cc7;
 }
 
 .header_calendar>div:nth-child(2) >span span:nth-child(2) {
@@ -5990,8 +5990,16 @@ a.modal_close {
     font-weight: 600;
     font-size: 0.8125rem;
     line-height: 16px;
-
     color: #071E57;
+}
+
+@media (max-width: 1600px) {
+    .info_abs>p>.go, .info_abs>p>.bol, .info_abs>p, .info_abs>p>.go_og, .info_abs>p>.go_pg, .info_abs>p>.bol_og, .info_abs>p>.bol_pg, .info_abs>p>.bol_om {
+        font-size: 1rem;
+    }
+    .info_abs .title {
+        font-size: 0.6875rem;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -6327,7 +6335,7 @@ a.modal_close {
         flex: 0 0 100%;
         max-width: 100%;
     }
-    .index_page aside:not(.latest_messages, .calendar_aside), .index_page.index_documents {
+    .index_page aside:not(.latest_messages, .calendar_aside, .admin_aside), .index_page.index_documents {
         display: none;
     }
     .index_main .tabcontent {
@@ -11912,6 +11920,10 @@ input.form-control.date {
 	.modal a.close-modal {
 		background-size: 12px 12px;
 	}
+	.modal.modal_user>header .user_data {
+		display: flex;
+		flex-wrap: wrap;
+	}
 	.modal_user a.back .arrow_left_wh {
 		background-size: 10px;
 	}
@@ -12854,7 +12866,9 @@ span.img-success {
 		padding: 0 8px;
 		height: auto;
 	}
-	
+	html {
+		height: auto;
+	}
 	html, body{
 		font-size: 10px;
 	}

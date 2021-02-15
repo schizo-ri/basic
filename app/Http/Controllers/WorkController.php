@@ -40,7 +40,7 @@ class WorkController extends Controller
 		} else {
 			$works = Work::orderBy('name')->get();
 		}
-    $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+    $employees = Employee::where('id','<>',0)->where('checkout',null)->get();
 
 		return view('Centaur::works.index', ['works' => $works, 'employees' => $employees,'permission_dep' => $permission_dep]);
     }
@@ -53,7 +53,7 @@ class WorkController extends Controller
     public function create(Request $request)
     {
       $departments = Department::orderBy('name', 'ASC')->get();
-      $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name', 'ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+      $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name', 'ASC')->where('employees.id','<>',0)->where('employees.checkout',null)->get();
       
       if(isset($request->department_id)) {
         $department1 = Department::find($request->department_id);
@@ -107,7 +107,7 @@ class WorkController extends Controller
     {
         $work = Work::find($id);
         $departments = Department::orderBy('name', 'ASC')->get();
-        $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name', 'ASC')->where('employees.id','<>',1)->where('employees.checkout',null)->get();
+        $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name', 'ASC')->where('employees.id','<>',0)->where('employees.checkout',null)->get();
        
         return view('Centaur::works.edit', ['work' => $work,'departments' => $departments,'employees' => $employees]);
     }

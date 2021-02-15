@@ -36,7 +36,7 @@
 		<!-- CSS -->
 		<script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all1.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/all2.css?random=@dt') }}"/>
 	
 		{{-- Material design --}}
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -58,6 +58,7 @@
             use App\Http\Controllers\DashboardController;
 			use App\Http\Controllers\CompanyController;
 			use App\Models\Shortcut;
+			$checked_user = Sentinel::getUser();
             $permission_dep = DashboardController::getDepartmentPermission();
             $moduli = CompanyController::getModules();
             $check = DashboardController::evidention_check();
@@ -80,12 +81,14 @@
 						</a>
 						<ul class="nav_ul float_right">
 							@if (Sentinel::check())
-								@if( $_SERVER['REQUEST_URI'] != '/dashboard')
-										@if (Shortcut::where('url', $url)->first() )
-											<a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i> <span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
+								@if( $checked_user->employee && $_SERVER['REQUEST_URI'] != '/dashboard')
+									<li>
+										@if ( $checked_user->employee->hasShortcuts->where('url', $url)->first() )
+											<a class="shortcut layout_shortcut" href="{{ route('shortcuts.edit', $checked_user->employee->hasShortcuts->where('url', $url)->first()->id ) }}" rel="modal:open" title="{{ __('basic.edit_shortcut')}}"><i class="fas fa-pencil-alt"></i></a>
 										@else
-											<a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
+											<a class="shortcut layout_shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"  title="{{ __('basic.create_shortcut')}}" ><i class="fas fa-plus"></i></a>
 										@endif
+									</li>
 								@endif
 								@if($countComment_all >0)<li><span class="count_comment"><a class="link_posts" href="#link_posts">{{ $countComment_all }}</a></span></li>@endif
 								@if(! $check )
@@ -272,7 +275,7 @@
 			<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
 
 			<!-- Scripts -->
-			<script src="{{URL::asset('/../js/all1.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/all2.js?random=@dt') }}"></script>
 
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>

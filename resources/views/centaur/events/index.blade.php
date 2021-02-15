@@ -210,7 +210,7 @@
 												<a href="{{ route('tasks.show', $task->id) }}" rel="modal:open">
 													<div class="show_event empl_{{  $task->employee_id }} col-12" >
 														<div class="event" {!! $task->employee->color ? 'style="background-color:' . $task->employee->color . '"' : 'style="background-color:#aaa"' !!} >
-															<p>{{ $task->employee->user['first_name'] }} {!! $task->car_id ? ' - ' . $task->car->registration : '' !!} {{ ' - ' . $task->title }}
+															<p>{{ $task->employee->user['first_name'] }} {!! $task->car_id ? ' - ' . strtoupper($task->car->model . ' '.  $task->car->car_index)  : '' !!} {{ ' - ' . $task->title }}
 																{{-- {{ date('H:i',strtotime($task->time1)) . ' - ' . date('G:i',strtotime($task->time2)) }} {{ $task->title }}, {{ $task->description }} --}}
 															</p>
 														
@@ -279,7 +279,7 @@
 									<a href="{{ route('tasks.show', $task->id) }}" rel="modal:open">
 										<span>{!! date('d.m.Y,', strtotime($task->date)) . ' '. iconv('ISO-8859-2', 'UTF-8',strftime("%a", strtotime($task->date))) !!}</span>
 										<span>{{ $task->employee->user['first_name'] }}</span> 
-										<span>{!! $task->car_id ? ' - ' . $task->car->registration : '' !!}</span>
+										<span>{!! $task->car_id ? ' - ' . strtoupper($task->car->model . ' '.  $task->car->car_index)  : '' !!}</span>
 										<span>{{  $task->title }}</span>
 										<span>{{ class_basename($task) }}</span>
 										
@@ -376,7 +376,7 @@
 													<a href="{{ route('tasks.show', $task->id) }}" rel="modal:open">
 														<div class="show_event empl_{{ $task->employee_id }} col-12" >
 															<div class="event" {!! $task->employee->color ? 'style="background-color:' . $task->employee->color . '"' : 'style="background-color:#aaa"' !!} >
-																<p>{{ $task->employee->user['first_name'] }} {!! $task->car_id ? ' - ' . $task->car->registration : '' !!} {{ ' - ' . $task->title }}
+																<p>{{ $task->employee->user['first_name'] }} {!! $task->car_id ? ' - ' . strtoupper($task->car->model . ' '.  $task->car->car_index)  : '' !!} {{ ' - ' . $task->title }}
 																	{{-- {{ date('H:i',strtotime($task->time1)) . ' - ' . date('G:i',strtotime($task->time2)) }} {{ $task->title }}, {{ $task->description }} --}}
 																</p>
 															</div>
