@@ -48,16 +48,17 @@ return [
 	'data_error'		=> 'Došlo je do greške, podaci nisu spremljeni.',
 	'error'				=> 'Došlo je do greške.',
 	'email_error'		=> 'E-mail nije poslan, došlo je do greške.',
-	'pass_reset'		=> 	'Upute za promjenu lozinke poslat će se na vašu adresu e-pošte ako je povezana s važećim računom.',
-	'password'			=> 	'Kreiraj novu lozinku',
-	'password_edit'		=> 	'Ispravi lozinku',
-	'reset'				=> 	'Poništi lozinku.',
+	'pass_reset'		=> 'Upute za promjenu lozinke poslat će se na vašu adresu e-pošte ako je povezana s važećim računom.',
+	'password'			=> 'Kreiraj novu lozinku',
+	'password_edit'		=> 'Ispravi lozinku',
+	'reset'				=> 'Poništi lozinku.',
     'invalid_code'  	=> 'Nevažeći ili istekao kôd za poništavanje lozinke; zatražite novu poveznicu.',
     'instruction_create'=> 'Nova radna uputa je objavljena.',
 	'request_exist'  	=> 'Zahtjev za taj period je već upisan.',
-	'record_exist'  		=> 'Zapis za taj period je već upisan.',
+	'record_exist'  	=> 'Zapis za taj period je već upisan.',
 	'email_send'     	=> 'E-mail je poslan.',
 	'request_deleted'   => 'Zahtjev je prethodno obrisan, nije ga moguće odobriti ',
+	'no_task'     		=> 'Zadatak nije nađen',
 	
 ];
 ?>

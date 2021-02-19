@@ -14,6 +14,7 @@ use App\Models\Afterhour;
 use App\User;
 use Sentinel;
 use App\Mail\AbsenceMail;
+use App\Mail\AbsenceEditMail;
 use App\Mail\AbsenceUpdateMail;
 use App\Mail\AbsenceConfirmMail;
 use App\Mail\ErrorMail;
@@ -612,7 +613,6 @@ class AbsenceController extends BasicAbsenceController
 			$absenceTypes = AbsenceType::where('active',1)->get();
 		}
 		
-		
 		$user = Sentinel::getUser();
 		$tasks = null;
 		$leave_types = null;
@@ -628,6 +628,14 @@ class AbsenceController extends BasicAbsenceController
 		return view('Centaur::absences.edit', ['absence' => $absence,'employees' => $employees, 'absenceTypes' => $absenceTypes, 'user' => $user, 'tasks' => $tasks, 'leave_types' => $leave_types]);
     }
 
+	public function requestEditAbsence(Request $request)
+	{
+		$absence = Absence::find($request['id']);
+
+		return view('Centaur::absences.request_edit_absence', ['absence' => $absence ]);
+	}
+
+
     /**
      * Update the specified resource in storage.
      *
@@ -638,102 +646,112 @@ class AbsenceController extends BasicAbsenceController
     public function update(Request $request, $id)
     {
 		$absence = Absence::find($id);
-		
-		if( isset($request['erp_type'])) {
-			$absenceType = AbsenceType::where('erp_id',$request['erp_type'])->first();
-			if($absenceType) {
-				$absenceType_id = $absenceType->id;
-				$ERP_leave_type = $request['erp_type'];
-			} else {
-				session()->flash('error', 'Tip zahtjeva nije nađen');
-		
-				return redirect()->back();
-			}
+
+		if( $this->test_mail ) {
+			$send_to = array('jelena.juras@duplico.hr');
 		} else {
-			$absenceType = AbsenceType::where('mark',$request['type'])->first();
-			$absenceType_id = $absenceType->id;
-			$ERP_leave_type = $absenceType->erp_id;
-		}
+			$send_to = EmailingController::sendTo('absences','create');
 
-		if(isset($request['decree'])) {
-			if ($request['decree'] == 1) {
-					$decree = 1;
-			   	} else {
-					$decree = 0;
-			}
-		} else {
-			$decree = 0;
-		}
-		
-		$data = array(
-			'type'  			=> $absenceType_id,
-			'ERP_leave_type'  	=> $ERP_leave_type,
-			'erp_task_id'  		=> 5007,
-			'employee_id'  		=> $request['employee_id'],
-			'start_date'    	=> date("Y-m-d", strtotime($request['start_date'])),
-			'end_date'			=> date("Y-m-d", strtotime($request['end_date'])),
-			'start_time'  		=> $request['start_time'],
-			'end_time'  		=> $request['end_time'],
-			'comment'  			=> $request['comment'],
-			'decree'  			=> $decree,
-		);
-		
-		if(isset($request['decree']) && $request['decree'] == 1) {
-			$data += ['approve'=>1];
-			$data += ['approved_date'=>date('Y-m-d')];
-			$data += ['approved_id'=>Sentinel::getUser()->employee['id']];
-		}
-	
-		$absence->updateAbsence($data);
-
-		if ( $this->api_erp ) {
-			if( $absence->absence->mark == 'BOL') {
-				$api = new ApiController();
-				$leave_types = $api->send_leave_request($absence, 'abs');
-			}
-		}
-
-		if($request['email'] == 'DA') {
-			/* Ako je djelatnik radione poruka ide na g.Peklića */
-			/* if( Sentinel::getUser()->employee->hasEmployeeDepartmen->where('department_id', Department::where('name','Radiona')->first()->id )->first()) {
-				$send_to = array('borislav.peklic@duplico.hr');
-			}  */
-
-			if( $this->test_mail ) {
-				$send_to = array('jelena.juras@duplico.hr');
+			$firstSuperior = $absence->employee->work->firstSuperior; // prvi nadređeni
+			if($firstSuperior) {
+				$mail_firstSuperior = $firstSuperior->email;
+				array_push($send_to, $mail_firstSuperior);
 			} else {
-				$send_to = EmailingController::sendTo('absences','create');
-
-				$firstSuperior = $absence->employee->work->firstSuperior; // prvi nadređeni
-				if($firstSuperior) {
-					$mail_firstSuperior = $firstSuperior->email;
-					array_push($send_to, $mail_firstSuperior);
-				} else {
-					$manager = $absence->employee->work->employee; // voditelj odjela
-					$mail_manager = $manager->email;
-					array_push($send_to, $mail_manager);
+				$manager = $absence->employee->work->employee; // voditelj odjela
+				$mail_manager = $manager->email;
+				array_push($send_to, $mail_manager);
+			}
+			// Ako je djelatnik radione poruka ide na g.Peklića 
+			// if( Sentinel::getUser()->employee->hasEmployeeDepartmen->where('department_id', Department::where('name','Radiona')->first()->id )->first()) {
+			//	$send_to = array('borislav.peklic@duplico.hr');
+			//}  
+		}
+		// zahtjev za ispravak izostanka
+		if( isset( $request['request_edit_absence']) && $request['request_edit_absence'] == 1) {
+			foreach(array_unique($send_to) as $send_to_mail) {
+				if( $send_to_mail != null & $send_to_mail != '' ) {
+					Mail::to($send_to)->send(new AbsenceEditMail($absence, $request));
 				}
 			}
 			
-			try {
-				foreach(array_unique($send_to) as $send_to_mail) {
-					if( $send_to_mail != null & $send_to_mail != '' ) {
-						Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
-					}
+			session()->flash('success', __('ctrl.email_send'));
+			
+			return redirect()->back();
+		} else {
+			if( isset($request['erp_type'])) {
+				$absenceType = AbsenceType::where('erp_id',$request['erp_type'])->first();
+				if($absenceType) {
+					$absenceType_id = $absenceType->id;
+					$ERP_leave_type = $request['erp_type'];
+				} else {
+					session()->flash('error', 'Tip zahtjeva nije nađen');
+			
+					return redirect()->back();
 				}
-			} catch (\Throwable $th) {
-				$email = 'jelena.juras@duplico.hr';
-				$url = $_SERVER['REQUEST_URI'];
-				Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
-				
-				session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
-				return redirect()->back();
+			} else {
+				$absenceType = AbsenceType::where('mark',$request['type'])->first();
+				$absenceType_id = $absenceType->id;
+				$ERP_leave_type = $absenceType->erp_id;
 			}
-	   } 
-
-		session()->flash('success', __('ctrl.data_edit'));
+			// Odluka uprave
+			if(isset($request['decree'])) {
+				if ($request['decree'] == 1) {
+						$decree = 1;
+					} else {
+						$decree = 0;
+				}
+			} else {
+				$decree = 0;
+			}
+			
+			$data = array(
+				'type'  			=> $absenceType_id,
+				'ERP_leave_type'  	=> $ERP_leave_type,
+				'erp_task_id'  		=> 5007,
+				'employee_id'  		=> $request['employee_id'],
+				'start_date'    	=> date("Y-m-d", strtotime($request['start_date'])),
+				'end_date'			=> date("Y-m-d", strtotime($request['end_date'])),
+				'start_time'  		=> $request['start_time'],
+				'end_time'  		=> $request['end_time'],
+				'comment'  			=> $request['comment'],
+				'decree'  			=> $decree,
+			);
+			
+			if(isset($request['decree']) && $request['decree'] == 1) {
+				$data += ['approve'=>1];
+				$data += ['approved_date'=>date('Y-m-d')];
+				$data += ['approved_id'=>Sentinel::getUser()->employee['id']];
+			}
 		
-		return redirect()->back();
+			$absence->updateAbsence($data);
+
+			if ( $this->api_erp ) {
+				if( $absence->absence->mark == 'BOL') {
+					$api = new ApiController();
+					$leave_types = $api->send_leave_request($absence, 'abs');
+				}
+			}
+			if($request['email'] == 'DA') {
+				try {
+					foreach(array_unique($send_to) as $send_to_mail) {
+						if( $send_to_mail != null & $send_to_mail != '' ) {
+							Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
+						}
+					}
+				} catch (\Throwable $th) {
+					$email = 'jelena.juras@duplico.hr';
+					$url = $_SERVER['REQUEST_URI'];
+					Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+					
+					session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+					return redirect()->back();
+				}
+			} 
+
+			session()->flash('success', __('ctrl.data_edit'));
+			
+			return redirect()->route('absences.index');
+		}
     }
 
     /**

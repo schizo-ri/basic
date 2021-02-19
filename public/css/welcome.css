@@ -447,7 +447,7 @@ span.img-success {
 
 @media (max-width: 1300px) {
 	html, body{
-		font-size: 0.9375rem;
+		font-size: 15px;
 	}
 	body section.welcome  {
 		padding-left: 40px;
@@ -456,7 +456,7 @@ span.img-success {
 
 @media (max-width: 1200px) {
 	html, body{
-		font-size: 0.875rem;
+		font-size: 14px;
 	}
 	.container {
 		height: calc(100% - 50px);
@@ -465,10 +465,10 @@ span.img-success {
 
 @media (max-width: 1024px) {
 	html, body{
-		font-size: 0.8125rem;
+		font-size: 13px;
 	}
 	body>section {
-		height: auto;
+		height: 100%;
 	}
 	.container {
         padding: 0 10px;
@@ -483,7 +483,7 @@ span.img-success {
 }
 @media (max-width: 992px) {
 	html, body{
-		font-size: 0.875rem;
+		font-size: 13px;
 	}
 	.container >section {
 		position: static;
@@ -499,7 +499,8 @@ span.img-success {
 
 	.container >section:first-child {
 		padding-top: 10px;
-		padding-bottom: 5px;
+		padding-bottom: 10px;
+		margin-bottom: 0;
 		max-height: fit-content;
 		overflow: auto;
 		flex: 0 0 auto;
@@ -518,8 +519,10 @@ span.img-success {
 }
 
 @media (max-width: 768px) {
+	html, body{
+		font-size: 12px;
+	}
 	html{
-		font-size: 0.75rem;
 		height: 100vh;
 	}
 	body {
@@ -543,34 +546,21 @@ span.img-success {
 }
 
 @media (max-width: 450px)  {
+	
 	html{
 		height: auto;
 	}
+	body {
+		height: auto;
+		min-height: 100vh;
+		overflow-y: auto;
+	}
+	body>section {
+		height: auto;
+		min-height: 100vh;
+	}
 	body>.welcome_page { 
 		height: auto;
-	}
-
-	
-	/*  {
-        scrollbar-width: thin;
-		position: relative;
-		overflow: auto;
-		scrollbar-width: thin;
-		height: calc(100% - 50px);
-		padding: 0;
-		z-index: 0;
-		
-	}     */
-	.container >section {
-		padding: 0;
-		height: auto;
-	} 
-	.container >section:first-child, .container >section:last-child {
-        margin:0;
-    }
-	body {
-		height: 100%;
-		overflow-y: auto;
 	}
 	body section.welcome {
 		padding: 30px;
@@ -580,17 +570,36 @@ span.img-success {
 		height: 100vh;
 		overflow: auto;
 	}
+	body section.welcome>div {
+		width: fit-content;
+		height: auto;
+		transform: initial;
+	}
+	.container {
+        scrollbar-width: thin;
+		position: relative;
+		overflow: auto;
+		scrollbar-width: thin;
+		height: calc(100% - 50px);
+		padding: 0;
+		z-index: 0;
+		position: fixed;
+		top: 50px;
+	}    
+	.container >section {
+		padding: 0;
+		height: auto;
+	} 
+	.container >section:first-child, .container >section:last-child {
+        margin:0;
+		padding-top: 10px;
+    }
 	.welcome_right {		
 		overflow: initial;
 		display: none;
 	}
 	.welcome_right>div {
 		width: 80%;
-	}
-	body section.welcome>div {
-		width: fit-content;
-		height: auto;
-		transform: initial;
 	}
 	.welcome_right>div:first-child {
 		left: 20px;

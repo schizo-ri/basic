@@ -1,6 +1,6 @@
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <div class="modal-header">
-    <h3 class="panel-title">@lang('basic.user_edit')</h3>
+    <h3 class="panel-title">@lang('basic.edit_user')</h3>
 </div>
 <div class="modal-body">
     <form accept-charset="UTF-8" class="form_edit_user form_user" role="form" method="post" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data" >

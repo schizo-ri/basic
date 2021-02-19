@@ -118,11 +118,10 @@
 				@else
                     <h4> @lang('absence.i'), {{ $temporaryEmployeeRequest->employee->user['first_name']   . ' ' . $temporaryEmployeeRequest->employee->user['last_name'] }}</h4>
                     <h4>
-                        
-                        @lang('absence.please_approve')  {{ $temporaryEmployeeRequest->absence['name'] }} za
+                        @lang('absence.please_approve')  {{ $temporaryEmployeeRequest->absence_type->name }} za
                         {{ date("d.m.Y", strtotime($temporaryEmployeeRequest->start_date)) . ' do ' . date("d.m.Y", strtotime( $temporaryEmployeeRequest->end_date)) . ' - ' . $dani_zahtjev . ' ' . __ ('absence.days') }}
                     
-                        @if( $temporaryEmployeeRequest->absence['mark'] == "IZL")
+                        @if( $temporaryEmployeeRequest->absence_type['mark'] == "IZL")
                             {{  'od ' . $temporaryEmployeeRequest->start_time  . ' - ' .  $temporaryEmployeeRequest->end_time }}
                         @endif
                     </h4>

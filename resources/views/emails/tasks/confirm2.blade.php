@@ -116,7 +116,7 @@
 						<p style="{{ $style }}">{{ $text }}</p>
 					@endforeach
 				@else
-					<p class="">Zadatak: <b>{{ $employee_task->task->task }}</b></p>
+					<p class="">Zadatak: <b>{{ $employee_task->task->task . ' - ' . $employee_task->task->description }}</b></p>
 				@endif
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_footer : '' !!}">

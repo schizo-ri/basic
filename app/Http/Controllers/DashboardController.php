@@ -38,9 +38,9 @@ class DashboardController extends Controller
      */
     public function index()
     {      
+        
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
-          
             if($employee) {
                 $sick_leave_not_approve = Absence::SickUserOpen( $employee->id );
             
@@ -85,12 +85,11 @@ class DashboardController extends Controller
                 $shortcuts = Shortcut::where('employee_id', $employee->id )->get();
                
                 return view('Centaur::dashboard',['locco_active' => $locco_active, 'posts' => $posts, 'sick_leave_not_approve' => $sick_leave_not_approve, 'events' => $events,'tasks' => $tasks,'employee' => $employee, 'data_absence' => $data_absence, 'profile_image' => $profile_image, 'user_name' => $user_name, 'count_requests' => $count_requests, 'countComment_all' => $countComment_all, 'check' => $check, 'shortcuts' => $shortcuts]);
-            }   else if( Sentinel::getUser()->temporaryEmployee )  {
+            } else if( Sentinel::getUser()->temporaryEmployee )  {
                     $temporaryEmployee = Sentinel::getUser()->temporaryEmployee;
 
                     return view('Centaur::dashboard', ['temporaryEmployee' => $temporaryEmployee]);
             } else {
-
                 return view('Centaur::dashboard');
             }
         } else {

@@ -15,6 +15,8 @@ use App\Mail\TemporaryEmployeeAbsenceMail;
 use App\Mail\TemporaryEmployeeAbsenceConfirmMail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ErrorMail;
+use Log;
+
 
 class TemporaryEmployeeRequestController extends Controller
 {
@@ -79,22 +81,22 @@ class TemporaryEmployeeRequestController extends Controller
         $temporaryEmployeeRequest->saveTemporaryEmployeeRequest($data);
 
         $send_to = EmailingController::sendTo('temporary_employee_requests', 'create');
-        try {
+      /*   try { */
             foreach(array_unique($send_to) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     Mail::to($send_to_mail)->send(new TemporaryEmployeeAbsenceMail($temporaryEmployeeRequest));
                 }
             }
-        } catch (\Throwable $th) {
+       /*  } catch (\Throwable $th) {
             $email = 'jelena.juras@duplico.hr';
             $url = $_SERVER['REQUEST_URI'];
             Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
 
             session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			return redirect()->back();
-        }
+        } */
 		
-       /*  session()->flash('success',  __('ctrl.data_save')); */
+        session()->flash('success',  __('ctrl.data_save'));
 		return redirect()->back();
     }
 
@@ -133,8 +135,10 @@ class TemporaryEmployeeRequestController extends Controller
      */
     public function update(Request $request, $id)
     {
+        Log::info($request);
         $temporaryEmployeeRequest = TemporaryEmployeeRequest::find($id);
         $absenceType = AbsenceType::where('mark',$request['type'])->first()->id;
+
         $data = array(
             'type'  			=> $absenceType,
             'employee_id'  		=> $request['employee_id'],
@@ -144,9 +148,27 @@ class TemporaryEmployeeRequestController extends Controller
             'end_time'  		=> $request['end_time'],
             'comment'  			=> $request['comment'],
         );
-
+        Log::info($data);
         $temporaryEmployeeRequest->updateTemporaryEmployeeRequest($data);
-        
+        Log::info($temporaryEmployeeRequest);
+        $send_to = EmailingController::sendTo('temporary_employee_requests', 'create');
+        Log::info($send_to);
+        /*   try { */
+              foreach(array_unique($send_to) as $send_to_mail) {
+                  if( $send_to_mail != null & $send_to_mail != '' ) {
+                      Mail::to($send_to_mail)->send(new TemporaryEmployeeAbsenceMail($temporaryEmployeeRequest));
+                  }
+              }
+         /*  } catch (\Throwable $th) {
+              $email = 'jelena.juras@duplico.hr';
+              $url = $_SERVER['REQUEST_URI'];
+              Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+  
+              session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+              return redirect()->back();
+          } */
+          
+
         session()->flash('success',  __('ctrl.data_edit'));
 		return redirect()->back();
     }
@@ -182,6 +204,9 @@ class TemporaryEmployeeRequestController extends Controller
 		$temporaryEmployeeRequest->updateTemporaryEmployeeRequest($data);
 
 	 	$send_to = EmailingController::sendTo('temporary_employee_requests', 'confirm');
+        $employee_mail = $temporaryEmployeeRequest->employee->email;
+		array_push($send_to, $employee_mail ); // mail zaposlenika
+        
         try {
             foreach(array_unique($send_to) as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
@@ -196,7 +221,6 @@ class TemporaryEmployeeRequestController extends Controller
             session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 			return redirect()->back();
         }
-		
 				
 		$message = session()->flash('success', __('absence.approved'));
 

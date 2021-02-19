@@ -116,7 +116,7 @@
 						<p style="{{ $style }}">{{ $text }}</p>
 					@endforeach
 				@else
-					<p class="">Zadatak: <b>{{ $employee_task->task->task }}</b></p>
+					<p class="">Zadatak: <b>{{ $employee_task->task->task . ' - ' . $employee_task->task->description }}</b></p>
 					<p class="">Komentar: <b>{{ $employee_task->comment }}</b></p>
 				@endif
             </div>

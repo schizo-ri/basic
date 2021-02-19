@@ -65,6 +65,7 @@
                 <input name="end_time" class="form-control" type="time" value="{!!  old('end_time') ? old('end_time') : '16:00' !!}"required>
                 {!! ($errors->has('end_time') ? $errors->first('end_time', '<p class="text-danger">:message</p>') : '') !!}
             </div>
+			<p class="time_request clear_l" style="display: none">Nemoguće poslati zahtjev. Završno vrijeme je manje od početnog</p>
         </div>
 		<div class="form-group clear_l {{ ($errors->has('comment')) ? 'has-error' : '' }}">
 			<label>@lang('basic.comment')</label>

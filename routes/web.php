@@ -161,8 +161,8 @@ Route::get('absence/absencesYears', ['as' => 'absencesYears', 'uses' => 'Absence
 Route::get('absence/print_requests', ['as' => 'print_requests', 'uses' => 'AbsenceController@printRequests']);
 Route::get('getTasks', ['as' => 'getTasks', 'uses' => 'AbsenceController@getTasks']);
 Route::get('getProject', ['as' => 'getProject', 'uses' => 'AbsenceController@getProject']);
-
 Route::get('getDays/{id}', 'AbsenceController@getDays');
+
 Route::get('days_offUnused/{id}', 'BasicAbsenceController@days_offUnused');
 Route::get('daniGO', 'BasicAbsenceController@daniGO');
 

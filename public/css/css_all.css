@@ -126,7 +126,7 @@ ul.admin_pages li >span.image_template{
     overflow: hidden;
 }
 #admin_page .index_table_filter {
-    height: 100%;
+    height: auto;
 }
 #admin_page .btn-new {     
     width: 41px;
@@ -298,6 +298,11 @@ ul.admin_pages li >span.image_template{
         height: 100%;
         overflow: auto;
     }
+    #admin_page .btn-new {
+        padding: 0 5px;
+        margin: 0 0 0 10px;
+        font-size: 0.6285rem;
+    }
     .index_page aside > .admin_panel, .index_page .index_main.admin_main {
         -moz-border-radius: 0;
         -webkit-border-radius: 0;
@@ -306,7 +311,7 @@ ul.admin_pages li >span.image_template{
     .admin_main .link_back {
         padding: 10px;
         top: 20px;
-        left: 10px;
+        left: 0;
         padding: 0;
         margin: 0;
         z-index: 2;
@@ -888,6 +893,9 @@ summary {
 .width_20 {
     width: 20%;
 }
+.width_25 {
+    width: 25%;
+}
 
 .height_auto {
     height: auto;
@@ -1263,19 +1271,20 @@ div.clear{
 #calendar a.scroll_right_cal,
 #calendar a.scroll_left_cal  {
     width: 8.5px;
-    height:  1.625rem;
+    height:  auto;
     background-position: center;
     border-radius: 50%;
     float: right;
     border: none;
     margin-right: 30px;
-    line-height: 26px;
     background-color: inherit;
     outline: none;
+    line-height: 20px;
 }
 #calendar button.scroll_right_cal img,
 #calendar button.scroll_left_cal img {
     height: 12px;
+    max-width: initial;
 }
 
 .dates::-webkit-scrollbar {
@@ -1999,12 +2008,18 @@ div#calendar ul li.active_date {
     }
    .container .calendar{
         margin: 0;
-        padding: 10px 10px;
+        padding: 10px 0;
     }
     .container .posts{
         margin: 0;
         padding: 10px 10px;
         overflow: auto;
+    }
+    .container .posts .all_post {
+        padding: 10px 15px;
+    }
+    .container .posts .all_post h2 {
+        padding-top: 10px;
     }
     .all_agenda {
         min-height: 150px;
@@ -2041,11 +2056,20 @@ div#calendar ul li.active_date {
     .container .posts{
         height: auto;
         flex: 0 0 auto;
+        
+    }
+    .container .posts .all_post {
+        min-height: 200px;
     }
 }
 @media (max-width: 768px) {
     .posts_index .posts {
         height: auto;
+    }
+    .container .posts {
+		height: auto;
+		margin: 0 auto;
+		width: 100%;
     }
     .container .noticeboard, .container .posts, .container .calendar {
         height: auto;
@@ -2097,30 +2121,8 @@ div#calendar ul li.active_date {
         padding-top: 25px;
     }
 }
-@media (min-width: 768px) and (max-height: 600px) {
 
-    .header_user_go p>span:first-child {
-        margin: 0;
-    }
-	
-	.topnav, .container .noticeboard {
-		width: 100%;
-		max-width: 100%;
-		height: auto;
-		padding: 0 25px;
-		margin: 20px;
-	}
-	.container .posts, .container .calendar {
-		width: 50%;
-		max-width: 50%;
-		padding: 10px;
-		height: auto;
-	}
-	.container .posts .all_post {
-		float: none;
-    }
-    
-}
+
 @media (max-width: 450px) {
     .container .noticeboard h2 {
 		padding-top: 0;
@@ -2162,10 +2164,24 @@ div#calendar ul li.active_date {
         float: right;
         padding-left: 20px;
     }
-    .comming_agenda .agenda_mark, .container .posts .all_post {
+    .comming_agenda .agenda_mark {
         height: auto;
         margin: auto;
     }    
+    .container .posts .all_post {
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+        scrollbar-width: thin;
+        padding: 0;
+        margin: 0;
+        float: none;
+		max-width: 100%;
+    }
+
+    .container .posts .all_post > div {
+        padding: 0;
+    }
     .container .noticeboard, .container .posts, .container .calendar{
         height: auto;
         padding: 10px;
@@ -2176,7 +2192,7 @@ div#calendar ul li.active_date {
         float: none;
         margin: auto;
     }
-    .container .calendar>div, .container .posts .all_post {
+    .container .calendar>div {
         width:100% ;
         padding: 10px 0;
     }
@@ -2329,7 +2345,7 @@ div#calendar ul li.active_date {
     overflow: auto;
 }
 .task_name {
-    font-size: 12px; 
+    font-size: 0,75rem; 
 }
 
 .show_hidden {
@@ -2527,6 +2543,21 @@ main.index_main.locco_create_main>section >main {
     position: relative;
     overflow: hidden;
     display: flex;
+}
+.admin_main .page-header {
+    display: table;
+}
+
+.visibilyti_colums {
+    font-size: 0.75rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+.visibilyti_colums span {
+    margin-right: 10px;
 }
 .index_main header.header_calendar {
     display: flex;
@@ -2994,7 +3025,7 @@ class="select-css"
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-unit {
     position: relative;
-    height: 50px;
+    margin-bottom: 10px;
 }
 
 .index_page .calender_view .pignose-calendar .pignose-calendar-unit .pignose-calendar-button-schedule-container {
@@ -3002,6 +3033,7 @@ class="select-css"
     right: 14px;
     top: 5px;
     bottom: 0;
+    height: fit-content;
 }
 .employee_color {
     display: inline-block;
@@ -3207,6 +3239,7 @@ class="select-css"
 
 .header_calendar>div>span.month_year {
     line-height: 50px;
+    text-transform: capitalize;
 }
 
 .main_calendar_month table, .index_event_week table {
@@ -3804,7 +3837,7 @@ main.main_ads.main_instructions {
     max-width: unset;
 }
 .index_page .index_main .btn-new:not(.user_interest .btn-new) {
-    width: auto;
+  
     font-size: 0.6875rem;
     color: #FFFFFF;
 }
@@ -4023,10 +4056,15 @@ table ul {
     border-radius: 5px;
 }
 .select2.select2-container {
-
+  /*   float: left; */
 }
-
-
+.toggle-vis {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
 .header_ads .index_table_filter .select_filter:hover,
  .notice_filter .select_filter:hover, 
  .fuel_header .select_filter:hover, 
@@ -4048,12 +4086,19 @@ table ul {
 .select2-container:not(.select2) { 
     box-shadow: 3px 0 6px rgba(0, 0, 0, 0.15), -3px 0 6px rgba(0, 0, 0, 0.15);
     margin-left: 0;
-    margin-top: 40px;
+    margin-top: 35px;
     background: white;
     z-index: 3;
-  
 }   
-
+.remove_project {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 2px 5px;
+    float: right;
+    width: auto;
+    box-shadow: 3px 3px 3px #ddd;
+    margin-right: 5px;
+}
 .select2-results__options{
     background-color: white;
     padding: 0 10px;
@@ -4075,14 +4120,19 @@ table ul {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
     list-style: none;
     padding: 0;
     margin: 0;
+    align-self: center;
+    text-indent: 5px;
+    text-align: left;
 }
 .select2-search__field {
     border: none;
     width: 100%;
+}
+textarea.select2-search__field  {
+    padding-top: 5px;
 }
 .main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years, .main_absence .select_filter.filter_employees, .main_absence .select_filter.filter_approve, input#filter_employees, .select2-selection{
     background-position: 98%;
@@ -4103,6 +4153,7 @@ table ul {
     padding-right: 15px;
     
 }
+
 .ads_index .div_select2 {
     margin-right: 15px;
 }
@@ -4115,7 +4166,7 @@ input#filter_employees {
 }
 
 datalist#list_employees {
-    font-size: 12px;
+    font-size: 0.75rem;
     line-height: 12px;
 }
 datalist option {
@@ -4229,9 +4280,10 @@ datalist option {
 .select2-hidden-accessible {
     display: none;
 }
-.index_page .dataTables_filter  >div {
+.index_page .dataTables_filter >div {
     height: -webkit-fill-available;
     padding: 0 10px;
+    padding-left: 15px;
 }
 .index_page .dataTables_filter>label {
   /*   margin: 0;
@@ -4256,6 +4308,7 @@ datalist option {
 .modal-body p.days_employee, .modal-body p.days_request, .modal-body p.time_request {
     color: red;
     padding: 10px 20px;
+    margin: 0;
 }
 
 .dataTables_filter span.show_button {   
@@ -4328,13 +4381,14 @@ datalist option {
     right: 20px; */
     text-decoration: none;
     width: 100%;
+    padding: 0 5px;
 }
 .index_page .all_absences a.add_new:hover {
     background-color: #0069d9;
     border-color: #0062cc;
 }
 .index_page a.add_new i, .index_page a.add_new svg {
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 .index_page .dataTables_wrapper .dataTables_length, .index_page .dataTables_wrapper .dataTables_info, .index_page .dataTables_wrapper .dataTables_processing {
@@ -4640,16 +4694,12 @@ form.after_form  {
     height: calc( 100% - 78px);
 }
 
-.table-responsive .dataTables_wrapper {
-    /* overflow: auto;
-    scrollbar-width: thin;
-    height: 100%; */
-}
-
 .diary_table .table-responsive .dataTables_wrapper:not(.page-main>.dataTables_wrapper) {
     display: none;
 }
-
+.diary_table table td:not(:first-child):not(:last-child), .diary_table table th:not(:first-child):not(:last-child) {
+    width: calc(10%);   
+}
 .second_view {
     display: none;
 }
@@ -5737,6 +5787,9 @@ main.index_main>section.section_evidention {
     margin: 0;
     padding: 0 20px;
 }
+.all_absences #index_table_filter input#mySearchTbl  {
+    width: 90%;
+}
 .search_label {
     margin: 0;
 }
@@ -5772,18 +5825,18 @@ s
     margin: 0;
     margin-bottom: .5rem;
     padding: 5px;
-    font-size: 15px;
+    font-size: 0.9375rem;
 }
 .structure h5{
     border-bottom: 2px solid #7cfc0057;
     padding: 5px;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 .structure h6 {
     border-bottom: 2px solid #87cefa5c;
     padding: 5px;
     display: none;
-    font-size: 13px;
+    font-size: 0.8125rem;
     padding-left: 40px;
     font-weight: 600;
 }
@@ -5810,18 +5863,10 @@ p.comment_empl small {
     padding-left: 40px;
 }
 .structure span {
-   /*  display: block;
-    margin-bottom: 10px;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: #eeeeee7d;
-    box-shadow: 3px 0 5px rgba(0, 0, 0, 0.15); */
     display: block;
     margin-bottom: 10px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 0.75rem;
     padding: 5px 10px;
     border-bottom: 2px solid #ccc;
 }
@@ -5867,9 +5912,12 @@ div.collaps_element {
 
 .filter_area>div {
    /*  max-width: fit-content; */
-   max-width: 20%;
+   max-width: 180px;
 }
-
+div.add_area a {
+    max-width: 100px;
+    float: right;
+}
 .index_main.profile_main {
     background: none;
     box-shadow: none;
@@ -6189,10 +6237,11 @@ a.modal_close {
     overflow: hidden;
 }
 .profile_photo>a img.profile_user {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 100%;
     margin-top: 50%;
-    transform: translateY(-50%);
+    margin-left: 50%;
+    transform: translate(-50%, -50%);
 }
 .photo_icon {
     background: url(../icons/photo.png) no-repeat;
@@ -6229,8 +6278,8 @@ a.modal_close {
     justify-content: flex-start;
 }
 .approve_buttons>div {
-    max-width: fit-content;
-    min-width: 120px;
+    width: 25%;
+    max-width: 150px;
     height: 100%;
     padding: 0 10px;
 }
@@ -6239,7 +6288,7 @@ a.modal_close {
     margin-right: 20px;
     font-style: normal;
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.6285rem;
     color: #606060;
     padding: 5px 0;
     cursor: pointer;
@@ -6276,7 +6325,7 @@ a.modal_close {
 #style_items, #mail_template {
     height: 100%;
     padding: 20px;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 #style_items .form-group >div {
@@ -6314,7 +6363,7 @@ a.modal_close {
     background: inherit;
     border-radius: 5px;
     padding: 0 10px;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 #style_items textarea {
     padding: 6px 10px;
@@ -6330,7 +6379,7 @@ a.modal_close {
     padding-left: 30px;
     width: auto;
     float: left;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .add_line, .add_link, .remove_line {
     float: left;
@@ -6372,20 +6421,25 @@ a.modal_close {
 }
 
 #mail_template #header {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 #mail_template #footer {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 #mail_template #body {
     height: auto;
     border: 1px dashed #eee;
-    font-size: 12px;
+    font-size: 0.75rem;
     padding: 15px;
     padding-bottom: 5px;
     overflow: hidden;
+}
+@media (max-width: 1300px) {
+    .info_abs>p, .info_abs>p>.go, .info_abs>p>.go_pg, .info_abs>p>.bol, .info_abs>p>.bol_pg, .info_abs>p>.bol_om {
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -6446,7 +6500,7 @@ a.modal_close {
         min-height: 70px
     }
     .index_main main.main_calendar, .index_main main.main_calendar_month, .index_main main.main_calendar_week {
-        top: 80px
+        top: 0;
     }
     .index_page aside.latest_messages header.post_header {
         height: 65px;
@@ -6641,13 +6695,6 @@ a.modal_close {
         font-size: 1rem;
         padding: 8px 15px;
     }
-   
-    .container .posts .all_post {
-        padding: 10px 15px;
-    }
-    .container .posts .all_post h2 {
-        padding-top: 10px;
-    }
     .container h2 {
         font-size: 0.875rem;
     }
@@ -6800,11 +6847,6 @@ a.modal_close {
         max-height: initial;
         padding: 0;
     }
-    .container .posts {
-		height: auto;
-		margin: 0 auto;
-		width: 100%;
-    }
     .posts_index .posts .all_post {
 		width: 100%;
 		float: none;
@@ -6954,20 +6996,8 @@ a.modal_close {
         float: left;
         margin: 0;
         left: 10px;
-        padding-right: 10px;
-        width: 80%;
-    }
-    .index_table_filter div.div_select2, .filtercontainer div.div_select2 {
-        flex: 0 0 20%;
-        margin: 0;
-    }
-    #admin_page .btn-new, .index_table_filter div.div_select2  {
-        margin-left: 10px;
-        margin-bottom: 5px;
-    }
-    .select_filter, .select2-selection {
-        height: 30px;
-        background: none;
+        padding-right: 15px;
+        width: 50%;
     }
     .index_table_filter >label, #index_table_filter >label, .index_table_filter > a.add_new {
         position: relative;
@@ -6976,6 +7006,33 @@ a.modal_close {
         top: auto;
         margin-bottom: 5px;
     }
+    .select2.select2-container, .select2.select2-container, .select_filter, .select2-selection {
+        margin-right: 15px;
+        margin-left: 0;
+        min-width: 100%;
+    }
+    .index_table_filter div.div_select2, .filtercontainer div.div_select2 {
+        flex: 0 0 20%;
+        margin: 0;
+    }
+    #admin_page .index_table_filter div.div_select2, #admin_page .filtercontainer div.div_select2 {
+        
+        overflow: visible;
+    }
+    .index_table_filter div.div_select2  {
+        margin-left: 10px;
+        margin-bottom: 5px;
+    }
+    .select_filter, .select2-selection {
+        height: 30px;
+        background: none;
+        min-width: unset;
+        white-space: break-spaces;
+        padding: 0;
+        text-align: center;
+        float: unset;
+    }
+  
     .index_table_filter span.show_button {
         line-height: 30px;
         margin-right: 10px;
@@ -6990,15 +7047,14 @@ a.modal_close {
         padding: 0;
         left: 0;
     }
-    .table tbody td span  {
+    .table tbody td span:not(.img_approve span)  {
         padding: 0;
-
     }
     .index_main.admin_main header  {
         padding-left: 60px;
     }
     .sequence_links > a, .notice_links > a {
-        font-size: 12px;
+        font-size: 0.75rem;
     }
     .approve_buttons>div {
         min-width: 25%;
@@ -7078,9 +7134,11 @@ a.modal_close {
         height: 100%;
     }
     .all_absences .dataTables_filter {
-        display: block;
+        display: flex;
         overflow: hidden;
         height: auto;
+        justify-content: start;
+        flex-wrap: wrap;
     }
     .index_table_filter input, #index_table_filter input, .index_page a.add_new {
         height: 30px;
@@ -7101,9 +7159,21 @@ a.modal_close {
         padding: 0;
     }
     .index_page #index_table_filter.dataTables_filter>label, .index_page .dataTables_filter >div {
-        width: 100%;
+        width: auto;
         margin-bottom: 5px;
         padding: 0;
+    }
+    .index_page.index_absence #index_table_filter.dataTables_filter .approve_area {
+        order: 4;
+    }
+    .index_page.index_absence #index_table_filter.dataTables_filter .filter_area {
+        order: 3;
+    }
+    .index_page.index_absence #index_table_filter.dataTables_filter>label {
+        order: 1;
+    }
+    .index_page.index_absence #index_table_filter.dataTables_filter .add_area {
+        order: 2;
     }
     .index_page a.add_new, .btn-new.btn-approve {
         line-height: 29px;
@@ -7122,17 +7192,6 @@ a.modal_close {
         scrollbar-width: thin;
    
         height: fit-content;
-    }
-    .container .posts .all_post {
-        width: 100%;
-        height: auto;
-        overflow: hidden;
-        scrollbar-width: thin;
-        padding: 0;
-        margin: 0;
-    }
-    .container .posts .all_post > div {
-        padding: 0;
     }
     .second_view .user_card {
 		width: 100%;
@@ -7498,6 +7557,11 @@ a.modal_close {
     }
     .header_ads .index_table_filter>div:first-child {
         margin-bottom: 10px;
+        margin-top: 0;
+        width: 100%;
+        float: left;
+        overflow: visible;
+        padding: 0;
     }
     .header_ads .add_ads {
         padding: 0;
@@ -7515,15 +7579,12 @@ a.modal_close {
         width: auto;
         max-width: initial;
     }
-    .header_benefits .index_table_filter>div:first-child {
-        width: 80%;
-        max-width: 80%;
+    .header_benefits .index_table_filter>div {
+        width: 50%;
+        max-width: 50%;
+        margin: 0;
+        clear: initial;
     }
-    .header_benefits .index_table_filter>div:nth-child(2){
-        width: 20%;
-        max-width: 20%;
-    }
-  
     .diary_header .select_filter {
         width: 15%;
     }
@@ -8339,17 +8400,22 @@ ul.nav_ul.float_right li img {
 }
 
 .user_header .image_prof>img {
-	height: auto;
+    height: auto;
     display: block;
     margin-left: auto;
     margin-right: auto;
     margin-top: 50%;
-    transform: translatey(-50%);
-    max-width: max-content;
-    width: 100%;
-    max-height: max-content;
+    margin-left: 50%;
+    transform: translate(-50%,-50%);
+    max-width: 100%;
+    min-width: 100%;
+    width: auto;
+    max-height: 100%;
+    min-height: 100%;
 }
-
+.user_header .info div h2 {
+	text-align: center;
+}
 .user_header .info div h2 {
 	font-weight: 600;
 	font-size: 1.5625rem;
@@ -9010,9 +9076,11 @@ span.count_post {
 .efc_show {
 	display: block;
 }
+
 .efc_hide {
 	display: none;
 }
+
 .user_header .efc_show img, .user_header .efc_hide img {
 	color: #2B2B2B;
     width: 8.4px;
@@ -9036,9 +9104,9 @@ span.count_post {
 
 .info .layout_button >button {
 	height: 100%;
-	max-width: calc((100% / 6) - 15px);
 	width: calc((100% / 6) - 15px);
-	min-width: calc((100% / 6) - 15px);
+	/* min-width: calc((100% / 7) - 15px);
+	max-width: calc((100% / 7) - 15px); */
     background: #F4F7FF;
     border: none;
     border-radius: 3px;
@@ -9050,6 +9118,7 @@ span.count_post {
 	color: #071E57;
 	margin-bottom: 15px;
 	padding: 10px;
+	box-sizing: border-box;
 }
 
 .info .layout_button >button.sick_button {
@@ -9077,7 +9146,7 @@ span.count_post {
 	font-size: 0.75rem;
 }
 .info .layout_button >button>a:hover {
-	box-sizing: border-box;
+/* 	box-sizing: border-box; */
 }
 .info .layout_button >button:not(:last-child) {
 	margin-right: 15px;
@@ -9399,6 +9468,7 @@ span.button_nav_img.campaign {
 .layout_button button:hover, .layout_button button:active, .shortcuts_container .shortcut_box>a:hover, .shortcuts_container .profile_img>span:hover, .shortcuts_container #left-button-scroll:hover, .shortcuts_container #right-button-scroll:hover{
 	border: 1px solid #1594F0;
 	text-decoration: none;
+	padding: 10px;
 }
 
 table.table_fuel, table.table_service {
@@ -9749,9 +9819,6 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		height: 35px;
 		background-size: 35px 35px;
 	}
-	.info .layout_button >button>a p {
-		/* font-size: 0.625rem; */
-	}
 	.salary .efc p {
 		font-size: 0.75rem;
 	}
@@ -9870,10 +9937,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.info .layout_button >button {
 		font-size: 0.75rem;
 		height: auto;
-		
+		width: auto;
 		float: left;
 		margin: 0;
-		min-width: auto;
 		height: 100%;
 	}
 	.layout_button span.img {
@@ -9969,8 +10035,8 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		width: 100%;
 		max-width: 100%;
 		margin: 0;
-		margin-top: 20px;
-        padding: 10px 10px;
+		margin-top: 0;
+		padding: 10px 10px;
 		float: none;
 		overflow: hidden;
 		height: auto;
@@ -9978,13 +10044,21 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.user_header .info>div:first-child {
 		padding-bottom: 35px;
 	}
+	.salary>div:first-child {
+		border-bottom:none;
+	}
+	.shortcuts_container:first-child>div:nth-child(2) {
+		margin-top: 10px;
+	}
 }
 
 @media (max-width: 768px){
 	.shortcut>span.shortcut_text {
 		display: none;
 	}
-	
+	.salary>div:first-child  {
+		padding: 20px 0;
+	}
 	.topnav.nav_top a.shortcut >svg.svg-inline--fa.fa-w-14, .topnav.nav_top a.shortcut >svg.svg-inline--fa.fa-w-16 {
 		position: absolute; 
     top: 50%;
@@ -10008,7 +10082,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		float: none;
 		clear: left;
 		margin: auto;
-		margin-top: 10px;
+		margin-top: 0;
 		top: 0;
 		overflow: hidden;
 		right: 0;
@@ -10038,7 +10112,17 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	.info .layout_button {
 		scroll-padding-top: 10px;
+		display: flex;
+		justify-content: flex-start;
+		padding-bottom: 0;
 	}
+	.info .layout_button >button {
+		margin-bottom: 10px;
+	}
+	.user_header .info>div:first-child {
+		padding-bottom: 23px;
+	}
+
 	.topnav {
 		width: 100%;
 		max-width: 100%;
@@ -10122,11 +10206,8 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		margin-right: 10px;
 
 	}
-	.container .posts .all_post {
-		float: none;
-		height: auto;
-	}
-		html {
+	
+	html {
 		height: auto;
 		overflow: auto;
 		scrollbar-width: thin;   
@@ -10140,7 +10221,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		float: none;
 		margin: auto;
 	}
-	.container .calendar, container .noticeboard, .container .posts {
+	.container .calendar, container .noticeboard {
 		float: none;
 		height: auto;
 		margin: auto;
@@ -10168,7 +10249,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		z-index: 2;
 		min-height: auto;		
 		padding: 0 10px;
-		position: sticky;
+		position: fixed;
 		top: 0;
 	}
 	.salary>div.shortcuts_container {
@@ -10228,9 +10309,6 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		margin: auto;
 		margin-bottom: 10px;
 	}
-	body section {
-		height: auto;
-	}
 	.user_header .info>div {
 		padding: 10px 0;
 		margin-bottom: 10px;
@@ -10247,9 +10325,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		display: block;
 		overflow: auto;
 		scrollbar-width: thin;
-		
 	}
-	
 	.topnav.responsive .icon {
 		background: inherit;
 	}
@@ -10294,7 +10370,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		line-height: 28px;
 	}
 	.button_nav span.button_nav_img {
-		height: auto;
+		height: 30px;
 		line-height: normal;
 	}
 	.header_nav .topnav#myTopnav {
@@ -10302,6 +10378,8 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		margin: 5px 0;
 		display: block;
 		width: auto;
+		min-height: 100%;
+		padding-bottom: 20px;
 	}
 	
 	.topnav.responsive >div {
@@ -10390,6 +10468,31 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		height: 35px;
 		background-size: 35px 35px;
 		margin: auto;
+	}
+}
+@media (min-width: 768px) and (max-height: 600px) {
+
+    .header_user_go p>span:first-child {
+        margin: 0;
+    }
+	.layout_button span.img, .layout_button span.img.all_req {
+        width: 20px;
+        height: 20px;
+        background-size: 20px 20px;
+    }
+	.topnav {
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		padding: 0 25px;
+		margin: 20px;
+	}
+	
+	.container .posts .all_post {
+		float: none;
+    }
+    .shortcuts_container:first-child>div:first-child {
+		height: auto;
 	}
 }
 .modal {
@@ -10515,8 +10618,10 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 
 .modal_user .user_data .user_img {
 	display: block;
-	float: left;
-	width: 100%;
+    /* float: left; */
+    width: 70px;
+    height: 70px;
+    margin: auto;
 }
 
 .modal.modal_user>header .user_data >div {
@@ -11247,8 +11352,15 @@ input[type="time"]::-webkit-inner-spin-button {
 	line-height: initial;
     padding: 0 10px;
 	height: auto;
-    min-height: 32px;
+    min-height: 30px;
 	width: 100% !important;
+	margin: 0;
+}
+span[aria-hidden=true] {
+	font-size: 20px;
+}
+textarea.select2-search__field {
+	resize: none;
 }
 #myModal_role .form-group:not(:first-child)  {
 	width: 47%;
@@ -12576,10 +12688,18 @@ body .blocker {
 input.form-control.date {
 	width: auto;
 }
+.modal .select2-container:not(.select2) {
+	margin-top: 25px;
+}
 @media (max-width:1300px) { 
 	.modal.modal_user>header {
 		padding: 20px;
-		
+	}
+	.notice_name, .notice_date {
+		font-size: 0.75rem;
+	}
+	.modal.modal_notice .modal-header>h3 {
+		font-size: 1.25rem;
 	}
 	.modal.modal_user>main {
 		overflow: auto;
@@ -12602,7 +12722,9 @@ input.form-control.date {
 	.modal_user .user_data .days_left >span, .modal_user .user_data .days_used >span {
 		padding-top: 0;
 	}
-	
+	.modal.modal_notice.notice_show .modal-header .btn-edit, .modal.modal_notice.notice_show .modal-header .btn-statistic, .modal.modal_notice.notice_show .modal-header .view_all, .modal.modal_questionnaire .modal-header .btn-edit, .modal.modal_questionnaire .modal-header .btn-statistic, .modal.modal_notice .btn-delete {
+		font-size: 0.75rem;
+	}
 
 }
 @media (max-width:1200px) {
@@ -12657,7 +12779,7 @@ input.form-control.date {
 		padding-top: 30px !important;
 	}
 	.modal .form-group {
-		margin-bottom: 0;
+		margin-bottom: 10px;
 	}
 	.modal .time {
 		width: 40%;
@@ -12704,11 +12826,16 @@ input.form-control.date {
 		
 	}
 
-	.modal select, .modal input[type="text"], .modal input[type="date"],  .modal input[type="time"], .modal input[type="email"], .modal input[type="password"], .modal input[type="tel"], .modal input[type="number"], .modal input[type="url"]{
+	.modal select, .modal input[type="text"], .modal input[type="date"],  .modal input[type="time"], .modal input[type="email"], .modal input[type="password"], .modal input[type="tel"], .modal input[type="number"], .modal input[type="url"], .modal input[type="datetime-local"] {
 		margin-bottom: 15px;
 		height: 30px;
 		padding: 0;
-		line-height: 30px;
+		padding-left: 10px;
+		/* line-height: 30px; */
+		vertical-align: middle;
+	}
+	.modal .select2 span.select2-selection--single {
+		height: 30px;
 	}
 	select.form-control[multiple], select.form-control[size] {
 		min-height: 30px;
@@ -12854,6 +12981,9 @@ input.form-control.date {
 @media (max-width:450px) {
 	.modal {
 		max-width: 100vw;
+	}
+	.modal-body .form-group.datum {
+		margin-bottom: 0;
 	}
 	.modal a.close-modal {
 		top: 5px !important;
@@ -13103,6 +13233,7 @@ span.file_name {
     display: block;
     color: #000000;
     margin-bottom: 5px;
+	font-size: 0.75rem;
 }
 /* @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900&display=swap'); */
 
@@ -13721,7 +13852,7 @@ span.img-success {
 
 @media (max-width: 1300px) {
 	html, body{
-		font-size: 0.9375rem;
+		font-size: 15px;
 	}
 	body section.welcome  {
 		padding-left: 40px;
@@ -13730,7 +13861,7 @@ span.img-success {
 
 @media (max-width: 1200px) {
 	html, body{
-		font-size: 0.875rem;
+		font-size: 14px;
 	}
 	.container {
 		height: calc(100% - 50px);
@@ -13739,10 +13870,10 @@ span.img-success {
 
 @media (max-width: 1024px) {
 	html, body{
-		font-size: 0.8125rem;
+		font-size: 13px;
 	}
 	body>section {
-		height: auto;
+		height: 100%;
 	}
 	.container {
         padding: 0 10px;
@@ -13757,7 +13888,7 @@ span.img-success {
 }
 @media (max-width: 992px) {
 	html, body{
-		font-size: 0.875rem;
+		font-size: 13px;
 	}
 	.container >section {
 		position: static;
@@ -13773,7 +13904,8 @@ span.img-success {
 
 	.container >section:first-child {
 		padding-top: 10px;
-		padding-bottom: 5px;
+		padding-bottom: 10px;
+		margin-bottom: 0;
 		max-height: fit-content;
 		overflow: auto;
 		flex: 0 0 auto;
@@ -13792,8 +13924,10 @@ span.img-success {
 }
 
 @media (max-width: 768px) {
+	html, body{
+		font-size: 12px;
+	}
 	html{
-		font-size: 0.75rem;
 		height: 100vh;
 	}
 	body {
@@ -13816,37 +13950,22 @@ span.img-success {
 	}
 }
 
-@media (max-width: 600px) {
-	html, body{
-		/* font-size: 0.6875rem; */
-	}
-}
-
 @media (max-width: 450px)  {
+	
+	html{
+		height: auto;
+	}
+	body {
+		height: auto;
+		min-height: 100vh;
+		overflow-y: auto;
+	}
+	body>section {
+		height: auto;
+		min-height: 100vh;
+	}
 	body>.welcome_page { 
 		height: auto;
-	}
-	
-	 {
-        scrollbar-width: thin;
-		position: relative;
-		overflow: auto;
-		scrollbar-width: thin;
-		height: calc(100% - 50px);
-		padding: 0;
-		z-index: 0;
-		
-	}    
-	.container >section {
-		padding: 0;
-		height: auto;
-	} 
-	.container >section:first-child, .container >section:last-child {
-        margin:0;
-    }
-	body {
-		height: 100%;
-		overflow-y: auto;
 	}
 	body section.welcome {
 		padding: 30px;
@@ -13856,17 +13975,36 @@ span.img-success {
 		height: 100vh;
 		overflow: auto;
 	}
+	body section.welcome>div {
+		width: fit-content;
+		height: auto;
+		transform: initial;
+	}
+	.container {
+        scrollbar-width: thin;
+		position: relative;
+		overflow: auto;
+		scrollbar-width: thin;
+		height: calc(100% - 50px);
+		padding: 0;
+		z-index: 0;
+		position: fixed;
+		top: 50px;
+	}    
+	.container >section {
+		padding: 0;
+		height: auto;
+	} 
+	.container >section:first-child, .container >section:last-child {
+        margin:0;
+		padding-top: 10px;
+    }
 	.welcome_right {		
 		overflow: initial;
 		display: none;
 	}
 	.welcome_right>div {
 		width: 80%;
-	}
-	body section.welcome>div {
-		width: fit-content;
-		height: auto;
-		transform: initial;
 	}
 	.welcome_right>div:first-child {
 		left: 20px;

@@ -25,6 +25,7 @@ $(function(){
 			}
 			delete_request ();
 		}
+
 		function init_absence_table () {
 			jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 				"date-eu-pre": function ( date ) {
@@ -283,7 +284,7 @@ $(function(){
 
 			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
 			console.log(url);
-			console.log
+			
 			$.ajax({
 				url: url,
 				type: "get",
@@ -510,7 +511,7 @@ $(function(){
 		$('.all_absences #index_table_filter').show(); 
 
 		if($(".all_absences #index_table_filter .show_button").length == 0) {
-			$('.all_absences #index_table_filter .filter_area').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+			$('.all_absences #index_table_filter label').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 			$('.show_button').on('click',function () {
 				$('.dt-buttons').toggle();		
 			/* 	console.log("show_button"); */
@@ -683,21 +684,8 @@ $(function(){
 				$('.form-group.time_group').show();
 				$('.form-group.date2').hide();
 
-				$('input[name=end_time]').on('blur',function(){
-					start_time = $('input[name=start_time]').val();
-					end_time = $('input[name=end_time]').val();
+				checkTime();
 
-					time_diff =  new Date("1970-1-1 " + end_time) - new Date("1970-1-1 " + start_time);
-					time_diff = time_diff/1000/60/60;
-
-					if( time_diff < 0 ) {
-						$('.time_request').show();
-						$('.btn-submit').hide();
-					} else {
-						$('.time_request').hide();
-						$('.btn-submit').show();
-					} 
-				});
 			} else {
 				$('.form-group.time_group').hide();
 				$('.form-group.date2').show();
@@ -841,6 +829,7 @@ $(function(){
 		select_employee ();
 		select_project ();
 		dateChange ();
+		checkTime();
 	}
 
 	function dateChange () {
@@ -978,6 +967,29 @@ $(function(){
 				console.log(errorThrown);
 			}
 		}); 
+	}
+
+	function checkTime() {
+		$('input[name=end_time]').on('blur',function(){
+			start_time = $('input[name=start_time]').val();
+			end_time = $('input[name=end_time]').val();
+
+			time_diff =  new Date("1970-1-1 " + end_time) - new Date("1970-1-1 " + start_time);
+			time_diff = time_diff/1000/60/60;
+			console.log(time_diff);
+		
+			if( time_diff <= 0 ) {
+				$('.time_request').show();
+				$('.btn-submit').hide();
+				$('.btn-submit').prop('disabled',true);
+				$('.btn-submit').css('border','2px solid red');
+			} else {
+				$('.time_request').hide();
+				$('.btn-submit').show();
+				$('.btn-submit').prop('disabled',false);
+				$('.btn-submit').css('border','1px solid rgb(21, 148, 240)');
+			} 
+		});
 	}
 });	
 if($('.main_ads').length >0) {
@@ -2113,15 +2125,23 @@ $( function () {
 					}
 				]
 			});
+			if($(".index_table_filter .show_button").length == 0) {
+				$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+			}
 			
-		if($(".index_table_filter .show_button").length == 0) {
-			$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
-		}
-		
-		
-		$('.show_button').on('click',function () {
-			$('.dt-buttons').show();
-		});
+			$('.show_button').on('click',function () {
+				$('.dt-buttons').show();
+			});
+			$('a.toggle-vis').on( 'click', function (e) {
+				e.preventDefault();
+				
+				// Get the column API object
+				var column = table.column( $(this).attr('data-column') );
+				
+				// Toggle the visibility
+				column.visible( ! column.visible() );
+			});
+			table.columns( '.col_hidden' ).visible( false );
 		}
 	
 		$('table.display').show();
@@ -3702,6 +3722,20 @@ if(body_width > 768) {
     $(".section_top_nav").on('click',function(event) {
         event.stopPropagation();
     });
+    var layout_button_width = $('div.layout_button').width();
+    var count_layout_button =  $('.layout_button button').length;
+   
+    if( count_layout_button > 0) {
+        var button_width = (layout_button_width / count_layout_button);
+        $('.layout_button button').width(button_width -15);
+        $('.layout_button button').css('min-width',button_width -15);
+        $('.layout_button button').css('max-width',button_width -15);
+        $('.layout_button button:last-child').width(button_width);
+        $('.layout_button button:last-child').css('min-width',button_width);
+        $('.layout_button button:last-child').css('max-width',button_width);
+    }
+
+
 }
 
 $("a[rel='modal:open']").addClass('disable');
@@ -4288,10 +4322,10 @@ $(function() {
 
     $('body').on($.modal.OPEN , function(event, modal) {
         $.getScript('/../select2-develop/dist/js/select2.min.js');
-      /*   selectSearchModal (); */
+        selectSearchModal ();
     });
 
-  /*   function selectSearchModal () {
+    function selectSearchModal () {
 		$(function(){
 			if( $('select.form-control').length > 0 ) {
 				$('select.form-control').select2({
@@ -4306,8 +4340,8 @@ $(function() {
 				});
 			}
 		});
-	} */
-/*     function matchCustom(params, data) {
+	}
+    function matchCustom(params, data) {
        
         // If there are no search terms, return all of the data
         if ($.trim(params.term) === '') {
@@ -4354,8 +4388,8 @@ $(function() {
         // Return `null` if the term should not be displayed
         return null;
         
-    } */
-});
+    }
+}); 
 // on load
 if( $('.posts_index').length > 0) {
 

@@ -405,7 +405,6 @@ ul.nav_ul.float_right li img {
     display: flex;
     justify-content: center;
     align-items: center;
-	padding: 0 10px;
 }
 .topnav.nav_top a.link_home {
 	padding: 28px 0;
@@ -477,17 +476,22 @@ ul.nav_ul.float_right li img {
 }
 
 .user_header .image_prof>img {
-	height: auto;
+    height: auto;
     display: block;
     margin-left: auto;
     margin-right: auto;
     margin-top: 50%;
-    transform: translatey(-50%);
-    max-width: max-content;
-    width: 100%;
-    max-height: max-content;
+    margin-left: 50%;
+    transform: translate(-50%,-50%);
+    max-width: 100%;
+    min-width: 100%;
+    width: auto;
+    max-height: 100%;
+    min-height: 100%;
 }
-
+.user_header .info div h2 {
+	text-align: center;
+}
 .user_header .info div h2 {
 	font-weight: 600;
 	font-size: 1.5625rem;
@@ -1176,9 +1180,9 @@ span.count_post {
 
 .info .layout_button >button {
 	height: 100%;
-	max-width: calc((100% / 7) - 15px);
-	width: calc((100% / 7) - 15px);
-	min-width: calc((100% / 7) - 15px);
+	width: calc((100% / 6) - 15px);
+	/* min-width: calc((100% / 7) - 15px);
+	max-width: calc((100% / 7) - 15px); */
     background: #F4F7FF;
     border: none;
     border-radius: 3px;
@@ -1190,6 +1194,7 @@ span.count_post {
 	color: #071E57;
 	margin-bottom: 15px;
 	padding: 10px;
+	box-sizing: border-box;
 }
 
 .info .layout_button >button.sick_button {
@@ -1217,7 +1222,7 @@ span.count_post {
 	font-size: 0.75rem;
 }
 .info .layout_button >button>a:hover {
-	box-sizing: border-box;
+/* 	box-sizing: border-box; */
 }
 .info .layout_button >button:not(:last-child) {
 	margin-right: 15px;
@@ -1539,6 +1544,7 @@ span.button_nav_img.campaign {
 .layout_button button:hover, .layout_button button:active, .shortcuts_container .shortcut_box>a:hover, .shortcuts_container .profile_img>span:hover, .shortcuts_container #left-button-scroll:hover, .shortcuts_container #right-button-scroll:hover{
 	border: 1px solid #1594F0;
 	text-decoration: none;
+	padding: 10px;
 }
 
 table.table_fuel, table.table_service {
@@ -1889,9 +1895,6 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		height: 35px;
 		background-size: 35px 35px;
 	}
-	.info .layout_button >button>a p {
-		/* font-size: 0.625rem; */
-	}
 	.salary .efc p {
 		font-size: 0.75rem;
 	}
@@ -2010,10 +2013,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.info .layout_button >button {
 		font-size: 0.75rem;
 		height: auto;
-		
+		width: auto;
 		float: left;
 		margin: 0;
-		min-width: auto;
 		height: 100%;
 	}
 	.layout_button span.img {
@@ -2109,8 +2111,8 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		width: 100%;
 		max-width: 100%;
 		margin: 0;
-		margin-top: 20px;
-        padding: 10px 10px;
+		margin-top: 0;
+		padding: 10px 10px;
 		float: none;
 		overflow: hidden;
 		height: auto;
@@ -2118,13 +2120,21 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.user_header .info>div:first-child {
 		padding-bottom: 35px;
 	}
+	.salary>div:first-child {
+		border-bottom:none;
+	}
+	.shortcuts_container:first-child>div:nth-child(2) {
+		margin-top: 10px;
+	}
 }
 
 @media (max-width: 768px){
 	.shortcut>span.shortcut_text {
 		display: none;
 	}
-	
+	.salary>div:first-child  {
+		padding: 20px 0;
+	}
 	.topnav.nav_top a.shortcut >svg.svg-inline--fa.fa-w-14, .topnav.nav_top a.shortcut >svg.svg-inline--fa.fa-w-16 {
 		position: absolute; 
     top: 50%;
@@ -2148,7 +2158,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		float: none;
 		clear: left;
 		margin: auto;
-		margin-top: 10px;
+		margin-top: 0;
 		top: 0;
 		overflow: hidden;
 		right: 0;
@@ -2178,7 +2188,17 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	.info .layout_button {
 		scroll-padding-top: 10px;
+		display: flex;
+		justify-content: flex-start;
+		padding-bottom: 0;
 	}
+	.info .layout_button >button {
+		margin-bottom: 10px;
+	}
+	.user_header .info>div:first-child {
+		padding-bottom: 23px;
+	}
+
 	.topnav {
 		width: 100%;
 		max-width: 100%;
@@ -2262,10 +2282,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		margin-right: 10px;
 
 	}
-	.container .posts .all_post {
-		float: none;
-		height: auto;
-	}
+	
 	html {
 		height: auto;
 		overflow: auto;
@@ -2280,7 +2297,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		float: none;
 		margin: auto;
 	}
-	.container .calendar, container .noticeboard, .container .posts {
+	.container .calendar, container .noticeboard {
 		float: none;
 		height: auto;
 		margin: auto;
@@ -2308,7 +2325,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		z-index: 2;
 		min-height: auto;		
 		padding: 0 10px;
-		position: sticky;
+		position: fixed;
 		top: 0;
 	}
 	.salary>div.shortcuts_container {
@@ -2368,9 +2385,6 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		margin: auto;
 		margin-bottom: 10px;
 	}
-	body section {
-		height: auto;
-	}
 	.user_header .info>div {
 		padding: 10px 0;
 		margin-bottom: 10px;
@@ -2387,9 +2401,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		display: block;
 		overflow: auto;
 		scrollbar-width: thin;
-		
 	}
-	
 	.topnav.responsive .icon {
 		background: inherit;
 	}
@@ -2434,7 +2446,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		line-height: 28px;
 	}
 	.button_nav span.button_nav_img {
-		height: auto;
+		height: 30px;
 		line-height: normal;
 	}
 	.header_nav .topnav#myTopnav {
@@ -2442,6 +2454,8 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		margin: 5px 0;
 		display: block;
 		width: auto;
+		min-height: 100%;
+		padding-bottom: 20px;
 	}
 	
 	.topnav.responsive >div {
@@ -2530,5 +2544,30 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 		height: 35px;
 		background-size: 35px 35px;
 		margin: auto;
+	}
+}
+@media (min-width: 768px) and (max-height: 600px) {
+
+    .header_user_go p>span:first-child {
+        margin: 0;
+    }
+	.layout_button span.img, .layout_button span.img.all_req {
+        width: 20px;
+        height: 20px;
+        background-size: 20px 20px;
+    }
+	.topnav {
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		padding: 0 25px;
+		margin: 20px;
+	}
+	
+	.container .posts .all_post {
+		float: none;
+    }
+    .shortcuts_container:first-child>div:first-child {
+		height: auto;
 	}
 }

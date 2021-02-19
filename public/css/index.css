@@ -88,7 +88,7 @@
     overflow: auto;
 }
 .task_name {
-    font-size: 12px; 
+    font-size: 0,75rem; 
 }
 
 .show_hidden {
@@ -286,6 +286,21 @@ main.index_main.locco_create_main>section >main {
     position: relative;
     overflow: hidden;
     display: flex;
+}
+.admin_main .page-header {
+    display: table;
+}
+
+.visibilyti_colums {
+    font-size: 0.75rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+.visibilyti_colums span {
+    margin-right: 10px;
 }
 .index_main header.header_calendar {
     display: flex;
@@ -1565,7 +1580,7 @@ main.main_ads.main_instructions {
     max-width: unset;
 }
 .index_page .index_main .btn-new:not(.user_interest .btn-new) {
-    width: auto;
+  
     font-size: 0.6875rem;
     color: #FFFFFF;
 }
@@ -1784,10 +1799,15 @@ table ul {
     border-radius: 5px;
 }
 .select2.select2-container {
-
+  /*   float: left; */
 }
-
-
+.toggle-vis {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
 .header_ads .index_table_filter .select_filter:hover,
  .notice_filter .select_filter:hover, 
  .fuel_header .select_filter:hover, 
@@ -1809,10 +1829,9 @@ table ul {
 .select2-container:not(.select2) { 
     box-shadow: 3px 0 6px rgba(0, 0, 0, 0.15), -3px 0 6px rgba(0, 0, 0, 0.15);
     margin-left: 0;
-    margin-top: 40px;
+    margin-top: 35px;
     background: white;
     z-index: 3;
-  
 }   
 .remove_project {
     border: 1px solid #ddd;
@@ -1848,10 +1867,15 @@ table ul {
     padding: 0;
     margin: 0;
     align-self: center;
+    text-indent: 5px;
+    text-align: left;
 }
 .select2-search__field {
     border: none;
     width: 100%;
+}
+textarea.select2-search__field  {
+    padding-top: 5px;
 }
 .main_absence .select_filter.filter_types, .main_absence .select_filter.filter_years, .main_absence .select_filter.filter_employees, .main_absence .select_filter.filter_approve, input#filter_employees, .select2-selection{
     background-position: 98%;
@@ -1872,6 +1896,7 @@ table ul {
     padding-right: 15px;
     
 }
+
 .ads_index .div_select2 {
     margin-right: 15px;
 }
@@ -1884,7 +1909,7 @@ input#filter_employees {
 }
 
 datalist#list_employees {
-    font-size: 12px;
+    font-size: 0.75rem;
     line-height: 12px;
 }
 datalist option {
@@ -1998,9 +2023,10 @@ datalist option {
 .select2-hidden-accessible {
     display: none;
 }
-.index_page .dataTables_filter  >div {
+.index_page .dataTables_filter >div {
     height: -webkit-fill-available;
     padding: 0 10px;
+    padding-left: 15px;
 }
 .index_page .dataTables_filter>label {
   /*   margin: 0;
@@ -2025,6 +2051,7 @@ datalist option {
 .modal-body p.days_employee, .modal-body p.days_request, .modal-body p.time_request {
     color: red;
     padding: 10px 20px;
+    margin: 0;
 }
 
 .dataTables_filter span.show_button {   
@@ -2097,13 +2124,14 @@ datalist option {
     right: 20px; */
     text-decoration: none;
     width: 100%;
+    padding: 0 5px;
 }
 .index_page .all_absences a.add_new:hover {
     background-color: #0069d9;
     border-color: #0062cc;
 }
 .index_page a.add_new i, .index_page a.add_new svg {
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 .index_page .dataTables_wrapper .dataTables_length, .index_page .dataTables_wrapper .dataTables_info, .index_page .dataTables_wrapper .dataTables_processing {
@@ -3502,6 +3530,9 @@ main.index_main>section.section_evidention {
     margin: 0;
     padding: 0 20px;
 }
+.all_absences #index_table_filter input#mySearchTbl  {
+    width: 90%;
+}
 .search_label {
     margin: 0;
 }
@@ -3537,18 +3568,18 @@ s
     margin: 0;
     margin-bottom: .5rem;
     padding: 5px;
-    font-size: 15px;
+    font-size: 0.9375rem;
 }
 .structure h5{
     border-bottom: 2px solid #7cfc0057;
     padding: 5px;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 .structure h6 {
     border-bottom: 2px solid #87cefa5c;
     padding: 5px;
     display: none;
-    font-size: 13px;
+    font-size: 0.8125rem;
     padding-left: 40px;
     font-weight: 600;
 }
@@ -3575,18 +3606,10 @@ p.comment_empl small {
     padding-left: 40px;
 }
 .structure span {
-   /*  display: block;
-    margin-bottom: 10px;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: #eeeeee7d;
-    box-shadow: 3px 0 5px rgba(0, 0, 0, 0.15); */
     display: block;
     margin-bottom: 10px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 0.75rem;
     padding: 5px 10px;
     border-bottom: 2px solid #ccc;
 }
@@ -3632,9 +3655,12 @@ div.collaps_element {
 
 .filter_area>div {
    /*  max-width: fit-content; */
-   max-width: 20%;
+   max-width: 180px;
 }
-
+div.add_area a {
+    max-width: 100px;
+    float: right;
+}
 .index_main.profile_main {
     background: none;
     box-shadow: none;
@@ -3954,10 +3980,11 @@ a.modal_close {
     overflow: hidden;
 }
 .profile_photo>a img.profile_user {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 100%;
     margin-top: 50%;
-    transform: translateY(-50%);
+    margin-left: 50%;
+    transform: translate(-50%, -50%);
 }
 .photo_icon {
     background: url(../icons/photo.png) no-repeat;
@@ -3994,8 +4021,8 @@ a.modal_close {
     justify-content: flex-start;
 }
 .approve_buttons>div {
-    max-width: fit-content;
-    min-width: 120px;
+    width: 25%;
+    max-width: 150px;
     height: 100%;
     padding: 0 10px;
 }
@@ -4004,7 +4031,7 @@ a.modal_close {
     margin-right: 20px;
     font-style: normal;
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.6285rem;
     color: #606060;
     padding: 5px 0;
     cursor: pointer;
@@ -4041,7 +4068,7 @@ a.modal_close {
 #style_items, #mail_template {
     height: 100%;
     padding: 20px;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 #style_items .form-group >div {
@@ -4079,7 +4106,7 @@ a.modal_close {
     background: inherit;
     border-radius: 5px;
     padding: 0 10px;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 #style_items textarea {
     padding: 6px 10px;
@@ -4095,7 +4122,7 @@ a.modal_close {
     padding-left: 30px;
     width: auto;
     float: left;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 .add_line, .add_link, .remove_line {
     float: left;
@@ -4137,20 +4164,25 @@ a.modal_close {
 }
 
 #mail_template #header {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 #mail_template #footer {
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 #mail_template #body {
     height: auto;
     border: 1px dashed #eee;
-    font-size: 12px;
+    font-size: 0.75rem;
     padding: 15px;
     padding-bottom: 5px;
     overflow: hidden;
+}
+@media (max-width: 1300px) {
+    .info_abs>p, .info_abs>p>.go, .info_abs>p>.go_pg, .info_abs>p>.bol, .info_abs>p>.bol_pg, .info_abs>p>.bol_om {
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 1200px) {
@@ -4406,13 +4438,6 @@ a.modal_close {
         font-size: 1rem;
         padding: 8px 15px;
     }
-   
-    .container .posts .all_post {
-        padding: 10px 15px;
-    }
-    .container .posts .all_post h2 {
-        padding-top: 10px;
-    }
     .container h2 {
         font-size: 0.875rem;
     }
@@ -4565,11 +4590,6 @@ a.modal_close {
         max-height: initial;
         padding: 0;
     }
-    .container .posts {
-		height: auto;
-		margin: 0 auto;
-		width: 100%;
-    }
     .posts_index .posts .all_post {
 		width: 100%;
 		float: none;
@@ -4719,14 +4739,30 @@ a.modal_close {
         float: left;
         margin: 0;
         left: 10px;
-        padding-right: 10px;
-        width: 80%;
+        padding-right: 15px;
+        width: 50%;
+    }
+    .index_table_filter >label, #index_table_filter >label, .index_table_filter > a.add_new {
+        position: relative;
+        transform: none;
+        display: inline-block;
+        top: auto;
+        margin-bottom: 5px;
+    }
+    .select2.select2-container, .select2.select2-container, .select_filter, .select2-selection {
+        margin-right: 15px;
+        margin-left: 0;
+        min-width: 100%;
     }
     .index_table_filter div.div_select2, .filtercontainer div.div_select2 {
         flex: 0 0 20%;
         margin: 0;
     }
-    #admin_page .btn-new, .index_table_filter div.div_select2  {
+    #admin_page .index_table_filter div.div_select2, #admin_page .filtercontainer div.div_select2 {
+        
+        overflow: visible;
+    }
+    .index_table_filter div.div_select2  {
         margin-left: 10px;
         margin-bottom: 5px;
     }
@@ -4737,14 +4773,9 @@ a.modal_close {
         white-space: break-spaces;
         padding: 0;
         text-align: center;
+        float: unset;
     }
-    .index_table_filter >label, #index_table_filter >label, .index_table_filter > a.add_new {
-        position: relative;
-        transform: none;
-        display: inline-block;
-        top: auto;
-        margin-bottom: 5px;
-    }
+  
     .index_table_filter span.show_button {
         line-height: 30px;
         margin-right: 10px;
@@ -4759,15 +4790,14 @@ a.modal_close {
         padding: 0;
         left: 0;
     }
-    .table tbody td span  {
+    .table tbody td span:not(.img_approve span)  {
         padding: 0;
-
     }
     .index_main.admin_main header  {
         padding-left: 60px;
     }
     .sequence_links > a, .notice_links > a {
-        font-size: 12px;
+        font-size: 0.75rem;
     }
     .approve_buttons>div {
         min-width: 25%;
@@ -4847,9 +4877,11 @@ a.modal_close {
         height: 100%;
     }
     .all_absences .dataTables_filter {
-        display: block;
+        display: flex;
         overflow: hidden;
         height: auto;
+        justify-content: start;
+        flex-wrap: wrap;
     }
     .index_table_filter input, #index_table_filter input, .index_page a.add_new {
         height: 30px;
@@ -4870,9 +4902,21 @@ a.modal_close {
         padding: 0;
     }
     .index_page #index_table_filter.dataTables_filter>label, .index_page .dataTables_filter >div {
-        width: 100%;
+        width: auto;
         margin-bottom: 5px;
         padding: 0;
+    }
+    .index_page.index_absence #index_table_filter.dataTables_filter .approve_area {
+        order: 4;
+    }
+    .index_page.index_absence #index_table_filter.dataTables_filter .filter_area {
+        order: 3;
+    }
+    .index_page.index_absence #index_table_filter.dataTables_filter>label {
+        order: 1;
+    }
+    .index_page.index_absence #index_table_filter.dataTables_filter .add_area {
+        order: 2;
     }
     .index_page a.add_new, .btn-new.btn-approve {
         line-height: 29px;
@@ -4891,17 +4935,6 @@ a.modal_close {
         scrollbar-width: thin;
    
         height: fit-content;
-    }
-    .container .posts .all_post {
-        width: 100%;
-        height: auto;
-        overflow: hidden;
-        scrollbar-width: thin;
-        padding: 0;
-        margin: 0;
-    }
-    .container .posts .all_post > div {
-        padding: 0;
     }
     .second_view .user_card {
 		width: 100%;
@@ -5267,6 +5300,11 @@ a.modal_close {
     }
     .header_ads .index_table_filter>div:first-child {
         margin-bottom: 10px;
+        margin-top: 0;
+        width: 100%;
+        float: left;
+        overflow: visible;
+        padding: 0;
     }
     .header_ads .add_ads {
         padding: 0;
@@ -5284,15 +5322,12 @@ a.modal_close {
         width: auto;
         max-width: initial;
     }
-    .header_benefits .index_table_filter>div:first-child {
-        width: 80%;
-        max-width: 80%;
+    .header_benefits .index_table_filter>div {
+        width: 50%;
+        max-width: 50%;
+        margin: 0;
+        clear: initial;
     }
-    .header_benefits .index_table_filter>div:nth-child(2){
-        width: 20%;
-        max-width: 20%;
-    }
-  
     .diary_header .select_filter {
         width: 15%;
     }

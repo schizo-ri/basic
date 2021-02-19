@@ -73,6 +73,20 @@ if(body_width > 768) {
     $(".section_top_nav").on('click',function(event) {
         event.stopPropagation();
     });
+    var layout_button_width = $('div.layout_button').width();
+    var count_layout_button =  $('.layout_button button').length;
+   
+    if( count_layout_button > 0) {
+        var button_width = (layout_button_width / count_layout_button);
+        $('.layout_button button').width(button_width -15);
+        $('.layout_button button').css('min-width',button_width -15);
+        $('.layout_button button').css('max-width',button_width -15);
+        $('.layout_button button:last-child').width(button_width);
+        $('.layout_button button:last-child').css('min-width',button_width);
+        $('.layout_button button:last-child').css('max-width',button_width);
+    }
+
+
 }
 
 $("a[rel='modal:open']").addClass('disable');

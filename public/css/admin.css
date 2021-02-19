@@ -126,7 +126,7 @@ ul.admin_pages li >span.image_template{
     overflow: hidden;
 }
 #admin_page .index_table_filter {
-    height: 100%;
+    height: auto;
 }
 #admin_page .btn-new {     
     width: 41px;
@@ -298,6 +298,11 @@ ul.admin_pages li >span.image_template{
         height: 100%;
         overflow: auto;
     }
+    #admin_page .btn-new {
+        padding: 0 5px;
+        margin: 0 0 0 10px;
+        font-size: 0.6285rem;
+    }
     .index_page aside > .admin_panel, .index_page .index_main.admin_main {
         -moz-border-radius: 0;
         -webkit-border-radius: 0;
@@ -306,7 +311,7 @@ ul.admin_pages li >span.image_template{
     .admin_main .link_back {
         padding: 10px;
         top: 20px;
-        left: 10px;
+        left: 0;
         padding: 0;
         margin: 0;
         z-index: 2;

@@ -55,21 +55,8 @@ $(function(){
 				$('.form-group.time_group').show();
 				$('.form-group.date2').hide();
 
-				$('input[name=end_time]').on('blur',function(){
-					start_time = $('input[name=start_time]').val();
-					end_time = $('input[name=end_time]').val();
+				checkTime();
 
-					time_diff =  new Date("1970-1-1 " + end_time) - new Date("1970-1-1 " + start_time);
-					time_diff = time_diff/1000/60/60;
-
-					if( time_diff < 0 ) {
-						$('.time_request').show();
-						$('.btn-submit').hide();
-					} else {
-						$('.time_request').hide();
-						$('.btn-submit').show();
-					} 
-				});
 			} else {
 				$('.form-group.time_group').hide();
 				$('.form-group.date2').show();
@@ -213,6 +200,7 @@ $(function(){
 		select_employee ();
 		select_project ();
 		dateChange ();
+		checkTime();
 	}
 
 	function dateChange () {
@@ -350,5 +338,28 @@ $(function(){
 				console.log(errorThrown);
 			}
 		}); 
+	}
+
+	function checkTime() {
+		$('input[name=end_time]').on('blur',function(){
+			start_time = $('input[name=start_time]').val();
+			end_time = $('input[name=end_time]').val();
+
+			time_diff =  new Date("1970-1-1 " + end_time) - new Date("1970-1-1 " + start_time);
+			time_diff = time_diff/1000/60/60;
+			console.log(time_diff);
+		
+			if( time_diff <= 0 ) {
+				$('.time_request').show();
+				$('.btn-submit').hide();
+				$('.btn-submit').prop('disabled',true);
+				$('.btn-submit').css('border','2px solid red');
+			} else {
+				$('.time_request').hide();
+				$('.btn-submit').show();
+				$('.btn-submit').prop('disabled',false);
+				$('.btn-submit').css('border','1px solid rgb(21, 148, 240)');
+			} 
+		});
 	}
 });	

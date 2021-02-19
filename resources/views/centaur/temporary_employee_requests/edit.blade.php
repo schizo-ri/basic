@@ -6,7 +6,7 @@
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.employee')</label>
-				<select class="form-control" name="employee_id[]" value="{{ old('employee_id') }}" size="10" autofocus multiple required >
+				<select class="form-control" name="employee_id" value="{{ old('employee_id') }}" size="10" autofocus  required >
 					<option value="" disabled></option>
 					@foreach ($employees as $employee)
 						<option name="employee_id" value="{{ $employee->id }}" {!! $temporaryEmployeeRequest->employee_id == $employee->id ? 'selected' : '' !!} >{{ $employee->user['last_name']  . ' ' . $employee->user['first_name'] }}</option>

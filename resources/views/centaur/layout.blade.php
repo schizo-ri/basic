@@ -33,7 +33,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 		<script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all1_js.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/css_all.css?random=@dt') }}"/>
 		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/>
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
@@ -73,16 +73,19 @@
 							@endif
 						</a>
 						{{-- <a class="" href="{{ route('api_erp.index') }}" ><span>api</span></a> --}}
+						
 						<ul class="nav_ul float_right">
-							@if( in_array('Čestitka UKR', $checked_user->employee->employeesDepartmentName()) || Sentinel::inRole('administrator') )
-								<li class="change_lang dropdown">
-									<button class="dropbtn"><i class="fas fa-globe-americas"></i></button>
-									<div class="dropdown-content">
-										<a class="lang_link" href="{{ action('DashboardController@change_lang', ['lang' => 'en']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-en.png') }}" alt="flag en" title="EN" /></a>
-										{{-- <a class="lang_link" href="{{ action('DashboardController@change_lang', ['lang' => 'uk']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-uk.png') }}" alt="flag en" title="UK" /></a> --}}
-										<a class="lang_link"  href="{{ action('DashboardController@change_lang', ['lang' => 'hr']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-hr.png') }}" alt="flag hr" title="HR" /></a>
-									</div>
-								</li>
+							@if(isset($checked_user->employee))
+								@if( in_array('Čestitka UKR', $checked_user->employee->employeesDepartmentName()) || Sentinel::inRole('administrator') )
+									<li class="change_lang dropdown">
+										<button class="dropbtn"><i class="fas fa-globe-americas"></i></button>
+										<div class="dropdown-content">
+											<a class="lang_link" href="{{ action('DashboardController@change_lang', ['lang' => 'en']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-en.png') }}" alt="flag en" title="EN" /></a>
+											{{-- <a class="lang_link" href="{{ action('DashboardController@change_lang', ['lang' => 'uk']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-uk.png') }}" alt="flag en" title="UK" /></a> --}}
+											<a class="lang_link"  href="{{ action('DashboardController@change_lang', ['lang' => 'hr']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-hr.png') }}" alt="flag hr" title="HR" /></a>
+										</div>
+									</li>
+								@endif
 							@endif
 							@if (Sentinel::check())
 								@if( $checked_user->employee && $_SERVER['REQUEST_URI'] != '/dashboard')
@@ -208,7 +211,7 @@
 				 */
 				
 			</script>
-			<script src="{{URL::asset('/../js/all1_js.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/js_all.js?random=@dt') }}"></script>
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
 

@@ -1,16 +1,17 @@
 <div class="modal-header">
 	<h3 class="panel-title">
-		@if( $absence->absence->mark == 'BOL' && $absence->end_date == null )
-			@lang('absence.close_sick_leave')
+		@if(! Sentinel::inRole('administrator'))
+			@lang('absence.request_edit_absence')
 		@else
-		  	@lang('absence.edit_absence') 
+			@if( $absence->absence->mark == 'BOL' && $absence->end_date == null )
+				@lang('absence.close_sick_leave')
+			@else
+				@lang('absence.edit_absence') 
+			@endif
 		@endif
 	</h3>
 </div>
 <div class="modal-body">
-	@if(! Sentinel::inRole('administrator'))
-		<input type="text" name="request_edit_absence" value="1" hidden/>
-	@endif
 	<form class="absence" role="form" method="post" name="myForm" accept-charset="UTF-8" action="{{ route('absences.update', $absence->id ) }}">
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
@@ -23,6 +24,7 @@
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 		@else
+			<input type="text" name="request_edit_absence" value="1" hidden/>
 			<p class="padd_10">@lang('absence.i'), {{ $absence->employee->user['first_name']  . ' ' . $absence->employee->user['last_name'] }} 
 				<span class="">@lang('absence.please_approve') @lang('absence.request_edit')</span>
 			</p>
@@ -109,7 +111,7 @@
 		@endif
 		{{ csrf_field() }}
 		{{ method_field('PUT') }}
-		<input class="btn-submit" type="submit" value="{{ __('basic.edit')}}" id="stil1">
+		<input class="btn-submit" type="submit" value="{!! Sentinel::inRole('administrator') ? __('basic.edit') :  __('basic.send') !!}" id="stil1">
 		<a href="#" rel="modal:close" class="btn-close">@lang('basic.cancel')</a>
 	</form>
 </div>

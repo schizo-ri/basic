@@ -101,7 +101,7 @@
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padd_0 position_rel height100">
 						<form name="contactform" class="after_form" method="post" action="{{ action('AfterhourController@storeConfMulti') }}">
 							<div id="index_table_filter" class="dataTables_filter">
-								<label class="col-md-12 col-lg-2 col-xl-2 float_left">
+								<label class="col-md-11 col-lg-2 col-xl-2 float_left">
 									<input type="search" placeholder="Search" onkeyup="mySearchTableAbsence()" id="mySearchTbl">
 								</label>
 								<div class="col-md-12 col-lg-4 col-xl-4 float_left approve_area">
@@ -125,11 +125,9 @@
 										@endif
 									{{-- @endif --}}
 								</div>
-								<div class="col-md-12 col-lg-6 col-xl-6 float_left filter_area">
-									<div class="float_right padd_l_10">
-										<a class="add_new" href="{{ route('absences.create') }}" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('basic.add')</a>
-									</div>
-									<div class="width_20 float_right padd_l_10 dropdown_empl">
+								<div class="col-md-12 col-lg-5 col-xl-5 float_left filter_area">
+									
+									<div class="width_25 float_right padd_l_10 dropdown_empl">
 										{{-- <input id="filter_employees" list="list_employees" autocomplete="off" value="SVI djelatnici" >
 										<datalist id="list_employees">
 											<option data-id="all" value="SVI djelatnici" selected />
@@ -148,7 +146,7 @@
 											@endif
 										</select>
 									</div>
-									<div class="width_20 float_right padd_l_10">
+									<div class="width_25 float_right padd_l_10">
 										<select id="filter_types" class="select_filter filter_types" >
 											<option value="all" >@lang('absence.all_types')</option>
 											@foreach ($types as $type)
@@ -160,14 +158,14 @@
 											@endforeach
 										</select>
 									</div>
-									<div class="width_20 float_right padd_l_10">
+									<div class="width_25 float_right padd_l_10">
 										<select id="filter_years" class="select_filter filter_years" >
 											@foreach ($years_all as $year)
 												<option value="{{ $year }}" {!! $year == date('Y-m') ? 'selected' : '' !!} >{{ $year }}</option>
 											@endforeach
 										</select>
 									</div>
-									<div class="width_20 float_right padd_l_10">
+									<div class="width_25 float_right padd_l_10">
 										<select id="filter_approve" class="select_filter filter_approve" >
 											<option value="all">@lang('absence.all_requests') </option>
 											@if(Sentinel::inRole('administrator'))
@@ -177,6 +175,9 @@
 											@endif
 										</select>
 									</div>
+								</div>
+								<div class="col-md-1 col-lg-1 col-xl-1 float_left add_area">
+									<a class="add_new" href="{{ route('absences.create') }}" rel="modal:open"><i style="font-size:11px" class="fa">&#xf067;</i>@lang('basic.add')</a>
 								</div>
 							</div>
 							<div class="table-responsive" >
@@ -195,11 +196,10 @@
 											<th style="max-width:30%;width:30%">@lang('basic.comment')</th>
 											<th style="max-width:10%;width:10%">@lang('absence.approved')</th>
 											<th style="max-width:15%;width:15%">@lang('absence.approve_comment')</th>
-											<!--<th>@lang('absence.aproved_by')</th>
-											<th>@lang('absence.aprove_date')</th>-->
-											@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
-												<th class="not-export-column no-sort" style="max-width:10%;width:10%">@lang('basic.options')</th>
-											@endif
+y											<th>@lang('absence.aprove_date')</th>-->
+											
+											<th class="not-export-column no-sort" style="max-width:10%;width:10%">@lang('basic.options')</th>
+											
 										</tr>
 									</thead>
 									<tbody class="overflow_auto">
@@ -214,6 +214,8 @@
 															$zahtjev = array('start_date' => $absence->start_date, 'end_date' => $absence->end_date);
 															$array_dani_zahtjeva = BasicAbsenceController::array_dani_zahtjeva($zahtjev);
 															$dani_go = BasicAbsenceController::daniGO_count($zahtjev);
+															
+															
 
 															$hours   = $interval1->format('%h'); 
 															$minutes = $interval1->format('%i');
@@ -235,11 +237,12 @@
 															<td class="absence_time" style="max-width:7%;width:7%" >{!! $absence->absence['mark'] == 'IZL' ? date('H:i',strtotime($absence->start_time)) . '-' .  date('H:i',strtotime($absence->end_time)) :'' !!}</td>
 															<td style="max-width:30%;width:30%">
 																@if( $absence->absence['mark'] != 'IZL' )
-																	[{!! $absence->approve == 0 ? 0 : $dani_go !!} @lang('absence.days')] 
+																	[{!! $absence->approve == 1 ||  $absence->approve == null ? $dani_go : 0  !!} @lang('absence.days')] 
 																@else
 																	[ {!! $absence->approve == 0 ? '00:00' : $hours . ' h, ' . $minutes . ' m' !!} ]
 																@endif
 																{{ $absence->comment }}
+																
 															</td>
 															<td class="approve not_link"  style="max-width:15%;width:15%">
 																@if($absence->approve == 1) 
@@ -265,9 +268,8 @@
 															</td>
 															{{-- <td>{!! $absence->approved ? $absence->approved['first_name'] . ' ' . $absence->approved['last_name'] : ''!!}</td> --}}
 															{{-- <td>{{ $absence->approved_date }}</td> --}}
-															
-															@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
-																<td class="not_link options center">
+															<td class="not_link options center">
+																@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
 																	@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep) || Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
 																		<!-- <button class="collapsible option_dots float_r"></button> -->
 																		@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep))
@@ -284,16 +286,14 @@
 																		</a>
 																		<a href="{{ route('print_requests', ['id' => $absence->id] ) }}" title="Print zahtjeva" target="_blank" ><i class="fas fa-print"></i></a> 
 																	@endif
-															{{-- 	@else
+																@else
 																	<a href="{{ route('absences.edit', $absence->id) }}" class="btn-edit" title="{{ __('absence.request_edit_absence')}}" rel="modal:open" >
 																		<i class="far fa-edit"></i>
-																	</a> --}}
-																</td>
-															@endif
-															
+																	</a> 
+																@endif
+															</td>
 														</tr>
 													@endif
-													
 												@endforeach
 											@endif
 											@if(isset( $afterhours ) && count( $afterhours )>0 && Sentinel::inRole('administrator') )

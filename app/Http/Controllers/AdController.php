@@ -210,7 +210,15 @@ class AdController extends Controller
 		
 		$ad->updateAd($data);
 		if(isset($request['fileToUpload'])) {
-			$target_dir = 'storage/ads/' . $ad->id . '/';  //specifies the directory where the file is going to be placed	
+			$target_dir = 'storage';
+			if(!file_exists($target_dir)){
+				mkdir($target_dir);
+            }
+			$target_dir = $target_dir.'/ads/';
+			if(!file_exists($target_dir)){
+				mkdir($target_dir);
+            }
+			$target_dir = $target_dir . $ad->id . '/';  //specifies the directory where the file is going to be placed	
 			if(!file_exists($target_dir)){
 				mkdir($target_dir);
             }

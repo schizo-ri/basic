@@ -3,7 +3,7 @@
 @section('title', __('basic.employees'))
 	@section('content')
 	<header class="page-header">
-		<div class="index_table_filter">
+		<div class="index_table_filter col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<label>
 				<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 			</label>
@@ -19,6 +19,25 @@
 				</select>
 			</div>
 		</div>
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 visibilyti_colums">
+			<span>Vidljivost kolona: </span>
+			<a class="toggle-vis" data-column="0">Ime i prezime</a>
+			<a class="toggle-vis" data-column="1">ERP ID</a>
+			<a class="toggle-vis" data-column="2">Datum rođenja</a>
+			<a class="toggle-vis" data-column="3">Mjesto rođenja</a>
+			<a class="toggle-vis" data-column="4">OIB</a>
+			<a class="toggle-vis" data-column="5">OI</a>
+			<a class="toggle-vis" data-column="6">Istek OI</a>
+			<a class="toggle-vis" data-column="7">Radno mjesto</a>
+			<a class="toggle-vis" data-column="8">Odjel</a>
+			<a class="toggle-vis" data-column="9">Stručna sprema</a>
+			<a class="toggle-vis" data-column="10">Struka</a>
+			<a class="toggle-vis" data-column="11">Datum prijave</a>
+			<a class="toggle-vis" data-column="12">Mobitel</a>
+			<a class="toggle-vis" data-column="13">Email</a>
+			<a class="toggle-vis" data-column="14">Prebivalište</a>
+			<a class="toggle-vis" data-column="15">Stranac</a>
+		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="table-responsive">
@@ -26,15 +45,22 @@
 				<table id="index_table" class="display table table-hover">
 					<thead>
 						<tr>
-							<th>@lang('basic.fl_name')</th>
-							<th>ERP ID</th>
-							<th class="sort_date">@lang('basic.b_day')</th>
-							<th>OIB</th>
-							<th>@lang('basic.work')</th>
+							<th >@lang('basic.fl_name')</th>
+							<th class='col_hidden'>ERP ID</th>
+							<th class="sort_date col_hidden">@lang('basic.b_day')</th>
+							<th  class='col_hidden'>Mjesto rođenja</th>
+							<th  class='col_hidden'>OIB</th>
+							<th  class='col_hidden'>Osobna iskaznica</th>
+							<th class="sort_date col_hidden">Istek osobne iskaznice</th>
+							<th >@lang('basic.work')</th>
 							<th>@lang('basic.department')</th>
-							<th>Stručna sprema</th>
-							<th>Struka</th>
+							<th class='col_hidden'>Stručna sprema</th>
+							<th class='col_hidden'>Struka</th>
 							<th class="sort_date">@lang('basic.reg_date')</th>
+							<th class='col_hidden'>Mobitel</th>
+							<th class='col_hidden'>E-mail</th>
+							<th class='col_hidden'>Prebivalište</th>
+							<th class='col_hidden'>Stranac</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
 					</thead>
@@ -47,7 +73,10 @@
 								</td>
 								<td>{!! $employee->erp_id ? $employee->erp_id : '' !!}</td>
 								<td>{!! $employee->b_day ? date("d.m.Y",strtotime($employee->b_day)) : '' !!}</td>
-								<td>{{  strval($employee->oib) }}</td>
+								<td>{{ $employee->b_place }}</td>
+								<td>{{ strval($employee->oib) }}</td>
+								<td>{{ strval($employee->oi) }}</td>
+								<td>{{ date("d.m.Y",strtotime($employee->oi_expiry))  }}</td>
 								<td>{!! $employee->work ? $employee->work['name'] : '' !!}</td>
 								<td>
 									@if($employee->hasEmployeeDepartmen && count($employee->hasEmployeeDepartmen)>0)
@@ -59,6 +88,10 @@
 								<td>{{ $employee->qualifications }}</td>
 								<td>{{ $employee->title }}</td>
 								<td>{!! $employee->reg_date ? date("d.m.Y",strtotime($employee->reg_date)) : '' !!}</td>
+								<td>{!! $employee->mobile ? 'Poslovni: ' . $employee->mobile : ''  !!} {!! 'Privatan: ' . $employee->priv_mobile ? $employee->priv_mobile : ''  !!}</td>
+								<td>{{ $employee->email }}</td>
+								<td>{{ $employee->prebiv_adresa . ', ' . $employee->prebiv_grad }}</td>
+								<td >{!! $employee->stranger == 1 ? 'DA, dozvola do:' . 	 date("d.m.Y",strtotime($employee->permission_date))  : '' !!}</td>
 								<td class="center">
 									
 									<!-- <button class="collapsible option_dots float_r"></button> -->

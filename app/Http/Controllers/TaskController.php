@@ -344,11 +344,23 @@ class TaskController extends Controller
     public function destroy($id)
     {
         $task = Task::find($id);
-        $task->delete();
-
-        session()->flash('success',__('ctrl.data_delete'));
-		
-        return redirect()->back();
+        if ($task) {
+            $employeeTasks = $task->employeeTasks;
+            if(  count( $employeeTasks ) >0 ) {
+                foreach ($employeeTasks as $employeeTask) {
+                    $employeeTask->delete();
+                }
+            }
+            $task->delete();
+    
+            session()->flash('success',__('ctrl.data_delete'));
+            
+            return redirect()->back();
+        } else {
+            session()->flash('error',__('ctrl.no_task'));
+            
+            return redirect()->back();
+        }
     }
 
     public static function task_for_selected_day ($date) 

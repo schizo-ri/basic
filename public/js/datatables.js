@@ -261,15 +261,23 @@ $( function () {
 					}
 				]
 			});
+			if($(".index_table_filter .show_button").length == 0) {
+				$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+			}
 			
-		if($(".index_table_filter .show_button").length == 0) {
-			$('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
-		}
-		
-		
-		$('.show_button').on('click',function () {
-			$('.dt-buttons').show();
-		});
+			$('.show_button').on('click',function () {
+				$('.dt-buttons').show();
+			});
+			$('a.toggle-vis').on( 'click', function (e) {
+				e.preventDefault();
+				
+				// Get the column API object
+				var column = table.column( $(this).attr('data-column') );
+				
+				// Toggle the visibility
+				column.visible( ! column.visible() );
+			});
+			table.columns( '.col_hidden' ).visible( false );
 		}
 	
 		$('table.display').show();

@@ -25,15 +25,12 @@ $i = 0;
 					@endphp					
 					<span class="profile_photo">
 						<a  href="{{ route('upload',['profileIMG' => true]) }}" rel="modal:open" title="{{ __('basic.upload_photo_profile') }}">
-							<span>
 							@if( ! empty($profile_image) && $profile_image != ''  )
 								<img class="radius50 profile_user" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image" />
 							@else
 								<img class="radius50 profile_user" src="{{ URL::asset('img/profile.svg') }}" alt="Profile image"  />
 							@endif
 								<span class="photo_icon "></span>
-							</span>
-						
 						</a>						
 					</span>
 					<h2>{{ $user->first_name . ' ' . $user->last_name }}</h2>

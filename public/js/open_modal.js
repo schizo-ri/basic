@@ -231,10 +231,10 @@ $(function() {
 
     $('body').on($.modal.OPEN , function(event, modal) {
         $.getScript('/../select2-develop/dist/js/select2.min.js');
-      /*   selectSearchModal (); */
+        selectSearchModal ();
     });
 
-  /*   function selectSearchModal () {
+    function selectSearchModal () {
 		$(function(){
 			if( $('select.form-control').length > 0 ) {
 				$('select.form-control').select2({
@@ -249,8 +249,8 @@ $(function() {
 				});
 			}
 		});
-	} */
-/*     function matchCustom(params, data) {
+	}
+    function matchCustom(params, data) {
        
         // If there are no search terms, return all of the data
         if ($.trim(params.term) === '') {
@@ -297,5 +297,5 @@ $(function() {
         // Return `null` if the term should not be displayed
         return null;
         
-    } */
-});
+    }
+}); 

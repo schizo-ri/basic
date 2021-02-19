@@ -76,7 +76,7 @@ class WorkDiaryController extends Controller
 
         $workDiaries = new WorkDiary();
         $workDiaries = $workDiaries->getTasks( $date, $task, $employee_id, $project );
-    
+        Log::info( $workDiaries );
         $sum_time = WorkDiary::sumTasks( $workDiaries ); 
 
         return view('Centaur::work_diaries.index', ['workDiaries' => $workDiaries,'dates' => $dates,'projects' => $projects, 'employees' => $employees, 'sum_time' => $sum_time, 'workTasks' => $workTasks]);

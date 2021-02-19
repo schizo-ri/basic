@@ -627,12 +627,18 @@
     }
    .container .calendar{
         margin: 0;
-        padding: 10px 10px;
+        padding: 10px 0;
     }
     .container .posts{
         margin: 0;
         padding: 10px 10px;
         overflow: auto;
+    }
+    .container .posts .all_post {
+        padding: 10px 15px;
+    }
+    .container .posts .all_post h2 {
+        padding-top: 10px;
     }
     .all_agenda {
         min-height: 150px;
@@ -669,11 +675,20 @@
     .container .posts{
         height: auto;
         flex: 0 0 auto;
+        
+    }
+    .container .posts .all_post {
+        min-height: 200px;
     }
 }
 @media (max-width: 768px) {
     .posts_index .posts {
         height: auto;
+    }
+    .container .posts {
+		height: auto;
+		margin: 0 auto;
+		width: 100%;
     }
     .container .noticeboard, .container .posts, .container .calendar {
         height: auto;
@@ -725,30 +740,8 @@
         padding-top: 25px;
     }
 }
-@media (min-width: 768px) and (max-height: 600px) {
 
-    .header_user_go p>span:first-child {
-        margin: 0;
-    }
-	
-	.topnav, .container .noticeboard {
-		width: 100%;
-		max-width: 100%;
-		height: auto;
-		padding: 0 25px;
-		margin: 20px;
-	}
-	.container .posts, .container .calendar {
-		width: 50%;
-		max-width: 50%;
-		padding: 10px;
-		height: auto;
-	}
-	.container .posts .all_post {
-		float: none;
-    }
-    
-}
+
 @media (max-width: 450px) {
     .container .noticeboard h2 {
 		padding-top: 0;
@@ -790,10 +783,24 @@
         float: right;
         padding-left: 20px;
     }
-    .comming_agenda .agenda_mark, .container .posts .all_post {
+    .comming_agenda .agenda_mark {
         height: auto;
         margin: auto;
     }    
+    .container .posts .all_post {
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+        scrollbar-width: thin;
+        padding: 0;
+        margin: 0;
+        float: none;
+		max-width: 100%;
+    }
+
+    .container .posts .all_post > div {
+        padding: 0;
+    }
     .container .noticeboard, .container .posts, .container .calendar{
         height: auto;
         padding: 10px;
@@ -804,7 +811,7 @@
         float: none;
         margin: auto;
     }
-    .container .calendar>div, .container .posts .all_post {
+    .container .calendar>div {
         width:100% ;
         padding: 10px 0;
     }

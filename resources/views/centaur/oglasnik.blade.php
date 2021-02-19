@@ -40,12 +40,8 @@ use App\Models\Ads;
 							{{-- <span class="arrow_left1"></span> --}}
 							<div class="div_select2">
 								<select id="filter1" class="select_filter sort" >
-									<option class="sort_desc" value="{{ route('oglasnik', ['sort' => 'DESC'])}}">
-										@lang('basic.new_first')
-									</option>
-									<option class="sort_asc" value="{{ route('oglasnik', ['sort' => 'ASC']) }} ">
-										@lang('basic.old_first')
-									</option>
+									<option class="sort_desc" value="{{ route('oglasnik', ['sort' => 'DESC'])}}">@lang('basic.new_first')</option>
+									<option class="sort_asc" value="{{ route('oglasnik', ['sort' => 'ASC']) }} ">@lang('basic.old_first')</option>
 								</select>
 							</div>
 						@endif

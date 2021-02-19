@@ -118,7 +118,7 @@ class WorkDiary extends Model
 				/* || $workDiary->project ? $workDiary->project->employee_id == $employee_id : '' || $workDiary->project ? $workDiary->project->employee_id2 == $employee_id : '' */
             });
 		}
-
+		
 		if( $project != null) {
             $workDiaries = $workDiaries->filter(function ($workDiary, $key) use ( $project ) {
 				

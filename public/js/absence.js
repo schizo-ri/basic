@@ -25,6 +25,7 @@ $(function(){
 			}
 			delete_request ();
 		}
+
 		function init_absence_table () {
 			jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 				"date-eu-pre": function ( date ) {
@@ -283,7 +284,7 @@ $(function(){
 
 			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
 			console.log(url);
-			console.log
+			
 			$.ajax({
 				url: url,
 				type: "get",
@@ -510,7 +511,7 @@ $(function(){
 		$('.all_absences #index_table_filter').show(); 
 
 		if($(".all_absences #index_table_filter .show_button").length == 0) {
-			$('.all_absences #index_table_filter .filter_area').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+			$('.all_absences #index_table_filter label').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 			$('.show_button').on('click',function () {
 				$('.dt-buttons').toggle();		
 			/* 	console.log("show_button"); */

@@ -79,7 +79,7 @@
             @endif
         @endif
         @if(in_array('Dnevnik', $moduli))
-            @if( count(Sentinel::getUser()->employee->hasDiary) > 0 || Sentinel::inRole('administrator') || count( Project::where('employee_id',Sentinel::getUser()->employee->id)->get() ) > 0 )
+            @if( Sentinel::getUser()->employee && (count(Sentinel::getUser()->employee->hasDiary) > 0 || Sentinel::inRole('administrator') || count( Project::where('employee_id',Sentinel::getUser()->employee->id)->get() ) > 0) )
                 <div class="">
                     <a class="button_nav load_button work_diaries_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('work_diaries.show', 1) }}" title="{{ __('basic.work_diary') }}">
                         <span class="button_nav_img work_diaries "><i class="fas fa-book"></i></span>
@@ -124,20 +124,22 @@
                     </div>
                 @endif
         @endif
-        @if(Sentinel::getUser()->hasAccess(['tasks.create']) || in_array('tasks.create', $permission_dep) )
-            <div class="">
-                <a class="button_nav load_button tasks_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('tasks.index') }}" title="{{ __('basic.tasks') }}">
-                    <span class="button_nav_img tasks"><i class="fas fa-tasks"></i></span>
-                    <p class="button_nav_text">@lang('basic.tasks')</p>
-                </a>	
-            </div>
-        @elseif ( count(Sentinel::getUser()->employee->hasEmployeeTask) > 0 )
-            <div class="">
-                <a class="button_nav load_button tasks_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('employee_tasks.show', 0) }}" title="{{ __('basic.tasks') }}">
-                    <span class="button_nav_img tasks"><i class="fas fa-tasks"></i></span>
-                    <p class="button_nav_text">@lang('basic.tasks')</p>
-                </a>	
-            </div>
+        @if (Sentinel::getUser()->employee )
+            @if(Sentinel::getUser()->hasAccess(['tasks.create']) || in_array('tasks.create', $permission_dep) )
+                <div class="">
+                    <a class="button_nav load_button tasks_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('tasks.index') }}" title="{{ __('basic.tasks') }}">
+                        <span class="button_nav_img tasks"><i class="fas fa-tasks"></i></span>
+                        <p class="button_nav_text">@lang('basic.tasks')</p>
+                    </a>	
+                </div>
+            @elseif ( count(Sentinel::getUser()->employee->hasEmployeeTask) > 0 )
+                <div class="">
+                    <a class="button_nav load_button tasks_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('employee_tasks.show', 0) }}" title="{{ __('basic.tasks') }}">
+                        <span class="button_nav_img tasks"><i class="fas fa-tasks"></i></span>
+                        <p class="button_nav_text">@lang('basic.tasks')</p>
+                    </a>	
+                </div>
+            @endif
         @endif
         @if(in_array('Edukacije', $moduli))
             @if(Sentinel::getUser()->hasAccess(['educations.view']) || in_array('educations.view', $permission_dep) )
@@ -149,14 +151,16 @@
                 </div>
             @endif
         @endif
-        @if( Sentinel::getUser()->hasAccess(['energy_consumptions.view']) || in_array('energy_consumptions.view', $permission_dep) )
-            @if ( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasTask->where('energy_consumptions', 1)->where('active', 1) )) > 0  )
-                <div class="">
-                    <a class="button_nav load_button energy_consumptions_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('energy_consumptions.index') }}" title="Potrošnja energenata">
-                        <span class="button_nav_img"><i class="fas fa-plug"></i></span>
-                        <p class="button_nav_text">Energenti</p>
-                    </a>	
-                </div>
+        @if (Sentinel::getUser()->employee )
+            @if( Sentinel::getUser()->hasAccess(['energy_consumptions.view']) || in_array('energy_consumptions.view', $permission_dep) )
+                @if ( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasTask->where('energy_consumptions', 1)->where('active', 1) )) > 0  )
+                    <div class="">
+                        <a class="button_nav load_button energy_consumptions_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('energy_consumptions.index') }}" title="Potrošnja energenata">
+                            <span class="button_nav_img"><i class="fas fa-plug"></i></span>
+                            <p class="button_nav_text">Energenti</p>
+                        </a>	
+                    </div>
+                @endif
             @endif
         @endif
     </div>

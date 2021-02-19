@@ -6,7 +6,6 @@
 	$today->modify('-1 years');
 	$today->modify('-14 days');
 	$key = 0;
-
 @endphp
 @section('content')
 	@if (Sentinel::check())
@@ -27,20 +26,20 @@
 					@endif
 					<h2>{{ Sentinel::getUser()->first_name . ' ' . Sentinel::getUser()->last_name }}</h2>
 					@if(isset($employee))
-					<p>{{ $employee->work['name'] }}</p>
-					<div class="header_user_go">
-						<p>
-							<span>@if(isset($data_absence)) {{ $data_absence['ukupnoPreostalo']  }}@endif</span>
-							<span>@lang('absence.vacation')<br>@lang('absence.days_left')</span>
-						</p>
-						<p>
-							<span>{!! isset($data_absence[ date('Y')]) && count($data_absence[ date('Y')]) > 0 ? $data_absence[ date('Y')]['dani_zahtjeva'] : 0 !!}</span>
-							<span>@lang('absence.vacation')<br>@lang('absence.days_used') <br> @lang('absence.this_year')</span>
-						</p>
-					</div>
+						<p>{{ $employee->work['name'] }}</p>
+						<div class="header_user_go">
+							<p>
+								<span>@if(isset($data_absence)) {{ $data_absence['ukupnoPreostalo']  }}@endif</span>
+								<span>@lang('absence.vacation')<br>@lang('absence.days_left')</span>
+							</p>
+							<p>
+								<span>{!! isset($data_absence[ date('Y')]) && count($data_absence[ date('Y')]) > 0 ? $data_absence[ date('Y')]['dani_zahtjeva'] : 0 !!}</span>
+								<span>@lang('absence.vacation')<br>@lang('absence.days_used') <br> @lang('absence.this_year')</span>
+							</p>
+						</div>
 					@endif
 				</div>
-				@if(isset($employee) || isset($temporaryEmployee))
+				@if(isset( $employee ) || isset($temporaryEmployee))
 					<div class="col-md-9 padd_0 float_left salary ">
 						{{-- <span class="efc_hide">@lang('basic.hide_salery')<img class="radius50" src="{{ URL::asset('icons/arrow_up.png') }}" alt="arrow" /></span>
 						<span class="efc_show">@lang('basic.show_salery')<img class="radius50" src="{{ URL::asset('icons/arrow_down.png') }}" alt="arrow" /></span> --}}
@@ -88,7 +87,7 @@
 							</div>
 						</div>
 						<div class="col-md-12 padd_0 float_left layout_button ">
-							@if(isset($employee) )
+							@if( isset($employee) && $employee )
 								@if( isset($sick_leave_not_approve) && $sick_leave_not_approve ) 
 									<button class="sick_button"><a href="{{ route('absences.edit', $sick_leave_not_approve->id) }}" rel="modal:open" title="{{ __('absence.add_absence')}}" >
 										<span>

@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\TemporaryEmployeeRequest;
 use App\Http\Controllers\BasicAbsenceController;
 use App\Models\MailTemplate;
+use Log;
 
 class TemporaryEmployeeAbsenceMail extends Mailable
 {
@@ -53,9 +54,12 @@ class TemporaryEmployeeAbsenceMail extends Mailable
         
         $zahtjev = array('start_date' => $this->temporaryEmployeeRequest['start_date'], 'end_date' => $this->temporaryEmployeeRequest['end_date']);
         $dani_zahtjev = BasicAbsenceController::daniGO_count($zahtjev);
-
+        Log::info('TemporaryEmployeeAbsenceMail');
+        Log::info($zahtjev);
+        Log::info($dani_zahtjev);
+        $subject = __('emailing.new_absence') . $this->temporaryEmployeeRequest->absence_type->name;
         return $this->view('Centaur::email.temporaryEmployeeRequest')
-                    ->subject( __('emailing.new_absence'))
+                    ->subject( $subject )
                     ->with([
                         'temporaryEmployeeRequest' => $this->temporaryEmployeeRequest,
                         'dani_zahtjev' => $dani_zahtjev,
