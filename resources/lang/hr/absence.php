@@ -5,6 +5,8 @@ return [
 	'absence' 		=> 'Izostanak',
     'add_absence' 	=> 'Dodaj zahtjev',
 	'edit_absence' 	=> 'Ispravi zahtjev',
+	'request_edit_absence' 	=> 'Zahtjev za izmjenom zahtjeva',
+	'request_edit' 	=> 'izmjena zahtjeva',
 	'delete_absence' => 'Obriši zahtjev',
 	'request_type' 	=> 'Tip zahtjeva',
 	'request_types' => 'Tipovi zahtjeva',

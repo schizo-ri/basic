@@ -165,8 +165,11 @@
 															<a href="{{ route('confirmation_show', [ 'absence_id' => $absence->id ]) }}" class="btn-edit" title="{{ __('absence.approve_absence')}}" rel="modal:open" >
 																<i class="far fa-check-square"></i>
 															</a>
+														@else
+															<a href="{{ route('absences.edit', $absence->id) }}" class="btn-edit" title="{{ __('absence.request_edit_absence')}}" rel="modal:open" >
+																<i class="far fa-edit"></i>
+															</a> 
 														@endif
-													
 													</td>
 												</tr>
 										@endforeach

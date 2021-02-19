@@ -1,5 +1,11 @@
 <div class="modal-header">
-	<h3 class="panel-title">@lang('absence.edit_absence')</h3>
+	<h3 class="panel-title">
+		@if(! Sentinel::inRole('administrator'))
+			@lang('absence.request_edit_absence')
+		@else
+			@lang('absence.edit_absence')
+		@endif
+	</h3>
 </div>
 <div class="modal-body">
 	<form role="form" method="post" name="myForm" accept-charset="UTF-8" action="{{ route('absences.update', $absence->id ) }}">
@@ -14,8 +20,9 @@
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 		@else
+			<input type="text" name="request_edit_absence" value="1" hidden/>
 			<p class="padd_10">@lang('absence.i'), {{ $absence->employee->user['first_name']  . ' ' . $absence->employee->user['last_name'] }} 
-				<span class="">@lang('absence.please_approve')</span>
+				<span class="">@lang('absence.please_approve')  @lang('absence.request_edit')</span>
 			</p>
 			<input name="employee_id" type="hidden" value="{{  $absence->employee_id }}" />
 		@endif
@@ -73,7 +80,7 @@
 		@endif
 		{{ csrf_field() }}
 		{{ method_field('PUT') }}
-		<input class="btn-submit" type="submit" value="{{ __('basic.edit')}}" id="stil1">
+		<input class="btn-submit" type="submit" value="{!! Sentinel::inRole('administrator') ? __('basic.edit') :  __('basic.send') !!}" id="stil1">
 		<a href="#" rel="modal:close" class="btn-close">@lang('basic.cancel')</a>
 	</form>
 </div>

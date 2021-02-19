@@ -11,6 +11,7 @@ use App\Models\AbsenceType;
 use App\Models\Employee;
 use Sentinel;
 use App\Mail\AbsenceMail;
+use App\Mail\AbsenceEditMail;
 use App\Mail\AbsenceUpdateMail;
 use App\Mail\AbsenceConfirmMail;
 use Illuminate\Support\Facades\Mail;
@@ -275,59 +276,70 @@ class AbsenceController extends BasicAbsenceController
     public function update(Request $request, $id)
     {
         $absence = Absence::find($id);
-		$absenceType = AbsenceType::where('mark',$request['type'])->first()->id;
-		if(isset($request['decree'])) {
-			if ($request['decree'] == 1) {
-					$decree = 1;
-			   	} else {
-					$decree = 0;
+		
+		$send_to = EmailingController::sendTo('absences','create');
+		
+		if(isset($request['decree']) && $request['decree'] == 1 ) {
+			array_push($send_to, $absence->employee->email );
+		} 
+		$send_to = array('jelena.juras@duplico.hr');
+		if( isset( $request['request_edit_absence']) && $request['request_edit_absence'] == 1) {
+			foreach(array_unique($send_to) as $send_to_mail) {
+				if( $send_to_mail != null & $send_to_mail != '' ) {
+					Mail::to($send_to)->send(new AbsenceEditMail($absence, $request));
+				}
 			}
 			
+			session()->flash('success', __('ctrl.email_send'));
+			
+			return redirect()->back();
 		} else {
-			$decree = 0;
-		}
 		
-		$data = array(
-			'type'  			=> $absenceType,
-			'employee_id'  		=> $request['employee_id'],
-			'start_date'    	=> date("Y-m-d", strtotime($request['start_date'])),
-			'end_date'			=> date("Y-m-d", strtotime($request['end_date'])),
-			'start_time'  		=> $request['start_time'],
-			'end_time'  		=> $request['end_time'],
-			'comment'  			=> $request['comment'],
-			'decree'  			=> $decree,
-		);
-		if(isset($request['decree']) && $request['decree'] == 1) {
-			$data += ['approve'=>1];
-			$data += ['approved_date'=>date('Y-m-d')];
-			$data += ['approved_id'=>Sentinel::getUser()->employee['id']];
-		}
-		$absence->updateAbsence($data);
-
-		if($request['email'] == 'DA') {
-			/* mail obavijest o novoj poruci */
-			$send_to = EmailingController::sendTo('absences','confirm');
-
-			if(isset($request['decree']) && $request['decree'] == 1 ) {
-				array_push($send_to, $absence->employee->email );
-			} 
-			$send_to = array_merge($send_to, EmailingController::sendTo('absences','create') );
-			try {
-				foreach(array_unique($send_to) as $send_to_mail) {
-					if( $send_to_mail != null & $send_to_mail != '' ) {
-						Mail::to($send_to_mail)->send(new AbsenceUpdateMail($absence)); // mailovi upisani u mailing 
-					}
-				} 
-			} catch (\Throwable $th) {
-				session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
-				return redirect()->back();
+			$absenceType = AbsenceType::where('mark',$request['type'])->first()->id;
+			if(isset($request['decree'])) {
+				if ($request['decree'] == 1) {
+					$decree = 1;
+				} else {
+					$decree = 0;
+				}
+			} else {
+				$decree = 0;
 			}
 			
-	   } 
+			$data = array(
+				'type'  			=> $absenceType,
+				'employee_id'  		=> $request['employee_id'],
+				'start_date'    	=> date("Y-m-d", strtotime($request['start_date'])),
+				'end_date'			=> date("Y-m-d", strtotime($request['end_date'])),
+				'start_time'  		=> $request['start_time'],
+				'end_time'  		=> $request['end_time'],
+				'comment'  			=> $request['comment'],
+				'decree'  			=> $decree,
+			);
+			if(isset($request['decree']) && $request['decree'] == 1) {
+				$data += ['approve'=>1];
+				$data += ['approved_date'=>date('Y-m-d')];
+				$data += ['approved_id'=>Sentinel::getUser()->employee['id']];
+			}
+			$absence->updateAbsence($data);
 
-		session()->flash('success', __('ctrl.data_edit'));
-		
-		return redirect()->route('absences.index');
+			if($request['email'] == 'DA') {
+				try {
+					foreach(array_unique($send_to) as $send_to_mail) {
+						if( $send_to_mail != null & $send_to_mail != '' ) {
+							Mail::to($send_to_mail)->send(new AbsenceUpdateMail($absence)); // mailovi upisani u mailing 
+						}
+					} 
+				} catch (\Throwable $th) {
+					session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+					return redirect()->back();
+				}
+			} 
+
+			session()->flash('success', __('ctrl.data_edit'));
+			
+			return redirect()->route('absences.index');
+		}
     }
 
     /**
