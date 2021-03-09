@@ -3,6 +3,7 @@
     use App\Http\Controllers\DashboardController;
     use App\Models\Campaign;
     use App\Models\Project;
+    use App\Models\Vacation;
 	$countQuestionnaire =  Questionnaire::countQuestionnaire();
     $countCampaign = Campaign::countCampaign();
     $permission_dep = DashboardController::getDepartmentPermission();
@@ -23,6 +24,14 @@
                 <p class="button_nav_text">@lang('welcome.home')</p>
             </a>
         </div>
+        @if ( Sentinel::inRole('administrator') || count( Vacation::whereDate('end_date', '>=', date('Y-m-d'))->where('active',1)->get()) > 0 )
+            <div class="">
+                <a class="button_nav load_button vacations_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('vacations.show',1) }}" title="{{ __('absences.vacations') }}">
+                    <span class="button_nav_img img beach "></span>
+                    <p class="button_nav_text">@lang('absence.vacations')</p>
+                </a>
+            </div>
+        @endif
         @if(in_array('Poruke', $moduli))
             @if(Sentinel::getUser()->hasAccess(['posts.view']) || in_array('posts.view', $permission_dep) )
                 <div class="div_posts">
@@ -153,7 +162,7 @@
         @endif
         @if (Sentinel::getUser()->employee )
             @if( Sentinel::getUser()->hasAccess(['energy_consumptions.view']) || in_array('energy_consumptions.view', $permission_dep) )
-                @if ( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasTask->where('energy_consumptions', 1)->where('active', 1) )) > 0  )
+                @if ( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasTask->where('energy_consumptions', 1)->where('active', 1) ) > 0  ) 
                     <div class="">
                         <a class="button_nav load_button energy_consumptions_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('energy_consumptions.index') }}" title="Potrošnja energenata">
                             <span class="button_nav_img"><i class="fas fa-plug"></i></span>
@@ -163,5 +172,15 @@
                 @endif
             @endif
         @endif
+     {{--    @if (Sentinel::inRole('administrator'))
+            @if (Sentinel::getUser()->employee )
+                <div class="">
+                    <a class="button_nav load_button categorizations_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('categorizations.index') }}" title="Potrošnja energenata">
+                        <span class="button_nav_img"><i class="fas fa-plug"></i></span>
+                        <p class="button_nav_text">Kompentencije</p>
+                    </a>	
+                </div>
+            @endif
+        @endif --}}
     </div>
 </section>

@@ -241,9 +241,12 @@ label.schedule_set {
 	bottom: 0;
 	cursor: pointer;
 }
-
+.select2-hidden-accessible {
+    display: none;
+}
 #checkboxes, #checkboxes1 {
-	display: none;
+ /*    height: 0; */
+	/* display: none; */
 /* 	border: 1px #dadada solid; */
    /*  position: absolute;
     left: 0px;

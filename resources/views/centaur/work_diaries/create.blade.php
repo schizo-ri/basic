@@ -19,7 +19,7 @@
 		@endif
 		<div class="form-group datum date1 float_l  {{ ($errors->has('date')) ? 'has-error' : '' }}" >
 			<label>@lang('basic.date')</label>
-			<input name="date" id="date" class="form-control" type="date" value="{{ old('date') }}{{-- {!!  old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}"  min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-1 day'), 'Y-m-d') : '' !!} --}}" required >
+			<input name="date" id="date" class="form-control" type="date" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}" min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-1 day'), 'Y-m-d') : '' !!}" required >
 			{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		@for ($i = 1; $i <= 5; $i++)

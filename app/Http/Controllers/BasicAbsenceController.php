@@ -144,6 +144,8 @@ class BasicAbsenceController extends Controller
 			$all_service = BasicAbsenceController::yearsServiceAll($user);  /* ukupan staž  */
 			$date = new DateTime('now');    /* današnji dan */
 			$ova_godina = date_format($date,'Y');
+			
+			$days = 0;
 
 			if( $user->abs_days != null ) {
 				if( array_key_exists($ova_godina, unserialize( $user->abs_days))) {
@@ -160,12 +162,12 @@ class BasicAbsenceController extends Controller
 				}
 
 				$days += (int)($all_service[0]/ 4);
-
+				
 				$days_for_kids = BasicAbsenceController::kids($user, $ova_godina);
 		
 				$days =  $days + $days_for_kids;
 
-				If($days > 25){
+				if($days > 25){
 					if($_max_days) {
 						$days = $_max_days;
 					} else {
@@ -295,14 +297,9 @@ class BasicAbsenceController extends Controller
 			} else {
 				/* Računa ukupan staz za određenu godinu - do 31.12.*/
 				$stazPG =  BasicAbsenceController::stazUkupnoPG($user, $godina);
-
 				$dana_staza = $stazPG[2];
 				$mjeseci_staza = $stazPG[1];
 				$godina_staza = $stazPG[0];
-				
-				if($stazPG > 7) {
-
-				}
 			
 				if(($dana_staza) > 30){
 					$dana_staza = $dana_staza -30;
@@ -326,7 +323,6 @@ class BasicAbsenceController extends Controller
 
 				$days_for_kids = BasicAbsenceController::kids($user, $godina);
 				$days = $days + $days_for_kids;
-				/* Log::info('godisnjiGodina '.$user->email .' '. $godina. ' '.$days ); */
 				If($days > 25){
 					if($_max_days) {
 						$days = $_max_days;
@@ -437,11 +433,13 @@ class BasicAbsenceController extends Controller
 		}
 		
 		/* Računa dane GO za djecu*/	
-		public static function kids($user, $year){
+		public static function kids($user, $year)
+		{
 			$kids = Kid::where('employee_id', $user->id)->get();
-			$today = date('m-d');
-
-			$datum = new DateTime($year . '-' . $today);  
+			
+			/* $today = date('m-d');
+			$datum = new DateTime($year . '-' . $today);   */
+			$datum = new DateTime($year . '-12-31'); 
 
 			$day = 0;
 			$kid_age;
@@ -450,9 +448,9 @@ class BasicAbsenceController extends Controller
 				if( date('Y', strtotime($kid->b_day )) <= $year ) {
 					$b_day = new DateTime($kid->b_day);  /* datum rođenja djeteta */
 					$kid_age = $b_day->diff($datum);
-					/* Log::info( 'kids '. $user->email .' '. $year.' '. $kid_age->y ); */
+				
 
-					if((int)$kid_age->y < 7){
+					if((int)$kid_age->y <= 7){
 						$count_kids += 1;
 					}
 				}
@@ -893,8 +891,6 @@ class BasicAbsenceController extends Controller
 							}
 						}	
 					}
-				/* 	Log::info("*****************". $year ."*****************" );
-					Log::info($zahtjevi_godina ); */
 					$requestsArray[$year] = array_unique(array_merge( $zahtjevi_godina ));	
 				}
 			}
@@ -1075,9 +1071,7 @@ class BasicAbsenceController extends Controller
 		*/
 		public static function afterHoursNoPaid($user) 
 		{
-			/* Log::info($user->id); */
 			$afterHours = Afterhour::where('employee_id', $user->id)->where('paid',null)->orWhere('paid',0)->where('approve',1)->get();
-		/* 	Log::info(count($afterHours)); */
 			$hours = 0;
 			foreach ($afterHours as $afterHour) {
 				if($afterHour->approve_h) {
@@ -1097,7 +1091,6 @@ class BasicAbsenceController extends Controller
 				}
 				
 			}
-			/* Log::info('afterHoursNoPaid ' . $hours); */
 			return $hours;
 		}	
 
@@ -1209,20 +1202,25 @@ class BasicAbsenceController extends Controller
 		public static function days_offUsed( $user )
 		{
 			$days_off = Absence::AllAbsenceUser($user->id,'SLD');
-			$days_off = $days_off->where('approve',1);
-
 			$count_days = 0;
-			$holidays = BasicAbsenceController::holidays();
+
+			if( $days_off != null) {
+				$days_off = $days_off->where('approve',1);
+			
+
 		
-			foreach($days_off as $request ){
-				$begin = new DateTime($request->start_date);
-				$end = new DateTime($request->end_date);
-				$end->setTime(0,0,1);
-				$interval = DateInterval::createFromDateString('1 day');
-				$period = new DatePeriod($begin, $interval, $end);
-				foreach ($period as $day) {
-					if(! in_array(date_format($day,'Y-m-d'), $holidays) && date_format($day,'N') < 6) {
-						$count_days += 1;
+				$holidays = BasicAbsenceController::holidays();
+			
+				foreach($days_off as $request ){
+					$begin = new DateTime($request->start_date);
+					$end = new DateTime($request->end_date);
+					$end->setTime(0,0,1);
+					$interval = DateInterval::createFromDateString('1 day');
+					$period = new DatePeriod($begin, $interval, $end);
+					foreach ($period as $day) {
+						if(! in_array(date_format($day,'Y-m-d'), $holidays) && date_format($day,'N') < 6) {
+							$count_days += 1;
+						}
 					}
 				}
 			}
@@ -1289,7 +1287,67 @@ class BasicAbsenceController extends Controller
 		public static function holidays_with_names () 
 		{
 			$holidays = array(
-				"2019-01-01"	=>	"Nova godina",
+				/* array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-01-01", "title" => "Nova godina"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-01-06", "title" => "Sveta tri kralja"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-04-21", "title" => "Uskrs"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-04-22", "title" => "Uskrsni ponedjeljak"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-05-01", "title" => "Praznik rada"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-06-20", "title" => "Tijelovo"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-06-22", "title" => "Dan antifašističke borbe"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-06-25", "title" => "Dan državnosti"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-08-05", "title" => "Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-08-15", "title" => "Velika Gospa"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-10-08", "title" => "Dan neovisnosti"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-11-01", "title" => "Dan svih svetih"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-12-25", "title" => "Božić"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2019-12-26", "title" => "Sveti Stjepan"),
+				
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-01-01", "title" => "Nova godina"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-01-06", "title" => "Sveta tri kralja"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-04-12", "title" => "Uskrs"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-04-13", "title" => "Uskrsni ponedjeljak"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-05-01", "title" => "Praznik rada"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-05-30", "title" => "Dan državnosti"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-06-11", "title" => "Tijelovo"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-06-22", "title" => "Dan antifašističke borbe"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-08-05", "title" => "Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-08-15", "title" => "Velika Gospa"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-11-01", "title" => "Dan svih svetih"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-11-18", "title" => "Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-12-25", "title" => "Božić"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2020-12-26", "title" => "Sveti Stjepan"),
+				
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-01-01", "title" => "Nova godina"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-01-06", "title" => "Sveta tri kralja"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-04-04", "title" => "Uskrs"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-04-05", "title" => "Uskrsni ponedjeljak"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-05-01", "title" => "Praznik rada"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-05-30", "title" => "Dan državnosti"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-06-03", "title" => "Tijelovo"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-06-22", "title" => "Dan antifašističke borbe"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-08-05", "title" => "Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-08-15", "title" => "Velika Gospa"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-11-01", "title" => "Dan svih svetih"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-11-18", "title" => "Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-12-25", "title" => "Božić"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2021-12-26", "title" => "Sveti Stjepan"),
+				
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-01-01", "title" => "Nova godina"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-01-06", "title" => "Sveta tri kralja"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-04-17", "title" => "Uskrs"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-04-18", "title" => "Uskrsni ponedjeljak"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-05-01", "title" => "Praznik rada"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-05-30", "title" => "Dan državnosti"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-06-16", "title" => "Tijelovo"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-06-22", "title" => "Dan antifašističke borbe"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-08-05", "title" => "Dan pobjede i domovinske zahvalnosti i Dan hrvatskih branitelja"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-08-15", "title" => "Velika Gospa"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-11-01", "title" => "Dan svih svetih"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-11-18", "title" => "Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-12-25", "title" => "Božić"),
+				array("name" => "holiday", "type" => __('basic.holidays'), "date" => "2022-12-26", "title" => "Sveti Stjepan"), */
+
+				 "2019-01-01"	=>	"Nova godina",
 				"2019-01-06"	=>	"Sveta tri kralja",
 				"2019-04-21"	=>	"Uskrs",
 				"2019-04-22"	=>	"Uskrsni ponedjeljak",
@@ -1347,7 +1405,7 @@ class BasicAbsenceController extends Controller
 				"2022-11-01"	=>	"Dan svih svetih",
 				"2022-11-18"	=>	"Dan sjećanja na žrtve Domovinskog rata i Dan sjećanja na žrtvu Vukovara i Škabrnje",
 				"2022-12-25"	=>	"Božić",
-				"2022-12-26"	=>	"Sveti Stjepan",
+				"2022-12-26"	=>	"Sveti Stjepan", 
 			);
 
 			return $holidays;

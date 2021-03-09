@@ -15,6 +15,7 @@ $(function(){
 		var sheet;
 		var approve;
 		var form_data;
+		var url_delete;
 		var url_load;
 		var type;
 		var type_text;
@@ -579,7 +580,6 @@ $(function(){
 		$('tr.tr_open_link td:not(.not_link)').on('click', function(e) {
 			e.preventDefault();
 			url = location.origin + $( this ).parent().attr('data-href');
-			console.log(url);
 			window.location = url;
 		});
 		

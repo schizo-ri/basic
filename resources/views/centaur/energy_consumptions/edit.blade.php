@@ -34,7 +34,11 @@
 				<p class="last_counter">Zadnje upisano stanje: <span></span></p>
 				<p class="result">Razika od prošlog upisa <span id="result"></span></p>
 				<input name="counter" type="number" class="form-control" id="counter" maxlength="20" value="{{ $energyConsumption->counter }}" required >
-				
+				<br>
+				<label class="{!! $energyConsumption->no_counter > 2 ? 'hidden' : '' !!}">Stanje brojila 2</label>
+				<p class="last_counter2 {!! $energyConsumption->no_counter > 2 ? 'hidden' : '' !!}">Zadnje upisano stanje: <span></span></p>
+				<p class="result2 {!! $energyConsumption->no_counter > 2 ? 'hidden' : '' !!}">Razika od prošlog upisa <span id="result2"></span></p>
+				<input class="{!! $energyConsumption->no_counter > 2 ? 'hidden' : '' !!}" name="counter2" type="number" class="form-control" id="counter2" maxlength="20" value="{{ $energyConsumption->counter2 }}" required {!! $energyConsumption->no_counter > 2 ? 'disabled' : '' !!}   >
 				{!! ($errors->has('counter') ? $errors->first('counter', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('comment'))  ? 'has-error' : '' }}" style="padding-top: 10px">

@@ -4,9 +4,6 @@
 @php use App\Http\Controllers\QuestionnaireController; @endphp
 @section('content')
 <div class="index_page index_documents">
-	<!-- <aside class="col-xs-12 col-sm-12 col-md-4 col-lg-4 float_left">
-		@include('Centaur::side_noticeboard')
-	</aside> -->
 	<main class="col-xs-12 col-sm-12 col-md-12 index_main main_documents float_right">
 		<section>
 			<div class="page-header header_questionnaire">

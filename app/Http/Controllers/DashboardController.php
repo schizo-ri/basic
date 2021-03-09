@@ -28,6 +28,9 @@ use Sentinel;
 use DateTime;
 use DB;
 use Artisan;
+use App\Models\WorkDiary;
+use App\Models\Project;
+use App\Models\WorkTask;
 
 class DashboardController extends Controller
 {
@@ -38,7 +41,6 @@ class DashboardController extends Controller
      */
     public function index()
     {      
-        
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
             if($employee) {
@@ -117,7 +119,6 @@ class DashboardController extends Controller
     {
         $user_name = '';
         $employee = Employee::find( $employee_id );
-        
         
 		if( $employee ) {
 			$user_name = explode('.',strstr($employee->email,'@',true));
@@ -204,7 +205,7 @@ class DashboardController extends Controller
 
     public function change_lang($lang)
     {
-        if(in_array($lang,['en','de','hr','uk'])){
+        if( in_array($lang,['en','de','hr','uk']) ){
           session(['locale'=> $lang]);
         }
         return back();

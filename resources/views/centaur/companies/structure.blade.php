@@ -3,21 +3,17 @@
 @section('title', __('basic.company'))
 
 @section('content')
+    <header class="page-header">
+        <div class="index_table_filter structure_company">
+            <label>
+                <input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
+            </label>
+            <span class="page_link collaps_all">Prikaži sve</span>
+        </div>
+    </header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="table-responsive">
-            @php
-           
-            @endphp
-            <header class="page-header">
-                <div class="index_table_filter">
-                    <label>
-                        <input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
-                    </label>
-                    <a class="page_link" href="{{ route('structure') }}">Struktura firme</a>
-
-                </div>
-            </header>
-	        <main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	        <main class="mail_structurecol-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="structure">
                     @foreach($company->hasDepartments_level0 as $department0)
                         <div>
@@ -121,4 +117,15 @@
             </main>
 		</div>
 	</main>
+    <script>
+        $('.collaps_all').on('click', function(){
+            $('.collaps_element').toggle();
+            $('p').toggle();
+            if( $(this).text() == 'Prikaži sve') {
+                $(this).text('Sakrij sve');
+            } else {
+                $(this).text('Prikaži sve');
+            }
+        });
+    </script>
 @stop

@@ -56,7 +56,8 @@ class EnergySourceController extends Controller
     {
         $data = array(
             'name'  	=> $request['name'],
-            'comment' 	=> $request['comment'],
+            'comment'   => $request['comment'],
+            'no_counter' => $request['no_counter'],
         );
         
         $energySource = new EnergySource();
@@ -103,6 +104,7 @@ class EnergySourceController extends Controller
         $data = array(
             'name'  	=> $request['name'],
             'comment' 	=> $request['comment'],
+            'no_counter' => $request['no_counter'],
         );
         
         $energySource->updateEnergySource($data);

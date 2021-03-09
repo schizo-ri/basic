@@ -918,6 +918,9 @@ summary {
 .margin_l_20 {
     margin-left:20px;
 }
+.margin_r_20 {
+    margin-right:20px;
+}
 .position_rel {
     position: relative;
 }
@@ -999,6 +1002,10 @@ summary {
 .bg_blue {
     background-color: #1694f0 !important;
 }
+.bg_lightgreen {
+    background-color: #a6f5aa !important;
+}
+
 .green {
     color: green;
 }
@@ -3411,6 +3418,10 @@ class="select-css"
     padding: 0;
 }
 
+.index_main main.mail_structure {
+    overflow: auto;
+}
+
 .index_main main.main_campaign,.index_main main.main_benefits {
     background-color: #fff;
     overflow: hidden;
@@ -4055,16 +4066,19 @@ table ul {
     border: 1px solid rgba(7, 30, 86, 0.1);
     border-radius: 5px;
 }
-.select2.select2-container {
-  /*   float: left; */
-}
+
 .toggle-vis {
-    border: 1px solid #ccc;
+    border: 1px solid #dee2e6;
     padding: 5px;
     border-radius: 5px;
     margin-right: 5px;
     margin-bottom: 5px;
 }
+
+.col_visible {
+    border-color: cornflowerblue;
+}
+
 .header_ads .index_table_filter .select_filter:hover,
  .notice_filter .select_filter:hover, 
  .fuel_header .select_filter:hover, 
@@ -4533,6 +4547,11 @@ form.after_form  {
     margin-left: 15px;
     color: #606060;
 }
+
+tbody tr:nth-child(odd){
+    border-top: 1px solid #ccc;
+}
+
 .sequence_links > a.sendEmail, .notice_links > a.sendEmail {
     font-size: 1.063rem;
 }
@@ -5013,12 +5032,67 @@ button.scroll_left {
     height: calc(100% - 80px);
     padding: 0 15px;
 }
+
+.btn_addVacation {
+    border: 1px solid #1183d4;
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px rgb(17 131 212 / 50%);
+    padding: 5px 10px;
+    background: #1183d4;
+    color: white;
+    /* position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%); */
+    margin-bottom: 20px;
+}
+
+.vacation_list {
+    display: block;
+    margin-bottom: 5px;
+    padding: 5px 15px;
+    line-height: 20px;
+    background: aliceblue;
+    text-align: start;
+}
+
 .index_page .index_main.main_absence, .index_page.index_documents .index_main.main_documents {
     background: none;
-    /* background: #ffffff; */
-  /*  box-shadow: none;*/
     border: none;
     color: inherit;
+}
+
+table.dataTable.vacation_plan tbody td {
+    padding: 15px;
+    vertical-align:baseline;
+    text-align: center;
+}
+table.dataTable.vacation_plan tbody tr.basic_view td {
+    padding-bottom: 50px;
+ 
+}
+table.dataTable.vacation_plan tbody tr.basic_view td>div {
+    display: inline-grid;
+    width: 100%;
+}
+table.dataTable.vacation_plan thead tr th {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    vertical-align: middle;
+    max-width: 40vw;
+    min-width: 120px;
+    z-index: 1;
+}
+.vacation_plan th:not(:last-child), .vacation_plan td:not(:last-child) {
+    border-right: 1px solid #ccc;
+}
+a.add_plan {
+    color: lightgray;
+    width: 100%;
+    height: 100%;
+}
+.index_documents h5 {
+    margin: 20px 0;
 }
 .index_page .index_main.main_absence {
     box-shadow: none;
@@ -5491,8 +5565,16 @@ main.all_absences.all_absences_employee >section {
     width: 40px;
     float: right;
     right: auto;
-
 }
+
+.index_table_filter > a.add_new.create_request {
+    width: auto;
+    vertical-align: middle;
+    display: inline-block;
+    padding: 10px;
+    text-transform: uppercase;
+}
+
 label.add_new {
     cursor: text;
 }
@@ -5508,6 +5590,11 @@ label.add_new {
     border-radius: 0 0 3px 3px;
     padding: 0 10px;
 }
+
+.index_page table.dataTable.display tbody tr td.sorting_1:first-child {
+    order: 1;
+    background: white;
+} 
 
 .table tbody td {
     position: relative;
@@ -5758,6 +5845,7 @@ main.index_main>section.section_evidention {
     width: 30%;
     padding: 0;
     float: left;
+    margin-bottom: 0;
 }
 
 .not_scheduled {
@@ -5840,12 +5928,14 @@ s
     padding-left: 40px;
     font-weight: 600;
 }
+
 h4 small, h5 small, h6 small, p small {
     font-size: 0.625rem;
     font-weight: 400;
     float: right;
     text-transform: uppercase;
 }
+
 p.comment_empl small {
     float: none;
 }
@@ -5853,15 +5943,17 @@ p.comment_empl small {
 .structure div {
     padding-left: 20px;
 }
+
 .structure div.dep_workers {
     display: none;
     padding-left: 60px;
 }
 .structure p {
     display: none;
-    font-size: 11px;
+    font-size:  0.6875rem;
     padding-left: 40px;
 }
+
 .structure span {
     display: block;
     margin-bottom: 10px;
@@ -5869,16 +5961,22 @@ p.comment_empl small {
     font-size: 0.75rem;
     padding: 5px 10px;
     border-bottom: 2px solid #ccc;
+    font-size: 0.6875rem;
 }
 
 input[type="search"]::-webkit-search-cancel-button {
     /* Remove default */
     -webkit-appearance: none;
 }
+
 div.collaps_element {
     display: none;
 }
-.table-responsive .table thead th {
+.collaps_element>p{
+    font-size: 0.75rem;
+    color: #0069d9;
+}
+.table-responsive .table thead th:not(.vacation_plan th) {
     border: none;
     text-align: left;
     z-index: 1;
@@ -7183,8 +7281,8 @@ a.modal_close {
     }
     .table-responsive .dataTables_wrapper {
         padding: 0;
-        height: 100%;
-        overflow: auto;
+        height: auto;
+      /*   overflow: auto; */
     }
     .index_page .index_main.main_absence {
         padding: 0;
@@ -7288,6 +7386,9 @@ a.modal_close {
     .table-responsive .table thead th {
         min-width: 33%;
         padding-right: 21px;
+    }
+    .table-responsive .table.vacation_plan th, .vacation_plan td {
+        min-width: 25vw !important;
     }
     .index_page .index_aside {
         width: 100%;
@@ -7949,7 +8050,7 @@ table.dataTable thead th {
    /*  z-index: 1; */
 }
 
-table.dataTable thead th, table.dataTable thead td{
+table.dataTable thead th:not(.vacation_plan th), table.dataTable thead td{
 /* 	padding-top: 15px; */
 	border: none;	
 }
@@ -8330,6 +8431,11 @@ ul.nav_ul.float_right li img {
     justify-content: center;
     align-items: center;
 }
+
+.topnav.nav_top a.shortcut {
+    padding: 0 10px;  
+}
+
 .topnav.nav_top a.link_home {
 	padding: 28px 0;
 	padding-left: 30px;
@@ -9468,7 +9574,6 @@ span.button_nav_img.campaign {
 .layout_button button:hover, .layout_button button:active, .shortcuts_container .shortcut_box>a:hover, .shortcuts_container .profile_img>span:hover, .shortcuts_container #left-button-scroll:hover, .shortcuts_container #right-button-scroll:hover{
 	border: 1px solid #1594F0;
 	text-decoration: none;
-	padding: 10px;
 }
 
 table.table_fuel, table.table_service {

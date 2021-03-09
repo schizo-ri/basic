@@ -37,7 +37,9 @@
 									<th>Energent</th>
 									<th>Datum očitanja</th>
 									<th>Stanje brojila</th>
-									<th>Potrošnja </th>
+									<th>Potrošnja brojilo 1</th>
+									<th>Stanje brojila 2</th>
+									<th>Potrošnja brojilo 2 </th>
 									<th>Komentar</th>
 									<th>@lang('basic.options')</th>
 								</tr>
@@ -55,6 +57,8 @@
 										<td>{{ date('d.m.Y', strtotime( $energyConsumption->date) ) }}</td>
 										<td>{{ $energyConsumption->counter }}</td>
 										<td>{!! $prevConsumption ? $energyConsumption->counter - $prevConsumption->counter : '' !!}</td>
+										<td>{{ $energyConsumption->counter2 }}</td>
+										<td>{!! $prevConsumption ? $energyConsumption->counter2 - $prevConsumption->counter2 : '' !!}</td>
 										<td>{{ $energyConsumption->comment }}</td>
 										<td class="center">
 											@if(Sentinel::getUser()->hasAccess(['energy_consumptions.update']) || in_array('energy_consumptions.update', $permission_dep))

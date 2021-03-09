@@ -153,6 +153,9 @@
 .margin_l_20 {
     margin-left:20px;
 }
+.margin_r_20 {
+    margin-right:20px;
+}
 .position_rel {
     position: relative;
 }
@@ -234,6 +237,10 @@
 .bg_blue {
     background-color: #1694f0 !important;
 }
+.bg_lightgreen {
+    background-color: #a6f5aa !important;
+}
+
 .green {
     color: green;
 }

@@ -86,9 +86,9 @@ class TaskCreateNotification extends Command
 
             // ako je vikend pomakni na ponedjeljak
             if(date_format($task_date, 'N') == 6 ) {
-                $end_date->modify('+2days');
+                $task_date->modify('+2days');
             } else if(date_format($task_date, 'N') == 7 ) {
-                $end_date->modify('+1day');
+                $task_date->modify('+1day');
             } 
 
             if( $end_date == null || strtotime(date_format($task_date, 'Y-m-d')) <= strtotime(date_format($end_date, 'Y-m-d'))) {

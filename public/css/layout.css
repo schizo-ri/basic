@@ -25,7 +25,7 @@ table.dataTable thead th {
    /*  z-index: 1; */
 }
 
-table.dataTable thead th, table.dataTable thead td{
+table.dataTable thead th:not(.vacation_plan th), table.dataTable thead td{
 /* 	padding-top: 15px; */
 	border: none;	
 }
@@ -406,6 +406,11 @@ ul.nav_ul.float_right li img {
     justify-content: center;
     align-items: center;
 }
+
+.topnav.nav_top a.shortcut {
+    padding: 0 10px;  
+}
+
 .topnav.nav_top a.link_home {
 	padding: 28px 0;
 	padding-left: 30px;
@@ -1544,7 +1549,6 @@ span.button_nav_img.campaign {
 .layout_button button:hover, .layout_button button:active, .shortcuts_container .shortcut_box>a:hover, .shortcuts_container .profile_img>span:hover, .shortcuts_container #left-button-scroll:hover, .shortcuts_container #right-button-scroll:hover{
 	border: 1px solid #1594F0;
 	text-decoration: none;
-	padding: 10px;
 }
 
 table.table_fuel, table.table_service {

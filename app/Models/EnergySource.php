@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EnergySource extends Model
 {
-    protected $fillable = ['name','comment'];
+    protected $fillable = ['name','comment','no_counter'];
    
     /*
 	* Save EnergySource

@@ -32,6 +32,6 @@ return [
 	'afterhour_approve'			=> 'Odobrenje zahtjeva za prekovremeni rad ',
 	'new_temporary_employee'	=> 'Privremeni djelatnik - obavijest ' . ' o ' . ' početku ' . ' rada',
 	'expiry_training'			=> 'Istek ' . ' osposobljavanja ',
-	'sickne_info'				=> 'Obavijest o bolovanju',
+	'sicknes_info'				=> 'Obavijest o bolovanju',
 ];
 ?>

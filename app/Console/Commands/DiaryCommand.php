@@ -10,7 +10,6 @@ use Sentinel;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DiaryMail;
 use DateTime;
-use Log;
 
 class DiaryCommand extends Command
 {
@@ -53,17 +52,15 @@ class DiaryCommand extends Command
             $send_to = array('jelena.juras@duplico.hr');
             $project = Project::find($project_id); 
             if($project->employee_id ) {
-                array_push( $send_to,$project->employee->email ); 
+                array_push( $send_to, $project->employee->email ); 
             }
             if($project->employee_id2 ) {
-                array_push( $send_to,$project->employee2->email ); 
+                array_push( $send_to, $project->employee2->email ); 
             }
-            Log::info($send_to);
-           
+            
             foreach ($send_to as $send_to_mail) {
                 Mail::to($send_to_mail)->send(new DiaryMail($project_workDiaries));
             }
         }
-    
     }
 }

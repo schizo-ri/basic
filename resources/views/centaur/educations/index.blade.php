@@ -25,7 +25,7 @@
 						</div>
 					</header>
 					<section class="page-main">
-						@if(count($educations)>0)
+						@if($educations && count($educations)>0)
 							<table id="index_table" class="display table table-hover">
 								<thead>
 									<tr>

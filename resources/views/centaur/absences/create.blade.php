@@ -37,7 +37,10 @@
 				<select class="form-control" name="type" value="{{ old('type') }}" id="request_type" required >
 					<option disabled selected value></option>
 					@foreach($absenceTypes as $absenceType)
-						<option value="{{ $absenceType->mark }}" {!! $type ==  $absenceType->mark ? 'selected' : '' !!} {!! $absenceType->mark == 'SLD' && $preostali_dani != 0 ? 'hidden' : '' !!}>{{ $absenceType->name}}</option>
+						@if ( $absenceType->mark != 'SLD' || ($absenceType->mark == 'SLD' && $user->employee->days_off == 1  ) )
+							<option value="{{ $absenceType->mark }}">{{ $absenceType->name}}</option>
+					
+						@endif
 					@endforeach
 				</select> 
 			@endif

@@ -14,6 +14,11 @@
 				<textarea class="form-control" maxlength="65535" name="comment">{{ $energySource->comment }}</textarea>
 				{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<div class="form-group {{ ($errors->has('no_counter')) ? 'has-error' : '' }}">
+				<label for="">Broj brojila</label>
+				<input class="form-control" name="no_counter" type="number" min="1" max="2" value="{!! $energySource->no_counter ? $energySource->no_counter : 1 !!}" required />
+				{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
 			{{ csrf_field() }}
 			{{ method_field('PUT') }}
 			<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">

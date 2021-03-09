@@ -41,14 +41,14 @@
 										<td>{{ $task->task }} <br> <small>{{ $task->description }}</small></td>
 										<td>
 											@php
-												$to_employees = explode(',',$task->to_employee_id);
+												$to_employees = explode(',', $task->to_employee_id);
 											@endphp
 											@foreach($to_employees as $employee_id)
-												{{ $employees->where('id', $employee_id)->first()->first_name . ' ' . $employees->where('id', $employee_id)->first()->last_name }} <br>
+												{!! $employees->where('id', $employee_id)->first() ? $employees->where('id', $employee_id)->first()->first_name . ' ' . $employees->where('id', $employee_id)->first()->last_name : '' !!} <br>
 											@endforeach
 										</td>
 										<td>{{ date('d.m.Y', strtotime($task->start_date )) }}</td>
-										<td>{{ date('d.m.Y', strtotime($task->end_date )) }}</td>
+										<td>{!! $task->end_date ? date('d.m.Y', strtotime($task->end_date )) : '' !!}</td>
 										<td>
 											@switch($task->interval_period)
 												@case('no_repeat')

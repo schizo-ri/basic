@@ -19,9 +19,10 @@
 				<select class="form-control" name="energy_id" required>
 					<option selected disabled></option>
 					@foreach($energySources as $energy)
-						<option name="energy_id" value="{{ $energy->id }}">{{ $energy->name }}</option>
+						<option name="energy_id" value="{{ $energy->id }}" >{{ $energy->name }}</option>
 					@endforeach	
 				</select>
+				<span id="no_counter" hidden ></span>
 				{!! ($errors->has('energy_id') ? $errors->first('energy_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('date')) ? 'has-error' : '' }}">
@@ -34,7 +35,11 @@
 				<p class="last_counter">Zadnje upisano stanje: <span></span></p>
 				<p class="result">Razika od prošlog upisa <span id="result"></span></p>
 				<input name="counter" type="number" class="form-control" id="counter" maxlength="20" value="{{ old('counter') }}" required >
-				
+				<br>
+				<label class="hidden hidden_counter">Stanje brojila 2</label>
+				<p class="last_counter2 hidden hidden_counter">Zadnje upisano stanje: <span></span></p>
+				<p class="result2 hidden hidden_counter">Razika od prošlog upisa <span id="result2"></span></p>
+				<input class="hidden hidden_counter" name="counter2" type="number" class="form-control" id="counter2" maxlength="20" value="{{ old('counter2') }}" required disabled  >
 				{!! ($errors->has('counter') ? $errors->first('counter', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('comment'))  ? 'has-error' : '' }}" style="padding-top: 10px">
@@ -49,4 +54,5 @@
 </div>
 <script>
 	$.getScript('/../js/energy.js');
+	
 </script>

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Document extends Model
 {
 
-	protected $fillable = ['employee_id','path','title','description'];
+	protected $fillable = ['employee_id','path','title','description','category_id'];
 	
 	/*
 	* The Eloquent user model name
@@ -17,6 +17,13 @@ class Document extends Model
 	protected static $employeeModel = 'App\Models\Employee'; 
 	
 	/*
+	* The Eloquent DocumentCategory model name
+	* 
+	* @var string
+	*/
+	protected static $documentCategoryModel = 'App\Models\DocumentCategory'; 
+
+	/*
 	* Returns the Users relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -25,6 +32,17 @@ class Document extends Model
 	public function employee()
 	{
 		return $this->belongsTo(static::$employeeModel,'employee_id');
+	}
+
+	/*
+	* Returns the Users relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function category()
+	{
+		return $this->belongsTo(static::$documentCategoryModel,'category_id');
 	}
 	
 	/*

@@ -123,7 +123,7 @@ class AfterhourController extends Controller
         $tasks = null;
         $projects_erp = null;
 
-        if( $request_empl ) {
+        if( $this->api_erp && $request_empl ) {
             $erp_id = $request_empl->erp_id;
             
             if( $this->api_erp && $erp_id ) {
@@ -160,7 +160,7 @@ class AfterhourController extends Controller
         $employee =  Employee::find($request['employee_id']);
         $request_exist = BasicAbsenceController::afterhoursForDay( $employee->id, $request['date'], $request['start_time'], $request['end_time'] );
         /*** Projekt */
-            if( $employee->erp_id ) {
+            if( $this->api_erp && $employee->erp_id ) {
                 if( $this->api_project ) {
                     $erp_employee = $employee->erp_id;
                     
@@ -184,7 +184,7 @@ class AfterhourController extends Controller
         if( $request_exist == 0  ) {
             $data = array(
                 'ERP_leave_type' => isset($request['ERP_leave_type']) ? $request['ERP_leave_type'] : 67,
-                'erp_task_id'    => isset($request['erp_task_id']) ? $request['erp_task_id'] : null,
+                'erp_task_id'    => isset($request['erp_task_id']) ? $request['erp_task_id'] : 5157,
                 'employee_id'  	 => $request['employee_id'],
                 'project_id'  	 => $this->api_project ? $project_id : ($request['project_id'] ? $request['project_id'] : null),
                 'date'    		 => $request['date'],
@@ -242,7 +242,7 @@ class AfterhourController extends Controller
         $data = array(
             'ERP_leave_type' => 67,
             'diary_id'       => $afterHour->id,
-            'erp_task_id'    => $afterHour->erp_task_id,
+            'erp_task_id'    => $afterHour->erp_task_id ? $afterHour->erp_task_id : 5157,
             'employee_id'  	 => $afterHour->employee_id,
             'project_id'  	 => $afterHour->project_id,
             'date'    		 => $afterHour->date,
@@ -317,7 +317,7 @@ class AfterhourController extends Controller
             $date = $afterhour->date;
         }
 
-        if( $employee ) {
+        if( $this->api_erp && $employee ) {
             $erp_id = $employee->erp_id;
             
             if( $this->api_erp && $erp_id ) {
@@ -401,7 +401,6 @@ class AfterhourController extends Controller
 
     public function storeConf(Request $request)
     {
-        
         $approve_employee = Sentinel::getUser()->employee;
         $message_erp = '';
         $afterHour = Afterhour::find($request['id']);
@@ -564,10 +563,12 @@ class AfterhourController extends Controller
                                 }
                             }
                         }
+                        $send_to_abs = array();
                         if( $this->test_mail ) {
-                            $send_to_abs = 'jelena.juras@duplico.hr';
+                            $send_to_abs = array('jelena.juras@duplico.hr');
                         } else {
                             $employee_mail = $absence->employee->email;
+                           
                             array_push($send_to_abs, $employee_mail ); // mail zaposlenika
 
                             $send_to_abs = EmailingController::sendTo('absences','confirm');
@@ -639,6 +640,25 @@ class AfterhourController extends Controller
 		);
 				
 		$afterhour->updateAfterhour($data);
+
+        if( $this->api_erp) {
+            try {
+                $api = new ApiController();
+                $send_leave_request = $api->send_leave_request($afterhour, 'aft');
+               /*  if($send_leave_request == true) {
+                    $message_erp = ' Zahtjev je uspješno zapisan u Odoo.';
+                } else {
+                    $message_erp = ' Zahtjev NIJE zapisan u Odoo.';
+                } */
+            } catch (\Throwable $th) {
+                $email = 'jelena.juras@duplico.hr';
+                $url = $_SERVER['REQUEST_URI'];
+                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+
+                session()->flash('error', __('ctrl.error') );
+                return redirect()->back();
+            }
+        }
 
         if($request['email'] == 1 ){ 
             if( $this->test_mail ) {

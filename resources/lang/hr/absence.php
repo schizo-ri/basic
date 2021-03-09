@@ -34,11 +34,13 @@ return [
 	'please_approve'=> 'molim da mi se odobri',
 	'sicknes'  		=> 'otvaram bolovanje ',
 	'end_sicknes'  	=> 'zatvaram bolovanje. ',
-	'sickne_info'  	=> 'Prijavljeno bolovanje',
+	'sicknes_info'  	=> 'Prijavljeno bolovanje',
 	'unused'  		=> 'Neiskorišteno',
 	'vacation_days' => 'dana godišnjeg odmora',
 	'days_off' 		=> 'slobodnih dana',
 	'vacation' 		=> 'Godišnji odmor',
+	'vacations' 	=> 'Godišnji odmori',
+	'vacation_plan' => 'Plan godišnjeg odmora',
 	'days_left' 	=> 'preostalo dana (razmjerno)',
 	'days_used' 	=> 'iskorišteno dana',
 	'refused'  		=> 'Odbijeno',
@@ -80,6 +82,7 @@ return [
 	'proportion' 	=> 'razmjerno',
 	'experience' 	=> 'Radni staž',
 	'yy_mm_dd' 		=> 'gg-mm-dd',
-	'close_sick_leave' => 'Zatvori bolovanje'	
+	'close_sick_leave' => 'Zatvori bolovanje',
+	'closing' 		=> 'Zaključivanje prijava',
 ];
 ?>

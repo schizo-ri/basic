@@ -46,7 +46,7 @@
 								<td>{{ $car->department['name'] }}</td>
 								<td>{!! $car->employee ? $car->employee->user['first_name'] . ' ' . $car->employee->user['last_name'] : '' !!}</td>					
 								<td>{!! $car->private_car == 1 ? 'privatno' : '' !!}</td>					
-								<td class="center">
+								<td class="center not_link">
 									@if( ! count($car->locco) > 0 && (Sentinel::getUser()->hasAccess(['cars.delete']) || in_array('cars.delete', $permission_dep)))
 										<a href="{{ route('cars.destroy', $car->id) }}"  class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
 											<i class="far fa-trash-alt"></i>

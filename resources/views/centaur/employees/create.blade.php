@@ -140,7 +140,7 @@
 				<select class="form-control" name="department_id[]" value="{{ old('department_id') }}" rows="6" required multiple >
 					<option selected="selected" disabled></option>
 					@foreach($departments as $department)
-						<option name="department_id" value="{{ $department->id }}">{{ $department->name }}</option>
+						<option name="department_id" value="{{ $department->id }}">{{ $department->name . '[' .$department->level1 . ']' }}</option>
 					@endforeach	
 				</select>
 				{!! ($errors->has('department_id') ? $errors->first('department_id', '<p class="text-danger">:message</p>') : '') !!}

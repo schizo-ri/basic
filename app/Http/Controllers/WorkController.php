@@ -147,10 +147,10 @@ class WorkController extends Controller
     public function destroy($id)
     {
         $work = Work::find($id);
-		$work->delete();
+		  $work->delete();
 		
-		$message = session()->flash('success',  __('ctrl.data_delete'));
-		
-		return redirect()->back()->withFlashMessage($message);
+      $message = session()->flash('success',  __('ctrl.data_delete'));
+      
+      return redirect()->back()->withFlashMessage($message);
     }
 }

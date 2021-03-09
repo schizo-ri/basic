@@ -18,7 +18,6 @@ class ErrorController extends Controller
             session()->flash('error',  __('ctrl.email_error'));
 			return redirect()->back();
         }
-      
    
         return "Došlo je do problema, poslana je mail obavijest administratoru!";
     }

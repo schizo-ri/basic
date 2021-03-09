@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CompanyController;
 use App\Models\WorkDiary;
 use App\Models\WorkTask;
 use App\Models\Employee;
@@ -28,6 +29,7 @@ class WorkDiaryController extends Controller
         $this->middleware('sentinel.auth');
         $this->api_erp = true;
         $this->api_project = true;
+        $this->moduli = CompanyController::getModules();
     }
     
     /**
@@ -76,7 +78,7 @@ class WorkDiaryController extends Controller
 
         $workDiaries = new WorkDiary();
         $workDiaries = $workDiaries->getTasks( $date, $task, $employee_id, $project );
-        Log::info( $workDiaries );
+       
         $sum_time = WorkDiary::sumTasks( $workDiaries ); 
 
         return view('Centaur::work_diaries.index', ['workDiaries' => $workDiaries,'dates' => $dates,'projects' => $projects, 'employees' => $employees, 'sum_time' => $sum_time, 'workTasks' => $workTasks]);
@@ -135,7 +137,6 @@ class WorkDiaryController extends Controller
      */
     public function store(Request $request)
     {
-    
         $seconds = 0;
         $project_overtime = null;
 
@@ -161,13 +162,14 @@ class WorkDiaryController extends Controller
                 $data = array(
                     'date'  	    => $request['date'],
                     'employee_id'   => $employee->id,
-                    'project_id'    => $this->api_project ? $project_id : ($request['project_id'] ? $request['project_id'] : null),
+                    'project_id'    => $this->api_project ? $project_id : ($request['project_id'] ? $proj_id : null),
                     'erp_task_id'   => isset($request['erp_task_id']) ? $request['erp_task_id'][$proj_key] : null,
                     'start_time'  	=> isset($request['start_time'] ) ? $request['start_time'] : null,
                     'end_time'  	=> isset($request['end_time']) ? $request['end_time'] : null,
                 );
         
                 $workDiary = new WorkDiary();
+                Log::info($data);
                 $workDiary->saveWorkDiary($data);
 
                 if(isset($request['project_overtime'] ) && $request['project_overtime']) {
@@ -200,13 +202,17 @@ class WorkDiaryController extends Controller
                 }
             }
             
-            $afterhours =  $seconds - 28800;
-            $send_afterhourRequest = '';
-            if( $afterhours > 0 && $project_overtime) {
-                $send_afterhourRequest = AfterhourController::storeAfterHour( $project_overtime );
-            } 
-    
-            session()->flash('success', __('ctrl.data_save') . " Spremljeno je ukupno " .  gmdate("H:i:s", $seconds)  . ' sati rada. ' . $send_afterhourRequest);
+            if( in_array('Prekovremeni', $this->moduli)  ) {
+                $afterhours =  $seconds - 28800;
+                $send_afterhourRequest = '';
+                if( $afterhours > 0 && $project_overtime) {
+                    $send_afterhourRequest = AfterhourController::storeAfterHour( $project_overtime );
+                } 
+                session()->flash('success', __('ctrl.data_save') . " Spremljeno je ukupno " .  gmdate("H:i:s", $seconds)  . ' sati rada. ' . $send_afterhourRequest);
+
+            }
+           
+            session()->flash('success', __('ctrl.data_save') );
           
             return redirect()->back();
         }
@@ -302,7 +308,7 @@ class WorkDiaryController extends Controller
                 $api = new ApiController();
                 $projects_erp = $api->get_employee_available_projects( $erp_id, $workDiary->date );
                 $project = Project::find($workDiary->project_id);
-               /*  dd($project->erp_id); //P-2871 */
+            
                 if(  $project->erp_id ) {
                     $project_erp = array_filter($projects_erp, function($value) use ($project) {
                         return strpos($value, $project->erp_id) !== false;

@@ -136,7 +136,7 @@
 				<select class="form-control" name="work_id" value="{{ $employee->work_id }}" required >
 					<option selected="selected" value=""></option>
 					@foreach($works as $work)
-						<option name="work_id" value="{{ $work->id }}" {!! $employee->work_id == $work->id ? 'selected' : '' !!} >{{ $work->name . ' - '. $work->department['name']  }}</option>
+						<option name="work_id" value="{{ $work->id }}" {!! $employee->work_id == $work->id ? 'selected' : '' !!} >{{ $work->name . ' - '. $work->department['name'] . '[' . $work->department->level1 . ']'  }}</option>
 					@endforeach	
 				</select>
 				{!! ($errors->has('work_id') ? $errors->first('work_id', '<p class="text-danger">:message</p>') : '') !!}
@@ -144,9 +144,9 @@
 			<div class="form-group {{ ($errors->has('department_id'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.department')</label>
 				<select class="form-control" name="department_id[]" value="{{ old('department_id') }}" rows="6" required multiple >
-					<option {!! count($employee->hasEmployeeDepartmen) ==0 ? 'selected="selected"' : '' !!} disabled></option>
+					<option {!! count($employee->hasEmployeeDepartmen) == 0 ? 'selected="selected"' : '' !!} disabled></option>
 					@foreach($departments as $department)
-						<option name="department_id" value="{{ $department->id }}" {!! $employee->hasEmployeeDepartmen->where('department_id',$department->id)->first() ? 'selected' : '' !!} >{{ $department->name }}</option>
+						<option name="department_id" value="{{ $department->id }}" {!! $employee->hasEmployeeDepartmen->where('department_id', $department->id)->first() ? 'selected' : '' !!} >{{ $department->name }}</option>
 					@endforeach	
 				</select>
 				{!! ($errors->has('department_id') ? $errors->first('department_id', '<p class="text-danger">:message</p>') : '') !!}
@@ -154,7 +154,7 @@
 			<div class="form-group {{ ($errors->has('superior_id'))  ? 'has-error' : '' }}">
 				<span><b>Nadređeni djelatnik:</b></span>
 				<select class="form-control" name="superior_id"  >
-					<option disabled selected></option>
+					<option disabled selected ></option>
 					@foreach($employees as $djelatnik)
 						<option name="superior_id" value="{{ $djelatnik->id }}" {!! $employee->superior_id == $djelatnik->id ? 'selected' : '' !!} >{{ $djelatnik->user['last_name'] . ' '. $djelatnik->user['first_name'] }}</option>
 					@endforeach	

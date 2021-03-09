@@ -53,7 +53,6 @@ Route::resource('roles', 'RoleController');
 // Company
 Route::resource('companies', 'CompanyController');
 Route::get('company/structure', ['as' => 'structure', 'uses' => 'CompanyController@structure']);
-Route::get('absence/absences_table', ['as' => 'absences_table', 'uses' => 'AbsenceController@absences_table']);
 
 // Department
 Route::resource('departments', 'DepartmentController');
@@ -95,6 +94,10 @@ Route::resource('education_articles', 'EducationArticleController');
 
 // Document
 Route::resource('documents', 'DocumentController');
+
+// DocumentCategory
+Route::resource('document_categories', 'DocumentCategoryController');
+
 // Upload image 
 Route::get('upload_image', ['as' => 'upload', 'uses' => 'DocumentController@uploadImage']);
 Route::get('imageDelete', ['as' => 'imageDelete', 'uses' => 'DocumentController@imageDelete']);
@@ -162,9 +165,17 @@ Route::get('absence/print_requests', ['as' => 'print_requests', 'uses' => 'Absen
 Route::get('getTasks', ['as' => 'getTasks', 'uses' => 'AbsenceController@getTasks']);
 Route::get('getProject', ['as' => 'getProject', 'uses' => 'AbsenceController@getProject']);
 Route::get('getDays/{id}', 'AbsenceController@getDays');
+Route::get('requestsFromPlan', ['as' => 'requestsFromPlan', 'uses' => 'AbsenceController@requestsFromPlan']);
 
 Route::get('days_offUnused/{id}', 'BasicAbsenceController@days_offUnused');
 Route::get('daniGO', 'BasicAbsenceController@daniGO');
+
+// Vacation
+Route::resource('vacations', 'VacationController');
+Route::get('vacationPlan', ['as' => 'vacationPlan', 'uses' => 'VacationPlanController@vacationPlan']);
+
+// VacationPlan
+Route::resource('vacation_plans', 'VacationPlanController');
 
 // Notices
 Route::resource('notices', 'NoticeController');
@@ -269,7 +280,7 @@ Route::resource('energy_sources', 'EnergySourceController');
 // EnergyConsumption
 Route::resource('energy_consumptions', 'EnergyConsumptionController');
 Route::get('lastCounter/{id1}/{id2}', ['as' => 'lastCounter', 'uses' => 'EnergyConsumptionController@lastCounter']);
-Route::get('lastCounter_Skip/{id1}/{id2}', ['as' => 'lastCounter_Skip', 'uses' => 'EnergyConsumptionController@lastCounter_Skip']);
+Route::get('lastCounter_Skip/{id1}/{id2}/{date}', ['as' => 'lastCounter_Skip', 'uses' => 'EnergyConsumptionController@lastCounter_Skip']);
 
 // Afterhour
 Route::resource('afterhours', 'AfterhourController');
@@ -382,3 +393,15 @@ Route::get('/down', function(){
 Route::get('contacts', ['as' => 'contacts', 'uses' => 'EmployeeController@contacts']);
 
 Route::resource('android', 'ConnectController');
+
+// Categorization
+Route::resource('categorizations', 'CategorizationController');
+
+/* // Competence
+Route::resource('competences', 'CompetenceController');
+
+// ConstructionSite
+Route::resource('construction_sites', 'ConstructionSiteController');
+
+// CompetenceGroup
+Route::resource('competence_groups', 'CompetenceGroupController'); */

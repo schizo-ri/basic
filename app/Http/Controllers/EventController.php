@@ -18,6 +18,8 @@ use DatePeriod;
 /* use Spatie\CalendarLinks\Link; */
 /* use DiegoSouza\Zimbra\Facades\Zimbra; */
 use DiegoSouza\Zimbra\Facades\Zimbra;
+use DB;
+use Log;
 
 class EventController extends Controller
 {
@@ -356,8 +358,12 @@ class EventController extends Controller
         $empl = Sentinel::getUser()->employee;
         $dataArr = array();
         $holidays = BasicAbsenceController::holidays_with_names();
+        $dataInitial = array();
+         /*   
+        if(count($holidays) > 0)
+        $dataArr = array_merge($dataInitial, $holidays); */
 
-        if(count($holidays) > 0) {
+         if(count($holidays) > 0) {
             foreach ($holidays as $date => $holiday) {
                 array_push($dataArr, ['name' => 'holiday', 'type' => __('basic.holidays'), 'date' => $date, 'title' => $holiday ]);
             }
@@ -365,10 +371,11 @@ class EventController extends Controller
     
         $employees = Employee::where('id','<>',0)->where('checkout',null)->with('hasEvents')->with('hasLocco')->with('hasAbsences')->with('hasTasks')->get();
         
-        if(count($employees)>0) {
+        if(count($employees)>0) {  
             foreach($employees as $employee) {
                 if(date('m',strtotime($employee->b_day)) == $month ) {
                     $dan = $year . '-' . date('m-d', strtotime($employee->b_day));
+                    
                     array_push($dataArr, ['name' => 'birthday',
                                           'type' => __('basic.birthday'), 
                                           'date' => $dan, 
@@ -383,24 +390,24 @@ class EventController extends Controller
                                           'employee' => $employee->user['first_name'] . ' ' . $employee->user['last_name'], 
                                           'employee_id' => $employee->id ]);
                 }
-                $tasks = $employee->hasTasks;
-                $tasks = $tasks->filter(function ($task, $key) use ( $month, $year) {
-                    return date('m',strtotime($task->start_date)) == $month && date('Y',strtotime($task->start_date)) == $year;
+                $tasks = $employee->hasEmployeeTask;
+                $EmployeeTasks = $tasks->filter(function ($task, $key) use ( $month, $year) {
+                    return date('m',strtotime($task->created_at)) == $month && date('Y',strtotime($task->created_at)) == $year;
                 });
-                /*  $tasks = Task::whereMonth('date', $month)->whereYear('date',$year)->get(); */
-                if(count($tasks) > 0) {
-                    foreach($tasks as $task) {
+               
+                if(count($EmployeeTasks) > 0) {
+                    foreach($EmployeeTasks as $EmployeeTask) {
                         array_push($dataArr, ['name' => "task", 
                                               'type' => __('calendar.task'), 
-                                              'id' => $task->id,
-                                              'date' => $task->start_date,
-                                              'time1' => $task->time1, 
-                                              'time2' => $task->time2, 
-                                              'title' => $task->task . ': ' . $task->description, 
-                                              'employee' => $task->employee->user['first_name'] . ' ' . $task->employee->user['last_name'], 
-                                              'background' =>  $task->employee->color, 
-                                              'car' => $task->car['registration'], 
-                                              'employee_id' => $task->employee_id ]);
+                                              'id' => $EmployeeTask->id,
+                                              'date' => date('Y-m-d',strtotime($EmployeeTask->created_at)),
+                                              'time1' => $EmployeeTask->task->time1, 
+                                              'time2' => $EmployeeTask->task->time2, 
+                                              'title' => $EmployeeTask->task->task . ': ' . $EmployeeTask->task->description, 
+                                              'employee' => $EmployeeTask->employee->user['first_name'] . ' ' . $EmployeeTask->employee->user['last_name'], 
+                                              'background' =>  $EmployeeTask->employee->color, 
+                                              'car' => $EmployeeTask->car['registration'], 
+                                              'employee_id' => $EmployeeTask->employee_id ]);
                     }
                 }
                
@@ -469,6 +476,75 @@ class EventController extends Controller
                 }
             }
         }
+      
+
+/*         $birthdays = Employee::leftJoin('users','employees.user_id','users.id')
+                            ->select('employees.id AS employee_id')
+                            ->selectRaw("concat(users.first_name, ' ', users.last_name) as employee")
+                            ->selectRaw("concat( $year,'-',DATE_FORMAT(employees.b_day, '%m-%d')) as date")
+                            ->selectRaw("concat('birthday') AS name")
+                            ->selectRaw("concat('Rođendan') AS type")
+                            ->where('employees.id','<>',0)
+                            ->where('employees.checkout',null)
+                            ->whereMonth('employees.b_day',$month)->get();
+        if(count($birthdays) > 0)
+            $dataArr = array_merge($dataArr, $birthdays->toArray());
+            
+        $lijecn_pregled = Employee::leftJoin('users','employees.user_id','users.id')
+            ->select('employees.id AS employee_id')
+            ->selectRaw("concat(users.first_name, ' ', users.last_name) as employee")
+            // ->selectRaw("concat("employees.lijecn_pregled") as date")
+            ->selectRaw("concat('liječnički') AS name")
+            ->selectRaw("concat('Liječnički pregled') AS type")
+            ->where('employees.id','<>',0)
+            ->where('employees.checkout',null)
+            ->whereMonth('employees.lijecn_pregled', $month)
+            ->whereYear('employees.lijecn_pregled', $year)->get();
+            dd( $lijecn_pregled);
+        if(count($lijecn_pregled) > 0)
+            $dataArr = array_merge($dataArr, $lijecn_pregled->toArray());    
+            
+        $tasks = Employee::leftJoin('users','employees.user_id','users.id')
+                        ->leftJoin('tasks','tasks.employee_id','employees.id')
+                        ->leftJoin('cars','cars.id','tasks.car_id')
+                        ->select('employees.id AS employee_id','tasks.id AS id','tasks.start_date AS date', 'tasks.time1 AS time1','tasks.time2 AS time2','tasks.task AS title','employees.color AS background', 'cars.registration AS car')
+                        ->selectRaw("concat('task') AS name")
+                        ->selectRaw("concat('Zadatak') AS type")
+                        ->selectRaw("concat(users.first_name, ' ', users.last_name) as employee")
+                        ->where('employees.id','<>',0)
+                        ->where('employees.checkout',null)
+                        ->whereMonth('tasks.start_date',$month)
+                        ->whereYear('tasks.start_date',$year)->get();
+        if(count($tasks) > 0)
+            $dataArr = array_merge($dataArr, $tasks->toArray());
+
+        $events = Employee::leftJoin('users','employees.user_id','users.id')
+                    ->leftJoin('events','events.employee_id','employees.id')
+                    ->select('employees.id AS employee_id','events.id AS id','events.date AS date', 'events.time1 AS time1','events.time2 AS time2','events.title AS title')
+                    ->selectRaw("concat('event') AS name")
+                    ->selectRaw("concat('Događaj') AS type")
+                    ->selectRaw("concat(users.first_name, ' ', users.last_name) as employee")
+                    ->where('employees.id','<>',0)
+                    ->where('employees.checkout',null)
+                    ->whereMonth('events.date',$month)
+                    ->whereYear('events.date',$year)->get();
+        
+        if(count($events) > 0)
+            $dataArr = array_merge($dataArr, $events->toArray());  
+       
+        $loccos = Employee::leftJoin('users','employees.user_id','users.id')
+                        ->leftJoin('loccos','loccos.employee_id','employees.id')
+                        ->leftJoin('cars','cars.id','loccos.car_id')
+                        ->select('employees.id AS employee_id','loccos.date AS date','cars.registration AS reg','loccos.destination AS title')
+                        ->selectRaw("concat('locco') AS name")
+                        ->selectRaw("concat('Locco vožnja') AS type")
+                        ->selectRaw("concat(users.first_name, ' ', users.last_name) as employee")
+                        ->where('employees.id','<>',0)
+                        ->where('employees.checkout',null)
+                        ->whereMonth('loccos.date',$month)
+                        ->whereYear('loccos.date',$year)->get();
+        if(count($loccos) > 0)
+            $dataArr = array_merge($dataArr, $loccos->toArray()); */
 
         return $dataArr;
     }

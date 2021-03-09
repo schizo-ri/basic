@@ -6,10 +6,19 @@
         <div class="form-group ">
             <label class="padd_10">@lang('basic.to_employee') </label>
             <select class="djelatnik" name="employee_id" value="{{ old('employee_id') }}" required > 
-                <option selected="selected" value=""></option>
+                <option selected="selected" disabled></option>
                 <option name="svi" value="svi">@lang('basic.all_employees')</option>
                 @foreach($employees as $employee)
                     <option name="employee_id" value="{{ $employee->id }}">{{ $employee->user['last_name']. ' ' . $employee->user['first_name'] }}</option>
+                @endforeach	
+            </select>
+        </div>
+        <div class="form-group ">
+            <label class="padd_10">@lang('basic.document_category') </label>
+            <select class="" name="category_id" value="{{ old('category_id') }}" required > 
+                <option selected disabled ></option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach	
             </select>
         </div>

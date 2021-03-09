@@ -62,6 +62,7 @@ class EnergyConsumptionController extends Controller
             'location_id'  	=> $request['location_id'],
             'date'          => $request['date'],
             'counter' 	    => $request['counter'],
+            'counter2' 	    => isset($request['counter2']) ? $request['counter2'] : null,
             'comment' 	    => $request['comment'],
         );
         
@@ -75,17 +76,20 @@ class EnergyConsumptionController extends Controller
     public function lastCounter(  $location_id, $energy_id)
     {
         $counter = new EnergyConsumption();
+        $energy = EnergySource::find( $energy_id);
+        $counter =  $counter->lastCounter( $energy_id, $location_id );
+        $array['counter'] = $counter;
+        $array['no_counter'] = $energy->no_counter;
 
-        $counter =  $counter->lastCounter( $energy_id, $location_id);
-
-        return $counter;
+        return $array;
+       /*  return $counter; */
     }
 
-    public function lastCounter_Skip(  $location_id, $energy_id)
+    public function lastCounter_Skip(  $location_id, $energy_id, $date)
     {
         $counter = new EnergyConsumption();
 
-        $counter =  $counter->lastCounter_Skip( $energy_id, $location_id);
+        $counter =  $counter->lastCounter_Skip( $energy_id, $location_id, $date);
 
         return $counter;
     }
@@ -135,6 +139,7 @@ class EnergyConsumptionController extends Controller
             'location_id'  	=> $request['location_id'],
             'date'          => $request['date'],
             'counter' 	    => $request['counter'],
+            'counter2' 	    => isset($request['counter2']) ? $request['counter2'] : null,
             'comment' 	    => $request['comment'],
         );
         

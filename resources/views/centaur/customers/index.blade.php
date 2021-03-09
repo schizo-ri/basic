@@ -8,12 +8,13 @@
 			<label>
 				<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 			</label>
+		
+			@if(Sentinel::getUser()->hasAccess(['customers.create']) || in_array('customers.create', $permission_dep))
+				<a class="btn-new" href="{{ route('customers.create') }}" rel="modal:open">
+					<i class="fas fa-plus"></i>
+				</a>
+			@endif
 		</div>
-		@if(Sentinel::getUser()->hasAccess(['customers.create']) || in_array('customers.create', $permission_dep))
-			<a class="btn-new" href="{{ route('customers.create') }}" rel="modal:open">
-				<i class="fas fa-plus"></i>
-			</a>
-		@endif
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="table-responsive">

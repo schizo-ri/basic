@@ -188,43 +188,27 @@
 							@endphp
 							@foreach ($workDiaries as $workDiary)
 								@php
-									$seconds =0;
+									$seconds = 0;
+									$items = $workDiary->hasWorkDiaryItem;
 								@endphp
 								<tr>
-									<td colspan="2" class="bg_blue color_white">{{ $workDiary->employee->user->last_name }}</td>
+									<td colspan="2" class="bg_blue color_white">{{ $workDiary->employee->user->first_name . ' '.  $workDiary->employee->user->last_name }}</td>
 								</tr>
-								@foreach ($workTasks as $key => $workTask)
+								@foreach ($items as $item)
 									@php
-										$item = $workDiary->hasWorkDiaryItem->where('task_id', $key )->first();
-										if($item) {
+										if( $item ) {
 											list($hour,$minute) = explode(':', $item->time);
 											$seconds += $hour*3600;
 											$seconds += $minute*60;																	
 										}
 									@endphp
-									@if($item )
-										<tr>
-											<td>{{ $workTask->name }}</td>
-											<td class="">{!! $item ? date('H:i', strtotime($item->time)) : '' !!}</td>
-										</tr>
-									@endif
-								@endforeach
-								{{-- @foreach ($workTasks as $key => $workTask)
 									<tr>
-										@php
-											$item = $workDiary->hasWorkDiaryItem->where('task_id', $key )->first();
-											if($item) {
-												list($hour,$minute) = explode(':', $item->time);
-												$seconds += $hour*3600;
-												$seconds += $minute*60;																	
-											}
-										@endphp
-										<td>{{ $workTask->name }}</td>
-										<td class="">{!! $item ? date('H:i', strtotime($item->time)) : '' !!}</td>
+										<td>{{ $item->workTask->name }}</td>
+										<td class="">{{ date('H:i', strtotime($item->time)) }}</td>
 									</tr>
-								@endforeach --}}
+								@endforeach
 								<tr>
-									<td  colspan="2" class="bg_lightblue">Ukupno vrijeme: {{  $seconds/3600 }} h</td>
+									<td  colspan="2" class="bg_lightblue">Ukupno vrijeme: {{ round(($seconds/3600),2 ) }} h</td>
 									@php
 										$all_time_project += $seconds;
 									@endphp
@@ -233,7 +217,7 @@
 						</tbody>
 						<tfoot class="bg_darkblue color_white ">
 							<tr>
-								<td colspan="2" class="padd10_0">Ukupno vrijeme projekta: {{  $all_time_project  / 3600 .' h' }}</td>
+								<td colspan="2" class="padd10_0">Ukupno vrijeme projekta: {{  round(($all_time_project  / 3600),2) .' h' }}</td>
 							</tr>
 						</tfoot>
 					</table>

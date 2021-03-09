@@ -18,6 +18,8 @@ return [
 	'activate'				=> 'Aktiviranje',
 	'active'				=> 'Aktivno',
 	'ad'					=> 'Oglas',
+	'document_categories'	=> 'Kategorije dokumenata',
+	'document_category'		=> 'Kategorija dokumenata',
 	'ad_categories'			=> 'Kategorije oglasa',
 	'ad_category'			=> 'Kategorija oglasa',
 	'add'					=> 'Dodaj',
@@ -32,7 +34,7 @@ return [
 	'add_benefit'			=> 'Dodaj pogodnost',
 	'add_campaign'			=> 'Dodaj kampanju',
 	'add_car'				=> 'Dodaj vozilo',
-	'add_category'			=> 'DODAJ KATEGORIJU',
+	'add_category'			=> 'Dodaj kategoriju',
 	'add_company'			=> 'Dodaj tvrtku',
 	'add_customer'			=> 'Dodaj naručitelja',
 	'add_department'		=> 'Dodaj odjel',
@@ -48,6 +50,7 @@ return [
 	'add_module'			=> 'Dodaj modul',
 	'add_notice'			=> 'Nova obavijest',
 	'add_permissions'		=> 'Dodaj dopuštnje',
+	'add_plan'				=> 'Dodaj plan',
 	'add_projects'			=> 'Dodaj projekt',
 	'add_question'			=> 'DODAJ PITANJE',
 	'add_recipient'			=> 'Dodaj primatelja',
@@ -153,6 +156,7 @@ return [
 	'edit_company'			=> 'Ispravi tvrtku',
 	'edit_customer'			=> 'Ispravi naručitelja',
 	'edit_department'		=> 'Ispravi odjel',
+	'edit_document'			=> 'Ispravi dokument',
 	'edit_locco'			=> 'Ispravi vožnju',
 	'edit_education'		=> 'Ispravi edukaciju',
 	'edit_emailing'			=> 'Ispravi',
@@ -163,6 +167,7 @@ return [
 	'edit_module'			=> 'Ispravi modul',
 	'edit_notice'			=> 'Ispravi obavijest',
 	'edit_permissions'		=> 'Ispravi dopuštnje',
+	'edit_plan'				=> 'Ispravi plan',
 	'edit_projects'			=> 'Ispravi projekt',
 	'edit_recipients'		=> 'Ispravi primatelje',
 	'edit_role'				=> 'Ispravi ulogu',
@@ -314,7 +319,6 @@ return [
 	'reg_date'				=> 'Datum prijave',
 	'rest_payout'			=> 'Ostaje za isplatu/povrat',
 	'interval'				=> 'Interval ponavljanja',
-	'interval'				=> 'Interval slanja',
 	'repetition_period'		=> 'Razdoblje ponavljanja',
 	'malfunction'			=> 'Prijava kvara',
 	'wrong_km'				=> 'Prijava krivih kilometara',
@@ -453,7 +457,7 @@ return [
 	'no_days'				=> 'Broj dana',
 	'no_education1'			=> 'Nema edukacija',
 	'no_education2'			=> 'da bi dodao novu klikni na gumb',
-	'no_open_order'			=> 'Nema neotvorenih naloga',
+	'no_open_order'			=> 'Nema otvorenih naloga',
 	'process'				=> 'Obradi',
 	'project'				=> 'Projekt',
 	'stranger'				=> 'Istek  dozvole za boravak',
@@ -463,7 +467,8 @@ return [
 	'work_task'				=> 'Radni zadatak',
 	'work_tasks'			=> 'Radni zadaci',
 	'paid'					=> 'Isplaćeno',
-		
+	'number_people'			=> 'Broj ljudi',
+	
 ];	
 
 ?> 

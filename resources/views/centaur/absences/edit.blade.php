@@ -1,6 +1,6 @@
 <div class="modal-header">
 	<h3 class="panel-title">
-		@if(! Sentinel::inRole('administrator'))
+		@if(! Sentinel::inRole('administrator') && $absence->absence->mark != 'BOL' )
 			@lang('absence.request_edit_absence')
 		@else
 			@if( $absence->absence->mark == 'BOL' && $absence->end_date == null )
@@ -12,7 +12,8 @@
 	</h3>
 </div>
 <div class="modal-body">
-	<form class="absence" role="form" method="post" name="myForm" accept-charset="UTF-8" action="{{ route('absences.update', $absence->id ) }}">
+	<form class="absence edit_absence" role="form" method="post" name="myForm" accept-charset="UTF-8" action="{{ route('absences.update', $absence->id ) }}">
+		<input type="text" name="id" value="{{ $absence->id }}" hidden/>
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.employee')</label>
@@ -24,7 +25,9 @@
 				{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 		@else
-			<input type="text" name="request_edit_absence" value="1" hidden/>
+			@if( $absence->absence->mark != 'BOL' )
+				<input type="text" name="request_edit_absence" value="1" hidden/>
+			@endif
 			<p class="padd_10">@lang('absence.i'), {{ $absence->employee->user['first_name']  . ' ' . $absence->employee->user['last_name'] }} 
 				<span class="">@lang('absence.please_approve') @lang('absence.request_edit')</span>
 			</p>
@@ -118,7 +121,6 @@
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
 $( document ).ready(function() {
-
 	if($( "#request_type" ).val() == 'IZL') {
 		$('.modal form .form-group.time_group').show();
 		$( ".datum.date2" ).hide();

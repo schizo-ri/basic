@@ -57,7 +57,7 @@ class DiaryMail extends Mailable
         return $this->view('emails.work_diaries.report')
                     ->subject('Dnevnik rada - izvještaj')
                     ->with([
-                        'workDiaries' => $this->workDiaries,   
+                        'workDiaries' => $this->workDiaries,
                         'workTasks' => $workTasks,   
                         'template_mail' => $mail_template,                     
                         'mail_style' => $mail_style,

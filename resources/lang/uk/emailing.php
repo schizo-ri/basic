@@ -27,7 +27,7 @@ return [
 	'store'					=> 'Store',
 	'save_calendar'			=> 'Store to calendar',
 	'new_add'				=> 'MyIntranet - a new ad has been published',
-	'sickne_info'			=> 'Obavijest o bolovanju',
+	'sicknes_info'			=> 'Obavijest o bolovanju',
 	'employed_temp_worker'	=>' with temporary work he began',
 	'afterhour'				=>'Application for approval of overtime work',
 	'afterhour_approve'		=>'Approval of overtime requests',

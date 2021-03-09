@@ -72,7 +72,7 @@
 												
 												$all_time_project = 0;
 											@endphp
-											<p class="font_white bg_darkblue padd_10 margin_0 collapsible cursor" >{{ '['.$project->erp_id . '] '. $project->name }}</p>
+											<p class="font_white bg_darkblue padd_10 margin_0 collapsible cursor" >{!! $project->erp_id ? '['. $project->erp_id . '] ' : '' !!} {{ $project->name }}</p>
 											@foreach ($dates as $date)
 												<section class="project_table">
 													@php

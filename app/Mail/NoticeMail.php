@@ -51,7 +51,7 @@ class NoticeMail extends Mailable
         }
         
         $title = 'Nova ' . ' ' .  ' obavijest';
-        if($this->notice->title) {
+        if( $this->notice->title ) {
             $title .= ' - ' . $this->notice->title;
         } 
 

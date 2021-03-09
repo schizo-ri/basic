@@ -73,7 +73,7 @@ return [
 	'request_types'	=>'Types of requests',
 	'all_types'		=>'All types',
 	'end_sicknes'	=>'I close the sick leave.',
-	'sickne_info'	=>'Reported sick leave',
+	'sicknes_info'	=>'Reported sick leave',
 	'days_off'		=>'days off',
 	'refused'		=>'Refused',
 	'not_approve'	=>'Not approved',

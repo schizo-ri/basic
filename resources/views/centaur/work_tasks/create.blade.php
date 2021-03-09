@@ -10,7 +10,7 @@
 		</div>
 		<div class="form-group {{ ($errors->has('description'))  ? 'has-error' : '' }}">
 			<label>@lang('basic.description')</label>
-			<textarea name="description" type="text" class="form-control" rows="3" >{{ old('description') }}</textarea>
+			<textarea name="description" type="text" class="form-control" rows="3" required>{{ old('description') }} </textarea>
 			{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		{{ csrf_field() }}

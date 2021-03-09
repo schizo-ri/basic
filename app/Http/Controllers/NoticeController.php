@@ -21,6 +21,8 @@ use Log;
 
 class NoticeController extends Controller
 {
+    private $test_mail;
+
     /**
      *
      * Set middleware to quard controller.
@@ -29,6 +31,7 @@ class NoticeController extends Controller
     public function __construct()
     {
         $this->middleware('sentinel.auth');
+        $this->test_mail = true;  // true - test na jelena.juras@duplco.hr
     }
   
     /**
@@ -58,12 +61,13 @@ class NoticeController extends Controller
      */
     public function create()
     {
-        $departments0 = Department::where('level1',0)->orderBy('name','ASC')->get();
-		$departments1 = Department::where('level1',1)->orderBy('name','ASC')->get();
-        $departments2 = Department::where('level1',2)->orderBy('name','ASC')->get();
+        $departments = Department::orderBy('name','ASC')->get();
+       /*  $departments0 = Department::where('level1',0)->orderBy('name','ASC')->get(); */
+		/* $departments1 = Department::where('level1',1)->orderBy('name','ASC')->get(); */
+       /*  $departments2 = Department::where('level1',2)->orderBy('name','ASC')->get(); */
         $templates = Template::get();
 
-        return view('Centaur::notices.create', ['templates' => $templates, 'departments0' => $departments0, 'departments1' => $departments1, 'departments2' => $departments2]);
+        return view('Centaur::notices.create', ['templates' => $templates, 'departments' => $departments]);
     }
 
     /**
@@ -74,14 +78,27 @@ class NoticeController extends Controller
      */
     public function store(Request $request)
     {
-        if( ! isset($request['to_department'])) {
+        dd($request);
+        if( ! isset($request['to_department'] ) || ! $request['to_department'] )  {
             $to_department_id = array( Department::where('level1',0)->first()->id );
-        }
+        } 
    
+        if( $this->test_mail ) {
+            $all_dep_employee = array('jelena.juras@duplico.hr');
+        } else {
+            $all_dep_employee = array('ivan.rendulic@duplico.hr','matija.rendulic@duplico.hr','zeljko.rendulic@duplico.hr','nikola.rendulic@duplico.hr','durdica.rendulic@duplico.hr');
+            if( $request['to_department'] && count( $request['to_department']  ) > 0 )  {
+                foreach($request['to_department'] as $department_id) {
+                    $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
+                    $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
+                }
+            }
+        }
+
         if(Sentinel::getUser()->employee) {
             $employee_id = Sentinel::getUser()->employee->id;
                 
-            if($request['to_department']) {
+            if( $request['to_department'] ) {
                 $to_department_id = implode(',', $request['to_department']);
                 if(isset($request['schedule_date'])) {
                     if($request['schedule_time'] != null) {
@@ -164,14 +181,11 @@ class NoticeController extends Controller
                     } else {
                         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
                             if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                                $all_dep_employee = array();
-                                foreach($request['to_department'] as $department_id) {
-                                    $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
-                                    $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
-                                }
                                
                                 try {   
-                                    Log::info($all_dep_employee);
+                                    Log::info(array_unique('******************** Notice store *****************'));
+                                    Log::info(array_unique($all_dep_employee));
+                                    dd($all_dep_employee);
                                     foreach (array_unique($all_dep_employee) as $mail) {
                                         Mail::to($mail)->send(new NoticeMail($notice1));
                                     }   
@@ -196,15 +210,11 @@ class NoticeController extends Controller
                 /* ************************* SEND MAIL *********************************** */
         
                 if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                    $all_dep_employee = array();
-                    
-                    foreach($request['to_department'] as $department_id) {
-                        $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
-                        $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
-                    }
-                     
+                    Log::info(array_unique('******************** Notice store *****************'));
+                    Log::info(array_unique($all_dep_employee));
                     try {   
-                        Log::info($all_dep_employee);
+                        Log::info(array_unique($all_dep_employee));
+                        dd($all_dep_employee);
                         foreach (array_unique($all_dep_employee) as $mail) {
                             Mail::to($mail)->send(new NoticeMail($notice1));
                         }              
@@ -303,6 +313,17 @@ class NoticeController extends Controller
     {
         $notice1 = Notice::find($id);
 
+        if( $this->test_mail ) {
+            $all_dep_employee = array('jelena.juras@duplico.hr');
+        } else {
+            $all_dep_employee = array('ivan.rendulic@duplico.hr','matija.rendulic@duplico.hr','zeljko.rendulic@duplico.hr','nikola.rendulic@duplico.hr','durdica.rendulic@duplico.hr');
+            
+            foreach($request['to_department'] as $department_id) {
+                $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
+                $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
+            }
+        }
+
         if(Sentinel::getUser()->employee) {
             $employee_id = Sentinel::getUser()->employee->id;
             $to_department_id = implode(',', $request['to_department']);
@@ -383,14 +404,7 @@ class NoticeController extends Controller
                 // if everything is ok, try to upload file
                 } else {
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-
                         if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                            $all_dep_employee = array();
-                            foreach($request['to_department'] as $department_id) {
-                                $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
-                                $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
-                            }
-                            
                             try {   
                                 Log::info($all_dep_employee);
                                 foreach (array_unique($all_dep_employee) as $mail) {
@@ -416,12 +430,6 @@ class NoticeController extends Controller
             /* ************************* SEND MAIL *********************************** */
      
             if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                $all_dep_employee = array();
-                foreach($request['to_department'] as $department_id) {
-                    $departments_employees = Department::allDepartmentsEmployeesEmail( $department_id);
-                    $all_dep_employee = array_merge($all_dep_employee, $departments_employees);
-                }
-               
                 try {    
                     Log::info($all_dep_employee);
                     foreach (array_unique($all_dep_employee) as $mail) {
@@ -538,6 +546,19 @@ class NoticeController extends Controller
 
     public static function getNoticeDashboard ( ) {
         $user_department = DashboardController::getUserDepartment();
+      
+        if( count($user_department) == 0) {
+            $employee = Sentinel::getUser()->employee;
+            if( $employee ) {
+                $work = $employee->work;
+            }
+            if( $work ) {
+                $department = $work->department;
+            }
+            if ( $department ) {
+                $user_department = array($department->id );
+            }
+        }
        
         $notices = NoticeController::getNotice('DESC', date('Y'));
         
@@ -563,7 +584,6 @@ class NoticeController extends Controller
         }
         return $notices;
     }
-
 
     public function test_mail_open (Request $request)
     {
@@ -593,5 +613,4 @@ class NoticeController extends Controller
 		
 		return redirect()->back()->withFlashMessage($message);
 	}
-
 }

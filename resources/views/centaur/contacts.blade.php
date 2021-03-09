@@ -39,7 +39,7 @@
 										<td>{!! $employee->priv_mobile !!}</td>
 										<td>{!! $employee->email !!}</td>
 										<td>{!! $employee->priv_email !!}</td>
-										<td>{!! $employee->prebiv_adresa . ', ' . $employee->prebiv_grad !!}</td>
+										<td>{{ $employee->prebiv_adresa }} {!! $employee->prebiv_grad ? ', ' . $employee->prebiv_grad : '' !!}</td>
 									</tr>
 								@endforeach
 							</tbody>

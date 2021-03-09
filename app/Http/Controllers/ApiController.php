@@ -48,7 +48,7 @@ class ApiController extends Controller
     {
         /* $response = $this->connect_id_get(); */
 
-       /*   $response = $this->get_available_leave_types(); */
+         $response = $this->get_available_leave_types();
 
         /*  array:9 [▼
             "holiday" => "Godišnji odmor"
@@ -71,18 +71,14 @@ class ApiController extends Controller
         1397 => "[P-2999] Izvođenje elektro radova na modulima Edgeconnex AMS05PH02, [0976] VERTIV CROATIA d.o.o."
       ] */
        
-
       /*   $response = $this->get_employee_project_tasks(45, date('Y-m-d'), 1348 );  */
         /*  array:2 [▼
             72 => "Kategorizacija artikala za ERP"
             1117 => "Rekapitulacija projekta - proučiti"
         ] */
 
-        /*  $response = $this->send_leave_request( Absence::find(3673), 'abs' ); // izostanak */
-        /*  $response = $this->send_leave_request( Absence::find(3709), 'abs' ); // izostanak
-          $response = $this->send_leave_request( Absence::find(3711), 'abs' ); // izostanak */
-        /*    $response = $this->send_leave_request( Afterhour::find(3444), 'aft' ); // Afterhour */
-        $response = $this->send_leave_request( Afterhour::find(3517), 'aft' ); 
+        $response = $this->send_leave_request( Absence::find(3825), 'abs' ); // izostanak
+       /*  $response = $this->send_leave_request( Afterhour::find(3503), 'aft' ); */
 
         return view('Centaur::api_erp.index',['response' => $response]);
     }
@@ -301,7 +297,6 @@ class ApiController extends Controller
         /* $sock->setDebug(1); */
         $param = array();
         $API = $this->API;
-
     
         $employee_id = intval( $absence->employee->erp_id ); 
         $leave_type_id = $absence->ERP_leave_type;
@@ -332,18 +327,20 @@ class ApiController extends Controller
                     $date_from = $start->format('Y-m-d');
                     $date_to = $end->format('Y-m-d');
                 }
-
             } else {
-                $date_from = $absence->start_date;           
-                $date_to =  $absence->end_date ? $absence->end_date : $date_from;
+                $date_from = $absence->start_date ;
+                $date_to = $absence->end_date ;
             }
-
+   
             if( $absence->absence->mark == 'IZL' ) {
                 $date_from = $date_from . ' ' . $absence->start_time;
                 $date_to = $date_to . ' ' . $absence->end_time;
-            } 
-        }
+            }  
+        } 
         if( $abs_type == 'aft' ) {
+            if( ! $task_id ) {
+                $task_id = 5157;
+            }
             $date_from = $absence->date . ' ' . $absence->start_time;
             $end = new DateTime( $date_from );  
             $period = explode(':', $absence->approve_h );
@@ -369,9 +366,9 @@ class ApiController extends Controller
         $param['password'] = $password;
         $param['API'] = $API;
         $param['method'] = $method;
-        $param['employee_id'] = $employee_id;
-        $param['leave_type_id'] = $leave_type_id;
+        $param['employee_id'] = $employee_id;        
         $param['task_id'] = $task_id;
+        $param['leave_type_id'] = $leave_type_id;
         $param['date_from'] = $date_from;
         $param['date_to'] = $date_to;
         $param['note'] = $note;
@@ -406,6 +403,7 @@ class ApiController extends Controller
                 return -1;
             }
         } 
+
         return $val;
     }
 }

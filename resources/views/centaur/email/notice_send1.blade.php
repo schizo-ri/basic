@@ -74,7 +74,7 @@
         </style>
 	</head>
 	<body>
-        <div style="width: 500px;max-width:100%;margin:auto;" id="mail_template">
+        <div style="width: 100%;max-width:100%;margin:auto;" id="mail_template">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="header" style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_header : '' !!}">
                 @if( isset($text_header) && $text_header && count($text_header) > 0)
 					@foreach ($text_header as $key => $text)

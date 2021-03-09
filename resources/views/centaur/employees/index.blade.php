@@ -37,9 +37,10 @@
 			<a class="toggle-vis" data-column="13">Email</a>
 			<a class="toggle-vis" data-column="14">Prebivalište</a>
 			<a class="toggle-vis" data-column="15">Stranac</a>
+			<a class="toggle-vis" data-column="16">Liječnički pregled</a>
 		</div>
 	</header>
-	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12 employees_main">
 		<div class="table-responsive">
 			@if(count($employees))
 				<table id="index_table" class="display table table-hover">
@@ -61,6 +62,7 @@
 							<th class='col_hidden'>E-mail</th>
 							<th class='col_hidden'>Prebivalište</th>
 							<th class='col_hidden'>Stranac</th>
+							<th class='sort_date col_hidden'>Liječnički pregled</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
 					</thead>
@@ -81,7 +83,7 @@
 								<td>
 									@if($employee->hasEmployeeDepartmen && count($employee->hasEmployeeDepartmen)>0)
 										@foreach ( $employee->hasEmployeeDepartmen as $empl_department )
-											{!! $empl_department->department ? $empl_department->department->name  : '' !!} <br>
+											{!! $empl_department->department ? $empl_department->department->name . ' [' .  $empl_department->department->level1 . ']' : '' !!} <br>
 										@endforeach
 									@endif
 								</td>
@@ -92,7 +94,8 @@
 								<td>{{ $employee->email }}</td>
 								<td>{{ $employee->prebiv_adresa . ', ' . $employee->prebiv_grad }}</td>
 								<td >{!! $employee->stranger == 1 ? 'DA, dozvola do:' . 	 date("d.m.Y",strtotime($employee->permission_date))  : '' !!}</td>
-								<td class="center">
+								<td >{!! $employee->lijecn_pregled ?  date("d.m.Y",strtotime($employee->lijecn_pregled)) : '' !!}</td>
+								<td class="center not_link">
 									
 									<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['employees.update']) || in_array('employees.update', $permission_dep))
@@ -128,4 +131,20 @@
 	<div id="login-modal" class="modal modal_user modal_employee">
 		
 	</div>
+	<script>
+		$(function(){
+			$( "thead tr th" ).each(function( index ) {
+				if( ! $(this).hasClass("col_hidden") ) {
+					$( 'a.toggle-vis[data-column='+index+']').addClass('col_visible');
+				}
+			});
+			$( 'a.toggle-vis').on('click',function(){
+				if( $( this ).hasClass('col_visible')) {
+					$( this ).removeClass('col_visible');
+				} else {
+					$( this ).addClass('col_visible');
+				}
+			});
+		});
+	</script>
 @stop

@@ -65,7 +65,7 @@ class AbsenceMail extends Mailable
             $subject = 'Odluka uprave - ';
         } else {
             if($this->absence->absence['mark'] == "BOL") {
-                $subject = __('emailing.sickne_info');
+                $subject = __('emailing.sicknes_info');
             } else {
                 $subject =__('emailing.new_absence') . ' ' . $this->absence->absence->name ;
             }

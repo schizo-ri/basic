@@ -17,14 +17,17 @@ class ProjectsImport implements ToModel, WithHeadingRow
     {
         ini_set('memory_limit','-1');
         
-        return new Project([
-            'erp_id'        => $row['erp_id'],
-            'customer_oib'  => $row['customer_oib'],
-            'name'          => $row['name'],
-            'employee_id'   => $row['employee_id'],
-            'active'        => 1,
-            'created_at'    => date('Y-m-d h:i:s'),
-            'updated_at'    => date('Y-m-d h:i:s'),
-        ]);
+        if($row['erp_id'] != '' && $row['name'] != '') {
+            return new Project([
+                'erp_id'        => $row['erp_id'],
+                'customer_oib'  => $row['customer_oib'],
+                'name'          => $row['name'],
+                'employee_id'   => $row['employee_id'],
+                'active'        => 1,
+                'created_at'    => date('Y-m-d h:i:s'),
+                'updated_at'    => date('Y-m-d h:i:s'),
+            ]);
+        }
+      
     }
 }

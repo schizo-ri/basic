@@ -39,28 +39,25 @@ class VehicalServiceController extends Controller
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
         } 
         $vehicalServices = VehicalService::orderBy('date','DESC')->get();
-        
         $cars = Car::orderBy('registration', 'ASC')->get();
         $dates = array();
-        foreach (array_keys($vehicalServices->groupBy('date')->toArray()) as $date) {
-            array_push($dates, date('Y',strtotime($date)) );
+        foreach (array_keys($vehicalServices->groupBy('date')->toArray()) as $date1) {
+            array_push($dates, date('Y',strtotime($date1)) );
         }
         $dates = array_unique($dates);
         rsort($dates);
         
-        if(isset( $request['date'] )  ) {
+        if(isset( $request['date'] ) && $request['date'] != null) {
             $date = $request['date'];
         } else {
-            $date = date('Y');
+            $date = null;
         }
-        
         if(  $date != null &&  $date != 'null') {
-          
             $vehicalServices = $vehicalServices->filter(function ($vehicalService, $key) use ($date) {
                 return date('Y',strtotime( $vehicalService->date )) == $date;
             });
         }
-      
+       /*  dd($vehicalServices); */
         if( isset( $request['car']) && $request['car'] != null && $request['car'] != 'null') {
             $car_id =  $request['car'];
             $vehicalServices = $vehicalServices->filter(function ($vehicalService, $key) use ( $car_id ) {

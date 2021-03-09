@@ -16,7 +16,6 @@ use DateTime;
 use DateInterval;
 use DatePeriod;
 
-
 class WorkRecordController extends Controller
 {
      /**

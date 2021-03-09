@@ -11,6 +11,7 @@ use App\Mail\IstructionMail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ErrorMail;
 use Sentinel;
+use Log;
 
 class InstructionController extends Controller
 {
@@ -46,6 +47,17 @@ class InstructionController extends Controller
         } else {
             $employee_departments = array();
         }
+        if( count($employee_departments) == 0) {
+            if( $employee ) {
+                $work = $employee->work;
+            }
+            if( $work ) {
+                $department = $work->department;
+            }
+            if ( $department ) {
+                $employee_departments = array( $department->id );
+            }
+        }
        
         $permission_dep = DashboardController::getDepartmentPermission();
         $instructions = Instruction::orderBy('title','ASC')->where('active',1)->get();
@@ -73,8 +85,8 @@ class InstructionController extends Controller
      */
     public function store(Request $request)
     {
-        $send_to = array('jelena.juras@duplico.hr');
-
+     //   $send_to = array('jelena.juras@duplico.hr');
+        $send_to = array();
         foreach ($request['department_id'] as $department_id) {
             $data = array(
                 'department_id' => $department_id,
@@ -86,9 +98,9 @@ class InstructionController extends Controller
             $instruction = new Instruction();
             $instruction->saveInstruction($data); 
 
-        //    array_push( $prima, Department::allDepartmentsEmployeesEmail( $department_id ));
+            array_push( $send_to, Department::allDepartmentsEmployeesEmail( $department_id ));
         }
-        
+        Log::info($send_to);
         try {
             foreach (array_unique($send_to) as $send_to_mail) {
                 Mail::to($send_to_mail)->send(new IstructionMail($instruction)); 

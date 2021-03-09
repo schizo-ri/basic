@@ -22,7 +22,6 @@ class Car extends Model
 	*/
 	protected static $departmentsModel = 'App\Models\Department'; 
 	
-	
 	/*
 	* The Eloquent locco model name
 	* 

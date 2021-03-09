@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EnergyConsumption extends Model
 {
-    protected $fillable = ['energy_id','location_id','date','counter','comment'];
+    protected $fillable = ['energy_id','location_id','date','counter','counter2','comment'];
     
     /*
 	* The Eloquent EnergySource model name
@@ -70,20 +70,21 @@ class EnergyConsumption extends Model
 	public function lastCounter ( $energy_id, $location_id )
 	{
 		$energyConsumption = EnergyConsumption::where('energy_id',$energy_id)->where('location_id',$location_id)->orderBy('date','DESC')->first();
-		$counter = null;
+		$counter = array();
 		if($energyConsumption) {
-			$counter = $energyConsumption->counter;
+			$counter[1] = $energyConsumption->counter;
+			$counter[2] = $energyConsumption->counter2;
 		}
-	
+
 		return  $counter;
 	}
 
-	public function lastCounter_Skip ( $energy_id, $location_id )
+	public function lastCounter_Skip ( $energy_id, $location_id, $date)
 	{
-		$energyConsumption = EnergyConsumption::where('energy_id',$energy_id)->where('location_id',$location_id)->orderBy('date','DESC')->skip(1)->first();
-		$counter = null;
+		$energyConsumption = EnergyConsumption::where('energy_id',$energy_id)->where('location_id', $location_id)->whereDate('date','<=',$date)->orderBy('date','DESC')->skip(1)->first();		$counter = array();
 		if($energyConsumption) {
-			$counter = $energyConsumption->counter;
+			$counter[1] = $energyConsumption->counter;
+			$counter[2] = $energyConsumption->counter2;
 		}
 	
 		return  $counter;

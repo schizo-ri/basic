@@ -196,10 +196,8 @@
 											<th style="max-width:30%;width:30%">@lang('basic.comment')</th>
 											<th style="max-width:10%;width:10%">@lang('absence.approved')</th>
 											<th style="max-width:15%;width:15%">@lang('absence.approve_comment')</th>
-y											<th>@lang('absence.aprove_date')</th>-->
-											
+											{{-- <th>@lang('absence.aprove_date')</th> --}}
 											<th class="not-export-column no-sort" style="max-width:10%;width:10%">@lang('basic.options')</th>
-											
 										</tr>
 									</thead>
 									<tbody class="overflow_auto">

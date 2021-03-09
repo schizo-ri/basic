@@ -133,7 +133,7 @@ class EmployeeController extends Controller
 
 		$data = array(
 			'user_id'  				=> $input['user_id'],
-			'erp_id'  				=> $input['erp_id'],
+			'erp_id'  				=> isset($input['erp_id']) ? $input['erp_id'] : null,
 			'father_name'     		=> $input['father_name'],
 			'mather_name'     		=> $input['mather_name'],
 			'oib'           		=> $input['oib'],
@@ -315,7 +315,7 @@ class EmployeeController extends Controller
 	
 		$data = array(
 			'user_id'  				=> $input['user_id'],
-			'erp_id'  				=> $input['erp_id'],
+			'erp_id'  				=> isset($input['erp_id']) ? $input['erp_id'] : null,
 			'father_name'     		=> $input['father_name'],
 			'mather_name'     		=> $input['mather_name'],
 			'oib'           		=> $input['oib'],

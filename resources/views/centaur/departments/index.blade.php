@@ -41,7 +41,6 @@
 								<td>{{ $department->email }}</td>
 								<td>{!! $department->employee && $department->employee->user ? $department->employee->user->first_name . ' ' .  $department->employee->user->last_name : '' !!}</td>
 								<td class="center">
-									<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['departments.update']) || in_array('departments.update', $permission_dep))
 										<a href="{{ route('departments.edit', $department->id) }}" class="btn-edit" title="{{ __('basic.edit_department')}}" rel="modal:open">
 												<i class="far fa-edit"></i>

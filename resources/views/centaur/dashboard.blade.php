@@ -240,7 +240,7 @@
 										<p class="agenda" id="{{ $event->date }}">
 											<span class="agenda_mark"><span class="green"></span></span>
 											<span class="agenda_time">{{ date('H:i',strtotime($event->time1)) }}<br><span>{{ date('H:i',strtotime($event->time2)) }}</span></span>
-											<span class="agenda_comment">{{ $event->description }}</span>
+											<span class="agenda_comment">{{ $event->title . ' - ' . $event->description }}</span>
 										</p>
 									@endforeach
 									@foreach($tasks->take(5) as $task)

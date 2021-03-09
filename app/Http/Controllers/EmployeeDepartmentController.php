@@ -76,7 +76,10 @@ class EmployeeDepartmentController extends Controller
     
             $message = session()->flash('success', 'Djelatnici su snimljeni u odjele');
         } else {
-            $message = session()->flash('error', 'Nije označen ni jedan djelatnik.');
+            foreach ($employeeDepartments as $employeeDepartment) {
+                $employeeDepartment->delete();
+            }
+            $message = session()->flash('error', 'Nije označen ni jedan djelatnik. ');
         }
 		
 		return redirect()->back()->withFlashMessage($message);

@@ -13,20 +13,24 @@
 					<i class="fas fa-plus"></i>
 				</a>
 			@endif
-			<select id="filter_employee" class="select_filter filter_travel" >
-				<option value="all">@lang('basic.all_employees')</option>
-				@foreach ($employees as $employee)
-					@if(count($employee->hasTravels) >0)
-						<option value="{{ $employee->first_name . ' ' .  $employee->last_name }}" class="id_{{ $employee->id }}">{{ $employee->first_name . ' ' .  $employee->last_name }}</option>
-					@endif
-				@endforeach
-			</select>
-			<select id="filter_date" class="select_filter filter_travel" >
-				<option value="all">@lang('basic.all_month')</option>
-				@foreach ($dates as $date)
-					<option value="{{ $date }}" class="date_{{ $date }}">{{ $date }}</option>
-				@endforeach
-			</select>
+			<div class="div_select2">
+				<select id="filter_employee" class="select_filter filter_travel" >
+					<option value="all">@lang('basic.all_employees')</option>
+					@foreach ($employees as $employee)
+						@if(count($employee->hasTravels) >0)
+							<option value="{{ $employee->first_name . ' ' .  $employee->last_name }}" class="id_{{ $employee->id }}">{{ $employee->first_name . ' ' .  $employee->last_name }}</option>
+						@endif
+					@endforeach
+				</select>
+			</div>
+			<div class="div_select2">
+				<select id="filter_date" class="select_filter filter_travel" >
+					<option value="all">@lang('basic.all_month')</option>
+					@foreach ($dates as $date)
+						<option value="{{ $date }}" class="date_{{ $date }}">{{ $date }}</option>
+					@endforeach
+				</select>
+			</div>
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

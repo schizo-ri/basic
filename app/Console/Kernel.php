@@ -99,9 +99,10 @@ class Kernel extends ConsoleKernel
                 //->dailyAt('12:00') 
                 ->evenInMaintenanceMode(); */
 
-        $schedule->command('task')
+                $schedule->command('diary')
                 ->everyMinute()
-                ->evenInMaintenanceMode();  
+                //->dailyAt('20:00') 
+                ->evenInMaintenanceMode(); 
     }
 
     /**

@@ -41,7 +41,7 @@
 										</a>
 									@endif
 									@if( count($training->hasEmployeeTrainings) == 0 && Sentinel::getUser()->hasAccess(['trainings.delete']) || in_array('trainings.delete', $permission_dep))
-										<a href="{{ route('ad_categories.destroy', $training->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+										<a href="{{ route('trainings.destroy', $training->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
 											<i class="far fa-trash-alt"></i>
 										</a>
 									@endif

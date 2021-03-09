@@ -15,6 +15,8 @@ $(function(){
 	var today = date.getFullYear() + '-' + ( '0' + (date.getMonth()+1) ).slice( -2 ) + '-' + ( '0' + (date.getDate()) ).slice( -2 );
 	var user_role;	
 	var parent;
+	var url_edit;
+	var data;
 
 	$('.btn-submit').on('click',function(){
 		$( this ).hide();
@@ -193,6 +195,44 @@ $(function(){
 					});
 				}
 			}
+		});
+
+		$('.edit_absence').on('submit', function(e) {
+			e.preventDefault();
+			url_edit = $( this ).attr('action');
+			
+		/* 	data_array = $( this ).serializeArray();
+			id = data_array[0].value */
+			
+			console.log(url_edit);
+
+			approve = $('#filter_approve').val();
+			type = $('#filter_types').val();
+			month = $('#filter_years').val();
+			employee_id =  $('#filter_employees').val();
+
+			url_load = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
+			data =  $( this ).serialize();
+			console.log(data);
+			$.ajax({
+				url: url_edit,
+				type: 'POST',
+				data: data,
+				beforeSend: function(){
+					$('body').prepend('<div id="loader"></div>');
+				},
+				success: function(result) {
+					$('tbody ').load(url_load + " tbody>tr",function(){
+						$('#loader').remove();
+					
+						$.modal.close();
+						$("#filter_types").find('option[value="'+type+'"]').attr('selected',true);
+						$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
+						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
+						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
+					});
+				}
+			});
 		});
 	}
 

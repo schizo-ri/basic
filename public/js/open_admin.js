@@ -118,7 +118,7 @@ $(function(){
 });
 
 if($(".index_table_filter .show_button").length == 0) {
-    $('.index_table_filter').append('<span class="show_button"><i class="fas fa-download"></i></span>');
+    $('.index_table_filter').not('.index_table_filter.structure_company').append('<span class="show_button"><i class="fas fa-download"></i></span>');
 } 
 
 var click_element;

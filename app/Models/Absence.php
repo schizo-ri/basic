@@ -102,7 +102,13 @@ class Absence extends Model
 	*/
 	public static function AllAbsenceUser($user_id, $type)
 	{
-		return Absence::where('employee_id',$user_id)->where('type', AbsenceType::where('mark', $type)->first()->id )->get();
+		$abs_type = AbsenceType::where('mark', $type)->first();
+		
+		if( $abs_type  ) {
+			return Absence::where('employee_id', $user_id)->where('type', $abs_type->id )->get();
+		} else {
+			return null;
+		}
 	}
 
 	/*
