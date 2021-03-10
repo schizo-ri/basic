@@ -30,15 +30,8 @@ class CarController extends Controller
     public function index()
     {
         $cars = Car::with('locco')->get();
-        /* $loccos = Locco::get(); */
-        $empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
-
-        return view('Centaur::cars.index', ['cars' => $cars,'permission_dep' => $permission_dep]);
+       
+        return view('Centaur::cars.index', ['cars' => $cars]);
     }
 
     /**

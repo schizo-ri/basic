@@ -80,6 +80,7 @@ mix.scripts([
     'public/js/upload_page.js',
     'public/js/user_profile.js',
     'public/js/users.js',
+    'public/js/vacation_req.js',
     'public/js/validate.js',
     'public/js/validate_doc.js',
     'public/js/validate_user.js',

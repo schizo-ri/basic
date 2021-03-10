@@ -54,26 +54,41 @@ $(function() {
         form_data = $('.form_sequence').serialize();
         form_data_array = $('.form_sequence').serializeArray();
 
-        /* console.log(form_data); */
+        var alert_text = '';
         console.log(form_data_array);
-       /*  console.log(data); */
        
         jQuery.each( form_data_array, function( i, field ) {
             if(field.value == "" ) {  //$(field).attr('required') && 
+                if( field.name == 'title' ) {
+                    alert_text += 'Nije unesen naslov obavijesti! ';
+                }
+                if( field.name == 'schedule_date' ) {
+                    alert_text += 'Nije postavljen datum!';
+                }
+                if( field.name == 'notice_create.js:65 schedule_time' ) {
+                    alert_text += 'Nije postavljeno vrijeme! ';
+                }
                 validate.push("block");
             } else {
                 validate.push(true);
             }
         });
+        if( data.get('to_department[]') == null ) {
+            alert_text += 'Nije unesen odjel na koji se šalje obavijest! ';
+            validate.push("block");
+        } else {
+            validate.push(true);
+        }
         if( html == undefined  || JSON.stringify(design) == undefined ) {
+            alert_text += 'Nije unesena obavijest! ';
             validate.push("block");
         } else {
             validate.push(true);
         }
         console.log(validate);
-
+        
         if(validate.includes("block") ) {
-            alert("Nisu uneseni svi parametri, nemoguće spremiti obavijest");
+            alert(alert_text);
             $(".btn-submit").prop("disabled", false);
         } else { 
             $.ajax({
@@ -90,7 +105,6 @@ $(function() {
                     window.location = location.origin;
                 },
                 error: function(jqXhr, json, errorThrown) {
-                    alert("Obavijest nije poslana, nešto je pošlo krivo ..."); 
                     var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
                                         'message':  jqXhr.responseJSON.message,
                                         'file':  jqXhr.responseJSON.file,
@@ -101,6 +115,7 @@ $(function() {
                         data: data_to_send,
                         success: function( response ) {
                             $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + response + '</div></div></div>').appendTo('body').modal();
+                            $(".btn-submit").prop("disabled", false);
                         }, 
                         error: function(jqXhr, json, errorThrown) {
                             console.log(jqXhr.responseJSON); 

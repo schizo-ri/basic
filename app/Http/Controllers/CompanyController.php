@@ -34,13 +34,8 @@ class CompanyController extends Controller
 		$departments = Department::get();
 		$modules = $this->getModules(); //moduli iz superadmin baze
 		$empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
 		
-		return view('Centaur::companies.index', ['companies' => $companies, 'departments' => $departments, 'modules' => $modules, 'permission_dep' => $permission_dep]);
+		return view('Centaur::companies.index', ['companies' => $companies, 'departments' => $departments, 'modules' => $modules]);
     }
 
     /**
@@ -298,33 +293,6 @@ class CompanyController extends Controller
 			}
 		}
 	
-/* {#685 ▼
-  +"id": 19
-  +"name": "Sportkart d.o.o."
-  +"address": "Avenija Dubrovnik 15/33"
-  +"city": "Zagreb"
-  +"oib": "20156458678"
-  +"first_name": "Igor"
-  +"last_name": "Tabak"
-  +"email": "igor.tabak@karting-arena.com"
-  +"phone": "778 7534"
-  +"created_at": "2020-05-22 07:43:05"
-  +"updated_at": "2020-05-22 07:43:05"
-}*/
-
-/* {#202 ▼
-	+"id": 13
-	+"client_id": 19
-	+"modules": "1,2,3,4,5,6,7,8,9,10"
-	+"db": "myintran_sportkart"
-	+"url": "sportkart.myintranet.io"
-	+"price_per_user": null
-	+"no_users": 100
-	+"calculate_method": null
-	+"created_at": "2020-05-22 07:43:05"
-	+"updated_at": "2020-05-22 07:43:05"
-  }
-   */
 		return $moduli_company;
 	}
 
@@ -353,7 +321,6 @@ class CompanyController extends Controller
 				} catch (Exception $e) {
 					session()->flash('error',  __('ctrl.retrieving_error'));
 					return redirect()->back();
-					//echo 'Caught exception: ',  $e->getMessage(), "\n";
 				}
 			} else {
 				session()->flash('error',  __('ctrl.no_oib'));

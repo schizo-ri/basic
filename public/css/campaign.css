@@ -115,8 +115,124 @@ p.modal_form_group_danger {
     height: 35px;
     line-height: 35px;
     float: left;
+    max-width: 100%;
+}
+.select2 span.selection, .select2 span.select2-search {
+    display: block;
 }
 
+.select2-selection{
+    background-position: 98%;
+    background-color: white;
+    width: 100%;
+    min-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid rgb(204 204 204);
+    border-radius: 5px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: #606060;
+    padding-left: 10px;
+    padding-right: 15px;
+}
+
+.select2-container:not(.select2) {
+    box-shadow: 3px 0 6px rgb(0 0 0 / 15%), -3px 0 6px rgb(0 0 0 / 15%);
+    margin-left: 0;
+    margin-top: 30px;
+    background: white;
+    z-index: 3;
+    max-height: 180px;
+    overflow: auto;
+}
+.select2-search__field {
+    border: none;
+    width: 100%;
+}
+.select2 span.select2-selection--multiple {
+    height: auto;
+}
+textarea.select2-search__field {
+    resize: none;
+}
+span[aria-hidden=true] {
+    font-size: 20px;
+}
+.select2 span:not(button >span) {
+    overflow: hidden;
+    display: inline-block;
+
+}
+.select2-selection__choice {
+    display: flex;
+}
+.select2-selection__choice__remove {
+    border: none;
+    background: inherit;
+}
+.select2-selection__choice__display {
+    line-height: 38px;
+}
+.select2-search__field {
+    line-height: initial;
+    padding: 0 10px;
+    height: auto;
+    min-height: 30px;
+    width: 100% !important;
+    margin: 0;
+}
+.select2-results__options {
+    background-color: white;
+    padding: 0 10px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    max-height: 300px;
+    overflow: auto;
+    border-top: 1px solid #ccc;
+}
+.select2-results__option.select2-results__option--selectable {
+    list-style: none;
+    padding: 3px 0;
+    cursor: pointer;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background-color: transparent;
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+    background: inherit;
+}
+
+.select2-container {
+    background: white;
+}
+
+.select2-selection__rendered {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    align-self: center;
+    text-indent: 5px;
+    text-align: left;
+}
+.select2-selection__choice {
+    height: 100%;
+}
 .campaign_set input.schedule_date {
     margin-right: 15px;
     display: none;
@@ -232,7 +348,10 @@ label.schedule_set {
     margin-bottom: 10px;
     display: block;
 }
-
+.select2-selection textarea {
+    min-width: 100%;
+    outline: none;
+}
 .overSelect {
 	position: absolute;
 	left: 0;
@@ -243,16 +362,6 @@ label.schedule_set {
 }
 .select2-hidden-accessible {
     display: none;
-}
-#checkboxes, #checkboxes1 {
- /*    height: 0; */
-	/* display: none; */
-/* 	border: 1px #dadada solid; */
-   /*  position: absolute;
-    left: 0px;
-    right: 0px;
-    background: rgb(255, 255, 255);
-    z-index: 1; */
 }
 
 #checkboxes > input[type=search], #checkboxes1 > input[type=search] {

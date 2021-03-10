@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DashboardController;
 use App\Models\Customer;
 use Sentinel;
 
@@ -29,9 +28,7 @@ class CustomerController extends Controller
     {
         $customers = Customer::where('active',1)->get();
 
-        $permission_dep = DashboardController::getDepartmentPermission();
-
-		return view('Centaur::customers.index', ['customers' => $customers, 'permission_dep' => $permission_dep]);
+		return view('Centaur::customers.index', ['customers' => $customers]);
 
     }
 

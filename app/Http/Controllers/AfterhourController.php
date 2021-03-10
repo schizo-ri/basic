@@ -49,8 +49,6 @@ class AfterhourController extends Controller
      */
     public function index( Request $request)
     {
-        $permission_dep = DashboardController::getDepartmentPermission();
-
         if( isset($request['date'])) {
             $date = explode('-', $request['date']);
             $month = $date[1];
@@ -89,7 +87,7 @@ class AfterhourController extends Controller
             return date('m',strtotime($afterhour->date)) == $month && date('Y',strtotime($afterhour->date)) == $year;
         });
        
-        return view('Centaur::afterhours.index', ['afterhours' => $afterhours,'employees' => $employees, 'dates' => $dates, 'permission_dep' => $permission_dep]);
+        return view('Centaur::afterhours.index', ['afterhours' => $afterhours,'employees' => $employees, 'dates' => $dates]);
     }
 
     public function afterhours_approve( )
@@ -141,9 +139,7 @@ class AfterhourController extends Controller
                 $projects = Project::where('active',1)->get();
             }
         }
-        
-       /*  $leave_types = $api->get_available_leave_types(); */
-        /* return  $tasks; */
+       
         return view('Centaur::afterhours.create',['employees' => $employees,'request_empl' => $request_empl,'projects' => $projects,'projects_erp' => $projects_erp,'tasks' => $tasks]);
     }
 
@@ -259,8 +255,7 @@ class AfterhourController extends Controller
         Mail::to($send_to_empl)->send(new AfterHourSendMail($afterHour));
 
         $send_to = EmailingController::sendTo('afterhours', 'create');
-      /*   $send_to = array('jelena.juras@duplico.hr'); */
-
+        /*  $send_to = array('jelena.juras@duplico.hr'); */
         Log::info("Prekovremeni poslan na mail: ".implode(', ',array_unique($send_to)));
                         
         foreach(array_unique($send_to) as $send_to_mail) {
@@ -336,8 +331,6 @@ class AfterhourController extends Controller
             }
         }
        
-     /*    $leave_types = $api->get_available_leave_types(); */
-
         return view('Centaur::afterhours.edit',['afterhour' => $afterhour,'employees' => $employees,'projects' => $projects,'projects_erp' => $projects_erp,'tasks' => $tasks]);
     }
 

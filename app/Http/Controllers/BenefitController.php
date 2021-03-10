@@ -29,14 +29,7 @@ class BenefitController extends Controller
     {
         $benefits = Benefit::get();
 
-        $empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
-
-        return view('Centaur::benefits.index', ['benefits' => $benefits,'permission_dep' => $permission_dep]);
+        return view('Centaur::benefits.index', ['benefits' => $benefits]);
     }
 
     /**
@@ -139,15 +132,8 @@ class BenefitController extends Controller
     {
        // $benefits = Benefit::where('status',1)->get();
         $benefits = Benefit::get();
-
-        $empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
         
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
-        
-		return view('Centaur::benefits.show', ['benefits' => $benefits, 'permission_dep' => $permission_dep ]);
+		return view('Centaur::benefits.show', ['benefits' => $benefits]);
     }
 
     /**

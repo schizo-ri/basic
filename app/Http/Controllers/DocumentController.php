@@ -34,7 +34,6 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        /*  $user = Employee::where('user_id',Sentinel::getUser()->id)->first(); */
         $empl = Sentinel::getUser()->employee;
 
         if(isset($empl)) {
@@ -46,7 +45,7 @@ class DocumentController extends Controller
                 $documents = Document::where('path','like','%'.$user_name .'/documents/%')->orWhere('path','like','%svi/documents/%')->get()->groupBy('category_id');
             }
         
-        $permission_dep = DashboardController::getDepartmentPermission();
+   
         $employees = Employee::employees_firstNameASC();
        
         $path = 'storage/' . $user_name . '/documents/';
@@ -65,7 +64,7 @@ class DocumentController extends Controller
             $docs2 = array();
         }
         
-          return view('Centaur::documents.index', ['docs' => $docs,'docs2' => $docs2,'documents' => $documents, 'employees' => $employees, 'user_name' => $user_name, 'permission_dep' => $permission_dep]);
+          return view('Centaur::documents.index', ['docs' => $docs,'docs2' => $docs2,'documents' => $documents, 'employees' => $employees, 'user_name' => $user_name]);
       } else {
           $message = session()->flash('error', __('ctrl.path_not_allow'));
           return redirect()->back()->withFlashMessage($message);

@@ -29,14 +29,11 @@ class AbsenceTypeController extends Controller
     {
         $empl = Sentinel::getUser()->employee;
 		$absenceTypes = AbsenceType::get();
-        $permission_dep = array();
-
+        
 		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-			
-			return view('Centaur::absence_types.index', ['absenceTypes' => $absenceTypes, 'empl' => $empl, 'permission_dep' => $permission_dep]);
+			return view('Centaur::absence_types.index', ['absenceTypes' => $absenceTypes, 'empl' => $empl]);
 		} else {
-			 return view('Centaur::absence_types.index', ['absenceTypes' => $absenceTypes, 'permission_dep' => $permission_dep]);
+			 return view('Centaur::absence_types.index', ['absenceTypes' => $absenceTypes]);
 		}
     }
 
@@ -77,7 +74,6 @@ class AbsenceTypeController extends Controller
 		
 		session()->flash('success', __('ctrl.data_save'));
 		return redirect()->back();
-     //   return redirect()->route('absence_types.index');
     }
 
     /**
@@ -132,7 +128,6 @@ class AbsenceTypeController extends Controller
 		
 		session()->flash('success', __('ctrl.data_edit'));
         return redirect()->back();	
-//        return redirect()->route('absence_types.index');
     }
 
     /**

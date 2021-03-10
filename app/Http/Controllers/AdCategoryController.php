@@ -30,14 +30,8 @@ class AdCategoryController extends Controller
     {
         $categories = AdCategory::get();
         $ads = Ad::get();
-		$empl = Sentinel::getUser()->employee;
-        $permission_dep = array();
         
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
-        
-		return view('Centaur::ad_categories.index', ['categories' => $categories,'permission_dep' => $permission_dep,'ads' => $ads]);
+		return view('Centaur::ad_categories.index', ['categories' => $categories,'ads' => $ads]);
     }
 
     /**
@@ -67,7 +61,6 @@ class AdCategoryController extends Controller
 		
 		session()->flash('success', "Podaci su spremljeni");
 		return redirect()->back();
-     //   return redirect()->route('ad_categories.index');
     }
 
     /**
@@ -113,7 +106,6 @@ class AdCategoryController extends Controller
 		
 		session()->flash('success', __('ctrl.data_edit'));
 		return redirect()->back();
-       // return redirect()->route('ad_categories.index');
     }
 
     /**

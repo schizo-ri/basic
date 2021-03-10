@@ -12,6 +12,9 @@ use App\Models\Ads;
 			<div class="page-header header_document">
 				<a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a>
 				@lang('basic.ads')
+				@if (Sentinel::getUser()->hasAccess(['ad_categories.view']) 	)
+					<a href="{{ route('ad_categories.index') }}" class="view_all" title="Energenti" >@lang('basic.ad_categories')</a>
+				@endif
 			</div>
 			<header class="header_ads">
 				<div class="index_table_filter">

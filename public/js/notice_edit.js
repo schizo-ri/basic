@@ -57,23 +57,42 @@ $('.form_sequence.notice_edit .btn-submit').on('click',function(e) {
     form_data = $('.form_sequence').serialize();
     form_data_array = $('.form_sequence').serializeArray();
 
+    var alert_text = '';
+    console.log(form_data_array);
+    
     jQuery.each( form_data_array, function( i, field ) {
         if(field.value == "" ) {  //$(field).attr('required') && 
+            if( field.name == 'title' ) {
+                alert_text += 'Nije unesen naslov obavijesti! ';
+            }
+            if( field.name == 'schedule_date' ) {
+                alert_text += 'Nije postavljen datum!';
+            }
+            if( field.name == 'notice_create.js:65 schedule_time' ) {
+                alert_text += 'Nije postavljeno vrijeme! ';
+            }
             validate.push("block");
         } else {
             validate.push(true);
         }
     });
-    if( JSON.stringify(design) == undefined ) {
+    if( data.get('to_department[]') == null ) {
+        alert_text += 'Nije unesen odjel na koji se šalje obavijest! ';
         validate.push("block");
     } else {
         validate.push(true);
     }
+    if( html == undefined  || JSON.stringify(design) == undefined ) {
+        alert_text += 'Nije unesena obavijest! ';
+        validate.push("block");
+    } else {
+        validate.push(true);
+    }
+    console.log(validate);
+    
     if(validate.includes("block") ) {
-        e.preventDefault();
-      
-        alert("Nisu uneseni svi parametri, nemoguće spremiti obavijest");
-        
+        alert(alert_text);
+        $(".btn-submit").prop("disabled", false);
     } else { 
         $.ajax({
             type: "post",

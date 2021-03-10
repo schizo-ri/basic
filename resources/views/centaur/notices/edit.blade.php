@@ -29,6 +29,8 @@
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
 		<script src="//editor.unlayer.com/embed.js"></script>
+         {{-- Select2 --}}
+         <link href="{{ URL::asset('/../select2-develop/dist/css/select2.min.css') }}" />
 		<!--Jquery -->
 		<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
 		@stack('stylesheet')
@@ -58,8 +60,22 @@
                         <input name="title" type="text" class="form-control" value="{{ $notice->title }}" required>
                         {!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
-                    <div class="form-group col-sm-12 col-md-6 float_left {{ ($errors->has('to_department'))  ? 'has-error' : '' }} ">
-                        <div class="selectBox department" onclick="showCheckboxesDepartment()" >
+                    <div class="form-group col-sm-12 col-md-6 float_left to_department {{ ($errors->has('to_department'))  ? 'has-error' : '' }} ">
+                        <label  >@lang('basic.to_department')</label>
+                        <select name="to_department[]" class="select_filter form-control js-example-basic-multiple js-states select2-hidden-accessible" value="{{ old('to_department') }}" multiple required >
+                            <option disabled ></option>
+                            @foreach($departments->where('level1', 0) as $department0)
+                                <option value="{{ $department0->id }}" {!! in_array( $department0->id, $notice_departments) ? 'selected' : '' !!}>[L0] {{ $department0->name }}</option>
+                                @foreach($departments->where('level2', $department0->id ) as $department1)
+                                    <option value="{{ $department1->id }}" class="padd_l_20" {!! in_array( $department1->id, $notice_departments) ? 'selected' : '' !!}>[L1] {{ $department1->name }}</option>
+                                    @foreach($departments->where('level2', $department1->id ) as $department2)
+                                        <option value="{{ $department2->id }}" class="padd_l_40" {!! in_array( $department2->id, $notice_departments) ? 'selected' : '' !!}>[L2] {{ $department2->name }}</option>
+                                    @endforeach	
+                                @endforeach	
+                            @endforeach	
+                        </select>
+
+                       {{--  <div class="selectBox department" onclick="showCheckboxesDepartment()" >
                             <!-- <select > -->
                                 <label  >@lang('basic.to_department')</label>
                             <!-- </select> -->
@@ -88,7 +104,7 @@
                                 </div>
                             @endforeach
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="form-group col-sm-12 col-md-6 float_left">
                         <label class="label_file" for="file">Top notice image<span><img src="{{ URL::asset('icons/download.png') }}" />Upload image</span></label>
                         <input type='file' id="file" name="fileToUpload" >
@@ -131,7 +147,27 @@
 		<script src="{{ URL::asset('/../node_modules/popper.js/dist/umd/popper.min.js') }}"></script>
         <!-- Restfulizer.js - A tool for simulating put,patch and delete requests -->
         <script src="{{ asset('/../restfulizer.js') }}"></script>
-		<script>
+		<!--Awesome icons -->
+		<script src="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/js/all.min.js') }}"></script>
+	
+		<!-- Jquery modal -->
+		<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
+		
+		<!--Unlayer modal -->
+		{{-- <script src="{{ URL::asset('/../node_modules/react-email-editor/umd/react-email-editor.min.js') }}"></script> --}}
+
+		<!-- Scripts -->
+		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
+		<script src="{{URL::asset('/../js/notice_edit.js') }}"></script>
+        {{--  Select2 find --}}
+        <script src="{{ URL::asset('/../select2-develop/dist/js/select2.min.js') }}"></script>
+        <script src="{{ URL::asset('/../select2-develop/dist/js/i18n/hr.js') }}"></script>
+		@if(session()->has('modal'))
+			<script>
+				$('.row.notification').modal();
+			</script>
+		@endif
+        <script>
             $(function() {        
                 $('.select_save').click(function(){
                     if($(this).val() == 1 ) {
@@ -161,39 +197,78 @@
                 });
             
             });
-            var expanded = false;
+           /*  var expanded = false;
             function showCheckboxesDepartment() {
-            var checkboxes1 = document.getElementById("checkboxes1");
-            if (!expanded) {
-                checkboxes1.style.display = "block";
-                expanded = true;
-            } else {
-                checkboxes1.style.display = "none";
-                expanded = false;
+                var checkboxes1 = document.getElementById("checkboxes1");
+                if (!expanded) {
+                    checkboxes1.style.display = "block";
+                    expanded = true;
+                } else {
+                    checkboxes1.style.display = "none";
+                    expanded = false;
+                }
+            } */
+            if( $('.select_filter').length > 0 ) {
+                $('.select_filter').select2({
+                    dropdownParent: $('.to_department'),
+                    matcher: matchCustom,
+                    width: 'resolve',
+                    placeholder: {
+                        id: '-1', // the value of the option
+                    },
+                    theme: "classic",
+                });
             }
+            function matchCustom(params, data) {
+                // If there are no search terms, return all of the data
+                if ($.trim(params.term) === '') {
+                return data;
+                }
+
+                // Do not display the item if there is no 'text' property
+                if (typeof data.text === 'undefined') {
+                return null;
+                }
+
+                // `params.term` should be the term that is used for searching
+                // `data.text` is the text that is displayed for the data object
+                var value = params.term;
+                var search_Array = value.split(" ");
+                /* console.log(value);
+                console.log(search_Array); */
+                if( search_Array.length == 1 ) {
+                    if (data.text.toLowerCase().indexOf(search_Array[0]) > -1) {
+                        var modifiedData = $.extend({}, data, true);
+                        return modifiedData;
+                    }
+                } else if( search_Array.length == 2 ) {
+                    if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1) {
+                        var modifiedData = $.extend({}, data, true);
+                        return modifiedData;
+                    }
+                } else if( search_Array.length == 3 ) {
+                    if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1) {
+                        var modifiedData = $.extend({}, data, true);
+                        return modifiedData;
+                    }
+                } else if( search_Array.length == 4 ) {
+                    if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1  && data.text.toLowerCase().indexOf(search_Array[3]) > -1) {
+                        var modifiedData = $.extend({}, data, true);
+                        return modifiedData;
+                    }
+                }  else if( search_Array.length == 5 ) {
+                    if (data.text.toLowerCase().indexOf(search_Array[0]) > -1 && data.text.toLowerCase().indexOf(search_Array[1]) > -1 && data.text.toLowerCase().indexOf(search_Array[2]) > -1  && data.text.toLowerCase().indexOf(search_Array[3]) > -1 && data.text.toLowerCase().indexOf(search_Array[4]) > -1) {
+                        var modifiedData = $.extend({}, data, true);
+                        return modifiedData;
+                    }
+                } 
+                // Return `null` if the term should not be displayed
+                return null;
             }
             $.getScript( '/../js/filter.js');  
 
         </script>
 
-		<!--Awesome icons -->
-		<script src="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/js/all.min.js') }}"></script>
-	
-		<!-- Jquery modal -->
-		<script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
-		
-		<!--Unlayer modal -->
-		{{-- <script src="{{ URL::asset('/../node_modules/react-email-editor/umd/react-email-editor.min.js') }}"></script> --}}
-
-		<!-- Scripts -->
-		<script src="{{URL::asset('/../js/open_modal.js') }}"></script>
-		<script src="{{URL::asset('/../js/notice_edit.js') }}"></script>
-
-		@if(session()->has('modal'))
-			<script>
-				$('.row.notification').modal();
-			</script>
-		@endif
 		@stack('script')		
     </body>
 </html>

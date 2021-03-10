@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\AdRequest;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DashboardController;
+use App\Http\Requests\AdRequest;
 use App\Models\Ad;
 use App\Models\AdCategory;
 use App\Models\Employee;
@@ -35,16 +34,14 @@ class AdController extends Controller
      */
     public function index(Request $request)
     {
-		$permission_dep = DashboardController::getDepartmentPermission();
-		
 		if(isset($request->category_id)) {
 			$category = AdCategory::where('id',$request->category_id)->first();
 			$ads = Ad::where('category_id',$category->id )->get();
 
-			return view('Centaur::ads.index', ['ads' => $ads, 'category' => $category, 'permission_dep' => $permission_dep]);
+			return view('Centaur::ads.index', ['ads' => $ads, 'category' => $category]);
 		} else {
 			$ads = Ad::get();
-			return view('Centaur::ads.index', ['ads' => $ads, 'permission_dep' => $permission_dep]);
+			return view('Centaur::ads.index', ['ads' => $ads]);
 		}
     }
 
@@ -141,7 +138,7 @@ class AdController extends Controller
 
 		$send_to_email = array();
 
-		/* Email adrese svim zaposlenika */
+		/* Email adrese svih zaposlenika */
 	 	$send_to_email = Employee::getEmails();
 		try {
 			foreach ($send_to_email as $email) {
@@ -278,7 +275,6 @@ class AdController extends Controller
 		}
 
 		$target_dir = 'storage/ads/' . $ad->id . '/';
-			
 			if(file_exists($target_dir)){
 				array_map('unlink', glob("$target_dir/*.*"));
 			}
@@ -306,13 +302,12 @@ class AdController extends Controller
 				$ads = Ad::orderBy('created_at','DESC')->get();
 			}
 			$user_department = array();
-			$permission_dep = DashboardController::getDepartmentPermission();
-			
+		
 			if( $user->work){
 				$user_department = $user->work->department->id;
 			}
 			
-			return view('Centaur::oglasnik',['ads'=> $ads,'user_department'=> $user_department,'permission_dep'=> $permission_dep]);
+			return view('Centaur::oglasnik',['ads'=> $ads,'user_department'=> $user_department]);
 
 		} else {
 			$message = session()->flash('error', __('ctrl.path_not_allow'));

@@ -5,7 +5,7 @@
 	use App\Models\Department;
 @endphp
 @section('content')
-<div class="index_page index_documents">
+<div class="index_page index_documents vacation_index">
 	<main class="col-md-12 index_main main_documents float_right">
 		<section>
 			<div class="page-header header_document">
@@ -50,7 +50,7 @@
 								@php
 									$begin = new DateTime( $vacation->start_period );
 									$end   = new DateTime( $vacation->end_period);
-									$department = Department::find($department_id);
+									$department = Department::with('hasEmployeeDepartment')->find($department_id);
 									$employee_departments = $department->hasEmployeeDepartment;	
 									$count_termin = 0;
 								@endphp
@@ -82,7 +82,7 @@
 															$reg_date = new Datetime($employee_department->employee->reg_date);
 															$employee_probation = $reg_date->modify('+'. $employee_department->employee->probation .' months');
 														@endphp
-														<tr>											
+														<tr id="empl_{{ $employee_department->employee_id }}">							
 															<td class="employee_name {!! count($employee_plan) >0 ? 'bg_lightgreen': '' !!}">
 																{{ $employee_department->employee->user->last_name . ' ' . $employee_department->employee->user->first_name }}
 																@if( isset($plan_department['employees'] ) && in_array( $employee_department->employee_id, explode( ',', $plan_department['employees'])))
@@ -103,21 +103,23 @@
 																	if( $employee_plan ) {
 																		$employee_plan_date = $employee_plan->where('start_date', $i->format("Y-m-d"))->first();
 																	}
+
 																	$count_plan_department = 0;
 																	foreach ($employee_departments as $employee_dep) {
-																		$empl_id =  $employee_dep->employee->id;
+																		$empl_id = $employee_dep->employee->id;
 																		foreach ($vacation->hasPlans as $vac_plan) {
 																			if( $vac_plan->employee_id == $empl_id && $vac_plan->start_date == $i->format("Y-m-d")) {
 																				$count_plan_department++;
 																			}
 																		}
 																	}
+																	
 																	// djelatnici sa kojima se ne smije poklapati
 																	$poklapanje = 0;
 																	if( isset($plan_department['employees'])) {
 																		$employees = explode(',', $plan_department['employees']);
 																		foreach ($vacation->hasPlans as $pl) {
-																			if ( in_array($pl->employee_id, $employees ) && in_array($employee_department->employee_id, $employees ) &&  $pl->start_date == $i->format("Y-m-d") ) {
+																			if ( in_array($pl->employee_id, $employees ) && in_array($employee_department->employee_id, $employees ) && $pl->start_date == $i->format("Y-m-d") ) {
 																				$poklapanje = true;
 																			}
 																		}
@@ -144,7 +146,7 @@
 																					<i class="far fa-edit"></i>
 																				</a>
 																			@endif --}}
-																			<a href="{{ route('vacation_plans.destroy', $employee_plan_date->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+																			<a href="{{ route('vacation_plans.destroy', $employee_plan_date->id) }}"  id="{{ $employee_department->employee_id }}" class="action_confirm btn-delete danger" data-token="{{ csrf_token() }}">
 																				<i class="far fa-trash-alt"></i>
 																			</a>
 																		@else
@@ -152,7 +154,7 @@
 																		@endif
 																	@else
 																		@if ( count( $employee_plan) == 0 && $poklapanje == 0 && ($plan_department['no_people'] > $count_plan_department) )
-																			<a class="add_plan" href="{{ action('VacationPlanController@vacationPlan', ['vacation_id' => $vacation->id, 'employee_id' => $employee_department->employee_id, 'start_date' => $i->format("Y-m-d")]) }}" > 
+																			<a class="add_plan" href="{{ action('VacationPlanController@vacationPlan', ['vacation_id' => $vacation->id, 'employee_id' => $employee_department->employee_id, 'start_date' => $i->format("Y-m-d")]) }}" id="{{ $employee_department->employee_id }}"> 
 																				@if ($checked_employee->id == $employee_department->employee_id )
 																					Zapiši me
 																				@else
@@ -183,6 +185,7 @@
 														$end   = new DateTime( $vacation->end_period);
 													@endphp
 													<tr class="basic_view">
+														<tr >
 														@for ($i =  $begin; $i < $end; $i->modify('+'. $vacation->interval .' day'))
 															<td>
 																<div>
@@ -255,7 +258,7 @@
 																						@endphp
 																						{{ $count . '. '}}{{ $employee_plan_date->employee->user->last_name }}
 																						@if ( $checked_employee->id == $employee_department->employee_id )
-																							<a href="{{ route('vacation_plans.destroy', $employee_plan_date->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
+																							<a href="{{ route('vacation_plans.destroy', $employee_plan_date->id) }}"  id="{{ $employee_department->employee_id }}" class="action_confirm btn-delete danger" data-token="{{ csrf_token() }}" >
 																								<i class="far fa-trash-alt"></i>
 																							</a>
 																						@endif
@@ -299,39 +302,9 @@
 							@endforeach
 						@endforeach
 					</main>
-					
 				</div>
 			</main>
 		</section>
 	</main>
 </div>
-
-<script>
-	$('.add_plan').on('click',function(){
-		if (! confirm("Sigurno želiš unijeti plan?")) {
-			return false;
-		} else {
-			return true;
-		}
-	});
-	$('.create_request').on('click',function(){
-		if (! confirm("Sigurno želiš pokrenuti izradu zahtjeva?")) {
-			return false;
-		} else {
-			return true;
-		}
-	});
-	var slice = $('#no_week').text();
-	$('tbody tr td').not('.employee_name').on('mouseover', function(){
-		$( this ).css('background','#bbb');
-		$( this ).nextAll().slice(0, slice - 1).css('background','#bbb');
-		$( this ).nextAll().slice(0, slice - 1).find('a').css('visibility','hidden');
-		
-	});
-	$('tbody tr td').not('.employee_name').on('mouseleave', function(){
-		$( this ).css('background','inherit');
-		$( this ).nextAll().slice(0, slice - 1).css('background','inherit');
-		$( this ).nextAll().slice(0, slice - 1).find('a').css('visibility','visible');
-	});
-</script>
 @stop

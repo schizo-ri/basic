@@ -5,32 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\EmailingController;
 use App\Http\Controllers\AbsenceController;
 use App\Models\Post;
 use App\Models\Event;
-use App\Models\Task;
 use App\Models\EmployeeTask;
 use App\Models\Employee;
 use App\Models\Department;
-use App\Models\Company;
 use App\Models\Locco;
-use App\Models\Setting;
 use App\Models\WorkRecord;
 use App\Models\Shortcut;
-use App\Models\EmployeeTraining;
 use App\Models\Absence;
-use App\Models\Car;
-use App\Models\MailTemplate;
-use Log;
 use App\Http\Controllers\BasicAbsenceController;
 use Sentinel;
-use DateTime;
-use DB;
-use Artisan;
-use App\Models\WorkDiary;
-use App\Models\Project;
-use App\Models\WorkTask;
 
 class DashboardController extends Controller
 {

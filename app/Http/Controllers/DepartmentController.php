@@ -34,14 +34,8 @@ class DepartmentController extends Controller
         $departments = Department::orderBy('name')->get();
         $department_roles = DepartmentRole::get();
 		$works = Work::get();
-        $empl = Sentinel::getUser()->employee;
-        $permission_dep = array();
-
-		if($empl) {
-        	$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-		}
-		
-		return view('Centaur::departments.index', ['departments' => $departments, 'works' => $works, 'department_roles' => $department_roles, 'permission_dep' => $permission_dep]);
+       
+		return view('Centaur::departments.index', ['departments' => $departments, 'works' => $works, 'department_roles' => $department_roles]);
     }
 
     /**
@@ -80,7 +74,6 @@ class DepartmentController extends Controller
 		
 		session()->flash('success',  __('ctrl.data_save'));
 		return redirect()->back();
-     //   return redirect()->route('departments.index');
     }
 
     /**
@@ -134,7 +127,6 @@ class DepartmentController extends Controller
 		
 		session()->flash('success',__('ctrl.data_edit'));
 		return redirect()->back();
-      //  return redirect()->route('departments.index');		
     }
 
     /**

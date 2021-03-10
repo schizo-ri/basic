@@ -31,7 +31,7 @@ class NoticeController extends Controller
     public function __construct()
     {
         $this->middleware('sentinel.auth');
-        $this->test_mail = true;  // true - test na jelena.juras@duplco.hr
+        $this->test_mail = false;  // true - test na jelena.juras@duplco.hr
     }
   
     /**
@@ -62,9 +62,6 @@ class NoticeController extends Controller
     public function create()
     {
         $departments = Department::orderBy('name','ASC')->get();
-       /*  $departments0 = Department::where('level1',0)->orderBy('name','ASC')->get(); */
-		/* $departments1 = Department::where('level1',1)->orderBy('name','ASC')->get(); */
-       /*  $departments2 = Department::where('level1',2)->orderBy('name','ASC')->get(); */
         $templates = Template::get();
 
         return view('Centaur::notices.create', ['templates' => $templates, 'departments' => $departments]);
@@ -78,7 +75,6 @@ class NoticeController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
         if( ! isset($request['to_department'] ) || ! $request['to_department'] )  {
             $to_department_id = array( Department::where('level1',0)->first()->id );
         } 
@@ -181,13 +177,11 @@ class NoticeController extends Controller
                     } else {
                         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
                             if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                               
+                                Log::info('******************** Notice store *****************');
+                                Log::info($all_dep_employee);
                                 try {   
-                                    Log::info(array_unique('******************** Notice store *****************'));
-                                    Log::info(array_unique($all_dep_employee));
-                                    dd($all_dep_employee);
                                     foreach (array_unique($all_dep_employee) as $mail) {
-                                        Mail::to($mail)->send(new NoticeMail($notice1));
+                                      //  Mail::to($mail)->send(new NoticeMail($notice1));
                                     }   
                                 } catch (\Throwable $th) {
                                     $email = 'jelena.juras@duplico.hr';
@@ -210,13 +204,11 @@ class NoticeController extends Controller
                 /* ************************* SEND MAIL *********************************** */
         
                 if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                    Log::info(array_unique('******************** Notice store *****************'));
+                    Log::info('******************** Notice store *****************');
                     Log::info(array_unique($all_dep_employee));
                     try {   
-                        Log::info(array_unique($all_dep_employee));
-                        dd($all_dep_employee);
                         foreach (array_unique($all_dep_employee) as $mail) {
-                            Mail::to($mail)->send(new NoticeMail($notice1));
+                         //   Mail::to($mail)->send(new NoticeMail($notice1));
                         }              
                     } catch (\Throwable $th) {
                         $email = 'jelena.juras@duplico.hr';
@@ -292,14 +284,16 @@ class NoticeController extends Controller
     public function edit($id)
     {
         $notice = Notice::find($id);
-        $departments = explode(',', $notice->to_department );
+        $notice_departments = explode(',', $notice->to_department );
         $templates = Template::get();
-
+        $departments = Department::get();
+      
+/* 
         $departments0 = Department::where('level1',0)->orderBy('name','ASC')->get();
 		$departments1 = Department::where('level1',1)->orderBy('name','ASC')->get();
-        $departments2 = Department::where('level1',2)->orderBy('name','ASC')->get();
+        $departments2 = Department::where('level1',2)->orderBy('name','ASC')->get(); */
 
-        return view('Centaur::notices.edit', ['notice' => $notice, 'templates' => $templates, 'departments' => $departments, 'departments0' => $departments0, 'departments1' => $departments1, 'departments2' => $departments2]);
+        return view('Centaur::notices.edit', ['notice' => $notice, 'templates' => $templates, 'departments' => $departments, 'notice_departments' => $notice_departments]);
     }
 
     /**

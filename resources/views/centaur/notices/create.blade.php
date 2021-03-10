@@ -55,16 +55,16 @@
                         <input name="title" type="text" class="form-control" value="{{ old('title') }}" required>
                         {!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
                     </div>
-                    <div class="form-group col-sm-12 col-md-6 float_left {{ ($errors->has('to_department'))  ? 'has-error' : '' }} ">
-                        <select class="select_filter form-control js-example-basic-multiple js-states select2-hidden-accessible" name="to_department[]" value="{{ old('to_department') }}" multiple required >
-                            <option value="" disabled></option>
-                            <option value="all" >@lang('basic.all_employees')</option>
+                    <div class="form-group col-sm-12 col-md-6 float_left to_department {{ ($errors->has('to_department'))  ? 'has-error' : '' }} ">
+                        <label  >@lang('basic.to_department')</label>
+                        <select name="to_department[]" class="select_filter form-control js-example-basic-multiple js-states select2-hidden-accessible" value="{{ old('to_department') }}" multiple required >
+                            <option disabled ></option>
                             @foreach($departments->where('level1', 0) as $department0)
-                                <option value="{{ $department0->id }}">{{ $department0->name }}</option>
+                                <option value="{{ $department0->id }}" >[L0] {{ $department0->name }}</option>
                                 @foreach($departments->where('level2', $department0->id ) as $department1)
-                                    <option value="{{ $department1->id }}">{{ $department1->name }}</option>
+                                    <option value="{{ $department1->id }}" class="padd_l_20">[L1] {{ $department1->name }}</option>
                                     @foreach($departments->where('level2', $department1->id ) as $department2)
-                                        <option value="{{ $department2->id }}">{{ $department2->name }}</option>
+                                        <option value="{{ $department2->id }}" class="padd_l_40">[L2] {{ $department2->name }}</option>
                                     @endforeach	
                                 @endforeach	
                             @endforeach	
@@ -188,7 +188,7 @@
                 });
             
             });
-            var expanded = false;
+           /*  var expanded = false;
             function showCheckboxesDepartment() {
                 console.log(expanded);
                 var checkboxes1 = $("#checkboxes1");
@@ -199,10 +199,10 @@
                     $(checkboxes1).css('height','0');
                     expanded = false;
                 }
-            }
+            } */
             if( $('.select_filter').length > 0 ) {
                 $('.select_filter').select2({
-                    dropdownParent: $('.campaign_set'),
+                    dropdownParent: $('.to_department'),
                     matcher: matchCustom,
                     width: 'resolve',
                     placeholder: {

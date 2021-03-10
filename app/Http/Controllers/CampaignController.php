@@ -33,14 +33,7 @@ class CampaignController extends Controller
         $campaigns = Campaign::get();
         $campaign_sequences = CampaignSequence::get();
 
-        $empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
-
-		return view('Centaur::campaigns.index', ['campaigns' => $campaigns,'permission_dep' => $permission_dep,'campaign_sequences' => $campaign_sequences]);
+		return view('Centaur::campaigns.index', ['campaigns' => $campaigns,'campaign_sequences' => $campaign_sequences]);
     }
 
     /**
@@ -92,14 +85,7 @@ class CampaignController extends Controller
         $campaign = Campaign::find($id);
         $campaignSequences = CampaignSequence::where('campaign_id',$id )->get();
 
-        $empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
-
-		return view('Centaur::campaigns.show', ['campaign' => $campaign, 'campaignSequences' => $campaignSequences, 'permission_dep' => $permission_dep ]);
+		return view('Centaur::campaigns.show', ['campaign' => $campaign, 'campaignSequences' => $campaignSequences]);
     }
 
     /**

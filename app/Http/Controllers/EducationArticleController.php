@@ -33,26 +33,16 @@ class EducationArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $empl = Sentinel::getUser()->employee;
-		$permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
-		
 		if($request->theme_id){
 			$educationArticles = EducationArticle::where('theme_id',$request->theme_id)->get();
 			$educationTheme = EducationTheme::where('id', $request->theme_id)->first();
 
-			return view('Centaur::education_articles.index', ['educationArticles' => $educationArticles,'educationTheme' => $educationTheme,'permission_dep' => $permission_dep]);
-
+			return view('Centaur::education_articles.index', ['educationArticles' => $educationArticles,'educationTheme' => $educationTheme]);
 		} else {
 			$educationArticles = EducationArticle::get();
 			
-			return view('Centaur::education_articles.index', ['educationArticles' => $educationArticles, 'permission_dep' => $permission_dep]);
+			return view('Centaur::education_articles.index', ['educationArticles' => $educationArticles]);
 		}
-		
-		
     }
 
     /**

@@ -154,7 +154,6 @@ class VacationPlanController extends Controller
             $vacationPlan = new VacationPlan();
             $vacationPlan->saveVacationPlan($data);
         }
-      
 		
 		session()->flash('success', __('ctrl.data_save'));
         

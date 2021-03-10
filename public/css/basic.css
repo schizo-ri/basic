@@ -104,7 +104,9 @@
 .padd_l_20 {
     padding-left: 20px;
 }
-
+.padd_l_40 {
+    padding-left: 40px;
+}
 .float_right {
     float: right;
 }
@@ -270,6 +272,7 @@
     top: 0;
     right: 0;
     background: #fff;
+    overflow-wrap: break-word;
 }
 
 .fa-question-circle.show_popUp, svg.fa-question-circle {

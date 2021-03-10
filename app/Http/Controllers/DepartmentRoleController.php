@@ -30,13 +30,8 @@ class DepartmentRoleController extends Controller
     {
 		$department_roles = DepartmentRole::get();
 		$empl = Sentinel::getUser()->employee;
-        $permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-        } 
 		
-		return view('Centaur::department_roles.index', ['department_roles' => $department_roles, 'permission_dep' => $permission_dep]);
+		return view('Centaur::department_roles.index', ['department_roles' => $department_roles]);
 	}
 	
     /**
@@ -50,7 +45,6 @@ class DepartmentRoleController extends Controller
 		$tables = array();
 		
 		foreach($tables1 as $table) {
-            //array_push($tables, $table->name);
             $tables[$table->name] = $table->description;
         }
       
@@ -97,7 +91,6 @@ class DepartmentRoleController extends Controller
 		
 		session()->flash('success',  __('ctrl.data_save'));
         return redirect()->back();	
-     //   return redirect()->route('department_roles.index');
     }
 
     /**
@@ -169,8 +162,6 @@ class DepartmentRoleController extends Controller
 		
 		session()->flash('success', __('ctrl.data_edit'));
         return redirect()->back();	
-   //     return redirect()->route('department_roles.index');
-		
     }
 
     /**
@@ -182,11 +173,9 @@ class DepartmentRoleController extends Controller
     public function destroy($id)
     {
         $departmentRole = DepartmentRole::find($id);
-		
 		$departmentRole->delete();
 		
 		$message = session()->flash('success',  __('ctrl.data_delete'));
-		
 		return redirect()->back()->withFlashMessage($message);
     }
 }
