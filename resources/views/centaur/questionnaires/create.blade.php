@@ -35,10 +35,10 @@
 					<input name="name_category[]" onchange="inputChange( this, this.value )" class="category_input" type="text" maxlength="255" value="{{ old('name_category') }}" placeholder="{{ __('questionnaire.add_category')}}" required >
 					{!! ($errors->has('name_category') ? $errors->first('name_category', '<p class="text-danger">:message</p>') : '') !!}
 				</div>
-				<div class="form-group {{ ($errors->has('coefficient')) ? 'has-error' : '' }}  col-2 float_l padd_0 padd_l_20">
+				{{-- <div class="form-group {{ ($errors->has('coefficient')) ? 'has-error' : '' }}  col-2 float_l padd_0 padd_l_20">
 					<input name="coefficient[]" type="number" pattern="[0-9]+([.\,][0-9]+)?" value="{{ old('coefficient') }}" placeholder="{{ __('questionnaire.coef') }}" >
 					{!! ($errors->has('coefficient') ? $errors->first('coefficient', '<p class="text-danger">:message</p>') : '') !!}
-				</div>
+				</div> --}}
 				<span>
 					<button type="button" class="collapsible option_dots"></button>
 					<button type="button" class="content delete"  onclick="brisi_element(this)">

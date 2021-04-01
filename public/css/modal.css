@@ -359,7 +359,6 @@ span.work {
   
   /* Slideshow container */
   .slideshow-container {
-	
 	width: 100%;
 	position: relative;
 	margin: auto;
@@ -503,9 +502,6 @@ span.work {
 .form-group>label:first-child {
 	width: 100%;
 }
-.modal-body label:not(.label_file, .container_radio) {
-/* 	width: 100%; */
-}
 
 .modal-body .form-group.datum {
 	width: 45%;
@@ -544,7 +540,6 @@ span.work {
 	max-width: 100%;
     margin: auto;
     display: block;
-    vertical-align: middle;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -796,6 +791,8 @@ input[type="time"]::-webkit-inner-spin-button {
 	width: 100%;
 	height: 45px;
 	line-height: 45px;
+/* 	line-height: calc(1.5em + .75rem + 2px); */
+
 }
 
 .modal input.schedule_date {
@@ -1412,7 +1409,6 @@ option::selection {
 	text-align: center;
 	color: #FFFFFF;
 	display: inline-block;
-    float: right;
     line-height: 36px;
 }
 
@@ -2160,13 +2156,6 @@ input#file, input#doc {
 		font-weight: 400;
 	}
 
-	.group_body_footer {
-	/*	margin: auto;
-		display: block;
-		margin-top: 30%;
-		margin-bottom: 70%;
-		transform: translateY(-50%);*/
-	}
 
 .modal-body.body_post {
 	padding-top: 15PX;
@@ -2292,7 +2281,6 @@ input.form-control.date {
 		line-height: 30px;
 		display: inline-block;
 		margin-bottom: 15px;
-		float: left;
 		width: 100%;
 	}
 	.modal-dialog,  .modal-dialog .modal-content {

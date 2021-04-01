@@ -30,7 +30,6 @@
 			<script src="//editor.unlayer.com/embed.js"></script>
 		<!--Jquery -->
 			<script src="{{ URL::asset('/../node_modules/jquery/dist/jquery.min.js') }}"></script>
-			
 		@stack('stylesheet')
 	</head>
 	<body>
@@ -42,8 +41,8 @@
 					<button  class="btn-submit" {{-- (click)="exportHtml()" --}}>@lang('basic.save')</button>
 					<email-editor></email-editor>
 					{{-- 	<input class="btn-submit" type="submit" value="{{ __('basic.save')}}"> --}}
-					<a class="btn-back" href="{{ url()->previous() .'/#templates' }}">
-						@lang('basic.back')
+					<a class="btn-back" href="{{ $_SERVER['HTTP_REFERER'] }}">
+						Zatvori
 					</a>
 				</div>
 				<input name="module" value="{{ $template->module }}" hidden/>

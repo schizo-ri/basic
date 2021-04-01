@@ -66,7 +66,8 @@
 			<div class="form-group {{ ($errors->has('start_km'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.start_km')</label>
 				<input class="form-control" name="start_km" type="number" id="start_km" required value="{!! $car_employee ? $car_employee->current_km : '' !!}" />	
-			{{-- 	<p id="start_km_text" style="display:{!! $car_employee  && $car_employee->car && $car_employee->car->private_car != 1 ? 'block' : 'none' !!}"">{!! $car_employee ? $car_employee->current_km : '' !!}</p> --}}
+				{{-- <p id="start_km_text" style="display:{!! $car_employee && $car_employee->car && $car_employee->car->private_car != 1 ? 'block' : 'none' !!}"">{!! $car_employee ? $car_employee->current_km : '' !!}</p> --}}
+				<p id="start_km_error" class="red" ></p>
 				{!! ($errors->has('start_km') ? $errors->first('start_km', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('end_km'))  ? 'has-error' : '' }}">
@@ -99,12 +100,21 @@
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
 	$(function() {
-		var current_km;
+		var current_km = $('#start_km').val();
+		var car_id;
+		var token;
+		var poc_km;
+		var zav_km;
+		var udaljenost;
+		var StartDate;
+		var EndDate;
+		
+		console.log("current_km load " + current_km);
 
 		$('#end_km').change(function() {
-			var poc_km = $('#start_km').val();
-			var zav_km = $('#end_km').val();
-			var udaljenost = zav_km - poc_km;
+			poc_km = $('#start_km').val();
+			zav_km = $('#end_km').val();
+			udaljenost = zav_km - poc_km;
 			
 			$('#distance').val(udaljenost);
 			if ( udaljenost < 0 ) {
@@ -117,43 +127,48 @@
 		});
 
 		$('#car_id').change(function(){
-			var car_id = $( this ).val();
-			try {
-				var token = $('meta[name="csrf-token"]').attr('content');
-				$.ajaxSetup({
-					headers: {
-						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			car_id = $( this ).val();
+			
+			token = $('meta[name="csrf-token"]').attr('content');
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+			$.ajax({
+				url:  "last_km", 
+				type: 'post',
+				data: {
+						'_token':  token,
+						'car_id': car_id,                   
 					}
-				});
-				$.ajax({
-					url:  "last_km", 
-					type: 'post',
-					data: {
-							'_token':  token,
-							'car_id': car_id,                   
-						}
-				})
-				.done(function( current_km ) {     
-					$('#start_km').val(current_km);
-					$('#start_km_text').text(current_km);
-				/* 	if(car.private_car == 1) {
-						$("#start_km_text").hide();						
-						$("#start_km").attr('type','number');
-
-					} else {
-						$("#start_km_text").show();						
-						$("#start_km").attr('type','hidden');
-					} */
-				})
-				.fail(function() {
-					alert( "Nije uspjelo" );
-				})
-			} catch (error) {
-				
-			}
+			})
+			.done(function( km ) {   
+				current_km = km;
+				console.log("car change " + current_km);
+				$('#start_km').val(current_km);
+				$('#start_km_text').text(current_km);
+			})
+			.fail(function() {
+				alert( "Nije uspjelo dohvaćanje kilometara" );
+			})
 		});
 
-		$('#wrong_km').change(function(){
+		$( "#start_km" ).on('change',function(){
+			poc_km = $( this ).val();
+			console.log(poc_km);
+			console.log("start_km change " + current_km);
+			if(poc_km < current_km ) {
+				$('#start_km_error').text('Uneseni početni kilometri su manji od zadnjih završnih. NEDOZVOLJENI UPIS! Provjeri izbor vozila!');
+				$('.btn-submit').hide();
+			} else {
+				$('#start_km_error').text("");
+				$('.btn-submit').show();
+			}
+
+		});
+		
+		$('#wrong_km').on('change',function(){
 			if ( $( this ).prop( "checked" ) ) {
 				$("#start_km_text").hide();
 				$("#start_km").attr('type','number');
@@ -170,8 +185,8 @@
 			start_date = $( this ).val();
 			end_date = $( "#end_date" ).val();
 		
-			var StartDate = new Date(start_date);
-			var EndDate = new Date(end_date);
+			StartDate = new Date(start_date);
+			EndDate = new Date(end_date);
 			
 			if( start_date == 'Invalid Date') {
 				console.log( 'Invalid Date');
@@ -192,8 +207,8 @@
 			console.log(start_date);
 			console.log(end_date);
 
-			var StartDate = new Date(start_date);
-			var EndDate = new Date(end_date);
+			StartDate = new Date(start_date);
+			EndDate = new Date(end_date);
 			console.log(StartDate);
 			console.log(EndDate);
 
@@ -208,5 +223,5 @@
 			}
 		});
 	});
-/* 	$.getScript( '/../js/validate.js'); */
+
 </script>

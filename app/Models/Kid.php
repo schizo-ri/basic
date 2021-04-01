@@ -13,7 +13,6 @@ class Kid extends Model
 	*/
     protected $fillable = ['first_name','last_name','employee_id','b_day'];
 	
-
 	/*
 	* The Eloquent employee model name
 	* 

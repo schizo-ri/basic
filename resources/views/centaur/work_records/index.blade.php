@@ -91,7 +91,8 @@
 											<span>{{ $abs }}</span>
 										@else 
 											@if ( date('N', strtotime($dan2) ) < 6)
-													@if( ( $employee->checkout == null && strtotime($dan2) >= strtotime($employee->reg_date) ) || ($employee->checkout != null && strtotime($dan2) < strtotime($employee->checkout) )  )
+										
+												@if( ( $employee->checkout == null && strtotime($dan2) >= strtotime($employee->reg_date) ) || ($employee->checkout != null && strtotime($dan2) <= strtotime($employee->checkout)  && strtotime($dan2) >= strtotime($employee->reg_date) )  )
 													<span>RR</span>
 												@endif
 											@endif

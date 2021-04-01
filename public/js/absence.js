@@ -19,13 +19,12 @@ $(function(){
 		var url_load;
 		var type;
 		var type_text;
-
-		if( $(".all_absences").length > 0 ) {
-			if ( ! $.fn.DataTable.isDataTable( '.all_absences #index_table' ) ) {
-				init_absence_table ();
-			}
-			delete_request ();
+		
+		
+		if ( ! $.fn.DataTable.isDataTable( '.all_absences #index_table' ) ) {
+			init_absence_table ();
 		}
+		delete_request ();
 
 		function init_absence_table () {
 			jQuery.extend( jQuery.fn.dataTableExt.oSort, {
@@ -73,6 +72,7 @@ $(function(){
 					return ((a < b) ? 1 : ((a > b) ? -1 : 0));
 				}
 			} );
+
 			admin = $('#user_admin').text();
 			if( $('.all_absences.table_absences.table_requests').length > 0 ) {
 				order = [ 2, "desc" ];
@@ -138,7 +138,6 @@ $(function(){
 						}
 					]
 				} );
-			
 			} catch (error) {
 				console.log(error.message);
 			}
@@ -296,12 +295,12 @@ $(function(){
 				success: function( response ) {
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
-						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak' ) {
 							$('.table-responsive .table thead th.absence_end_date').css('display','none');
 							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
 							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
 							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
-						} else if (type_text == '') {
+						} else if (type_text == 'Svi tipovi') {
 							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
 							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
 							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
@@ -350,7 +349,7 @@ $(function(){
 			}
 		
 			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
-
+			console.log(url);
 			$.ajax({
 				url: url,
 				type: "get",
@@ -361,12 +360,12 @@ $(function(){
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
 						
-						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak' ) {
 							$('.table-responsive .table thead th.absence_end_date').css('display','none');
 							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
 							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
 							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
-						} else if (type_text == '') {
+						} else if (type_text == 'Svi tipovi') {
 							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
 							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
 							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
@@ -399,11 +398,12 @@ $(function(){
 		
 		$('#filter_years').on('change',function() {
 			month = $( this ).val();
-			if( $('#filter_types').length>0) {
+			if( $('#filter_types').length > 0) {
 				type = $('#filter_types').val();
 				type_text = $('#filter_types').find('option:selected').text();
 			} else {
 				type = 'all';
+				type_text = 'Svi tipovi';
 			}
 			if( $('#filter_employees').length>0) {
 				employee_id =  $('#filter_employees').val();
@@ -415,7 +415,10 @@ $(function(){
 			} else {
 				approve = null;
 			}
+			console.log(type);
+			console.log(type_text);
 			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
+			console.log(url);
 			$.ajax({
 				url: url,
 				type: "get",
@@ -426,12 +429,12 @@ $(function(){
 				success: function( response ) {
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
-						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak' ) {
 							$('.table-responsive .table thead th.absence_end_date').css('display','none');
 							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
 							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
 							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
-						} else if (type_text == '') {
+						} else if (type_text == 'Svi tipovi') {
 							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
 							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
 							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
@@ -477,12 +480,12 @@ $(function(){
 				success: function( response ) {
 					$('.main_absence ').load(url + " .main_absence>section",function(){
 						$('#loader').remove();
-						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak') {
+						if(type_text == 'Prekovremeni sati' || type_text == 'Izlazak' ) {
 							$('.table-responsive .table thead th.absence_end_date').css('display','none');
 							$('.table-responsive .table tbody td.absence_end_date').css('display','none');
 							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
 							$('.table-responsive .table tbody td.absence_time').css('display','table-cell');
-						} else if (type_text == '') {
+						} else if (type_text == 'Svi tipovi') {
 							$('.table-responsive .table thead th.absence_end_date').css('display','table-cell');
 							$('.table-responsive .table tbody td.absence_end_date').css('display','table-cell');
 							$('.table-responsive .table thead th.absence_time').css('display','table-cell');
@@ -623,7 +626,6 @@ $(function(){
 				}
 			});
 		}
-
 		selectSearch ();
 	}
 });

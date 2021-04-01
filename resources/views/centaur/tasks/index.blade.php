@@ -26,13 +26,13 @@
 						<table id="index_table" class="display table table-hover sort_3_desc">
 							<thead>
 								<tr>
-									<th>@lang('basic.task') | @lang('basic.description')</th>
-									<th>@lang('basic.to_employee')</th>
-									<th class="sort_date">@lang('absence.start_date')</th>
-									<th class="sort_date">@lang('absence.end_date')</th>
-									<th>@lang('basic.interval')</th>
-									<th>Status</th>
-									<th class="not-export-column">@lang('basic.options')</th>
+									<th class="align_l">@lang('basic.task') | @lang('basic.description')</th>
+									<th class="align_l">@lang('basic.to_employee')</th>
+									<th class="sort_date align_l">@lang('absence.start_date')</th>
+									<th class="sort_date align_l">@lang('absence.end_date')</th>
+									<th class="align_l">@lang('basic.interval')</th>
+									<th class="align_l">Status</th>
+									<th class="not-export-column align_l">@lang('basic.options')</th>
 								</tr>
 							</thead>
 							<tbody>

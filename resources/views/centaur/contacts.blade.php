@@ -27,8 +27,10 @@
 									<th>@lang('basic.phone')</th>
 									<th>@lang('basic.priv_mobile')</th>
 									<th>e-mail</th>
-									<th>@lang('basic.priv_email')</th>
-									<th>@lang('basic.address')</th>
+									@if (Sentinel::inRole('administrator'))
+										<th>@lang('basic.priv_email')</th>
+										<th>@lang('basic.address')</th>
+									@endif
 								</tr>
 							</thead>
 							<tbody>
@@ -38,8 +40,10 @@
 										<td>{!! $employee->mobile !!}</td>
 										<td>{!! $employee->priv_mobile !!}</td>
 										<td>{!! $employee->email !!}</td>
-										<td>{!! $employee->priv_email !!}</td>
-										<td>{{ $employee->prebiv_adresa }} {!! $employee->prebiv_grad ? ', ' . $employee->prebiv_grad : '' !!}</td>
+										@if (Sentinel::inRole('administrator'))
+											<td>{!! $employee->priv_email !!}</td>
+											<td>{{ $employee->prebiv_adresa }} {!! $employee->prebiv_grad ? ', ' . $employee->prebiv_grad : '' !!}</td>
+										@endif
 									</tr>
 								@endforeach
 							</tbody>

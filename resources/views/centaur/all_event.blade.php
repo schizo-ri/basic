@@ -38,7 +38,10 @@
                                {{ ' - ' .  $data_day['title'] }}
                             @endif
                             @if (isset($data_day['time1']))
-                                {{ ' - ' . date('H:i', strtotime($data_day['time1'])) . '-' .  date('H:i', strtotime($data_day['time2'])) }}
+                                {{ ' - ' . date('H:i', strtotime($data_day['time1'])) }}
+                            @endif
+                            @if (isset($data_day['time2']))
+                                {{ ' - ' . date('H:i', strtotime($data_day['time2'])) }}
                             @endif
                             @if (isset($data_day['car']))
                                {{ ' - ' .  $data_day['car'] }}

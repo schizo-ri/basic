@@ -40,9 +40,8 @@ class DocumentController extends Controller
             $user_name = DashboardController::user_name( $empl->id );
             if(Sentinel::inRole('administrator')) {
                 $documents = Document::where('path','like','%/documents/%')->get()->groupBy('category_id');
-                
             } else {
-                $documents = Document::where('path','like','%'.$user_name .'/documents/%')->orWhere('path','like','%svi/documents/%')->get()->groupBy('category_id');
+                $documents = Document::where('path','like','%'.$user_name .'/documents/%')->orWhere('path','like','%svi/documents/%')->where('active',1)->get()->groupBy('category_id');
             }
         
    
@@ -174,6 +173,7 @@ class DocumentController extends Controller
                         'category_id'   => $request['category_id'],
                         'title'  		    => $imageName,
                         'path'  		    => $path,
+                        'active'  		    => $request['active'],
                         'description'   => $request['title']
                     );
                     $document = new Document();
@@ -209,6 +209,7 @@ class DocumentController extends Controller
                         'category_id'   => $request['category_id'],
                         'title'  		    => $docName,
                         'path'  		    => $path,
+                        'active'  		    => $request['active'],
                         'description'   => $request['title']
                     );
 
@@ -255,7 +256,8 @@ class DocumentController extends Controller
         $document = Document::find($id);
 
         $data = array(
-            'category_id'  	=> $request['category_id']
+            'category_id'  	=> $request['category_id'],
+            'active'  		=> $request['active'],
         );
             
         $document->updateDocument($data);

@@ -8,27 +8,19 @@ $(function() {
     if( $('.dataArr').text()) {
         var data1 = JSON.parse( $('.dataArr').text());
     }
-    /*
-    var data1 = [];
-    for (i = 0; i < data.length; i++) { 
-        var txt = '{"name": "' + data[i].name + '","date":"' + data[i].date + '"}'
-        data1.push(JSON.parse(txt));
-    }
-    */
    if( $('.calender_view').length >0) {
         $('.calender_view').pignoseCalendar({
         multiple: false,
         week: 1,
         weeks: [
+            'Ned',
             'Pon',
             'Uto',
             'Sri',
             'Čet',
             'Pet',
             'Sub',
-            'Ned'
         ],
-        // Month long names January ~ December
         monthsLong: [
             'Siječanj',
             'Veljača',
@@ -43,7 +35,6 @@ $(function() {
             'Studeni',
             'Prosinac'
         ],
-        // Month short names Jan ~ Dec
         months: [
             'Sij',
             'Velj',
@@ -58,7 +49,6 @@ $(function() {
             'Stu',
             'Pro'
         ],
-        // Other control words
         controls: {
                 ok: 'ok',
                 cancel: 'poništi'
@@ -104,13 +94,10 @@ $(function() {
                     view = $('.change_view_calendar').val();
                     
                     var d = new Date(datum);
-
                     if( d != 'Invalid Date') {
                         var url = url_basic + '?dan=' + datum;
                         get_url(url, datum);
                     } 
-                    
-
                     /*    if(body_width < 768) {
                         $('.index_main.index_event').modal();
                     }   */

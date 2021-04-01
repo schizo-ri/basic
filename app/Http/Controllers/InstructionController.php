@@ -42,6 +42,8 @@ class InstructionController extends Controller
     public function radne_upute () 
     {
         $employee = Sentinel::getUser()->employee;
+        $employee_departments = null;
+        
         if ( $employee ) {
             $employee_departments = $employee->employeesDepartment();
         } else {
@@ -50,13 +52,14 @@ class InstructionController extends Controller
         if( count($employee_departments) == 0) {
             if( $employee ) {
                 $work = $employee->work;
+                if( $work ) {
+                    $department = $work->department;
+                }
+                if ( $department ) {
+                    $employee_departments = array( $department->id );
+                }
             }
-            if( $work ) {
-                $department = $work->department;
-            }
-            if ( $department ) {
-                $employee_departments = array( $department->id );
-            }
+           
         }
        
         $permission_dep = DashboardController::getDepartmentPermission();

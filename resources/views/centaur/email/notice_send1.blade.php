@@ -94,7 +94,7 @@
 						<p style="{{ $style }}">{{ $text }}</p>
 					@endforeach
 				@else
-                    <p>Nova obavijest</p>
+                {{--     <p>Nova obavijest</p> --}}
                 @endif
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="body" style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_body : '' !!}">

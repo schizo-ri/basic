@@ -101,10 +101,6 @@ body>section {
 	text-align: center;
 }
 
-.title {
-	/*font-size: 84px;*/
-}
-
 .links > a {
 	color: #636b6f;
 	padding: 0 25px;
@@ -175,6 +171,8 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active  {
     -webkit-box-shadow: 0 0 0 30px white inset !important;
+	-moz-box-shadow:    0 0 0 30px white inset !important;
+  	box-shadow:         0 0 0 30px white inset !important;
 }
 
 
@@ -210,7 +208,6 @@ input:-webkit-autofill:active  {
 	user-select: none;
 	color: #202020;
 	line-height: 15px;
-	float: left;
   }
   
   /* Hide the browser's default checkbox */
@@ -416,15 +413,74 @@ main:hover > ::-webkit-scrollbar-thumb, section:hover > ::-webkit-scrollbar-thum
 	width: 100%;
 	background: linear-gradient(#071E57 35%, #ffffff 35%);
 }
+
+.body_visitors .icon_alert {
+	max-height: 35px;
+}
+
+.body_visitors .container {
+	height: calc(100% - 60px);
+    overflow: auto;
+	background: #071E57;
+}
+
+main.visitors {
+	background: white;
+	padding: 30px;
+}
+
+.visitors h1 {
+	margin-bottom: 20px;
+	font-size: 1.625rem;
+}
+
+.visitors h5 {
+	font-size: 1.25rem;
+}
+
+p.gdpr {
+	font-size: 10px;
+	clear: both;
+}
+
+.cookie {
+	position: fixed;
+    bottom: 0;
+    left: 50%;
+    right: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    background-color: bisque;
+    padding: 20px;
+    margin: 0;
+}
+.close_cookie, .cookie_info {
+	margin: 0 20px;
+    border-radius: 5px;
+    background-color: #838281;
+    color: bisque;
+    padding: 2px 20px;
+    box-shadow: 3px 3px 3px #838281;
+    font-size: 14px;
+    line-height: 20px;
+    height: 25px;
+    display: inline-block;
+    outline: none;
+    border: 1px solid;
+}
+
 .container >section {
 	height: 100%;
     padding: 0;
     background: none;
     padding-right: 20px;
 }
+
 .container section.side_noticeboard {
 	width: calc( 33.333333% - 50px);
 }
+
 span.img-success {
 	background: url('../icons/success.png') no-repeat center;
 	width: 131px;
@@ -546,7 +602,12 @@ span.img-success {
 }
 
 @media (max-width: 450px)  {
-	
+	main.visitors {
+		padding: 10px;
+	}
+	.visitors>section {
+		padding: 0;
+	}
 	html{
 		height: auto;
 	}

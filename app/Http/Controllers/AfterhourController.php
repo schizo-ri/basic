@@ -199,7 +199,6 @@ class AfterhourController extends Controller
                 Mail::to($afterHour->employee->email)->send(new AfterHourSendMail($afterHour));
 
                 $send_to = EmailingController::sendTo('afterhours', 'create');
-               
             }
 
             Log::info("Prekovremeni poslan na mail: ".implode(', ',array_unique($send_to)));
@@ -344,12 +343,36 @@ class AfterhourController extends Controller
     public function update(Request $request, $id)
     {
         $afterhour = Afterhour::find($id);
+        
+        $employee =  Employee::find($afterhour->employee_id);
 
+        /*** Projekt */
+            if( $this->api_erp && $employee->erp_id ) {
+                if( $this->api_project ) {
+                    $erp_employee = $employee->erp_id;
+                    
+                    $api = new ApiController();
+                    $projects_erp = $api->get_employee_available_projects( $erp_employee, $request['date'] );
+                    try {
+                        $project_erp = $projects_erp[$request['project_id']];
+                        $erp_id = str_replace("]","", str_replace("[","",strstr( $project_erp," ", true )));
+                    } catch (\Throwable $th) {
+                        //throw $th;
+                    }
+
+                    $project = isset($erp_id) && $erp_id ? Project::where('erp_id', $erp_id)->first() : null;
+                    $project_id = $project ? $project->id : null;
+                }
+            } else {
+                $project_id = $request['project_id'];
+            }
+        /*** Projekt */
+    
         $data = array(
             'ERP_leave_type' => isset($request['ERP_leave_type']) ? $request['ERP_leave_type'] : 67,
             'erp_task_id'    => isset($request['erp_task_id']) ? $request['erp_task_id'] : null,
             'employee_id'  	 => $request['employee_id'],
-            'project_id'  	 => $request['project_id'],
+            'project_id'  	 => $this->api_project ? $project_id : ($request['project_id'] ? $request['project_id'] : null),
             'date'    		 => $request['date'],
             'start_time'  	 => $request['start_time'],
             'end_time'  	 => $request['end_time'],

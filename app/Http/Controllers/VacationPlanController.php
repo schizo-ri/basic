@@ -114,21 +114,31 @@ class VacationPlanController extends Controller
     public function destroy($id)
     {
         $vacation_plan = VacationPlan::find($id);
-        $vacation_plans = VacationPlan::where('employee_id', $vacation_plan->employee_id )->get();
-       
-        if( count( $vacation_plans)> 0 ) {
-            foreach ($vacation_plans as $plan ) {
-                $absence = $plan->absence;
-                if( $absence ) {
-                    $absence->delete();
+        if( $vacation_plan ) {
+            $vacation_plans = VacationPlan::where('employee_id', $vacation_plan->employee_id )->get();
+            if( count( $vacation_plans)> 0 ) {
+                foreach ($vacation_plans as $plan ) {
+                    $absence = $plan->absence;
+                    if( $absence ) {
+                        $absence->delete();
+                    }
+                    $plan->delete();
                 }
-                $plan->delete();
             }
-        }
 
-        $message = session()->flash('success', __('ctrl.data_delete'));
+            $message = session()->flash('success', __('ctrl.data_delete'));
 		
-		return redirect()->back()->withFlashMessage($message);
+		    return redirect()->back()->withFlashMessage($message);
+
+        } else {
+            $message = session()->flash('error', __('ctrl.no_plan'));
+		
+		    return redirect()->back()->withFlashMessage($message);
+        }
+       
+        
+
+        
     }
     
     public function vacationPlan ( Request $request)

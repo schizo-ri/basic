@@ -122,9 +122,9 @@
 						<p><b>@lang('basic.comment'): </b></p>
 						<p style="padding-left: 20px">{{ $employee->comment }}</p>
 					</div>
-					<div style="margin-bottom: 20px">
+					{{-- <div style="margin-bottom: 20px">
 						<p><b>IT odjel: </b>Molim kontaktirati {{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }} za sve potrebne informacije.</p>
-					</div>
+					</div> --}}
 				@endif
             </div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_footer : '' !!}">

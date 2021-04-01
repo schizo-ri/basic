@@ -2,9 +2,8 @@ function mySearchTable() {
   $("#mySearchTbl").on('keyup',function() {
     var value = $(this).val().toLowerCase();
     var search_Array = value.split(" ");
-console.log(value);
-console.log(search_Array);
-    $(".display.table tr").filter(function() {
+
+    $(".display.table tbody tr").filter(function() {
       if( search_Array.length == 1 ) {
         $(this).toggle($(this).text().toLowerCase().indexOf(search_Array[0]) > -1);
       } else if( search_Array.length == 2 ) {
@@ -32,7 +31,6 @@ console.log(search_Array);
         }
       });
     }
-    
   });
 }
 
@@ -58,6 +56,7 @@ function mySearch() {
   
   });
 }
+
 
 function mySearchTableAbsence() {
   $("#mySearchTbl").on('keyup',function() {

@@ -130,7 +130,7 @@
                         {{ $temporaryEmployeeRequest->comment }}
                     </div>
                 @endif
-                <form name="contactform" method="get" target="_blank" action="{{ route('confirmationTemp') }}">
+                <form name="contactform" method="get" target="_blank" action="{{ route('confirmationTemp') }}" style="overflow: hidden;">
                     <input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="approve_reason" value=""><br>
                     <input type="hidden" name="id" value="{{ $temporaryEmployeeRequest->id }}"><br>
                     <input type="radio" name="approve" value="1" checked> @lang('absence.approved')
@@ -138,6 +138,9 @@
                     <input type="hidden" name="email" value="1" checked><br>
                     <input class="odobri marg_top_20" type="submit" value="{{ __('basic.send_mail') }}">
                 </form>
+                <p>Ako ne možeš koristiti formu za unos pošalji odobrenje putem linka </p>
+                <p><a href="{{ route('confirmationTemp',['id'=> $temporaryEmployeeRequest->id,'approve'=> 1, 'approve_reason'=>'']) }}">@lang('absence.approved')</a> |
+                   <a href="{{ route('confirmationTemp',['id'=> $temporaryEmployeeRequest->id,'approve'=> 0, 'approve_reason'=>'']) }}">@lang('absence.not_approve')</a></p>
             </div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_footer : '' !!}">
 				@if( isset($text_footer) && $text_footer && count($text_footer) > 0)

@@ -129,7 +129,7 @@
 				<div class="marg_20">
 					{{ $afterhour->comment }}
 				</div>		
-				<form method="get" target="_blank" action="{{ route('confirmationAfterHours') }}">
+				<form method="get" target="_blank" action="{{ route('confirmationAfterHours') }}" style="overflow: hidden;">
 					<input style="height: 34px;width: 100%; border-radius: 5px; border: 1px solid #ccc;" type="text" name="approved_reason" maxlength="191"><br>
 					<input type="hidden" name="id" value="{{ $afterhour->id }}"><br>
 					<div class="time">
@@ -141,6 +141,9 @@
 					{{ csrf_field() }}
 					<input class="odobri" type="submit" value="Pošalji">
 				</form>
+				<p>Ako ne možeš koristiti formu za unos pošalji odobrenje putem linka </p>
+				<p><a href="{{ route('confirmationAfterHours',['id'=> $afterhour->id,'approve'=> 1, 'approve_h'=> $interval, 'approved_reason'=>'']) }}">Potvrđeno</a> |
+					<a href="{{ route('confirmationAfterHours',['id'=> $afterhour->id,'approve'=> 0,'approve_h'=> '00:00',  'approved_reason'=>'']) }}">Odbijeno</a></p>
             </div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_footer : '' !!}">
 				@if( isset($text_footer) && $text_footer && count($text_footer) > 0)

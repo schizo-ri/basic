@@ -153,7 +153,7 @@ class WorkDiaryController extends Controller
                 if( $this->api_project && $erp_employee ) {
                     $api = new ApiController();
                     $projects_erp = $api->get_employee_available_projects( $erp_employee, $request['date'] );
-                    $project_erp = $projects_erp [$proj_id ];
+                    $project_erp = $projects_erp [ $proj_id ];
                     $erp_id = str_replace("]","", str_replace("[","",strstr( $project_erp," ", true )));
                     $project = $erp_id ? Project::where('erp_id', $erp_id)->first() : null;
                     $project_id = $project ? $project->id : null;

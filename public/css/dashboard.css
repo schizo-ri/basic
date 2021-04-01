@@ -540,14 +540,7 @@
     position: static;
     display: block;
 }
-.all_post .placeholder {
-/*     margin-top: 50%;
-    margin-bottom: 50%;
-    transform: translateY(-50%);
-    position: relative;
-    top: auto;
-    left: auto; */
-}
+
 .placeholder_cal {
     height: auto;
     display: none;

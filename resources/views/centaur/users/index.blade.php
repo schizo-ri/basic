@@ -20,9 +20,15 @@
 				<a class="btn-new create_user" href="{{ route('users.create') }}" rel="modal:open">
 					<i class="fas fa-plus"></i>
 				</a>
-			@endif	
+			@endif
 			<span class="change_view"></span>
 			<span class="change_view2"></span>
+			<div class="div_select2">
+				<select id="filter_types" class="select_filter filter_checkout" >
+					<option value="checkin" selected>Prijavljeni</option>
+					<option value="checkout"  >Odjavljeni</option>
+				</select>
+			</div>
 		</div>
 	</header>
 	<main class="col-xs-12 col-sm-12 col-md-12 col-lg-12 users_main">
@@ -98,6 +104,11 @@
 										@if(Sentinel::getUser()->hasAccess(['users.delete']) && ! $user->employee)
 											<a href="{{ route('users.destroy', $user->id) }}" class="action_confirm danger" data-method="delete" data-token="{{ csrf_token() }}" >
 												<i class="far fa-trash-alt"></i>
+											</a>
+										@endif
+										@if ( $user->active == 0 && Sentinel::getUser()->hasAccess(['users.update']) )
+											<a href="{{ route('activateUser', $user->id) }}" class="" title="{{ __('basic.activate_user') }}" >
+												<i class="fas fa-undo-alt"></i>
 											</a>
 										@endif
 									</td>

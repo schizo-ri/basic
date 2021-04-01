@@ -150,3 +150,9 @@ $( ".template_button" ).on('mouseover', function(){
 $( ".template_button" ).on('mouseout', function(){
     $('.show_temp#temp' + temp).remove();
 });
+
+// LINK BACK   
+$('.main_noticeboard .header_document .link_back').on('click',function(e){
+       
+});
+

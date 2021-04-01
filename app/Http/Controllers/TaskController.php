@@ -88,6 +88,7 @@ class TaskController extends Controller
             'description'       => $request['description'],
 			'start_date'  	    => $request['start_date'],
 			'end_date'  	    => $request['end_date'],
+			'time1'  	        => $request['time1'],
             'interval_period'   => $request['interval_period'],
             'energy_consumptions'=> $request['energy_consumptions'],
 			'active' 		    => $request['active'],
@@ -126,8 +127,6 @@ class TaskController extends Controller
                     if($email != null && $email != '') {
                         try {
                             Mail::to($email)->send(new TaskCreateMail($employeeTask));
-                            $ja = 'jelena.juras@duplico.hr';
-                            Mail::to($ja)->send(new TaskCreateMail($employeeTask));
                         } catch (\Throwable $th) {
                             $email = 'jelena.juras@duplico.hr';
                             $url = $_SERVER['REQUEST_URI'];
@@ -160,9 +159,7 @@ class TaskController extends Controller
                 $email = $employee->email;
                 if($email != null && $email != '') {
                     try {
-                      Mail::to( $email)->send(new TaskInfoMail($task));
-                      $ja = 'jelena.juras@duplico.hr';
-                      Mail::to( $ja)->send(new TaskInfoMail($task));
+                       Mail::to( $email)->send(new TaskInfoMail($task));
                     } catch (\Throwable $th) {
                         $email = 'jelena.juras@duplico.hr';
                         $url = $_SERVER['REQUEST_URI'];
@@ -178,7 +175,7 @@ class TaskController extends Controller
                 }
             }           
         } 
-
+        
 		session()->flash('success',  __('ctrl.data_save'));
 	
         return redirect()->back();
@@ -248,6 +245,7 @@ class TaskController extends Controller
         );
 
 		$task->updateTask($data);
+
         // spremanje dnevnog zadatka i slanje maila
         if( $task->start_date == date('Y-m-d') ) {
             foreach ($request['to_employee_id'] as $key => $employee_id) {
@@ -278,9 +276,6 @@ class TaskController extends Controller
                         if($email != null && $email != '') {
                             try {
                                 Mail::to($email)->send(new TaskCreateMail($employeeTask));
-                                $ja = 'jelena.juras@duplico.hr';
-                                 Mail::to($ja)->send(new TaskCreateMail($employeeTask));
-
                             } catch (\Throwable $th) {
                                 $email = 'jelena.juras@duplico.hr';
                                 $url = $_SERVER['REQUEST_URI'];
@@ -311,10 +306,10 @@ class TaskController extends Controller
                     }
                 }
 
-                $email = $employee->email;
-                if($email != null && $email != '') {
+               /*  $email = $employee->email;
+                if( $email != null && $email != '' ) {
                     try {
-                    Mail::to( $email)->send(new TaskInfoMail($employeeTask));
+                        Mail::to( $email)->send(new TaskInfoMail($employeeTask));
                     } catch (\Throwable $th) {
                         $email = 'jelena.juras@duplico.hr';
                         $url = $_SERVER['REQUEST_URI'];
@@ -326,7 +321,7 @@ class TaskController extends Controller
                 } else {
                     session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
                     return redirect()->back();
-                }
+                } */
              }           
         } 
 

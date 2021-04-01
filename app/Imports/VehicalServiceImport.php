@@ -26,9 +26,9 @@ class VehicalServiceImport implements ToModel, WithHeadingRow
             return new VehicalService([
                 'car_id'        => $car->id,
                 'employee_id'   => $employee->id, 
-                'comment'        => $row['comment'],
+                'comment'       => $row['comment'],
                 'km'            => $row['km'],
-                'price'          => $row['price'],
+                'price'         => $row['price'],
                 'date'          => date('Y-m-d', strtotime($row['date'])),
             ]);
         }

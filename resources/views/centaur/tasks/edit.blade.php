@@ -38,6 +38,11 @@
 			<input name="end_date" type="date" id="end_date"  class="form-control" value="{!! $task->end_date !!}" required>
 			{!! ($errors->has('end_date') ? $errors->first('end_date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
+		<div class="form-group datum float_l {{ ($errors->has('time1')) ? 'has-error' : '' }}">
+			<label>@lang('absence.time')</label>
+			<input name="time1" type="time" id="time1" class="form-control" value="{!! $task->time1 !!}" required>
+			{!! ($errors->has('time1') ? $errors->first('time1', '<p class="text-danger">:message</p>') : '') !!}
+		</div>
 		<div class="form-group {{ ($errors->has('interval_period'))  ? 'has-error' : '' }} clear_l" id="period">
 			<label class="label_period">Period ponavljanja</label>
 			<select class="form-control period" name="interval_period" value="{{ $task->interval_period }}" required >

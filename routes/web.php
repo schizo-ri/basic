@@ -338,7 +338,7 @@ Route::get('sendEmail', ['as' => 'sendEmail', 'uses' => 'QuestionnaireController
 
 // User edit 
 Route::get('user/edit_user/{id}', ['as' => 'user.edit', 'uses' => 'UserController@edit_user']);
-
+Route::get('activateUser/{id}',array('as'=>'activateUser','uses'=>'UserController@activateUser'));
 
 // Open slide show
 Route::get('users.slide_show/{id}', ['as' => 'slide_show', 'uses' => 'UserController@slide_show']);
@@ -359,7 +359,6 @@ Route::get('all_event', ['as' => 'all_event', 'uses' => 'EventController@modal_e
 
 // Start Campaign
 Route::get('startCampaign', ['as' => 'sendEmail', 'uses' => 'CampaignController@startCampaign']);
-
 
 // CampaignSequence mail
 Route::get('campaign_mail', ['as' => 'campaign_mail', 'uses' => 'CampaignSequenceController@campaign_mail']);
@@ -397,11 +396,44 @@ Route::resource('android', 'ConnectController');
 // Categorization
 Route::resource('categorizations', 'CategorizationController');
 
-/* // Competence
+// AnnulaGoal
+Route::resource('annual_goals', 'AnnualGoalController');
+
+// OKR
+Route::resource('okrs', 'OkrController');
+Route::get('progressOkr', ['as' => 'progressOkr', 'uses' => 'OkrController@progressOkr']);
+
+// KeyResult
+Route::resource('key_results', 'KeyResultController');
+Route::get('progressKeyResult', ['as' => 'progressKeyResult', 'uses' => 'KeyResultController@progressKeyResult']);
+
+// KeyResult
+Route::resource('key_result_tasks', 'KeyResultTaskController');
+Route::get('progressTask', ['as' => 'progressTask', 'uses' => 'KeyResultTaskController@progressTask']);
+
+// Visitor
+Route::resource('visitors', 'VisitorController');
+Route::get('visitors/hr/{id}', 'VisitorController@visitors_show_hr');
+Route::get('visitors/en/{id}', 'VisitorController@visitors_show_en');
+Route::get('visitors/de/{id}', 'VisitorController@visitors_show_de');
+
+// Competence
 Route::resource('competences', 'CompetenceController');
 
-// ConstructionSite
-Route::resource('construction_sites', 'ConstructionSiteController');
+// CompetenceDepartment
+Route::resource('competence_departments', 'CompetenceDepartmentController');
 
-// CompetenceGroup
-Route::resource('competence_groups', 'CompetenceGroupController'); */
+// CompetenceGroupQuestion
+Route::resource('competence_group_questions', 'CompetenceGroupQuestionController');
+
+// CompetenceQuestion
+Route::resource('competence_questions', 'CompetenceQuestionController');
+Route::post('importQuestions/{id}', 'CompetenceQuestionController@importQuestions')->name('importQuestions'); 
+
+// CompetenceRating
+Route::resource('competence_ratings', 'CompetenceRatingController');
+
+// CompetenceEvaluation
+Route::resource('competence_evaluations', 'CompetenceEvaluationController');
+Route::post('updateEvaluation', ['as' => 'updateEvaluation', 'uses' => 'CompetenceEvaluationController@updateEvaluation']);
+ 

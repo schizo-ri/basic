@@ -18,7 +18,7 @@
     <div>        
         <div class="notices_list">
             @if(count($notices_user)>0)
-                @foreach ($notices_user->take(3) as $notice)
+                @foreach ($notices_user as $notice)
                     <a class="notice_show"  href="{{ route('notices.show', $notice->id) }}" rel="modal:open">
                         <article class="notice">
                             <div class="col-2 float_left">

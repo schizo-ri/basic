@@ -75,7 +75,8 @@ class Kernel extends ConsoleKernel
                 ->dailyAt('7:00') 
                 ->evenInMaintenanceMode();
         $schedule->command('task')
-                ->everyMinute()
+                // ->everyMinute()
+                ->hourly()
                 ->evenInMaintenanceMode();  
         $schedule->command('car_registration')
                 ->dailyAt('7:00') 
@@ -89,7 +90,6 @@ class Kernel extends ConsoleKernel
                 // ->everyMinute()
                 ->dailyAt('7:00') 
                 ->evenInMaintenanceMode();
-        
         $schedule->command('diary')
                 // ->everyMinute()
                 ->dailyAt('20:00') 
@@ -99,10 +99,9 @@ class Kernel extends ConsoleKernel
                 //->dailyAt('12:00') 
                 ->evenInMaintenanceMode(); */
 
-                $schedule->command('diary')
-                ->everyMinute()
-                //->dailyAt('20:00') 
-                ->evenInMaintenanceMode(); 
+                $schedule->command('task')
+                ->hourly()
+                ->evenInMaintenanceMode();  
     }
 
     /**

@@ -181,7 +181,7 @@ class NoticeController extends Controller
                                 Log::info($all_dep_employee);
                                 try {   
                                     foreach (array_unique($all_dep_employee) as $mail) {
-                                      //  Mail::to($mail)->send(new NoticeMail($notice1));
+                                        Mail::to($mail)->send(new NoticeMail($notice1));
                                     }   
                                 } catch (\Throwable $th) {
                                     $email = 'jelena.juras@duplico.hr';
@@ -208,7 +208,7 @@ class NoticeController extends Controller
                     Log::info(array_unique($all_dep_employee));
                     try {   
                         foreach (array_unique($all_dep_employee) as $mail) {
-                         //   Mail::to($mail)->send(new NoticeMail($notice1));
+                          Mail::to($mail)->send(new NoticeMail($notice1));
                         }              
                     } catch (\Throwable $th) {
                         $email = 'jelena.juras@duplico.hr';
@@ -502,7 +502,11 @@ class NoticeController extends Controller
         
 		if($empl) {
             array_push($user_department, $empl->work->department->id);  // odjel korisnika
-            array_push($user_department, $departments->where('level1',0)->first()->id);  //svi
+            array_push($user_department, $departments->where('level1', 0)->first()->id);  //svi
+
+            foreach ( $empl->hasEmployeeDepartmen->where('employee_id',$empl->id) as $empl_department) {
+                array_push($user_department, $empl_department->department_id);
+            }
 
 			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 		}
@@ -545,12 +549,13 @@ class NoticeController extends Controller
             $employee = Sentinel::getUser()->employee;
             if( $employee ) {
                 $work = $employee->work;
-            }
-            if( $work ) {
-                $department = $work->department;
-            }
-            if ( $department ) {
-                $user_department = array($department->id );
+                if( $work ) {
+                    $department = $work->department;
+                    if ( $department ) {
+                        $user_department = array($department->id );
+                    }
+                }
+                
             }
         }
        

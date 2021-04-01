@@ -138,8 +138,7 @@ $(function() { // filter knowledge base
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr.responseJSON.message);
 			}
-		});
-	
+		});	
 	});
 
 	$('.filter_tasks').on('change',function(){
@@ -277,8 +276,26 @@ $(function() { // filter knowledge base
 	});
 
 	$('#filter').on('change',function() {
-		var trazi = $('#filter').val().toLowerCase();
+		var trazi = $(this).val().toLowerCase();
+		console.log("filter");
+		console.log(trazi);
 		if(trazi == "all"){
+			$('.panel').show();
+		} else {
+			$('.panel').filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(trazi) > -1);
+			});
+		}
+	});	
+	$('#filter1').on('change',function() {
+		console.log('filter1');
+		var trazi = $(this).val().toLowerCase();
+		console.log(trazi);
+
+		$('.div_keyResultTasks').show();
+		$( ".div_keyResults" ).show();
+		
+		if(trazi == "svi"){
 			$('.panel').show();
 		} else {
 			$('.panel').filter(function() {
@@ -493,9 +510,7 @@ $(function() { // filter knowledge base
 
 	$('.filter_checkout').on('change',function(e) {
 		var check = $(this).val();
-
 		url = location.href + '?status='+check;
-		console.log(url);
 
 		$.ajax({
 			url: url,

@@ -11,6 +11,8 @@ use App\Models\Afterhour;
 use App\Models\Absence;
 use Log;
 use DateTime;
+use DateInterval;
+use DatePeriod;
 
 class ApiController extends Controller
 {
@@ -77,7 +79,10 @@ class ApiController extends Controller
             1117 => "Rekapitulacija projekta - proučiti"
         ] */
 
-        $response = $this->send_leave_request( Absence::find(3825), 'abs' ); // izostanak
+        
+        $response = $this->send_leave_requestSick( Absence::find(3884), 'abs' );
+
+        /* $response = $this->send_leave_request( Absence::find(3825), 'abs' ); // izostanak */
        /*  $response = $this->send_leave_request( Afterhour::find(3503), 'aft' ); */
 
         return view('Centaur::api_erp.index',['response' => $response]);
@@ -282,6 +287,10 @@ class ApiController extends Controller
 
     function send_leave_request( $absence, $abs_type ) 
     {
+        Log::info('***************** API ERP send_leave_request ***********************');
+        Log::info("type " . $abs_type);
+        Log::info($absence);
+
         $user = $this->user;
         $password = $this->password ;
         $dbname = $this->dbname;
@@ -316,20 +325,25 @@ class ApiController extends Controller
             }
             
             if( $absence->absence->mark == 'BOL' ) {
-                if( $absence->start_date == date('Y-m-d') || $absence->end_date == date('Y-m-d') ) {
-                    $date_from = date('Y-m-d'); 
-                    $date_to = date('Y-m-d'); 
+                if( $absence->end_date == null ) {
+                    if( strtotime($absence->start_date) >= strtotime(date('Y-m-d')) ) {
+                        $date_from = $absence->start_date; 
+                        $date_to = $absence->start_date; 
+                    } else {
+                        $start = new DateTime( date('Y-m-d'));
+                        $start->modify('+1 day');
+                        $end = new DateTime(date('Y-m-d'));
+                        $end->modify('+1 day');
+                        $date_from = $start->format('Y-m-d');
+                        $date_to = $end->format('Y-m-d');
+                    }
                 } else {
-                    $start = new DateTime(date('Y-m-d'));
-                    $start->modify('+1 day');
-                    $end = new DateTime(date('Y-m-d'));
-                    $end->modify('+1 day');
-                    $date_from = $start->format('Y-m-d');
-                    $date_to = $end->format('Y-m-d');
+                    $date_from = date('Y-m-d'); 
+                    $date_to = date('Y-m-d');
                 }
             } else {
-                $date_from = $absence->start_date ;
-                $date_to = $absence->end_date ;
+                $date_from = $absence->start_date;
+                $date_to = $absence->end_date;
             }
    
             if( $absence->absence->mark == 'IZL' ) {
@@ -372,30 +386,110 @@ class ApiController extends Controller
         $param['date_from'] = $date_from;
         $param['date_to'] = $date_to;
         $param['note'] = $note;
-        Log::info('***************** API ERP send_leave_request ***********************');
+       
         Log::info($param);
         
-        $get_employee_available_projects = new xmlrpcmsg('execute');
-        $get_employee_available_projects->addParam(new xmlrpcval($param['dbname'], "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval($param['uid'], "int"));
-        $get_employee_available_projects->addParam(new xmlrpcval($param['password'], "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval($param['API'], "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval($param['method'], "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval($param['employee_id'], "int"));
-        $get_employee_available_projects->addParam(new xmlrpcval($param['task_id'], "int"));
-        $get_employee_available_projects->addParam(new xmlrpcval($param['leave_type_id'], $type_id));
-        $get_employee_available_projects->addParam(new xmlrpcval($param['date_from'], "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval($param['date_to'], "string"));
-        $get_employee_available_projects->addParam(new xmlrpcval($param['note'], "string"));
-        $resp = $sock->send($get_employee_available_projects);
-      /*   dd($resp); */
-        $val = $resp->value();
-     
-        Log::info('***************** API ERP kraj ***********************');
-       
+        if( $leave_type_id ) {
+            $get_employee_available_projects = new xmlrpcmsg('execute');
+            $get_employee_available_projects->addParam(new xmlrpcval($param['dbname'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['uid'], "int"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['password'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['API'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['method'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['employee_id'], "int"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['task_id'], "int"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['leave_type_id'], $type_id));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['date_from'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['date_to'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['note'], "string"));
+            $resp = $sock->send($get_employee_available_projects);
+          /*   dd($resp); */
+            $val = $resp->value();
+            
+         
+           
+            if(! is_int($val)){
+                $id = $val->scalarval();
+               
+                if($id > 0){
+                    return $id;
+                } 
+                else{
+                    return -1;
+                }
+            } 
+            Log::info( "response " . $val );
+            Log::info('***************** API ERP kraj ***********************');
+    
+            return $val;
+        } else {
+            return false;
+        }
+    }
+
+    //** Bolovanje ako je početni dan zahtjeva manji od današnjeg dana  kreira u erpu Bolovanje za svaki dan  */
+    function send_leave_requestSick( $absence, $abs_type ) 
+    {
+        Log::info('***************** API ERP send_leave_request SickLeave ***********************');
+        Log::info("type " . $abs_type);
+        Log::info($absence);
+
+        $user = $this->user;
+        $server_url = $this->server_url;
+
+        if(session()->exists('xmlr')) {
+            $uid = intval(session('xmlr'));
+        } else {
+            $uid = $this->connect_id_get();
+        }
+        $sock = new xmlrpc_client($server_url."object");
+        $sock->setSSLVerifyPeer(0);
+        $param = array();
+
+        $begin = new DateTime($absence->start_date);
+        $end = new DateTime('now');
+        $end->setTime(0,0,1);
+        $interval = DateInterval::createFromDateString('1 day');
+        $period = new DatePeriod($begin, $interval, $end);
+
+        foreach ($period as $dan ) {
+            $date_from = date_format($dan,'Y-m-d');
+            $date_to = date_format($dan,'Y-m-d');
+            $param['dbname'] = $this->dbname;
+            $param['uid'] = $uid;
+            $param['password'] = $this->password;
+            $param['API'] = $this->API;
+            $param['method'] = 'vacation_request_create';
+            $param['employee_id'] = intval( $absence->employee->erp_id );        
+            $param['task_id'] = $absence->erp_task_id;
+            $param['leave_type_id'] = $absence->ERP_leave_type;
+            $param['date_from'] = $date_from;
+            $param['date_to'] = $date_to;
+            $param['note'] = '';
+           
+            Log::info($param);
+            
+            $get_employee_available_projects = new xmlrpcmsg('execute');
+            $get_employee_available_projects->addParam(new xmlrpcval($param['dbname'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['uid'], "int"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['password'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['API'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['method'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['employee_id'], "int"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['task_id'], "int"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['leave_type_id'], "int"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['date_from'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['date_to'], "string"));
+            $get_employee_available_projects->addParam(new xmlrpcval($param['note'], "string"));
+            $resp = $sock->send($get_employee_available_projects);
+            /*   dd($resp); */
+            $val = $resp->value();
+            
+          
+        }
         if(! is_int($val)){
             $id = $val->scalarval();
-           
+            
             if($id > 0){
                 return $id;
             } 
@@ -403,6 +497,8 @@ class ApiController extends Controller
                 return -1;
             }
         } 
+        Log::info( "response " . $val );
+        Log::info('***************** API ERP kraj ***********************');
 
         return $val;
     }

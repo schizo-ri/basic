@@ -7,6 +7,7 @@
 	$countQuestionnaire =  Questionnaire::countQuestionnaire();
     $countCampaign = Campaign::countCampaign();
     $permission_dep = DashboardController::getDepartmentPermission();
+
 @endphp
 <section class="section_top_nav" id="section_top_nav">
     <span class="close_topnav">
@@ -24,10 +25,20 @@
                 <p class="button_nav_text">@lang('welcome.home')</p>
             </a>
         </div>
+        @if(in_array('OKR', $moduli))
+            @if ( Sentinel::inRole('administrator'))
+                <div class="">
+                    <a class="button_nav load_button okrs_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('okrs.index') }}" title="OKR">
+                        <span class="button_nav_img "><i class="fas fa-bullseye"></i></span>
+                        <p class="button_nav_text">OKR</p>
+                    </a>
+                </div>
+            @endif
+        @endif
         @if ( Sentinel::inRole('administrator') || count( Vacation::whereDate('end_date', '>=', date('Y-m-d'))->where('active',1)->get()) > 0 )
             <div class="">
                 <a class="button_nav load_button vacations_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('vacations.show',1) }}" title="{{ __('absences.vacations') }}">
-                    <span class="button_nav_img img beach "></span>
+                    <span class="button_nav_img {{-- img beach  --}}"><i class="fas fa-umbrella-beach"></i></span>
                     <p class="button_nav_text">@lang('absence.vacations')</p>
                 </a>
             </div>
@@ -67,14 +78,16 @@
             @endif
         @endif
         <!--Provjera kod superadmina ima li korisnik modul-->
-        @if(in_array('Ankete', $moduli) && $countQuestionnaire > 0)
-            @if(Sentinel::getUser()->hasAccess(['questionnaires.view']) || in_array('questionnaires.view', $permission_dep) )
-                <div class="">
-                    <a class="button_nav load_button questionnaires_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('questionnaires.index') }}"  title="{{ __('questionnaire.questionnaires') }}">
-                        <span class="button_nav_img questionnaire"><!-- <img class="" src="{{ URL::asset('../icons/list_grey.png') }}" alt="Profile image"  /> --></span>
-                        <p class="button_nav_text">@lang('questionnaire.questionnaires')</p>	
-                    </a>
-                </div>
+        @if(in_array('Ankete', $moduli) )
+            @if ( Sentinel::inRole('administrator') || $countQuestionnaire > 0)
+                @if(Sentinel::getUser()->hasAccess(['questionnaires.view']) || in_array('questionnaires.view', $permission_dep) )
+                    <div class="">
+                        <a class="button_nav load_button questionnaires_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('questionnaires.index') }}"  title="{{ __('questionnaire.questionnaires') }}">
+                            <span class="button_nav_img questionnaire"><!-- <img class="" src="{{ URL::asset('../icons/list_grey.png') }}" alt="Profile image"  /> --></span>
+                            <p class="button_nav_text">@lang('questionnaire.questionnaires')</p>
+                        </a>
+                    </div>
+                @endif
             @endif
         @endif
         @if(in_array('Oglasnik',$moduli))
@@ -172,15 +185,5 @@
                 @endif
             @endif
         @endif
-     {{--    @if (Sentinel::inRole('administrator'))
-            @if (Sentinel::getUser()->employee )
-                <div class="">
-                    <a class="button_nav load_button categorizations_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('categorizations.index') }}" title="Potrošnja energenata">
-                        <span class="button_nav_img"><i class="fas fa-plug"></i></span>
-                        <p class="button_nav_text">Kompentencije</p>
-                    </a>	
-                </div>
-            @endif
-        @endif --}}
     </div>
 </section>

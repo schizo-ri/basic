@@ -11,6 +11,7 @@ use App\Http\Controllers\BasicAbsenceController;
 use App\Mail\TaskCreateMail;
 use Illuminate\Support\Facades\Mail;
 use Log;
+use Sentinel;
 
 class TaskCreateNotification extends Command
 {
@@ -47,7 +48,18 @@ class TaskCreateNotification extends Command
     {
         $today = new DateTime('now');
         
-        $tasks = Task::whereDate('end_date', '>=', date('Y-m-d'))->where('active', 1)->get();
+        $time_start = date('H').':00:00';
+        $time_end = (date('H')+1);
+        $time_end = strlen($time_end) == 1 ? '0'. $time_end : $time_end;
+        $time_end = $time_end.':00:00';
+       
+        Log::info('***************** TaskCreateNotification *********************');
+        Log::info("time " . $time_start);
+        Log::info("time"  . $time_end);
+        $tasks = Task::whereDate('end_date', '>=', date('Y-m-d'))->whereTime('time1', '>=', $time_start)->whereTime('time1', '<', $time_end)->where('active', 1)->get();
+
+        /* $tasks = Task::whereDate('end_date', '>=', date('Y-m-d'))->where('active', 1)->get(); */
+        Log::info( $tasks );
 
         foreach ($tasks as $task) {
             $task_date =  new DateTime( $task->start_date );
@@ -83,43 +95,20 @@ class TaskCreateNotification extends Command
                 default:
                     $task_date =  $task_date;
             }
-
+           
             // ako je vikend pomakni na ponedjeljak
             if(date_format($task_date, 'N') == 6 ) {
                 $task_date->modify('+2days');
             } else if(date_format($task_date, 'N') == 7 ) {
                 $task_date->modify('+1day');
             } 
+            Log::info( 'task_date ' . date_format($task_date, 'Y-m-d'));
+            Log::info( 'end_date ' . date_format($end_date, 'Y-m-d'));
 
             if( $end_date == null || strtotime(date_format($task_date, 'Y-m-d')) <= strtotime(date_format($end_date, 'Y-m-d'))) {
                 if( date_format($task_date, 'Y-m-d') == date_format($today, 'Y-m-d') ) {
                     $employee_ids = explode(',', $task->to_employee_id);
-
-                    // smjena svih zaduženih, svaki put slijedeći,  ako ima izostanak!!!
-                    /* $empl_id = $employee_ids[0];
-                    $response = true;
-                    if(count( $employee_ids ) > 1) {
-                        $prev_task = EmployeeTask::where('task_id', $task->id)->orderBy('created_at','DESC')->first();
-                        if($prev_task) {
-                            $key = array_search( $prev_task->employee_id, $employee_ids);
-                            if ( $key == (count( $employee_ids ) -1) ) {
-                                $key = 0;
-                            } else {
-                                $key = $key+1;
-                            }
-                            $empl_id = $employee_ids[$key];
-
-                            $response = BasicAbsenceController::absenceForDayTask($empl_id, date_format($task_date, 'Y-m-d'));  // djelatnik ima zahtjev na dan (a nije Izlazak)
-                            if( $response == false ) {
-                                if ( $key == (count( $employee_ids ) -1) ) {
-                                    $key = 0;
-                                } else {
-                                    $key = $key+1;
-                                }
-                                $empl_id = $employee_ids[$key];
-                            }
-                        }
-                    }  */
+                   
                     foreach ($employee_ids as $key => $empl_id) {
                         $employee =  Employee::where('id', $empl_id )->first();
 
@@ -132,10 +121,8 @@ class TaskCreateNotification extends Command
                             }
                         }
     
-                        $emails = array($employee->email, 'jelena.juras@duplico.hr');
-                        
-                        Log::info('TaskCreateNotification: ');
-                        Log::info($emails);
+                        $emails = array('jelena.juras@duplico.hr', $employee->email);
+                       
                         $data = array(
                             'task_id'  	    => $task->id,
                             'employee_id'  	=>  $empl_id  
@@ -143,7 +130,8 @@ class TaskCreateNotification extends Command
                         
                         $employeeTask = new EmployeeTask();
                         $employeeTask->saveEmployeeTask( $data);  
-                        
+                       
+                        Log::info($emails);
                         Log::info($employeeTask);       
 
                         foreach ($emails as $email) {
@@ -155,5 +143,34 @@ class TaskCreateNotification extends Command
                 }
             }
         }
+        Log::info('***************** KRAJ  TaskCreateNotification *********************');
     }
 }
+
+
+ // smjena svih zaduženih, svaki put slijedeći,  ako ima izostanak!!!
+    /* $empl_id = $employee_ids[0];
+    $response = true;
+    if(count( $employee_ids ) > 1) {
+        $prev_task = EmployeeTask::where('task_id', $task->id)->orderBy('created_at','DESC')->first();
+        if($prev_task) {
+            $key = array_search( $prev_task->employee_id, $employee_ids);
+            if ( $key == (count( $employee_ids ) -1) ) {
+                $key = 0;
+            } else {
+                $key = $key+1;
+            }
+            $empl_id = $employee_ids[$key];
+
+            $response = BasicAbsenceController::absenceForDayTask($empl_id, date_format($task_date, 'Y-m-d'));  // djelatnik ima zahtjev na dan (a nije Izlazak)
+            if( $response == false ) {
+                if ( $key == (count( $employee_ids ) -1) ) {
+                    $key = 0;
+                } else {
+                    $key = $key+1;
+                }
+                $empl_id = $employee_ids[$key];
+            }
+        }
+    }  */
+    

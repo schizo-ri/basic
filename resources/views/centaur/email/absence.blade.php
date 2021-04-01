@@ -176,7 +176,7 @@
 						<p>Status: {!! $absence->approve == 1 ? 'odobren' : 'odbijen' !!}</p>
 						<p>Ako želiš promjeniti odobrenje pošalji odobrenje, u suprotnom nije potrebno ponovno odobravati.</p>
 					@endif
-					<form name="contactform" method="get" target="_blank" action="{{ route('confirmation') }}">
+					<form name="contactform" method="get" target="_blank" action="{{ route('confirmation') }}" style="overflow: hidden;">
 						<input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="approve_reason" value=""><br>
 						<input type="hidden" name="id" value="{{ $absence->id }}"><br>
 						<input type="radio" name="approve" value="1" id="approve1" style="cursor:pointer" checked> <label for="approve1" style="cursor:pointer"> @lang('absence.approved')</label>
@@ -184,6 +184,10 @@
 						<input type="hidden" name="email" value="1" checked><br>
 						<input class="odobri marg_top_20" type="submit" value="{{ __('basic.process') }}" style="cursor:pointer">
 					</form>
+					<p>Ako ne možeš koristiti formu za unos pošalji odobrenje putem linka </p>
+					<p><a href="{{ route('confirmation',['id'=> $absence->id,'approve'=> 1, 'approve_reason'=>'']) }}">@lang('absence.approved')</a> |
+					   <a href="{{ route('confirmation',['id'=> $absence->id,'approve'=> 0, 'approve_reason'=>'']) }}">@lang('absence.not_approve')</a></p>
+						
 				@endif
             </div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $mail_style ? $mail_style->style_footer : '' !!}">

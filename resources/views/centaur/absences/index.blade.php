@@ -126,15 +126,7 @@
 									{{-- @endif --}}
 								</div>
 								<div class="col-md-12 col-lg-5 col-xl-5 float_left filter_area">
-									
 									<div class="width_25 float_right padd_l_10 dropdown_empl">
-										{{-- <input id="filter_employees" list="list_employees" autocomplete="off" value="SVI djelatnici" >
-										<datalist id="list_employees">
-											<option data-id="all" value="SVI djelatnici" selected />
-												@foreach ($employees as $r_employee)
-													<option value="{{ $r_employee->user->last_name . ' ' .$r_employee->user->first_name }}" data-id="{{ $r_employee->id }}" style="height: 12px"/>
-												@endforeach
-										</datalist> --}}
 										<select id="filter_employees" class="js-example-basic-single select_filter filter_employees" name="state" >
 											@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
 												<option value="all" selected >SVI djelatnici</option>
@@ -187,16 +179,13 @@
 											@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
 												<th style="max-width:10%;width:10%">@lang('basic.fl_name')</th>
 											@endif
-											{{-- <th class="sort_date">@lang('absence.request_date')</th> --}}
 											<th style="max-width:10%;width:10%">@lang('absence.request_type')</th>
 											<th class="sort_date" style="max-width:7%;width:7%">@lang('absence.start_date')</th>
 											<th class="sort_date absence_end_date" style="max-width:7%;width:7%">@lang('absence.end_date')</th>
-											<!--<th>Period</th>-->
 											<th class="absence_time" style="max-width:7%;width:7%">@lang('absence.time')</th>
 											<th style="max-width:30%;width:30%">@lang('basic.comment')</th>
 											<th style="max-width:10%;width:10%">@lang('absence.approved')</th>
 											<th style="max-width:15%;width:15%">@lang('absence.approve_comment')</th>
-											{{-- <th>@lang('absence.aprove_date')</th> --}}
 											<th class="not-export-column no-sort" style="max-width:10%;width:10%">@lang('basic.options')</th>
 										</tr>
 									</thead>
@@ -227,11 +216,9 @@
 															@if( Sentinel::inRole('administrator') )
 																<td style="max-width:10%;width:10%">{{ $absence->employee->user['last_name'] . ' ' . $absence->employee->user['first_name'] }}</td>
 															@endif
-															{{-- <td>{{ date('d.m.Y',strtotime($absence->created_at)) }}</td> --}}
 															<td style="max-width:10%;width:10%">{{ '[' . $absence->absence['mark'] . '] ' . $absence->absence['name'] }}</td>
 															<td style="max-width:7%;width:7%">{{ date('d.m.Y',strtotime($absence->start_date))  }}</td>
 															<td class="absence_end_date" style="max-width:7%;width:7%">{!! $absence->end_date ? date('d.m.Y',strtotime($absence->end_date)) : '' !!}</td>
-															<!--<td>xx dana</td>-->
 															<td class="absence_time" style="max-width:7%;width:7%" >{!! $absence->absence['mark'] == 'IZL' ? date('H:i',strtotime($absence->start_time)) . '-' .  date('H:i',strtotime($absence->end_time)) :'' !!}</td>
 															<td style="max-width:30%;width:30%">
 																@if( $absence->absence['mark'] != 'IZL' )
@@ -240,7 +227,6 @@
 																	[ {!! $absence->approve == 0 ? '00:00' : $hours . ' h, ' . $minutes . ' m' !!} ]
 																@endif
 																{{ $absence->comment }}
-																
 															</td>
 															<td class="approve not_link"  style="max-width:15%;width:15%">
 																@if($absence->approve == 1) 
@@ -264,8 +250,6 @@
 																	<textarea class="" type="text" name="approve_reason[{{ $absence->id}}]" rows="2"></textarea>
 																@endif
 															</td>
-															{{-- <td>{!! $absence->approved ? $absence->approved['first_name'] . ' ' . $absence->approved['last_name'] : ''!!}</td> --}}
-															{{-- <td>{{ $absence->approved_date }}</td> --}}
 															<td class="not_link options center">
 																@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
 																	@if(Sentinel::getUser()->hasAccess(['absences.update']) || in_array('absences.update', $permission_dep) || Sentinel::getUser()->hasAccess(['absences.delete']) || in_array('absences.delete', $permission_dep))
@@ -304,7 +288,6 @@
 													@endphp
 													<tr class="tr_open_link tr" data-href="/absences/{{ $afterhour->employee->id }} empl_{{ $afterhour->employee_id}}"  id="requestAft_{{ $afterhour->id}}" >
 														<td style="max-width:10%;width:10%">{{ $afterhour->employee->user['last_name'] . ' ' . $afterhour->employee->user['first_name'] }}</td>
-														{{-- <td>{{ date('d.m.Y',strtotime($afterhour->created_at)) }}</td> --}}
 														<td style="max-width:10%;width:10%">Prekovremeni sati</td>
 														<td style="max-width:7%;width:7%">{{ date('d.m.Y',strtotime($afterhour->date))  }}</td>
 														<td class="absence_end_date" style="max-width:10%;width:10%">-</td>
@@ -337,8 +320,6 @@
 																<textarea class="" type="text" name="approved_reason[{{ $afterhour->id}}]" rows="2"></textarea>
 															@endif
 														</td>
-														{{-- <td>{!! $afterhour->approved ? $afterhour->approved['first_name'] . ' ' . $afterhour->approved['last_name'] : ''!!}</td> --}}
-														{{-- <td>{{ $afterhour->approved_date }}</td> --}}
 														@if( Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') )
 															<td class="not_link options center" style="max-width:10%;width:10%">
 																@if(Sentinel::getUser()->hasAccess(['afterhours.update']) || in_array('afterhours.update', $permission_dep) || Sentinel::getUser()->hasAccess(['afterhours.delete']) || in_array('afterhours.delete', $permission_dep))
@@ -359,8 +340,9 @@
 													</tr>
 												@endforeach
 											@endif
-										@else
-											<tr class="tr_placeholder"><td colspan="9">
+										{{-- @else
+											<tr class="tr_placeholder">
+												<td colspan="9">
 													<span class="placeholder_span">
 														<img class="" src="{{ URL::asset('icons/placeholder_absence.png') }}" alt="Placeholder image" />
 														<span >@lang('basic.no_absence1')
@@ -371,7 +353,7 @@
 														</span>
 													</span>
 												</td>
-											</tr>
+											</tr> --}}
 										@endif
 									</tbody>
 								</table>

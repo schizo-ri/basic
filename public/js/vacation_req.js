@@ -57,10 +57,14 @@ $(function(){
                             if( $('.basic_view').length > 0 ) {
                                 $("tr.basic_view").load(url_load + ' tr.basic_view>td',function(){
                                     $('#loader').remove();
+                                    delete_request ();
+                                    store_request();
                                 });
                             } else {
                                 $("tr#empl_"+id).load(url_load + " tr#empl_"+id+'>td',function(){
                                     $('#loader').remove();
+                                    delete_request ();
+                                    store_request();
                                 });
                             }
                         }
@@ -96,12 +100,17 @@ $(function(){
                             if( $('.basic_view').length > 0 ) {
                                 $("tr.basic_view").load(url_load + ' tr.basic_view>td',function(){
                                     $('#loader').remove();
+                                    delete_request ();
+                                    store_request();
                                 });
                             } else {
                                 $('#loader').remove();
                                 
                                 $("tr#empl_"+id).load(url_load + " tr#empl_"+id+'>td',function(){
                                     $('#loader').remove();
+                                    delete_request ();
+                                    store_request();
+                            
                                 });
                             }
                         }

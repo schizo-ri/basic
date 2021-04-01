@@ -257,9 +257,6 @@ span[aria-hidden=true] {
     -webkit-appearance: none;
 } */
 
-#interval {
-	/* display: none; */
-}
 
 #interval > .input_interval {
 	width: 100px;

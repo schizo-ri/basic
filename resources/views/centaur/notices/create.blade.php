@@ -43,7 +43,7 @@
                         <button  class="btn-submit" {{-- (click)="exportHtml()" --}}>@lang('basic.save')</button>
                         <email-editor></email-editor>
                         {{-- 	<input class="btn-submit" type="submit" value="{{ __('basic.save')}}"> --}}
-                        <a class="btn-back" href="{{ url()->previous() }}">
+                        <a class="btn-back" href="{{ route('noticeboard') }}" >
                             @lang('basic.back')
                         </a>
                     </div>

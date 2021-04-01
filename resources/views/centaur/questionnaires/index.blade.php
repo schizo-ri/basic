@@ -1,7 +1,9 @@
 @extends('Centaur::layout')
 
 @section('title', __('basic.documents'))
-@php use App\Http\Controllers\QuestionnaireController; @endphp
+@php 
+use App\Http\Controllers\QuestionnaireController; 
+@endphp
 @section('content')
 <div class="index_page index_documents">
 	<main class="col-xs-12 col-sm-12 col-md-12 index_main main_documents float_right">
@@ -48,19 +50,18 @@
 				</div>
 			</div>
 			<main class="all_documents main_questionnaire">
-				
-					<header class="page-header">
-						<div class="index_table_filter">
-							<label>
-								<input type="search" placeholder="{{ __('basic.search')}}" onkeyup="mySearchDoc()" id="mySearch">
-							</label>
-							@if(Sentinel::getUser()->hasAccess(["questionnaires.create"]) || in_array("questionnaires.create", $permission_dep) )
-								<a class="add_new new_questionnaire" href="{{ route('questionnaires.create') }}" rel="modal:open"  title="{{ __('questionnaire.add_questionnaire')}}"><i style="font-size:11px" class="fa">&#xf067;</i></a>
-							@endif
-							<span class="change_view"></span>
-							<span class="change_view2"></span>
-						</div>
-					</header>
+				<header class="page-header">
+					<div class="index_table_filter">
+						<label>
+							<input type="search" placeholder="{{ __('basic.search')}}" onkeyup="mySearchDoc()" id="mySearch">
+						</label>
+						@if(Sentinel::getUser()->hasAccess(["questionnaires.create"]) || in_array("questionnaires.create", $permission_dep) )
+							<a class="add_new new_questionnaire" href="{{ route('questionnaires.create') }}" rel="modal:open"  title="{{ __('questionnaire.add_questionnaire')}}"><i style="font-size:11px" class="fa">&#xf067;</i></a>
+						@endif
+						<span class="change_view"></span>
+						<span class="change_view2"></span>
+					</div>
+				</header>
 				@if(count($questionnaires))
 					<div class="table-responsive first_view">
 						<table id="index_table" class="display table dataTable table-hover">
@@ -81,7 +82,7 @@
 										$progress_perc1 = QuestionnaireController::progress_perc( $questionnaire->id);
 										$progress_count1 = QuestionnaireController::progress_count( $questionnaire->id);
 									@endphp
-									<tr class="clickable-row" data-href="{{ route('questionnaire_results.show', $questionnaire->id) }}" >
+									<tr class="tr_open_link" data-href="/questionnaires/{{$questionnaire->id}}" data-modal >
 										<td >
 											@if(($questionnaire->status == 1 && ! count(QuestionnaireController::collectResults( $questionnaire->id)->where('employee_id', Sentinel::getUser()->employee->id)) > 0 ))
 												<a class="qname" href="{{ route('questionnaires.show', $questionnaire->id) }}" rel="modal:open" >{{ $questionnaire->name }}</a>
@@ -106,7 +107,6 @@
 									
 										@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.update']) || in_array('questionnaires.update', $permission_dep) || Sentinel::getUser()->hasAccess(['questionnaires.delete']) || in_array('questionnaires.delete', $permission_dep))
 											<td class="options center">
-												<!-- <button class="collapsible option_dots float_r"></button> -->
 												@if(Sentinel::getUser()->hasAccess(['questionnaires.create']) || in_array('questionnaires.create', $permission_dep))
 													<a href="{{ action('QuestionnaireController@sendEmail', ['id' => $questionnaire->id ] ) }}" class="btn-edit sendEmail" title="{{ __('basic.sendEmail')}}"><i class="far fa-envelope"></i></a>
 												@endif 
@@ -161,10 +161,7 @@
 		</section>
 	</main>
 </div>
-<script>
-	$.getScript( '/../js/datatables.js');
-	$.getScript( '/../js/questionnaire.js');
-	$.getScript( '/../js/filter_table.js');
-	$.getScript( '/../js/open_modal.js');
-</script>
+<div id="login-modal" class="modal modal_questionnaire">
+		
+</div>
 @stop

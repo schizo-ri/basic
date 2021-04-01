@@ -10,9 +10,7 @@
 .show_task {
     display: none;
 }
-.add_project {
-   
-}
+
 .form-control.color {
     width: 100px;
 }
@@ -25,6 +23,7 @@
 .link_back {
     color: inherit;
     text-decoration: none;
+    height: 20px;
 }
 .calendar_aside .link_back{
     position: absolute;
@@ -130,7 +129,117 @@
     position: relative;
     overflow: visible;
 }
+/* OKR CSS */
 
+.all_okrs>div {
+    height: 100%;
+}
+section.okrs {
+    height: calc(100% - 60px);
+}
+section.okrs .tabcontent {
+    float: left;
+    width: 90%;
+    height: 100%;
+    overflow: auto;
+}
+.index_main .tabcontent#companyOkr {
+    display: block;
+} 
+
+.section_okr {
+    padding: 20px;
+    padding-top: 0;
+    color: #606060;
+}  
+.tab_okr {
+    float: left;
+    height: 100%;
+    width: 10%;
+    padding: 10px 0;
+    border-right: 1px solid #ccc;
+}
+.div_main {
+    padding: 0;
+}
+.div_keyResults div.no_Tasks {
+    font-size: 10px;
+}
+.okrs a {
+    padding: 0 5px;
+}
+
+.div_okr, .div_keyResults {
+    padding: 0;
+    margin-top: 10px;
+    
+}
+.div_okr>div:not(.not_link), .keyResults>div:not(.not_link) {
+    cursor: pointer;
+}
+.div_okr {
+    background-color: #071e57;
+    color: white;
+    text-transform: uppercase;
+}
+.div_okr div, .div_keyResults div, .keyResults div {
+    padding:0;
+}
+
+.div_okr>div, .div_keyResults>div:not(.div_keyResultTasks), .keyResults>div {
+    padding:5px;
+}
+
+.div_keyResults div {
+    font-size: 0.875rem;
+    font-weight: 600;
+    
+}
+
+.div_keyResults, .div_keyResultTasks{
+    display: none;
+}
+.edit_progress>span, .edit_progress>p {
+    float: left;
+}
+.edit_progress>span {
+    width: 25%;
+    display: block;
+    padding-right: 10px;
+}
+.edit_progress>p {
+    width: 75%;
+    cursor: pointer;
+}
+.section_okr .div_header {
+    font-size: 0.75rem;
+    border-bottom: 1px solid #ccc;
+    padding: 5px 0;
+}
+
+.div_keyResults .ui-progressbar, .ui-progressbar {
+    height: 1em;
+    margin: 0;
+}
+
+.ui-progressbar .ui-progressbar-value {
+    margin: 0;
+    background: #1594f0;
+}
+
+div.keyResultTask {
+   /*  background-color: #98caef94; */
+    margin-bottom: 5px;
+    padding: 5px;
+    padding-left: 10px;
+}
+div.keyResultTask>div:first-child {
+    padding-left: 40px;
+    font-weight: 400;
+}
+.keyResultTask div {
+    padding: 5px;
+}
 .index_page aside.calendar_aside>div {
     height: 100%;
     clear: both;
@@ -141,6 +250,49 @@
     margin: 0;
     width: 100%;
 }
+
+.index_table_filter>div.tab_okr {
+    float: left;
+    height: 38px;
+    display: flex;
+}
+
+.tab_okr .tablinks {
+    border: none;
+    background: inherit;
+    font-size: 0.875rem;
+    width: 100%;
+    text-align: left;
+    padding: 10px 20px;
+}
+.okrs h4 {
+    color: black;
+    font-size: 1.25rem;
+}
+
+.index_documents .okrs h5 {
+    color: black;
+    font-size: 1.125rem;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.goals {
+    padding: 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.goals p {
+    padding-left: 40px;
+}
+.tab_okr .tablinks:hover, .tab_okr .tablinks:focus, .tab_okr .tablinks.active {
+    background: #e9ecef;
+    outline: none;
+}
+/* 
+.tab_okr .tablinks.active  {
+    box-shadow: 3px 3px 3px #ccc;
+} */
 
 .index_page .posts .all_post article.main_post {
     padding-top: 25px;
@@ -361,7 +513,6 @@ main.index_main.locco_create_main>section >main {
 }
 
 .user_filter .select_filter {
-    background-image: ;
     float: right;
     padding: 6px 15px 10px 0;
     margin-top: 0;
@@ -427,6 +578,7 @@ img.doc_icons {
     display: none;
 
 }
+
 
 .index_main .form_post input[type="submit"] {
     background: url('/icons/plane.png') no-repeat;
@@ -611,8 +763,6 @@ img.doc_icons {
     text-align: right;
 }
 
-
-class="select-css"
 .tabcontent .comments .message .right .comment_empl {
     text-align: right;
 }
@@ -1148,6 +1298,7 @@ class="select-css"
 } 
 
 .index_main main {
+    clear: both;
     height: calc(100% - 78px);
     width: 100%;
     background-color: inherit;
@@ -1540,9 +1691,7 @@ main.main_ads {
     padding-right: 5px;
     height: calc(100% - 145px);
 }
-main.main_ads.main_instructions {
 
-}
 .index_main main.ad_main {
     height: auto;
     padding: 10px 20px;
@@ -1751,7 +1900,6 @@ footer.ad_footer {
     padding-right: 0;
     position: static;
     transform: none;
-    float: left;
     display: inline-block;
     margin: 0;
 }
@@ -1797,7 +1945,7 @@ table ul {
     background: url(../icons/arrow_down1.png) no-repeat;
     background-position: 98%;
     appearance: none;
-    padding-right: 10px;
+    padding-right: 20px;
     margin-left: 20px;
     cursor: pointer;
     background-color: white;
@@ -1835,13 +1983,21 @@ table ul {
     width: fit-content;
     
 }
+
+.select2-container {
+    display: inline-block;
+    min-width: 100px;
+}
+
 .select2-container:not(.select2) { 
     box-shadow: 3px 0 6px rgba(0, 0, 0, 0.15), -3px 0 6px rgba(0, 0, 0, 0.15);
     margin-left: 0;
-    margin-top: 35px;
+    margin-top: 0;
     background: white;
     z-index: 3;
-}   
+}  
+
+
 .remove_project {
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -1851,6 +2007,7 @@ table ul {
     box-shadow: 3px 3px 3px #ddd;
     margin-right: 5px;
 }
+
 .select2-results__options{
     background-color: white;
     padding: 0 10px;
@@ -1878,6 +2035,7 @@ table ul {
     align-self: center;
     text-indent: 5px;
     text-align: left;
+    font-weight: normal;
 }
 .select2-search__field {
     border: none;
@@ -1902,7 +2060,7 @@ textarea.select2-search__field  {
     font-size: 0.75rem;
     color: #606060;
     padding-left: 10px;
-    padding-right: 15px;
+    padding-right: 30px;
     
 }
 
@@ -1957,7 +2115,7 @@ datalist option {
 #admin_page .index_table_filter div.div_select2, #admin_page .filtercontainer div.div_select2 {
     margin-left: 15px ;
 }
-.diary_header .index_table_filter div.div_select2 {
+.diary_header .index_table_filter div.div_select2, .index_documents div.div_select2 {
     margin-left: 15px;
 }
 
@@ -2087,6 +2245,9 @@ datalist option {
     cursor: pointer;
 }
 
+span.show_button_upload {
+    cursor: pointer;
+}
 .index_table_filter span.show_button, .index_table_filter span.show_button_upload  {
     width: auto;
     height: auto;
@@ -2120,6 +2281,9 @@ datalist option {
     color: #FFFFFF;
     margin-left: 10px;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .index_page a.add_new:hover, .btn-new.btn-approve:hover {
     background-color: #0069d9;
@@ -2138,9 +2302,6 @@ datalist option {
 .index_page .all_absences a.add_new:hover {
     background-color: #0069d9;
     border-color: #0062cc;
-}
-.index_page a.add_new i, .index_page a.add_new svg {
-    margin-right: 10px;
 }
 
 .index_page .dataTables_wrapper .dataTables_length, .index_page .dataTables_wrapper .dataTables_info, .index_page .dataTables_wrapper .dataTables_processing {
@@ -2286,10 +2447,6 @@ form.after_form  {
     color: #606060;
 }
 
-tbody tr:nth-child(odd){
-    border-top: 1px solid #ccc;
-}
-
 .sequence_links > a.sendEmail, .notice_links > a.sendEmail {
     font-size: 1.063rem;
 }
@@ -2415,10 +2572,6 @@ tbody tr:nth-child(odd){
     margin: auto;
     display: block;
   }
-
-.latest_messages  div.search_input  {
-    /* margin: 25px 0; */
-}
 
 .search_post {
     background: url(/icons/search.png) no-repeat;
@@ -2633,7 +2786,6 @@ span.show i, span.show svg, span.hide i, span.hide svg {
     background: #ffffff;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
     border-radius: 3px;
-    float: left;
     margin-right: 10px;
     padding: 5px;
     position: relative;
@@ -2727,7 +2879,6 @@ button.scroll_left {
     right: 0;
     font-size: 1.375rem;
     display: inline-block;
-    float: left;
 }
 
 .index_page a.add_new.new_document>svg, .index_page a.add_new.new_document > i {
@@ -2909,7 +3060,6 @@ main.index_main.main_absence >section {
     background-position: center;
     display: inline-block;
     margin-right: 20px;
-    float: right;
     margin: 10px 0;
     transform: rotate(270deg);
     margin-left: -20px;
@@ -3042,9 +3192,7 @@ main.all_absences >section {
     margin-top: 15px;
     display: block;
 }
-.info_abs>p>span.days_off {
-    
-}
+
 .info_abs .title .year_select {
     float: right;
     font-weight: 400;
@@ -3127,9 +3275,7 @@ section.modal_user.modal_employee main {
 main.all_absences.all_absences_employee >section {
     height: 100%;
 }
-.index_main main.all_absences tbody tr {
-   /*  display: none; */
-}
+
 .index_main main.all_documents {
     overflow: hidden;
     position: relative;
@@ -3198,7 +3344,6 @@ main.all_absences.all_absences_employee >section {
     background: #EAEAEA;
     position: relative;
     display: inline-block;
-    float: left;
     margin-right: 10px;
     overflow: hidden;
 }
@@ -3345,6 +3490,10 @@ label.add_new {
     font-size: 0.875rem;
   
     color: #2B2B2B;
+}
+
+.competence_table table.dataTable tbody td {
+    vertical-align: top;
 }
 #index_table1.table_work_record {
     border: 1px solid #ccc;
@@ -4026,7 +4175,7 @@ a.password_edit {
     color: #1390E9;
     
 }
-.user_profile .user_info .label_value:not(:last-child)) {
+.user_profile .user_info .label_value:not(:last-child) {
     margin-bottom: 30px;
 }
 
@@ -4247,9 +4396,37 @@ a.modal_close {
 .mail_form a {
     display: inline-block;
 }
-.form-group {
+.form-group:not(.modal_questionnaire .form-group) {
     clear: both;
     overflow: hidden;
+    
+}
+.visitors .form-group {
+    padding: 5px;
+    margin-bottom: 0.5rem;
+}
+.lang_choose img {
+    cursor: pointer;
+}
+.visitors_section {
+    margin-top: 30px;
+}
+.aktivna.form-group {
+    padding-left: 20px;
+}
+
+.rating_span {
+    padding: 0 5px;
+    display: inline-block;
+}
+
+.add_rating {
+    float: right;
+    cursor: pointer;
+}
+
+.rating_group>div {
+    padding-bottom: 10px;
 }
 
 #mail_template #header, #mail_template #footer {
@@ -4277,6 +4454,167 @@ a.modal_close {
     padding-bottom: 5px;
     overflow: hidden;
 }
+
+* {box-sizing:border-box}
+
+.page-main.competence_section, .competence_section .slideshow-container {
+    overflow: hidden;
+}
+
+.competence_section .slideshow-container {
+    padding: 20px;
+    padding-top: 0;
+    height: 100%;
+    position: relative;
+}
+
+.competence_section .slideshow-container ul.legend  {
+    /* position: absolute;
+    right: 0;
+    top: 0; */
+    float: right;
+    list-style: none;
+    font-size: 12px;
+    padding: 20px;
+    background: #e9ecef;
+}
+
+.main_competences  ul.legend {
+    list-style: none;
+    font-size: 12px;
+    padding: 20px;
+    background: #e9ecef;
+    float: right;
+}
+
+
+.rating_all, .rating_group:not(.form-group .rating_group) {
+    position: absolute;
+    bottom: 0;
+}
+.rating_all {
+    top: 22px;
+    left: 0;
+    right: 0;
+    bottom: auto;
+}
+
+.rating_group:not(.form-group .rating_group) {
+    float: right;
+    right: 0;
+}
+
+.slideshow-container form {
+    height: 100%;
+    overflow: auto;
+    width: 100%;
+    margin: auto;
+    padding-bottom: 30px;
+    font-size: 14px;
+}
+
+.slideshow-container form>div {
+    width: 80%;
+    margin: auto;
+
+}
+
+.rating_radio {
+    float: left;
+    padding: 0 15px;
+    text-align: center;
+}
+
+table.dataTable .td_group {
+    background: #0062cc;
+    color: white;
+}
+
+table.dataTable .td_question {
+    background: #e9ecef;
+}
+
+.rating_radio input, .rating_radio label {
+    display: block !important;
+}
+
+.main_competences {
+    padding: 20px 25px;
+    padding-top: 0;   
+}
+
+.main_competences >section {
+    display: flex;
+    justify-content: flex-start;
+    padding-top: 20px;
+}
+
+.competence_section .mySlides {
+    height: auto;
+}
+
+.competence_section .mySlides >div {
+    padding: 0 30px;
+}
+
+.competence_section a.prev, .competence_section a.next {
+    position: static;
+    float: right;
+    background: #e9ecef;
+    border: 1px solid #1594F0;
+    margin-left: 10px;
+    padding: 0 15px;
+}
+
+.total_rating {
+    font-size: 12px;
+    margin-left: 20px;
+    float: left;
+    width: auto;
+    line-height: 35px;
+    color: red;
+}
+.competence_section .description {
+    opacity: 0.4;
+    font-size: 0.875em;
+    color: inherit;
+    padding: 0 !important;
+}
+
+.competence_section .radio_group {
+    padding-left: 50px;
+}
+.competence_section .prev {
+    left: 0;
+}
+
+.competence_section .next {
+    right: 0;
+}
+
+.competence_section .prev:hover, .competence_section .next:hover {
+    background-color:rgba(0, 0, 0, 0.1);
+}
+
+p.eval_employee {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.eval_employee .select2-container {
+    margin-left: 20px;
+}
+.eval_employee .select2-selection {
+    border: none;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+}
+.competence_table .select2-container:not(.select2) {
+    margin: 0;
+}
+
 @media (max-width: 1300px) {
     .info_abs>p, .info_abs>p>.go, .info_abs>p>.go_pg, .info_abs>p>.bol, .info_abs>p>.bol_pg, .info_abs>p>.bol_om {
         font-size: 1rem;
@@ -4564,6 +4902,32 @@ a.modal_close {
     }
 }
 @media (max-width: 768px) {
+    .tab_okr {
+        float: none;
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+    }
+    .tab_okr .tablinks {
+        width: 25%;
+        float: left;
+        border-bottom: 1px solid #ccc;
+       
+    }
+    .index_page.competence_table .index_main {
+        margin-bottom: 0;
+    }
+    .section_okr {
+        font-size: 10px;
+    }
+    section.okrs .tabcontent {
+        width: 100%;
+        float: none;
+    }
+    .okrs h4 {
+        margin: 10px;
+    }
+   
     .header_document.page-header {
         padding: 10px;
     }
@@ -4662,7 +5026,6 @@ a.modal_close {
     }
     .index_main header.post_sent .link_back {
         display: inline-block;
-        float: left;
         margin: 0;
         line-height: 50px;
         padding: 0;
@@ -4831,8 +5194,71 @@ a.modal_close {
         display: none;
     }
 }
-
 @media (max-width: 450px) {
+    .competence_section .slideshow-container {
+        padding: 10px;
+        padding-bottom: 30px;
+    }
+    .rating_all {
+        position: static;
+        padding-left: 10px;
+        overflow: hidden;
+        width: 100%;
+    }
+    .slideshow-container form>div {
+        width: 100%;
+    }
+    .slideshow-container form {
+        padding: 0;
+        width: 100%;
+        font-size: 10px;
+    }
+    .eval_employee span {
+        display: block;
+        min-width: 50%;
+        line-height: 30px;
+    }
+    .competence_section .mySlides >div {
+        padding: 10px;
+        overflow: hidden;
+        width: 100%;
+        float: none;
+    }
+    .slideshow-container input.btn-submit {
+        margin-left: 10px;
+    }
+    .tab_okr { 
+        padding: 0;
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .tab_okr .tablinks {
+        padding: 5px;
+        border-bottom:none;
+        text-align: center;
+    }
+    .div_okr {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .okrs a {
+        padding: 0 10px;
+        float: left;
+    }
+
+    .div_keyResults>div {
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .div_keyResultTasks {
+        background: #dcfaff;
+    }
+    div.keyResultTask>div:first-child {
+        padding: 0;
+    }
     .index_table_filter >label, #index_table_filter >label {
         float: left;
         margin: 0;
@@ -5387,7 +5813,7 @@ a.modal_close {
     .index_table_filter>div {
         height: auto;
         margin-top:10px ;
-        clear: both;
+     /*    clear: both; */
         width: 100%;
         flex: 0 0 100%;
         max-width: 100%;
@@ -5755,7 +6181,6 @@ a.modal_close {
     background-color: #ccffb3;
 }
 
-
 @media print {
     table tr td {
         transform: scale(.7);
@@ -5763,6 +6188,4 @@ a.modal_close {
         font-size: 0.5rem;
     }
 }
-.not_link {
-    cursor: ;
-}
+

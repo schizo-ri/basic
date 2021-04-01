@@ -16,6 +16,6 @@ return [
     'failed'        => 'Podaci ne odgovaraju našim zapisima.',
     'throttle'      => 'Previše pokušaja prijave. Pokušajte ponovo za: sekundi sekundi.',
     'auth_update'   => 'Podaci korisnika su ispravljeni.',
-
+    'auth_active'   => ' je ponovno aktivan.',
 
 ];

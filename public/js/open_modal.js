@@ -190,10 +190,11 @@ $(function() {
 			fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
 		};
     });
+
     $('tr[data-modal] td:not(:last-child)').on("click", function(e) {
         e.preventDefault();
         var href = location.origin + $(this).parent().data('href');
-       
+       console.log(href);
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
             escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
@@ -225,10 +226,9 @@ $(function() {
     $('tr.tr_open_link_new_page td:not(.not_link)').on('click', function(e) {
 		e.preventDefault();
 		url = location.origin + $( this ).parent().attr('data-href');
-		console.log(url);
         window.location = url;
     });
-
+    
     $('body').on($.modal.OPEN , function(event, modal) {
         $.getScript('/../select2-develop/dist/js/select2.min.js');
         selectSearchModal ();

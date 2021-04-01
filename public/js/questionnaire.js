@@ -20,15 +20,49 @@ $(function() {
         if(all_width > div_width ) {
             $('.preview_doc .scroll_right').show();
         }
-            
-        $(".clickable-row").click(function() {
-        //   window.location = $(this).data("href");
 
-        });
-        $('.collapsible').click(function(event){ 
+        $('tr.clickable-row[data-modal] td:not(:last-child)').on("click", function(e) {
+            e.preventDefault();
+            var href = location.origin + $(this).parent().data('href');
+            console.log(href);
+
+            if( $('.main_questionnaire').length > 0 ) {
+                var class_modal = 'modal modal_questionnaire';
+            } else {
+                var class_modal = 'modal';
+            }
+            $.modal.defaults = {
+                closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+                escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+                clickClose: true,      // Allows the user to close the modal by clicking the overlay
+                closeText: 'Close',     // Text content for the close <a> tag.
+                closeClass: '',         // Add additional class(es) to the close <a> tag.
+                showClose: true,        // Shows a (X) icon/link in the top-right corner
+                modalClass: class_modal,    // CSS class added to the element being displayed in the modal.
+                // HTML appended to the default spinner during AJAX requests.
+                spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+        
+                showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+                fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+                fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+            };
+            $.get(href, function(html) { 
+                $(html).appendTo('#login-modal');
+            }); 
+            $('#login-modal').modal();
+            $('#login-modal').on($.modal.CLOSE, function(event, modal) {
+                $( "#login-modal" ).empty();
+            });
+    
+            $('a.close-modal').on('click',function(){
+                $( "#login-modal" ).empty();
+            });
+        }); 
+
+        $('.collapsible').on("click", function(event){ 
             $(this).siblings().toggle();
         });
-        $('#right-button').click(function() {
+        $('#right-button').on("click", function() {
             event.preventDefault();
             $('.preview_doc').animate({
                 scrollLeft: "+=217px"
@@ -37,13 +71,13 @@ $(function() {
             
         });
 
-        $('.sendEmail').click(function(){
+        $('.sendEmail').on("click", function(){
             if (!confirm("Stvarno želiš poslati obavijest mailom?")) {
                 return false;
             }
         });
         
-        $('#left-button').click(function() {
+        $('#left-button').on("click", function() {
             event.preventDefault();
             $('.preview_doc').animate({
                 scrollLeft: "-=217px"
@@ -55,7 +89,7 @@ $(function() {
             }
         });
 
-        $('.show').click(function(){
+        $('.show').on("click", function(){
             $('.show').toggle();
             $('.hide').toggle();
             $('.preview_doc').toggle();
@@ -71,7 +105,7 @@ $(function() {
             }
         });
 
-        $('.hide').click(function(){
+        $('.hide').on("click", function(){
             $('.show').toggle();
             $('.hide').toggle();
             $('.preview_doc').toggle();

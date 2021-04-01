@@ -12,6 +12,11 @@
                 @endforeach	
             </select>
         </div>
+        <div class="form-group">
+			<label>Status</label>
+			<input type="radio" id="status_0" name="active" value="0" {!! $document->active == 0 ? 'checked' : '' !!} /><label for="status_0">@lang('basic.inactive')</label>
+			<input type="radio" id="status_1" name="active" value="1" {!! $document->active == 1 ? 'checked' : '' !!}  /><label for="status_1">@lang('basic.active')</label>
+		</div>
         {{ csrf_field() }}
         {{ method_field('PUT') }}
         <input class="btn-submit" type="submit" value="{{ __('basic.save') }}" name="submit">

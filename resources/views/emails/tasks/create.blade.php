@@ -121,11 +121,14 @@
 					<p class="">Zaduženi djelatnik: {{ $employeeTask->employee->user->first_name . ' ' . $employeeTask->employee->user->last_name }}</p>				
 					<p class="">Status: {!! $employeeTask->task->active == 1 ? 'aktivan' : 'neaktivan' !!}</p>
 				@endif
-				<form name="contactform" method="get" target="_blank" action="{{ route('tasks_confirm') }}">
+				<form name="contactform" method="get" target="_blank" action="{{ route('tasks_confirm') }}" style="overflow: hidden;">
 					<input type="hidden" name="id" value="{{ $employeeTask->id }}" />
 					<input style="height: 34px; width: 100%;border-radius: 5px;" type="text" name="comment" required ><br>
 					<input class="odobri" type="submit" value="Potvrdi izvršenje">
 				</form>
+
+				<p>Ako ne možeš koristiti formu za unos pošalji potvrdu putem linka </p>
+				<p><a href="{{ route('tasks_confirm',['id'=> $employeeTask->id,'comment'=> '']) }}">Potvrdi izvršenje</a></p>
             </div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_footer : '' !!}">
 				@if( isset($text_footer) && $text_footer && count($text_footer) > 0)

@@ -49,22 +49,23 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->where('active',1)->get();
-		/* $departmentRoles = DepartmentRole::get(); */
-        $empl = Sentinel::getUser()->employee;
-        /* dd(Sentinel::getUser()->employee->work->department->departmentRole->first()->permissions); */
-        
-        $permission_dep = array();
-		if($empl) {
-            if($empl->work && $empl->work->department) {
-                $permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-            }			
-        } 
+        if( isset($request['status'])) {
+			if( $request['status'] == 'checkout' ) {
+				$status = 0;
+			} else {
+				$status = 1;
+			}
+		} else {
+			$status = 1;
+		}
+
+        $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->where('active', $status )->get();
+       
         $roles = app()->make('sentinel.roles')->createModel()->all();
 
-        return view('Centaur::users.index', ['users' => $users,'permission_dep' => $permission_dep]);
+        return view('Centaur::users.index', ['users' => $users]);
     }
 
     /**
@@ -567,4 +568,19 @@ class UserController extends Controller
         }
     }
 
+										
+    public function activateUser ($id)
+    {
+        $user = Sentinel::findById($id);
+
+        $data = array(
+            'active'    => 1
+        );
+        
+        $user = Sentinel::update($user, $data);
+
+        session()->flash('success', __('basic.user') . ' ' . $user->first_name . ' ' . $user->last_name . ' ' . __('auth.auth_active'));
+        return redirect()->back();
+
+    }
 }

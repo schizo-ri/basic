@@ -40,6 +40,7 @@ class TaskCreateMail extends Mailable
      */
     public function build()
     {
+        Log::info("TaskCreateMail");
         $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','TaskCreateMail')->first();
         $mail_style = array();
         $template_text_header = array();

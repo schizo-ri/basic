@@ -341,9 +341,9 @@ class AbsenceController extends BasicAbsenceController
      */
     public function store(Request $request)
     {
-	
 		Log::info('******************* Zahtjev za izostanak *********************');
 		Log::info($request);
+
 		if( $this->api_erp && isset($request['erp_type'])) {
 			$absenceType = AbsenceType::where('erp_id',$request['erp_type'])->first();
 			if( $absenceType ) {
@@ -359,11 +359,9 @@ class AbsenceController extends BasicAbsenceController
 			$absenceType_id = $absenceType->id;
 			$ERP_leave_type = $absenceType->erp_id;
 		}
-		/* 
-		Log::info('absenceType_id ' . $absenceType_id);
-		Log::info('ERP_leave_type '. $ERP_leave_type); */
 
 		$message = '';
+		$decree = 0;
 
 		if(isset($request['decree'])) {
 			if ($request['decree'] == 1) {
@@ -371,9 +369,8 @@ class AbsenceController extends BasicAbsenceController
 				} else {
 					$decree = 0;
 			}
-		} else {
-				$decree = 0;
-		}
+		} 
+
 		if($request['employee_id'][0] == 'all' || $request['employee_id'][0] == 'svi') {
 			$employees = Employee::employees_firstNameASC();
 			foreach($employees as $employee ) {
@@ -455,6 +452,7 @@ class AbsenceController extends BasicAbsenceController
 							}
 							try {
 								Log::info( $send_to );
+							
 								foreach(array_unique($send_to) as $send_to_mail) {
 									
 									if( $send_to_mail != null & $send_to_mail != '' ) {
@@ -471,8 +469,13 @@ class AbsenceController extends BasicAbsenceController
 					    }
 					    if ( $this->api_erp ) {
 							if( $request['type'] == 'BOL' || (isset($request['decree']) && $request['decree'] == 1 )) {
+								Log::info("Bolovanje u ERP");
 								$api = new ApiController();
-								$leave_types = $api->send_leave_request($absence, 'abs');
+								if( strtotime($absence->start_date) >= strtotime(date('Y-m-d'))) {
+									$leave_types = $api->send_leave_request($absence, 'abs');
+								} else {
+									$leave_types = $api->send_leave_requestSick($absence, 'abs');
+								}
 							}
 					    }
 					} else {
@@ -482,7 +485,7 @@ class AbsenceController extends BasicAbsenceController
 				}
 			}
 
-			Log::info('******************* Zahtjev za izostanak kraj *********************');
+			
 			$message = session()->flash('success', __('ctrl.request_sent'));
 		
 			return redirect()->back()->with('modal','true')->with('absence','true')->withFlashMessage($message);
@@ -504,12 +507,25 @@ class AbsenceController extends BasicAbsenceController
 					'decree'  			=> $decree,
 				);
 				if( $request['type'] == 'BOL' || $request['type'] == 2 || (isset($request['decree']) && $request['decree'] == 1 ) ) {
-					$data += ['approve'			=>1];
-					$data += ['approved_date'	=>date('Y-m-d')];
+					$data += ['approve'			=> 1];
+					$data += ['approved_date'	=> date('Y-m-d')];
 					$data += ['approved_id' 	=> null];
 				}
 				$absence = new Absence();
 				$absence->saveAbsence($data);
+
+				if ( $this->api_erp ) {					
+					if( $request['type'] == 'BOL' || $request['type'] == 2 || (isset($request['decree']) && $request['decree'] == 1 ) ) {
+						Log::info("Bolovanje u ERP");
+						$api = new ApiController();
+
+						if( strtotime($absence->start_date) >= strtotime(date('Y-m-d'))) {
+							$leave_types = $api->send_leave_request($absence, 'abs');
+						} else {
+							$leave_types = $api->send_leave_requestSick($absence, 'abs');
+						}
+					}
+				}
 
 				if($request['email'] == 'DA' ) {
 					if( $this->test_mail ) {
@@ -550,17 +566,14 @@ class AbsenceController extends BasicAbsenceController
 		
 					return redirect()->back()->with('modal','true')->with('absence','true')->withFlashMessage($message);
 				}
-				if ( $this->api_erp ) {
-					if( $request['type'] == 'BOL' || (isset($request['decree']) && $request['decree'] == 1 )) {
-						$api = new ApiController();
-						$leave_types = $api->send_leave_request($absence, 'abs');
-					}
-				}
+				
 		    } else {
 				session()->flash('error',  __('ctrl.request_exist'));
 				return redirect()->back();
 			}
 	    }
+
+		Log::info('******************* Zahtjev za izostanak kraj *********************');
     }
 
     /**
@@ -734,6 +747,7 @@ class AbsenceController extends BasicAbsenceController
 			}
 			
 			if($request['email'] == 'DA') {
+
 				try {
 					foreach(array_unique($send_to) as $send_to_mail) {
 						if( $send_to_mail != null & $send_to_mail != '' ) {
@@ -765,15 +779,21 @@ class AbsenceController extends BasicAbsenceController
     public function destroy($id)
     {
         $absence = Absence::find($id);
-		$absence->delete();
+		if($absence) {
+			$absence->delete();
 		
-		$message = session()->flash('success',__('ctrl.data_delete'));
+			$message = session()->flash('success',__('ctrl.data_delete'));
+			
+			return redirect()->back()->withFlashMessage($message);
+		} else {
+			return true;
+		}
 		
-		return redirect()->back()->withFlashMessage($message);
 	}
 	
 	public function storeConf(Request $request)
     {
+
 		$absence = Absence::find($request['id']);
 		$message_erp = '';
 		if( $absence ) {

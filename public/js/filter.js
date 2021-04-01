@@ -1,5 +1,6 @@
 $(function() {
-	$("#mySearch").on( 'keyup', function() {
+	$("#mySearch").on( 'keyup', function() { //ima funkcija u filter_table
+		console.log("mySearch1");
 		var value = $(this).val().toLowerCase();
 		$(".panel").filter(function() {
 			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)

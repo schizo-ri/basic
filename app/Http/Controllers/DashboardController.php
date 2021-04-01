@@ -26,7 +26,7 @@ class DashboardController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {      
+    {   
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
             if($employee) {
@@ -141,12 +141,13 @@ class DashboardController extends Controller
     public static function getUserDepartment () {
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
-           /*  $departments = Department::get(); */
+            $department = Department::where('level1', 0)->first();
             $user_department = array();
+            array_push($user_department, $department->id);  //svi
             if( $employee ) {
                 $employee_departments = $employee->hasEmployeeDepartmen;
       
-                if( $employee_departments) {
+                if( $employee_departments ) {
                     foreach ($employee_departments as $department) {
                         array_push($user_department, $department->department_id);
                     }

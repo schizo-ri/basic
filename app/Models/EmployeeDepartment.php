@@ -80,4 +80,9 @@ class EmployeeDepartment extends Model
 								 ->orderBy('departments.name','ASC')
 								 ->orderBy('users.last_name','ASC')->get();
 	}
+
+	public function DepartmentEmployees ($id)
+	{
+		
+	}
 }

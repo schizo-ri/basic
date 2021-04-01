@@ -33,8 +33,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 		<script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/all_css.css?random=@dt') }}"/>
-		<link rel="stylesheet" href="{{ URL::asset('/../css/admin.css') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/css.css?random=@dt') }}"/>
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
 		<!--Jquery -->
@@ -195,23 +194,22 @@
 			<script>
 				// Check if a new cache is available on page load.
 				/* window.addEventListener('load', function(e) {
-				window.applicationCache.addEventListener('updateready', function(e) {
-					if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-					// Browser downloaded a new app cache.
-					// Swap it in and reload the page to get the new hotness.
-					window.applicationCache.swapCache();
-					if (confirm('A new version of this site is available. Load it?')) {
-						window.location.reload();
-					}
-					} else {
-					// Manifest didn't changed. Nothing new to server.
-					}
-				}, false);
-				}, false);
-				 */
-				
+					window.applicationCache.addEventListener('updateready', function(e) {
+						if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+						// Browser downloaded a new app cache.
+						// Swap it in and reload the page to get the new hotness.
+						window.applicationCache.swapCache();
+						if (confirm('A new version of this site is available. Load it?')) {
+							window.location.reload();
+						}
+						} else {
+						// Manifest didn't changed. Nothing new to server.
+						}
+					}, false);
+					}, false);
+				*/
 			</script>
-			<script src="{{URL::asset('/../js/all_js.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/js.js?random=@dt') }}"></script>
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
 
@@ -223,6 +221,7 @@
 			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
+
 			
 			<!-- tinymce js -->
 			<script src="{{ URL::asset('/node_modules/tinymce/tinymce.min.js') }}" ></script>

@@ -212,6 +212,12 @@
                 <a href="{{ route('templates.index') }}" class="line_height_61 admin_link {{ Request::is('templates*') ? 'active_admin' : '' }}" id="templates">@lang('basic.templates')</a>
             </li>  
         @endif 
+        @if(Sentinel::getUser()->hasAccess(["visitors.view"]))
+            <li class="">
+                <span class="image_template" ></span> 
+                <a href="{{ route('visitors.index') }}" class="line_height_61 admin_link {{ Request::is('visitors*') ? 'active_admin' : '' }}" id="visitors">@lang('basic.visitors')</a>
+            </li>  
+        @endif 
     @endif
     @if(Sentinel::inRole('superadmin') )
         <li class="">

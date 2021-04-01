@@ -59,6 +59,7 @@ return [
 	'email_send'     	=> 'E-mail je poslan.',
 	'request_deleted'   => 'Zahtjev je prethodno obrisan, nije ga moguće odobriti ',
 	'no_task'     		=> 'Zadatak nije nađen',
+	'no_plan'     		=> 'Plan nije nađen',
 	
 ];
 ?>

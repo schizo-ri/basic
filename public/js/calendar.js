@@ -1,12 +1,12 @@
 // kalendar dashboard
 $( function () {
-    if( $("#calendar").lenght > 0) {
+    if( $("#calendar").length > 0) {
         var locale = $('.locale').text();
         $('.dates li').first().addClass('active_date');
         var div_width = $( '.dates').width();
         var all_width = 69;
         var dates = $('.box-content').find('.dates');
-    
+
         if(locale == 'en' || locale == 'uk' ) {
             var day_of_week = new Array("SUN","MON","TUE","WED","THU","FRI","SAT");
             var monthNames = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");

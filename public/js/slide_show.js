@@ -1,11 +1,9 @@
 $(function(){
-    
     var slideIndex = 1;
 
-    if($('.slide_index')) {
+    if($('.slide_index').length > 0) {
         slideIndex = $('.slide_index').text();
     }
-    
     showSlides(slideIndex);
 
     function showSlides(n) {
@@ -21,6 +19,7 @@ $(function(){
         } 
 
         $(slides).each(function( index, element ) {
+           
             if(index == n-1) {
                 $(element).show();
                 $(element).addClass('block');
@@ -30,6 +29,7 @@ $(function(){
                 $(element).hide();
                 $(element).removeClass('block');
             }
+            
         });
         $(slides_info).each(function( index, element ) {
             if(index == n-1) {
@@ -42,6 +42,7 @@ $(function(){
                 $(element).removeClass('block');
             }
         });
+       
     }
 
     function plusSlides(n) {
@@ -57,10 +58,10 @@ $(function(){
         showSlides(currentSlide += n);
     }
 
-    $('.prev').click(function(){
+    $('.prev').on('click',function(){
         plusSlides(-1);
     });
-    $('.next').click(function(){
+    $('.next').on('click',function(){
         plusSlides(+1);
     });
 });

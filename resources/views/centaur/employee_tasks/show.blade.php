@@ -41,10 +41,26 @@
 								@foreach ($employeeTasks->sortBy('created_at') as $employeeTask)
 									<tr >
 										<td>{{ $employeeTask->task->task }}<br> <small>{{  $employeeTask->task->description }}</small></td>
-										<td>{{ $employeeTask->employee->user->first_name . ' ' . $employeeTask->employee->user->last_name}}</td>
+										<td>{{ $employeeTask->employee->user->first_name . ' ' . $employeeTask->employee->user->last_name}} </td>
 										<td>{{ date('d.m.Y', strtotime($employeeTask->created_at )) }}</td>
 										<td>{{ $employeeTask->comment }}</td>
-										<td>{!! $employeeTask->status == 1 ? '<span class="green padd_l_15">Izvršen</span>' : '' !!}</td>
+										<td>
+											@if ($employeeTask->status == 1)
+												<span class="green padd_l_15">Izvršen</span>
+											@else
+												@if (Sentinel::getUser()->employee->id == $employeeTask->employee_id)
+													<form name="contactform" method="get"  action="{{ route('tasks_confirm') }}" style="overflow: hidden;">
+														<input type="hidden" name="id" value="{{ $employeeTask->id }}" />
+														<input style="height: 34px;width: 200px;max-width: 70%;border-radius: 5px; border:1px solid #ccc;float:left;" type="text" name="comment" required >
+														@csrf
+														<input style="height: 34px; width: auto;border-radius: 5px; border:1px solid #ccc; float:left; margin-left: 10px" type="submit" value="Potvrdi">
+														
+														<input type="hidden" name="online" value="1">
+													</form>
+												@endif
+											@endif
+										
+										</td>
 									</tr>
 								@endforeach
 							</tbody>

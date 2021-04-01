@@ -185,10 +185,9 @@
 														$end   = new DateTime( $vacation->end_period);
 													@endphp
 													<tr class="basic_view">
-														<tr >
 														@for ($i =  $begin; $i < $end; $i->modify('+'. $vacation->interval .' day'))
 															<td>
-																<div>
+																<div style="display: inline-grid;">
 																	@php
 																		$count = 0;
 																	@endphp
@@ -197,7 +196,6 @@
 																			@php
 																				$employee_plan = $vacation->hasPlans->where('employee_id', $employee_department->employee_id);
 																				$employee_plan_date = $employee_plan->where('start_date',$i->format("Y-m-d"))->first();
-																				
 																			@endphp
 																			@if ( $checked_employee->id == $employee_department->employee_id )
 																				@if( count( $employee_plan) == 0)
@@ -226,9 +224,10 @@
 																						// djelatnici sa kojima se ne smije poklapati
 																						$poklapanje = 0;
 																						if( isset($plan_department['employees'])) {
+																							
 																							$employees = explode(',', $plan_department['employees']);
-																							foreach ($vacation->hasPlans->where('start_date', $i->format("Y-m-d") ) as $pl) {
-																								if ( in_array($pl->employee_id, $employees) && in_array( $pl->employee_id,$employee_departments->pluck('employee_id')->toArray()) ) {
+																							foreach ( $vacation->hasPlans->where('start_date', $i->format("Y-m-d") ) as $pl) {
+																								if ( in_array( $checked_employee->id, $employees) && in_array($pl->employee_id, $employees) && in_array( $pl->employee_id, $employee_departments->pluck('employee_id')->toArray()) ) {
 																									$poklapanje = true;
 																								}
 																							}
@@ -246,6 +245,7 @@
 																							}
 																						}
 																					@endphp
+																				
 																					@if ( $poklapanje == 0 && ($plan_department['no_people'] > $count_plan_department )  && ($plan_department['no_people'] > $count_plan_department_nextweek ) )
 																						<a class="add_plan btn_addVacation action_confirm" href="{{ action('VacationPlanController@vacationPlan',['vacation_id' => $vacation->id, 'employee_id' => $employee_department->employee_id, 'start_date' => $i->format("Y-m-d")]) }}" style="order:1;"> Zapiši me </a>
 																					@endif
@@ -258,9 +258,10 @@
 																						@endphp
 																						{{ $count . '. '}}{{ $employee_plan_date->employee->user->last_name }}
 																						@if ( $checked_employee->id == $employee_department->employee_id )
-																							<a href="{{ route('vacation_plans.destroy', $employee_plan_date->id) }}"  id="{{ $employee_department->employee_id }}" class="action_confirm btn-delete danger" data-token="{{ csrf_token() }}" >
+																							<a href="{{ route('vacation_plans.destroy', $employee_plan_date->id) }}"  id="{{ $employee_department->employee_id }}" class="action_confirm btn-delete danger" data-token="{{ csrf_token() }}">
 																								<i class="far fa-trash-alt"></i>
 																							</a>
+																						
 																						@endif
 																					</span>
 																				@endif

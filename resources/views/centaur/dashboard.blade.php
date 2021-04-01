@@ -59,11 +59,29 @@
 								<button id="left-button-scroll" class=""><i class="fas fa-chevron-left"></i></button>
 								<button id="right-button-scroll" class=""><i class="fas fa-chevron-right"></i></button>
 							</div>
-						</div>
+						</div>						
 						<div class="shortcuts_container">
 							<div>
 								<div class="profile_images">
-									@if (isset($employee) && count($shortcuts) > 0 )
+									@if(in_array('OKR', $moduli))
+										@if (Sentinel::inRole('administrator'))
+											<span class="shortcut_box hasShortcut" >
+												<a class="" href="{{ route('okrs.index') }}"  title="{{ __('basic.okrs')}}">
+													OKR
+												</a>
+											</span>
+										@endif
+									@endif
+									@if(in_array('Kompetencije', $moduli))
+										@if (Sentinel::inRole('administrator'))
+											<span class="shortcut_box hasShortcut" >
+												<a class="" href="{{ route('competences.index') }}"  title="{{ __('basic.okrs')}}">
+													@lang('basic.competences')
+												</a>
+											</span>
+										@endif
+									@endif
+									@if (isset($employee) && count($shortcuts) > 0 )										
 										@foreach ($shortcuts as $key => $shortcut)
 											<span class="shortcut_box hasShortcut" >
 												<a href="{{ route('shortcuts.destroy', $shortcut->id) }}" class="action_confirm btn-delete danger icon_delete" title="{{ __('basic.delete')}}" data-method="delete" data-token="{{ csrf_token() }}">
@@ -103,7 +121,7 @@
 										</span></a>
 									</button>
 								@endif
-								@if( in_array('Radiona', $employee->employeesDepartmentName()) || in_array('Monteri', $employee->employeesDepartmentName())   )
+								@if( in_array('Radiona', $employee->employeesDepartmentName()) || in_array('Monteri', $employee->employeesDepartmentName()) || Sentinel::getUser()->id == 9  )
 									@if(in_array('Dnevnik', $moduli))
 										<button class=""><a href="{{ route('work_diaries.create') }}" rel="modal:open">
 											<span>
@@ -112,7 +130,8 @@
 											</span></a>
 										</button>
 									@endif
-								@else
+								@endif
+								@if( (! in_array('Radiona', $employee->employeesDepartmentName()) && ! in_array('Monteri', $employee->employeesDepartmentName()) ) ||  Sentinel::getUser()->id == 51  ||  Sentinel::getUser()->id == 17) {{-- peklić, antić --}}
 									@if(in_array('Prekovremeni', $moduli))
 										<button class=""><a href="{{ route('afterhours.create') }}" rel="modal:open">
 											<span>
@@ -122,17 +141,14 @@
 										</button>
 									@endif
 								@endif
-								@if(Sentinel::getUser()->id == 9) 
-									@if(in_array('Dnevnik', $moduli))
-										<button class=""><a href="{{ route('work_diaries.create') }}" rel="modal:open">
-											<span>
-												<span class="img clock"></span>
-												<p>@lang('basic.add_work_diary')</p>
-											</span></a>
-										</button>
-									@endif
-								@endif
-								@if( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasEmployeeTask) > 0 )
+								@if( Sentinel::inRole('administrator') )
+									<button class="" ><a href="{{ route('tasks.index') }}" title="{{ __('basic.tasks') }}">
+										<span>
+											<span class="img task"></span>
+											<p>@lang('calendar.tasks')</p>
+										</span></a>
+									</button>
+								@elseif(count(Sentinel::getUser()->employee->hasEmployeeTask) > 0 )
 									<button class="" ><a href="{{ route('task_list') }}" rel="modal:open" title="{{ __('basic.tasks') }}">
 										<span>
 											<span class="img task"></span>

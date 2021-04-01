@@ -126,7 +126,7 @@
 				{!! ($errors->has('reg_date') ? $errors->first('reg_date', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group">
-				<input type="checkbox" name="checkout" value="1" > Odjava
+				<input type="checkbox" name="checkout" value="1" id="checkout" {!! $temporaryEmployee->checkout == 1 ? 'checked' : '' !!} ><label for="checkout"> Odjava</label>
 			</div>
 			<div class="form-group {{ ($errors->has('comment'))  ? 'has-error' : '' }}" style="padding-top: 10px">
 				<label>@lang('basic.comment') </label>

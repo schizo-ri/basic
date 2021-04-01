@@ -49,7 +49,7 @@
 			<div class="form-group {{ ($errors->has('start_km'))  ? 'has-error' : '' }}">
 				<label>@lang('basic.start_km')</label>
 				<input class="form-control" name="start_km" type="text" id="start_km" required value="{{ $locco->start_km }}" />	
-				
+				<p id="start_km_error" class="red" ></p>
 				{!! ($errors->has('start_km') ? $errors->first('start_km', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="form-group {{ ($errors->has('end_km'))  ? 'has-error' : '' }}">
@@ -79,7 +79,7 @@
 					<input class="" type="checkbox" name="travel" value="travel" id="travel" {!! $locco->travel_id ? 'checked' : '' !!} />
 				</div>
 			@endif --}}
-			@method('PUT')
+			{{ method_field('PUT') }}
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" id="submit" value="{{ __('basic.save')}}">
 		</fieldset>

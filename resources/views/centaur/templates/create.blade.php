@@ -41,9 +41,9 @@
 				<div class="unlayer container">
 					<button  class="btn-submit" {{-- (click)="exportHtml()" --}}>@lang('basic.save')</button>
 					<email-editor></email-editor>
-					{{-- 	<input class="btn-submit" type="submit" value="{{ __('basic.save')}}"> --}}
-					<a class="btn-back" href="{{ url()->previous() .'/#templates' }}">
-						@lang('basic.back')
+					{{-- <input class="btn-submit" type="submit" value="{{ __('basic.save')}}"> --}}
+					<a class="btn-back" href="{{ $_SERVER['HTTP_REFERER'] }}">
+						Zatvori
 					</a>
 				</div>
 				<input name="module" value="basic" hidden/>

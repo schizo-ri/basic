@@ -97,7 +97,11 @@ class VacationController extends Controller
     public function show($id)
     {
         $vacation = Vacation::find($id);
-        $vacations = Vacation::whereDate('end_date', '>=', date('Y-m-d'))->get();
+        if( Sentinel::inRole('administrator')) {
+            $vacations = Vacation::get();
+        } else {
+            $vacations = Vacation::whereDate('end_date', '>=', date('Y-m-d'))->get();
+        }
         
         $checked_user = Sentinel::getUser();
         $checked_employee =  $checked_user->employee;

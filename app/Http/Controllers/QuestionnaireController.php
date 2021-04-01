@@ -83,7 +83,15 @@ class QuestionnaireController extends Controller
 		/* snima kategorije */
 		if(isset($request['name_category'])) {
 			foreach( $request['name_category'] as $key => $category ) {
-				foreach( $request['coefficient'] as $key2 => $coefficient) {
+				$data_category = array(
+					'name_category'  	=> $category,
+					'questionnaire_id'	=> $questionnaire->id,
+				);
+
+				$evaluationCategory = new EvaluationCategory();
+				$evaluationCategory->saveCategory($data_category);
+
+				/* foreach( $request['coefficient'] as $key2 => $coefficient) {
 					if( $key == $key2) {
 						$data_category = array(
 							'name_category'  	=> $category,
@@ -95,7 +103,7 @@ class QuestionnaireController extends Controller
 						$evaluationCategory = new EvaluationCategory();
 						$evaluationCategory->saveCategory($data_category);
 					}
-				}
+				} */
 				if(isset($request['name_question'])) {
 					/* snima pitanja */
 					foreach( $request['name_question']  as $key3 => $question ) {
@@ -240,16 +248,16 @@ class QuestionnaireController extends Controller
 		/* Ispravak kategorije */
 		if(isset($request['name_category'])) {
 			foreach( $request['name_category'] as $key1 => $category ) {  
-				foreach( $request['coefficient'] as $key2 => $coefficient) {
+				/* foreach( $request['coefficient'] as $key2 => $coefficient) { */
 					foreach( $request['category_id'] as $key3 => $category_id) {
-						if( $key1 == $key2 && $key1 == $key3) {
+						if( /* $key1 == $key2 &&  */$key1 == $key3) {
 							$data_category = array(
 								'name_category'  	=> $category,
 								'questionnaire_id'	=> $questionnaire->id
 							);
-							if($request['coefficient'] != '') {
+							/* if($request['coefficient'] != '') {
 								$data += [ 'coefficient' => str_replace(',', '.', $coefficient) ];
-							}
+							} */
 						
 							if( $category_id) {
 								$category_2 = EvaluationCategory::find($category_id);
@@ -318,7 +326,7 @@ class QuestionnaireController extends Controller
 							}
 						}
 					}
-				}
+				/* } */
 			}
 		}
 

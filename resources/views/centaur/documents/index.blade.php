@@ -67,6 +67,7 @@
 									<tr>
 										<th class="not-export-column no-sort">-</th>
 										<th>@lang('basic.title')</th>
+										<th>@lang('basic.status')</th>
 										<th>@lang('basic.type')</th>
 										<th>@lang('basic.date')</th>
 										@if (Sentinel::inRole('administrator'))
@@ -77,7 +78,7 @@
 								<tbody>
 									@foreach ($documents as $group)
 										<tr>
-											<td colspan="{!! Sentinel::inRole('administrator') ? 5 : 4 !!}">{{ $group->first()->category->name }}</td>
+											<td colspan="{!! Sentinel::inRole('administrator') ? 6 : 5 !!}">{{ $group->first()->category->name }}</td>
 										</tr>
 										@foreach ($group as $document)
 											<?php
@@ -92,6 +93,7 @@
 													@endif -->
 												</td><!--type -->
 												<td><a href="{{ asset($open) }}" target="_blank">{{ $document->title }}</a></td>
+												<td>{!! $document->active == 1 ? 'Aktivno' : 'Neaktivo' !!}</td>
 												<td>{{ __('doc_type.' . pathinfo($open, PATHINFO_EXTENSION) ) }}</td>
 												<td>{{ Carbon\Carbon::parse($document->created_at)->diffForHumans()  }}</td>
 												@if (Sentinel::inRole('administrator'))

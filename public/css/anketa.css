@@ -63,10 +63,6 @@ a>.fa-edit  {
 	text-align: left;
 }
 
-.fa-calendar-alt {
-
-}
-
 .block {
 	display:block;
 }
@@ -172,10 +168,6 @@ input[type="radio"]{
 
 .anketa {
 	padding:20px 30px;
-}
-
-.anketa form .ime {
-	/*border-bottom: 1px solid #ccc;*/
 }
 
 .anketa form .ime select{

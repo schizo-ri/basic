@@ -38,7 +38,7 @@ $( function () {
 				target.push(index);
 			}
 		});
-		
+
 		try {
 			jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 				"date-eu-pre": function ( date ) {
@@ -108,7 +108,7 @@ $( function () {
 				stateSave: true,
 				dom: 'Bfrtip',
 				buttons: [
-				/* 	'copyHtml5',
+					'copyHtml5',
 					{
 						extend: 'print',
 						exportOptions: {
@@ -147,7 +147,7 @@ $( function () {
 							head.appendChild(style);
 						
 						}
-					}, */
+					},
 					{
 						extend: 'pdfHtml5',
 						orientation: 'landscape',
@@ -270,7 +270,6 @@ $( function () {
 			});
 			$('a.toggle-vis').on( 'click', function (e) {
 				e.preventDefault();
-				
 				// Get the column API object
 				var column = table.column( $(this).attr('data-column') );
 				

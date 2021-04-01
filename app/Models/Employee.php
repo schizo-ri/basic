@@ -434,9 +434,10 @@ class Employee extends Model
 	 * Svi odjeli djelatnika prema Employee Department uključujući krovne odjele 
 	 * vraća ID
 	*/
-	public function employeesDepartment (/*  $employee */ ) 
+	public function employeesDepartment ( ) 
 	{
 		$employee_departments = $this->hasEmployeeDepartmen;
+
 		$departments = array();
 		foreach ($employee_departments as $employee_department) {
 			array_push($departments, $employee_department->department_id);
@@ -460,7 +461,7 @@ class Employee extends Model
 	 * Svi odjeli djelatnika prema Employee Department uključujući krovne odjele 
 	 * vraća NAME
 	*/
-	public function employeesDepartmentName (/*  $employee */ ) 
+	public function employeesDepartmentName () 
 		{
 			$employee_departments = $this->hasEmployeeDepartmen;
 			

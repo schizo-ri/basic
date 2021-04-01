@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    protected $fillable = ['employee_id','to_employee_id','car_id','type','task','start_date','end_date','interval_period','active','description','energy_consumptions'];
+    protected $fillable = ['employee_id','to_employee_id','car_id','type','task','start_date','end_date','time1','interval_period','active','description','energy_consumptions'];
 
 	/*
 	* The Eloquent employee model name

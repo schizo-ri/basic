@@ -36,6 +36,16 @@
 			<input name="end_date" type="date" id="end_date"  class="form-control" value="{!! isset($date) ? $date : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
 			{!! ($errors->has('end_date') ? $errors->first('end_date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
+		<div class="form-group datum float_l {{ ($errors->has('time1')) ? 'has-error' : '' }}">
+			<label>@lang('absence.time')</label>
+			<input name="time1" type="time" id="time1" class="form-control" value="07:00" required>
+			{!! ($errors->has('time1') ? $errors->first('time1', '<p class="text-danger">:message</p>') : '') !!}
+		</div>
+		{{-- <div class="form-group datum float_r {{ ($errors->has('end_time')) ? 'has-error' : '' }}">
+			<label>@lang('absence.end_time')</label>
+			<input name="end_time" type="time" id="end_time"  class="form-control" value="07:00" required>
+			{!! ($errors->has('end_time') ? $errors->first('v', '<p class="text-danger">:message</p>') : '') !!}
+		</div> --}}
 		<div class="form-group {{ ($errors->has('interval'))  ? 'has-error' : '' }} clear_l" id="period">
 			<label class="label_period">Period ponavljanja</label>
 			<select class=" period" name="interval_period" value="{{ old('interval_period') }}" required >

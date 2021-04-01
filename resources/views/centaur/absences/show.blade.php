@@ -88,7 +88,7 @@
 												<td>{{ $absence->employee->user['first_name'] . ' ' . $absence->employee->user['last_name'] }}</td>
 												<td>{{ '[' . $absence->absence['mark'] . '] ' . $absence->absence['name'] }}</td>
 												<td>{{ date('d.m.Y', strtotime($absence->start_date)) }}</td>
-												<td>{{  date('d.m.Y', strtotime($absence->end_date)) }}</td>
+												<td>{!! $absence->end_date ? date('d.m.Y', strtotime($absence->end_date))  : '' !!}</td>
 												<td>
 													@if( $absence->absence['mark'] != 'IZL' )
 														{{ $dani_go }} @lang('absence.days')

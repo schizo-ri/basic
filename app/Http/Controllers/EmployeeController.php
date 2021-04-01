@@ -410,8 +410,7 @@ class EmployeeController extends Controller
 
 		/* mail obavijest o novoj poruci */
 		$send_to = EmailingController::sendTo('employees', 'update');
-		Log::info( 'edit employee' );
-		Log::info( $send_to );
+		
 		if($request['send_email'] == 'DA') {
 			Log::info(" request['send_email'] = DA" );
 			$send_to = EmailingController::sendTo('employees', 'update');

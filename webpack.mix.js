@@ -30,7 +30,7 @@ mix.styles([
     'public/css/travel_show.css',
     'public/css/welcome.css',
     
-], 'public/css/all_css.css');
+], 'public/css/css.css');
 mix.scripts([
     'public/js/absence.js',
     'public/js/absence_create.js',
@@ -43,6 +43,7 @@ mix.scripts([
     'public/js/campaign_sequences_show.js',
     'public/js/chart.js',
     'public/js/collaps.js',
+    'public/js/competence.js',
     'public/js/datatables.js',
     'public/js/datatables_evidention.js',
     'public/js/department.js',
@@ -56,7 +57,8 @@ mix.scripts([
     'public/js/filter_dropdown.js',
     'public/js/filter_table.js',
     'public/js/go_value.js',
-    'public/js/load_calendar.js',
+    'public/js/locco.js',
+    'public/js/load_calendar2.js',
     'public/js/nav.js',
     'public/js/nav_active.js',
     'public/js/nav_button_color.js',
@@ -86,6 +88,6 @@ mix.scripts([
     'public/js/validate_user.js',
     'public/js/validate_user_edit.js',
     'public/js/work_records.js',
-], 'public/js/all_js.js');
+], 'public/js/js.js');
 
 /* mix.js('resources/assets/laravel-echo-setup.js', 'public/js'); */

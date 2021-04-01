@@ -27,7 +27,7 @@
 						<img class="img_button day_after" src="{{ URL::asset('icons/arrow_right.png') }}" alt="arrow"/>
 					</span>
 					<span class="month_year">
-						{{ $selected['month'] . ' ' .  $selected['god_select'] . ', ' . __('calendar.wk') . ' ' .  $selected['tj_select'] }}
+						{{ $selected['month'] .' ' .  $selected['god_select'] . ', ' . __('calendar.wk') . ' ' .  $selected['tj_select'] }}
 					</span>
 				</div>
 				<div class="col-4 float_left padd_0 event_container">
@@ -447,8 +447,4 @@
 	</main>
 </div>
 <script src="{{ URL::asset('node_modules/pg-calendar/dist/js/pignose.calendar.min.js') }}"></script>
-<script>
-	$.getScript( '/../js/load_calendar2.js');
-
-</script>
 @stop

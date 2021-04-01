@@ -49,7 +49,7 @@ class DiaryCommand extends Command
         $workDiaries = WorkDiary::whereDate('date',$date )->get()->groupBy('project_id');
         
         foreach ( $workDiaries as $project_id => $project_workDiaries) {
-            $send_to = array('jelena.juras@duplico.hr');
+            $send_to = array();
             $project = Project::find($project_id); 
             if($project->employee_id ) {
                 array_push( $send_to, $project->employee->email ); 

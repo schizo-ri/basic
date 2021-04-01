@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Document extends Model
 {
 
-	protected $fillable = ['employee_id','path','title','description','category_id'];
+	protected $fillable = ['employee_id','path','title','description','category_id','active'];
 	
 	/*
 	* The Eloquent user model name
