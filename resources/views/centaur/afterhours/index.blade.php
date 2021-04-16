@@ -8,7 +8,8 @@
 			<label>
 				<input type="search"  placeholder="{{ __('basic.search')}}" onkeyup="mySearchTable()" id="mySearchTbl">
 			</label>
-			<input class="btn-new btn-store" type="submit" value="Spremi isplaćene sati" id="stil1">
+			<span class="check_all store_buttom" data-value="1"><i class="fas fa-check-square"></i> Označi sve</span>
+			<input class="btn-new btn-store store_buttom" type="submit" value="Spremi isplaćene sati" id="stil1">
 			@if(Sentinel::getUser()->hasAccess(['afterhours.create']) || ($permission_dep && in_array('afterhours.view', $permission_dep)))
 				<a class="btn-new" href="{{ route('afterhours.create') }}" rel="modal:open">
 					<i class="fas fa-plus"></i>
@@ -104,9 +105,9 @@
 <script>
 	$(function(){
 		if( $('tbody tr').length == 0)  {
-			$('.btn-store').hide();
+			$('.store_buttom').hide();
 		} else {
-			$('.btn-store').show();
+			$('.store_buttom').show();
 		}
 		$('.btn-store').on('click', function(){
 			$('form#afterHourPaid').submit();

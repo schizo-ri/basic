@@ -756,6 +756,9 @@
         box-shadow: none;
         padding-bottom: 10px;
     }
+    .container >section:first-child {
+        order: 3;
+    }
     .container .noticeboard>div {
         background: #FFFFFF;
         box-shadow: 3px 0 14px rgba(0, 0, 0, 0.15), -3px 0 14px rgba(0, 0, 0, 0.15);

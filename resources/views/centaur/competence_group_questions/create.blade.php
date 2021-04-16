@@ -7,11 +7,13 @@
         <div class="form-group {{ ($errors->has('name'))  ? 'has-error' : '' }}">
             <label>@lang('basic.name')</label>
             <input name="name" type="text" class="form-control" value="{{ old('name') }}" maxlength="100" required>
+            <input name="nameUKR" type="text" class="form-control margin_t_10" value="{{ old('nameUKR') }}" maxlength="100" placeholder="Ukrajinski prijevod" >
             {!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
         </div>
         <div class="form-group clear_l {{ ($errors->has('description')) ? 'has-error' : '' }}">
 			<label>@lang('basic.description')</label>
 			<textarea name="description" class="form-control" type="text" maxlength="65535" >{{ old('description') }}</textarea>
+            <textarea name="descriptionUKR" class="form-control margin_t_10" type="text" maxlength="65535" placeholder="Ukrajinski prijevod" >{{ old('descriptionUKR') }}</textarea>
 			{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
         <div class="form-group {{ ($errors->has('coefficient'))  ? 'has-error' : '' }}">
@@ -26,9 +28,11 @@
                 <div class="overflow_hidd rating_group">
                     <div>
                         <input name="q_name[]" type="text" class="form-control" maxlength="191" placeholder="Pitanje" >
+                        <input name="q_nameUKR[]" type="text" class="form-control margin_t_10" maxlength="191" placeholder="Ukrajinski prijevod" >
                     </div>
                     <div>
                         <textarea name="q_description[]" class="form-control" type="text" maxlength="65535" placeholder="opis pitanja"></textarea>
+                        <textarea name="q_descriptionUKR[]" class="form-control margin_t_10" type="text" maxlength="65535" placeholder="Ukrajinski prijevod"></textarea>
                     </div>
                     <div>
                         <input name="q_rating[]" type="number" min="1" max="50" step="1" class="form-control" placeholder="Ocjena" value="5">

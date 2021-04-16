@@ -52,6 +52,5 @@
     $('#year').on('change',function(){
         $('#end_date').val( $( this ).val() + '-12-31' );
     });
-    $.getScript('/../js/okr_store.js');
-  
+    $.getScript('/../js/okr_store1.js');
 </script>

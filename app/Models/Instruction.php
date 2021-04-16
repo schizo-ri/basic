@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Instruction extends Model
 {
-    protected $fillable = ['department_id','title','description','active'];
+    protected $fillable = ['department_id','title','description','employee_id','active'];
     
     /*
 	* The Eloquent department model name
@@ -14,7 +14,18 @@ class Instruction extends Model
 	* @var string
 	*/
 	protected static $departmentModel = 'App\Models\Department'; 
+
+	/*
+	* Returns the Employee relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
 	
+	public function employee()
+	{
+		return $this->belongsTo(static::$employeeModel,'employee_id');
+	}
+
 	/*
 	* Returns the department relationship
 	* 
@@ -33,6 +44,14 @@ class Instruction extends Model
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
 	*/
+
+	/*
+	* The Eloquent employee model name
+	* 
+	* @var string
+	*/
+	
+	protected static $employeeModel = 'App\Models\Employee'; 
 	
 	public function comments()
 	{

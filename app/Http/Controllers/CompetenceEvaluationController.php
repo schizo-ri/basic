@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Competence;
+use App\Models\Employee;
 use App\Models\CompetenceEvaluation;
 use Sentinel;
 
@@ -27,23 +28,7 @@ class CompetenceEvaluationController extends Controller
      */
     public function index(Request $request)
     {
-        $competence = Competence::with('hasEvaluations')->find($request['id']);
-        $employees = collect();
-        $user = Sentinel::getUser();
-        $this_employee = $user->employee;
-
-        if($competence) {
-            if( count($competence->hasEvaluations) >0 ) {
-                foreach ($competence->hasEvaluations as $evaluation) {
-                    $employees->push( $evaluation->employee );
-                }
-            }
-
-            return view('Centaur::competence_evaluations.index', ['competence' => $competence,'employees' => $employees->unique(),'this_employee' => $this_employee ]);
-        } else {
-            session()->flash('error', 'Kompentencija nije nađena');
-            return redirect()->back();
-        }
+       //
     }
 
     /**
@@ -93,9 +78,41 @@ class CompetenceEvaluationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
+
+        $selected_employee = isset($request['employee_id']) ? Employee::where('id',$request['employee_id'] )->first() : null;
         
+        if( $selected_employee ) {
+            $competence = Competence::with(array('hasEvaluations' => function($query) use($selected_employee)
+            {
+                $query->where('competence_evaluations.employee_id', $selected_employee->id);
+            }))->find($id);
+        } else {
+            $competence = Competence::with('hasEvaluations')->with('hasGroups')->find($id);
+        }
+     
+        $all_employees = Employee::employees_getNameASC();
+        $employees = collect();
+        $user = Sentinel::getUser();
+        $this_employee = $user->employee;
+       
+        if($competence) {
+            if( count($competence->hasEvaluations) > 0 ) {
+                if( $selected_employee ) {
+                    $employees->push( $selected_employee );
+                } else {
+                    foreach ($competence->hasEvaluations as $evaluation) {
+                        $employees->push( $evaluation->employee );
+                    }
+                }
+            }  
+
+            return view('Centaur::competence_evaluations.show', ['competence' => $competence,'employees' => $employees->unique(),'this_employee' => $this_employee,'all_employees' => $all_employees, 'selected_employee' => $selected_employee ]);
+        } else {
+            session()->flash('error', 'Kompentencija nije nađena');
+            return redirect()->back();
+        }
     }
 
     /**

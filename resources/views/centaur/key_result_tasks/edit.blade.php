@@ -52,7 +52,7 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-    $.getScript('/../js/okr_store.js');
+    $.getScript('/../js/okr_store1.js');
     $('#year').on('change',function(){
         $('#end_date').val( $( this ).val() + '-12-31' );
     });

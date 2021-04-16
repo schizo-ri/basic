@@ -31,7 +31,7 @@ class CompetenceController extends Controller
      */
     public function index()
     {
-        if (Sentinel::inRole('administrator')) {
+        if (Sentinel::inRole('administrator') || Sentinel::inRole('moderator')) {
             $competences = Competence::get();
         } else {
             $user = Sentinel::getUser();
@@ -41,10 +41,10 @@ class CompetenceController extends Controller
             $competences = collect();
 
             if( $departments_id && ! empty( $departments_id) ) {
-                $competences = $competences->merge(Competence::join('competence_departments','competence_departments.competence_id','competences.id')->select('competences.*','competence_departments.department_id','competence_departments.work_id')->where('competences.status', 1)->whereIn('competence_departments.department_id', $departments_id)->get());
+                $competences = $competences->merge(Competence::join('competence_departments','competence_departments.competence_id','competences.id')->select('competences.*','competence_departments.department_id','competence_departments.work_id')->where('competences.status', 1)->whereIn('competence_departments.department_id', $departments_id)->where('status',1)->get());
             }
             if( $work_id ) {
-                $competences = $competences->merge(Competence::join('competence_departments','competence_departments.competence_id','competences.id')->select('competences.*','competence_departments.department_id','competence_departments.work_id')->where('competences.status', 1)->where('competence_departments.work_id',  $work_id )->get());
+                $competences = $competences->merge(Competence::join('competence_departments','competence_departments.competence_id','competences.id')->select('competences.*','competence_departments.department_id','competence_departments.work_id')->where('competences.status', 1)->where('competence_departments.work_id',  $work_id )->where('status',1)->get());
             }
             $competences = $competences->merge(Competence::where('employee_id', $employee->id)->get());
            
@@ -77,7 +77,9 @@ class CompetenceController extends Controller
     {
         $data = array(
 			'name'         => $request['name'],
+			'nameUKR'      => $request['nameUKR'],
 			'description'  => $request['description'],
+			'descriptionUKR'  => $request['descriptionUKR'],
 			'status'       => $request['status'],
 			'employee_id'  => $request['employee_id']
 		);
@@ -120,7 +122,8 @@ class CompetenceController extends Controller
                     $data_rating = array(
                         'competence_id' => $competence->id,
                         'rating'        => $rating,
-                        'description'   => $request['r_description'][ $rating_key ]
+                        'description'   => $request['r_description'][ $rating_key ],
+                        'descriptionUKR'=> $request['r_descriptionUKR'][ $rating_key ]
                     );
                     
                     $rating = new CompetenceRating();
@@ -203,7 +206,9 @@ class CompetenceController extends Controller
 
         $data = array(
 			'name'         => $request['name'],
+			'nameUKR'      => $request['nameUKR'],
 			'description'  => $request['description'],
+			'descriptionUKR'  => $request['descriptionUKR'],
 			'status'       => $request['status'],
 			'employee_id'  => $request['employee_id']
 		);
@@ -285,7 +290,8 @@ class CompetenceController extends Controller
                 $data_rating = array(
                     'competence_id' => $competence->id,
                     'rating'        => $rating,
-                    'description'   => $request['r_description'][ $id_key ]
+                    'description'   => $request['r_description'][ $id_key ],
+                    'descriptionUKR'   => $request['r_descriptionUKR'][ $id_key ]
                 );
                 
                 if( $rating && $comp_rating) {                    
@@ -299,7 +305,8 @@ class CompetenceController extends Controller
                     $data_rating = array(
                         'competence_id' => $competence->id,
                         'rating'        => $rating_new,
-                        'description'   => $request['r_description'][ $id_rating ]
+                        'description'   => $request['r_description'][ $id_rating ],
+                        'descriptionUKR'   => $request['r_descriptionUKR'][ $id_key ]
                     );
                     $comp_rating = new CompetenceRating();
                     $comp_rating->saveCompetenceRating($data_rating);

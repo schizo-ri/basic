@@ -7,10 +7,13 @@
             <label>OKR</label>
             <select class="form-control" name="okr_id" value="{{ old('okr_id') }}" required >
                 <option value="" selected disabled></option>
-                <option name="okr_id" value="{{ $key_result->okr->id }}" selected >{{  $key_result->okr->name }}</option>
-               {{--  @foreach ($okrs as $okr)
-                    <option name="okr_id" value="{{ $okr->id }}" {!! $key_result->okr_id == $okr->id ? 'selected' : '' !!}>{{  $okr->name }}</option>
-                @endforeach	 --}}
+                @if (Sentinel::inRole('uprava'))
+                    @foreach ($okrs as $okr)
+                        <option name="okr_id" value="{{ $okr->id }}" {!! $key_result->okr_id == $okr->id ? 'selected' : '' !!}>{{  $okr->name }}</option>
+                    @endforeach	
+                @else
+                    <option name="okr_id" value="{{ $key_result->okr->id }}" selected >{{  $key_result->okr->name }}</option>
+                @endif
             </select>
             {!! ($errors->has('okr_id') ? $errors->first('okr_id', '<p class="text-danger">:message</p>') : '') !!}
         </div>
@@ -51,7 +54,7 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-    $.getScript('/../js/okr_store.js');
+    $.getScript('/../js/okr_store1.js');
     $('#year').on('change',function(){
         $('#end_date').val( $( this ).val() + '-12-31' );
     });

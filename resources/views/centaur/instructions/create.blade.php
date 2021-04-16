@@ -15,8 +15,17 @@
 		</div>
 		<div class="form-group {{ ($errors->has('title')) ? 'has-error' : '' }}">
 			<label>@lang('basic.title')</label>
-			<input class="form-control" placeholder="{{ __('basic.title')}}" name="title" type="text" maxlength="191" value="{{ old('title') }}" required />
+			<input class="form-control" name="title" type="text" maxlength="191" value="{{ old('title') }}" required />
 			{!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
+		</div>
+		<div class="form-group">
+			<label>@lang('basic.responsible')</label>
+			<select class="form-control" name="employee_id" value="{{ old('employee_id')}}" id="select_level">
+				<option value="" selected>
+				@foreach($employees as $employee)
+					<option value="{{ $employee->id }}" >{{ $employee->first_name . ' ' . $employee->last_name }}</option>
+				@endforeach
+			</select>
 		</div>
 		<div class="form-group {{ ($errors->has('description')) ? 'has-error' : '' }}">
 			<label>@lang('basic.description')</label>

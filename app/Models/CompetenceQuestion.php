@@ -11,7 +11,7 @@ class CompetenceQuestion extends Model
      *
      * @var array
      */
-    protected $fillable = ['group_id','name','description','rating'];
+    protected $fillable = ['group_id','name','nameUKR','description','descriptionUKR','rating'];
 
      /*
 	* The Eloquent CompetenceGroupQuestion model name

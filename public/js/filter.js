@@ -18,4 +18,14 @@ $(function() {
 			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
 		});
 	});
+	$('.check_all').on('click',function(){
+		console.log('check_all');
+		if( $( this ).attr('data-value') == 1 ) {
+			$('input[type=checkbox]').prop('checked',true);
+			$( this ).attr('data-value',0);
+		} else {
+			$('input[type=checkbox]').prop('checked',false);
+			$( this ).attr('data-value',1);
+		}
+	});
 });

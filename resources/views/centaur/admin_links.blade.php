@@ -1,9 +1,11 @@
 <ul class="admin_pages">
-    @if (Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') || Sentinel::inRole('moderator'))
-        <li class="first_group">
-            <span class="image_users" ></span> 
-            <a href="" class="line_height_45 admin_link open_menu" id="hr_links" >LJUDSKI POTENCIJALI <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
-        </li>
+    @if (Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') || Sentinel::inRole('moderator')|| Sentinel::inRole('racunovodstvo'))
+        @if(Sentinel::getUser()->hasAccess(["users.view"]) || Sentinel::getUser()->hasAccess(["employees.view"])  )
+            <li class="first_group">
+                <span class="image_users" ></span> 
+                <a href="" class="line_height_45 admin_link open_menu" id="hr_links" >LJUDSKI POTENCIJALI <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
+            </li>
+        @endif
             @if(Sentinel::getUser()->hasAccess(["users.view"]))
                 <li class="first_group hr_links ">
                     <span class="space" ></span> 
@@ -51,13 +53,17 @@
                 </li>
             @endif
         @if(in_array('Evidencija', $moduli) ||  in_array('Prekovremeni', $moduli) || in_array('Dnevnik', $moduli) || in_array('Privremeni', $moduli))
-            <li class="first_group">
-                <span class="space" ></span> 
-                <a href="" class="line_height_45 admin_link open_menu" id="abs_links" >EVIDENCIJA<span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
-            </li>
-                <li class="first_group abs_links"><span class="space" ></span>
-                    <a href="{{ route('vacations.index') }}" class="line_height_45 admin_link {{ Request::is('vacations*') ? 'active_admin' : '' }}" id="vacations">@lang('absence.vacations')</a>
+            @if(Sentinel::getUser()->hasAccess(["vacations.create"]) || Sentinel::getUser()->hasAccess(["afterhours.view"]) )
+                <li class="first_group">
+                    <span class="space" ></span> 
+                    <a href="" class="line_height_45 admin_link open_menu" id="abs_links" >EVIDENCIJA<span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
                 </li>
+            @endif     
+                @if(Sentinel::getUser()->hasAccess(["vacations.create"]) )
+                    <li class="first_group abs_links"><span class="space" ></span>
+                        <a href="{{ route('vacations.index') }}" class="line_height_45 admin_link {{ Request::is('vacations*') ? 'active_admin' : '' }}" id="vacations">@lang('absence.vacations')</a>
+                    </li>
+                @endif
                 @if(in_array('Evidencija', $moduli) && Sentinel::getUser()->hasAccess(["work_records.view"]))
                     <li class="first_group abs_links"><span class="space" ></span>
                         <a href="{{ route('work_records.index') }}" class="line_height_45 admin_link {{ Request::is('work_records*') ? 'active_admin' : '' }}" id="work_records">@lang('basic.work_records')</a>
@@ -79,7 +85,7 @@
                     </li>
                 @endif
         @endif
-        @if(in_array('Projekti', $moduli))
+        @if(in_array('Projekti', $moduli) && Sentinel::getUser()->hasAccess(["projects.view"]))
             <li class="first_group">
                 <span class="space" ></span> 
                 <a href="" class="line_height_45 admin_link open_menu" id="project_links" >@lang('basic.projects') <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
@@ -95,10 +101,12 @@
                     </li>
                 @endif
         @endif
-        <li class="first_group">
-            <span class="space" ></span> 
-            <a href="" class="line_height_45 admin_link open_menu" id="car_links" >LOCCO VOŽNJE <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
-        </li>  
+        @if(Sentinel::getUser()->hasAccess(["cars.view"]) || Sentinel::getUser()->hasAccess(["loccos.view"]))
+            <li class="first_group">
+                <span class="space" ></span> 
+                <a href="" class="line_height_45 admin_link open_menu" id="car_links" >LOCCO VOŽNJE <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
+            </li>  
+        @endif
             @if(in_array('Locco vožnja', $moduli))
                 @if(Sentinel::getUser()->hasAccess(["cars.view"]))
                     <li class="first_group car_links">
@@ -131,10 +139,12 @@
                     </li>
                 @endif
             @endif
-        <li class="first_group">
-            <span class="space" ></span> 
-            <a href="" class="line_height_45 admin_link open_menu" id="basic_links" >OPĆI PODACI  <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
-        </li>
+        @if (Sentinel::inRole('administrator'))
+            <li class="first_group">
+                <span class="space" ></span> 
+                <a href="" class="line_height_45 admin_link open_menu" id="basic_links" >OPĆI PODACI  <span class="arrow_down"><i class="fas fa-chevron-down"></i></span></a>
+            </li>
+        @endif
             @if(Sentinel::getUser()->hasAccess(["roles.view"]))
                 <li class="first_group basic_links"><span class="space" ></span> 
                     <a href="{{ route('roles.index') }}" class="line_height_45 admin_link {{ Request::is('roles*') ? 'active_admin' : '' }}" id="roles"> @lang('basic.roles')</a>
@@ -155,7 +165,7 @@
                     <a href="{{ route('works.index') }}"  class="line_height_45 admin_link {{ Request::is('works*') ? 'active_admin' : '' }}" id="works">@lang('basic.works')</a>
                 </li>
             @endif
-            @if(Sentinel::getUser()->hasAccess(["instructions.view"]))
+            @if(Sentinel::getUser()->hasAccess(["instructions.create"]))
                 <li class="first_group basic_links"><span class="space" ></span>
                     <a href="{{ route('instructions.index') }}" class="line_height_45 admin_link {{ Request::is('instructions*') ? 'active_admin' : '' }}" id="works">@lang('basic.instructions')</a>
                 </li>
@@ -180,9 +190,11 @@
                     <a href="{{ route('ad_categories.index') }}"  class="line_height_45 admin_link {{ Request::is('ad_categories*') ? 'active_admin' : '' }}" id="ad_categories">@lang('basic.ad_categories')</a>
                 </li>
             @endif
-            <li class="first_group basic_links"><span class="space" ></span>
-                <a href="{{ route('document_categories.index') }}"  class="line_height_45 admin_link {{ Request::is('document_categories*') ? 'active_admin' : '' }}" id="document_categories">@lang('basic.document_categories')</a>
-            </li>
+            @if(Sentinel::getUser()->hasAccess(["document_categories.view"]))
+                <li class="first_group basic_links"><span class="space" ></span>
+                    <a href="{{ route('document_categories.index') }}"  class="line_height_45 admin_link {{ Request::is('document_categories*') ? 'active_admin' : '' }}" id="document_categories">@lang('basic.document_categories')</a>
+                </li>
+            @endif
             @if(Sentinel::getUser()->hasAccess(["terminations.view"]))
                 <li class="first_group basic_links"><span class="space" ></span>
                     <a href="{{ route('terminations.index') }}"  class="line_height_45 admin_link {{ Request::is('terminations*') ? 'active_admin' : '' }}" id="terminations">@lang('basic.termination_types')</a>

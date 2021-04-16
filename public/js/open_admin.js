@@ -25,7 +25,7 @@ function selectSearch () {
     });
 }
 function matchCustom(params, data) {
-  /*   console.log(params);
+    /*   console.log(params);
     console.log(params.term);
     
     console.log(data);
@@ -79,9 +79,10 @@ function matchCustom(params, data) {
 $(function(){
     if($('.index_admin').length > 0 ) {
         var class_open;
-    
+
         if(body_width > 992) {
             class_open = $('.admin_link.active_admin').parent().attr('class');
+
             if(class_open != undefined && class_open != '') {
                 class_open = "."+class_open.replace(" ",".");
                 $(class_open).show();
@@ -127,6 +128,7 @@ var url;
 
 if($('.index_admin').length > 0 ) { 
     $('.admin_pages li>a').not('.open_menu').on('click',function(e) {
+
         $('#login-modal').remove();
         e.preventDefault();
         click_element = $(this);

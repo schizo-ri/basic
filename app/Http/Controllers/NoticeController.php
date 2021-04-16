@@ -45,11 +45,7 @@ class NoticeController extends Controller
         $departments = Department::get();
 
         $empl = Sentinel::getUser()->employee;
-        $permission_dep = array();
-        
-		if($empl) {
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
-		}
+      
         
         return view('Centaur::notices.index', ['notices' => $notices,'departments' => $departments, 'permission_dep' => $permission_dep]);
     }
@@ -340,7 +336,6 @@ class NoticeController extends Controller
                 'text_json'  		=> $request['text_json']
             );
            
-
             $notice1->updateNotice($data1);
             
             $now = date('Y-m-d H:i');
@@ -398,19 +393,21 @@ class NoticeController extends Controller
                 // if everything is ok, try to upload file
                 } else {
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-                        if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                            try {   
-                                Log::info($all_dep_employee);
-                                foreach (array_unique($all_dep_employee) as $mail) {
-                                    Mail::to($mail)->send(new NoticeMail($notice1));
-                                }              
-                            } catch (\Throwable $th) {
-                                $email = 'jelena.juras@duplico.hr';
-                                $url = $_SERVER['REQUEST_URI'];
-                                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
-                                
-                                $message = session()->flash('success',  __('emailing.not_send'));
-                                return redirect()->back()->withFlashMessage($message);
+                        if( $request['schedule_set'] != 2 ) {
+                            if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
+                                try {   
+                                    Log::info($all_dep_employee);
+                                    foreach (array_unique($all_dep_employee) as $mail) {
+                                        Mail::to($mail)->send(new NoticeMail($notice1));
+                                    }              
+                                } catch (\Throwable $th) {
+                                    $email = 'jelena.juras@duplico.hr';
+                                    $url = $_SERVER['REQUEST_URI'];
+                                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+                                    
+                                    $message = session()->flash('success',  __('emailing.not_send'));
+                                    return redirect()->back()->withFlashMessage($message);
+                                }
                             }
                         }
                     
@@ -422,20 +419,21 @@ class NoticeController extends Controller
                 }
             }
             /* ************************* SEND MAIL *********************************** */
-     
-            if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
-                try {    
-                    Log::info($all_dep_employee);
-                    foreach (array_unique($all_dep_employee) as $mail) {
-                        Mail::to($mail)->send(new NoticeMail($notice1));
-                    }   
-                } catch (\Throwable $th) {
-                    $email = 'jelena.juras@duplico.hr';
-                    $url = $_SERVER['REQUEST_URI'];
-                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
-
-                    $message = session()->flash('success',  __('emailing.not_send'));
-                    return redirect()->back()->withFlashMessage($message);
+            if( $request['schedule_set'] != 2 ) {
+                if($request['schedule_set'] == 0 || strtotime($now) >= strtotime($notice1->schedule_date) ) {
+                    try {    
+                        Log::info($all_dep_employee);
+                        foreach (array_unique($all_dep_employee) as $mail) {
+                            Mail::to($mail)->send(new NoticeMail($notice1));
+                        }   
+                    } catch (\Throwable $th) {
+                        $email = 'jelena.juras@duplico.hr';
+                        $url = $_SERVER['REQUEST_URI'];
+                        Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+    
+                        $message = session()->flash('success',  __('emailing.not_send'));
+                        return redirect()->back()->withFlashMessage($message);
+                    }
                 }
             }
  
@@ -478,7 +476,7 @@ class NoticeController extends Controller
         
         $departments = Department::get();
         $user_department = array();
-        $permission_dep = array();
+       
         
         if(isset($request['sort'])) { 
             $sort = $request['sort'];
@@ -492,11 +490,13 @@ class NoticeController extends Controller
             $year = date('Y');
         }
 
-        if(Sentinel::inRole('administrator')) {
+        $notices = Notice::whereYear('created_at', $year)->orderBy('created_at', $sort)->get();
+        
+        /* if(Sentinel::inRole('administrator')) {
             $notices = Notice::whereYear('created_at', $year)->orderBy('created_at', $sort)->get();        
         } else {
             $notices = NoticeController::getNotice($sort, $year);
-        }
+        } */
 
         $empl = Sentinel::getUser()->employee;
         
@@ -507,8 +507,6 @@ class NoticeController extends Controller
             foreach ( $empl->hasEmployeeDepartmen->where('employee_id',$empl->id) as $empl_department) {
                 array_push($user_department, $empl_department->department_id);
             }
-
-			$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 		}
  
         $years = array();
@@ -520,7 +518,7 @@ class NoticeController extends Controller
 
         rsort($years);
       
-        return view('Centaur::noticeboard', ['notices' => $notices,'user' => $empl,'sort' => $sort,'departments' => $departments, 'permission_dep' => $permission_dep, 'user_department' => $user_department, 'today' => $today, 'time' => $time, 'years' => $years]);
+        return view('Centaur::noticeboard', ['notices' => $notices,'user' => $empl,'sort' => $sort,'departments' => $departments, 'user_department' => $user_department, 'today' => $today, 'time' => $time, 'years' => $years]);
     }
 
     public function schedule ()

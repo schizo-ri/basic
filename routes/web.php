@@ -267,6 +267,11 @@ Route::resource('employee_terminations', 'EmployeeTerminationController');
 Route::resource('projects', 'ProjectController');
 Route::post('importProject', 'ProjectController@importProject')->name('importProject'); 
 
+
+// ProjectWorkTask
+Route::resource('project_work_tasks', 'ProjectWorkTaskController');
+Route::get('getProjectTasks', ['as' => 'getProjectTasks', 'uses' => 'ProjectWorkTaskController@getProjectTasks']);
+
 // Customer
 Route::resource('customers', 'CustomerController');
 
@@ -402,6 +407,7 @@ Route::resource('annual_goals', 'AnnualGoalController');
 // OKR
 Route::resource('okrs', 'OkrController');
 Route::get('progressOkr', ['as' => 'progressOkr', 'uses' => 'OkrController@progressOkr']);
+Route::get('exportOkr', 'OkrController@exportOkr')->name('exportOkr'); 
 
 // KeyResult
 Route::resource('key_results', 'KeyResultController');
@@ -437,3 +443,5 @@ Route::resource('competence_ratings', 'CompetenceRatingController');
 Route::resource('competence_evaluations', 'CompetenceEvaluationController');
 Route::post('updateEvaluation', ['as' => 'updateEvaluation', 'uses' => 'CompetenceEvaluationController@updateEvaluation']);
  
+// ImprovementRecommendation
+Route::resource('improvement_recommendations', 'ImprovementRecommendationController');

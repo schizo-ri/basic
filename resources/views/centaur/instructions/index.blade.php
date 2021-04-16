@@ -22,6 +22,7 @@
 					<thead>
 						<tr>
 							<th>@lang('basic.title')</th>
+							<th>@lang('basic.responsible')</th>
 							<th>Status</th>
 							<th>@lang('basic.to_department')</th>
 							<th class="not-export-column">@lang('basic.options')</th>
@@ -31,6 +32,7 @@
 						@foreach ($instructions as $instruction)
 							<tr class="tr_open_link" data-href="/instructions/{{ $instruction->id }}" data-modal >
 								<td>{{ $instruction->title }}</td>
+								<td>{{ $instruction->employee->user->first_name .' '. $instruction->employee->user->last_name }}</td>
 								<td>{{ $instruction->department->name }}</td>
 								<td>{!! $instruction->active == 1 ? __('basic.active') : __('basic.inactive') !!}</td>
 								<td class="not_link">

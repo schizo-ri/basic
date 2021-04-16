@@ -232,7 +232,7 @@ class TaskController extends Controller
 
         $employees_id = implode(",",$request['to_employee_id']);
         $data = array(
-			'employee_id'  	    => $employee->id,
+			'employee_id'  	    => $request['employee_id'],
 			'to_employee_id'    => $employees_id,
 			'car_id'  		    => $request['car_id'],
             'task'  		    => $request['task'],
@@ -263,9 +263,7 @@ class TaskController extends Controller
     
                         if( $task->energy_consumptions == 1 ) {
                             $user = Sentinel::findById( $employeeTask->employee->user_id );
-    
-                            Log($user->inRole('energenti'));
-                            Log($user->inRole('administrator'));
+
                             $role = Sentinel::findRoleBySlug('energenti');
                             if( ! $user->inRole('energenti') ) {
                                 $role->users()->attach($user);
@@ -293,35 +291,36 @@ class TaskController extends Controller
           /*   } */
         } else {
             foreach ($request['to_employee_id'] as $employee_id) {
+                $employeeTask = EmployeeTask::where('employee_id', $employee_id)->where('task_id', $task->id )->whereDate('created_at',date('Y-m-d'))->first();
+
                 $employee = Employee::where('id', $employee_id )->first();
 
                 if( $task->energy_consumptions == 1 ) {
                     $user = Sentinel::findById( $employee->user_id );
 
-                    Log($user->inRole('energenti'));
-                    Log($user->inRole('administrator'));
                     $role = Sentinel::findRoleBySlug('energenti');
                     if( ! $user->inRole('energenti') ) {
                         $role->users()->attach($user);
                     }
                 }
-
-               /*  $email = $employee->email;
-                if( $email != null && $email != '' ) {
-                    try {
-                        Mail::to( $email)->send(new TaskInfoMail($employeeTask));
-                    } catch (\Throwable $th) {
-                        $email = 'jelena.juras@duplico.hr';
-                        $url = $_SERVER['REQUEST_URI'];
-                        Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
-                        
-                        session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+                if($request['send_email'] == 'DA') {
+                    $email = $employee->email;
+                    if( $email != null && $email != '' ) {
+                        try {
+                            Mail::to( $email)->send(new TaskInfoMail($employeeTask));
+                        } catch (\Throwable $th) {
+                            $email = 'jelena.juras@duplico.hr';
+                            $url = $_SERVER['REQUEST_URI'];
+                            Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+                            
+                            session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Nešto je pošlo krivo!');
+                            return redirect()->back();
+                        }
+                    } else {
+                        session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
                         return redirect()->back();
                     }
-                } else {
-                    session()->flash('error', 'Uspješno je ispravljen zadatak, ali mail nije poslan. Provjeri mail adresu djelatnika');
-                    return redirect()->back();
-                } */
+                }
              }           
         } 
 

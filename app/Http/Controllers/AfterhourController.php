@@ -47,7 +47,7 @@ class AfterhourController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index( Request $request)
+    public function index( Request $request )
     {
         if( isset($request['date'])) {
             $date = explode('-', $request['date']);
@@ -69,7 +69,7 @@ class AfterhourController extends Controller
         
         $employees = Employee::employees_lastNameASC();
 
-        if(  $employee_id != 'null' && $employee_id != null && $employee_id != 'all' ) {
+        if( $employee_id != 'null' && $employee_id != null && $employee_id != 'all' ) {
             $afterhours = $afterhours->where('employee_id', $employee_id);
         }
         
@@ -201,26 +201,28 @@ class AfterhourController extends Controller
                 $send_to = EmailingController::sendTo('afterhours', 'create');
             }
 
-            Log::info("Prekovremeni poslan na mail: ".implode(', ',array_unique($send_to)));
-            foreach(array_unique($send_to) as $send_to_mail) {
-                if( $send_to_mail != null & $send_to_mail != '' ) {
-                    Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterHour)); 
+            // za djelatnike IT mail ide voditelju - Kranjec
+            $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
+
+            if ( $afterHour->employee->work->department == 'IT odjel' &&  $superior ) {
+                Log::info("Prekovremeni za IT poslan na mail: ". $superior->email );
+                Mail::to( $superior->email )->send(new AfterHourCreateMail($afterHour)); 
+            } else {
+                Log::info("Prekovremeni poslan na mail: ".implode(', ',array_unique($send_to)));
+                foreach(array_unique($send_to) as $send_to_mail) {
+                    if( $send_to_mail != null & $send_to_mail != '' ) {
+                        Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterHour)); 
+                    }
                 }
-            }
-            // za djelatnike Inženjeringa mail ide voditelju - Željko Rendulić
+            } 
+
+            // za djelatnike Inženjeringa INFO mail ide voditelju - Željko Rendulić
             if( $afterHour->employee->work->department == 'Inženjering') {
                 $voditelj =  $afterHour->employee->work ? $afterHour->employee->work->employee : null;
                 if( $voditelj ) {
                     Log::info( 'Prekovremeni - info mail ide na  ' . $voditelj->user->first_name . ' '. $voditelj->user->last_name );
                     Mail::to( $voditelj->email )->send(new AfterHourInfoMail($afterHour)); 
                 }
-            }
-            // za djelatnike IT mail ide voditelju - Novosel
-            if ($afterHour->employee->work->department == 'IT odjel') {
-                $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
-                if( $superior ) {
-                    Mail::to( $superior->email)->send(new AfterHourInfoMail($afterHour)); 
-                } 
             }
         } else {
             session()->flash('error',  __('ctrl.request_exist'));
@@ -417,6 +419,11 @@ class AfterhourController extends Controller
 
     public function storeConf(Request $request)
     {
+
+        Log::info('**************** Afterhour odobrenje storeConf*************');
+        Log::info('poslan request:');
+        Log::info($request);
+       
         $approve_employee = Sentinel::getUser()->employee;
         $message_erp = '';
         $afterHour = Afterhour::find($request['id']);
@@ -433,7 +440,8 @@ class AfterhourController extends Controller
             );
             
             $afterHour->updateAfterhour($data);
-
+            Log::info('zapisano u bazu:');
+            Log::info($afterHour);
             if( $this->api_erp ) {
                 // slanje zahtjeva u Odoo
                 if( $afterHour->approve == 1) {
@@ -475,12 +483,16 @@ class AfterhourController extends Controller
         } else {
             $message = session()->flash('error', __('ctrl.request_deleted'));
         }
-
+        Log::info('**************** KRAJ Afterhour odobrenje storeConf*************');
         return redirect()->route('dashboard')->withFlashMessage($message);
     }
 
     public function storeConfMulti(Request $request)
     {
+        Log::info('**************** Afterhour odobrenje storeConfMulti *************');
+        Log::info('poslan request:');
+        Log::info($request);
+
         $approve_employee = Sentinel::getUser()->employee;
         if( is_array($request['id']) ) {
             if( ! isset($request['approve']) ) {
@@ -504,7 +516,8 @@ class AfterhourController extends Controller
                         );
                     
                         $afterHour->updateAfterhour($data);
-                        
+                        Log::info('zapisano u bazu:');
+                        Log::info($afterHour);
                         if( $afterHour->approve == 1) {
                             if ( $this->api_erp) {
                                 try {
@@ -559,6 +572,9 @@ class AfterhourController extends Controller
                         );
                                 
                         $absence->updateAbsence($data);
+                        Log::info('zapisano u bazu:');
+                        Log::info($absence);
+                        
                         if( $absence->approve == 1) {
                             if( $this->api_erp) {
                                 try {
@@ -620,6 +636,8 @@ class AfterhourController extends Controller
                     }
 				}
             }
+            Log::info('**************** KRAJ Afterhour odobrenje storeConfMulti *************');
+            
             $message = 'Uspješno je obrađeno ' . $count . ' zahtjeva!';
             return $message;
             /*  return redirect()->back()->withFlashMessage($message); */
@@ -706,10 +724,9 @@ class AfterhourController extends Controller
     
     public function paidHours (Request $request) 
 	{
-       
         foreach ($request['id'] as $key => $id) {
             $afterHour = Afterhour::find($id);
-			if( isset($request['paid'][$key] )) {
+			if( isset($request['paid'][ $key] )) {
 				$paid = $request['paid'][$key];
 			} else {
 				$paid = 0;

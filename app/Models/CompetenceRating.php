@@ -11,7 +11,7 @@ class CompetenceRating extends Model
      *
      * @var array
      */
-    protected $fillable = ['competence_id','description','rating'];
+    protected $fillable = ['competence_id','description','descriptionUKR','rating'];
 
     /*
 	* The Eloquent Competence model name

@@ -88,6 +88,6 @@
 			}
 		}
 
-		$.getScript('/../js/absence_create.js');
+		$.getScript('/../js/absence_create_new.js');
 	});
 </script>

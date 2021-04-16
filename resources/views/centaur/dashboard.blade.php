@@ -64,22 +64,20 @@
 							<div>
 								<div class="profile_images">
 									@if(in_array('OKR', $moduli))
-										@if (Sentinel::inRole('administrator'))
-											<span class="shortcut_box hasShortcut" >
-												<a class="" href="{{ route('okrs.index') }}"  title="{{ __('basic.okrs')}}">
-													OKR
-												</a>
-											</span>
-										@endif
+										<span class="shortcut_box hasShortcut" >
+											<a class="" href="{{ route('okrs.index') }}"  title="{{ __('basic.okrs')}}">
+												OKR
+											</a>
+										</span>
 									@endif
 									@if(in_array('Kompetencije', $moduli))
-										@if (Sentinel::inRole('administrator'))
+										{{-- @if (Sentinel::inRole('administrator')) --}}
 											<span class="shortcut_box hasShortcut" >
 												<a class="" href="{{ route('competences.index') }}"  title="{{ __('basic.okrs')}}">
 													@lang('basic.competences')
 												</a>
 											</span>
-										@endif
+									{{-- 	@endif --}}
 									@endif
 									@if (isset($employee) && count($shortcuts) > 0 )										
 										@foreach ($shortcuts as $key => $shortcut)

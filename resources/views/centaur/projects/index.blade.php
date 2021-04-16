@@ -49,12 +49,24 @@
 									{!! $project->customer_oib && $customers->where('oib',filter_var($project->customer_oib , FILTER_SANITIZE_NUMBER_INT))->first() ? $customers->where('oib',filter_var($project->customer_oib , FILTER_SANITIZE_NUMBER_INT))->first()->name : '' !!}
 								</td>
 								<td>{{ filter_var($project->customer_oib, FILTER_SANITIZE_NUMBER_INT) }}</td>
-								<td class="center">
-									<!-- <button class="collapsible option_dots float_r"></button> -->
+								<td class="center">								
 									@if(Sentinel::getUser()->hasAccess(['projects.update']) || in_array('projects.update', $permission_dep))
 										<a href="{{ route('projects.edit', $project->id) }}" class="btn-edit"  title="{{ __('basic.edit')}}" rel="modal:open">
 												<i class="far fa-edit"></i>
 										</a>
+									@endif
+									@if ( count($project->hasProjectWorkTask) > 0)
+										@if(Sentinel::getUser()->hasAccess(['project_work_tasks.create']) || in_array('project_work_tasks.create', $permission_dep))
+											<a href="{{ route('project_work_tasks.edit', ['project_id' => $project->id ]) }}" class="btn-edit"  rel="modal:open" title="Kategorije elektroradova na projektu">
+												<i class="fas fa-tasks"></i>
+											</a>
+										@endif
+									@else
+										@if(Sentinel::getUser()->hasAccess(['project_work_tasks.create']) || in_array('project_work_tasks.create', $permission_dep))
+											<a href="{{ route('project_work_tasks.create', ['project_id' => $project->id ]) }}" class="btn-edit"  rel="modal:open" title="Kategorije elektroradova na projektu">
+												<i class="fas fa-tasks"></i>
+											</a>
+										@endif
 									@endif
 									@if( count($project->locco) == 0 && count($project->afterhour) == 0 && (Sentinel::getUser()->hasAccess(['projects.delete']) || in_array('projects.delete', $permission_dep)) )
 										<a href="{{ route('projects.destroy', $project->id) }}" class="action_confirm btn-delete danger" data-method="delete" title="{{ __('basic.delete')}}" data-token="{{ csrf_token() }}">

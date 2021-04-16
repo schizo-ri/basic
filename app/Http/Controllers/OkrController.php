@@ -14,6 +14,8 @@ use App\Mail\OkrMail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ErrorMail;
 use Sentinel;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\OkrExport;
 use Log;
 
 class OkrController extends Controller
@@ -43,7 +45,6 @@ class OkrController extends Controller
         $employee_key_result_tasks = null;
         $annualGoals = AnnualGoal::where('year', date('Y'))->get();
         $employees = Okr::allEmployeeOnOKRs();
-      /*   $employees = null; */
 
         if( isset($request['status'] ) ) {
             if( $request['status'] == 'finished' ) {
@@ -65,6 +66,17 @@ class OkrController extends Controller
             $keyResultTasks = KeyResultTask::get();
         }
         
+        if( isset($request['tim'] ) ) {
+            if( $request['tim'] == 'tim' ) {
+                $okrs = $okrs->where('status', 1);
+            }
+            if( $request['tim'] == 'duplico' ) {
+                $okrs = $okrs->where('status', 0);
+            }
+        }
+        if( $okrs ) {
+            
+        }
         $unique_dates =  $okrs->pluck('start_date')->unique()->toArray();
         
         $quarters = array();
@@ -154,7 +166,7 @@ class OkrController extends Controller
             } else { 
                 $send_to = $okr->employee->email;
             }
-            
+            Log::info( $send_to);
             if( $send_to &&  $send_to != '' &&  $send_to != null ) {
                 try {   
                     Mail::to($send_to)->send(new OkrMail($okr));
@@ -171,9 +183,10 @@ class OkrController extends Controller
             }
         }       
 
-        session()->flash('success',  __('ctrl.data_save'));
+        return 'okr_' . $okr->id;
+        /* session()->flash('success',  __('ctrl.data_save'));
 		
-        return redirect()->back();
+        return redirect()->back(); */
     }
 
     /**
@@ -311,7 +324,6 @@ class OkrController extends Controller
                             $data = array(
                                 'progress'  	=> $request['progress'],
                             );
-                                
                             $keyResultTask->updateKeyResultTask($data);
                         }
                     }
@@ -319,37 +331,93 @@ class OkrController extends Controller
             }
         }
 
-        if ( $okr->status == 0 ) {
-            if(Sentinel::getUser()->employee->id != $okr->employee_id ) {
-                if( $this->test_mail ) {
-                    $send_to = array('jelena.juras@duplico.hr');
-                } else { 
-                    if($okr->employee) {
-                        $send_to = array( $okr->employee->email );
-                    } else {
-                        $send_to = array();
-                    }
-                   
+        if(Sentinel::getUser()->employee->id != $okr->employee_id ) {
+            if( $this->test_mail ) {
+                $send_to = array('jelena.juras@duplico.hr');
+            } else { 
+                if($okr->employee) {
+                    $send_to = array( $okr->employee->email );
+                } else {
+                    $send_to = array();
                 }
-                Log::info($send_to);
-                if( !empty($send_to)) {
-                    try {   
-                        foreach (array_unique($send_to) as $mail) {
-                            if( $mail != '' && $mail != null) {
-                                Mail::to($mail)->send(new OkrProgressMail($okr));
-                            }
-                        }   
-                    } catch (\Throwable $th) {
-                        $email = 'jelena.juras@duplico.hr';
-                        $url = $_SERVER['REQUEST_URI'];
-                        Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
-            
-                        $message = session()->flash('success',  __('emailing.not_send'));
-                        return redirect()->back()->withFlashMessage($message);
-                    }
+                
+            }
+            Log::info($send_to);
+            if( !empty($send_to)) {
+                try {   
+                    foreach (array_unique($send_to) as $mail) {
+                        if( $mail != '' && $mail != null) {
+                            Mail::to($mail)->send(new OkrProgressMail($okr));
+                        }
+                    }   
+                } catch (\Throwable $th) {
+                    $email = 'jelena.juras@duplico.hr';
+                    $url = $_SERVER['REQUEST_URI'];
+                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+        
+                    $message = session()->flash('success',  __('emailing.not_send'));
+                    return redirect()->back()->withFlashMessage($message);
                 }
             }
         }
         return "Uspješno spremljeno";
+    }
+
+    public function exportOkr( Request $request)
+    {
+        if( $request['employee_id'] == '*') {
+            $okrs = Okr::with('hasKeyResults')->get();
+        } else {
+            $employee = Employee::with('hasOkrs')->with('hasKeyResult')->with('hasKeyResultTask')->find($request['employee_id']);
+            $okrs = $employee->hasOkrs;
+            $keyResults = $employee->hasKeyResult;
+            $keyResultTasks = $employee->hasKeyResultTask;
+        }
+        
+        $okrs_arr = array();
+        $okr_arr = array();
+        foreach ($okrs as $okr) {
+            array_push($okr_arr, 'OKR');
+            array_push($okr_arr, $okr->name);
+            array_push($okr_arr, $okr->comment ? $okr->comment : '');
+            array_push($okr_arr, ('Q'.ceil(date("n", strtotime(date($okr->start_date))) / 3) .' - '. date("Y", strtotime(date($okr->start_date)))));
+            array_push($okr_arr, $okr->employee ? $okr->employee->user->first_name . ' ' . $okr->employee->user->last_name : '');
+            array_push($okr_arr, $okr->status == 0 ? 'Duplico OKR' : 'Timski OKR' );
+
+            array_push($okrs_arr, $okr_arr);
+            $okr_arr = array();
+            if( count($okr->hasKeyResults) > 0 ) {
+                foreach ($okr->hasKeyResults as $keyResult) {
+                    array_push($okr_arr, 'Key result');
+                    array_push($okr_arr, $keyResult->name);
+                    array_push($okr_arr, $keyResult->comment);
+                    array_push($okr_arr, ('Q'.ceil(date("n", strtotime(date($keyResult->end_date))) / 3) .' - '. date("Y", strtotime(date($keyResult->end_date)))));
+                    array_push($okr_arr, $keyResult->employee ? $keyResult->employee->user->first_name . ' ' . $keyResult->employee->user->last_name : '' );
+                    array_push($okr_arr, '' );
+
+                    array_push($okrs_arr, $okr_arr);
+                    $okr_arr = array();
+                    
+                    if( count($keyResult->hasTasks) > 0 ) {
+                        foreach ($keyResult->hasTasks as $tasks) {
+                            array_push($okr_arr, 'Task');
+                            array_push($okr_arr, $tasks->name);
+                            array_push($okr_arr, $tasks->comment);
+                            array_push($okr_arr, ('Q'.ceil(date("n", strtotime(date($tasks->end_date))) / 3) .' - '. date("Y", strtotime(date($tasks->end_date)))));
+                            array_push($okr_arr, $tasks->employee ? $tasks->employee->user->first_name . ' ' . $tasks->employee->user->last_name : '' );
+                            array_push($okr_arr, '' );
+
+                            array_push($okrs_arr, $okr_arr);
+                            $okr_arr = array();
+                        }
+                    }
+                    
+                }
+            }
+        }
+
+        $export = new OkrExport($okrs_arr);
+        
+        return Excel::download($export, 'okr.xlsx');
     }
 }

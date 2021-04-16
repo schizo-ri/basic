@@ -14,7 +14,6 @@ class Employee extends Model
 	protected $fillable = [
 		'erp_id','user_id','father_name','mather_name','maiden_name','oib','oi','oi_expiry','b_day','b_place','mobile','email','priv_mobile','priv_email','prebiv_adresa','prebiv_grad','borav_adresa','borav_grad','title','qualifications','marital','work_id','superior_id','reg_date','probation','years_service','termination_service','first_job','comment','checkout','termination_id',
 		'effective_cost','brutto','color','abs_days','lijecn_pregled','znr','size','shoe_size','days_off','stranger','permission_date'
-
 	];
 	
 	/*
@@ -114,6 +113,27 @@ class Employee extends Model
 	* @var string
 	*/
 	protected static $employeeTaskModel = 'App\Models\EmployeeTask'; 
+
+	/*
+	* The Eloquent Okr model name
+	* 
+	* @var string
+	*/
+	protected static $okrModel = 'App\Models\Okr'; 
+
+	/*
+	* The Eloquent KeyResult model name
+	* 
+	* @var string
+	*/
+	protected static $keyResultModel = 'App\Models\KeyResult'; 
+
+	/*
+	* The Eloquent KeyResultTask model name
+	* 
+	* @var string
+	*/
+	protected static $keyResultTaskModel = 'App\Models\KeyResultTask'; 
 
 	/*
 	* Returns the works relationship
@@ -283,12 +303,46 @@ class Employee extends Model
 	/*
 	* Returns the employeeDepartment relationship
 	* 
-	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	* @return \Illuminate\Database\Eloquent\Relations\hasMany
 	*/
 	
 	public function hasEmployeeDepartmen()
 	{
 		return $this->hasMany(static::$employeeDepartmentModel,'employee_id');
+	}
+
+	/*
+	* Returns the Okr relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasMany
+	*/
+	
+	public function hasOkrs()
+	{
+		return $this->hasMany(static::$okrModel,'employee_id');
+	}
+
+	/*
+	* Returns the KeyResult relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasMany
+	*/
+	
+	public function hasKeyResult()
+	{
+		return $this->hasMany(static::$keyResultModel,'employee_id');
+	}
+
+	
+	/*
+	* Returns the KeyResulttask relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasMany
+	*/
+	
+	public function hasKeyResultTask()
+	{
+		return $this->hasMany(static::$keyResultTaskModel,'employee_id');
 	}
 
 	/*

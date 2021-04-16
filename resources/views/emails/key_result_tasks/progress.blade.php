@@ -119,7 +119,8 @@
 				@else
                     <p>OKR: <b>{{ $keyResultTask->keyResult->okr->name }}</b></p>
                     <p>Ključni rezultat: <b>{{ $keyResultTask->keyResult->name }}</b></p>
-                    <p> <b>{{ $keyResultTask->name }}</b> ima status završenosti od {{  $keyResultTask->progress }}% </p>
+                    <p><b>{{ $keyResultTask->name }}</b> ima status završenosti od {{  $keyResultTask->progress }}% </p>
+                    <p>Rok izvršenja: {{ date('d.m.Y', strtotime($keyResultTask->end_date)) }}</p>
                     <p>Promjenu spremio djelatnik: {{ Sentinel::getUser()->employee->user->last_name . ' ' . Sentinel::getUser()->employee->user->first_name}}</p>
                     <a href="{{ $link }}" class="odobri" >Vidi detalje</a>
                 @endif

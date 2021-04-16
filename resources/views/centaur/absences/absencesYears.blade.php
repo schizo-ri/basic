@@ -82,6 +82,6 @@
 	</main>
 </div>
 <script>
-	$.getScript('/../js/absence_create.js');
+	$.getScript('/../js/absence_create_new.js');
 </script>
 @stop

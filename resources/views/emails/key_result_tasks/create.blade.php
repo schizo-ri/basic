@@ -122,6 +122,7 @@
                     <p>Zadatak: <b>{{ $keyResultTask->name }}</b></p>
                     <p>Zaduženi djelatnik: {{ $keyResultTask->employee->user->first_name . ' ' . $keyResultTask->employee->user->last_name }}</p>
                     <p>Kvartal: {{'Q'.ceil(date("n", strtotime(date($keyResultTask->end_date))) / 3) .' - '. date("Y", strtotime(date($keyResultTask->end_date))) }}</p>
+                    <p>Rok izvršenja: {{ date('d.m.Y', strtotime($keyResultTask->end_date)) }}</p>
                     <p>Komentar: {{ $keyResultTask->comment }}</p>
                     <p>Promjenu spremio djelatnik: {{ Sentinel::getUser()->employee->user->last_name . ' ' . Sentinel::getUser()->employee->user->first_name}}</p>
                     <a href="{{ $link }}" class="odobri" >Vidi detalje</a>

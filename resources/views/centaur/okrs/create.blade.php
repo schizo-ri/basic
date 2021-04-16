@@ -31,10 +31,10 @@
             <label>Kvartal</label>
             <select name="quarter" id="quarter" required>
                 <option value="" disabled selected ></option>
-                <option value="q1" selected>Q1 [01.01.-31.03.]</option>
-                <option value="q2">Q2 [01.04.-30.06.]</option>
-                <option value="q3">Q3 [01.07.-30.09.]</option>
-                <option value="q2">Q2 [01.10.-31.12.]</option>
+                <option value="q1" {!! date('m') < 3 ? 'selected' : '' !!}>Q1 [01.01.-31.03.]</option>
+                <option value="q2" {!! date('m') > 3 && date('m') < 7 ? 'selected' : '' !!}>Q2 [01.04.-30.06.]</option>
+                <option value="q3" {!! date('m') > 6 && date('m') < 10 ? 'selected' : '' !!}>Q3 [01.07.-30.09.]</option>
+                <option value="q2"  {!! date('m') > 9 ? 'selected' : '' !!}>Q2 [01.10.-31.12.]</option>
             </select>
             {!! ($errors->has('quarter') ? $errors->first('quarter', '<p class="text-danger">:message</p>') : '') !!}
         </div>
@@ -56,7 +56,7 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-    $.getScript('/../js/okr_store.js');
+    $.getScript('/../js/okr_store1.js');
 
     $('#year').on('change',function(){
         $('#end_date').val( $( this ).val() + '-12-31' );

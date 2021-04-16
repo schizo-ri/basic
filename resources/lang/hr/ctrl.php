@@ -54,6 +54,7 @@ return [
 	'reset'				=> 'Poništi lozinku.',
     'invalid_code'  	=> 'Nevažeći ili istekao kôd za poništavanje lozinke; zatražite novu poveznicu.',
     'instruction_create'=> 'Nova radna uputa je objavljena.',
+    'instruction_reminder'=> 'Podjetnik za provjeru radne upute',
 	'request_exist'  	=> 'Zahtjev za taj period je već upisan.',
 	'record_exist'  	=> 'Zapis za taj period je već upisan.',
 	'email_send'     	=> 'E-mail je poslan.',

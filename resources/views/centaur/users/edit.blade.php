@@ -84,6 +84,16 @@
                 <label>@lang('basic.conf_password')</label>
                 <input class="form-control" name="password_confirmation" id="conf_password" type="password" />
             </div>
+            <div class="form-group" >
+                {{-- <label>{{ __('basic.roles')}}</label> --}}
+                <div class="checkbox">
+                    @foreach ($roles as $role)
+                        @if($user->inRole($role))
+                            <input type="hidden" class="roles" id="role{{ $role->id }}" name="roles[{{ $role->slug }}]" value="{{ $role->id }}" {!! $user->inRole($role) ? 'checked' : '' !!} />
+                        @endif
+                    @endforeach
+                </div>
+            </div>
             {{ csrf_field() }}
             {{ method_field('PUT') }}
             <input class="btn-submit" type="submit" value="{{ __('basic.edit')}}">

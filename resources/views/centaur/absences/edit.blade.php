@@ -17,7 +17,7 @@
 		@if (Sentinel::inRole('administrator'))
 			<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
 				<label>@lang('basic.employee')</label>
-				<select class="form-control" name="employee_id" value="{{ old('employee_id') }}" required >
+				<select class="form-control" name="employee_id" value="{{ old('employee_id') }}" required id="select_employee" >
 					<option name="employee_id" value="{{ $absence->employee->id }}"  >
 						{{ $absence->employee->user['last_name']  . ' ' . $absence->employee->user['first_name'] }} 
 					</option>
@@ -31,7 +31,7 @@
 			<p class="padd_10">@lang('absence.i'), {{ $absence->employee->user['first_name']  . ' ' . $absence->employee->user['last_name'] }} 
 				<span class="">@lang('absence.please_approve') @lang('absence.request_edit')</span>
 			</p>
-			<input name="employee_id" type="hidden" value="{{  $absence->employee_id }}" />
+			<input name="employee_id" type="hidden" value="{{  $absence->employee_id }}"  id="select_employee"/>
 		@endif
 		<div class="form-group {{ ($errors->has('erp_type')) ? 'has-error' : '' }}">
 			<label>@lang('absence.abs_type')</label>
@@ -142,6 +142,6 @@ $( document ).ready(function() {
 		var end_date = $( "#end_date" );
 		end_date.val(start_date);
 	});
-	$.getScript('/../js/absence_create.js');
+	$.getScript('/../js/absence_create_new.js');
 });
 </script>

@@ -48,8 +48,26 @@ class Project extends Model
 	* 
 	* @var string
 	*/
-	protected static $diaryModel = 'App\Models\WorkDiary'; 	
+	protected static $diaryModel = 'App\Models\WorkDiary';
 
+	/*
+	* The Eloquent ProjectWorkTask model name
+	* 
+	* @var string
+	*/
+	protected static $projectWorkTaskModel = 'App\Models\ProjectWorkTask';
+
+	/*
+	* Returns the locco relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasProjectWorkTask()
+	{
+		return $this->hasMany(static::$projectWorkTaskModel,'project_id');
+	}	
+	
 	/*
 	* Returns the locco relationship
 	* 
@@ -150,6 +168,4 @@ class Project extends Model
 	{
 		return $this->update($project);
 	}
-
-	
 }

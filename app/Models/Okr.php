@@ -74,7 +74,7 @@ class Okr extends Model
 
 	public static function allEmployeeOnOKRs () 
 	{
-		$okrs = Okr::where('status', 0)->with('hasKeyResults')->get();
+		$okrs = Okr::with('hasKeyResults')->get();
 
 		$employees = $okrs->map(function ($okr, $key) {
 			if($okr->employee ) {

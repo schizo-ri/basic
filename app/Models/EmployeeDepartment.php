@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Sentinel;
 
 class EmployeeDepartment extends Model
 {
@@ -81,8 +82,11 @@ class EmployeeDepartment extends Model
 								 ->orderBy('users.last_name','ASC')->get();
 	}
 
-	public function DepartmentEmployees ($id)
+	/** Za voditelja odjelja - svi djelatnici radnih mjesta kojima je prvi nadređeni */
+	public static function DepartmentEmployees ( $department_id )
 	{
-		
+		$works = Work::where('first_superior', Sentinel::getUser()->employee->id )->get()->pluck('id')->toArray();
+		$employees = Employee::whereIn('work_id', $works)->where('checkout', null)->get()->pluck('id')->toArray();
+		return EmployeeDepartment::whereIn('employee_id', $employees)->get();
 	}
 }

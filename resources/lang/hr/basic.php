@@ -29,7 +29,7 @@ return [
 	'add_employee_department'=> 'Dodaj djelatnike u odjel',
 	'add_ad'				=> 'Dodaj oglas',
 	'add_afterhour'			=> 'Prijavi prekovremene sate',
-	'add_answer'			=> 'DODAJ ODGOVOR',
+	'add_answer'			=> 'Dodaj odgovor',
 	'add_educationArticle'	=> 'Dodaj članak',
 	'add_benefit'			=> 'Dodaj pogodnost',
 	'add_campaign'			=> 'Dodaj kampanju',
@@ -39,7 +39,8 @@ return [
 	'add_customer'			=> 'Dodaj naručitelja',
 	'add_department'		=> 'Dodaj odjel',
 	'add_document'			=> 'Dodaj dokument',
-	'add_locco'				=> 'Dodaj vožnju','add_education'			=> 'Dodaj edukaciju',
+	'add_locco'				=> 'Dodaj vožnju',
+	'add_education'			=> 'Dodaj edukaciju',
 	'add_emailing'			=> 'Dodaj email postavku',
 	'add_employee'			=> 'Dodaj zaposlenika',
 	'add_employee_training'	=> 'Dodaj osposobljavanje',
@@ -122,6 +123,7 @@ return [
 	'create_travel'			=> 'Kreiraj putni nalog',
 	'create_user'			=> 'Dodaj korisnika',
 	'created_at'			=> 'Kreirano dana',
+	'created_by'			=> 'Kreirano djelatnik',
 	'current_km'			=> 'Trenutni kilometri',
 	'custom_interal'		=> 'Prilagođeno ponavljanje',
 	'customer'				=> 'Naručitelj',
@@ -491,6 +493,12 @@ return [
 	'add_competence'		=> 'Dodaj kompetenciju',
 	'edit_competence'		=> 'Ispravi kompetenciju',
 	'visitors'				=> 'Posjetitelji',
+	'total_rating'			=> 'Ukupna ocjena',
+	'group_rating'			=> 'Ocjena grupe',
+	'next_tab'				=> 'slijedeće',
+	'prev_tab'				=> 'prethodno',
+	'responsible'			=> 'Odgovoran djelatnik',
+	
 	
 ];	
 

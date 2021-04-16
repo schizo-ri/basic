@@ -77,12 +77,13 @@ return [
 	'total'	 		=> 'ukupno',
 	'this_month' 	=> 'Ovaj mjesec',
 	'this_year' 	=> 'ova godina',
-	'used_unused' 	=> 'Iskorišteni - Neiskorišteni',
+	'used_unused' 	=> 'Ukupno - Iskorišteni - Neiskorišteni',
 	'total_days' 	=> 'Ukupno dana',
 	'proportion' 	=> 'razmjerno',
 	'experience' 	=> 'Radni staž',
 	'yy_mm_dd' 		=> 'gg-mm-dd',
 	'close_sick_leave' => 'Zatvori bolovanje',
 	'closing' 		=> 'Zaključivanje prijava',
+	'no_pay'	 	=> 'Neisplaćeno',
 ];
 ?>

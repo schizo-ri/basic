@@ -16,6 +16,15 @@
 			<textarea name="description" class="form-control" type="text" maxlength="65535" >{{ $task->description }}</textarea>
 			{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
+		<div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
+			<label for="">@lang('basic.created_by')</label>
+			<select class="form-control" name="employee_id" value="{{ $task->employee_id }}" size="10" required >
+				@foreach ($employees as $employee)
+					<option value="{{ $employee->id }}" {!! $task->employee_id == $employee->id ? 'selected' : '' !!}>{{ $employee->last_name . ' ' .  $employee->first_name }}</option>
+				@endforeach
+			</select>
+			{!! ($errors->has('employee_id') ? $errors->first('employee_id', '<p class="text-danger">:message</p>') : '') !!}
+		</div>
 		<div class="form-group {{ ($errors->has('to_employee_id')) ? 'has-error' : '' }}">
 			<label for="">@lang('basic.employees_in_charge')</label>
 			<select class="form-control" name="to_employee_id[]" value="{{ $task->to_employee_id }}" size="10" multiple required >
@@ -70,6 +79,11 @@
 			{!! ($errors->has('start_date') ? $errors->first('start_date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		<input name="type" type="hidden" value="event" id="event_type" />
+		<div class="form-group">
+			<label >@lang('absence.email_send')</label>
+			<span><input type="radio" name="send_email" value="DA"  /> @lang('basic.send_mail') </span>
+			<span><input type="radio" name="send_email" value="NE" checked /> @lang('basic.dont_send_mail')</span>
+		</div>
 		{{ csrf_field() }}
 		{{ method_field('PUT') }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1">

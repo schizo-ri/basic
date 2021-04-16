@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardController;
 use App\Models\Instruction;
 use App\Models\Department;
+use App\Models\Employee;
 use App\Mail\IstructionMail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ErrorMail;
@@ -41,6 +42,7 @@ class InstructionController extends Controller
 
     public function radne_upute () 
     {
+      
         $employee = Sentinel::getUser()->employee;
         $employee_departments = null;
         
@@ -76,8 +78,9 @@ class InstructionController extends Controller
     public function create()
     {
         $departments = Department::orderBy('name','ASC')->get();
+        $employees = Employee::employees_getNameASC();
 
-        return view('Centaur::instructions.create', ['departments' => $departments]);
+        return view('Centaur::instructions.create', ['departments' => $departments,'employees' => $employees]);
     }
 
     /**
@@ -90,9 +93,11 @@ class InstructionController extends Controller
     {
      //   $send_to = array('jelena.juras@duplico.hr');
         $send_to = array();
+
         foreach ($request['department_id'] as $department_id) {
             $data = array(
                 'department_id' => $department_id,
+                'employee_id'   => $request['employee_id'],
                 'title'         => $request['title'],
                 'description'   => $request['description'],
                 'active'        => $request['active']
@@ -130,7 +135,7 @@ class InstructionController extends Controller
     public function show($id)
     {
         $instruction = Instruction::find($id);
-
+        
         return view('Centaur::instructions.show', ['instruction' => $instruction]);
     }
 
@@ -143,10 +148,10 @@ class InstructionController extends Controller
     public function edit($id)
     {
         $instruction = Instruction::find($id);
-
+        $employees = Employee::employees_getNameASC();
         $departments = Department::orderBy('name','ASC')->get();
 
-        return view('Centaur::instructions.edit', ['instruction' => $instruction,'departments' => $departments]);
+        return view('Centaur::instructions.edit', ['instruction' => $instruction,'departments' => $departments,'employees' => $employees]);
     }
 
     /**
@@ -162,11 +167,11 @@ class InstructionController extends Controller
 
         $data = array(
             'department_id' => $request['department_id'],
+            'employee_id'   => $request['employee_id'],
             'title'         => $request['title'],
             'description'   => $request['description'],
             'active'        => $request['active']
         );
-        
         
         $instruction->updateInstruction($data);
 

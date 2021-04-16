@@ -24,7 +24,6 @@ if( $('.competence_table').length > 0 ) {
         $('.upload_file.'+element_id).show();
     });
 
-
     $('.rating_radio.evaluate_manager>input').on('click',function(){
         mouse_is_inside = true;
         ev_id = $(this).attr('title');
@@ -63,7 +62,7 @@ if( $('.competence_table').length > 0 ) {
         ev_id = $(this).attr('title');
         comment = $(this).val();
         rating_id = null;
-        $(document).click(function(e) {
+        $(document).on('click',function(e) {
             if(container && !container.is(e.target) && mouse_is_inside == true ) {
                 submit_form (ev_id,rating_id, comment);
             }
@@ -109,10 +108,15 @@ if( $('.competence_table').length > 0 ) {
         $('.total_rating').remove();
         var element = $(this);
         value = $(this).val().toLowerCase();
+        id = $(this).find('option:selected').attr('data-id');
         console.log(value);
+        console.log(id);
         if( value == 'all') {
-            $(".tr_evaluation").show();
+            $(".tr_questions").hide();
+            $(".tr_evaluation").hide();
+
         } else {
+            $(".tr_questions").show();
             $(".tr_evaluation").filter(function() {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
@@ -129,8 +133,8 @@ if( $('.competence_table').length > 0 ) {
                 }
             });
             $( element ).parent().after('<p class="total_rating">Ukupna bodovi: '+all_rating.toFixed(2)+'</p>');
-         /*    $( element ).parent().after('<p class="total_rating">Ukupna ocjena nadređenog: '+all_rating2+'</p>'); */
-            
+            $('.form_recommendation').find('input#employee_id').val(id);
+            $('.form_recommendation').show();
         }
     });
 

@@ -28,7 +28,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
         <script>var dt = new Date().getTime();</script>
 		{{--  CSS --}}
-		<link rel="stylesheet" href="{{ URL::asset('/../css/css.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/css3.css?random=@dt') }}"/>
 		{{--  Select find --}}
 		<link href="{{ URL::asset('/../select2-develop/dist/css/select2.min.css') }}" />
 		{{-- ICON --}}
@@ -122,7 +122,7 @@
                 @include('Centaur::side_nav')
             </header>
             <div class="container col-sm-12 col-md-12 col-lg-12">
-                @if(Sentinel::check() && (Sentinel::inRole('administrator') || Sentinel::inRole('moderator')) )
+                @if (Sentinel::check() &&  Sentinel::inRole('administrator') || Sentinel::inRole('superadmin') || Sentinel::inRole('moderator') || Sentinel::inRole('racunovodstvo'))
                     <div class="index_page index_admin">
                         <aside class="col-md-12 col-lg-4 col-xl-4 float_left admin_aside">
                             <section class="col-12 float_left admin_panel">
@@ -133,11 +133,6 @@
                         <main class="col-md-12 col-lg-8 col-xl-8 index_main float_right admin_main">
                             <section>
                                 <div id="admin_page">
-                                    {{-- @if (Shortcut::where('url', $url)->first() )
-                                        <a class="shortcut" href="{{ route('shortcuts.edit', Shortcut::where('url', $url)->first()->id ) }}" rel="modal:open"><i class="fas fa-pencil-alt"></i><span class="shortcut_text">@lang('basic.edit_shortcut')</span></a>
-                                    @else
-                                        <a class="shortcut" href="{{ route('shortcuts.create', ['url' => $url, 'title' => $_SERVER['REQUEST_URI']] ) }}" rel="modal:open"><i class="fas fa-plus"></i>  <span class="shortcut_text">@lang('basic.add_shortcut')</span></a>
-                                    @endif --}}
                                     <a class="link_back" href="{{  url()->previous() }}"><span class="curve_arrow_left_grey"></span></a>
                                     @yield('content')
                                 </div>
@@ -149,7 +144,7 @@
             <span hidden class="locale" >{{ App::getLocale() }}</span>
             @include('Centaur::notifications', ['modal' => 'true'])
         </section>
-    <span hidden id="employee_id">{!! $user->employee ? $user->employee->id : null !!}</span>
+        <span hidden id="employee_id">{!! $user->employee ? $user->employee->id : null !!}</span>
 		{{-- Scripts --}}
 			<script>
 				// Enable pusher logging - don't include this in production
@@ -185,7 +180,7 @@
 			{{-- Jquery modal --}}
             <script src="{{ URL::asset('/../node_modules/jquery-modal/jquery.modal.min.js') }}"></script>
             {{-- Scripts --}}
-			<script src="{{URL::asset('/../js/js.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/js3.js?random=@dt') }}"></script>
 			{{-- Datatables --}}
 			<script src="{{ URL::asset('/../dataTables/datatables.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>

@@ -501,6 +501,8 @@ span.img-success {
 	display: block;
 }
 
+
+
 @media (max-width: 1300px) {
 	html, body{
 		font-size: 15px;
@@ -637,7 +639,6 @@ span.img-success {
 		transform: initial;
 	}
 	.container {
-        scrollbar-width: thin;
 		position: relative;
 		overflow: auto;
 		scrollbar-width: thin;
@@ -646,6 +647,8 @@ span.img-success {
 		z-index: 0;
 		position: fixed;
 		top: 50px;
+		display: flex;
+		flex-wrap: wrap;
 	}    
 	.container >section {
 		padding: 0;

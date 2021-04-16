@@ -116,7 +116,7 @@
 						<p style="{{ $style }}">{{ $text }}</p>
 					@endforeach
 				@else
-					<p>Djelatniku {{ $employeeTraining->employee->user->first_name . ' ' . $employeeTraining->employee->user->last_name }} osposobljavanje ističe {{ date('d.m.Y', strtotime($employeeTraining->expiry_date )) }}!</p>
+					<p>Djelatniku {{ $employeeTraining->employee->user->first_name . ' ' . $employeeTraining->employee->user->last_name }} osposobljavanje <b>{{  $employeeTraining->training->name }}</b> ističe {{ date('d.m.Y', strtotime($employeeTraining->expiry_date )) }}!</p>
 				@endif
             </div>
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="footer"  style="{!! $template_mail && $template_mail->mailStyle ? $template_mail->mailStyle->first()->style_footer : '' !!}">

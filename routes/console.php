@@ -84,3 +84,6 @@ Artisan::command('sickLeave', function () {
 Artisan::command('diary', function () {
     $this->info("Dnevnik rada!");
 });
+Artisan::command('instruction', function () {
+    $this->info("Podsjetnik za radne upute!");
+});

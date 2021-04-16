@@ -27,6 +27,7 @@
 							<thead>
 								<tr>
 									<th class="align_l">@lang('basic.task') | @lang('basic.description')</th>
+									<th class="align_l">@lang('basic.created_by')</th>
 									<th class="align_l">@lang('basic.to_employee')</th>
 									<th class="sort_date align_l">@lang('absence.start_date')</th>
 									<th class="sort_date align_l">@lang('absence.end_date')</th>
@@ -39,6 +40,7 @@
 								@foreach ($tasks as $task)
 									<tr class="tr_open_link_new_page"  data-href="/employee_tasks/{{ $task->id }}" >
 										<td>{{ $task->task }} <br> <small>{{ $task->description }}</small></td>
+										<td>{{ $task->employee->user->first_name . ' ' . $task->employee->user->last_name  }}</td>
 										<td>
 											@php
 												$to_employees = explode(',', $task->to_employee_id);

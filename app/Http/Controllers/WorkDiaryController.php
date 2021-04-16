@@ -153,8 +153,15 @@ class WorkDiaryController extends Controller
                 if( $this->api_project && $erp_employee ) {
                     $api = new ApiController();
                     $projects_erp = $api->get_employee_available_projects( $erp_employee, $request['date'] );
-                    $project_erp = $projects_erp [ $proj_id ];
-                    $erp_id = str_replace("]","", str_replace("[","",strstr( $project_erp," ", true )));
+                    try {
+                        $project_erp = $projects_erp [ $proj_id ];
+                        $erp_id = str_replace("]","", str_replace("[","",strstr( $project_erp," ", true )));
+                    } catch (\Throwable $th) {
+                        session()->flash('error', 'Nije moguće spremiti, projekt nije zapisan u raspored.' );
+        
+                        return redirect()->back();
+                    }
+                        
                     $project = $erp_id ? Project::where('erp_id', $erp_id)->first() : null;
                     $project_id = $project ? $project->id : null;
                 }

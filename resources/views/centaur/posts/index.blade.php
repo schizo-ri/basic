@@ -11,10 +11,8 @@
 		use App\Models\Employee;
 	@endphp
 	<aside class="col-xs-12 col-sm-12 col-md-4 col-lg-4 latest_messages">
-		
 		<div>
 			<header class="post_header">
-				
 				<h1><a class="link_back" href="{{  url()->previous() }}"><span class="curve_arrow_left_blue"></span></a>@lang('basic.latest_messages')
 					@if(Sentinel::getUser()->hasAccess(['posts.create']) || in_array('posts.create', $permission_dep))
 						<a class="btn btn-primary btn-lg btn-new" href="{{ route('posts.create') }}" rel="modal:open" title="{{ __('basic.new_post')}}">
@@ -48,10 +46,7 @@
 												@if( Sentinel::getUser()->employee->id == $post->to_employee_id )
 													{{ $post->employee->user['first_name'] . ' ' . $post->employee->user['last_name'] }}
 												@else
-													@if($post->to_employee_id != null)
-														{{ $post->to_employee->user['first_name'] . ' ' . $post->to_employee->user['last_name'] }}
-													
-													@endif
+													{{ $post->to_employee->user['first_name'] . ' ' . $post->to_employee->user['last_name'] }}
 												@endif
 											@endif
 											@if( $post->to_department_id != null )
@@ -74,7 +69,6 @@
 											</span>
 										@endif
 									</span>
-
 								</button>
 							</article>
 						@endforeach
@@ -139,13 +133,7 @@
 																$next_comment = PostController::previous($comment->id, $post->id);
 																$next_empl = $next_comment['employee_id'];
 															@endphp
-															@if ( $comment->employee_id == $post->employee_id && $next_empl != $comment->employee_id)
-																{{ $post->to_department->name }} |
-															@else
-																@if( $next_empl != $comment->employee_id )
-																	{{ $comment->employee->user['first_name'] . ' ' .  $comment->employee->user['last_name']}} |
-																@endif
-															@endif
+															@if( $next_empl != $comment->employee_id && $comment->employee_id != Sentinel::getUser()->employee->id){{ $comment->employee->user['first_name'] . ' ' .  $comment->employee->user['last_name']  }} | @endif 
 															<small>{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans()  }}</small>
 														</p>
 														<div class="content">
@@ -182,8 +170,7 @@
 																@if( $next_empl != $comment->employee_id && $comment->employee_id != Sentinel::getUser()->employee->id){{ $comment->employee->user['first_name'] . ' ' .  $comment->employee->user['last_name']  }} | @endif 
 																<small>{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans()  }}</small>
 															</p>
-															<div class="content">
-																
+															<div class="content">																
 																@if( $comment->employee_id != Sentinel::getUser()->employee->id)
 																	@php
 																		$image_comment = DashboardController::profile_image($comment->employee_id);

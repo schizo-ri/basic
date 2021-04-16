@@ -49,7 +49,9 @@ class CompetenceGroupQuestionController extends Controller
             $data = array(
                 'competence_id'=> $request['competence_id'],
                 'name'         => $request['name'],
+                'nameUKR'      => $request['nameUKR'],
                 'description'  => $request['description'],
+                'descriptionUKR'  => $request['descriptionUKR'],
                 'coefficient'  => $request['coefficient']
             );
             
@@ -61,7 +63,9 @@ class CompetenceGroupQuestionController extends Controller
                     $data_question = array(
                         'group_id'     => $competenceGroupQuestion->id,
                         'name'         => $name,
+                        'nameUKR'         => $request['q_nameUKR'][ $key_question ],
                         'description'  => $request['q_description'][ $key_question ],
+                        'descriptionUKR'  => $request['q_descriptionUKR'][ $key_question ],
                         'rating'       => $request['q_rating'][ $key_question ],
                     );
 
@@ -115,41 +119,50 @@ class CompetenceGroupQuestionController extends Controller
 
         $data = array(
             'name'         => $request['name'],
-            'description'  => $request['description'],
+			'nameUKR'      => $request['nameUKR'],
+			'description'  => $request['description'],
+			'descriptionUKR'  => $request['descriptionUKR'],
             'coefficient'  => $request['coefficient']
         );
         
         $competenceGroup->updateCompetenceGroupQuestion($data);
-
-        foreach ($request['q_id']  as $key_id => $q_id) {
-            $competenceQuestion = CompetenceQuestion::find($q_id);
-            $name = $request['q_name'][$key_id];
-
-            $data_question = array(
-                'group_id'     => $competenceGroup->id,
-                'name'         =>  $name ,
-                'description'  => $request['q_description'][ $key_id ],
-                'rating'        => $request['q_rating'][ $key_id ],
-            );
-
-            if( $name && $competenceQuestion) {                    
-                $competenceQuestion->updateCompetenceQuestion($data_question);
-            } else {
-                $competenceQuestion->delete();
+        if( $request['q_id'] ) {
+            foreach ($request['q_id']  as $key_id => $q_id) {
+                $competenceQuestion = CompetenceQuestion::find($q_id);
+                $name = $request['q_name'][$key_id];
+    
+                $data_question = array(
+                    'group_id'     => $competenceGroup->id,
+                    'name'         => $name,
+                    'nameUKR'      => $request['q_nameUKR'][ $key_id ],
+                    'description'  => $request['q_description'][ $key_id ],
+                    'descriptionUKR'  => $request['q_descriptionUKR'][ $key_id ],
+                    'rating'        => $request['q_rating'][ $key_id ],
+                );
+    
+                if( $name && $competenceQuestion) {                    
+                    $competenceQuestion->updateCompetenceQuestion($data_question);
+                } else {
+                    $competenceQuestion->delete();
+                }
             }
         }
-        foreach ($request['q_name'] as $id_name => $name_new) {
-            if( ! isset($request['q_id'][$id_name]) ) {
-                $data_name = array(
-                    'group_id'     => $competenceGroup->id,
-                    'name'         => $name_new,
-                    'description'  => $request['q_description'][ $id_name ],
-                    'rating'        => $request['q_rating'][ $id_name ],
-                );
-                $comp_rating = new CompetenceQuestion();
-                $comp_rating->saveCompetenceQuestion($data_name);
-            }
-        } 
+        if( $request['q_name'] ) {
+            foreach ($request['q_name'] as $id_name => $name_new) {
+                if( ! isset($request['q_id'][$id_name]) ) {
+                    $data_name = array(
+                        'group_id'     => $competenceGroup->id,
+                        'name'         => $name_new,
+                        'nameUKR'      => $request['q_nameUKR'][ $id_name ],
+                        'description'  => $request['q_description'][ $id_name ],
+                        'descriptionUKR'=> $request['q_descriptionUKR'][ $id_name ],
+                        'rating'        => $request['q_rating'][ $id_name ],
+                    );
+                    $comp_rating = new CompetenceQuestion();
+                    $comp_rating->saveCompetenceQuestion($data_name);
+                }
+            } 
+        }
 
         session()->flash('success',  __('ctrl.data_edit'));
         return redirect()->back();

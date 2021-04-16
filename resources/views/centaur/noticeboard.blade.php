@@ -17,7 +17,7 @@
 						<label>
 							<input type="search" id="mySearch_noticeboard" placeholder="{{ __('basic.search')}}" title="Type ... " class="input_search" autofocus>
 						</label>
-						@if(Sentinel::getUser()->employee && Sentinel::getUser()->hasAccess(['notices.create']) || in_array('notices.create', $permission_dep) )
+						@if($user && Sentinel::getUser()->hasAccess(['notices.create']) || in_array('notices.create', $permission_dep) )
 							<a class="add_new create_notice" href="{{ route('notices.create') }}"  >
 								<i style="font-size:11px" class="fa">&#xf067;</i>
 							</a>

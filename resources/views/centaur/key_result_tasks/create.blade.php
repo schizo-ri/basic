@@ -24,8 +24,8 @@
         </div>
         <div class="form-group {{ ($errors->has('employee_id')) ? 'has-error' : '' }}">
             <label>@lang('basic.employee')</label>
-            <select class="form-control" name="employee_id" value="{{ old('employee_id') }}"  >
-                <option value="" selected disabled></option>
+            <select class="form-control" name="employee_id[]" value="{{ old('employee_id') }}" multiple >
+                {{-- <option value="" selected disabled></option> --}}
                 @foreach ($employees as $employee)
                     <option name="employee_id" value="{{ $employee->id }}">{{ $employee->last_name . ' ' . $employee->first_name }}</option>
                 @endforeach	
@@ -48,7 +48,7 @@
 </div>
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-     $.getScript('/../js/okr_store.js');
+     $.getScript('/../js/okr_store1.js');
     $('#year').on('change',function(){
         $('#end_date').val( $( this ).val() + '-12-31' );
     });

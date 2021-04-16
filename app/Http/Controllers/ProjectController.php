@@ -8,6 +8,8 @@ use App\Http\Controllers\DashboardController;
 use App\Models\Project;
 use App\Models\Customer;
 use App\Models\Employee;
+use App\Models\WorkTask;
+use App\Models\WorkDiaryItem;
 use App\Imports\ProjectsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Mail\ErrorMail;
@@ -87,7 +89,13 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        //
+        $project = Project::where('id', $id )->with('hasDiary')->with('hasProjectWorkTask')->first();
+        $work_tasks = WorkTask::get();
+        $projectWorkTasks = $project->hasProjectWorkTask;
+		$diaries = $project->hasDiary->pluck('id')->toArray();
+        $diary_items = WorkDiaryItem::whereIn('diary_id', $diaries)->get();
+        
+        return view('Centaur::projects.show',['project' =>  $project, 'work_tasks' => $work_tasks,'projectWorkTasks' =>  $projectWorkTasks, 'diary_items' =>  $diary_items] );
     }
 
     /**

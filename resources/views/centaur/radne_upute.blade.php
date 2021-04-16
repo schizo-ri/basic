@@ -37,15 +37,28 @@
 										<main class="ad_main">
 											<span class="ad_category">{{ $instruction->department['name'] }}</span>
 											<span class="ad_content"><b>{{ $instruction->title }}</b> <br></span>
+										<p class="clearfix"><small class="float_r">{!! $instruction->employee ? 'Zadužen djelatnik: '.  $instruction->employee->user->first_name . ' ' . $instruction->employee->user->last_name : '' !!}</small></p>
+
 										</main>
 										<footer class="ad_footer">
 											<span><small>{!! str_limit(strip_tags($instruction->description), 200) !!}</small></span>
 										</footer>
 									</div>
 								</a>
-								<div class="notice_links">
-								
-								</div>	
+								@if (Sentinel::inRole('administrator'))
+									<div class="notice_links">
+										@if(Sentinel::getUser()->hasAccess(['instructions.view']) || in_array('instructions.view', $permission_dep))
+											<a href="{{ route('instructions.edit', $instruction->id ) }}" class="edit_service btn-edit" title="{{ __('basic.edit_instruction')}}" rel="modal:open">
+												<i class="far fa-edit"></i>
+											</a>
+										@endif
+										@if( Sentinel::getUser()->hasAccess(['instructions.delete']) || in_array('instructions.delete', $permission_dep))
+											<a href="{{ route('instructions.destroy', $instruction->id) }}" class="action_confirm btn-delete danger edit_service " data-method="delete" data-token="{{ csrf_token() }}" title="{{ __('basic.delete')}}">
+												<i class="far fa-trash-alt"></i>
+											</a>
+										@endif
+									</div>	
+								@endif
 							</article>
 						@endif
 					@endforeach

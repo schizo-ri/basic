@@ -69,44 +69,63 @@ class KeyResultTaskController extends Controller
      */
     public function store(Request $request)
     {
-        $data = array(
-			'employee_id'  	=> $request['employee_id'],
-			'keyresult_id'  => $request['keyresult_id'],
-			'name'  	    => $request['name'],
-			'comment'  		=> $request['comment'],
-			'end_date'  	=> $request['end_date'],
-			'progresss'  	=> $request['progresss'],
-		);
-			
-		$keyResultTask = new KeyResultTask();
-		$keyResultTask->saveKeyResultTask($data);
-
-        if( $keyResultTask->employee ) {
-            if( $this->test_mail ) {
-                $send_to = 'jelena.juras@duplico.hr'; 
-            } else { 
-                $send_to = $keyResultTask->employee->email;
-            }
- 
-             if( $send_to &&  $send_to != '' &&  $send_to != null ) {
-                 try {   
-                    Mail::to($send_to)->send(new KeyResultTaskMail($keyResultTask));
- 
-                 } catch (\Throwable $th) {
-                     $email = 'jelena.juras@duplico.hr';
-                     $url = $_SERVER['REQUEST_URI'];
-                     Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+        if( is_array($request['employee_id'])) {
+            foreach ( $request['employee_id'] as $employee_id) {
+                $data = array(
+                    'employee_id'  	=> $employee_id,
+                    'keyresult_id'  => $request['keyresult_id'],
+                    'name'  	    => $request['name'],
+                    'comment'  		=> $request['comment'],
+                    'end_date'  	=> $request['end_date'],
+                    'progresss'  	=> $request['progresss'] ? $request['progresss'] : '',
+                );
+                
+                $keyResultTask = new KeyResultTask();
+                $keyResultTask->saveKeyResultTask($data);
+        
+                if( $keyResultTask->employee ) {
+                    if( $this->test_mail ) {
+                        $send_to = 'jelena.juras@duplico.hr'; 
+                    } else { 
+                        $send_to = $keyResultTask->employee->email;
+                    }
          
-                     $message = session()->flash('success',  __('emailing.not_send'));
-                     return redirect()->back()->withFlashMessage($message);
-                 }
+                     if( $send_to &&  $send_to != '' &&  $send_to != null ) {
+                         try {   
+                            Mail::to($send_to)->send(new KeyResultTaskMail($keyResultTask));
+         
+                         } catch (\Throwable $th) {
+                             $email = 'jelena.juras@duplico.hr';
+                             $url = $_SERVER['REQUEST_URI'];
+                             Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
                  
-             }
-         }
+                             $message = session()->flash('success',  __('emailing.not_send'));
+                             return redirect()->back()->withFlashMessage($message);
+                         }
+                         
+                     }
+                }
+            }
+        } else {
+            $data = array(
+                'employee_id'  	=> null,
+                'keyresult_id'  => $request['keyresult_id'],
+                'name'  	    => $request['name'],
+                'comment'  		=> $request['comment'],
+                'end_date'  	=> $request['end_date'],
+                'progresss'  	=> $request['progresss'] ? $request['progresss'] : '',
+            );
+            
+            $keyResultTask = new KeyResultTask();
+            $keyResultTask->saveKeyResultTask($data);
+        }
+       
+        
+        return 'task_' . $keyResultTask->id;
 
-        session()->flash('success',  __('ctrl.data_save'));
+      /*   session()->flash('success',  __('ctrl.data_save'));
 		
-        return redirect()->back();
+        return redirect()->back(); */
     }
 
     /**
@@ -189,31 +208,29 @@ class KeyResultTaskController extends Controller
 			
 		$keyResultTask->updateKeyResultTask($data);
        
-        if ( $keyResultTask->keyResult->okr->status == 0 ) {
-            $send_to = array();
-            if( $this->test_mail ) {
-                $send_to = array('jelena.juras@duplico.hr');
-            } else { 
-                if(Sentinel::getUser()->employee->id != $keyResultTask->keyResult->employee_id ) {
-                    array_push( $send_to, $keyResultTask->keyResult->employee->email);
-                } 
-            }
-            Log::info($send_to);
-            if( !empty($send_to)) {
-                try {   
-                    foreach (array_unique($send_to) as $mail) {
-                        if( $mail != '' && $mail != null) {
-                            Mail::to($mail)->send(new KeyResultTaskProgressMail ($keyResultTask));
-                        }
-                    }   
-                } catch (\Throwable $th) {
-                    $email = 'jelena.juras@duplico.hr';
-                    $url = $_SERVER['REQUEST_URI'];
-                    Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
-        
-                    $message = session()->flash('success',  __('emailing.not_send'));
-                    return redirect()->back()->withFlashMessage($message);
-                }
+        $send_to = array();
+        if( $this->test_mail ) {
+            $send_to = array('jelena.juras@duplico.hr');
+        } else { 
+            if(Sentinel::getUser()->employee->id != $keyResultTask->keyResult->employee_id ) {
+                array_push( $send_to, $keyResultTask->keyResult->employee->email);
+            } 
+        }
+        Log::info($send_to);
+        if( !empty($send_to)) {
+            try {   
+                foreach (array_unique($send_to) as $mail) {
+                    if( $mail != '' && $mail != null) {
+                        Mail::to($mail)->send(new KeyResultTaskProgressMail ($keyResultTask));
+                    }
+                }   
+            } catch (\Throwable $th) {
+                $email = 'jelena.juras@duplico.hr';
+                $url = $_SERVER['REQUEST_URI'];
+                Mail::to($email)->send(new ErrorMail( $th->getFile() . ' => ' . $th->getMessage(), $url)); 
+    
+                $message = session()->flash('success',  __('emailing.not_send'));
+                return redirect()->back()->withFlashMessage($message);
             }
         }
 

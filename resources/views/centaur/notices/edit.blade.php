@@ -54,7 +54,6 @@
                     <h3 class="panel-title">@lang('basic.edit_notice')</h3>
                 </header>
                 <section class="campaign_set">
-                    
                     <div class="form-group col-sm-12 col-md-6 float_left {{ ($errors->has('title'))  ? 'has-error' : '' }}">
                         <label>@lang('basic.title')</label>
                         <input name="title" type="text" class="form-control" value="{{ $notice->title }}" required>
@@ -74,37 +73,7 @@
                                 @endforeach	
                             @endforeach	
                         </select>
-
-                       {{--  <div class="selectBox department" onclick="showCheckboxesDepartment()" >
-                            <!-- <select > -->
-                                <label  >@lang('basic.to_department')</label>
-                            <!-- </select> -->
-                            <div class="overSelect"></div>
-                        </div>
-                        <div id="checkboxes1" >
-                            <input type="search"  placeholder="{{ __('basic.search')}}"  id="mySearch1">
-                            @foreach($departments0 as $department0)
-                                <div class="col-12">
-                                    <label for="{{  '0_'.$department0->id }}" class="col-12 float_left panel1" >
-                                        <input name="to_department[]" type="checkbox" id="{{ '0_'.$department0->id }}" value="{{ $department0->id }}" {!! in_array( $department0->id, $departments) ? 'checked' : '' !!} />
-                                        <span>{{ $department0->name }}</span>
-                                    </label>
-                                    @foreach($departments1->where('level2', $department0->id ) as $department1)
-                                        <label for="{{  '1_'.$department1->id }}" class="col-12 float_left panel1" >
-                                            <input name="to_department[]" type="checkbox" id="{{ '1_'.$department1->id }}"  value="{{ $department1->id }}" {!! in_array( $department1->id,$departments) ? 'checked' : '' !!}  />
-                                            <span>{{ $department1->name }}</span>
-                                        </label>
-                                        @foreach( $departments2->where('level2', $department1->id)  as $department2)
-                                            <label for="{{  '2_'.$department2->id }}" class="col-offset-1 col-md-10 float_left panel1" >
-                                                <input name="to_department[]" type="checkbox" id="{{ '2_'.$department2->id }}" value="{{ $department2->id }}" {!! in_array( $department2->id,$departments) ? 'checked' : '' !!}  />
-                                                <span>{{ $department2->name }}</span>
-                                            </label>
-                                        @endforeach
-                                    @endforeach
-                                </div>
-                            @endforeach
-                        </div>
-                    </div> --}}
+                    </div>
                     <div class="form-group col-sm-12 col-md-6 float_left">
                         <label class="label_file" for="file">Top notice image<span><img src="{{ URL::asset('icons/download.png') }}" />Upload image</span></label>
                         <input type='file' id="file" name="fileToUpload" >
@@ -112,7 +81,9 @@
                     <div class="form-group col-sm-12 col-md-6 float_left {{ ($errors->has('schedule_date'))  ? 'has-error' : '' }}" >
                         <label class="label_schedule">@lang('basic.schedule')</label>
                         <p class="schedule col-sm-12 col-md-6 float_left">
-                            <input type="radio" name="schedule_set" id="send" class="select_save" value="0" checked />
+                            <input type="radio" name="schedule_set" id="no-send" class="select_save" value="2" checked />
+                                <label class="schedule_set" for="no-send">@lang('basic.dont_send_mail')</label>
+                            <input type="radio" name="schedule_set" id="send" class="select_save" value="0" />
                                 <label class="schedule_set" for="send">@lang('basic.send')</label>
                             <input type="radio" name="schedule_set" id="schedule" class="select_save" value="1" />
                                 <label class="schedule_set"  for="schedule">@lang('basic.schedule')</label>
@@ -123,6 +94,8 @@
                         <input name="schedule_date" class="schedule_date" type="date" class="form-control" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" required />
                         <input name="schedule_time" class="schedule_date" type="time" class="form-control" value="08:00" required />
                         {!! ($errors->has('schedule_date') ? $errors->first('schedule_date', '<p class="text-danger">:message</p>') : '') !!}
+                        <p class="schedule col-sm-12 col-md-6 float_left">
+                            
                     </div>
                     <!-- <div class="form-group last {{ ($errors->has('notice')) ? 'has-error' : '' }}">
                         <label>@lang('basic.notice'):</label>

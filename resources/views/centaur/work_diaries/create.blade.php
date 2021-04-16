@@ -38,11 +38,12 @@
 									@foreach ($projects_erp as $id => $project)
 										<option class="project_list" value="{{ $id }}">{{ $project  }}</option>
 									@endforeach	
-								@endif
-								@if(isset($projects) && $projects && count( $projects ) > 0 )
-									@foreach ($projects as $project)
-										<option class="project_list" value="{{ intval($project->id) }}" >{{ $project->erp_id  . ' ' . $project->name }}</option>
-									@endforeach	
+								@else 
+									@if(isset($projects) && $projects && count( $projects ) > 0 )
+										@foreach ($projects as $project)
+											<option class="project_list" value="{{ intval($project->id) }}" >{{ $project->erp_id  . ' ' . $project->name }}</option>
+										@endforeach	
+									@endif
 								@endif
 							</select>
 						</div>
@@ -50,7 +51,7 @@
 					<div class="form-group tasks {{ ($errors->has('erp_task_id')) ? 'has-error' : '' }}">
 						<label>@lang('basic.task')</label>
 						<select id="select_task{{ $i }}" name="erp_task_id[{{ $i }}]" placeholder="Izaberi zadatak..."  value="{{ old('erp_task_id') }}" {!! $i == 1 ? 'required' : '' !!}>
-							<option value="" disabled selected>Izaberi zadatak</option>
+							<option value="" disabled selected >Izaberi zadatak</option>
 							@if(isset( $tasks ) && $tasks )
 								@foreach ($tasks as $id => $task)
 									<option class="project_list" value="{{ $id }}">{{ $task  }}</option>
@@ -68,7 +69,8 @@
 								<p class="task_description hidden">{!! trim($workTask->description) !!}</p>
 								<article>
 									<input class="task_id" type="hidden" name="task_id[{{ $i }}][]" value="{{  $workTask->id }}" >
-									<input class="task_time" type="time" name="time[{{ $i }}][]" value="{!! old('time') ? old('time') : '' !!}" min="00:00" max="12:00"  >
+									<input class="task_time" type="time" name="time[{{ $i }}][]" value="{!! old('time') ? old('time') : '' !!}" min="00:00" max="12:00"  > 
+									<span class="padd_l_20" id="restHours_{{ $workTask->id }}"></span>
 									<textarea class="form-control task_description" name="description[{{ $i }}][]" type="text"  rows="3" placeholder="Opis rada">{{ old('description') }}</textarea>
 								</article>
 							</div>
@@ -88,9 +90,9 @@
 				<input name="end_time" class="form-control" type="time" value="{!! old('end_time') ? old('end_time') : '00:00' !!}" required disabled readonly>
 				{!! ($errors->has('end_time') ? $errors->first('end_time', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group select_project {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
+			<div class="form-group select_project {{ ($errors->has('project_overtime')) ? 'has-error' : '' }}">
 				<label>Prekovremeni sati na projekt</label>
-				<select id="select_project_overtime" name="project_overtime" placeholder="Izaberi projekt..."  value="{{ old('project_id') }}" >
+				<select id="select_project_overtime" name="project_overtime" placeholder="Izaberi projekt..."  value="{{ old('project_overtime') }}" >
 					@if(isset($projects_erp) && $projects_erp && count( $projects_erp ) > 0)
 						@foreach ($projects_erp as $id => $project)
 							<option class="project_list" value="{{ $id }}">{{ $project  }}</option>
@@ -107,12 +109,14 @@
 
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-	showHideEelement();
+	$.getScript('/../js/absence_create_new.js');
+
+	/* showHideEelement();
 	textareaChange();
-	timeChange();
+	timeChange(); */
 /* 	selectSearchModal (); */
 
-	var time;
+/* 	var time;
 	var time_array = [];
 	var total_minute;
 	var h;
@@ -133,6 +137,7 @@
 		$('section.project:visible').last().children('section').children('.select_project').find('select').prop('required',true);
 		$('section.project:visible').last().children('section').children('.tasks').find('select').prop('required',true);
 	});
+
 	$('.remove_project').on('click',function(){
 		var id_parent = $( this ).parent().attr('id');
 		console.log(id_parent);
@@ -145,6 +150,7 @@
 		$('section.project#'+id_parent+' textarea').val('');
 
 	});
+
 	function showHideEelement() {
 		$('.show_hidden').on('click', function(){
 			$( this ).parent().find('.task_description').toggle();
@@ -230,19 +236,6 @@
 			}
 		});
 	}
-
-	/* function selectSearchModal () {
-		$(function(){
-			if( $('select.form-control').length > 0 ) {
-				$('select.form-control').select2({
-					dropdownParent: $('body'),
-					width: 'resolve',
-					placeholder: {
-						id: '-1', // the value of the option
-					},
-				});
-			}
-		});
-	} */
-	$.getScript('/../js/absence_create.js');
+ */
+	
 </script>

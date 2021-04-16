@@ -17,6 +17,7 @@ use App\Models\Shortcut;
 use App\Models\Absence;
 use App\Http\Controllers\BasicAbsenceController;
 use Sentinel;
+use Log;
 
 class DashboardController extends Controller
 {
@@ -29,6 +30,7 @@ class DashboardController extends Controller
     {   
         if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
+
             if($employee) {
                 $sick_leave_not_approve = Absence::SickUserOpen( $employee->id );
             

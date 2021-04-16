@@ -16,13 +16,51 @@ if( $( '.section_okr' ).length > 0 ) {
     var quarter;
     var status;
 
-    findOpenElement ();
+    if(open_element.length == 0) {
+        findOpenElement ();
+    }
     openResults();
     openTasks();
     deleteOkr ();
     edit_progress();
     progressBar();
     selectSearch ();
+    
+    $('#filter_okr_tim').on('change',function() {
+        tim = $( this ).val();
+        console.log(tim);
+
+        url = location.href + '?tim='+tim;
+        console.log(url);
+        $.ajax({
+            url: url,
+            type: "get",
+            beforeSend: function(){
+                $('body').prepend('<div id="loader"></div>');
+            },
+            success: function( response ) {
+                $('#loader').remove();
+
+                $.get(url, function(data, status){
+                    content =  $('#'+visible_element+' .section_okr>div', data );
+                    $( '#'+visible_element+' .section_okr').html( content );
+
+                    filterQuarterOpenElements();
+
+                    openResults();
+                    openTasks();
+                    deleteOkr ();
+                    edit_progress();
+                    progressBar();
+                });
+            },
+
+            error: function(jqXhr, json, errorThrown) {
+                console.log(jqXhr.responseJSON.message);
+            }
+        });
+
+    });	
 
     $('#filter_status').on('change',function() {
         filter_status();
@@ -34,6 +72,9 @@ if( $( '.section_okr' ).length > 0 ) {
 
     $('#filter_okr_empl').on('change',function() {
         filterQuarter();
+        employee = $( this ).find('option:selected').attr('data-value');
+        url = location.origin + '/exportOkr?employee_id='+employee;
+        $('.exportOkr').attr('href',url)
     });	
 
     function filterQuarter () {             /* Filter kvartal i djelatnik */
@@ -43,7 +84,7 @@ if( $( '.section_okr' ).length > 0 ) {
         if( quarter == 'all' && employee == 'all' ) {
             $('.div_okr').show();
         } else if( quarter == 'all') {
-            $('.panel').filter(function() {
+            $('.panel_filter').filter(function() {
                 if( $(this).text().toLowerCase().indexOf(employee) > -1 ) {
                     $(this).show();
                     $(this).parent().show();
@@ -51,8 +92,9 @@ if( $( '.section_okr' ).length > 0 ) {
                     $(this).hide();
                 }
             });
+            $('.div_keyResults').hide();
         } else if (employee == 'all' ) {
-            $('.panel').filter(function() {
+            $('.panel_filter').filter(function() {
                 if( $(this).text().toLowerCase().indexOf(quarter) > -1 ) {
                     $(this).show();
                     $(this).parent().show();
@@ -61,7 +103,7 @@ if( $( '.section_okr' ).length > 0 ) {
                 }
             });
         } else {
-            $('.panel').filter(function() {
+            $('.panel_filter').filter(function() {
                 if( $(this).text().toLowerCase().indexOf(quarter) > -1 && $(this).text().toLowerCase().indexOf(employee) > -1 ) {
                     $(this).show();
                     $(this).parent().show();
@@ -70,51 +112,50 @@ if( $( '.section_okr' ).length > 0 ) {
                 }
             });
         }
+        $('.div_keyResults').hide();
+        $('.div_keyResultTasks').hide();
+         
         findOpenElement ();
     }
 
-    function filterQuarterOpenElements() {
+    function filterQuarterOpenElements(open_element) {
         visible_element = $('.tabcontent:visible').attr('id')
 
         quarter = $('#filter_quarter').val().toLowerCase();
         employee = $('#filter_okr_empl').length > 0 ? $('#filter_okr_empl').val().toLowerCase() : 'all';
-
-        $( "#"+visible_element+" .panel" ).each(function( index, element ) {
-            id =  $( element).attr('id');
-            if( id != undefined ) {
-                if( quarter == 'all' && employee == 'all' ) {
-                    $('.div_okr').show();
-                } else if( quarter == 'all') {
-                     $("#"+id).filter(function() {
-                        if( $(this).text().toLowerCase().indexOf(employee) > -1 ) {
-                            $(this).show();
-                            $(this).parent().show();
-                        } else {
-                            $(this).hide();
-                        }
-                    });
-                } else if (employee == 'all' ) {
-                     $("#"+id).filter(function() {
-                        if( $(this).text().toLowerCase().indexOf(quarter) > -1 ) {
-                            $(this).show();
-                            $(this).parent().show();
-                        } else {
-                            $(this).hide();
-                        }
-                    });
+      /*   if( quarter == 'all' && employee == 'all' ) {
+            $('.div_okr').show();
+        } else if( quarter == 'all') {
+            $('.panel_filter').filter(function() {
+                if( $(this).text().toLowerCase().indexOf(employee) > -1 ) {
+                    $(this).show();
+                    $(this).parent().show();
                 } else {
-                     $("#"+id).filter(function() {
-                        if( $(this).text().toLowerCase().indexOf(quarter) > -1 && $(this).text().toLowerCase().indexOf(employee) > -1 ) {
-                            $(this).show();
-                            $(this).parent().show();
-                        } else {
-                            $(this).hide();
-                        }
-                    });
+                    $(this).hide();
                 }
-                /* $("#"+id).show(); */
-                
-            }
+            });
+            $('.div_keyResults').hide();
+        } else if (employee == 'all' ) {
+            $('.panel_filter').filter(function() {
+                if( $(this).text().toLowerCase().indexOf(quarter) > -1 ) {
+                    $(this).show();
+                    $(this).parent().show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        } else {
+            $('.panel_filter').filter(function() {
+                if( $(this).text().toLowerCase().indexOf(quarter) > -1 && $(this).text().toLowerCase().indexOf(employee) > -1 ) {
+                    $(this).show();
+                    $(this).parent().show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        } */
+        jQuery.each( open_element, function( i, val ) {
+            $("#"+this).show();
         });
     }
 
@@ -133,10 +174,6 @@ if( $( '.section_okr' ).length > 0 ) {
                 $.get(url, function(data, status){
                     content =  $('#'+visible_element+' .section_okr>div', data );
                     $( '#'+visible_element+' .section_okr').html( content );                      
-
-                    /* jQuery.each( open_element, function( i, val ) {
-                        $('.open_element').show();
-                    }); */
 
                     filterQuarterOpenElements();
 
@@ -368,8 +405,11 @@ if( $( '.section_okr' ).length > 0 ) {
     function storeProgressOnOkr( id, progress ) {
         visible_element = $('.tabcontent:visible').attr('id');
         url = location.origin + '/progressOkr' + '?progress='+progress+'&id='+id;
-        employee = $('#filter_okr_empl').length > 0 ? $('#filter_okr_empl').val().toLowerCase() : 'all';
-        quarter = $('#filter_quarter').val().toLowerCase();
+
+        tim = $('#filter_okr_tim').val();
+        status = $( '#filter_status' ).val();
+
+        url_load = location.href + '?tim='+tim+'&status='+status;
 
         $.ajax({
             url: url,
@@ -379,15 +419,18 @@ if( $( '.section_okr' ).length > 0 ) {
             },
             success: function( response ) {
                 $('#loader').remove();
-                $.get(location.href, function(data, status){
+                $.get(url_load, function(data, status){
                     content =  $('#'+visible_element+' .section_okr>div', data );
                     $( '#'+visible_element+' .section_okr').html( content );  
-                    
+                
+                    console.log(open_element);
                     jQuery.each( open_element, function( i, val ) {
-                       /*  $('#'+val).addClass('open_element'); */
+                        $('#'+val).addClass('open_element');
                         $('.open_element').show();
                     });
                     
+                    filterQuarterOpenElements();
+
                     openResults();
                     openTasks();
                     deleteOkr ();
@@ -404,9 +447,12 @@ if( $( '.section_okr' ).length > 0 ) {
 //ok
     function storeProgressOnResult( id, progress ) {
         visible_element = $('.tabcontent:visible').attr('id');
-        
         url = location.origin + '/progressKeyResult' + '?progress='+progress+'&id='+id;
-        console.log(url);
+
+        tim = $('#filter_okr_tim').val();
+        status = $( '#filter_status' ).val();
+        url_load = location.href + '?tim='+tim+'&status='+status;
+
         $.ajax({
             url: url,
             type: "get",
@@ -416,7 +462,7 @@ if( $( '.section_okr' ).length > 0 ) {
             success: function( response ) {
                 $('#loader').remove();
 
-                $.get(location.href, function(data, status){
+                $.get(url_load, function(data, status){
                     content =  $('#'+visible_element+' .section_okr>div',data );
                     $( '#'+visible_element+' .section_okr').html( content );  
                     
@@ -443,8 +489,10 @@ if( $( '.section_okr' ).length > 0 ) {
     function storeProgressOnTask( id, progress ) {
         url = location.origin + '/progressTask' + '?progress='+progress+'&id='+id;
         visible_element = $('.tabcontent:visible').attr('id');
-        employee = $('#filter_okr_empl').length > 0 ? $('#filter_okr_empl').val().toLowerCase() : 'all';
-        quarter = $('#filter_quarter').val().toLowerCase();
+
+        tim = $('#filter_okr_tim').val();
+        status = $( '#filter_status' ).val();
+        url_load = location.href + '?tim='+tim+'&status='+status;
 
         $.ajax({
             url: url,
@@ -454,7 +502,7 @@ if( $( '.section_okr' ).length > 0 ) {
             },
             success: function( response ) {
                 $('#loader').remove();
-                $.get(location.href, function(data, status){
+                $.get(url_load, function(data, status){
                     content =  $('#'+visible_element+' .section_okr>div',data );
                     $( '#'+visible_element+' .section_okr').html( content );  
                     
@@ -495,6 +543,11 @@ if( $( '.section_okr' ).length > 0 ) {
                         reload_element = reload_element.replace('del_','');;
                     }
     
+                    tim = $('#filter_okr_tim').val();
+                    status = $( '#filter_status' ).val();
+
+                    url_load = location.href + '?tim='+tim+'&status='+status;
+
                     $.ajaxSetup({
                         headers: {
                             '_token': token
@@ -509,15 +562,17 @@ if( $( '.section_okr' ).length > 0 ) {
                         },
                         success: function(result) {
                             $('#loader').remove();
-                            $.get(location.href, function(data, status){
+                            $.get(url_load, function(data, status){
                                 content =  $('#'+visible_element+' .section_okr>div',data );
                                 $( '#'+visible_element+' .section_okr').html( content );  
                                 
-                                jQuery.each( open_element, function( i, val ) {
+                             /*    jQuery.each( open_element, function( i, val ) {
                                     $('#'+val).addClass('open_element');
                                     $('.open_element').show();
-                                });
+                                }); */
                                 
+                                filterQuarterOpenElements();
+
                                 openResults();
                                 openTasks();
                                 deleteOkr ();

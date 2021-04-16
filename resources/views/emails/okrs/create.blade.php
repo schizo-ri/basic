@@ -120,7 +120,7 @@
                     <p>OKR: {{ $okr->name }}</p>
                     <p>Zaduženi djelatnik: {{ $okr->employee->user->first_name . ' ' . $okr->employee->user->last_name }}</p>
                     <p>Kvartal: {{'Q'.ceil(date("n", strtotime(date($okr->start_date))) / 3) .' - '. date("Y", strtotime(date($okr->start_date))) }}</p>
-                    <p>Komentar: {{ $okr->comment }} }}</p>
+                    <p>Komentar: {{ $okr->comment }}</p>
                     <p>OKR kreirao djelatnik: {{ Sentinel::getUser()->employee->user->last_name . ' ' . Sentinel::getUser()->employee->user->first_name}}</p>
                     <a href="{{ $link }}" class="odobri" >Vidi detalje</a>
                 @endif

@@ -42,7 +42,7 @@
 			<label>@lang('basic.manager')</label>
 			<select class="form-control" name="employee_id" value="" id="select_level">
 				<option value="" selected>
-				@foreach($employees as  $employee)
+				@foreach($employees as $employee)
 					<option value="{{ $employee->id }}" >{{ $employee->user->first_name . ' ' . $employee->user->last_name }}</option>
 				@endforeach
 			</select>

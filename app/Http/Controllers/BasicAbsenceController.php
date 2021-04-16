@@ -1071,7 +1071,8 @@ class BasicAbsenceController extends Controller
 		*/
 		public static function afterHoursNoPaid($user) 
 		{
-			$afterHours = Afterhour::where('employee_id', $user->id)->where('paid',null)->orWhere('paid',0)->where('approve',1)->get();
+			$afterHours = Afterhour::where('employee_id', $user->id)->where('paid', 0)->where('approve',1)->get();
+
 			$hours = 0;
 			foreach ($afterHours as $afterHour) {
 				if($afterHour->approve_h) {
@@ -1086,14 +1087,12 @@ class BasicAbsenceController extends Controller
 					} else {
 						$odobreni_sati = $odobreni_sati;
 					}
-	
 					$hours += $odobreni_sati;
 				}
 				
 			}
 			return $hours;
 		}	
-
 
 		/* 
 			Vraća broj odobrenih prekovremenih sati za djelatnika 
@@ -1156,7 +1155,7 @@ class BasicAbsenceController extends Controller
 
 		/* 
 			Vraća sate prekovremeni sati - izlasci 
-			računa slobodne dane  
+			računa slobodne dane
 		*/ 
 		public static function afterHours_withoutOuts($user)
 		{
@@ -1169,7 +1168,7 @@ class BasicAbsenceController extends Controller
 			if($razlika >= 8){
 				$razlika = round($razlika / 8, 0, PHP_ROUND_HALF_DOWN);
 			} else {
-				$razlika =0;
+				$razlika = 0;
 			}
 			
 			$days_off = DayOff::where('employee_id', $user->id)->get()->sum('days_no');
@@ -1206,8 +1205,6 @@ class BasicAbsenceController extends Controller
 
 			if( $days_off != null) {
 				$days_off = $days_off->where('approve',1);
-			
-
 		
 				$holidays = BasicAbsenceController::holidays();
 			
@@ -1234,8 +1231,9 @@ class BasicAbsenceController extends Controller
 		{
 			$user = Employee::find($user_id);
 
-			$days_off = BasicAbsenceController::afterHours_withoutOuts( $user );
+			$days_off = BasicAbsenceController::afterHours_withoutOuts( $user );			
 			$days_offUsed = BasicAbsenceController::days_offUsed( $user );
+
 		/* 	$days_off = BasicAbsenceController::days_off( $user ); */
 		/* 	$days_offUsed = BasicAbsenceController::days_offUsed($user); */
 

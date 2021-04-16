@@ -33,7 +33,7 @@
 					</header>
 					<section class="page-main main_competences">
 						@if(count($competences))
-							@if (Sentinel::inRole('administrator') )
+							@if (Sentinel::inRole('administrator') || Sentinel::inRole('moderator') )
 								<table id="index_table" class="display table table-hover sort_1_asc">
 									<thead>
 										<tr>
@@ -119,7 +119,7 @@
 												</td>
 												<td class="center not_link">
 													@if(Sentinel::getUser()->hasAccess(['competence_evaluations.view']) || in_array('competence_evaluations.view', $permission_dep))
-														<a href="{{ route('competence_evaluations.index', ['id' => $competence->id] ) }}" class="btn-edit" title="Rezultati evaluacije" >
+														<a href="{{ route('competence_evaluations.show', $competence->id ) }}" class="btn-edit" title="Rezultati evaluacije" >
 															<i class="fas fa-poll"></i>
 														</a>
 													@endif
@@ -146,18 +146,18 @@
 							@else
 								<section>
 									@foreach ( $competences as $competence )
-										<article class="col-xs-12 col-sm-49 col-md-32 col-lg-24 col-xl-19 noticeboard_notice_body panel">
+										<article class="col-xs-12 col-sm-49 col-md-32 col-lg-24 col-xl-19 noticeboard_notice_body panel competence_body">
 											<a href="{{ route('competences.show', $competence->id) }}" >
 												<div>
 													{{-- <header class="ad_header">
 													</header> --}}
-													<main class="ad_main">
-														<span class="ad_content">{{ $competence->name }}</span>
-														<span class="ad_content"><b>{{ $competence->description }}</b> </span>
+													<main class="competence_main">
+														<span class="competence_content">{!! Config::get('app.locale') == 'uk' ? $competence->nameUKR : $competence->name !!}</span>
+														<span class="competence_content"><b>{!! Config::get('app.locale') == 'uk' ? $competence->descriptionUKR : $competence->description !!}</b> </span>
 													</main>
-													<footer class="ad_footer">
+													{{-- <footer class="ad_footer">
 														
-													</footer>
+													</footer> --}}
 												</div>
 											</a>
 										</article>

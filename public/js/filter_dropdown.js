@@ -6,77 +6,6 @@ $(function() { // filter knowledge base
 	var task = null;
 	var url;
 	var project;
-/* 
-	$('.change_month_afterhour').on('change',function(){
-		date =  $(this).val().toLowerCase();
-		employee_id =  $('.change_employee_afterhour').val();
-		if(employee_id != '' && employee_id != null) {
-			employee_id = employee_id.replace("empl_","");
-		}
-		url =  location.href + '?date='+date+'&employee_id='+employee_id;
-		$.ajax({
-			url: url,
-			type: "get",
-			beforeSend: function(){
-				// Show image container
-				$('body').prepend('<div id="loader"></div>');
-			},
-			success: function( response ) {
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-				
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-					if( $('tbody tr').length == 0)  {
-						$('.btn-store').hide();
-					} else {
-						$('.btn-store').show();
-					}
-				});
-			},
-			error: function(jqXhr, json, errorThrown) {
-				console.log(jqXhr.responseJSON.message);
-			}
-		});
-	});
-	
-	$('.change_employee_afterhour').on('change',function(){
-		employee_id =  $(this).val().toLowerCase();
-		if(employee_id != '' && employee_id != null) {
-			employee_id = employee_id.replace("empl_","");
-		}
-		date =  $('.change_month_afterhour').val();
-		
-		$.ajax({
-			url: location.href + '?date='+date+'&employee_id='+employee_id ,
-			type: "get",
-			beforeSend: function(){
-				// Show image container
-				$('body').prepend('<div id="loader"></div>');
-			},
-			success: function( response ) {
-				$( '#admin_page >main' ).load(location.href + '?date='+date+'&employee_id='+employee_id + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-					if( $('tbody tr').length == 0)  {
-						$('.btn-store').hide();
-					} else {
-						$('.btn-store').show();
-					}
-				});
-			},
-			error: function(jqXhr, json, errorThrown) {
-				console.log(jqXhr.responseJSON.message);
-			}
-		});
-	}); */
 
 	$('.filter_employees').not('.main_absence .filter_employees').on('change',function(){
 		employee_id = $( this ).val();
@@ -425,9 +354,6 @@ $(function() { // filter knowledge base
 			success: function( response ) {
 				if( url.includes('work_diaries/1')) {
 					$( '.page-main' ).load(url + ' .page-main>.diary_project',function(){
-						console.log("work_diaries");
-						console.log(url);
-						console.log(location.href );
 						$('#loader').remove();
 						$.getScript('/../js/datatables.js');
 						$.getScript('/../js/collaps.js');
@@ -437,15 +363,21 @@ $(function() { // filter knowledge base
 						})
 						
 					$.getScript('/../restfulizer.js');
-					});
+					});				
 				} else {
 					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
 						$('#loader').remove();
 						$.getScript('/../js/datatables.js');
 						$('.show_button').on('click',function () {
-							console.log("show_button click 3");
 							$('.dt-buttons').toggle();
 						})
+						if (url.includes('afterhours'))  {
+							if( $('tbody tr').length == 0) {
+								$('.store_buttom').hide();
+							} else {
+								$('.store_buttom').show();
+							}
+						}
 						$.getScript('/../restfulizer.js');
 					});
 				}

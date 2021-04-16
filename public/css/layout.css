@@ -2312,9 +2312,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	}
 	.scroll_button button:first-child {
 		margin-right: 10px;
-
 	}
-	
 	html {
 		height: auto;
 		overflow: auto;
@@ -2328,6 +2326,9 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	div.topnav {
 		float: none;
 		margin: auto;
+	}
+	.container .calendar {
+		order: 2;
 	}
 	.container .calendar, container .noticeboard {
 		float: none;
@@ -2397,6 +2398,7 @@ table.table_service td:nth-child(4), table.table_service td:nth-child(5) {
 	.container div.user_header {
 		height: fit-content;
 		margin: 0;
+		order: 1;
 	}
 	.button_nav.active p.button_nav_text {
 		

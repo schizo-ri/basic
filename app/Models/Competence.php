@@ -11,7 +11,7 @@ class Competence extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['name','description','status','employee_id'];
+	protected $fillable = ['name','nameUKR','description','descriptionUKR','status','employee_id'];
 
 	/*
 	 * The Eloquent Employee model name

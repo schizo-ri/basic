@@ -33,7 +33,7 @@
 		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 		<script>var dt = new Date().getTime();</script>
 		<!-- CSS -->
-		<link rel="stylesheet" href="{{ URL::asset('/../css/css.css?random=@dt') }}"/>
+		<link rel="stylesheet" href="{{ URL::asset('/../css/css3.css?random=@dt') }}"/>
 		<!-- ICON -->
 		<link rel="shortcut icon" href="{{ asset('img/icon.ico') }}">
 		<!--Jquery -->
@@ -80,7 +80,7 @@
 										<button class="dropbtn"><i class="fas fa-globe-americas"></i></button>
 										<div class="dropdown-content">
 											<a class="lang_link" href="{{ action('DashboardController@change_lang', ['lang' => 'en']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-en.png') }}" alt="flag en" title="EN" /></a>
-											{{-- <a class="lang_link" href="{{ action('DashboardController@change_lang', ['lang' => 'uk']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-uk.png') }}" alt="flag en" title="UK" /></a> --}}
+											<a class="lang_link" href="{{ action('DashboardController@change_lang', ['lang' => 'uk']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-uk.png') }}" alt="flag en" title="UK" /></a>
 											<a class="lang_link"  href="{{ action('DashboardController@change_lang', ['lang' => 'hr']) }}"><img class="img_flag" src="{{ URL::asset('icons/flag-hr.png') }}" alt="flag hr" title="HR" /></a>
 										</div>
 									</li>
@@ -118,8 +118,8 @@
 										</li>
 									@endif
 								@endif --}}						  
-								@if(Sentinel::inRole('administrator') || Sentinel::inRole('moderator'))
-									<li><a id="open-admin" href="{{ route('users.index') }}" title="{{ __('basic.open_admin')}}"  >
+								@if(Sentinel::inRole('administrator') || Sentinel::inRole('moderator') || Sentinel::inRole('racunovodstvo') )
+									<li><a id="open-admin" href="{!! Sentinel::getUser()->hasAccess(["users.view"]) ? route('users.index') : route('admin') !!}" title="{{ __('basic.open_admin')}}"  >
 										<img class="img_button" src="{{ URL::asset('icons/flash.png') }}" alt="messages" title="{{ __('basic.open_admin')}}" /></a>
 									</li>
 								@endif
@@ -209,7 +209,7 @@
 					}, false);
 				*/
 			</script>
-			<script src="{{URL::asset('/../js/js.js?random=@dt') }}"></script>
+			<script src="{{URL::asset('/../js/js3.js?random=@dt') }}"></script>
 		 	<!-- moment -->
 			<script src="{{ URL::asset('/../node_modules/moment/moment.min.js') }}"></script>
 
@@ -221,7 +221,6 @@
 			<script src="{{ URL::asset('/../dataTables/JSZip-2.5.0/jszip.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/pdfmake.min.js') }}"></script>
 			<script src="{{ URL::asset('/../dataTables/pdfmake-0.1.36/vfs_fonts.js') }}"></script>
-
 			
 			<!-- tinymce js -->
 			<script src="{{ URL::asset('/node_modules/tinymce/tinymce.min.js') }}" ></script>

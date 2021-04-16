@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\IDCardExpired::class,
         \App\Console\Commands\SickLeaveCommand::class,
         \App\Console\Commands\DiaryCommand::class,
+        \App\Console\Commands\InstructionCommand::class,
     ];
 
     /**
@@ -42,9 +43,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
        
-       /*  $schedule->command('email:absence_day') 
+        /* $schedule->command('email:absence_day') 
                 ->dailyAt('12:00')  
-                //->everyMinute()
                 ->evenInMaintenanceMode();
         $schedule->command('email:campaign')
                 ->dailyAt('7:00') 
@@ -56,7 +56,6 @@ class Kernel extends ConsoleKernel
                 ->dailyAt('7:00') 
                 ->evenInMaintenanceMode(); 
         $schedule->command('anniversary')
-                // ->everyMinute()
                 ->dailyAt('7:00') 
                 ->evenInMaintenanceMode();
         $schedule->command('medicalExamination')
@@ -75,33 +74,28 @@ class Kernel extends ConsoleKernel
                 ->dailyAt('7:00') 
                 ->evenInMaintenanceMode();
         $schedule->command('task')
-                // ->everyMinute()
                 ->hourly()
                 ->evenInMaintenanceMode();  
         $schedule->command('car_registration')
                 ->dailyAt('7:00') 
-                // ->everyMinute()
                 ->evenInMaintenanceMode();
         $schedule->command('birthday')
                 ->dailyAt('7:00') 
-                // ->everyMinute()
                 ->evenInMaintenanceMode();
         $schedule->command('idCard')
-                // ->everyMinute()
                 ->dailyAt('7:00') 
                 ->evenInMaintenanceMode();
         $schedule->command('diary')
-                // ->everyMinute()
                 ->dailyAt('20:00') 
                 ->evenInMaintenanceMode(); 
         $schedule->command('sickLeave')
                  ->everyMinute()
                 //->dailyAt('12:00') 
                 ->evenInMaintenanceMode(); */
-
-                $schedule->command('task')
-                ->hourly()
-                ->evenInMaintenanceMode();  
+        /* $schedule->command('instruction')
+                // ->everyMinute() 
+                ->dailyAt('7:00') 
+                ->evenInMaintenanceMode();   */
     }
 
     /**

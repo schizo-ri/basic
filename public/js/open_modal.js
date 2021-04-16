@@ -1,7 +1,6 @@
 $("a[rel='modal:open']").addClass('disable');
 
 $(function() {
-  
     $("a[rel='modal:open']").removeClass('disable');
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
@@ -230,6 +229,19 @@ $(function() {
     });
     
     $('body').on($.modal.OPEN , function(event, modal) {
+            
+       /*  console.log("modal length" + $( ".modal" ).length);
+        $( ".modal" ).on('click',function( event ) {
+            if( event.target.rel != 'modal:close' ) {
+                console.log(event.target.nodeName);
+                console.log( "clicked: " + event.target.nodeName );
+                console.log(  event.target );
+                console.log(  event.target.rel );
+                console.log(  event.target.classList );
+            }
+        
+        });
+ */
         $.getScript('/../select2-develop/dist/js/select2.min.js');
         selectSearchModal ();
     });
@@ -298,4 +310,7 @@ $(function() {
         return null;
         
     }
+
+
+
 }); 

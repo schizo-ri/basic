@@ -544,7 +544,7 @@ $(function(){
 		$('.after_form').on('submit',function(e){
 			var broj_zahtjeva = $('.checkinput:checked').length;
 
-			if (! confirm("Sigurno želiš odobriti "+broj_zahtjeva+" zahtjeva?")) {
+			if (! confirm("Sigurno želiš obraditi "+broj_zahtjeva+" zahtjeva?")) {
 				
 				return false;
 			} else {

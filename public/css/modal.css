@@ -49,6 +49,51 @@
 	clear: both;
 }
 
+.modal.modal_big {
+	width: 1000px;
+    max-width: 90%;
+}
+.modal .table_project_task th {
+	text-align: center;
+}
+.modal .hidden_task {
+	display: none;
+}
+.modal .show_all_tasks {
+	cursor: pointer;
+	color: blue;
+}
+.modal.modal_big .modal-body {
+	overflow: auto;
+}
+.modal .table_project_task td {
+	text-align: right;
+}
+
+.modal .table_project_task tr td:first-child {
+	text-align: left;
+	position: sticky;
+    left: 0;
+    background: white;
+}
+
+.modal .table_project_task th, .modal .table_project_task td {
+	width: 8%;
+    border: 1px solid #ccc;
+    padding: 5px;
+    font-weight: 400;
+    vertical-align: middle;
+    min-width: 90px;
+}
+
+.modal .table_project_task tr th:first-child {
+	width: 15%;
+	text-align: left;
+	position: sticky;
+    left: 0;
+    background: white;
+}
+
 .modal.modal_notice, .modal.modal_questionnaire, .modal_user  {
 	position: fixed;
     float: right;

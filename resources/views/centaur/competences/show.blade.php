@@ -3,12 +3,15 @@
 @section('title', 'Evaluacija')
 
 @section('content')
+@php
+/* 	dd(Config::get('app.locale')); */
+@endphp
 <div class="index_page competence_table">
 	<main class="col-md-12 index_main main_documents float_right">
 		<section>
 			<div class="page-header header_document">
 				<a class="link_back" href="{{ route('competences.index') }}" ><span class="curve_arrow_left"></span></a>
-				{{ $competence->name }}
+				{!! Config::get('app.locale') == 'uk' ? $competence->nameUKR : $competence->name !!}
 			</div>
 			<main class="all_documents">
 				<div class="table-responsive">
@@ -30,7 +33,7 @@
 							<form accept-charset="UTF-8" role="form" method="post" action="{{ route('competence_evaluations.store') }}">
 								<ul class="legend">
 									@foreach ($competence->hasRatings as $rating)
-										<li>{{ $rating->rating . ' - ' . $rating->description}} </li>
+										<li>{{ $rating->rating . ' - ' }} {!! Config::get('app.locale') == 'uk' ? $rating->descriptionUKR : $rating->description !!} </li>
 									@endforeach
 								</ul>
 								<div>
@@ -49,7 +52,7 @@
 												</p>
 											@endif
 										@else
-												<input type="hidden" name="employee_id" value="{{ Sentinel::getUser()->employee->id }}">
+											<input type="hidden" name="employee_id" value="{{ Sentinel::getUser()->employee->id }}">
 										@endif
 										@php
 											$rating_all = 0;
@@ -61,8 +64,8 @@
 											<span hidden id="coefficient">{{ $group->coefficient }}</span>
 											<input type="hidden" name="group_id[{{ $group->id }}]" value="{{ $group->id }}">
 											<div class="mySlides">
-												<h5>{{ ($key_group + 1) . '. '. $group->name }}</h5>
-												<h6>{{ $group->description }}</h6>
+												<h5>{{ ($key_group + 1) . '. '}} {!! Config::get('app.locale') == 'uk' ? $group->nameUKR : $group->name !!}</h5>
+												<h6>{!! Config::get('app.locale') == 'uk' ? $group->descriptionUKR : $group->description !!}</h6>
 												@if ( count($group->hasQuestions) > 0)
 													<div>
 														@foreach ($group->hasQuestions as $key_quest => $question)
@@ -82,9 +85,9 @@
 															@endphp
 															<input type="hidden" name="question_id[{{ $group->id }}][{{ $question->id }}]" value="{{ $question->id }}">
 															<div class="clearfix">
-																<div >
-																	<p>{{ ($key_quest + 1) . '. '. $question->name }} {!! $evaluation ? ' - '. $rating_question .' - ' .  $evaluation->rating->description : '' !!}</p>
-																	<p class="description">{{  $question->description }}</p>
+																<div>
+																	<p>{{ ($key_quest + 1) . '. '}} {!! Config::get('app.locale') == 'uk' ? $question->nameUKR : $question->name !!} {!! $evaluation ? ' - '. $rating_question .' - ' .  $evaluation->rating->description : '' !!}</p>
+																	<p class="description">{!! Config::get('app.locale') == 'uk' ? $question->descriptionUKR : $question->description !!}</p>
 																</div>
 																<div class="overflow_hidd radio_group">
 																	@if( count($competence->hasRatings) > 0 )
@@ -105,7 +108,7 @@
 															</div>
 														@endforeach
 													</div>
-													<div class="rating_group"><b>Ocjena grupe: <span>{{ $rating_group }}</span></b></div>
+													<div class="rating_group"><b>@lang('basic.group_rating'): <span>{{ $rating_group }}</span></b></div>
 													@if( ! $evaluations || count($evaluations) == 0)
 														@if ( $key_group == count($competence->hasGroups)-1 )
 															<input class="btn-submit" type="submit"  value="{{ __('basic.save')}}" id="stil1">
@@ -114,16 +117,16 @@
 													<!-- Next and previous buttons -->
 													@if (count($competence->hasGroups) > 1)
 														@if ($key_group != (count($competence->hasGroups)-1))
-															<a class="next btn-next">Slijedeće &#10095;</a>
+															<a class="next btn-next">@lang('basic.next_tab') &#10095;</a>
 														@endif
 														@if ($key_group != 0)
-															<a class="prev btn-next">&#10094; Prethodno</a>
+															<a class="prev btn-next">&#10094; @lang('basic.prev_tab')</a>
 														@endif
 													@endif
 												@endif
 											</div>
 										@endforeach
-										<div class="rating_all"><b>Ukupna ocjena: <span>{{ $rating_all }}</span></b></div>
+										<div class="rating_all"><b>@lang('basic.total_rating'): <span>{{ $rating_all }}</span></b></div>
 									</div>
 								</div>
 								{{ csrf_field() }}
