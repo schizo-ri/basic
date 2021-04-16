@@ -74,7 +74,7 @@
 						{{-- <a class="" href="{{ route('api_erp.index') }}" ><span>api</span></a> --}}
 						
 						<ul class="nav_ul float_right">
-							@if(isset($checked_user->employee))
+							{{-- @if(isset($checked_user->employee))
 								@if( in_array('Čestitka UKR', $checked_user->employee->employeesDepartmentName()) || Sentinel::inRole('administrator') )
 									<li class="change_lang dropdown">
 										<button class="dropbtn"><i class="fas fa-globe-americas"></i></button>
@@ -85,7 +85,7 @@
 										</div>
 									</li>
 								@endif
-							@endif
+							@endif --}}
 							@if (Sentinel::check())
 								@if( $checked_user->employee && $_SERVER['REQUEST_URI'] != '/dashboard')
 									<li>
@@ -165,7 +165,7 @@
 				// Enable pusher logging - don't include this in production
 				/* Pusher.logToConsole = true; */
 				var employee_id = $('#employee_id').text();
-				var pusher = new Pusher('d2b66edfe7f581348bcc', {
+				var pusher = new Pusher('d41ea47da1cf61c8251e', {
 					cluster: 'eu'
 				});
 

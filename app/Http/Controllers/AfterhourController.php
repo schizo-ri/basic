@@ -37,8 +37,8 @@ class AfterhourController extends Controller
     public function __construct()
     {
         $this->middleware('sentinel.auth');
-        $this->api_erp = true;
-        $this->api_project = true;
+        $this->api_erp = false;
+        $this->api_project = false;
         $this->test_mail = false;  // true - test na jelena.juras@duplico.hr
     }
     

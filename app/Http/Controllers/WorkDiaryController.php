@@ -27,8 +27,8 @@ class WorkDiaryController extends Controller
 	public function __construct()
 	{
         $this->middleware('sentinel.auth');
-        $this->api_erp = true;
-        $this->api_project = true;
+        $this->api_erp = false;
+        $this->api_project = false;
         $this->moduli = CompanyController::getModules();
     }
     

@@ -41,7 +41,7 @@ class AbsenceController extends BasicAbsenceController
     public function __construct()
     {
 		$this->middleware('sentinel.auth');
-		$this->api_erp = true;
+		$this->api_erp = false;
 		$this->test_mail = false;  // true - test na jelena.juras@duplco.hr
     }
 	

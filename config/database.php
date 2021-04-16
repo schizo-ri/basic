@@ -51,7 +51,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'myintran_duplico'),      // duplicoh_icom-user    /novi_portal_basic   /   myintran_tvrtka
+            'database' => env('DB_DATABASE', 'myintran_degordian'),      // duplicoh_icom-user    /novi_portal_basic   /   myintran_tvrtka
             'username' => env('DB_USERNAME','root'),                    //duplicoh_jelena       /root                /   myintran_jelenaj
             'password' => env('DB_PASSWORD', ''),                // Sifra123jj           / ''                 /   2UhAghyLBRil
             'unix_socket' => env('DB_SOCKET', ''),

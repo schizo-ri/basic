@@ -90,7 +90,7 @@ class TaskController extends Controller
 			'end_date'  	    => $request['end_date'],
 			'time1'  	        => $request['time1'],
             'interval_period'   => $request['interval_period'],
-            'energy_consumptions'=> $request['energy_consumptions'],
+            'energy_consumptions'=> isset($request['energy_consumptions']) ? $request['energy_consumptions'] : null,
 			'active' 		    => $request['active'],
         );
 
@@ -118,7 +118,7 @@ class TaskController extends Controller
                         Log($user->inRole('administrator'));
                         $role = Sentinel::findRoleBySlug('energenti');
                       
-                        if( ! $user->inRole('energenti') ) {
+                        if(  $role && ! $user->inRole('energenti') ) {
                             $role->users()->attach($user);
                         }
                     }
@@ -240,7 +240,7 @@ class TaskController extends Controller
 			'start_date'  	    => $request['start_date'],
 			'end_date'  	    => $request['end_date'],
             'interval_period'   => $request['interval_period'],
-            'energy_consumptions'=> $request['energy_consumptions'],
+            'energy_consumptions'=> isset($request['energy_consumptions']) ? $request['energy_consumptions'] : null,
 			'active' 		    => $request['active'],
         );
 
@@ -265,7 +265,7 @@ class TaskController extends Controller
                             $user = Sentinel::findById( $employeeTask->employee->user_id );
 
                             $role = Sentinel::findRoleBySlug('energenti');
-                            if( ! $user->inRole('energenti') ) {
+                            if(  $role && ! $user->inRole('energenti') ) {
                                 $role->users()->attach($user);
                             }
                         }
