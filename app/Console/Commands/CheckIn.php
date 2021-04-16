@@ -42,7 +42,7 @@ class CheckIn extends Command
     public function handle()
     {
         $today_date = date('Y-m-d');
-        Log::info( "CheckIn " . $today_date);
+   
         $travelorders = TravelOrder::openTravelOrders();
         if( count($travelorders) > 0 ) {
             foreach ($travelorders as $travelorder) {
@@ -57,7 +57,7 @@ class CheckIn extends Command
                         
                     $workRecord = new WorkRecord();
                     $workRecord->saveWorkRecords($data);
-                    Log::info($workRecord);
+                  
                 }
               
             }

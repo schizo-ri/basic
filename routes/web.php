@@ -11,16 +11,13 @@
 |
 */
 
-
 Route::get('/', function () {
     if(Sentinel::check()) {
         return redirect('dashboard');
     } else {
         return view('welcome');
     }
-  
 });
-
 
 // Authorization
 Route::get('login', 'Auth\SessionController@getLogin')->name('auth.login.form');
@@ -134,6 +131,7 @@ Route::resource('absence_types', 'AbsenceTypeController');
 
 // Absences
 Route::resource('absences', 'AbsenceController');
+Route::get('requestsFromPlan', ['as' => 'requestsFromPlan', 'uses' => 'AbsenceController@requestsFromPlan']);
 
 // Notices
 Route::resource('notices', 'NoticeController');
@@ -264,6 +262,13 @@ Route::get('/t', function () {
     event(new \App\Events\MessageSendEvent());
     dd('Event Run Successfully.');
 });
+
+// Vacation
+Route::resource('vacations', 'VacationController');
+Route::get('vacationPlan', ['as' => 'vacationPlan', 'uses' => 'VacationPlanController@vacationPlan']);
+
+// VacationPlan
+Route::resource('vacation_plans', 'VacationPlanController');
 
 Route::get('errorMessage', ['as' => 'errorMessage', 'uses' => 'ErrorController@errorMessage']);
 

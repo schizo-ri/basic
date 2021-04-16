@@ -8,6 +8,7 @@
 				<label>@lang('basic.employee')</label>
 				<select class="form-control" name="employee_id[]" value="{{ old('employee_id') }}" size="10" autofocus multiple required >
 					<option value="" disabled></option>
+					<option value="all" >@lang('basic.all_employees')</option>
 					@foreach ($employees as $employee)
 						<option name="employee_id" value="{{ $employee->id }}">{{ $employee->user['last_name']  . ' ' . $employee->user['first_name'] }}</option>
 					@endforeach	
@@ -69,7 +70,7 @@
 		@endif
 		@if (Sentinel::inRole('administrator'))
 			<div class="display_flex">
-				<label for="decree">@lang('basic.decree')</label>
+				<label for="decree" class="decree">@lang('basic.decree')</label>
 				<input class="margin_l_20" type="checkbox" name="decree" value="1" id="decree" />
 			</div>
 		@endif

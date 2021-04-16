@@ -61,8 +61,13 @@ $(function() {
                         get_url(url, datum);
 
                         if(body_width < 768) {
-                            $('.index_main.index_event').modal();
-                        }  
+                            $('.index_main.index_event').modal({
+                                escapeClose: true,
+                                showClose: true,
+                                clickClose: true,
+                                closeText: 'Close',
+                            });
+                        }
                     }
                 }
             },

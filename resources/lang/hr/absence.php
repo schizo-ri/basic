@@ -69,6 +69,9 @@ return [
 	'proportion' 	=> 'razmjerno',
 	'experience' 	=> 'Radni staž',
 	'yy_mm_dd' 		=> 'gg-mm-dd',
-	
+	'vacation' 		=> 'Godišnji odmor',
+	'vacations' 	=> 'Godišnji odmori',
+	'vacation_plan' => 'Plan godišnjeg odmora',
+	'closing' 		=> 'Zaključivanje prijava',
 ];
 ?>

@@ -359,7 +359,6 @@ class PostController extends Controller
 			}
 			event(new MessageSend( __('basic.new_message'), $comment, $post->employee_id ));
 		}
-		
 
 		$message = session()->flash('success', __('basic.sent_message'));
 

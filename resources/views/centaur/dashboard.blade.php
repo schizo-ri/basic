@@ -20,7 +20,7 @@
 		<div class="user_header col-xs-12 col-sm-12 col-md-12 col-lg-8" >
 			<div class="info ">
 				<div class="col-md-3 float_left user_header_info">
-					@if($profile_image && ! empty($profile_image))
+					@if(isset($profile_image) && $profile_image && ! empty($profile_image))
 						<span class="image_prof">
 							<img class="" src="{{ URL::asset('storage/' . $user_name . '/profile_img/' . end($profile_image)) }}" alt="Profile image" />
 						</span>
@@ -210,7 +210,7 @@
 				<div>
 					<h2>
 						@lang('basic.posts')
-						@if( $countComment_all > 0)
+						@if( isset($countComment_all) && $countComment_all > 0)
 							<span class="count_coments">{{ $countComment_all }}</span>
 						@endif   
 						@if(Sentinel::getUser()->hasAccess(['posts.create']) || in_array('posts.create', $permission_dep))

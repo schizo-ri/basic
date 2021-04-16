@@ -17,6 +17,7 @@ use App\Mail\AbsenceConfirmMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Emailing;
 use App\Models\Department;
+use App\Models\Vacation;
 use DateTime;
 
 class AbsenceController extends BasicAbsenceController
@@ -129,19 +130,64 @@ class AbsenceController extends BasicAbsenceController
      */
     public function store(Request $request)
     {
-	   $absenceType = AbsenceType::where('mark',$request['type'])->first()->id;
+		$absenceType = AbsenceType::where('mark',$request['type'])->first()->id;
 
-	   if(isset($request['decree'])) {
-		   if ($request['decree'] == 1) {
-				$decree = 1;
-		  	} else {
+		if(isset($request['decree'])) {
+			if ($request['decree'] == 1) {
+					$decree = 1;
+				} else {
+					$decree = 0;
+			}
+			
+		} else {
 				$decree = 0;
-		   }
-		   
-	   } else {
-			$decree = 0;
-	   }
-	   if(is_array($request['employee_id'])  && count($request['employee_id']) > 0) {
+		}
+
+		if($request['employee_id'][0] == 'all' || $request['employee_id'][0] == 'svi') {
+			$employees = Employee::employees_lastNameASC();
+
+			foreach($employees as $employee ) {
+				$data = array(
+					'type'  			=> $absenceType,
+					'employee_id'  		=> $employee->id,
+					'start_date'    	=> date("Y-m-d", strtotime($request['start_date'])),
+					'end_date'			=> date("Y-m-d", strtotime($request['end_date'])),
+					'start_time'  		=> $request['start_time'],
+					'end_time'  		=> $request['end_time'],
+					'comment'  			=> $request['comment'],
+					'decree'  			=> $decree,
+				);
+				if(isset($request['decree']) && $request['decree'] == 1) {
+					$data += ['approve'=> 1 ];
+					$data += ['approved_date'=>date('Y-m-d')];
+					$data += ['approved_id'=>Sentinel::getUser()->employee['id']];
+				}
+				$absence = new Absence();
+				$absence->saveAbsence($data);
+
+				if($request['email'] == 'DA') {
+					$send_to = EmailingController::sendTo('absences','confirm');
+
+					if(isset($request['decree']) && $request['decree'] == 1 ) {
+						array_push($send_to, $absence->employee->email );
+					} 
+					$send_to = array_merge($send_to, EmailingController::sendTo('absences','create') );
+					try {
+						foreach(array_unique($send_to) as $send_to_mail) {
+							if( $send_to_mail != null & $send_to_mail != '' ) {
+								Mail::to($send_to_mail)->send(new AbsenceMail($absence)); // mailovi upisani u mailing 
+							}
+						} 
+					} catch (\Throwable $th) {
+						session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
+						return redirect()->back();
+					}
+			    } 
+			}
+			$message = session()->flash('success', __('ctrl.request_sent'));
+		
+			return redirect()->back()->with('modal','true')->with('absence','true')->withFlashMessage($message);
+		} else if(is_array($request['employee_id'])  && count($request['employee_id']) > 0) {
 		   	foreach($request['employee_id'] as $employee_id){
 				$data = array(
 					'type'  			=> $absenceType,
@@ -179,10 +225,9 @@ class AbsenceController extends BasicAbsenceController
 						session()->flash('error', __('ctrl.data_save') . ', '. __('ctrl.email_error'));
 						return redirect()->back();
 					}
-					
-			   } 
+			    } 
 			}
-	   } else {
+	    } else {
 			$data = array(
 				'type'  			=> $absenceType,
 				'employee_id'  		=> $request['employee_id'],
@@ -217,7 +262,7 @@ class AbsenceController extends BasicAbsenceController
 					return redirect()->back();
 				}
 		   } 
-	   }
+	    }
 	 
 	   	$message = session()->flash('success', __('ctrl.request_sent'));
 		
@@ -486,4 +531,74 @@ class AbsenceController extends BasicAbsenceController
 
 		return $interval->format($differenceFormat);
 	}	
+	
+	public function requestsFromPlan ( Request $request )
+	{
+		if( $request['vacation_id'] ) {
+			$vacation = Vacation::find($request['vacation_id']);
+
+			if( $vacation ) {
+				$vacationPlans = $vacation->hasPlans->where('request_id',null)->sortBy('start_date')->sortBy('employee_id');
+				$vacationPlans_unique = $vacationPlans->unique('employee_id');	
+
+				if( count($vacationPlans_unique) > 0) {
+					$absenceType = AbsenceType::where('mark','GO')->first();
+					$absenceType_id = $absenceType->id;
+					$ERP_leave_type = $absenceType->erp_id;
+					$odobrio_user = Sentinel::getUser()->employee;
+	
+					foreach( $vacationPlans_unique as $vacationPlan ) {
+						$start_date = new DateTime( $vacationPlan->start_date );
+						$end_date = new DateTime( $vacationPlan->start_date );
+						$interval = $vacation->interval * $vacation->no_week;
+						$end_date->modify('+'. ( $interval -1) .' days');
+						
+						$data = array(
+							'type'  			=> $absenceType_id,
+							'ERP_leave_type'  	=> $ERP_leave_type,
+							'erp_task_id'  		=> 5007,
+							'employee_id'  		=> $vacationPlan->employee_id,
+							'start_date'    	=> $start_date->format("Y-m-d"),
+							'end_date'			=> $end_date->format("Y-m-d"),
+							'start_time'  		=> '07:00:00',
+							'end_time'  		=> '15:00:00',
+							'comment'  			=> 'Generirano iz plana',
+							'approve'  			=> 1,
+							'approve_reason'	=> 'Automatsko odobrenje iz plana',
+							'approved_id'    	=>  $odobrio_user->id,
+							'approved_date'		=>  date('Y-m-d')
+						);
+	
+						$absence = new Absence();
+						$absence->saveAbsence($data);
+					
+						foreach( $vacationPlans->where('employee_id', $vacationPlan->employee_id ) as $plan_empl) {
+							$data_plan = array(
+								'request_id'  			=> $absence->id,
+							);
+		
+							$plan_empl->updateVacationPlan($data_plan);
+						}
+					}
+				} else {
+					session()->flash('success', 'Nema zahtjeva ili su svi zahtjevi su već generirani.');
+			
+					return redirect()->back();
+				}
+			} else {
+				session()->flash('error', 'Plan nije nađen');
+			
+				return redirect()->back();
+			}
+
+			session()->flash('success', 'Zahtjevi su generirani.');
+			
+			return redirect()->back();
+
+		} else {
+			session()->flash('error', 'Nešto je pošlo krivo. Nema podataka za izvršenje radnje');
+		
+			return redirect()->back();
+		}
+	}
 }

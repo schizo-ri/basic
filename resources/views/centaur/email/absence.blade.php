@@ -53,13 +53,15 @@
 				<p>@lang('absence.unused') {{ $neiskoristeno_GO }} @lang('absence.vacation_days') </p>
 			@endif
 		</div>
-		<form name="contactform" method="get" target="_blank" action="{{ route('confirmation') }}">
-			<input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="approve_reason" value=""><br>
-			<input type="hidden" name="id" value="{{ $absence->id }}"><br>
-			<input type="radio" name="approve" value="1" checked> @lang('absence.approved')
-			<input type="radio" name="approve" value="0" style="padding-left:20px;">  @lang('absence.not_approved')<br>
-			<input type="hidden" name="email" value="1" checked><br>
-			<input class="odobri marg_top_20" type="submit" value="{{ __('basic.send_mail') }}">
-		</form>
+		@if ( $absence->decree == null ||  $absence->decree == 0 )
+			<form name="contactform" method="get" target="_blank" action="{{ route('confirmation') }}">
+				<input style="height: 34px;width: 100%;border-radius: 5px;" type="text" name="approve_reason" value=""><br>
+				<input type="hidden" name="id" value="{{ $absence->id }}"><br>
+				<input type="radio" name="approve" value="1" checked> @lang('absence.approved')
+				<input type="radio" name="approve" value="0" style="padding-left:20px;">  @lang('absence.not_approved')<br>
+				<input type="hidden" name="email" value="1" checked><br>
+				<input class="odobri marg_top_20" type="submit" value="{{ __('basic.send_mail') }}">
+			</form>
+		@endif
 	</body>
 </html>

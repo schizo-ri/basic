@@ -74,7 +74,7 @@ class NoticeController extends Controller
     {
        /*  dd($request); */
         if( ! isset($request['to_department'])) {
-            $to_department_id = array( Department::where('level',0)->first()->id );
+            $to_department_id = array( Department::where('level1',0)->first()->id );
         }
    
         if(Sentinel::getUser()->employee) {
@@ -281,21 +281,21 @@ class NoticeController extends Controller
 
         $permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
         
-            if( $notice  && ! NoticeStatistic::where('notice_id', $notice->id)->where('employee_id',  $employee_id)->first() ) {
-                $data = array(
-                    'employee_id'   => $employee_id,
-                    'notice_id'     => $notice->id,
-                    'status'  		=> 1
-                );
-                
-                $statistic = new NoticeStatistic();
-                $statistic->saveStatistic($data);
-            }
-            $notice_statistic = NoticeStatistic::where('notice_id', $notice->id)->get();
-            $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
-            $count_statistic = count( $notice_statistic);
-            $count_employees = count($employees);
-            $statistic = $count_statistic /  $count_employees *100 ;
+        if( $notice  && ! NoticeStatistic::where('notice_id', $notice->id)->where('employee_id',  $employee_id)->first() ) {
+            $data = array(
+                'employee_id'   => $employee_id,
+                'notice_id'     => $notice->id,
+                'status'  		=> 1
+            );
+            
+            $statistic = new NoticeStatistic();
+            $statistic->saveStatistic($data);
+        }
+        $notice_statistic = NoticeStatistic::where('notice_id', $notice->id)->get();
+        $employees = Employee::where('id','<>',1)->where('checkout',null)->get();
+        $count_statistic = count( $notice_statistic);
+        $count_employees = count($employees);
+        $statistic = $count_statistic /  $count_employees *100 ;
 
         return view('Centaur::notices.show', ['notice' => $notice,'permission_dep' => $permission_dep, 'statistic' => $statistic]);
     }

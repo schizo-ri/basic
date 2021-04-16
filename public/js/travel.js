@@ -6,7 +6,6 @@ if(locale == 'en') {
 } else {
     saved = "Podaci su spremljeni";
 }
-
 $('.close_travel').on('click',function(e){
     var parent_id = $(this).parent().parent().attr('id');
     e.preventDefault();
@@ -21,8 +20,8 @@ $('.close_travel').on('click',function(e){
         type: "get",
         success: function( response ) {
             $('#'+parent_id).load(location.origin + '/travel_orders' + ' #'+ parent_id + '>td',function(){
-                $.getScript( '/../restfulizer.js');
-                $.getScript( '/../js/travel.js');
+                /* $.getScript( '/../restfulizer.js');
+                $.getScript( '/../js/travel.js'); */
             });
             $('<div><div class="modal-header"><span class="img-success"></span></div><div class="modal-body"><div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>success:</strong>' + response + '</div></div></div>').appendTo('body').modal();
         },

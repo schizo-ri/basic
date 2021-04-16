@@ -39,6 +39,9 @@ return [
 	'add_department' => 'Dodaj odjel',
 	'edit_department'=> 'Ispravi odjel',
 	'department_roles' => "Dopuštenja odjela",
+	'add_plan'				=> 'Dodaj plan',
+	'edit_plan'				=> 'Ispravi plan',
+	'number_people'			=> 'Broj ljudi',
 	'level'			=> 'Razina',
 	'level1'		=> '1.razina',
 	'level2'		=> '2.razina',
@@ -360,6 +363,7 @@ return [
 	'shortcut' 			=> 'Prečac',
 	'shortcuts' 		=> 'Prečaci',
 	'add_shortcut' 		=> 'Dodaj prečac',
+	'create_shortcut' 	=> 'Dodaj prečac',
 	'edit_shortcut' 	=> 'Ispravi prečac',		
 ];	
 

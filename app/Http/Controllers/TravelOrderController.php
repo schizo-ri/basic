@@ -307,7 +307,7 @@ class TravelOrderController extends Controller
         $travel->saveTravelOrder($data);
         
         /* mail obavijest o završenom putnom nalogu */
-        $send_to =  EmailingController::sendTo('travel_orders','confirm');
+      /*   $send_to =  EmailingController::sendTo('travel_orders','confirm');
        
         foreach(array_unique($send_to) as $send_to_mail) { // mailovi upisani u mailing 
             if( $send_to_mail != null & $send_to_mail != '' ) {
@@ -318,7 +318,7 @@ class TravelOrderController extends Controller
                     return $message;
                 }
             }
-        }
+        } */
 
         return $message;
     }

@@ -50,7 +50,6 @@
 		<div><b>@lang('basic.comment'): </b></div>
 		<div class="marg_20">
 			{{ $absence->comment }}
-			
 		</div>
 		<div><b>Odluku donio: {{ Sentinel::getUser()->first_name . ' ' .  Sentinel::getUser()->last_name }}</b></div>
 	</body>

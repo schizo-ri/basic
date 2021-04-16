@@ -24,7 +24,7 @@ $(function() {
     day_before();
 
     var position_selected_day = $('.selected_day').position().top;
-    $('.main_calendar_month').scrollTop(position_selected_day);
+    $('.main_calendar_month').scrollTop(position_selected_day)
    
     function day_after() {
         $(document).on('click', '.arrow .day_after', function(e) {

@@ -90,7 +90,6 @@ class WorkRecordController extends Controller
     {
         
         if(isset( $request['date']) ) {
-            
             $mjesec = date('m',strtotime( $request['date'] . '-1'));
             $godina = date('Y',strtotime( $request['date']));
            
@@ -140,7 +139,7 @@ class WorkRecordController extends Controller
             }
         }
         // zahtjevi za izostanak
-        $absences = Absence::whereBetween('start_date', [$date_before, $date_after])->where('approve','<>',null)->get();
+        $absences = Absence::whereBetween('start_date', [$date_before, $date_after])->where('approve',1)->get();
 
         $holidays = BasicAbsenceController::holidays();
        

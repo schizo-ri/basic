@@ -25,8 +25,6 @@
 							<th>@lang('basic.name')</th>
 							<th>@lang('basic.description')</th>
 							<th>@lang('basic.emailing')</th>
-							<th>@lang('basic.shortcut') <br> index</th>
-							<th>@lang('basic.shortcut') <br> create</th>
 							<th class="not-export-column">@lang('basic.options')</th>
 						</tr>
 					</thead>
@@ -36,8 +34,6 @@
 								<td>{{ $table->name }}</td>
 								<td>{{ $table->description }}</td>
 								<td>{!! $table->emailing == '0' ? 'neaktivno' : 'aktivno' !!}</td>
-								<td>{!! $table->shortcut_i == '1' ? 'da' : '' !!}</td>
-								<td>{!! $table->shortcut_c == '1' ? 'da' : '' !!}</td>
 								<td class="center">
 									<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['tables.update']))

@@ -606,8 +606,7 @@ class EventController extends Controller
 				
 		$time_end = microtime(true);
 		$execution_time = ($time_end - $time_start);
-		Log::info('Event: 13 - ExecutionTime: '.$execution_time);
-		//dd($dataArr);
+	
         return $dataArr;
     }
 

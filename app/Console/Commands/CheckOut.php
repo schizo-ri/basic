@@ -46,7 +46,7 @@ class CheckOut extends Command
         } else {
             $checkOut_time = $today_date . ' 15:00';
         }
-        Log::info('CheckOut '. $today_date);
+        
         $workRecords = WorkRecord::whereDate('start',$today_date)->get();
         
         foreach ($workRecords as $workRecord) {

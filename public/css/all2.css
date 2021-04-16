@@ -1256,6 +1256,9 @@ header {
     background: #F8FAFF;
     overflow: hidden;
 }
+ main.main_campaign {
+	 height: 100% !important;
+ }
 .form_template main {
     height: calc(100% - 81px);
 }
@@ -3502,8 +3505,50 @@ a.btn1 {
     width: 100%;
     background-color: inherit;
     padding: 0;
+    overflow: auto;
+}
+table.dataTable.vacation_plan thead tr th {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    vertical-align: middle;
+    max-width: 40vw;
+    min-width: 120px;
+    z-index: 1;
 }
 
+table.dataTable.vacation_plan tbody tr.basic_view td>div {
+    display: inline-grid;
+    width: 100%;
+}
+a.add_plan {
+    color: lightgray;
+    width: 100%;
+    height: 100%;
+}
+.table-responsive .table.vacation_plan th:not(:last-child), .vacation_plan td:not(:last-child) {
+    border-right: 1px solid #ccc;
+}
+
+.vacation_list {
+    display: block;
+    margin-bottom: 5px;
+    padding: 5px 15px;
+    line-height: 20px;
+    background: aliceblue;
+    text-align: start;
+}
+.btn_addVacation {
+    border: 1px solid #1183d4;
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px rgb(17 131 212 / 50%);
+    padding: 5px 10px;
+    background: #1183d4;
+    color: white;
+    margin-bottom: 20px;
+}
+.index_documents h5 {
+    margin: 20px 0;
+}
 .index_main main.main_campaign,.index_main main.main_benefits {
     background-color: #fff;
 }
@@ -10035,7 +10080,7 @@ span.work {
 .form-group>label:first-child {
 	width: 100%;
 }
-.modal-body label:not(.label_file, .container_radio) {
+.modal-body label:not(.label_file, .container_radio, .decree) {
 	width: 100%;
 }
 

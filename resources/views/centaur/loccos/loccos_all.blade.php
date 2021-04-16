@@ -19,7 +19,7 @@
             }
 		</style>
         	<!-- Datatables -->
-        <link rel="stylesheet" href="{{ URL::asset('/../css/all1.css') }}"/>
+        <link rel="stylesheet" href="{{ URL::asset('/../css/all2.css') }}"/>
     </head>
     <body style="height:auto">
         <div class="export_loccos " >

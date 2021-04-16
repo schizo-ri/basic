@@ -50,8 +50,6 @@ class CarsRegistration extends Command
         $today = new DateTime();
         $today->modify('-1 years');
         $today->modify('+14 days');
-        Log::info("Cron job CarsRegistration " . $today->format('Y-m-d') );
-        Log::info($send_to);
 
         $cars = Car::where('last_registration', $today->format('Y-m-d') )->get();
 
@@ -59,7 +57,6 @@ class CarsRegistration extends Command
             foreach($send_to as $send_to_mail) {
                 if( $send_to_mail != null & $send_to_mail != '' ) {
                     foreach($cars as $car) {
-                        Log::info("Cron job CarsRegistration " . $car->id);
                         Mail::to(trim($send_to_mail))->send(new CarsRegistrationMail( $car )); // mailovi upisani u mailing 
                     }
                 }

@@ -209,7 +209,7 @@ class RoleController extends Controller
         }
 
         session()->flash('success', "Role '{$role->name}' has been updated.");
-        return redirect('admin');
+        return redirect()->back();
     }
 
     /**

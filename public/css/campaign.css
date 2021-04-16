@@ -26,6 +26,9 @@ header {
     background: #F8FAFF;
     overflow: hidden;
 }
+ main.main_campaign {
+	 height: 100% !important;
+ }
 .form_template main {
     height: calc(100% - 81px);
 }

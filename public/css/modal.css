@@ -473,7 +473,7 @@ span.work {
 .form-group>label:first-child {
 	width: 100%;
 }
-.modal-body label:not(.label_file, .container_radio) {
+.modal-body label:not(.label_file, .container_radio, .decree) {
 	width: 100%;
 }
 

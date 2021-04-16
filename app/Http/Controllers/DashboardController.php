@@ -42,8 +42,7 @@ class DashboardController extends Controller
            
             if($employee) {
                 $data_absence = BasicAbsenceController::zahtjevi( $employee ); 
-                /* Log::info( "*****************".$employee->user->last_name."*****************");
-                Log::info($data_absence); */
+               
                 //dohvaća dopuštenja odjela za korisnika
                 $permission_dep = DashboardController::getDepartmentPermission();
 
@@ -162,20 +161,27 @@ class DashboardController extends Controller
 
     public static function evidention_check() 
     {
-        $employee = Sentinel::getUser()->employee;
+        $user = Sentinel::getUser();
+        $employee = $user ->employee;
+        $record = null;
 
-        $record_yesterday = WorkRecord::where('employee_id', $employee->id)->whereDate('start', '<', date('Y-m-d'))->orderBy('start','DESC')->first();
-        if( $record_yesterday && $record_yesterday['end'] == null ) {
-            $start = $record_yesterday->start;
-            $end = date('Y-m-d', strtotime( $start )) . ' 16:15:00';
-            $data = array(
-                'end'  =>   $end,
-            );
-            $record_yesterday->updateWorkRecords($data);
-        }
+        if( $employee ) {
+            
 
-        $record = WorkRecord::where('employee_id', $employee->id)->whereDate('start', date('Y-m-d'))->first();
+            $record_yesterday = WorkRecord::where('employee_id', $employee->id)->whereDate('start', '<', date('Y-m-d'))->orderBy('start','DESC')->first();
+            if( $record_yesterday && $record_yesterday['end'] == null ) {
+                $start = $record_yesterday->start;
+                $end = date('Y-m-d', strtotime( $start )) . ' 16:15:00';
+                $data = array(
+                    'end'  =>   $end,
+                );
+                $record_yesterday->updateWorkRecords($data);
+            }
     
+            $record = WorkRecord::where('employee_id', $employee->id)->whereDate('start', date('Y-m-d'))->first();
+        
+        }
+       
         return $record;
     }
 
