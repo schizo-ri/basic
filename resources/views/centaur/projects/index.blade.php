@@ -84,7 +84,5 @@
 <script>	
     $.getScript('/../js/filter.js');
     $.getScript('/../js/project.js');
-    
-
 </script>
 @stop

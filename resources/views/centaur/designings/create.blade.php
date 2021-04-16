@@ -1,5 +1,5 @@
 <div class="modal-header">
-	<h3 class="panel-title">Unesi novo projektiranje</h3>
+	<h3 class="panel-title">Unesi novi ormar</h3>
 </div>
 <div class="modal-body">
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('designings.store') }}" enctype="multipart/form-data">
@@ -14,8 +14,13 @@
 				<input class="form-control" name="name" type="text" value="{{ old('name') }}" maxlength="191" required />
 				{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<div class="form-group {{ ($errors->has('cabinet_name')) ? 'has-error' : '' }}">
+				<label>Naziv ormara</label>
+				<input class="form-control" name="cabinet_name" type="text" value="{{ old('cabinet_name') }}" maxlength="50" required />
+				{!! ($errors->has('cabinet_name') ? $errors->first('cabinet_name', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
 			<div class="form-group {{ ($errors->has('date')) ? 'has-error' : '' }}">
-				<label>Datum isporuke</label>
+				<label>Datum završetka pripreme</label>
 				<input class="form-control" name="date" type="date" value="{{ old('date') }}" required />
 				{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
@@ -46,7 +51,7 @@
 				<textarea class="form-control" name="comment" type="text"  rows="3" maxlength="5592415">{{ old('comment') }}</textarea>
 				{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-		{{-- 	<div class="form-group {{ ($errors->has('fileToUpload')) ? 'has-error' : '' }}">
+		{{-- <div class="form-group {{ ($errors->has('fileToUpload')) ? 'has-error' : '' }}">
 				<label>Dodaj dokumenat</label>
 				<input type="file" name="fileToUpload" id="fileToUpload">
 				{!! ($errors->has('fileToUpload') ? $errors->first('fileToUpload', '<p class="text-danger">:message</p>') : '') !!}

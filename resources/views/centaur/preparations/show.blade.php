@@ -55,7 +55,7 @@
                 </div>
                 <div class="tbody">
                     @foreach ($preparations as $preparation)
-                        <span class="project_show" id="collaps_{{  $preparation->project_no  }}"></span> 
+                        <span class="project_show" id="collaps_{{ $preparation->project_no  }}"></span> 
                         <!-- Ispis pripreme -->  
                         <p class="tr row_preparation_text {!! $preparation->active == 1 ? 'active' : 'inactive' !!} {{ str_replace(':','_', $preparation->project_no)  }}" id="id_{{ $preparation->id }}" style="display: none">
                             <span class="td text_preparation option_input not_remove">
@@ -69,6 +69,15 @@
                                     <a href="{{ action('PreparationController@close_preparation', $preparation->id) }}" class="btn" id="close_preparation" class="action_confirm" ><i class="fas fa-check"></i>
                                         @if ($preparation->active == 1)Završi @else Vrati @endif  
                                     </a>
+                                @endif
+                                @if ( Sentinel::inRole('priprema')  || Sentinel::inRole('administrator') || Sentinel::getUser()->email == 'borislav.peklic@duplico.hr'  )
+                                    <a href="{{ action('PreparationController@finished', $preparation->id) }}" class="btn finish action_confirm" id="finish_preparation{{ $preparation->finish }}" >
+                                        @if ( $preparation->finish == 0) Ormar je spreman @else Ormar nije spreman @endif  
+                                    </a>
+                                @endif
+                                @if (Sentinel::inRole('skladiste_upload'))
+                                    
+                                    
                                 @endif
                             </span>
                             <span hidden class="equipmentLists_json not_remove"></span>

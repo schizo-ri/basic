@@ -19,6 +19,8 @@ use App\Mail\ErrorMail;
 use Carbon;
 use Sentinel;
 use DB;
+use Log;
+
 
 class EquipmentListController extends Controller
 {
@@ -47,119 +49,123 @@ class EquipmentListController extends Controller
     {
         $before_all = array();       
         $after_all = array();
+        $data_list = array();
         
-        foreach ($request['delivered'] as $key_delivered => $delivered) {
-            if ( $delivered != null ) {
-               foreach ($request['id'] as $key_id => $list_id) {
-                   if ($key_id == $key_delivered) {
-                        $list_before = array();
-                        $list_after = array();
-                        $promjena = false;
+        foreach ($request['id'] as $key_id => $list_id) {
+            $equipment_list = EquipmentList::find($list_id);
+            
+            if(isset($equipment_list))  {
+                $listUpdates =  $equipment_list->updates;
 
-                        $equipment_list = EquipmentList::find($list_id);
+                foreach ($request['delivered'] as $key_delivered => $delivered) {
+                    if ( $delivered != null ) {
+                        if ($key_id == $key_delivered) {
+                            $list_before = array();
+                            $list_after = array();
+                            $promjena = false;
 
-                        if( $equipment_list->delivered) {
-                            $delivered_quantity = $equipment_list->delivered;   //5
-                        } else {
-                            $delivered_quantity = 0;
-                        }
-
-                        $listUpdates = ListUpdate::where('item_id', $list_id )->get(); //1
-
-                        if( count($listUpdates ) > 0) {
-                            foreach ($listUpdates as $listUpdate) {
-                                $delivered_quantity += $listUpdate->quantity;
+                            if( $equipment_list->delivered) {
+                                $delivered_quantity = $equipment_list->delivered;   //5
+                            } else {
+                                $delivered_quantity = 0;
                             }
-                        }
-                       
-                        if( $delivered_quantity != $delivered ) {
-                            $class = '';
 
-                            if (! $equipment_list->delivered) {
-                                $class = "not_delivered";
-                            } else if( $equipment_list->quantity > $delivered_quantity ) {
-                                $class = "partial";
-                            } else if( $equipment_list->quantity <= $delivered_quantity) {
-                                $class = "all_delivered";
+                            if(  $listUpdates && count($listUpdates ) > 0) {
+                                foreach ($listUpdates as $listUpdate) {
+                                    $delivered_quantity += $listUpdate->quantity;
+                                }
                             }
-    
-                            $list_before += ['product_number' => $equipment_list->product_number];
-                            $list_before += ['id' => $equipment_list->id];
-                            $list_before += ['name'     => $equipment_list->name ];
-                            $list_before += ['mark'     => $equipment_list->mark ];
-                            $list_before += ['quantity' => $equipment_list->quantity];
-                            $list_before += ['delivered' => $delivered_quantity];
-                            $list_before += ['class'    => $class];
-                           
-                            $upis_kolicine = 0;
-                            $upis_kolicine = $delivered - $delivered_quantity;
-                           
+                        
+                            if( $delivered_quantity != $delivered ) {
+                                $class = '';
 
-                            $data = array(
-                                'quantity'  => $upis_kolicine,
-                                'item_id'  => $list_id,
-                                'user_id'  => Sentinel::getUser()->id,
-                            );
-                            $promjena = true;
-
-                            $listUpdate = new ListUpdate();
-                            $listUpdate->saveListUpdate($data);  
-                            $class = '';
-
-                            $listUpdates = ListUpdate::where('item_id', $equipment_list->id )->get();  //nove liste
-                            $delivered_quantity = $equipment_list->delivered; 
-                            foreach ($listUpdates as $key => $listUpdate) {
-                                $delivered_quantity += $listUpdate->quantity;
-                            }
+                                if (! $equipment_list->delivered) {
+                                    $class = "not_delivered";
+                                } else if( $equipment_list->quantity > $delivered_quantity ) {
+                                    $class = "partial";
+                                } else if( $equipment_list->quantity <= $delivered_quantity) {
+                                    $class = "all_delivered";
+                                }
+        
+                                $list_before += ['product_number' => $equipment_list->product_number];
+                                $list_before += ['id' => $equipment_list->id];
+                                $list_before += ['name'     => $equipment_list->name ];
+                                $list_before += ['mark'     => $equipment_list->mark ];
+                                $list_before += ['quantity' => $equipment_list->quantity];
+                                $list_before += ['delivered' => $delivered_quantity];
+                                $list_before += ['class'    => $class];
                             
-                            if (! $delivered) {
-                                $class = "not_delivered";
-                            } else if( $equipment_list->quantity > $delivered_quantity ) {
-                                $class = "partial";
-                            } else if( $equipment_list->quantity <= $delivered_quantity) {
-                                $class = "all_delivered";
+                                $upis_kolicine = 0;
+                                $upis_kolicine = $delivered - $delivered_quantity;
+                            
+
+                                $data = array(
+                                    'quantity'  => $upis_kolicine,
+                                    'item_id'  => $list_id,
+                                    'user_id'  => Sentinel::getUser()->id,
+                                );
+                                $promjena = true;
+
+                                $listUpdate = new ListUpdate();
+                                $listUpdate->saveListUpdate($data);  
+                                $class = '';
+
+                                $listUpdates = ListUpdate::where('item_id', $equipment_list->id )->get();  //nove liste
+                                $delivered_quantity = $equipment_list->delivered; 
+                                foreach ($listUpdates as $key => $listUpdate) {
+                                    $delivered_quantity += $listUpdate->quantity;
+                                }
+                                
+                                if (! $delivered) {
+                                    $class = "not_delivered";
+                                } else if( $equipment_list->quantity > $delivered_quantity ) {
+                                    $class = "partial";
+                                } else if( $equipment_list->quantity <= $delivered_quantity) {
+                                    $class = "all_delivered";
+                                }
+        
+                                $list_after += ['product_number' => $equipment_list->product_number];
+                                $list_after += ['name' => $equipment_list->name];
+                                $list_after += ['mark'     => $equipment_list->mark ];
+                                $list_after += ['quantity' => $equipment_list->quantity];
+                                $list_after += ['delivered' =>  $delivered_quantity];
+                                $list_after += ['class' => $class];
+        
+                                if($promjena == true) {
+                                    array_push($before_all, $list_before );
+                                    array_push($after_all, $list_after );
+                                }                
                             }
-    
-                            $list_after += ['product_number' => $equipment_list->product_number];
-                            $list_after += ['name' => $equipment_list->name];
-                            $list_after += ['mark'     => $equipment_list->mark ];
-                            $list_after += ['quantity' => $equipment_list->quantity];
-                            $list_after += ['delivered' =>  $delivered_quantity];
-                            $list_after += ['class' => $class];
-    
-                            if($promjena == true) {
-                                array_push($before_all, $list_before );
-                                array_push($after_all, $list_after );
-                            }                
                         }
-                   }
-               }
-            }           
+                    }
+                }
+
+                $quantity2 = $request['quantity2'][$key_id];
+                if ( $quantity2 != null ) {
+                    $data_list = array(
+                        'quantity2'  => $quantity2,
+                    );
+                    $equipment_list->updateEquipmentList($data_list);
+                }
+                $comment = $request['comment'][$key_id];
+                if ( $comment != null ) {
+                    $data_list += ['comment'  => $comment];
+                }
+                if( $quantity2 != null || $comment != null ) {
+                    $equipment_list->updateEquipmentList($data_list);
+                }
+
+                $preparation_id = $equipment_list->preparation_id;
+    
+                $preparation = Preparation::find($preparation_id);
+                $delivered = PreparationController::delivered( $preparation_id );
+                $data_preparation = array(
+                    'delivered'  => $delivered,
+                );
+                $preparation->updatePreparation($data_preparation);
+            }
         }
 
-        $preparation_id = Preparation::where('id',$equipment_list->preparation_id)->first()->id;
-
-        $preparation = Preparation::find($preparation_id);
-        $delivered = PreparationController::delivered( $preparation_id );
-        $data_preparation = array(
-            'delivered'  => $delivered,
-        );
-        $preparation->updatePreparation($data_preparation);
- 
-        /*     $send_to_mail = array(); */
-        /*     if($preparation->manager) { */
-        /*         array_push( $send_to_mail, $preparation->manager->email); */
-        /*     } */
-        /*     if( $preparation->designed ) { */
-        /*         array_push( $send_to_mail, $preparation->designed->email); */
-        /*     } */
-       // array_push( $send_to_mail, 'jelena.juras@duplico.hr');
-        
-     
-      /*   foreach( array_unique($send_to_mail) as $email) {
-            Mail::to($email)->send(new EquipmentMail($preparation, $before_all, $after_all )); 
-        } */
-       
         session()->flash('success', "Podaci su upisani");
         
         return redirect()->back();
@@ -296,7 +302,6 @@ class EquipmentListController extends Controller
                                                           'listUpdates' => $listUpdates]);
         } catch (\Throwable $th) {
             return redirect()->route('preparations.index');
-            
         }
     }
 
@@ -423,21 +428,20 @@ class EquipmentListController extends Controller
         return redirect()->back();
     }
 
-    public function import ()
+    public function import (Request $request)
     {
         try {
             Excel::import(new EquipmentImport, request()->file('file'));
         } catch (\Throwable $th) {
-          
             $email = 'jelena.juras@duplico.hr';
             $url = $_SERVER['REQUEST_URI'];
             Mail::to($email)->send(new ErrorMail($th->getMessage(), $url)); 
             
-            session()->flash('error', "Došlo je do problema, dokument nije učitan!");
+            session()->flash('error', "Došlo je do problema, dokument nije učitan! " . $th->getMessage());
         
             return redirect()->back();
         } 
-       
+        
         session()->flash('success', "Dokument je učitan");
         return back();
     }
@@ -453,7 +457,7 @@ class EquipmentListController extends Controller
             $url = $_SERVER['REQUEST_URI'];
             Mail::to($email)->send(new ErrorMail($th->getMessage(), $url)); 
             
-            session()->flash('error', "Došlo je do problema, dokument nije učitan!");
+            session()->flash('error', "Došlo je do problema, dokument nije učitan!" . $th->getMessage());
         
             return redirect()->back();
         }  
@@ -473,7 +477,7 @@ class EquipmentListController extends Controller
             $url = $_SERVER['REQUEST_URI'];
             Mail::to($email)->send(new ErrorMail($th->getMessage(), $url)); 
             
-            session()->flash('error', "Došlo je do problema, dokument nije učitan!");
+            session()->flash('error', "Došlo je do problema, dokument nije učitan!" . $th->getMessage());
         
             return redirect()->back();
         } 

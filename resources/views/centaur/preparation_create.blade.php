@@ -1,10 +1,13 @@
 <form class="create_preparation" accept-charset="UTF-8" role="form" method="post" action="{{ route('preparations.store') }}" enctype="multipart/form-data">
    {{--  <span class="input_preparation file_input"></span> --}}
     <span class="input_preparation project_no_input">
-        <input name="project_no" type="text" value="{{ old('project_no') }}" required placeholder="Broj" maxlength="30"  />
+        <input name="project_no" type="text" value="{{ old('project_no') }}" required placeholder="Broj projekta" maxlength="30"  />
     </span>
     <span class="input_preparation name_input">
-        <input class=""  name="name" type="text" value="{{ old('name') }}" placeholder="Naziv projekta" />
+        <input class="" name="project_name" type="text" value="{{ old('project_name') }}" placeholder="Naziv projekta" required />
+    </span>
+    <span class="input_preparation name_input">
+        <input class="" name="name" type="text" value="{{ old('name') }}" placeholder="Naziv ormara" required/>
     </span>
     <span class="input_preparation delivery_input">
         <input class="" name="delivery" type="date" value="" required />

@@ -44,7 +44,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $modules = array('agglomerations','agglomeration_stations','agglomeration_station_lists','contracts','category_employees','designings','employees','equipment_lists','list_reports','list_updates','preparations','preparation_employees','preparation_records','projects','project_employees','publishes','publish_projects','roles','role_users','users');
+        $modules = array('designing_employees','stocks','agglomerations','agglomeration_stations','agg lomeration_station_lists','contracts','category_employees','designings','employees','equipment_lists','list_reports','list_updates','preparations','preparation_employees','preparation_records','projects','project_employees','publishes','publish_projects','roles','role_users','users');
         $permissions = array('view','create','update','delete');
         return view('Centaur::roles.create',['modules' => $modules ,'permissions' => $permissions]);
     }
@@ -60,7 +60,7 @@ class RoleController extends Controller
         // Validate the form data
         $result = $this->validate($request, [
             'name' => 'required',
-            'slug' => 'required|alpha_dash|unique:roles',
+            'slug' => 'required|unique:roles',
         ]);
 
         // Create the Role
@@ -113,7 +113,7 @@ class RoleController extends Controller
         // $id = $this->decode($hash);
         $role = $this->roleRepository->findById($id);
 
-        $modules = array('agglomerations','agglomeration_stations','agglomeration_station_lists','contracts','category_employees','designings','employees','equipment_lists','list_reports','list_updates','preparations','preparation_employees','preparation_records','projects','project_employees','publishes','publish_projects','roles','role_users','users');
+        $modules = array('designing_employees','stocks','agglomerations','agglomeration_stations','agglomeration_station_lists','contracts','category_employees','designings','employees','equipment_lists','list_reports','list_updates','preparations','preparation_employees','preparation_records','projects','project_employees','publishes','publish_projects','roles','role_users','users');
       
         $permissions = array('view','create','update','delete');
 

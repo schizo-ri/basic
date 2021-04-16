@@ -7,9 +7,18 @@ html {
 	width: 100vw;
 	margin: 0;
 }
+
+.delete_employee, .edit_employee {
+	cursor: pointer;
+	margin: 0 10px;
+}
+.delete_employee  {
+	color: red;
+}
 .contract_info_show {
 	cursor: pointer;
 }
+
 body {
     height: 100%;
     overflow: hidden;
@@ -174,6 +183,7 @@ a.close, body .modal a.close-modal{
 .btn-toolbar a {
 	display: block;
     float: right;
+	/* margin-left: 20px; */
 }
 .m-b-md {
 	margin-bottom: 30px;
@@ -321,8 +331,23 @@ a.btn-delete:hover {
 	line-height: 20px;
 }
 
+.col-2 {
+	width: 16.67%;
+	float: left;
+}
+
 .col-6 {
 	width: 50%;
+	float: left;
+}
+
+.col-8 {
+	width: 66.67%;
+	float: left;
+}
+
+.col-10 {
+	width: 83.33%;
 	float: left;
 }
 
@@ -362,6 +387,9 @@ a.btn-delete:hover {
 	background: lightpink;
 }
 
+.manufacturers_body .btn {
+	padding: 0;
+}
 .red_border {
 	border: 2px solid red !important;
 }
@@ -404,7 +432,8 @@ label.filter_employee input#mySearch::placeholder, label.filter_empl input#mySea
 	color: #ccc;
 	cursor: pointer;
 }
-.filter_project > .clearable__clear {
+
+.filter_project > .clearable__clear, .stock_header .clearable__clear{
 	padding: 0;
 	line-height: 36px;
 }
@@ -540,10 +569,7 @@ span.text_preparation.file_input {
 	min-width: 35px;
 	height: 40px;	
 }
-.create_preparation span.input_preparation.file_input, 
-.form_preparation span.input_preparation.file_input {
-/* 	display: none; */
-}
+
 .create_preparation span.input_preparation:nth-child(3) {
 	max-width: 40%;
 } 
@@ -728,6 +754,9 @@ span.td_50.replace_items  {
 	padding: 10px 0;
 	text-decoration: none;
 }
+.bg_yellow {
+	background-color: yellow;
+}
 .preparation_list span.th:nth-child(2), .preparation_list span.td:nth-child(2) {
 	width: 10%;
 	background-color: #f5f5f5;
@@ -762,8 +791,14 @@ span.td_50.replace_items  {
 .replace_items > span {
 	padding: 5px;
 }
+.finish {
+	max-width: 100%;
+    white-space: initial;
+    border: 1px solid;
+    box-shadow: 3px 3px 3px;
+}
 span.th:nth-child(3),  span.td:nth-child(3), span.input_preparation:nth-child(3){
-	width: 57%;
+	width: 40%;
 	overflow-wrap: break-word;
 }
 
@@ -782,7 +817,11 @@ span.th:nth-child(6),  span.td:nth-child(6), span.input_preparation:nth-child(6)
 	width: 10%;
 }
 span.th:nth-child(7),  span.td:nth-child(7), span.input_preparation:nth-child(7){
-	width: 3%;
+	width: 15%;
+  
+}
+span.th:nth-child(8),  span.td:nth-child(8), span.input_preparation:nth-child(8){
+	width: 5%;
   
 }
 span.input_preparation.submit_preparation {
@@ -795,7 +834,7 @@ span.th:nth-child(4),  span.td:nth-child(4), span.input_preparation:nth-child(4)
 .text_preparation  svg:not(.btn>svg), .text_preparation i:not(.btn>i) {
 	margin-left: 15px; 
 }
-.text_preparation input[name="delivered[]"] {
+.text_preparation.delivered input {
 	    /* width: 100%; */
 		border-radius: 5px;
 		max-width: 80px;
@@ -806,7 +845,15 @@ span.th:nth-child(4),  span.td:nth-child(4), span.input_preparation:nth-child(4)
 		padding-right: 5px;
 		margin-right: 5px;
 }
-
+.text_preparation.delivered input[name*=quantity2] {
+	width: 100%;
+	text-align: right;
+}
+.text_preparation.delivered input[name*=comment] {
+	margin-top: 10px;
+	max-width: none;
+	text-align: left;
+}
 .create_item > input {
 	border-radius: 5px;
     text-align: left;
@@ -982,6 +1029,8 @@ span.input_preparation > select {
 	background: transparent; 
 	color: #337ab7;
 	border: none;
+	line-height: 25px;
+	padding: 8px 12px;
 }
 input[type="date"]::-webkit-inner-spin-button {
     display: none;
@@ -1141,7 +1190,6 @@ input[type="date"]::-webkit-inner-spin-button {
 .show_inactive, .show_active {
 	cursor: pointer;
     padding: 5px;
-    border: 1px solid #ccc;
     max-width: 100%;
     margin-bottom: 5px;
     font-weight: normal;
@@ -1149,7 +1197,8 @@ input[type="date"]::-webkit-inner-spin-button {
     /* position: relative; */
     float: left;
     border-radius: 5px;
-    box-shadow: 3px 3px 3px #ccc;
+	/* border: 1px solid #ccc; */
+  /*   box-shadow: 3px 3px 3px #ccc; */
 }
 .contract_info {
     width: 800px;
@@ -1189,7 +1238,7 @@ input[type="date"]::-webkit-inner-spin-button {
 		font-size: 16px;
 	}
 }
-.table_projects td span.value {
+.table_projects td span.value:not(.stock_index .table_projects td span.value ) {
 	line-height: 34px;
     height: 34px;
     display: inline-block;
@@ -1665,15 +1714,41 @@ select.select_employee {
 	vertical-align: middle;
 	margin-left: 10px;
 }
-.proj_user_color {
-	color:white;
+
+.timeline .table>tbody>tr>td.proj_user_color {
 	font-weight: 600;
+	padding: 5px;
 }
+
+.proj_user_color >span {
+	width: 100%;
+	display: inline-block;
+	padding: 5px;
+}
+
+.proj_user_color a,.proj_user_color span.delete_employee  {
+	display: none;
+}
+
+.proj_user_color a:not(a.edit_employee) {
+	color: #ccc;
+}
+
+.proj_user_color:hover a, .proj_user_color:hover span.delete_employee {
+	display: inline-block;
+}
+
+span.add_employee {
+	color: #ccc;
+	cursor: pointer;
+}
+
 .timeline {
 	margin-bottom: 30px;
 	overflow: auto;
 	padding: 0;
 }
+
 .project_name {
 	position: absolute;
     white-space: nowrap;
@@ -1689,6 +1764,7 @@ select.select_employee {
 	color: white;
 	max-width: 100%;
 }
+
 .project_name:hover {
 	text-shadow: 1px 1px rgb(139, 132, 132);
 }
@@ -1706,16 +1782,18 @@ select.select_employee {
 	position: relative;
 }
 .timeline .table>tbody>tr>td, .timeline .table>thead>tr>th {
-	width: 4%;
+	width: 150px;
     min-width: 4%;
     height: 40px;
     padding: 0;
     min-height: 40px;
     max-height: 50px;
+	vertical-align: middle;
+    text-align: center;
 }
 .timeline .table>tbody>tr>td:first-child, .timeline .table>thead>tr>th:first-child {
 	min-width: 150px;
-	width: 8%;
+	width: auto;
 	padding: 10px 0;
 }
 .table>thead>tr>th {
@@ -1745,7 +1823,7 @@ input[type="date"]
 	margin-bottom: 10px;
 }
 .timeline .table-hover>tbody>tr:hover td:not(:first-child) {
-	text-shadow: 1px 1px rgb(139, 132, 132);
+/* 	text-shadow: 1px 1px rgb(139, 132, 132); */
 }
 .timeline .next_week, .timeline .previous_week {
 	position: absolute;
@@ -1766,3 +1844,18 @@ input[type="date"]
 	width: fit-content;
 	max-width: 90%;
 }
+.importStockView  {
+	padding: 30px 50px;
+}
+button#upload {
+	margin-right: 20px;
+    border-radius: 5px;
+    background: inherit;
+    border: 1px solid #1695f0;
+    box-shadow: 2px 2px 3px #1694f0;
+    outline: none;
+}
+tr.tr_open_link_new_page td:not(.not_link) {
+	cursor: pointer;
+}
+

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Designing extends Model
 {
     protected $fillable = [
-        'project_no','name','date','manager_id','designer_id','comment','start','end','active'];
+        'project_no','name','cabinet_name','date','manager_id','designer_id','comment','start','end','active','finished'];
 
      /*
 	* The Eloquent project model name
@@ -23,6 +23,13 @@ class Designing extends Model
 	*/
 	protected static $commentModel = 'App\Models\DesigningComment'; 
 	
+	/*
+		* The Eloquent DesigningEmployee model name
+		* 
+		* @var string
+	*/
+	protected static $designingEmployeeModel = 'App\Models\DesigningEmployee'; 
+
     /*
 	* Returns the user relationship
 	* 
@@ -43,7 +50,7 @@ class Designing extends Model
 		return $this->belongsTo(static::$userModel,'designer_id');
 	}
 	
-	 /*
+	/*
 	* Returns the DesigningComment relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -51,6 +58,16 @@ class Designing extends Model
 	public function hasComments()
 	{
 		return $this->hasMany(static::$commentModel,'designing_id');
+	}
+
+	/*
+	* Returns the DesigningComment relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	public function hasEmployees()
+	{
+		return $this->hasMany(static::$designingEmployeeModel,'designing_id');
 	}
 	
     /*

@@ -3,7 +3,7 @@
 
 Broj projekta: {!! $preparationEmployee->preparation->project_no !!}
 
-Naziv projekta: {!! $preparationEmployee->preparation->name !!}
+Naziv projekta: {!! $preparationEmployee->preparation->project_name . ' ' . $preparationEmployee->preparation->name !!}
 
 Voditelj: {!! $preparationEmployee->preparation->manager ? $preparationEmployee->preparation->manager->first_name . ' ' . $preparationEmployee->preparation->manager->last_name : '' !!}
 

@@ -64,5 +64,10 @@ $(function() {
             fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
             };
     });
-   
+    $('tr.tr_open_link_new_page td:not(.not_link)').on('click', function(e) {
+		e.preventDefault();
+		url = location.origin + $( this ).parent().attr('data-href');
+		console.log(url);
+        window.location = url;
+    });
 });

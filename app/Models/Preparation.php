@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Preparation extends Model
 {
     protected $fillable = [
-        'project_no','name','project_manager','delivery','designed_by','preparation','mechanical_processing','marks_documentation','delivered','active'];
+        'project_no','project_name','name','project_manager','delivery','designed_by','preparation','mechanical_processing','marks_documentation','delivered','active','finish'];
 
 	/*
 	* The Eloquent user model name
@@ -45,6 +45,13 @@ class Preparation extends Model
 	protected static $preparationEmployeesModel = 'App\Models\PreparationEmployee'; 
 	
 	/*
+	* The Eloquent DischargeStock model name
+	* 
+	* @var string
+	*/
+	protected static $dischargeStocksModel = 'App\Models\DischargeStock'; 
+
+	/*
 	* Returns the equipmentList relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\hasmany
@@ -53,6 +60,17 @@ class Preparation extends Model
 	public function equipment()
 	{
 		return $this->hasMany(static::$equipmentModel,'preparation_id');
+	}
+
+	/*
+	* Returns the dischargeStocks relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasmany
+	*/
+	
+	public function hasDischargeStock()
+	{
+		return $this->hasMany(static::$dischargeStocksModel,'preparation_id');
 	}
 
 	/*

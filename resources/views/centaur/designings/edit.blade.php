@@ -11,11 +11,16 @@
 			</div>
 			<div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
 				<label>Naziv projekta</label>
-				<input class="form-control" name="name" type="text" value="{{  $designing->name }}" maxlength="191" required />
+				<input class="form-control" name="name" type="text" value="{{ $designing->name }}" maxlength="191" required />
 				{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
+			<div class="form-group {{ ($errors->has('cabinet_name')) ? 'has-error' : '' }}">
+				<label>Naziv ormara</label>
+				<input class="form-control" name="cabinet_name" type="text" value="{{ $designing->cabinet_name }}" maxlength="50" required />
+				{!! ($errors->has('cabinet_name') ? $errors->first('cabinet_name', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
 			<div class="form-group {{ ($errors->has('date')) ? 'has-error' : '' }}">
-				<label>Datum isporuke</label>
+				<label>Datum završetka pripreme</label>
 				<input class="form-control" name="date" type="date" value="{{  $designing->date }}" required />
 				{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 			</div>

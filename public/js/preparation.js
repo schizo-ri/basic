@@ -20,12 +20,12 @@ $('#mySearch_preparation').on('keyup',function() {
         $(this).toggle($(this).text().toLowerCase().indexOf(trazi) > -1)
     });
 });	
-$('.clearable__clear').click(function(){
+$('.clearable__clear').on('click',function(){
     $('#mySearch_preparation').val('');
     $('.open_project').show();
 
 });
-$('.select_employee').change(function(){
+$('.select_employee').on('change',function(){
     var find = $( this ).val().toLowerCase();
   
     if(find == 'all' ) {
@@ -42,7 +42,7 @@ $('.select_employee').change(function(){
 });
 /* $('.table_preparations .tbody').width($('.table_preparations .thead').width()); */
 
-$('.update_preparation_employee').submit(function(e){
+$('.update_preparation_employee').on('submit',function(e){
     e.preventDefault();
     var form = $( this );
     var form_data = form.serialize(); 
@@ -100,7 +100,7 @@ var checkbox_height;
 function open_list () {
     var expanded = false;
 
-    $('.showCheckboxes').click(function(){
+    $('.showCheckboxes').on('click',function(){
         var this_checkboxes1 = $(this).next('.checkboxes1');
         
         if( $(this_checkboxes1).is(":visible")) {
@@ -115,7 +115,7 @@ function open_list () {
             expanded = true;
         } 
         if( expanded ) {
-            $(document).mouseup(function(e) {
+            $(document).on('mouseup',function(e) {
                 var container = $(".checkboxes1");
         
                 // if the target of the click isn't the container nor a descendant of the container

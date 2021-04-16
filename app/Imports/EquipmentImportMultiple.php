@@ -28,10 +28,8 @@ class EquipmentImportMultiple implements ToModel, WithHeadingRow
             $id = $preparation->id;
         }
 
-        if( isset($row['replaced_item_id'] ) && $row['replaced_item_id'] != '' ) {
-      
+        if(  $row['product_number'] != '' && isset($row['replaced_item_id'] ) && $row['replaced_item_id'] != '' ) {
             $replaced_item = EquipmentList::where('preparation_id', $id)->where('product_number', $row['replaced_item_id'] )->first();
-         
             if( $replaced_item ) {
                 $data = array(
                     'replace_item'  => 1,
@@ -39,7 +37,25 @@ class EquipmentImportMultiple implements ToModel, WithHeadingRow
                 );
         
                 $replaced_item->updateEquipmentList($data);
+                if( Sentinel::inRole('skladiste_upload')) {
+                    $item = $this->stock->where('product_number',  $row['product_number'])->first();
+                    if ( $item ) {
+                        $quantity = $item->quantity;
+                        $discharges = DischargeStock::where('item_id', $item->id )->get()->sum('quantity');
+                        $total_quantity =  $quantity - $discharges;
+                        if ( $total_quantity > 0) {
+                            $q =  $total_quantity >= $row['quantity'] ? $row['quantity'] : $total_quantity;
+                            $data = array(
+                                'item_id' => $this->stock->where('product_number',  $row['product_number'])->first()->id, 
+                                'quantity' => $q,
+                                'preparation_id' => $id
 
+                            );
+                            $dischargeStock = new DischargeStock();
+                            $dischargeStock->saveDischargeStock($data);
+                        }
+                    }
+                }
                 return new EquipmentList([
                     'list_count'  => $count,
                     'preparation_id'  => $id,

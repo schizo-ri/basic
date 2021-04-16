@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Preparation;
 use App\Models\EquipmentList;
+use App\Models\Designing;
 use App\User;
 use Cartalyst\Sentinel\Users\EloquentUser;
 use App\Models\PreparationRecord;
@@ -17,7 +18,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use Sentinel;
 use DB;
 use Cartalyst\Sentinel\Roles\EloquentRole;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PreparationFinishMail;
+use App\Mail\ErrorMail;
 
 class PreparationController extends Controller
 {
@@ -101,9 +104,16 @@ class PreparationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        if( isset($request['designing_id']) ) {
+            $designing = Designing::find($request['designing_id']);
+            if( $designing ) {
+                return view('Centaur::preparations.create',['designing_id' => $request['designing_id']] );
+            }
+        } 
+        return "Nemoguće izvršiti";
+      
     }
 
     /**
@@ -114,14 +124,26 @@ class PreparationController extends Controller
      */
     public function store(Request $request)
     {
+        if( isset($request['designing_id']) ) {
+            $designing = Designing::find($request['designing_id']);
+        } else {
+            $designing = null;
+        }
+
+        if( $designing ) {
+            $data = array(
+                'finished' => 1,
+            );
+            
+            $designing->updateDesigning($data);
+        }
+
         $data = array(
-            'name'                  => $request['name'],
-            'project_no'            => str_replace(" ", "_",$request['project_no']),
-            'project_manager'       => $request['project_manager'],
-            'designed_by'           => $request['designed_by'],
-           /*  'preparation'           => $request['preparation'],
-            'mechanical_processing' => $request['mechanical_processing'],
-            'marks_documentation'   => $request['marks_documentation'], */
+            'name'                  => $designing ? $designing->cabinet_name : $request['name'],
+            'project_name'          => $designing ? $designing->name : $request['project_name'],
+            'project_no'            => $designing ? $designing->project_no : str_replace(" ", "_",$request['project_no']),
+            'project_manager'       => $designing ? $designing->manager_id : $request['project_manager'],
+            'designed_by'           => $designing ? $designing->designer_id : $request['designed_by'],
             'preparation'           => '{"Oprema preuzeta iz skladišta":"NE","Postavljene oznake na opremu":"NE","Oprema namontirana na ploču ormara":"NE","Periferna oprema postavljena (lampa, grijač, uvodnice...)":"NE","Postavljene i označene stezaljke":"NE"}',
             'mechanical_processing' => '{"Obrađena ploča":"NE","Obrađen ormar":"NE","Postavljeni PF-ovi":"NE","Montirane kanalice":"NE","Montirane din šine":"NE","Postavljena oprema na vrata ormara":"NE"}',
             'marks_documentation'   => '{"Pripremljene oznake za opremu":"NE","Pripremljene oznake za stezaljke":"NE","Pripremljene i postavljene oznake s nazivom ormara i QR pločica":"NE","Pripremljene opisne oznake":"NE","Napravljena izlazna dokumentacija i pripremljena shema":"NE"}',
@@ -132,28 +154,15 @@ class PreparationController extends Controller
         $preparation->savePreparation($data);
 
         $data = array(
-            'name'          => $request['name'],
-            'project_no'    => $request['project_no'],
-            'preparation_id'=> $preparation->id,
-            'start_date'      => date('Y-m-d',strtotime($preparation->created_at)),
-            'end_date'      => $request['delivery'],
+            'name'           => $designing ? $designing->name : $request['name'],
+            'project_no'     => $designing ? $designing->project_no : $request['project_no'],
+            'preparation_id' => $preparation->id,
+            'start_date'     => date('Y-m-d',strtotime($preparation->created_at)),
+            'end_date'       => $request['delivery'],
         );
 
         $project = new Project();
         $project->saveProject($data);
-
-        /* if( $request['preparation'] || $request['mechanical_processing'] || $request['marks_documentation']) {
-            $data = array(
-                'preparation_id'  => $preparation->id,
-                'preparation'  => $request['preparation'],
-                'mechanical_processing'  => $request['mechanical_processing'],
-                'marks_documentation'   => $request['marks_documentation'],
-                'date'  => date('Y-m-d'),
-            );
-          
-            $preparationRecord = new PreparationRecord();
-            $preparationRecord->savePreparationRecord($data);
-        } */
         
         if(request()->file('file')) {
             if( $request['siemens'] == "1" ) {
@@ -161,23 +170,6 @@ class PreparationController extends Controller
             } else {
                 Excel::import(new EquipmentImport, request()->file('file'));
             }
-           /*  try {
-                if( $request['siemens'] == "1" ) {
-                    Excel::import(new EquipmentImportSiemens, request()->file('file')); 
-                } else {
-                    Excel::import(new EquipmentImport, request()->file('file'));
-                }
-               
-            } catch (\Throwable $th) {
-               
-                $email = 'jelena.juras@duplico.hr';
-                $url = $_SERVER['REQUEST_URI'];
-                Mail::to($email)->send(new ErrorMail($th->getMessage(), $url)); 
-                
-                session()->flash('error', "Došlo je do problema, dokument nije učitan!");
-            
-                return redirect()->back();
-            } */
         }
        
 
@@ -255,12 +247,10 @@ class PreparationController extends Controller
        
         $data = array(
             'name' => $request['name'],
+            'project_name'   => $request['project_name'],
             'project_no'  => str_replace(" ", "_",$request['project_no']),
             'project_manager'  => $request['project_manager'],
             'designed_by'  => $request['designed_by'],
-            
-           
-            
             'delivery'  => $request['delivery'],
         );
         if(isset($request['preparation_title'])) {
@@ -371,6 +361,54 @@ class PreparationController extends Controller
             session()->flash('success', "Podaci su spremljeni, projekt je neaktivan.");
         } else {
             session()->flash('success', "Podaci su spremljeni, projekt je aktivan.");
+        }
+      
+        return redirect()->back(); 
+    }
+
+    public function finished ( $id ) 
+    {
+        $preparation = Preparation::find($id);
+        
+        if ($preparation->finish == 1) {
+            $finish = 0;
+        } else {
+            $finish = 1;
+        }
+
+        $data = array(
+			'finish' =>  $finish
+        );
+
+        $preparation->updatePreparation($data);
+
+        $send_to = array('jelena.juras@duplico.hr');
+        array_push($send_to, $preparation->manager->email);
+        array_push($send_to, $preparation->designed->email);
+        array_push($send_to, 'mladen.bockor@duplico.hr');
+        array_push($send_to, 'sasa.sindik@duplico.hr');
+        array_push($send_to, 'borislav.peklic@duplico.hr');
+        
+        $message = 'Mail je poslan';
+        
+        try {
+            foreach (array_unique($send_to) as $send_to_mail) {
+                if($send_to_mail != '') {
+                    Mail::to($send_to_mail)->send(new PreparationFinishMail($preparation)); 
+                }
+            }
+        } catch (\Throwable $th) {
+            $email = 'jelena.juras@duplico.hr';
+            $url = $_SERVER['REQUEST_URI'];
+            Mail::to($email)->send(new ErrorMail($th->getMessage(), $url)); 
+            
+            $message = "Došlo je do problema, mail nije poslan! " . $th->getMessage();
+        } 
+
+        if ($preparation->finish == 0) {
+            session()->flash('success', "Podaci su spremljeni, ormr nije spreman za isporuku." .  $message);
+        } else {
+            session()->flash('success',  "Podaci su spremljeni, ormar je spreman za isporuku." . $message);
         }
       
         return redirect()->back(); 

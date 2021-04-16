@@ -36,10 +36,11 @@
                         <p class="tr">
                             <span class="col-xs-10">
                                 <span class="col-md-1">Broj</span>
-                                <span class="col-md-5">Naziv</span>
+                                <span class="col-md-3">Naziv projekta</span>
+                                <span class="col-md-3">Naziv ormara</span>
                                 <span class="col-md-2">Voditelj projekta</span>
                                 <span class="col-md-2">Projektirao</span>
-                                <span class="col-md-2">Datum isporuke</span>
+                                <span class="col-md-1">Datum isporuke</span>
                             </span>
                             <span class="col-xs-2">
                                 <span class="col-md-12"> Zaduženi za pripremu i označavanje</span>
@@ -63,16 +64,19 @@
                             @if( $proj_no )
                                 <div class="tr open_project col-xs-12 {!! $j>=$count ? 'align_top' : '' !!}">
                                     <a href="{{ route('preparations.show', $preparation1->first()->id) }}" class="show_preparations col-xs-10">
-                                        <span class="col-md-1">
-                                        {{ $proj_no  }}
+                                        <span class="col-md-1 {!! $preparation1->where('finish',1)->first() ? 'bg_yellow' : '' !!} ">
+                                            {{ $proj_no  }}  
                                         </span>
-                                        <span class="col-md-5">
-                                        {{$preparation_name }}
+                                        <span class="col-md-3">
+                                            {{$preparation1->first()->project_name}}
+                                        </span>
+                                        <span class="col-md-3">
+                                            {{$preparation_name }}
                                         </span>
                                         <span class="col-md-2">{{ $preparation1->first()->manager['first_name'] . ' ' . $preparation1->first()->manager['last_name'] }}</span>
                                         <span class="col-md-2">{{ $preparation1->first()->designed['first_name'] . ' ' . $preparation1->first()->designed['last_name'] }}</span>
                                         
-                                        <span class="col-md-2">{{ date("d.m.Y",strtotime($preparation1->sortBy('delivery')->first()->delivery)) }}</span>
+                                        <span class="col-md-1">{{ date("d.m.Y",strtotime($preparation1->sortBy('delivery')->first()->delivery)) }}</span>
                                     </a>
                                     <div class="col-xs-2 td">
                                         <form class="update_preparation_employee" accept-charset="UTF-8" role="form" method="post" action="{{ route('preparation_employees.update', $preparation1->first()->id) }}" id="{{ $preparation->id }}" >

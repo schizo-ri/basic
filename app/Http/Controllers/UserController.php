@@ -166,15 +166,15 @@ class UserController extends Controller
             'last_name' => $request->get('last_name', null),
             'color' => $request->get('color')
         ];
-
+      
         // Do we need to update the password as well?
         if ($request->has('password')  && $request->get('password') != null) {
-            $result = $this->validate($request, [
+           /*  $result = $this->validate($request, [
 				'password' => 'nullable|confirmed|min:4',
-			]);
+			]); */
 			$attributes['password'] = $request->get('password');
         }
-
+       
         // Fetch the user object
         $user = $this->userRepository->findById($id);
       
@@ -188,11 +188,11 @@ class UserController extends Controller
         
         // Update the user
         $user = $this->userRepository->update($user, $attributes);
-
+       
         // Update role assignments
         $roleIds = array_values($request->get('roles', []));
         $user->roles()->sync($roleIds);
-
+        
         // All done
         if ($request->expectsJson()) {
             return response()->json(['user' => $user], 200);

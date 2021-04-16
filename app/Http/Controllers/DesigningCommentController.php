@@ -76,7 +76,7 @@ class DesigningCommentController extends Controller
                 }
             }
         }
-        $send_to_mail = array('jelena.juras@duplico.hr');
+        
         foreach( array_unique($send_to_mail) as $email) {
             try {
                 if( $email ) {

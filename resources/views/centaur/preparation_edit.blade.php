@@ -4,7 +4,10 @@
         <input  name="project_no" type="text" value="{{ $preparation->project_no }}" maxlength="30" required autofocus />
     </span>
     <span class="input_preparation name_input">
-        <input class=""  name="name" type="text" value="{{ $preparation->name }}" maxlength="100"   />
+        <input class="" name="project_name" type="text" value="{{ $preparation->project_name }}" placeholder="Naziv projekta" required />
+    </span>
+    <span class="input_preparation name_input">
+        <input class="" name="name" type="text" value="{{ $preparation->name }}" placeholder="Naziv ormara" maxlength="100" />
     </span>
     <span class="input_preparation delivery_input">
         <input class="" name="delivery" type="date" value="{{ $preparation->delivery }}" />
@@ -33,7 +36,6 @@
     <span class="input_preparation preparation_input">
         @if (Sentinel::inRole('priprema')  || Sentinel::inRole('administrator'))
             @foreach($priprema as $key1 => $priprema1) 
-        
                 <h5>{{ $priprema1 }}</h5>
                 <input type="hidden" name="preparation_title[{{ $key1 }}]" value="{{ $priprema1 }}"   >
                 <span class="col-md-4">

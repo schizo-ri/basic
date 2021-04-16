@@ -23,7 +23,7 @@
         
        <!-- CSS modal -->
         <link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.css') }}" type="text/css" />
-        <link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}" type="text/css" />
+        <link rel="stylesheet" href="{{ URL::asset('css/welcome_new.css') }}" type="text/css" />
  
     
         <script  src="{{ URL::asset('node_modules/@fullcalendar/core/main.js') }}"></script>

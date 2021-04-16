@@ -16,10 +16,13 @@
    $today_w->modify('-'.$modify. 'days');
    setlocale(LC_TIME, 'HR.utf8');
 @endphp
+<span id="user_role" hidden>{!! Sentinel::inRole('administrator') ? 'admin' : 'basic' !!}</span>
 @section('content')
     <div class="page-header">
         <div class='btn-toolbar pull-right'>
-            <span class="show_inactive"><a href="{{ route('designings.index', ['active' => $active == 1 ? 0 : 1]) }}">{!!  $active == 1 ? 'Prikaži neaktivne' : 'Prikaži aktivne' !!}</a></span>
+            @if((Sentinel::inRole('voditelj') || Sentinel::inRole('administrator')) )
+                <span class="show_inactive"><a href="{{ route('designings.index', ['active' => $active == 1 ? 0 : 1]) }}">{!!  $active == 1 ? 'Prikaži neaktivne' : 'Prikaži aktivne' !!}</a></span>
+            @endif
             <label class="filter_empl">
                 <input type="search" placeholder="Traži..." onkeyup="mySearchTable()" id="mySearchTbl">
                 <i class="clearable__clear">&times;</i>
@@ -83,7 +86,8 @@
                     </tbody>
                 </table>
             </div>
-        <span class="json_users" hidden> {{ json_encode($users )}}</span>
+        <span class="json_users" hidden> {{ json_encode( $users )}}</span>
+        <span class="json_designins" hidden> {{ json_encode( $all_designings )}}</span>
         </section>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 designers_list ">
             <div class='btn-toolbar pull-right'>
@@ -107,7 +111,7 @@
                     <thead>
                         <tr>
                             <th>Broj</th>
-                            <th>Naziv</th>
+                            <th>Naziv - Naziv ormara</th>
                             <th>Datum isporuke</th>
                             <th>Voditelj</th>
                             <th>Projektant</th>
@@ -122,45 +126,49 @@
                     <tbody>
                         @php
                             $j=0;
-                            $count = count($designings) - 3;
+                            $count = count($all_designings) - 3;
                         @endphp
-                        @if(count($designings) > 0)
-                            @foreach ($designings as $designing)
-                                @php
-                                    if ($designing->designer != null ) {
-                                        $employee = $designing->designer;
-                                    } else {
-                                        $employee = null;
-                                    }
-                                @endphp
-                                <tr class="project_{{ $designing->id }} {!! $j>3 && $j>=$count ? 'align_top' : '' !!}">
-                                    <td>{{ $designing->project_no }}</td>
-                                    <td>{{ $designing->name  }}</td>
-                                    <td>{{ date('d.m.Y', strtotime($designing->date) ) }}</td>
-                                    <td>{!! $designing->manager ? $designing->manager->first_name . ' ' . $designing->manager->last_name : ''  !!}</td>
-                                    <td class="designer_select">
-                                        <form class="update_preparation_employee" accept-charset="UTF-8" role="form" method="post" action="{{ route('designings.update', $designing->id) }}" id="{{ $designing->id }}" >
-                                            <fieldset>
-                                                <div class="selectBox showCheckboxes" >
-                                                    <span class="j" hidden >{{ $j }}</span>
-                                                    <span class="employee_id" hidden>{!! $employee ? $employee->id : null !!}</span>
-                                                    <label class="zaduzi_text {!! Sentinel::inRole('administrator') ? 'cursor' : '' !!}">
-                                                        @if (! isset($employee) ||  ! $employee  )
-                                                            @if ( Sentinel::inRole('administrator'))
-                                                                Zaduži projektanta
+                        @if(count($all_designings) > 0)
+                            @foreach ($all_designings->groupBy('project_no') as $key => $designings)
+                                <tr class="group_name" id="group_name_{{ $key }}">
+                                    <td colspan="{!! Sentinel::getUser()->hasAccess(['designings.update']) || Sentinel::getUser()->hasAccess(['designings.delete']) ? 9 : 8 !!}">{{ $key . ' ' . $designings->first()->name }}</td>
+                                </tr>
+                                @foreach ($designings as $designing)
+                                    @php
+                                        if ($designing->designer != null ) {
+                                            $employee = $designing->designer;
+                                        } else {
+                                            $employee = null;
+                                        }
+                                        $designingEmployees = $designing->hasEmployees->sortBy('start_date');
+                                    @endphp
+                                    <tr class="line_project group_name_{{ $key }} project_{{ $designing->id }} {!! $j>3 && $j>=$count ? 'align_top' : '' !!}">
+                                        <td>{{ $designing->project_no }}</td>
+                                        <td>{{ $designing->name . ' - '. $designing->cabinet_name }}</td>
+                                        <td>{{ date('d.m.Y', strtotime($designing->date) ) }}</td>
+                                        <td>{!! $designing->manager ? $designing->manager->first_name . ' ' . $designing->manager->last_name : ''  !!}</td>
+                                        <td class="designer_select">
+                                            <form class="update_preparation_employee" accept-charset="UTF-8" role="form" method="post" action="{{ route('designing_employees.store') }}" id="{{ $designing->id }}" >
+                                                <fieldset>
+                                                    <div class="selectBox showCheckboxes" >
+                                                        <span class="j" hidden >{{ $j }}</span>
+                                                        <span class="employee_id" hidden>{!! $employee ? $employee->id : null !!}</span>
+                                                        <label class="zaduzi_text {!! Sentinel::inRole('administrator') ? 'cursor' : '' !!}">
+                                                            @if (! isset($employee) ||  ! $employee  )
+                                                                @if ( Sentinel::inRole('administrator'))
+                                                                    Zaduži projektanta
+                                                                @endif
+                                                            @else
+                                                                {{ $employee->first_name . ' ' . trim($employee->last_name) }}
                                                             @endif
-                                                        @else
-                                                            {{ $employee->first_name . ' ' . trim($employee->last_name) }}
-                                                        @endif
-                                                        @if ( Sentinel::inRole('administrator'))
-                                                            <i class="fas fa-caret-down"></i>
-                                                        @endif
-                                                    </label>
-                                                    <div class="overSelect"></div>
-                                                </div>
-                                                @if(Sentinel::getUser()->hasAccess(['preparation_employees.create']))
-                                                    <div class="checkboxes1" >
-                                                       {{--  @php
+                                                            @if ( Sentinel::inRole('administrator'))
+                                                                <i class="fas fa-caret-down"></i>
+                                                            @endif
+                                                        </label>
+                                                        <div class="overSelect"></div>
+                                                    </div>
+                                                    @if(Sentinel::getUser()->hasAccess(['preparation_employees.create']))
+                                                        {{--  @php
                                                             $i = 0;
                                                         @endphp
                                                         @foreach ($users as $user)
@@ -172,123 +180,165 @@
                                                                 $i++;
                                                             @endphp
                                                         @endforeach--}}
-                                                        <input type="date" name="start" value="{{ $designing->start }}" title="Početni datum">
-                                                        <input type="date" name="end" value="{{ $designing->end }}" title="Završni datum">
-                                                        <input type="hidden" name="designing_id" value="{{  $designing->id }}">
-                                                        {{ csrf_field() }}
-                                                        {{ method_field('PUT') }}
-                                                        <input class="btn  btn_spremi store_preparation" type="submit" value="Spremi">
-                                                    </div> 
+                                                        <div class="checkboxes1" >
+                                                            <input type="date" name="start_date" value="{{ $designing->start }}" title="Početni datum" required>
+                                                            {{-- <input type="date" name="end" value="{{ $designing->end }}" title="Završni datum"> --}}
+                                                            <input type="hidden" name="designing_id" value="{{ $designing->id }}">
+                                                            {{ csrf_field() }}
+                                                            <input class="btn  btn_spremi store_preparation" type="submit" value="Spremi">
+                                                        </div> 
+                                                    @endif
+                                                    {{-- @if (count($designingEmployees)> 0 )
+                                                        <p>
+                                                            @foreach ($designingEmployees as $designingEmployee)
+                                                                <p>{{ $designingEmployee->user->first_name . ' ' . $designingEmployee->user->last_name . ' - ' .date('d.m.Y', strtotime($designingEmployee->start_date )) }}
+                                                                    <span class="delete_employee" data-href="{{ route('designing_employees.destroy', $designingEmployee->id) }}"><i class="far fa-trash-alt"></i></span>
+                                                                    <a class="edit_employee" href="{{ route('designing_employees.edit', $designingEmployee->id) }}" rel="modal:open"><i class="fas fa-edit"></i></a>
+                                                                </p>
+                                                            @endforeach
+                                                        </p>
+                                                    @endif --}}
+                                                </fieldset>
+                                            </form>
+                                        </td>
+                                        <td>{{ $designing->comment  }}</td>
+                                        <td>
+                                            <span class="open_doc_list" >
+                                                @php
+                                                    $doc_troskovnik = array();
+                                                    $doc_shema = array();
+                                                    $doc_project = array();
+                                                    $path = 'uploads/' . $designing->id . '/Projekt/';
+                                                    if(file_exists($path)){
+                                                        $doc_project = array_diff(scandir($path), array('..', '.', '.gitignore'));
+                                                    } 
+                                                    $path1 = 'uploads/' . $designing->id . '/Shema/';
+                                                    if(file_exists($path1)){
+                                                        $doc_shema = array_diff(scandir($path1), array('..', '.', '.gitignore'));
+                                                    } 
+                                                    $path2 = 'uploads/' . $designing->id . '/Troskovnik/';
+                                                    if(file_exists($path2)){
+                                                        $doc_troskovnik = array_diff(scandir($path2), array('..', '.', '.gitignore'));
+                                                    } 
+                                                @endphp                                          
+                                                @if (count( $doc_troskovnik)>0 || count( $doc_shema)>0 || count( $doc_project)>0) 
+                                                    <label class="collapsible ">Dokumenti  <i class="fas fa-caret-down"></i></label>
+                                                    <div class="content file">
+                                                        @foreach ($doc_troskovnik as $doc)
+                                                            <p><a href="{{ $path2 . $doc }}" target="_blanck" class="open_file">Troškovnik: {{ $doc }}</a>
+                                                                @if( Sentinel::getUser()->hasAccess(['designings.delete']) )
+                                                                    <a href="{{ action('DesigningController@delete_file' ) }}" class="action_confirm btn-delete doc danger" data-token="{{ csrf_token() }}" title="{{$path2 . $doc }}">
+                                                                        <i class="far fa-trash-alt"></i>
+                                                                    </a>
+                                                                @endif
+                                                            </p>
+                                                        @endforeach
+                                                        @foreach ($doc_shema as $doc)
+                                                            <p><a href="{{ $path1 . $doc }}" target="_blanck" class="open_file">Shema: {{ $doc }}</a>
+                                                                @if( Sentinel::getUser()->hasAccess(['designings.delete']) )
+                                                                    <a href="{{ action('DesigningController@delete_file' ) }}" class="action_confirm btn-delete doc danger" data-token="{{ csrf_token() }}" title="{{$path1 . $doc }}">
+                                                                        <i class="far fa-trash-alt"></i>
+                                                                    </a>
+                                                                @endif
+                                                            </p>
+                                                        @endforeach
+                                                        @foreach ($doc_project as $doc)
+                                                            <p><a href="{{ $path . $doc }}" target="_blanck" class="open_file">Projekt: {{ $doc }}</a>
+                                                                @if( Sentinel::getUser()->hasAccess(['designings.delete']) )
+                                                                    <a href="{{ action('DesigningController@delete_file' ) }}" class="action_confirm btn-delete doc danger" data-token="{{ csrf_token() }}" title="{{$path . $doc }}">
+                                                                        <i class="far fa-trash-alt"></i>
+                                                                    </a>
+                                                                @endif
+                                                            </p>
+                                                        @endforeach
+                                                    </div>
                                                 @endif
-                                            </fieldset>
-                                        </form>
-                                    </td>
-                                    <td>{{ $designing->comment  }}</td>
-                                    <td>
-                                        <span class="open_doc_list" >
-                                            @php
-                                                $docs = array();
-                                                $path = 'uploads/' . $designing->id . '/';
-                                                if(file_exists($path)){
-                                                    $docs = array_diff(scandir($path), array('..', '.', '.gitignore'));
-                                                } 
-                                            @endphp
-                                            @if (count( $docs)>0)
-                                            <label class="collapsible ">Dokumenti  <i class="fas fa-caret-down"></i></label>
-                                            <div class="content file">
-                                                @foreach ($docs as $doc)
-                                                    <p><a href="{{ $path . $doc }}" target="_blanck" class="open_file">{{ $doc }}</a>
-                                                        @if( Sentinel::getUser()->hasAccess(['designings.delete']) )
-                                                            <a href="{{ action('DesigningController@delete_file' ) }}" class="action_confirm btn-delete doc danger" data-token="{{ csrf_token() }}" title="{{$path . $doc }}">
-                                                                <i class="far fa-trash-alt"></i>
-                                                            </a>
-                                                        @endif
-                                                    </p>
+                                            </span>
+                                        </td>
+                                        <td class="empl_color">
+                                            @if ($designing->hasEmployees && count($designing->hasEmployees) > 0)
+                                                <span class="vertical_align_m">Dodjeljeno</span>
+                                                @foreach ($designing->hasEmployees as $designing_empl)
+                                                    <span class="user_color" style="background-color:{{ $designing_empl->user->color }}" title="{{ $designing_empl->user->first_name . ' ' . $designing_empl->user->last_name }}"></span>
                                                 @endforeach
-                                            </div>
-                                            @endif
-                                        </span>
-                                    </td>
-                                    <td class="empl_color">
-                                        @if ($designing->designer && $designing->start)
-                                            <span class="vertical_align_m">Dodjeljeno</span> <span class="user_color" style="background-color:{{ $designing->designer->color }} "></span>
-                                        @else
-                                            <span class="vertical_align_m">Nedodjeljeno <span class="user_color" style="background-color:#ddd"></span></span>
-                                        @endif
-                                    </td>
-                                    @if(Sentinel::getUser()->hasAccess(['designings.update']) || Sentinel::getUser()->hasAccess(['designings.delete']) )
-                                        <td class="">
-                                            @if(Sentinel::getUser()->hasAccess(['designings.update']) )
-                                                <a href="{{ route('designings.show', $designing->id) }}" class="btn">
-                                                    <i class="fas fa-comments"></i> Komentari
-                                                </a>
-                                            @endif
-                                            @if(Sentinel::getUser()->hasAccess(['designings.update']) )
-                                                <span class="file-upload btn" id="upload_{{ $designing->id }}"><i class="fas fa-upload"></i> Upload</span>
-                                                <a href="{{ route('designings.edit', $designing->id) }}" class="btn " rel="modal:open">
-                                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                                    Edit
-                                                </a>
-                                            @endif
-                                            @if ( Sentinel::getUser()->hasAccess(['designings.create']) )
-                                                <a href="{{ action('DesigningController@close_designing', $designing->id) }}" class="btn" class="action_confirm" ><i class="fas fa-check"></i>
-                                                    @if ($designing->active == 1)Završi @else Vrati @endif  
-                                                </a>
-                                            @endif
-                                            @if(Sentinel::getUser()->hasAccess(['designings.delete']) )
-                                            <a href="{{ route('designings.destroy', $designing->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}">
-                                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                                Delete
-                                            </a>
+                                            @else
+                                                <span class="vertical_align_m">Nedodjeljeno <span class="user_color" style="background-color:#ddd"></span></span>
                                             @endif
                                         </td>
-                                    @endif
-                                </tr>
-                                @php
-                                    $j++;
-                                @endphp
+                                        @if(Sentinel::getUser()->hasAccess(['designings.update']) || Sentinel::getUser()->hasAccess(['designings.delete']) )
+                                            <td class="">
+                                                @if( Sentinel::getUser()->hasAccess(['designings.update']) )
+                                                    <a href="{{ route('designings.show', $designing->id) }}" class="btn">
+                                                        <i class="fas fa-comments"></i> Komentari
+                                                    </a>
+                                                @endif                                            
+                                                @if((Sentinel::inRole('voditelj') || Sentinel::inRole('administrator')) && Sentinel::getUser()->hasAccess(['designings.update']) )
+                                                    <span class="file-upload btn" id="upload_{{ $designing->id }}"><i class="fas fa-upload"></i> Upload</span>
+                                                    <a href="{{ route('designings.edit', $designing->id) }}" class="btn " rel="modal:open">
+                                                        <i class="fas fa-edit"></i>
+                                                        Edit
+                                                    </a>
+                                                @endif
+                                                @if( $designing->finished == 0 &&( Sentinel::inRole('projektant') || Sentinel::inRole('administrator')) && Sentinel::getUser()->hasAccess(['designings.update']) )
+                                                    {{--  <a href="{{ action('DesigningController@toProduction', $designing->id) }}" class="btn">
+                                                        <i class="fas fa-share-square"></i> Prebaci u proizvodnju
+                                                    </a> --}}
+                                                    <a href="{{ route('preparations.create', ['designing_id' => $designing->id]) }}" class="btn" rel="modal:open">
+                                                        <i class="fas fa-share-square"></i> Prebaci u proizvodnju
+                                                    </a>
+                                                @endif
+                                                @if ( Sentinel::inRole('administrator') && Sentinel::getUser()->hasAccess(['designings.create']) )
+                                                    <a href="{{ action('DesigningController@reminder', $designing->id) }}" class="btn" class="action_confirm" ><i class="far fa-envelope"></i>
+                                                        Podsjetnik
+                                                    </a>
+                                                    <a href="{{ action('DesigningController@close_designing', $designing->id) }}" class="btn" class="action_confirm" ><i class="fas fa-check"></i>
+                                                        @if ($designing->active == 1)Završi @else Vrati @endif  
+                                                    </a>
+                                                @endif
+                                                @if(Sentinel::inRole('administrator') && Sentinel::getUser()->hasAccess(['designings.delete']) )
+                                                <a href="{{ route('designings.destroy', $designing->id) }}" class="action_confirm btn btn-delete" data-method="delete" data-token="{{ csrf_token() }}">
+                                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                                    Delete
+                                                </a>
+                                                @endif
+                                            </td>
+                                        @endif
+                                    </tr>
+                                    @php
+                                        $j++;
+                                    @endphp
+                                @endforeach
                             @endforeach
                         @endif
                     </tbody>
                 </table>
             </div>
-            
         </div>
     </div>
 <script>
+    $.getScript('/../js/filter.js');
+    $.getScript('/../js/designings.js');
 
-$.getScript('/../js/filter.js');
-$.getScript('/../js/designings.js');
-$('.file-upload').click(function(){
-    var id = $( this ).attr('id');
-    id = id.replace('upload_','');
-    
-    $('<form accept-charset="UTF-8" role="form" method="post" action="'+location.origin+'/designings/'+id+'" enctype="multipart/form-data"><div class="form-group"><label>Dodaj dokumenat</label><input type="file" name="fileToUpload[]" id="fileToUpload" multiple></div><div class="form-group file_names"><label>Naziv dokumenta</label></div><input type="hidden" name="file_up" value="1"><input name="_token" value="{{ csrf_token() }}" type="hidden"><input name="_method" value="PUT" type="hidden"><input class="btn btn-md btn-primary pull-right" type="submit" value="Spremi"></form>').appendTo('body').modal();
-
-    $('#fileToUpload').change(function(e){
-        var file_list = e.target.files;
-        console.log( e.target.files );
-        $.each(file_list,function(idx,elm){
-            
-            $('.file_names').append('<input type="text" class="form-control margin_b_10" name="file_name[]" value="'+ elm.name.substr(0, elm.name.lastIndexOf('.')) +'">');
-        });
-    
+    $('.group_name').on('click',function(){
+        var id = $( this ).attr('id');
+        $( '.'+id ).toggle();
     });
-});
+    $('.file-upload').click(function(){
+        var id = $( this ).attr('id');
+        id = id.replace('upload_','');
+        
+        $('<form accept-charset="UTF-8" role="form" method="post" action="'+location.origin+'/designings/'+id+'" enctype="multipart/form-data"><div class="form-group"><label>Dodaj troškovnik</label><input type="file" name="troskovnikToUpload[]" class="fileToUpload" id="fileToUpload" ><div class="form-group file_names"></div></div><div class="form-group"><label>Dodaj jednopolnu shemu</label><input type="file" name="shemaToUpload[]" class="fileToUpload" id="shemaToUpload" ><div class="form-group file_names"></div></div><div class="form-group"><label>Dodaj glavni projekt</label><input type="file" name="projectToUpload[]" class="fileToUpload"  id="projectToUpload" ><div class="form-group file_names"></div></div><input type="hidden" name="file_up" value="1"><input name="_token" value="{{ csrf_token() }}" type="hidden"><input name="_method" value="PUT" type="hidden"><input class="btn btn-md btn-primary pull-right" type="submit" value="Spremi"></form>').appendTo('body').modal();
+
+       /*  $('#fileToUpload').change(function(e){
+            var this_el = this;
+            var file_list = e.target.files;
+            console.log( e.target.files );
+            $.each(file_list,function(idx,elm){
+                $(this_el).next('.file_names').append('<input type="text" class="form-control margin_b_10" name="file_troskovnik[]" value="'+ elm.name.substr(0, elm.name.lastIndexOf('.')) +'">');
+            });
+        
+        });
+     */
+    });
 </script>
- {{--  <tr class="month_row">
-    <th>Mjesec</th>
-    @for ($i = 0; $i < $num_of_days_m; $i++)
-        @php
-            $first_month = $num_of_days_m - intval( $today_m->format('j'));
-        @endphp
-        <th class="align_center {!! $today_m->format('d') == 1 || $i== 0 ? 'month_first_day' : '' !!}" colspan="{!! $i == 0 ? (intval($first_month) + 1) : 1 !!}" >
-            {!! $today_m->format('d') == 1 || $i == 0 ?  $today_m->format('m') : '' !!} 
-        </th>
-        @php
-            $today_m->modify('+'. intval($first_month) + 1 .'days');
-            $i += intval($first_month);
-        @endphp
-    @endfor
-</tr> --}}
 @stop

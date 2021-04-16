@@ -48,6 +48,7 @@
                     <span class="th">Jed.mj.</span>
                     <span class="th">Količina</span>
                     <span class="th">Isporučena količina</span>
+                    <span class="th">Imam na skladištu / Komentar</span>
                     <span class="th"></span>
                 </p>
             </div>
@@ -135,7 +136,7 @@
                                             <span class="td text_preparation ">{{ $equipment_level2->unit }}</span>
                                             <span class="td text_preparation quantity ">{{ $equipment_level2->quantity }}</span>
                                             <span class="td text_preparation delivered">
-                                                <input name="delivered[{{ $equipment_level2->id }}]" type="number" step="0.01"  title="Please enter number only" value="{{ $delivered }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} />    
+                                                <input name="delivered[{{ $equipment_level2->id }}]" type="number" step="0.01" title="Please enter number only" value="{{ $delivered }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} />   
                                                 @if ( $delivered )
                                                     @if (Sentinel::inRole('administrator') || Sentinel::inRole('nabava')  )
                                                         <span class="arrow_down"><i class="fas fa-arrow-down"></i></span>  
@@ -160,6 +161,10 @@
                                                         </span>
                                                     @endif                                        
                                                 @endif
+                                            </span>
+                                            <span class="td text_preparation delivered">
+                                                <input name="quantity2[{{ $equipment_level2->id }}]" type="number" step="0.01" title="Imam na skladištu" value="{{  $equipment_level2->quantity2 }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} /> 
+                                                <input name="comment[{{ $equipment_level2->id }}]" type="text" maxlength="191" title="Komentar" value="{{  $equipment_level2->comment }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} /> 
                                             </span>
                                             <span class="td text_preparation replace">
                                                 @if (Sentinel::inRole('nabava') || Sentinel::inRole('administrator'))
@@ -226,7 +231,8 @@
                                                         <span class="td text_preparation ">{{ $equipment_level3->unit }}</span>
                                                         <span class="td text_preparation quantity ">{{ $equipment_level3->quantity }}</span>
                                                         <span class="td text_preparation delivered">
-                                                            <input name="delivered[{{ $equipment_level3->id }}]" type="number" step="0.01"  title="Please enter number only" value="{{ $delivered }}"  {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!}  />    
+                                                            <input name="delivered[{{ $equipment_level3->id }}]" type="number" step="0.01" title="Please enter number only" value="{{ $delivered }}"  {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!}  />    
+                                                            
                                                             @if ( $delivered )
                                                                 @if ( Sentinel::inRole('administrator') || Sentinel::inRole('nabava') )
                                                                     <span class="arrow_down"><i class="fas fa-arrow-down"></i></span>  
@@ -253,6 +259,11 @@
                                                                     </span>
                                                                 @endif                                        
                                                             @endif
+                                                            
+                                                        </span>
+                                                        <span class="td text_preparation delivered">
+                                                            <input name="quantity2[{{ $equipment_level3->id }}]" type="number" step="0.01" title="Imam na skladištu" value="{{  $equipment_level3->quantity2 }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} />
+                                                            <input name="comment[{{ $equipment_level3->id }}]" type="text" maxlength="191" title="Komentar" value="{{  $equipment_level3->comment }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} />  
                                                         </span>
                                                         <span class="td text_preparation replace">
                                                             @if (Sentinel::inRole('nabava') || Sentinel::inRole('administrator'))
@@ -291,7 +302,7 @@
                                         $delivered +=  $listUpdate->quantity;
                                     } */
                                 @endphp
-                                <input name="id[]" value="{{ $equipment->id }}" hidden/>
+                                <input name="id[{{ $equipment->id }}]" value="{{ $equipment->id }}" hidden/>
                             
                                 <p class="tr row_preparation_text {!! $equipment->replace_item == 1 ? 'removed_item' : '' !!}" id="{{ $equipment->id }}" >
                                     <span class="td text_preparation align_left padding_h_10">
@@ -322,7 +333,7 @@
                                     <span class="td text_preparation ">{{ $equipment->unit }}</span>
                                     <span class="td text_preparation quantity ">{{ $equipment->quantity }}</span>
                                     <span class="td text_preparation delivered">
-                                        <input name="delivered[]" type="number" step="0.01"  title="Please enter number only" value="{{ $delivered }}"  {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!}  />    
+                                        <input name="delivered[{{ $equipment->id }}]" type="number" step="0.01"  title="Please enter number only" value="{{ $delivered }}"  {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!}  />   
                                         @if ( $delivered )
                                             @if (Sentinel::inRole('administrator') || Sentinel::inRole('list_view')  )
                                                 <span class="arrow_down"><i class="fas fa-arrow-down"></i></span>  
@@ -342,6 +353,10 @@
                                                 </span>
                                             @endif                                        
                                         @endif
+                                    </span>
+                                    <span class="td text_preparation delivered">
+                                        <input name="quantity2[{{ $equipment->id }}]" type="number" step="0.01" title="Imam na skladištu" value="{{  $equipment->quantity2 }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} /> 
+                                        <input name="comment[{{ $equipment->id }}]" type="text" maxlength="191" title="Komentar" value="{{  $equipment->comment }}" {!! ! Sentinel::inRole('priprema') && ! Sentinel::inRole('administrator') ? 'disabled' : '' !!} />  
                                     </span>
                                     <span class="td text_preparation replace">
                                         @if (Sentinel::inRole('nabava') || Sentinel::inRole('administrator'))
@@ -364,7 +379,7 @@
                     @endforeach                    
                 @endif
             </div>
-            @if ( Sentinel::inRole('priprema')  )
+            @if ( Sentinel::inRole('priprema')  ||Sentinel::inRole('administrator')  )
                 @csrf
                 <input class="btn btn-lg btn-primary store_changes" type="submit" value="Spremi">
             @endif
@@ -589,7 +604,7 @@
     }
     
     function delivered_change_color() {
-        $('.text_preparation.delivered>input').change(function(){
+        $('.text_preparation.delivered>input:first-child').change(function(){
             delivered = $( this ).val();
             quantity = $( this ).parent().prev().text();
         

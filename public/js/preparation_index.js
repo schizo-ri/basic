@@ -16,6 +16,17 @@ var active;
 var users;
 var equipment;
 
+
+$('.action_confirm#finish_preparation0').on('click', function(e){
+    return confirm("Jesi li siguran da je ormar spreman za isporuku?");
+});
+$('.action_confirm#finish_preparation1').on('click', function(e){
+    return confirm("Jesi li siguran da želiš poništiti gotovost ormara?");
+});
+$('.action_confirm#close_preparation').on('click', function(e){
+    return confirm("Jesi li siguran da želiš završiti ormar?");
+});
+
 var project_no = $('.project_show').attr('id');  //project number
 project_no = project_no.replace('collaps_','');
 
@@ -39,11 +50,12 @@ function updatePage() {
                
                 preparation = $.grep(preparations, function(e){ return e.id == preparation_id; });
                 preparation = preparation[0];
-                /* console.log( "preparation_id " + preparation_id );
+                console.log( "preparation_id " + preparation_id );
                 console.log( preparation );
-                console.log( equipment ); */
+                
                 if(preparation != undefined) {
                     equipment = preparation.equipment;
+                    console.log( equipment );
                     $('.row_preparation_text#id_'+preparation.id).find('span:not(.not_remove)').remove();
 
                     if(users.find(x => x.id === preparation.project_manager) != undefined) {
@@ -57,7 +69,7 @@ function updatePage() {
                         tr_text += '<span class="td text_preparation file_input"><a class="open_upload_link"><i class="fas fa-upload"></i><span class="preparation_id" hidden>' + preparation_id + '</span></a></span>';
                     }
                     tr_text += '<span class="td text_preparation project_no_input">'+ preparation.project_no +'</span>';
-                    tr_text += '<span class="td text_preparation name_input">'+ preparation.name +'</span>';
+                    tr_text += '<span class="td text_preparation name_input">'+ (preparation.project_name ? preparation.project_name + ' - ' : '') + preparation.name +'</span>';
                     tr_text += '<span class="td text_preparation delivery_input">'+ preparation.delivery + '</span>';
                     tr_text += '<span class="td text_preparation manager_input">'+ manager +'</span>';
                     tr_text += '<span class="td text_preparation designed_input">'+ designed +'</span>';
@@ -129,31 +141,39 @@ function updatePage() {
                         isporuceno = 0;
                     }
                     if ( !jQuery.isEmptyObject( equipment ) ) {
-                        if ( preparation.active == 1) {
-                        
-                            if( equipment.find(x => x.level1 != null ) ) {
-                                var equipment_level1 = $(equipment).filter(function( index ) {
-                                    return equipment[index].level1 != null;
-                                }); 
-                                $.each( equipment_level1, function( key, value ) {
-                                    tr_text += '<a href="' + location.origin + '/equipment_lists/' + this.id + '/edit?preparation_id='+preparation.id + '" class="equipment_lists_open" >'  +this.product_number + '</a>';
-                                });
+                        if( equipment.find(x => x.level1 != null ) ) {
+                            var equipment_level1 = $(equipment).filter(function( index ) {
+                                return equipment[index].level1 != null;
+                            }); 
+                            $.each( equipment_level1, function( key, value ) {
+                                tr_text += '<a href="' + location.origin + '/equipment_lists/' + this.id + '/edit?preparation_id='+preparation.id + '" class="equipment_lists_open" >'  +this.product_number + '</a>';
+                            });
+                        } else {
+                            if(equipment[0] != undefined) {
+                                tr_text += '<a href="' + location.origin + '/equipment_lists/' + equipment[0].id + '/edit?preparation_id='+preparation.id + '" class="equipment_lists_open" >Upis opreme</a>' ;
                             } else {
-                                if(equipment[0] != undefined) {
-                                    tr_text += '<a href="' + location.origin + '/equipment_lists/' + equipment[0].id + '/edit?preparation_id='+preparation.id + '" class="equipment_lists_open" >Upis opreme</a>' ;
-                                } else {
-                                    tr_text += "Nema zapisa";
-                                }
+                                tr_text += "Nema zapisa";
                             }
+                        }
+                        if ( preparation.active == 1) {
                             if ( roles.includes('nabava') || roles.includes('administrator') ) {
                                 tr_text += '<a href="' + location.origin + '/multiReplaceItem/' + preparation_id + '" class="equipment_lists_open multi_replace" >Zamjena</a>';
                             }
                             if(hasmark == true) {
                                 tr_text += '<a class="btn-file-input equipment_lists_mark" href="'+ location.origin + '/export/'+preparation_id +'" ><i class="fas fa-download"></i> Preuzmi oznake</a>'
                             } 
+                            if( roles.includes('skladiste_upload') ) {
+                                tr_text += '<a class="btn-file-input equipment_lists_mark" href="'+ location.origin + '/exportStock/'+preparation_id +'" ><i class="fas fa-download"></i> Roba na skladištu</a>'
+                                tr_text += '<a class="btn-file-input equipment_lists_mark" href="'+ location.origin + '/exportStock2/'+preparation_id +'" ><i class="fas fa-download"></i> Roba za naručiti</a>'
+                            }
+                            
                         } 
                     } else {
                         tr_text += "Nema zapisa";
+                    }
+                    if(  preparation.finish == 1 ) {
+                        tr_text += '<p class="bg_yellow">Ormar je spreman za isporuku</p>';
+
                     }
                     tr_text += '<span class="delivered_items">Isporučeno: ' + isporuceno + '%</span>';
                     tr_text += '</span>';
@@ -170,14 +190,14 @@ function updatePage() {
             $('.row_preparation_text span.text_preparation.option_input').show();
             css();
            
-            $('.open_upload_link').click(function(){
+            $('.open_upload_link').on('click',function(){
                 var preparation_id = $( this ).find('.preparation_id').text();
          
                 $('.upload_links .prep_id').val(preparation_id);
                 $('.upload_links').modal();
                 return false;
             });
-            
+           
         },
         error: function(jqXhr, json, errorThrown) {
             alert("Projekt nema dovoljno podataka, došlo je do greške!");
@@ -188,9 +208,7 @@ function updatePage() {
                                 'line':  jqXhr.responseJSON.line };
     
             console.log(data_to_send); 
-       
-            
-            $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + error + '</div></div></div>').appendTo('body').modal();
+            $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + jqXhr.responseJSON.message + '</div></div></div>').appendTo('body').modal();
             
             $.ajax({
                 url: 'errorMessage',
@@ -330,7 +348,7 @@ function collapsThisProject ( id ) { // id = project id
             tr_text += '<span class="td text_preparation file_input"><a class="open_upload_link"><i class="fas fa-upload"></i><span class="preparation_id" hidden>' + preparation_id + '</span></a></span>';
         }
         tr_text += '<span class="td text_preparation project_no_input">'+ preparation.project_no +'</span>';
-        tr_text += '<span class="td text_preparation name_input">'+ preparation.name +'</span>';
+        tr_text += '<span class="td text_preparation name_input">'+ (preparation.project_name ? preparation.project_name + ' - ' : '') + preparation.name +'</span>';
         tr_text += '<span class="td text_preparation delivery_input">'+ preparation.delivery + '</span>';
         tr_text += '<span class="td text_preparation manager_input">'+ manager +'</span>';
         tr_text += '<span class="td text_preparation designed_input">'+ designed +'</span>';
@@ -564,7 +582,7 @@ function btnEdit () {
             });
         }
         if($( '.form_preparation.edit_preparation.'+id ).find('.file_input').length == 0) {
-            $( '.form_preparation.edit_preparation.'+id ).prepend( '<span class="input_preparation file_input"></span> <span class="input_preparation project_no_input"> <input name="project_no" type="text" value="'+ preparation.project_no +'" maxlength="30" required /> </span> <span class="input_preparation name_input"> <input name="name" type="text" value="'+ preparation.name +'" maxlength="100"/> </span> <span class="input_preparation delivery_input"> <input name="delivery" type="date" value="'+ preparation.delivery +'" /> </span><span class="input_preparation manager_input"><select name="project_manager" class="project_manager" required ><option disabled  >Voditelj projekta</option>' + manager  + '</select></span><span class="input_preparation designed_input"> <select name="designed_by" class="designed_by" required> <option disabled >Projektant</option>' + manager  + '</select> </span> <span class="input_preparation preparation_input">'+ priprema_text +'</span> <span class="input_preparation mechanical_input">'+ mehanicka_text +'</span> <span class="input_preparation marks_input">'+ oznake_text +'</span> <input name="_token" value="'+ _token+'" type="hidden"> <input name="_method" value="PUT" type="hidden"> <span class="input_preparation equipment_input"></span>' );
+            $( '.form_preparation.edit_preparation.'+id ).prepend( '<span class="input_preparation project_no_input"> <input name="project_no" type="text" value="'+ preparation.project_no +'" maxlength="30" required /></span><span class="input_preparation name_input"><input name="project_name" type="text" value="'+(preparation.project_name ? preparation.project_name : '' )+'"  placeholder="Naziv projekta"  maxlength="100"/> </span><span class="input_preparation name_input"> <input name="name" placeholder="Naziv ormara" type="text" value="'+ preparation.name +'" maxlength="100"/> </span> <span class="input_preparation delivery_input"> <input name="delivery" type="date" value="'+ preparation.delivery +'" /> </span><span class="input_preparation manager_input"><select name="project_manager" class="project_manager" required ><option disabled  >Voditelj projekta</option>' + manager  + '</select></span><span class="input_preparation designed_input"> <select name="designed_by" class="designed_by" required> <option disabled >Projektant</option>' + manager  + '</select> </span> <span class="input_preparation preparation_input">'+ priprema_text +'</span> <span class="input_preparation mechanical_input">'+ mehanicka_text +'</span> <span class="input_preparation marks_input">'+ oznake_text +'</span> <input name="_token" value="'+ _token+'" type="hidden"> <input name="_method" value="PUT" type="hidden"> <span class="input_preparation equipment_input"></span>' );
         }
         $( '.form_preparation.edit_preparation.'+id ).css('display','flex');
         $( '.row_preparation_text#id_'+id ).hide();

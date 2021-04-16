@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\EquipmentListUpdate::class,
         \App\Console\Commands\PreparationCreate::class,
         \App\Console\Commands\PreparationUpdate::class,
+        \App\Console\Commands\DesigningScheduleCommand::class,
     ];
 
     /**
@@ -43,7 +44,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:preparation_update')
                     ->dailyAt('14:30')
                   ->evenInMaintenanceMode();
-
+        $schedule->command('schedule')
+                  /* ->everyMinute() */
+                  ->dailyAt('06:30')
+                ->evenInMaintenanceMode();
     }
 
     /**

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class EquipmentList extends Model
 {
     protected $fillable = [
-        'preparation_id','product_number','mark', 'name', 'unit', 'quantity', 'delivered','replace_item','replaced_item_id','user_id','level1','stavka_id_level1', 'stavka_id_level2'];
+        'preparation_id','product_number','mark', 'name', 'unit', 'quantity', 'quantity2','comment','delivered','replace_item','replaced_item_id','user_id','level1','stavka_id_level1', 'stavka_id_level2'];
     
     /*
 	* The Eloquent project model name

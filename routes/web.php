@@ -63,6 +63,7 @@ Route::post('saveImg', ['as' => 'saveImg', 'uses' => 'PublishController@saveImg'
 // Preparations
 Route::resource('preparations', 'PreparationController');
 Route::get('close_preparation/{preparation?}', ['as' => 'close_preparation', 'uses' => 'PreparationController@close_preparation']);
+Route::get('finished/{preparation?}', ['as' => 'finished', 'uses' => 'PreparationController@finished']);
 Route::get('delivered/{id?}', ['as' => 'delivered', 'uses' => 'PreparationController@delivered']);
 Route::get('Centaur::preparations/index', ['as' => 'preparations_active', 'uses' => 'PreparationController@preparations_active']);
 
@@ -78,9 +79,15 @@ Route::resource('list_updates', 'ListUpdateController');
 // Designing
 Route::resource('designings', 'DesigningController');
 Route::get('close_designing/{designing?}', ['as' => 'close_designing', 'uses' => 'DesigningController@close_designing']);
+Route::get('toProduction/{designing?}', ['as' => 'toProduction', 'uses' => 'DesigningController@toProduction']);
+Route::get('reminder/{designing?}', ['as' => 'reminder', 'uses' => 'DesigningController@reminder']);
+Route::get('delete_file', 'DesigningController@delete_file')->name('delete_file');
 
 //DesigningComment
 Route::resource('designing_comments', 'DesigningCommentController');
+
+//DesigningEmployee
+Route::resource('designing_employees', 'DesigningEmployeeController');
 
 // EquipmentList
 Route::resource('equipment_lists', 'EquipmentListController');
@@ -138,5 +145,17 @@ Route::get('errorMessage', ['as' => 'errorMessage', 'uses' => 'ErrorController@e
 // Android
 Route::resource('android', 'ConnectController');
 
-Route::get('delete_file', 'DesigningController@delete_file')->name('delete_file');
- 
+
+
+// Stock
+Route::resource('stocks', 'StockController');
+Route::post('importStock', 'StockController@importStock')->name('importStock'); 
+Route::post('updateStock', ['as' => 'updateStock', 'uses' => 'StockController@updateStock']);
+
+// DischargeStock
+Route::resource('discharge_stocks', 'DischargeStockController');
+Route::get('exportStock/{id?}', 'DischargeStockController@exportStock')->name('exportStock');
+Route::get('exportStock2/{id?}', 'DischargeStockController@exportStock2')->name('exportStock2');
+
+// Manufacturer
+Route::resource('manufacturers', 'ManufacturerController');

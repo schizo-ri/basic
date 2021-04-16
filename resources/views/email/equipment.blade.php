@@ -29,7 +29,7 @@
 		</style>
 	</head>
 	<body>
-		<p>Djelatnik {{ Sentinel::getUser()->email }} je obnovio popis opreme za projekt {{ $preparation->project_no . ' ' . $preparation->name }}</p>
+		<p>Djelatnik {{ Sentinel::getUser()->email }} je obnovio popis opreme za projekt {{ $preparation->project_no . ' ' . $preparation->project_name . ' ' . $preparation->name }}</p>
 		
 		<p><b>Lista prije promjene:</b></p>
 		<table>

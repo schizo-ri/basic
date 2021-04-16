@@ -27,7 +27,7 @@
         <link rel="stylesheet" href="{{ URL::asset('/../node_modules/@fortawesome/fontawesome-free/css/all.css') }}" type="text/css" />
         <!-- CSS modal -->
         <link rel="stylesheet" href="{{ URL::asset('node_modules/jquery-modal/jquery.modal.min.css') }}" type="text/css" />
-        <link rel="stylesheet" href="{{ URL::asset('css/welcome.css') }}" type="text/css" />
+        <link rel="stylesheet" href="{{ URL::asset('css/welcome_new.css') }}" type="text/css" />
 		@stack('stylesheet')
     </head>
     <body> 
@@ -70,6 +70,9 @@
                             @endif
                             @if(Sentinel::getUser()->hasAccess(['contracts.view']))
                                 <li class="{{ Request::is('contracts*') ? 'active' : '' }}"><a href="{{ route('contracts.index') }}">OEM Ugovori</a></li>
+                            @endif
+                            @if(Sentinel::getUser()->hasAccess(['stocks.view']))
+                                <li class="{{ Request::is('stocks*') ? 'active' : '' }}"><a href="{{ route('stocks.index') }}">Stanje skladišta</a></li>
                             @endif
                         </ul>
                         <ul class="nav navbar-nav navbar-right">

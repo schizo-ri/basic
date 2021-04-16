@@ -35,7 +35,8 @@
 			<thead>
 				<tr >
 					<th>Broj</th>
-					<th>Naziv</th>
+					<th>Naziv projekta</th>
+					<th>Naziv ormara</th>
 					<th>Voditelj</th>
 					<th>Datum isporuke</th>
 				</tr>
@@ -45,6 +46,7 @@
 					@foreach ($preparations as $preparation)
 						<tr >
 							<td>{{ $preparation['project_no'] }}</td>
+							<td>{{ $preparation['project_name'] }}</td>
 							<td>{{ $preparation['name'] }}</td>
 							<td>{{ $preparation['project_manager'] }}</td>
 							<td>{{ $preparation['date'] }}</td>

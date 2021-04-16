@@ -36,7 +36,7 @@ class ListUpdate extends Model
     }
     
 	/*
-	* Returns the preparation relationship
+	* Returns the user relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	*/

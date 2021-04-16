@@ -26,3 +26,6 @@ Artisan::command('command:preparation_create', function () {
 Artisan::command('command:preparation_update', function () {
     $this->comment(PreparationUpdate::quote());
 })->describe('Display an PreparationUpdate quote');
+Artisan::command('schedule', function () {
+    $this->comment(DesigningScheduleCommand::quote());
+})->describe('Display an DesigningScheduleCommand quote');

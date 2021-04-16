@@ -26,6 +26,13 @@ class User extends Authenticatable
 	* @var string
 	*/
 	protected static $designingModel = 'App\Models\Designing'; 
+
+    /*
+	* The Eloquent DesigningEmployee model name
+	* 
+	* @var string
+	*/
+	protected static $designingEmployeeModel = 'App\Models\DesigningEmployee'; 
     
     /*
 	* Returns the equipmentList relationship
@@ -38,7 +45,17 @@ class User extends Authenticatable
 		return $this->hasMany(static::$designingModel,'designer_id');
 	}
 
-
+   /*
+	* Returns the designing_employees relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasmany
+	*/
+	
+	public function hasDesigningEmployees()
+	{
+		return $this->hasMany(static::$designingEmployeeModel,'user_id');
+	}
+    
     /**
      * The attributes that should be hidden for arrays.
      *
