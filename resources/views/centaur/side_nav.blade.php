@@ -35,14 +35,14 @@
                 </div>
             @endif
         @endif
-        @if ( Sentinel::inRole('administrator') || count( Vacation::whereDate('end_date', '>=', date('Y-m-d'))->where('active',1)->get()) > 0 )
+        {{-- @if ( Sentinel::inRole('administrator') || count( Vacation::whereDate('end_date', '>=', date('Y-m-d'))->where('active',1)->get()) > 0 )
             <div class="">
                 <a class="button_nav load_button vacations_button isDisabled {!! !Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('vacations.show',1) }}" title="{{ __('absences.vacations') }}">
-                    <span class="button_nav_img {{-- img beach  --}}"><i class="fas fa-umbrella-beach"></i></span>
+                    <span class="button_nav_img "><i class="fas fa-umbrella-beach"></i></span>
                     <p class="button_nav_text">@lang('absence.vacations')</p>
                 </a>
             </div>
-        @endif
+        @endif --}}
         @if(in_array('Poruke', $moduli))
             @if(Sentinel::getUser()->hasAccess(['posts.view']) || in_array('posts.view', $permission_dep) )
                 <div class="div_posts">

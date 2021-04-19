@@ -209,7 +209,7 @@
 				<textarea class="form-control" name="comment" maxlength="65535" >{{ $employee->comment }}</textarea>
 				{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('lijecn_pregled')) ? 'has-error' : '' }}">
+			{{-- <div class="form-group {{ ($errors->has('lijecn_pregled')) ? 'has-error' : '' }}">
 				<label>@lang('basic.lijecn_pregled')</label>
 				<input class="form-control" placeholder="{{ __('basic.lijecn_pregled')}}" name="lijecn_pregled" type="date" value="{{ $employee->lijecn_pregled }}" required />
 				{!! ($errors->has('lijecn_pregled') ? $errors->first('lijecn_pregled', '<p class="text-danger">:message</p>') : '') !!}
@@ -271,7 +271,7 @@
 					</div>
 				@endif				
 				{!! ($errors->has('abs_days') ? $errors->first('abs_days', '<p class="text-danger">:message</p>') : '') !!}
-			</div>		
+			</div> --}}		
 			@if(in_array('Kampanje', $moduli) && count($campaigns)>0)
 				<div class="form-group {{ ($errors->has('campaign_id')) ? 'has-error' : '' }}">
 					<label>@lang('basic.campaigns')</label>
