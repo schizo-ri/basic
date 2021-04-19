@@ -52,8 +52,8 @@ class WorkController extends Controller
     public function create(Request $request)
     {
       $departments = Department::orderBy('name', 'ASC')->get();
-      $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name', 'ASC')->where('employees.checkout',null)->get();
-      
+      $employees = Employee::employees_lastNameASCStatus(1); 
+
       if(isset($request->department_id)) {
         $department1 = Department::find($request->department_id);
         return view('Centaur::works.create', ['departments' => $departments,'department1' => $department1,'employees' => $employees]);
@@ -107,8 +107,8 @@ class WorkController extends Controller
     {
         $work = Work::find($id);
         $departments = Department::orderBy('name', 'ASC')->get();
-        $employees = Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->orderBy('users.last_name', 'ASC')->where('employees.checkout',null)->get();
-       
+        $employees = Employee::employees_lastNameASCStatus(1); 
+
         return view('Centaur::works.edit', ['work' => $work,'departments' => $departments,'employees' => $employees]);
     }
 

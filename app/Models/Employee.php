@@ -386,9 +386,9 @@ class Employee extends Model
 	public static function employees_lastNameASCStatus($status)
 	{
 		if($status == 0) {
-			return Employee::join('users','users.id','employees.user_id')-> select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout','<>',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>', null)->orderBy('users.last_name','ASC')->get();
+			return Employee::join('users','users.id','employees.user_id')-> select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout','<>',null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>', null)->orderBy('users.last_name','ASC')->get();
 		} else {
-			return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',0)->where('employees.checkout', null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>' ,null)->orderBy('users.last_name','ASC')->get();
+			return Employee::join('users','users.id','employees.user_id')->select('employees.*','users.first_name','users.last_name')->where('employees.id','<>',1)->where('employees.checkout', null)->where('employees.user_id','<>',null)->where('employees.reg_date','<>' ,null)->orderBy('users.last_name','ASC')->get();
 		}
 	}
 

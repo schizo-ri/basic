@@ -52,8 +52,8 @@ return [
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'myintran_degordian'),      // duplicoh_icom-user    /novi_portal_basic   /   myintran_tvrtka
-            'username' => env('DB_USERNAME','root'),                    //duplicoh_jelena       /root                /   myintran_jelenaj
-            'password' => env('DB_PASSWORD', ''),                // Sifra123jj           / ''                 /   2UhAghyLBRil
+            'username' => env('DB_USERNAME','myintran'),                    //duplicoh_jelena       /root                /   myintran_jelenaj
+            'password' => env('DB_PASSWORD', '2UhAghyLBRil'),                // Sifra123jj           / ''                 /   2UhAghyLBRil
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -72,9 +72,9 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_EXT_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_EXT_DATABASE', 'novi_portal'),  // novi_portal // duplicoh_icom-superadmin
-            'username' => env('DB_EXT_USERNAME', 'root'),        //duplicoh_jelena
-            'password' => env('DB_EXT_PASSWORD', ''),             //Sifra123jj
+            'database' => env('DB_EXT_DATABASE', 'duplicoh_icom-superadmin'),  // novi_portal // duplicoh_icom-superadmin
+            'username' => env('DB_EXT_USERNAME', 'duplicoh_jelena'),        //duplicoh_jelena
+            'password' => env('DB_EXT_PASSWORD', 'Sifra123jj'),             //Sifra123jj
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

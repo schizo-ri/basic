@@ -209,7 +209,7 @@
 				<textarea class="form-control" name="comment" maxlength="65535" >{{ $employee->comment }}</textarea>
 				{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('lijecn_pregled')) ? 'has-error' : '' }}">
+			{{-- <div class="form-group {{ ($errors->has('lijecn_pregled')) ? 'has-error' : '' }}">
 				<label>@lang('basic.lijecn_pregled')</label>
 				<input class="form-control" placeholder="{{ __('basic.lijecn_pregled')}}" name="lijecn_pregled" type="date" value="{{ $employee->lijecn_pregled }}" required />
 				{!! ($errors->has('lijecn_pregled') ? $errors->first('lijecn_pregled', '<p class="text-danger">:message</p>') : '') !!}
@@ -235,16 +235,16 @@
 					<option value="1" {!! $employee->days_off == 1 ? 'selected' : '' !!}  >Slobodni dani</option>
 					<option value="0" {!! $employee->days_off == 0 ? 'selected' : '' !!} >Isplata</option>
 				</select>
-			</div>
-			<div class="form-group">
+			</div> --}}
+			{{-- <div class="form-group">
 				<input type="checkbox" name="stranger" value="1" id="stranger" {!! $employee->stranger == 1 ? 'checked' : '' !!} > <label for="stranger">Djelatnik je stranac</label>
 			</div>
 			<div class="form-group"  id="dozvola">
 				<label>Datum isteka dozvole boravka u RH: </label>
 				<input name="permission_date" class="form-control" type="date" value="{{ $employee->permission_date }}" >
-			</div>
+			</div> --}}
 
-			@php
+			{{-- @php
 				$abs_day = 0;
 				$abs_year = date('Y');
 				if( $employee->abs_days) {
@@ -271,7 +271,7 @@
 					</div>
 				@endif				
 				{!! ($errors->has('abs_days') ? $errors->first('abs_days', '<p class="text-danger">:message</p>') : '') !!}
-			</div>		
+			</div> --}}
 			@if(in_array('Kampanje', $moduli) && count($campaigns)>0)
 				<div class="form-group {{ ($errors->has('campaign_id')) ? 'has-error' : '' }}">
 					<label>@lang('basic.campaigns')</label>

@@ -190,7 +190,7 @@
 				<textarea class="form-control" maxlength="65535" name="comment"></textarea>
 				{!! ($errors->has('comment') ? $errors->first('comment', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group {{ ($errors->has('lijecn_pregled')) ? 'has-error' : '' }}">
+			{{-- <div class="form-group {{ ($errors->has('lijecn_pregled')) ? 'has-error' : '' }}">
 				<label>@lang('basic.lijecn_pregled')</label>
 				<input class="form-control" placeholder="{{ __('basic.lijecn_pregled')}}" name="lijecn_pregled" type="date" value="{{ old('lijecn_pregled') }}" required />
 				{!! ($errors->has('lijecn_pregled') ? $errors->first('lijecn_pregled', '<p class="text-danger">:message</p>') : '') !!}
@@ -216,8 +216,8 @@
 					<option value="1" selected >Slobodni dani</option>
 					<option value="0">Isplata</option>
 				</select>
-			</div>
-			<div class="form-group">
+			</div> --}}
+			{{-- <div class="form-group">
 				<input type="checkbox" name="stranger" value="1" id="stranger" ><label for="stranger">Djelatnik je stranac</label>
 			</div>
 			<div class="form-group" id="dozvola">
@@ -233,7 +233,7 @@
 					<span class="remove"><i class="far fa-trash-alt"></i></span>
 				</div>
 				{!! ($errors->has('abs_days') ? $errors->first('abs_days', '<p class="text-danger">:message</p>') : '') !!}
-			</div>
+			</div> --}}
 			@if(in_array('Kampanje', $moduli) && count($campaigns)>0)
 				<div class="form-group {{ ($errors->has('campaign_id')) ? 'has-error' : '' }}">
 					<label>@lang('basic.campaigns')</label>

@@ -115,7 +115,7 @@ class UserController extends Controller
         }
 
         // Do we need to send an activation email?
-        if (! $activate ) {
+      /*   if (! $activate ) {
             $code = $result->activation->getCode();
             $email = $result->user->email;
             try {
@@ -127,7 +127,7 @@ class UserController extends Controller
 
                 return redirect()->back()->with('error',  __('ctrl.no_valid_email')); 
             }            
-        }
+        } */
         // Assign User Roles
         foreach ($request->get('roles', []) as $slug => $id) {
             $role = Sentinel::findRoleBySlug($slug);
