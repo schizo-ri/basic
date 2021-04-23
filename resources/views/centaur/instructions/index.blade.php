@@ -32,7 +32,7 @@
 						@foreach ($instructions as $instruction)
 							<tr class="tr_open_link" data-href="/instructions/{{ $instruction->id }}" data-modal >
 								<td>{{ $instruction->title }}</td>
-								<td>{{ $instruction->employee->user->first_name .' '. $instruction->employee->user->last_name }}</td>
+								<td>{!! $instruction->employee ? $instruction->employee->user->first_name .' '. $instruction->employee->user->last_name : '' !!}</td>
 								<td>{{ $instruction->department->name }}</td>
 								<td>{!! $instruction->active == 1 ? __('basic.active') : __('basic.inactive') !!}</td>
 								<td class="not_link">

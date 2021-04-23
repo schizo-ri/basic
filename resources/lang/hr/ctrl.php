@@ -61,6 +61,7 @@ return [
 	'request_deleted'   => 'Zahtjev je prethodno obrisan, nije ga moguće odobriti ',
 	'no_task'     		=> 'Zadatak nije nađen',
 	'no_plan'     		=> 'Plan nije nađen',
+	'no_data'     		=> 'Podatak nije nađen, vjerovatno je već obrisan',
 	
 ];
 ?>

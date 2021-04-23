@@ -29,6 +29,7 @@ function storeOkr () {
                 $('body').prepend('<div id="loader"></div>');
             },
             success: function( response_id ) {
+                console.log("response_id " + response_id);
                 $.modal.close();
                 $('#loader').remove();
                 $.get(url_load, function(data, status){

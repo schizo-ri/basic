@@ -115,7 +115,8 @@
 											@foreach ( $okrs as $okr )
 												@if ( $okr->status == 0 || ( $okr->status == 1 && ( Sentinel::inRole('uprava') || Sentinel::inRole('administrator') || $employee->id == $okr->employee_id) ) )
 													<div class="okr_group"  id="okrgroup_{{ $okr->id }}">
-														<div class="col-12 overflow_hidd padd_0 div_okr panel panel_filter" id="okr_{{ $okr->id }}" style="{!! $this_quarter != ('Q'.ceil(date("n", strtotime(date($okr->start_date))) / 3) .' - '. date("Y", strtotime(date($okr->start_date)))) ? 'display:none;' : '' !!}" >
+														<div class="col-12 clearfix padd_0 div_okr panel panel_filter hover_open_comment" id="okr_{{ $okr->id }}" style="{!! $this_quarter != ('Q'.ceil(date("n", strtotime(date($okr->start_date))) / 3) .' - '. date("Y", strtotime(date($okr->start_date)))) ? 'display:none;' : '' !!}" >
+															
 															<div class="col-sm-7 col-3 float_l"><i class="fas fa-bullseye"></i><span class="padd_l_10">{{ $okr->name }}</span></div>
 															<div class="col-sm-1 col-1 float_l">{!! $okr->status == 0 ? 'Duplico OKR' : 'Timski OKR' !!}</div>
 															<div class="col-sm-4 col-1 float_l">{!! $okr->employee ? $okr->employee->user->first_name . ' ' . $okr->employee->user->last_name : '<i class="fas fa-globe-europe" title="Svi"></i>' !!}</div>
@@ -135,7 +136,18 @@
 															</div>
 															<div class="col-sm-8 col-2 float_l comment_okr not_link ">{!!  $okr->comment ? $okr->comment : '-' !!}</div>
 															<div class="col-sm-4 col-1 float_l center not_link">
+																@if( Sentinel::inRole('uprava') || Sentinel::inRole('administrator') )
+																	{{-- @if(Sentinel::getUser()->hasAccess(['okr_comments.create']) || in_array('okr_comments.create', $permission_dep))
+																		<a href="{{ route('okr_comments.create', ['okr_id' => $okr->id]) }}" class="btn-edit not_link" rel="modal:open" title="Unesi komentar">
+																			<i class="far fa-comment"></i>
+																		</a>
+																	@endif --}}
+																	<a href="{{ route('okr_comments.show',$okr->id ) }}" class="btn-edit not_link" rel="modal:open" title="Vidi komentare">
+																		<i class="far fa-comments"></i>
+																	</a>
+																@endif
 																@if( Sentinel::inRole('uprava') || Sentinel::inRole('administrator') || $employee->id == $okr->employee_id )
+																	<a class="red reminder_btn" href="{{ action('OkrController@reminderOkr',['okr_id'=> $okr->id ]) }}" title="Pošalji podsjetnik"><i class="fas fa-bell"></i></a>
 																	@if(Sentinel::getUser()->hasAccess(['okrs.update']) || in_array('okrs.update', $permission_dep))
 																		<a href="{{ route('okrs.edit', $okr->id) }}" class="btn-edit not_link" rel="modal:open">
 																				<i class="far fa-edit not_link"></i>
@@ -154,10 +166,10 @@
 																@endif
 															</div>
 														</div>
-														<div class="col-12 overflow_hidd padd_0 div_keyResults panel panel_filter" id="okr1_{{ $okr->id }}">
-															@if (count($all_keyResults->where('okr_id', $okr->id )) > 0)
-																@foreach ($all_keyResults->where('okr_id', $okr->id ) as $keyResults)
-																	<div class="col-12 overflow_hidd padd_0 keyResults panel" id="key_{{ $keyResults->id }}" style="{!! $this_quarter != ('Q'.ceil(date("n", strtotime(date($keyResults->okr->start_date))) / 3) .' - '. date("Y", strtotime(date($keyResults->okr->start_date)))) ? 'display:none;' : '' !!}">
+														<div class="col-12 clearfix padd_0 div_keyResults panel panel_filter" id="okr1_{{ $okr->id }}">														
+															@if (count($all_keyResults->where('okr_id', $okr->id )->where('progress', '<>', 100)) > 0)
+																@foreach ($all_keyResults->where('okr_id', $okr->id )->where('progress', '<>', 100) as $keyResults)
+																	<div class="col-12 clearfix padd_0 keyResults hover_open_comment panel" id="key_{{ $keyResults->id }}" style="{!! $this_quarter != ('Q'.ceil(date("n", strtotime(date($keyResults->okr->start_date))) / 3) .' - '. date("Y", strtotime(date($keyResults->okr->start_date)))) ? 'display:none;' : '' !!}">
 																		<div class="col-sm-8 col-4 float_l"><i class="fas fa-key"></i><span class="padd_l_10">{{ $keyResults->name }}</span></div>
 																		<div class="col-sm-4 col-1 float_l">{!! $keyResults->employee ? $keyResults->employee->user->first_name . ' ' . $keyResults->employee->user->last_name : '<i class="fas fa-globe-europe" title="Svi"></i>' !!}</div>
 																		<div class="col-sm-3 col-1 float_l">
@@ -176,7 +188,20 @@
 																		</div>
 																		<div class="col-sm-8 col-2 float_l comment_okr not_link ">{!! $keyResults->comment ? $keyResults->comment : '-' !!}</div>
 																		<div class="col-sm-4 col-1 float_l center not_link">
+																			@if( Sentinel::inRole('uprava') || Sentinel::inRole('administrator') )
+																				{{-- @if(Sentinel::getUser()->hasAccess(['key_results_comments.create']) || in_array('key_results_comments.create', $permission_dep))
+																					<a href="{{ route('key_results_comments.create', ['keyResults_id' => $keyResults->id]) }}" class="btn-edit not_link" rel="modal:open">
+																						<i class="far fa-comment"></i>
+																					</a>
+																				@endif --}}
+																				<a href="{{ route('key_results_comments.show',$keyResults->id ) }}" class="btn-edit not_link" rel="modal:open" title="Vidi komentare">
+																					<i class="far fa-comments"></i>
+																				</a>
+																			@endif
 																			@if( Sentinel::inRole('uprava') || Sentinel::inRole('administrator') || $employee->id == $keyResults->employee_id  || $employee->id == $okr->employee_id )
+																				@if( count($keyResults->hasTasks) > 0 )
+																					<a class="red reminder_btn" href="{{ action('KeyResultController@reminderKeyResult',['keyResults_id'=> $keyResults->id ]) }}" title="Pošalji podsjetnik"><i class="fas fa-bell"></i></a>
+																				@endif
 																				@if(Sentinel::getUser()->hasAccess(['key_results.update']) || in_array('key_results.update', $permission_dep))
 																					<a href="{{ route('key_results.edit', $keyResults->id) }}" class="btn-edit not_link" rel="modal:open">
 																							<i class="far fa-edit not_link"></i>
@@ -196,8 +221,8 @@
 																		</div>
 																	</div>
 																	<div class="col-12 overflow_hidd padd_0 div_keyResultTasks panel panel_filter" id="result_{{ $keyResults->id }}">
-																		@if (count($all_keyResultTasks->where('keyresult_id',$keyResults->id) ) > 0)
-																			@foreach ($all_keyResultTasks->where('keyresult_id',$keyResults->id) as $task)
+																		@if (count($all_keyResultTasks->where('keyresult_id',$keyResults->id)->where('progress', '<>', 100) ) > 0)
+																			@foreach ($all_keyResultTasks->where('keyresult_id',$keyResults->id)->where('progress', '<>', 100) as $task)
 																				<div class="col-12 overflow_hidd padd_0 keyResultTask panel" id="task_{{$task->id}}" style="{!! $this_quarter != ('Q'.ceil(date("n", strtotime(date($task->keyResult->okr->start_date))) / 3) .' - '. date("Y", strtotime(date($task->keyResult->okr->start_date))) ) ? 'display:none;' : '' !!}">
 																					<div class="col-sm-8 col-4 float_l"><i class="fas fa-tasks"></i><span class="padd_l_10">{{ $task->name }}</span></div>
 																					<div class="col-sm-4 col-1 float_l">{!! $task->employee ? $task->employee->user->first_name . ' ' . $task->employee->user->last_name : '<i class="fas fa-globe-europe" title="Svi"></i>' !!}</div>
@@ -211,6 +236,11 @@
 																					</div>
 																					<div class="col-sm-8 col-2 float_l comment_okr not_link ">{!! $task->comment ? $task->comment : '-' !!}</div>
 																					<div class="col-sm-4 col-1 float_l center not_link">
+																						@if( Sentinel::inRole('uprava') || Sentinel::inRole('administrator') )
+																							<a href="{{ route('key_result_tasks_comments.show', $task->id ) }}" class="btn-edit not_link" rel="modal:open" title="Vidi komentare">
+																								<i class="far fa-comments"></i>
+																							</a>
+																						@endif
 																						@if( Sentinel::inRole('uprava') || Sentinel::inRole('administrator') || $employee->id == $task->employee_id || $employee->id == $okr->employee_id || $employee->id == $keyResults->employee_id )
 																							@if(Sentinel::getUser()->hasAccess(['key_result_tasks.update']) || in_array('key_result_tasks.update', $permission_dep))
 																								<a href="{{ route('key_result_tasks.edit', $task->id) }}" class="btn-edit not_link" rel="modal:open">

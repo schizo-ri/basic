@@ -669,7 +669,7 @@ $(function(){
 	var select_projects;
 	var select_tasks;
 	var id_parent;
-
+	
 	$('.btn-submit').on('click',function(){
 		$( this ).hide();
 	});
@@ -911,7 +911,7 @@ $(function(){
 			bool = (date >= StartDate);
 			console.log(bool);
 
-			if( ! bool ) {
+			if( StartDate != 'Invalid Date' && ! bool ) {
 				e.preventDefault();
 				alert ("Nemoguće je poslati zahtjev unaprijed! ")
 			}
@@ -2129,6 +2129,7 @@ if( $('.competence_table').length > 0 ) {
     var mouse_is_inside = false;
     var form = $('form.form_evaluation');
     var url;
+    var url_recommodation;
     var ev_id;
     var rating_id;
     var comment;
@@ -2158,6 +2159,12 @@ if( $('.competence_table').length > 0 ) {
         rating_id = $(this).val();
         comment = null;
         submit_form (ev_id,rating_id, comment);
+    });
+
+    $('.form_recommendation').on('submit',function(e){
+        e.preventDefault();
+       
+        submit_evaluation ();
     });
 
     $('.rating_radio.evaluate_user>input').on('click',function() {
@@ -2196,8 +2203,42 @@ if( $('.competence_table').length > 0 ) {
         });
     });
     
+    function submit_evaluation ( ) {
+        form = $('form.form_recommendation');
+        form_data = form.serialize(); 
+        url =  $( form ).attr('action') + '?employee_id='+id;
+
+        console.log("submit_evaluation");
+        $.ajax({
+            url: url,
+            type: "post",
+            data: form_data,
+            success: function( recomendations ) {
+                console.log(recomendations);
+                text = '';
+                $.each(recomendations, function( index, recomendation ) {
+                   text += '<p>'+ recomendation.comment + '<small>'+recomendation.target_date+'</small>'+ '</p>';
+                });
+                $('.recomendation div').append(text);
+                mouse_is_inside = false;
+            }, 
+            error: function(jqXhr, json, errorThrown) {
+                $(".btn-submit").prop("disabled", false);
+                var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                    'message':  jqXhr.responseJSON.message,
+                                    'file':  jqXhr.responseJSON.file,
+                                    'line':  jqXhr.responseJSON.line };
+
+                console.log(data_to_send); 
+        
+                $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + "Podaci nisu spremljeni, došlo je do greške: " + data_to_send.message + '</div></div></div>').appendTo('body').modal();
+            }
+        });
+
+    }
     function submit_form (ev_id, rating_id, comment) {
         /* form_data = form.serialize();  */
+        form = $('form.form_evaluation');
         if(rating_id) {
             url = $( form ).attr('action') + '?rating_id='+rating_id+'&id='+ev_id;
         }
@@ -2262,6 +2303,40 @@ if( $('.competence_table').length > 0 ) {
             $( element ).parent().after('<p class="total_rating">Ukupna bodovi: '+all_rating.toFixed(2)+'</p>');
             $('.form_recommendation').find('input#employee_id').val(id);
             $('.form_recommendation').show();
+
+            url_recommodation = location.origin + '/getRecommendations?employee_id='+id;
+
+            console.log(url_recommodation);
+            $.ajax({
+                url: url_recommodation,
+                type: "get",
+                success: function( recomendations ) {
+                    console.log(recomendations);
+                    text = '';
+                    $.each(recomendations, function( index, recomendation ) {
+                       date = recomendation.target_date.split("-");
+                       
+                       text += '<p>'+ recomendation.comment;
+                       if (recomendation.mentor_name != '') {
+                        text +=  " | Dodjeljen mentor: " + recomendation.mentor_name;
+                       }
+                       text += '<small>'+date[2]+"."+date[1]+"."+date[0]+'.</small>'+ '</p>';
+                    });
+                    $('.recomendation div').append(text);
+                }, 
+                error: function(jqXhr, json, errorThrown) {
+                    $(".btn-submit").prop("disabled", false);
+                    var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                        'message':  jqXhr.responseJSON.message,
+                                        'file':  jqXhr.responseJSON.file,
+                                        'line':  jqXhr.responseJSON.line };
+    
+                    console.log(data_to_send); 
+            
+                    $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + "Podaci nisu spremljeni, došlo je do greške: " + data_to_send.message + '</div></div></div>').appendTo('body').modal();
+                }
+            });
+
         }
     });
 
@@ -6352,7 +6427,7 @@ function validate_user_form () {
         }
         console.log('validate roles');
     });
-    $( "textarea" ).each(function( index ) {
+    $( "textarea" ).not('.td_evaluation textarea').each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 ) {
                 if( !$( this ).parent().find('.modal_form_group_danger').length) {

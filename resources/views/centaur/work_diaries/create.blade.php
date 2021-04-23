@@ -19,7 +19,8 @@
 		@endif
 		<div class="form-group datum date1 float_l  {{ ($errors->has('date')) ? 'has-error' : '' }}" >
 			<label>@lang('basic.date')</label>
-			<input name="date" id="date" class="form-control" type="date" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}" min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-1 day'), 'Y-m-d') : '' !!}" required >
+			<input name="date" id="date" class="form-control" type="date" 
+			pattern="(?:19|20)\[0-9\]{2}-(?:(?:0\[1-9\]|1\[0-2\])/(?:0\[1-9\]|1\[0-9\]|2\[0-9\])|(?:(?!02)(?:0\[1-9\]|1\[0-2\])/(?:30))|(?:(?:0\[13578\]|1\[02\])-31))" value="{!! old('date') ? old('date') : Carbon\Carbon::now()->format('Y-m-d') !!}" min="{!! !Sentinel::inRole('administrator') ? date_format(date_modify( New DateTime('now'),'-1 day'), 'Y-m-d') : '' !!}" max="{{ date_format(date_modify( New DateTime('now'),'+30 days'), 'Y-m-d') }}" required >
 			{!! ($errors->has('date') ? $errors->first('date', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
 		@for ($i = 1; $i <= 5; $i++)
@@ -95,7 +96,7 @@
 				<select id="select_project_overtime" name="project_overtime" placeholder="Izaberi projekt..."  value="{{ old('project_overtime') }}" >
 					@if(isset($projects_erp) && $projects_erp && count( $projects_erp ) > 0)
 						@foreach ($projects_erp as $id => $project)
-							<option class="project_list" value="{{ $id }}">{{ $project  }}</option>
+							<option class="project_list" value="{{ $id }}" selected>{{ $project  }}</option>
 						@endforeach	
 					@endif
 				</select>
@@ -111,131 +112,4 @@
 <script>
 	$.getScript('/../js/absence_create_new.js');
 
-	/* showHideEelement();
-	textareaChange();
-	timeChange(); */
-/* 	selectSearchModal (); */
-
-/* 	var time;
-	var time_array = [];
-	var total_minute;
-	var h;
-	var m;
-	var afterhour_min;
-	var start_time;
-	var start_time_Arr;
-	var end_time_minute;
-	var end_time;
-	var this_time;
-	var this_description;
-	var count_project;
-	var project;
-	var task;
-	
-	$('.add_project').on('click',function(){
-		$('section.project:hidden').first().show();
-		$('section.project:visible').last().children('section').children('.select_project').find('select').prop('required',true);
-		$('section.project:visible').last().children('section').children('.tasks').find('select').prop('required',true);
-	});
-
-	$('.remove_project').on('click',function(){
-		var id_parent = $( this ).parent().attr('id');
-		console.log(id_parent);
-		$( this ).parent().hide();
-		$('section.project#'+id_parent).children('section').children('.select_project').find('select').prop('required',false);
-		$('section.project#'+id_parent).children('section').children('.select_project').find('select').val(null);
-		$('section.project#'+id_parent).children('section').children('.tasks').find('select').prop('required',false);
-		$('section.project#'+id_parent).children('section').children('.tasks').find('select').val(null);
-		$('section.project#'+id_parent+' input').val('');
-		$('section.project#'+id_parent+' textarea').val('');
-
-	});
-
-	function showHideEelement() {
-		$('.show_hidden').on('click', function(){
-			$( this ).parent().find('.task_description').toggle();
-		});
-		$('.hide_task').on('click',function(){
-			$(this).toggle();
-			$( this ).siblings('.show_task').toggle();
-			$( this ).parent().find('article').toggle();
-		});
-		$('.show_task').on('click',function(){
-			$(this).toggle();
-			$( this ).siblings('.show_task').toggle();
-			$( this ).parent().find('article').toggle();
-		});
-	}
-
-	function textareaChange() {
-		$('textarea').on('change', function(){
-			this_description = $( this ).val();
-			if( this_description != '') {
-				$( this ).parent().find('input[type=time]').prop('required', true);
-			} else {
-				$( this ).parent().find('input[type=time]').prop('required', false);
-			}
-		});
-	}
-
-	function timeChange() {
-		$('input[type=time]').on('change', function(){
-			this_time = $( this ).val();
-			if( this_time != '00:00' && this_time != '') {
-				$( this ).parent().find('textarea').prop('required', true);
-			} else {
-				$( this ).parent().find('textarea').prop('required', false);
-			}
-			total_minute = 0;
-			end_time_minute=0;
-			start_time = $('input[name=start_time]').val();
-			
-			$( "input.task_time[type=time]" ).each(function( index, element ) {
-				time = $( this ).val();
-				
-				if(time != '') {
-					console.log(time);
-					time_array = time.split(':');
-					console.log(time_array);
-					if(time_array.length > 0 ) {
-						total_minute = total_minute + parseInt((time_array[0] * 60));
-						total_minute  = total_minute + parseInt(time_array[1]);
-					}
-				}
-			});
-		
-			if(total_minute > (8*60) ) {
-				$('.time_group').show();
-				$('.error-modal').remove();
-				$('.time_group').append('<p class="alert error-modal">Upisano je vrijeme veće od 8 radnih sati. Obavezan upis vremena za prekovremeni rad!</p>');
-				
-				$('.time_group').find('input').attr('disabled',false);
-				project = $('section.project:visible').last().find('section').find('.select_project').find('select').val();
-			
-				$('.time_group .select_project select').find('option[value='+project+']').prop('selected',true);
-
-				if( start_time == '00:00') {
-					$('input[name=start_time]').val('15:00');
-					start_time = $('input[name=start_time]').val();
-				}
-				afterhour_min = total_minute - (8*60);
-
-				start_time_Arr = start_time.split(':');
-				end_time_minute = end_time_minute + parseInt((start_time_Arr[0] * 60));
-				end_time_minute  = end_time_minute + parseInt(start_time_Arr[1]);
-				end_time = afterhour_min + end_time_minute;
-				h = Math.floor(end_time / 60);
-				m = end_time % 60;
-				m = m < 10 ? '0' + m : m;
-				console.log((h.toString().length == 1 ? '0'+h.toString() : h) + ':'+ m);
-				$('input[name=end_time]').val((h.toString().length == 1 ? '0'+h.toString() : h) + ':'+ m);
-			} else {
-				$('.time_group').hide();
-				$('.time_group').find('input').attr('disabled',true);
-				$('.time_group p.alert').remove();
-			}
-		});
-	}
- */
-	
 </script>

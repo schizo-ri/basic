@@ -9,7 +9,7 @@
 	<main class="col-lg-12 col-xl-12 index_main main_absence float_right">
 		<section>
 			<header class="header_absence">
-				<a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a>
+				<a class="link_back" href="{{ route('absences.index') }}" ><span class="curve_arrow_left"></span></a>
 				@if (Sentinel::inRole('administrator') || Sentinel::inRole('superadmin')	)
 					<p>@lang('absence.all_requests') 
 						<a href="{{ route('absences_table') }}" class="view_all" title="{{ __('absence.absences')}}" >vidi izračune</a>
@@ -109,11 +109,6 @@
 													
 													{{ $absence->comment }}
 												</td>
-
-
-
-
-
 												<td>{!! $absence->approve == 1 ? 'DA' : 'NE' !!} {!! $absence->approve_reason ? ' - ' . $absence->approve_reason : '' !!}</td>
 												<td>{{ $absence->approved['first_name'] . ' ' . $absence->approved['last_name'] }}</td>
 												<td>{{ $absence->approved_date }}</td>
@@ -133,6 +128,34 @@
 												@endif
 											</tr>
 										@endforeach
+										@if (count( $employee->hasCorrectings) > 0)
+											@foreach ($employee->hasCorrectings as $correcting)
+												<td>{{ $employee->user->first_name . ' ' . $employee->user->last_name }}</td>
+												<td>Popravak rada</td>
+												<td>{{ date('d.m.Y.', strtotime($correcting->created_at)) }}</td>
+												<td></td>
+												<td>{{ date('H:i',strtotime($correcting->time)) }}</td>
+												<td></td>
+												<td>[{{ $correcting->project->erp_id }}] - {{ $correcting->comment }}</td>
+												<td></td>
+												<td></td>
+												<td></td>
+												@if (Sentinel::inRole('administrator') || Sentinel::inRole('superadmin'))
+													<td>
+														@if(Sentinel::getUser()->hasAccess(['work_correctings.update']) || in_array('work_correctings.update', $permission_dep) )
+															<a href="{{ route('work_correctings.edit', $correcting->id) }}" class="btn-edit" rel="modal:open">
+																<i class="far fa-edit"></i>
+															</a>
+														@endif
+														@if(Sentinel::getUser()->hasAccess(['work_correctings.delete']) || in_array('work_correctings.delete', $permission_dep))
+															<a href="{{ route('work_correctings.destroy', $correcting->id) }}" class="action_confirm btn-delete danger"  {{-- data-method="delete" --}} data-token="{{ csrf_token() }}">
+																<i class="far fa-trash-alt"></i>
+															</a>
+														@endif
+													</td>
+												@endif
+											@endforeach
+										@endif
 										@foreach ($afterhours as $afterhour)
 											<tr>
 												<td>{{ $afterhour->employee->user['first_name'] . ' ' . $afterhour->employee->user['last_name'] }}</td>

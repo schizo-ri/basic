@@ -648,7 +648,28 @@ $(function(){
 	var parent;
 	var url_edit;
 	var data;
-
+	var time;
+	var time_array = [];
+	var total_minute;
+	var h;
+	var m;
+	var afterhour_min;
+	var start_time_Arr;
+	var end_time_minute;
+	var this_time;
+	var this_description;
+	var project;
+	var task;
+	var hours = 0;
+	var minutes  = 0;
+	var seconds = 0;
+	var timeParts;
+	var total_time = 0;
+	var bool;
+	var select_projects;
+	var select_tasks;
+	var id_parent;
+	
 	$('.btn-submit').on('click',function(){
 		$( this ).hide();
 	});
@@ -664,9 +685,11 @@ $(function(){
 	$('textarea').on('change',function(){
 		$('.btn-submit').show();
 	});
+
 	$('.show_button').on('click',function () {
 		$('.dt-buttons').show();
 	});
+
 	if($('form.absence').length > 0) {
 		$( "#request_type" ).on('change',function() {
 			$('input[name=start_date]').prop('disabled', false);
@@ -729,7 +752,7 @@ $(function(){
 					type: "get",
 					success: function( days_response ) {
 						broj_dana = days_response;
-						if( broj_dana == 0 ) {
+						if( broj_dana <= 0 ) {
 							$('.days_employee').text("Nemoguće poslati zahtjev. Svi slobodni dani su iskorišteni!");
 							$('.btn-submit').hide();
 						} else {
@@ -869,17 +892,47 @@ $(function(){
 	}
 
 	if($('form.form_afterhour').length > 0 || $('form.form_work_diary').length > 0) {
+		$('.btn-submit').on('click',function(e) {
+			start_date = $( "#date" ).val();
+			end_time = $("input[name=end_time]").val() + ':00';
+			console.log("end_time1 " +end_time);
+			if( end_time == '00:00:00') {
+				if( h == undefined ) {
+					end_time = '15:00:00';
+				} else {
+					end_time = (h.toString().length == 1 ? '0'+h.toString() : h) + ':'+ m + ':00';
+				}
+			}
+			
+			console.log("end_time2 " +end_time);
+			StartDate = new Date(start_date + ' ' + end_time);
+			console.log( date );
+			console.log(StartDate);
+			bool = (date >= StartDate);
+			console.log(bool);
+
+			if( StartDate != 'Invalid Date' && ! bool ) {
+				e.preventDefault();
+				alert ("Nemoguće je poslati zahtjev unaprijed! ")
+			}
+		});
+
 		select_employee ();
 		select_project ();
 		dateChange ();
 		checkTime();
+
+		if( $('form.form_work_diary').length > 0) {
+			showHideEelement();
+			textareaChange();
+			timeChange();
+		}
 	}
 
 	function dateChange () {
 		$('#date').on('change', function(){
 			employee_id = $( '#select_employee' ).val();
 			start_date =  $( '#date' ).val();
-			/* console.log('dateChange: ' + 'employee_id '+employee_id + ' start_date '+start_date); */
 			if( employee_id != '' && employee_id != undefined && start_date != '' && start_date != undefined ) {
 				getProjectEmpl ( employee_id, start_date );
 			}
@@ -890,6 +943,7 @@ $(function(){
 		$('#select_employee').on('change', function(){
 			employee_id = $( '#select_employee' ).val();
 			start_date =  $( '#date' ).val();
+			$('span[id^="restHours"]').text("");
 			/* console.log('select_employee: ' + 'employee_id '+employee_id + ' start_date '+start_date); */
 			if( employee_id != '' && employee_id != undefined && start_date != '' && start_date != undefined ) {
 				getProjectEmpl ( employee_id, start_date );
@@ -897,14 +951,75 @@ $(function(){
 		});
 	}
 
+
 	function select_project () {
 		$('select[id^="select_project"]').on('change', function(){
 			parent = $(this).parent().parent();
 			employee_id = $( '#select_employee' ).val();
 			start_date =  $( '#date' ).val();
 			project = $( this ).val();
-			/* console.log('select_project: ' + 'employee_id '+employee_id + ' start_date '+start_date+ ' project '+project); */
+			project_no = $( this ).find('option:selected').text();
+			project_no = project_no.substring(1, 7);
+
 			getTasksEmpl ( employee_id, start_date, project, parent );
+			$('span[id^="restHours"]').text("");
+
+			url = location.origin + '/getProjectTasks';
+			$.ajax({
+				url: url,
+				type: "get",
+				data:  { employee_id: employee_id, project:project_no },
+				success: function( data ) {
+					ProjectTasks = data.projectWorkTasks;
+					console.log(ProjectTasks);
+					if( ! jQuery.isEmptyObject(ProjectTasks)) {
+						workDiaryItem = data.workDiaryItem;
+						project_id = data.project_id;
+						console.log(workDiaryItem);
+						console.log(workDiaryItem);
+						$.each(ProjectTasks, function( id, ProjectTask ) {
+							
+							total_time = 0;
+
+							$.each( workDiaryItem[ProjectTask.task_id], function( key, item ) {
+								time = item.time;
+								timeParts = time.split(":");
+								hours = timeParts[0];
+								minutes = timeParts[1]/60;
+								hours = parseFloat(hours)+parseFloat(minutes);
+								total_time += hours;
+							});
+							$('#restHours_'+ProjectTask.task_id).text("Preostalo sati na projektu: " + (parseFloat(ProjectTask.hours) - total_time).toFixed(2));
+							if(  (parseFloat(ProjectTask.hours) - total_time).toFixed(2) < 0) {
+								$('#restHours_'+ProjectTask.task_id).addClass('red');
+							}
+						});
+						$('.work_task_group').first().prepend('<a class="float_r open_recap" href="'+location.origin+'/projects/'+ project_id +'" rel="modal:open">Vidi obračun sati projekta</a>');
+						$('.open_recap').on('click', function(){
+							$.modal.defaults = {
+								closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
+								escapeClose: true,      // Allows the user to close the modal by pressing `ESC`
+								clickClose: true,       // Allows the user to close the modal by clicking the overlay
+								closeText: 'Close',     // Text content for the close <a> tag.
+								closeClass: '',         // Add additional class(es) to the close <a> tag.
+								showClose: true,        // Shows a (X) icon/link in the top-right corner
+								modalClass: "modal modal_big",    // CSS class added to the element being displayed in the modal.
+								// HTML appended to the default spinner during AJAX requests.
+								spinnerHtml: '<div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div>',
+						
+								showSpinner: true,      // Enable/disable the default spinner during AJAX requests.
+								fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
+								fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
+							};
+						});
+					}
+				},
+				error: function(jqXhr, json, errorThrown) {
+					console.log(jqXhr);
+					console.log(json);
+					console.log(errorThrown);
+				}
+			}); 
 		});
 	}
 
@@ -920,9 +1035,6 @@ $(function(){
 				if($.map(projects, function(n, i) { return i; }).length > 0 ) {
 					projectElement(projects);
 				}
-				console.log("projects.length "+projects.length);
-			
-			/* 	getTasksEmpl ( employee_id, start_date, Object.keys(projects)[0] ); */
 			},
 			error: function(jqXhr, json, errorThrown) {
 				console.log(jqXhr);
@@ -934,13 +1046,13 @@ $(function(){
 	
 	function getTasksEmpl ( employee_id, start_date, project, parent )	{
 		url = location.origin + '/getTasks';
-		console.log('getTasksEmpl: ' + 'employee_id '+employee_id + ' start_date '+start_date+ ' project '+project);
+	/* 	console.log('getTasksEmpl: ' + 'employee_id '+employee_id + ' start_date '+start_date+ ' project '+project); */
 		$.ajax({
 			url: url,
 			type: "get",
 			data:  { employee_id: employee_id, start_date: start_date, project:project },
 			success: function( tasks ) {
-				console.log(tasks);
+			/* 	console.log(tasks); */
 				if($.map(tasks, function(n, i) { return i; }).length > 0 ) {
 					tastElement(tasks, parent);
 				} else {
@@ -956,7 +1068,7 @@ $(function(){
 	}
 
 	function projectElement(projects) {
-		var select_projects = '<option value="" disabled selected>Izaberi projekt</option>';
+		select_projects = '<option value="" disabled selected>Izaberi projekt</option>';
 		$.each(projects, function( id, project ) {
 			select_projects += '<option class="project_list" name="erp_task_id" value="'+id+'">'+project+'</option>';
 		});
@@ -968,7 +1080,7 @@ $(function(){
 	}
 	
 	function tastElement(tasks, parent) {
-		var select_tasks = '<option value="" disabled selected>Izaberi zadatak</option>';
+		select_tasks = '<option value="" disabled selected>Izaberi zadatak</option>';
 
 		$.each(tasks, function( id, task ) {
 			select_tasks += '<option class="project_list" name="erp_task_id" value="'+id+'">'+task+'</option>';
@@ -1032,6 +1144,112 @@ $(function(){
 				$('.btn-submit').prop('disabled',false);
 				$('.btn-submit').css('border','1px solid rgb(21, 148, 240)');
 			} 
+		});
+	}
+
+	
+	$('.add_project').on('click',function(){
+		$('section.project:hidden').first().show();
+		$('section.project:visible').last().children('section').children('.select_project').find('select').prop('required',true);
+		$('section.project:visible').last().children('section').children('.tasks').find('select').prop('required',true);
+	});
+
+	$('.remove_project').on('click',function(){
+		id_parent = $( this ).parent().attr('id');
+		console.log(id_parent);
+		$( this ).parent().hide();
+		$('section.project#'+id_parent).children('section').children('.select_project').find('select').prop('required',false);
+		$('section.project#'+id_parent).children('section').children('.select_project').find('select').val(null);
+		$('section.project#'+id_parent).children('section').children('.tasks').find('select').prop('required',false);
+		$('section.project#'+id_parent).children('section').children('.tasks').find('select').val(null);
+		$('section.project#'+id_parent+' input').val('');
+		$('section.project#'+id_parent+' textarea').val('');
+
+	});
+
+	function showHideEelement() {
+		$('.show_hidden').on('click', function(){
+			$( this ).parent().find('.task_description').toggle();
+		});
+		$('.hide_task').on('click',function(){
+			$(this).toggle();
+			$( this ).siblings('.show_task').toggle();
+			$( this ).parent().find('article').toggle();
+		});
+		$('.show_task').on('click',function(){
+			$(this).toggle();
+			$( this ).siblings('.show_task').toggle();
+			$( this ).parent().find('article').toggle();
+		});
+	}
+
+	function textareaChange() {
+		$('textarea').on('change', function(){
+			this_description = $( this ).val();
+			if( this_description != '') {
+				$( this ).parent().find('input[type=time]').prop('required', true);
+			} else {
+				$( this ).parent().find('input[type=time]').prop('required', false);
+			}
+		});
+	}
+
+	function timeChange() {
+		$('input[type=time]').on('change', function(){
+			this_time = $( this ).val();
+			if( this_time != '00:00' && this_time != '') {
+				$( this ).parent().find('textarea').prop('required', true);
+			} else {
+				$( this ).parent().find('textarea').prop('required', false);
+			}
+			total_minute = 0;
+			end_time_minute=0;
+			start_time = $('input[name=start_time]').val();
+			
+			$( "input.task_time[type=time]" ).each(function( index, element ) {
+				time = $( this ).val();
+				
+				if(time != '') {
+					console.log(time);
+					time_array = time.split(':');
+					console.log(time_array);
+					if(time_array.length > 0 ) {
+						total_minute = total_minute + parseInt((time_array[0] * 60));
+						total_minute  = total_minute + parseInt(time_array[1]);
+					}
+				}
+			});
+		
+			if(total_minute > (8*60) ) {
+				$('.time_group').show();
+				$('.error-modal').remove();
+				$('.time_group').append('<p class="alert error-modal">Upisano je vrijeme veće od 8 radnih sati. Obavezan upis vremena za prekovremeni rad!</p>');
+				
+				$('.time_group').find('input').attr('disabled',false);
+				project = $('section.project:visible').last().find('section').find('.select_project').find('select').val();
+			
+				$('.time_group .select_project select').find('option[value='+project+']').prop('selected',true);
+
+				if( start_time == '00:00') {
+					$('input[name=start_time]').val('15:00');
+					start_time = $('input[name=start_time]').val();
+				}
+				afterhour_min = total_minute - (8*60);
+
+				start_time_Arr = start_time.split(':');
+				end_time_minute = end_time_minute + parseInt((start_time_Arr[0] * 60));
+				end_time_minute  = end_time_minute + parseInt(start_time_Arr[1]);
+				end_time = afterhour_min + end_time_minute;
+				h = Math.floor(end_time / 60);
+				m = end_time % 60;
+				m = m < 10 ? '0' + m : m;
+				/* console.log((h.toString().length == 1 ? '0'+h.toString() : h) + ':'+ m); */
+				$('input[name=end_time]').val((h.toString().length == 1 ? '0'+h.toString() : h) + ':'+ m);
+			} else {
+				$('.time_group').hide();
+				$('.time_group').find('input').attr('disabled',true);
+				$('.time_group p.alert').remove();
+			}
 		});
 	}
 });	
@@ -1911,6 +2129,7 @@ if( $('.competence_table').length > 0 ) {
     var mouse_is_inside = false;
     var form = $('form.form_evaluation');
     var url;
+    var url_recommodation;
     var ev_id;
     var rating_id;
     var comment;
@@ -1925,6 +2144,12 @@ if( $('.competence_table').length > 0 ) {
     var element_id;
     var coefficient;
     var q_rating;
+    console.log("competence");
+
+    collapse_tr ();
+    submit_evaluation ( );
+    storeEvaluation();
+    submit_form ();
 
     $('.show_button_upload').on('click', function(){
         element_id = $(this).attr('id');
@@ -1932,73 +2157,240 @@ if( $('.competence_table').length > 0 ) {
         $('.upload_file.'+element_id).modal();
         $('.upload_file.'+element_id).show();
     });
-
-
-    $('.rating_radio.evaluate_manager>input').on('click',function(){
-        mouse_is_inside = true;
-        ev_id = $(this).attr('title');
-        container = null;
-        rating_id = $(this).val();
-        comment = null;
-        submit_form (ev_id,rating_id, comment);
-    });
-
-    $('.rating_radio.evaluate_user>input').on('click',function() {
-        coefficient = parseFloat( $('#coefficient').text());
+   
+    function storeEvaluation() {
+        $('.rating_radio.evaluate_user>input').on('click',function() {
+            coefficient = parseFloat( $('#coefficient').text());
+           
+            total_rating = 0;
+            total_group = 0;
+            $( ".rating_radio.evaluate_user input:checked" ).each(function( index, element ) {
+                q_rating = parseFloat($( element ).siblings('span.span_question_rating').text());
+                console.log($(element).next('label.label_rating').text());
+                rating = parseFloat($( element ).next('label.label_rating').text()) * coefficient * q_rating;
+                console.log(rating);
+                if($.isNumeric( rating ) ) {
+                    total_rating+=rating;
+                }
+    
+                if( $(element).is(':visible')) {
+                    total_group +=  rating; 
+                }
+            });
+    
+            $('.rating_all span').text(total_rating.toFixed(2));
+            $('.mySlides:visible .rating_group span').text(total_group.toFixed(2))
+        });
+        
        
-        total_rating = 0;
-        total_group = 0;
-        $( ".rating_radio.evaluate_user input:checked" ).each(function( index, element ) {
-            q_rating = parseFloat($( element ).siblings('span.span_question_rating').text());
-            console.log($(element).next('label.label_rating').text());
-            rating = parseFloat($( element ).next('label.label_rating').text()) * coefficient * q_rating;
-            console.log(rating);
-            if($.isNumeric( rating ) ) {
-                total_rating+=rating;
-            }
-
-            if( $(element).is(':visible')) {
-                total_group +=  rating; 
+    }
+   
+    function collapse_tr () {
+        $('.tr_group').on('click',function(){
+            var id = $( this ).attr('data-id');
+    
+            $('.tr_questions[data-id="'+id+'"]').toggle();
+            if( $('.tr_questions[data-id="'+id+'"]:visible').length == 0 ) {
+                $('.tr_evaluation[data-id="'+id+'"]').hide();
+                $('.arrow_collapse').find('i , svg').remove();
+                $('.arrow_collapse').prepend('<i class="fas fa-angle-down"></i>');
+            
+            } else {
+                $( this ).find('.arrow_collapse').find('i , svg').remove();
+                $( this ).find('.arrow_collapse').prepend('<i class="fas fa-angle-up"></i>');
             }
         });
-
-        $('.rating_all span').text(total_rating.toFixed(2));
-        $('.mySlides:visible .rating_group span').text(total_group.toFixed(2))
-    });
-    
-    $(".evaluation_comment").on('change',function(){
-        container = $( this );
-        mouse_is_inside = true;
-        ev_id = $(this).attr('title');
-        comment = $(this).val();
-        rating_id = null;
-        $(document).click(function(e) {
-            if(container && !container.is(e.target) && mouse_is_inside == true ) {
-                submit_form (ev_id,rating_id, comment);
+        $('.tr_questions').on('click',function(){
+            var id = $( this ).attr('data-question');
+            $('.tr_evaluation[data-question="'+id+'"]').toggle();
+            if( $('.tr_evaluation[data-question="'+id+'"]:visible').length == 0 ) {
+                $( this ).find('.td_question').find('.arrow_collapse').find('i , svg').remove();
+                $( this ).find('.td_question').find('.arrow_collapse').prepend('<i class="fas fa-angle-down"></i>');
+            } else {
+                $( this ).find('.td_question').find('.arrow_collapse').find('i , svg').remove();
+                $( this ).find('.td_question').find('.arrow_collapse').prepend('<i class="fas fa-angle-up"></i>');
             }
         });
-    });
-    
-    function submit_form (ev_id, rating_id, comment) {
-        /* form_data = form.serialize();  */
-        if(rating_id) {
-            url = $( form ).attr('action') + '?rating_id='+rating_id+'&id='+ev_id;
-        }
-        if( comment ) {
-            url = $( form ).attr('action') + '?comment='+comment+'&id='+ev_id;
-        }
+    }
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    function submit_evaluation ( ) {
+        $('.form_recommendation').on('submit',function(e){
+            e.preventDefault();
+           
+            form = $('form.form_recommendation');
+            form_data = form.serialize(); 
+            url =  $( form ).attr('action') + '?employee_id='+id;
+    
+            $.ajax({
+                url: url,
+                type: "post",
+                data: form_data,
+                success: function( recomendations ) {
+                    console.log(recomendations);
+                    text = '';
+                    $.each(recomendations, function( index, recomendation ) {
+                       text += '<p>'+ recomendation.comment + '<small>'+recomendation.target_date+'</small>'+ '</p>';
+                    });
+                    $('.recomendation div').append(text);
+                    mouse_is_inside = false;
+                }, 
+                error: function(jqXhr, json, errorThrown) {
+                    $(".btn-submit").prop("disabled", false);
+                    var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                        'message':  jqXhr.responseJSON.message,
+                                        'file':  jqXhr.responseJSON.file,
+                                        'line':  jqXhr.responseJSON.line };
+    
+                    console.log(data_to_send); 
+            
+                    $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + "Podaci nisu spremljeni, došlo je do greške: " + data_to_send.message + '</div></div></div>').appendTo('body').modal();
+                }
+            });
+        });
+    }
+
+    function submit_form () {
+        $('.rating_radio.evaluate_manager>input').on('click',function(){
+            mouse_is_inside = true;
+            ev_id = $(this).attr('title');
+            container = null;
+            rating_id = $(this).val();
+            comment = null;
+            form = $('form.form_evaluation');
+            if(rating_id) {
+                url = $( form ).attr('action') + '?rating_id='+rating_id+'&id='+ev_id;
             }
-        });  
+            if( comment ) {
+                url = $( form ).attr('action') + '?comment='+comment+'&id='+ev_id;
+            }
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });  
+            $.ajax({
+                url: url,
+                type: "post",
+                success: function( response ) {
+                    console.log(response);
+                    mouse_is_inside = false;
+                }, 
+                error: function(jqXhr, json, errorThrown) {
+                    $(".btn-submit").prop("disabled", false);
+                    var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                        'message':  jqXhr.responseJSON.message,
+                                        'file':  jqXhr.responseJSON.file,
+                                        'line':  jqXhr.responseJSON.line };
+
+                    console.log(data_to_send); 
+            
+                    $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + "Podaci nisu spremljeni, došlo je do greške: " + data_to_send.message + '</div></div></div>').appendTo('body').modal();
+                }
+            });
+        });
+
+        $(".evaluation_comment").on('change',function(){
+            console.log("evaluation_comment");
+            
+            container = $( this );
+            mouse_is_inside = true;
+            ev_id = $(this).attr('title');
+            comment = $(this).val();
+            rating_id = null;
+            console.log(ev_id);
+            console.log(comment);
+            $(document).on('click',function(e) {
+                if(container && !container.is(e.target) && mouse_is_inside == true ) {
+                    console.log("submit textarea");
+                    form = $('form.form_evaluation');
+                    if(rating_id) {
+                        url = $( form ).attr('action') + '?rating_id='+rating_id+'&id='+ev_id;
+                    }
+                    if( comment ) {
+                        url = $( form ).attr('action') + '?comment='+comment+'&id='+ev_id;
+                    }
+        
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });  
+                    $.ajax({
+                        url: url,
+                        type: "post",
+                        success: function( response ) {
+                            console.log(response);
+                            mouse_is_inside = false;
+                        }, 
+                        error: function(jqXhr, json, errorThrown) {
+                            $(".btn-submit").prop("disabled", false);
+                            var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                                'message':  jqXhr.responseJSON.message,
+                                                'file':  jqXhr.responseJSON.file,
+                                                'line':  jqXhr.responseJSON.line };
+        
+                            console.log(data_to_send); 
+                    
+                            $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + "Podaci nisu spremljeni, došlo je do greške: " + data_to_send.message + '</div></div></div>').appendTo('body').modal();
+                        }
+                    });
+                }
+            });
+        });
+
+    }
+
+    $('.filter_evaluation').on('change',function(){
+        $('.total_rating').remove();
+        var element = $(this);
+        value = $(this).val().toLowerCase();
+        id = $(this).find('option:selected').attr('data-id');
+        console.log(value);
+        console.log(id);
+
+        url = location.href + '?employee_id='+id;
+        console.log(url);
         $.ajax({
             url: url,
-            type: "post",
+            type: "get",
+            beforeSend: function(){
+                $('body').prepend('<div id="loader"></div>');
+            },
             success: function( response ) {
-                console.log(response);
-                mouse_is_inside = false;
+                $('.recomendation').load( url + ' .recomendation>div');
+                $('tbody').load( url + ' tbody>tr', function(){
+                    collapse_tr ();
+                    submit_form ();
+
+                     if( value == 'all') {
+                        $(".tr_questions").hide();
+                        $(".tr_evaluation").hide();
+
+                    } else {
+                        $(".tr_questions").show();
+                        $(".tr_evaluation").filter(function() {
+                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                        });
+                        all_rating = 0;
+                        all_rating2 = 0;
+                        $( ".rating_empl:visible" ).each(function( index ) {
+                            rating =  parseFloat($( this ).text());
+                            all_rating+=rating;
+                        });
+                        $( ".edit_evaluation_id:visible input:checked" ).each(function( index ) {
+                            rating2 = parseFloat($( this ).siblings('label').text());
+                            if($.isNumeric( rating2 ) ) {
+                                all_rating2+=rating2;
+                            }
+                        });;
+                        $( element ).parent().after('<p class="total_rating">Ukupna bodovi: '+all_rating.toFixed(2)+'</p>');
+                        $('.form_recommendation').find('input#employee_id').val(id);
+                        $('.form_recommendation').show()
+                    }
+                    $('#loader').remove();
+                });
+               
             }, 
             error: function(jqXhr, json, errorThrown) {
                 $(".btn-submit").prop("disabled", false);
@@ -2012,16 +2404,44 @@ if( $('.competence_table').length > 0 ) {
                 $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + "Podaci nisu spremljeni, došlo je do greške: " + data_to_send.message + '</div></div></div>').appendTo('body').modal();
             }
         });
-    }
+      /*   url_recommodation = location.origin + '/getRecommendations?employee_id='+id;
+        $.ajax({
+            url: url_recommodation,
+            type: "get",
+            success: function( recomendations ) {
+                console.log(recomendations);
+                text = '';
+                $.each(recomendations, function( index, recomendation ) {
+                date = recomendation.target_date.split("-");
+                
+                text += '<p>'+ recomendation.comment;
+                if (recomendation.mentor_name != '') {
+                    text +=  " | Dodjeljen mentor: " + recomendation.mentor_name;
+                }
+                text += '<small>'+date[2]+"."+date[1]+"."+date[0]+'.</small>'+ '</p>';
+                });
+                $('.recomendation div').append(text);
+            }, 
+            error: function(jqXhr, json, errorThrown) {
+                $(".btn-submit").prop("disabled", false);
+                var data_to_send = { 'exception':  jqXhr.responseJSON.exception,
+                                    'message':  jqXhr.responseJSON.message,
+                                    'file':  jqXhr.responseJSON.file,
+                                    'line':  jqXhr.responseJSON.line };
 
-    $('.filter_evaluation').on('change',function(){
-        $('.total_rating').remove();
-        var element = $(this);
-        value = $(this).val().toLowerCase();
-        console.log(value);
-        if( value == 'all') {
-            $(".tr_evaluation").show();
+                console.log(data_to_send); 
+        
+                $('<div><div class="modal-header"><span class="img-error"></span></div><div class="modal-body"><div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>danger:</strong>' + "Podaci nisu spremljeni, došlo je do greške: " + data_to_send.message + '</div></div></div>').appendTo('body').modal();
+            }
+        }); */
+        
+
+        /* if( value == 'all') {
+            $(".tr_questions").hide();
+            $(".tr_evaluation").hide();
+
         } else {
+            $(".tr_questions").show();
             $(".tr_evaluation").filter(function() {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
@@ -2036,11 +2456,11 @@ if( $('.competence_table').length > 0 ) {
                 if($.isNumeric( rating2 ) ) {
                     all_rating2+=rating2;
                 }
-            });
+            });;
             $( element ).parent().after('<p class="total_rating">Ukupna bodovi: '+all_rating.toFixed(2)+'</p>');
-         /*    $( element ).parent().after('<p class="total_rating">Ukupna ocjena nadređenog: '+all_rating2+'</p>'); */
-            
-        }
+            $('.form_recommendation').find('input#employee_id').val(id);
+            $('.form_recommendation').show()
+        } */
     });
 
     $('.prev').on('click',function(){
@@ -3111,6 +3531,16 @@ $(function() {
 			$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
 		});
 	});
+	$('.check_all').on('click',function(){
+		console.log('check_all');
+		if( $( this ).attr('data-value') == 1 ) {
+			$('input[type=checkbox]').prop('checked',true);
+			$( this ).attr('data-value',0);
+		} else {
+			$('input[type=checkbox]').prop('checked',false);
+			$( this ).attr('data-value',1);
+		}
+	});
 });
 $(function() { // filter knowledge base
 	var value = null;
@@ -3120,77 +3550,6 @@ $(function() { // filter knowledge base
 	var task = null;
 	var url;
 	var project;
-/* 
-	$('.change_month_afterhour').on('change',function(){
-		date =  $(this).val().toLowerCase();
-		employee_id =  $('.change_employee_afterhour').val();
-		if(employee_id != '' && employee_id != null) {
-			employee_id = employee_id.replace("empl_","");
-		}
-		url =  location.href + '?date='+date+'&employee_id='+employee_id;
-		$.ajax({
-			url: url,
-			type: "get",
-			beforeSend: function(){
-				// Show image container
-				$('body').prepend('<div id="loader"></div>');
-			},
-			success: function( response ) {
-				$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
-				
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-					if( $('tbody tr').length == 0)  {
-						$('.btn-store').hide();
-					} else {
-						$('.btn-store').show();
-					}
-				});
-			},
-			error: function(jqXhr, json, errorThrown) {
-				console.log(jqXhr.responseJSON.message);
-			}
-		});
-	});
-	
-	$('.change_employee_afterhour').on('change',function(){
-		employee_id =  $(this).val().toLowerCase();
-		if(employee_id != '' && employee_id != null) {
-			employee_id = employee_id.replace("empl_","");
-		}
-		date =  $('.change_month_afterhour').val();
-		
-		$.ajax({
-			url: location.href + '?date='+date+'&employee_id='+employee_id ,
-			type: "get",
-			beforeSend: function(){
-				// Show image container
-				$('body').prepend('<div id="loader"></div>');
-			},
-			success: function( response ) {
-				$( '#admin_page >main' ).load(location.href + '?date='+date+'&employee_id='+employee_id + ' #admin_page >main .table-responsive',function(){
-					$('#loader').remove();
-					$.getScript('/../js/datatables.js');
-					$('.show_button').on('click',function () {
-                        $('.dt-buttons').toggle();		
-                    })
-					$.getScript('/../restfulizer.js');
-					if( $('tbody tr').length == 0)  {
-						$('.btn-store').hide();
-					} else {
-						$('.btn-store').show();
-					}
-				});
-			},
-			error: function(jqXhr, json, errorThrown) {
-				console.log(jqXhr.responseJSON.message);
-			}
-		});
-	}); */
 
 	$('.filter_employees').not('.main_absence .filter_employees').on('change',function(){
 		employee_id = $( this ).val();
@@ -3539,9 +3898,6 @@ $(function() { // filter knowledge base
 			success: function( response ) {
 				if( url.includes('work_diaries/1')) {
 					$( '.page-main' ).load(url + ' .page-main>.diary_project',function(){
-						console.log("work_diaries");
-						console.log(url);
-						console.log(location.href );
 						$('#loader').remove();
 						$.getScript('/../js/datatables.js');
 						$.getScript('/../js/collaps.js');
@@ -3551,15 +3907,21 @@ $(function() { // filter knowledge base
 						})
 						
 					$.getScript('/../restfulizer.js');
-					});
+					});				
 				} else {
 					$( '#admin_page >main' ).load(url + ' #admin_page >main .table-responsive',function(){
 						$('#loader').remove();
 						$.getScript('/../js/datatables.js');
 						$('.show_button').on('click',function () {
-							console.log("show_button click 3");
 							$('.dt-buttons').toggle();
 						})
+						if (url.includes('afterhours'))  {
+							if( $('tbody tr').length == 0) {
+								$('.store_buttom').hide();
+							} else {
+								$('.store_buttom').show();
+							}
+						}
 						$.getScript('/../restfulizer.js');
 					});
 				}
@@ -4514,7 +4876,6 @@ if($('.index_admin').length > 0 ) {
 $("a[rel='modal:open']").addClass('disable');
 
 $(function() {
-  
     $("a[rel='modal:open']").removeClass('disable');
     $.modal.defaults = {
         closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
@@ -4743,6 +5104,19 @@ $(function() {
     });
     
     $('body').on($.modal.OPEN , function(event, modal) {
+            
+       /*  console.log("modal length" + $( ".modal" ).length);
+        $( ".modal" ).on('click',function( event ) {
+            if( event.target.rel != 'modal:close' ) {
+                console.log(event.target.nodeName);
+                console.log( "clicked: " + event.target.nodeName );
+                console.log(  event.target );
+                console.log(  event.target.rel );
+                console.log(  event.target.classList );
+            }
+        
+        });
+ */
         $.getScript('/../select2-develop/dist/js/select2.min.js');
         selectSearchModal ();
     });
@@ -4811,7 +5185,11 @@ $(function() {
         return null;
         
     }
+
+
+
 }); 
+
 // on load
 if( $('.posts_index').length > 0) {
 
@@ -6172,7 +6550,7 @@ function validate_user_form () {
         }
         console.log('validate roles');
     });
-    $( "textarea" ).each(function( index ) {
+    $( "textarea" ).not('.td_evaluation textarea').each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 ) {
                 if( !$( this ).parent().find('.modal_form_group_danger').length) {

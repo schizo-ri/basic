@@ -270,6 +270,10 @@ span.work {
 	width: auto;
     height: 108px;
 }
+
+modal.modal_notice.notice_show >img {
+	width: auto;
+}
 .modal.modal_notice.notice_show.modal_user {
 	overflow: auto;
 }

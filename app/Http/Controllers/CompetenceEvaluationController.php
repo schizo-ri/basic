@@ -67,7 +67,6 @@ class CompetenceEvaluationController extends Controller
                 $competenceEvaluation->saveCompetenceEvaluation($data);
             }
         }
-
         session()->flash('success',  __('ctrl.data_save'));
 		return redirect()->back();
     }
@@ -80,9 +79,8 @@ class CompetenceEvaluationController extends Controller
      */
     public function show($id, Request $request)
     {
-
-        $selected_employee = isset($request['employee_id']) ? Employee::where('id',$request['employee_id'] )->first() : null;
-        
+        $selected_employee = isset($request['employee_id']) ? Employee::where('id',$request['employee_id'] )->with('hasImprovementRecommendation')->first() : null;
+     
         if( $selected_employee ) {
             $competence = Competence::with(array('hasEvaluations' => function($query) use($selected_employee)
             {
@@ -91,13 +89,15 @@ class CompetenceEvaluationController extends Controller
         } else {
             $competence = Competence::with('hasEvaluations')->with('hasGroups')->find($id);
         }
-     
+
+        $evaluations = $competence->hasEvaluations;
+       
         $all_employees = Employee::employees_getNameASC();
         $employees = collect();
         $user = Sentinel::getUser();
         $this_employee = $user->employee;
        
-        if($competence) {
+        if( $competence) {
             if( count($competence->hasEvaluations) > 0 ) {
                 if( $selected_employee ) {
                     $employees->push( $selected_employee );
@@ -108,7 +108,7 @@ class CompetenceEvaluationController extends Controller
                 }
             }  
 
-            return view('Centaur::competence_evaluations.show', ['competence' => $competence,'employees' => $employees->unique(),'this_employee' => $this_employee,'all_employees' => $all_employees, 'selected_employee' => $selected_employee ]);
+            return view('Centaur::competence_evaluations.show', ['competence' => $competence,'evaluations' => $evaluations,'employees' => $employees->unique(),'this_employee' => $this_employee,'all_employees' => $all_employees, 'selected_employee' => $selected_employee ]);
         } else {
             session()->flash('error', 'Kompentencija nije nađena');
             return redirect()->back();

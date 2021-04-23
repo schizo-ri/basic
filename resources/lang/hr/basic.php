@@ -60,6 +60,8 @@ return [
 	'add_setting'			=> 'Dodaj postavku',
 	'add_shortcut'			=> 'Dodaj prečac',
 	'add_table'				=> 'Dodaj tabelu',
+	'add_location'			=> 'Dodaj lokaciju',
+	'edit_location'			=> 'Ispravi lokaciju',
 	'add_termination'		=> 'Dodaj otkaz',
 	'add_educationTheme'	=> 'Dodaj temu',
 	'add_training'			=> 'Dodaj osposobljavanje',

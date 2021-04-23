@@ -38,7 +38,7 @@ $(function(){
 	var select_projects;
 	var select_tasks;
 	var id_parent;
-
+	
 	$('.btn-submit').on('click',function(){
 		$( this ).hide();
 	});
@@ -280,7 +280,7 @@ $(function(){
 			bool = (date >= StartDate);
 			console.log(bool);
 
-			if( ! bool ) {
+			if( StartDate != 'Invalid Date' && ! bool ) {
 				e.preventDefault();
 				alert ("Nemoguće je poslati zahtjev unaprijed! ")
 			}

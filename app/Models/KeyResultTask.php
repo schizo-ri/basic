@@ -11,7 +11,7 @@ class KeyResultTask extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['keyresult_id','employee_id','name','comment','start_date','end_date','progress'];
+	protected $fillable = ['keyresult_id','employee_id','name','comment','start_date','end_date','progress','comment_admin'];
 
     /*
 	* The Eloquent employee model name
@@ -26,6 +26,13 @@ class KeyResultTask extends Model
 	* @var string
 	*/
 	protected static $keyResultModel = 'App\Models\KeyResult'; 	
+
+	/*
+	* The Eloquent KeyResultTask model name
+	* 
+	* @var string
+	*/
+	protected static $keyResultTasksCommentModel = 'App\Models\KeyResultTasksComment'; 	
 
 	/*
 	* Returns the KeyResult relationship
@@ -47,7 +54,18 @@ class KeyResultTask extends Model
 		return $this->belongsTo(static::$employeesModel,'employee_id');
 	}
 
-      /*
+	/*
+	* Returns the keyResult relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasComments()
+	{
+		return $this->hasMany(static::$keyResultTasksCommentModel,'key_result_tasks_id');
+    }	
+
+    /*
 	* Save KeyResultTask
 	* 
 	* @param array $keyResultTask
@@ -68,6 +86,5 @@ class KeyResultTask extends Model
 	public function updateKeyResultTask($keyResultTask=array())
 	{
 		return $this->update($keyResultTask);
-	}	
-
+	}
 }

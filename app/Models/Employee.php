@@ -43,7 +43,15 @@ class Employee extends Model
 	* @var string
 	*/
 	protected static $projectModel = 'App\Models\Project'; 
+	
+	/*
+	* The Eloquent ImprovementRecommendation model name
+	* 
+	* @var string
+	*/
+	protected static $ImprovementRecommendationModel = 'App\Models\ImprovementRecommendation'; 
 
+	
 	/*
 	* The Eloquent task model name
 	* 
@@ -136,6 +144,14 @@ class Employee extends Model
 	protected static $keyResultTaskModel = 'App\Models\KeyResultTask'; 
 
 	/*
+	* The Eloquent WorkCorrecting model name
+	* 
+	* @var string
+	*/
+	protected static $workCorrectingModel = 'App\Models\WorkCorrecting'; 
+
+
+	/*
 	* Returns the works relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -156,6 +172,18 @@ class Employee extends Model
 	{
 		return $this->hasMany(static::$shortcutModel,'employee_id');
 	}
+
+	/*
+	* Returns the ImprovementRecommendation relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasImprovementRecommendation()
+	{
+		return $this->hasMany(static::$ImprovementRecommendationModel,'employee_id');
+	}
+
 
 	/*
 	* Returns the project relationship
@@ -343,6 +371,17 @@ class Employee extends Model
 	public function hasKeyResultTask()
 	{
 		return $this->hasMany(static::$keyResultTaskModel,'employee_id');
+	}
+
+	/*
+	* Returns the CorrectingModel relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\hasMany
+	*/
+	
+	public function hasCorrectings()
+	{
+		return $this->hasMany(static::$workCorrectingModel,'employee_id');
 	}
 
 	/*

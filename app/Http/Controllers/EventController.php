@@ -17,7 +17,7 @@ use DateInterval;
 use DatePeriod;
 /* use Spatie\CalendarLinks\Link; */
 /* use DiegoSouza\Zimbra\Facades\Zimbra; */
-use DiegoSouza\Zimbra\Facades\Zimbra;
+/* use DiegoSouza\Zimbra\Facades\Zimbra; */
 use DB;
 use Log;
 
@@ -44,7 +44,8 @@ class EventController extends Controller
         dd(  $result ); */
      
         $empl = Sentinel::getUser()->employee;
-       
+        $events = collect();
+
         if( isset($_GET['dan']) ) {
             $dan = $_GET['dan'];
         } else {
@@ -52,14 +53,26 @@ class EventController extends Controller
         }
        
         $selected = EventController::selectedDay( $dan );
-      
         if($empl) {
             if( Sentinel::inRole('administrator')) {
-                $events = Event::whereMonth('date',$selected['mj_select'])->get();
+                $events = Event::whereMonth('date', $selected['mj_select'])->where('status', 0 )->get();
+                $events =  $events->merge(Event::whereMonth('date', $selected['mj_select'])->where('status', 1)->where('employee_id', Sentinel::getUser()->employee->id  )->get());
             } else {
-                $events = Event::whereMonth('date',$selected['mj_select'])->where('employee_id', $empl->id)->get();
+                $events_temp = Event::whereMonth('date', $selected['mj_select'])->get();
+                foreach ($events_temp as $event) {
+                    if( count ( $event->employee->hasEmployeeDepartmen  ) > 0 ) {
+                        foreach ($event->employee->hasEmployeeDepartmen as $employeeDepartmenent ) {
+                            if(  ! $events->contains( $event ) && 
+                                ( ($employeeDepartmenent->department->employee_id == Sentinel::getUser()->employee->id && $event->status == 0 ) || 
+                                ($event->employee_id == Sentinel::getUser()->employee->id) || 
+                                ( $employeeDepartmenent->department->roofLevel->employee_id == Sentinel::getUser()->employee->id && $event->status == 0) ) ) {
+                                $events = $events->push($event);
+                            }
+                        }
+                    }
+                }
             }
-
+            /* dd( $events); */
             foreach ( $events as $event ) {
                 $event->week = date('W',strtotime($event->date));
             }
@@ -137,7 +150,6 @@ class EventController extends Controller
      */
     public function create(Request $request)
     {
-       
         if ($request['time1']) {
             $time = $request['time1'];
             $time2 = strtotime( $time ) + 3600;
@@ -173,7 +185,8 @@ class EventController extends Controller
 			'date'  		=> $request['date'],
 			'time1' 		=> $request['time1'],
 			'time2' 		=> $request['time2'],
-			'description'   => $request['description']
+			'description'   => $request['description'],
+			'status'        => $request['status']
         );
 
         $event = new Event();
@@ -199,7 +212,7 @@ class EventController extends Controller
         }
     }
 
-    /*   */
+    /*   Registracija vozila zapisana kao event*/
     public function store_event ( $id )
     {
         $car = Car::find( $id );
@@ -214,6 +227,7 @@ class EventController extends Controller
 			'time1' 		=> '08:00',
 			'time2' 		=> '09:00',
 			'description'   => "Registracija vozila " . $car->registration,
+			'status'        => 0
         );
 
         $event = new Event();
@@ -273,7 +287,8 @@ class EventController extends Controller
 			'date'  		=> $request['date'],
 			'time1' 		=> $request['time1'],
 			'time2' 		=> $request['time2'],
-			'description'   => $request['description']
+			'description'   => $request['description'],
+            'status'        => $request['status']
         );
 
         $event->updateEvent($data);
@@ -411,7 +426,7 @@ class EventController extends Controller
                     }
                 }
                
-                $events = $employee->hasEvents;               
+                $events = $employee->hasEvents;
                
                 $events = $events->filter(function ($event, $key) use ( $month, $year ) {
                     return date('m',strtotime($event->date)) == $month && date('Y',strtotime($event->date)) == $year;
@@ -478,7 +493,7 @@ class EventController extends Controller
         }
       
 
-/*         $birthdays = Employee::leftJoin('users','employees.user_id','users.id')
+        /* $birthdays = Employee::leftJoin('users','employees.user_id','users.id')
                             ->select('employees.id AS employee_id')
                             ->selectRaw("concat(users.first_name, ' ', users.last_name) as employee")
                             ->selectRaw("concat( $year,'-',DATE_FORMAT(employees.b_day, '%m-%d')) as date")

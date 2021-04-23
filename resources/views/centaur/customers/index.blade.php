@@ -37,10 +37,14 @@
 								<td>{{ $customer->city }}</td>
 								<td>{{ $customer->oib }}</td>
 								<td class="center">
-									<!-- <button class="collapsible option_dots float_r"></button> -->
 									@if(Sentinel::getUser()->hasAccess(['customers.update']) || in_array('customers.update', $permission_dep))
 										<a href="{{ route('customers.edit', $customer->id) }}" class="btn-edit"  title="{{ __('basic.edit')}}" rel="modal:open">
-												<i class="far fa-edit"></i>
+											<i class="far fa-edit"></i>
+										</a>
+									@endif
+									@if(Sentinel::getUser()->hasAccess(['customer_locations.create']) || in_array('customer_locations.create', $permission_dep))
+										<a href="{{ route('customer_locations.create',['customer_id' => $customer->id]) }}" class="btn-edit"  title="{{ __('basic.add_location')}}" rel="modal:open">
+											<i class="fas fa-map-marker-alt"></i>
 										</a>
 									@endif
 									@if(Sentinel::getUser()->hasAccess(['customers.delete']) || in_array('customers.delete', $permission_dep) )

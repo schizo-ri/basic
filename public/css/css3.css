@@ -2312,6 +2312,7 @@ div#calendar ul li.active_date {
 * {
     scrollbar-width: none;
 }
+
 .index_page {
     height: 100%;
     font-family: Montserrat, sans-serif;
@@ -2360,6 +2361,9 @@ div#calendar ul li.active_date {
     vertical-align: middle;
     line-height: 26px;
 }
+/* input#date:before {
+    content: attr(data-date);
+} */
 .campaign_start_date {
     float: right;
     padding: 0 20px;
@@ -2487,6 +2491,7 @@ section.okrs .tabcontent {
 .div_keyResults div.no_Tasks, .no_Tasks {
     font-size: 10px;
 }
+
 .okrs a {
     padding: 0 5px;
 }
@@ -2494,9 +2499,27 @@ section.okrs .tabcontent {
 .div_okr, .div_keyResults {
     padding: 0;
     margin-top: 10px;
-    
+    position: relative;
 }
 
+.hover_open_comment div.okr_comments {
+    display: none;
+    position: absolute;
+    top: 100%;
+    background: white;
+    z-index: 1;
+    padding: 10px;
+    padding: 10px;
+    width: 99%;
+    margin: auto;
+    text-transform: initial;
+    color: black;
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #ccc;
+}
+.recomendation {
+    font-size: 0.875rem;
+}
 .div_okr>div:not(.not_link), .keyResults>div:not(.not_link) {
     cursor: pointer;
 }
@@ -2507,9 +2530,10 @@ section.okrs .tabcontent {
     text-transform: uppercase;
 }
 
-.div_okr div, .div_keyResults div, .keyResults div {
-    padding:0;
-}
+.keyResults div {
+    padding: 0;
+} 
+
 
 .div_okr>div, .div_keyResults>div:not(.div_keyResultTasks), .keyResults>div {
     padding:5px;
@@ -2518,10 +2542,12 @@ section.okrs .tabcontent {
 .div_keyResults div {
     font-size: 0.875rem;
     font-weight: 600;
+    overflow: hidden;
 }
 
 .div_keyResults, .div_keyResultTasks{
     display: none;
+  
 }
 .edit_progress>span, .edit_progress>p {
     float: left;
@@ -4835,6 +4861,17 @@ form.after_form  {
     height: fit-content;
     max-height: 50%;
     overflow: auto;
+}
+.noticeboard .notices_list *, .noticeboard_notice_body *{
+    max-width: 100% !important;
+    min-width: auto !important;
+}
+
+@media only screen and (min-width: 520px) {
+    .noticeboard .u-row .u-col-100 {
+        width: auto;
+        min-width: auto !important;
+    }
 }
 
 .noticeboard_notice_body, .emails_email_body:not(:nth-child(5n)) {
@@ -9314,7 +9351,7 @@ ul.nav_ul.float_right li img {
 	display: block;
 	overflow: hidden;
 	position: relative;
-	padding: 37px;
+	padding: 0;
 }
 .shortcuts_container .profile_img >span>span {
 	display: block;
@@ -9803,6 +9840,7 @@ span.count_post {
     justify-content: flex-start;
     height: 55%;
     overflow-wrap: break-word;
+	overflow: auto;
 }
 
 .info .layout_button >button {
@@ -9855,6 +9893,7 @@ span.count_post {
 
 .layout_button span.img {
 	width: 65px;
+	max-width: 100%;
 	height: 65px;
 	display: block;
 	margin: auto;
@@ -9865,31 +9904,31 @@ span.count_post {
 
 span.img.books {
 	background: url('../icons/books.png') no-repeat center;
-	background-size:  65px 65px;
+	background-size: 100% auto;
 }
 
 span.img.beach {
 	background: url('../icons/beach.svg') no-repeat center;
-	background-size: 65px 65px;
+	background-size: 100% auto;
 }
 span.img.clock {
 	background: url('../icons/clock.svg') no-repeat center;
-	background-size:  65px 65px;
+	
 }
 
 span.img.overtime {
 	background: url('../icons/overtime.png') no-repeat center;
-	background-size:  65px 65px;
+	background-size: 100% auto;
 }
 
 span.img.sick {
 	background: url('../icons/sick.png') no-repeat center;
-	background-size:  65px 65px;
+	background-size: 100% auto;
 }
 
 span.img.car {
 	background: url('../icons/car.svg') no-repeat center;
-	background-size:  65px 65px;
+	background-size: 100% auto;
 }
 .layout_button button.background_red {
 	background: rgba(256,0,0,0.4);
@@ -9897,15 +9936,15 @@ span.img.car {
 }
 span.img.task {
 	background: url('../icons/task.svg') no-repeat center;
-	background-size:  65px 65px;
+	background-size: 100% auto;
 }
 span.img.travel {
 	background: url('../icons/travel.svg') no-repeat center;
-	background-size:  65px 65px;
+	background-size: 100% auto;
 }
 span.img.fuel {
 	background: url('../icons/fuel.svg') no-repeat center;
-	background-size:  65px 65px;
+	background-size: 100% auto;
 }
 span.img-success {
 	background: url('../icons/success.png') no-repeat center;
@@ -9929,7 +9968,7 @@ span.img-error {
 
 .layout_button span.img.all_req {
 	background: url('../icons/zahtjevi.svg') no-repeat center;
-	background-size:  65px 65px;
+	background-size: 100% auto;
 }
 
 .layout_button span.img.all_req p {
@@ -11472,6 +11511,10 @@ span.work {
 .modal_user .user_img >img {
 	width: auto;
     height: 108px;
+}
+
+modal.modal_notice.notice_show >img {
+	width: auto;
 }
 .modal.modal_notice.notice_show.modal_user {
 	overflow: auto;

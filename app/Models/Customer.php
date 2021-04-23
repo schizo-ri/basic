@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-    protected $fillable = ['name','address','city','oib','active'];
+    protected $fillable = ['name','address','city','oib','active','representedBy'];
 
 	/*
 	* The Eloquent project model name
@@ -14,8 +14,14 @@ class Customer extends Model
 	* @var string
 	*/
 	protected static $projectModel = 'App\Models\Project'; 
-	
-	
+
+	/*
+	* The Eloquent CustomerLocation model name
+	* 
+	* @var string
+	*/
+	protected static $customerLocationModel = 'App\Models\CustomerLocation'; 
+		
 	/*
 	* Returns the project relationship
 	* 
@@ -25,6 +31,17 @@ class Customer extends Model
 	public function project()
 	{
 		return $this->hasMany(static::$projectModel,'customer_id')->orderBy('created_at','DESC');
+	}	
+
+	/*
+	* Returns the CustomerLocation relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasLocations()
+	{
+		return $this->hasMany(static::$customerLocationModel,'customer_id');
 	}	
 	
 	/*

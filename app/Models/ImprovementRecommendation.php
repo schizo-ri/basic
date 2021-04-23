@@ -33,7 +33,7 @@ class ImprovementRecommendation extends Model
 	* @return \Illuminate\Database\Eloquent\Relations\HasMany
 	*/
 	
-	public function mentor()
+	public function isMentor()
 	{
 		return $this->belongsTo(static::$employeeModel,'mentor');
 	}

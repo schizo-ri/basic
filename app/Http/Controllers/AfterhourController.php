@@ -204,7 +204,7 @@ class AfterhourController extends Controller
             // za djelatnike IT mail ide voditelju - Kranjec
             $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
 
-            if ( $afterHour->employee->work->department == 'IT odjel' &&  $superior ) {
+            if ( $afterHour->employee->work->department->name == 'IT odjel' && $superior ) {
                 Log::info("Prekovremeni za IT poslan na mail: ". $superior->email );
                 Mail::to( $superior->email )->send(new AfterHourCreateMail($afterHour)); 
             } else {
@@ -215,15 +215,16 @@ class AfterhourController extends Controller
                     }
                 }
             } 
+            Mail::to( 'zeljko.rendulic@duplico.hr' )->send(new AfterHourInfoMail($afterHour)); 
 
-            // za djelatnike Inženjeringa INFO mail ide voditelju - Željko Rendulić
-            if( $afterHour->employee->work->department == 'Inženjering') {
+            // za djelatnike Inženjeringa INFO mail ide voditelju - Željko Rendulić - SVI ZAHTJVI DOLATE NA MAIL kroz emailing
+            /* if( $afterHour->employee->work->department->name == 'Inženjering') {
                 $voditelj =  $afterHour->employee->work ? $afterHour->employee->work->employee : null;
                 if( $voditelj ) {
                     Log::info( 'Prekovremeni - info mail ide na  ' . $voditelj->user->first_name . ' '. $voditelj->user->last_name );
                     Mail::to( $voditelj->email )->send(new AfterHourInfoMail($afterHour)); 
                 }
-            }
+            } */
         } else {
             session()->flash('error',  __('ctrl.request_exist'));
             return redirect()->back();
@@ -264,21 +265,24 @@ class AfterhourController extends Controller
                 Mail::to($send_to_mail)->send(new AfterHourCreateMail($afterHour)); 
             }
         }
-        // za djelatnike Inženjeringa mail ide voditelju - Željko Rendulić
-        if( $afterHour->employee->work->department == 'Inženjering') {
+        // za djelatnike Inženjeringa mail ide voditelju - Željko Rendulić - SVI ZAHTJVI DOLATE NA MAIL kroz emailing
+      /*   if( $afterHour->employee->work->department->name == 'Inženjering') {
             $voditelj =  $afterHour->employee->work ? $afterHour->employee->work->employee : null;
             if( $voditelj ) {
                 Log::info( 'Prekovremeni - info mail ide na  ' . $voditelj->user->first_name . ' '. $voditelj->user->last_name );
                 Mail::to( $voditelj->email)->send(new AfterHourInfoMail($afterHour)); 
             }
-        }
+        } */
         // za djelatnike IT mail ide voditelju - Novosel
-        if ($afterHour->employee->work->department == 'IT odjel') {
+        if ($afterHour->employee->work->department->name == 'IT odjel') {
             $superior = $afterHour->employee->work ? $afterHour->employee->work->firstSuperior : null;
             if( $superior ) {
                 Mail::to( $superior->email)->send(new AfterHourInfoMail($afterHour)); 
             } 
         }
+
+        Mail::to( 'zeljko.rendulic@duplico.hr' )->send(new AfterHourInfoMail($afterHour)); 
+        
         return "Zahtjev za prekovremene sate je poslan.";
     }
     /**
@@ -419,7 +423,6 @@ class AfterhourController extends Controller
 
     public function storeConf(Request $request)
     {
-
         Log::info('**************** Afterhour odobrenje storeConf*************');
         Log::info('poslan request:');
         Log::info($request);
@@ -434,7 +437,7 @@ class AfterhourController extends Controller
             $data = array(
                 'approve'  		    =>  intval($request['approve']),
                 'approve_h'  		=>  $request['approve'] == 0 ? '00:00:00' : $request['approve_h'],
-                'approved_reason'  	=>  $request['approved_reason'] == 0 ?  $request['approved_reason']  : null,
+                'approved_reason'  	=>  $request['approved_reason'] != '' ?  $request['approved_reason']  : null,
                 'approved_id'    	=>  $approve_employee ? $approve_employee->id : null,
                 'approved_date'	    =>  date("Y-m-d")
             );

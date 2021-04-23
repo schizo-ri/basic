@@ -50,7 +50,7 @@ class ApiController extends Controller
     {
         /* $response = $this->connect_id_get(); */
 
-         $response = $this->get_available_leave_types();
+        /*  $response = $this->get_available_leave_types(); */
 
         /*  array:9 [▼
             "holiday" => "Godišnji odmor"
@@ -64,8 +64,10 @@ class ApiController extends Controller
             67 => "Prekovremeni sati"
         ]
         */
-       /*  $response = $this->get_employee_available_projects(45,date('Y-m-d')); */
+        /* $response = $this->get_employee_available_projects(45,date('Y-m-d')); */
         
+        $response = $this->get_employee_available_projects(45, null);
+
         /* array:4 [▼
         55 => "[P-002] 002 Interni poslovi Duplico, [0001] Duplico d.o.o."
         328 => "[P-2378] INA Rafinerija Rijeka Urinj - izvođenje svih instalacijskih radova i puštanje u pogon sustava instalacije procesnog grijanja prema stavkama grupe 1650, ▶"
@@ -80,7 +82,7 @@ class ApiController extends Controller
         ] */
 
         
-        $response = $this->send_leave_requestSick( Absence::find(3884), 'abs' );
+        /* $response = $this->send_leave_requestSick( Absence::find(3884), 'abs' ); */
 
         /* $response = $this->send_leave_request( Absence::find(3825), 'abs' ); // izostanak */
        /*  $response = $this->send_leave_request( Afterhour::find(3503), 'aft' ); */
@@ -308,7 +310,11 @@ class ApiController extends Controller
         $API = $this->API;
     
         $employee_id = intval( $absence->employee->erp_id ); 
-        $leave_type_id = $absence->ERP_leave_type;
+        if( $abs_type == 'correct' ) {
+            $leave_type_id = 69;
+        } else {
+            $leave_type_id = $absence->ERP_leave_type;
+        }
         
         if(is_numeric($leave_type_id) ) {
             $type_id = "int";
@@ -368,6 +374,20 @@ class ApiController extends Controller
 
            /*  $date_to = $absence->date . ' ' . $absence->end_time; */
         }
+        if( $abs_type == 'correct' ) {
+            $task_id = 5157;
+
+            $date_from = $absence->date . ' ' . '07:00:00';
+            $end = new DateTime( $date_from );  
+            $period = explode(':', $absence->approve_h );
+            $hour =  $period[0];
+            $minute =  $period[1];
+          
+            $end->modify('+'.$hour.'hours');
+            $end->modify('+'.$minute.'minutes');
+           
+            $date_to = date_format($end,'Y-m-d H:i:s');
+        }
 
         /* $note = $absence->comment; */
 
@@ -405,8 +425,6 @@ class ApiController extends Controller
             $resp = $sock->send($get_employee_available_projects);
           /*   dd($resp); */
             $val = $resp->value();
-            
-         
            
             if(! is_int($val)){
                 $id = $val->scalarval();

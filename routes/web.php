@@ -275,6 +275,8 @@ Route::get('getProjectTasks', ['as' => 'getProjectTasks', 'uses' => 'ProjectWork
 // Customer
 Route::resource('customers', 'CustomerController');
 
+// Customer
+Route::resource('customer_locations', 'CustomerLocationController');
 
 // EnergyLocation
 Route::resource('energy_locations', 'EnergyLocationController');
@@ -408,14 +410,25 @@ Route::resource('annual_goals', 'AnnualGoalController');
 Route::resource('okrs', 'OkrController');
 Route::get('progressOkr', ['as' => 'progressOkr', 'uses' => 'OkrController@progressOkr']);
 Route::get('exportOkr', 'OkrController@exportOkr')->name('exportOkr'); 
+Route::get('reminderOkr', 'OkrController@reminderOkr')->name('reminderOkr'); 
+
+// OkrComment
+Route::resource('okr_comments', 'OkrCommentController');
 
 // KeyResult
 Route::resource('key_results', 'KeyResultController');
 Route::get('progressKeyResult', ['as' => 'progressKeyResult', 'uses' => 'KeyResultController@progressKeyResult']);
+Route::get('reminderKeyResult', 'KeyResultController@reminderKeyResult')->name('reminderKeyResult'); 
 
-// KeyResult
+// KeyResultsComment
+Route::resource('key_results_comments', 'KeyResultsCommentController');
+
+// KeyResultTask
 Route::resource('key_result_tasks', 'KeyResultTaskController');
 Route::get('progressTask', ['as' => 'progressTask', 'uses' => 'KeyResultTaskController@progressTask']);
+
+// KeyResultTasksComment
+Route::resource('key_result_tasks_comments', 'KeyResultTasksCommentController');
 
 // Visitor
 Route::resource('visitors', 'VisitorController');
@@ -445,3 +458,8 @@ Route::post('updateEvaluation', ['as' => 'updateEvaluation', 'uses' => 'Competen
  
 // ImprovementRecommendation
 Route::resource('improvement_recommendations', 'ImprovementRecommendationController');
+Route::get('getRecommendations', ['as' => 'getRecommendations', 'uses' => 'ImprovementRecommendationController@getRecommendations']);
+
+// WorkCorrecting
+Route::resource('work_correctings', 'WorkCorrectingController');
+Route::get('confirmationWorkCorrecting', ['as' => 'confirmationWorkCorrecting', 'uses' => 'WorkCorrectingController@storeConf']);

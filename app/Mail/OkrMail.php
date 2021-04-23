@@ -37,7 +37,7 @@ class OkrMail extends Mailable
      */
     public function build()
     {
-        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','IstructionMail')->first();
+        $mail_template = MailTemplate::orderBy('created_at','DESC')->where('for_mail','OkrMail')->first();
         $mail_style = array();
         $template_text_header = array();
         $template_text_body= array();

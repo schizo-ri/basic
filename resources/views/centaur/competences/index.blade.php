@@ -147,7 +147,11 @@
 								<section>
 									@foreach ( $competences as $competence )
 										<article class="col-xs-12 col-sm-49 col-md-32 col-lg-24 col-xl-19 noticeboard_notice_body panel competence_body">
-											<a href="{{ route('competences.show', $competence->id) }}" >
+											@if ( $competence->employee && $competence->employee->id == Sentinel::getUser()->employee->id && $competence->status == 1 )
+												<a href="{{ route('competence_evaluations.show', $competence->id) }}" >
+											@else
+												<a href="{{ route('competences.show', $competence->id) }}" >
+											@endif
 												<div>
 													{{-- <header class="ad_header">
 													</header> --}}

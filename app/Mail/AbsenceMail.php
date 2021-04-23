@@ -67,7 +67,7 @@ class AbsenceMail extends Mailable
             if($this->absence->absence['mark'] == "BOL") {
                 $subject = __('emailing.sicknes_info');
             } else {
-                $subject =__('emailing.new_absence') . ' ' . $this->absence->absence->name ;
+                $subject =__('emailing.new_absence') . ' ' . $this->absence->absence->name;
             }
             $view = 'Centaur::email.absence';
         }

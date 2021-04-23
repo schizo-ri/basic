@@ -12,7 +12,7 @@ class Okr extends Model
 	*
 	* @var array
 	*/
-	protected $fillable = ['employee_id','name','comment','start_date','end_date','progress','status'];
+	protected $fillable = ['employee_id','name','comment','start_date','end_date','progress','status','comment_admin'];
 	
     /*
 	* The Eloquent employee model name
@@ -29,6 +29,13 @@ class Okr extends Model
 	protected static $keyResultModel = 'App\Models\KeyResult'; 	
 	
 	/*
+	* The Eloquent Okr model name
+	* 
+	* @var string
+	*/
+	protected static $okrCommentModel = 'App\Models\OkrComment'; 	
+
+	/*
 	* Returns the employees relationship
 	* 
 	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -38,6 +45,17 @@ class Okr extends Model
 		return $this->belongsTo(static::$employeesModel,'employee_id');
 	}
 	
+	/*
+	* Returns the okrComment relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasComments()
+	{
+		return $this->hasMany(static::$okrCommentModel,'okr_id');
+    }	
+
 	/*
 	* Returns the keyResult relationship
 	* 

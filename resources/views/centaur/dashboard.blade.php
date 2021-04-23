@@ -71,13 +71,16 @@
 										</span>
 									@endif
 									@if(in_array('Kompetencije', $moduli))
-										{{-- @if (Sentinel::inRole('administrator')) --}}
-											<span class="shortcut_box hasShortcut" >
-												<a class="" href="{{ route('competences.index') }}"  title="{{ __('basic.okrs')}}">
-													@lang('basic.competences')
-												</a>
-											</span>
-									{{-- 	@endif --}}
+										<span class="shortcut_box hasShortcut" >
+											<a class="" href="{{ route('competences.index') }}"  title="{{ __('basic.okrs')}}">
+												@lang('basic.competences')
+											</a>
+										</span>
+									@endif
+									@if(Sentinel::getUser()->hasAccess(['work_correctings.create']) || in_array('work_correctings.create', $permission_dep) )
+										<span class="shortcut_box hasShortcut" >
+											<a href="{{ route('work_correctings.create') }}" class="view_all" rel="modal:open">Prijavi popravak</a>
+										</span>
 									@endif
 									@if (isset($employee) && count($shortcuts) > 0 )										
 										@foreach ($shortcuts as $key => $shortcut)

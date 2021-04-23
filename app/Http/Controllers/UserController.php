@@ -54,6 +54,7 @@ class UserController extends Controller
         if( isset($request['status'])) {
 			if( $request['status'] == 'checkout' ) {
 				$status = 0;
+               
 			} else {
 				$status = 1;
 			}
@@ -61,7 +62,12 @@ class UserController extends Controller
 			$status = 1;
 		}
 
-        $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->where('active', $status )->get();
+        if( $status == 0 ) {
+            $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->where('users.active', $status )->where('employees.checkout', '<>', null)->get();
+        } else {
+            $users = $this->userRepository->createModel()->orderBy('last_name', 'ASC')->with('roles')->leftJoin('employees', 'users.id', '=', 'employees.user_id')->select('users.*','employees.b_day','employees.work_id')->where('users.active', $status )->where('employees.checkout', null)->get();
+        }
+       
        
         $roles = app()->make('sentinel.roles')->createModel()->all();
 

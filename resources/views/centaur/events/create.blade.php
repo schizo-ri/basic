@@ -8,6 +8,11 @@
 			<input name="title" type="text" class="form-control" required>
 			{!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
+		<div class="form-group">
+			<label >Status</label>
+			<span><input type="radio" name="status" value="1" id="status1" checked /><label for="status1"> @lang('basic.private')</label> </span>
+			<span><input type="radio" name="status" value="0" id="status0"  /> <label for="status0">Duplico</label></span>
+		</div>
 		<div class="form-group datum {{ ($errors->has('label')) ? 'has-error' : '' }}">
 			<label>@lang('basic.date')</label>
 			<input name="date" type="date" class="form-control" value="{!! isset($date) ? $date : Carbon\Carbon::now()->format('Y-m-d') !!}" required>
@@ -30,6 +35,7 @@
 			<textarea name="description" class="form-control" type="text" required ></textarea>
 			{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
+		
 		<input name="type" type="hidden" value="event" id="event_type" />
 		{{ csrf_field() }}
 		<input class="btn-submit" type="submit" value="{{ __('basic.save')}}" id="stil1">

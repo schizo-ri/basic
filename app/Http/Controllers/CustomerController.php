@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
-use Sentinel;
 
 class CustomerController extends Controller
 {
@@ -56,6 +55,7 @@ class CustomerController extends Controller
 			'city'  		=> $request['city'],
 			'oib'  			=> $request['oib'],
 			'active'        => $request['active'],
+			'representedBy' => $request['representedBy'],
 		);
 		
 		$customer = new Customer();
@@ -106,6 +106,7 @@ class CustomerController extends Controller
 			'city'  		=> $request['city'],
 			'oib'  			=> $request['oib'],
 			'active'        => $request['active'],
+            'representedBy' => $request['representedBy'],
 		);
 		
         $customer->updateCustomer($data);

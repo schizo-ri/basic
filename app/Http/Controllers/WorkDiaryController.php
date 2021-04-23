@@ -107,7 +107,6 @@ class WorkDiaryController extends Controller
         if( $employee ) {
             if( $this->api_erp ) {
                 $erp_id = $employee->erp_id;
-                Log::info('employee' . $erp_id);               
                 
                 $api = new ApiController();
                 $projects_erp = $api->get_employee_available_projects( $erp_id, $date );
@@ -209,9 +208,14 @@ class WorkDiaryController extends Controller
                 }
             }
             
+           
             if( in_array('Prekovremeni', $this->moduli)  ) {
+                
                 $afterhours =  $seconds - 28800;
                 $send_afterhourRequest = '';
+                Log::info('Dnevnik - prekovremeni' . $workDiary->employee->user->last_name . ' prekovremeni ' . $afterhours );
+                Log::info('project_overtime:' );
+                Log::info($project_overtime );
                 if( $afterhours > 0 && $project_overtime) {
                     $send_afterhourRequest = AfterhourController::storeAfterHour( $project_overtime );
                 } 

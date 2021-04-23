@@ -25,7 +25,7 @@
 							@if ( count($employees) > 0)
 								<div class="div_select2">
 									<select name="employee_id" class="select_filter filter_evaluation " style="border: none;font-size: inherit;color: inherit;" required >
-										<option value="all" selected>Svi</option>
+										{{-- <option value="all" selected>Svi</option> --}}
 										@foreach ( $employees as $employee )
 											<option value="{!! $employee->user->last_name  . ' ' . $employee->user->first_name !!}" data-id="{{ $employee->id }}" >{!! $employee->user->last_name  . ' ' . $employee->user->first_name !!}</option>
 										@endforeach
@@ -55,12 +55,24 @@
 									<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">
 								</form>
 							</div>
+							
 							<div class="col-md-12 col-lg-6  float_left">
 								<ul class="legend">
 									@foreach ($competence->hasRatings as $rating)
 										<li>{{ $rating->rating . ' - ' . $rating->description}} </li>
 									@endforeach
 								</ul>	
+							</div>
+							<div class="recomendation col-md-12 col-lg-12 clearfix">
+								<div>
+									@if ( $selected_employee && count($selected_employee->hasImprovementRecommendation) > 0)
+										<div>
+											@foreach ($selected_employee->hasImprovementRecommendation->sortByDesc('createdAt') as $recommendation)
+												<p>{{ $recommendation->comment }}</p> <small>[{{ date('d.m.Y', strtotime($recommendation->createdAt)) }}]</small>
+											@endforeach
+										</div>
+									@endif
+								</div>
 							</div>
 							<div>
 								<form class="form_evaluation" accept-charset="UTF-8" role="form" method="post" action="{{ route('updateEvaluation') }}">
@@ -84,10 +96,10 @@
 													<tr class="tr_questions" data-id="{{ $group->id }}" data-question="{{ $question->id }}">
 														<td class="td_question" colspan="6"><span class="arrow_collapse padd_r_20"><i class="fas fa-angle-down"></i></span>{{ $question->name }}</td>
 													</tr>
-													@foreach ($question->hasEvaluations->groupBy('employee_id') as $employee_id => $evaluation)
+													@foreach ($evaluations->where('question_id', $question->id)->groupBy('employee_id')->take(1) as $employee_id => $evaluation)
 														@php
 															$evaluation_empl = $evaluation->where('user_id', $employee_id )->first();
-															$evaluation_admin = $evaluation->where('user_id','<>',$employee_id )->first();
+															$evaluation_admin = $evaluation->where('user_id','<>' ,$employee_id )->first();
 															if ($evaluation_empl) {
 																$employee = $evaluation_empl->employee;
 															} else {
@@ -110,7 +122,7 @@
 																				name="rating_id[{!! $evaluation_empl ? $evaluation_empl->id : $evaluation_admin->id !!}]"
 																				value="{{ $rating->id }}" 
 																				title="{!! $evaluation_empl ? $evaluation_empl->id : $evaluation_admin->id !!}" id="id[{!! $evaluation_empl ? $evaluation_empl->id : $evaluation_admin->id !!}][{{$key_rating}}]"
-																				{!! $evaluation_admin && $evaluation_admin->where('rating_id', $rating->id )->first() ? 'checked' : '' !!}>
+																				{!! $evaluation_admin && $evaluation_admin->rating_id == $rating->id ? 'checked' : '' !!}>
 																			<label for="id[{!! $evaluation_empl ? $evaluation_empl->id : $evaluation_admin->id !!}][{{$key_rating}}]">{{ $rating->rating }}</label>
 																		</div>
 																	@endforeach
@@ -136,7 +148,8 @@
 </div>
 <script>
 	$(function() {
-		if( $('.competence_table').length > 0 ) {
+		function collapse_group() {
+			if( $('.competence_table').length > 0 ) {
 			$('.tr_group').on('click',function(){
 				var id = $( this ).attr('data-id');
 
@@ -163,6 +176,8 @@
 				}
 			});
 		}
+		}
+		
 	});
 	
 </script>

@@ -67,6 +67,17 @@
 												'afterHours_withoutOuts' => BasicAbsenceController::afterHours_withoutOuts( $employee ), 
 												'neiskoristenoGO' => BasicAbsenceController::neiskoristenoGO( $employee ), 
 											);
+											$sum = 0;
+											$sum_correcting = 0;
+
+											if( count( $employee->hasCorrectings ) > 0 ) {
+												foreach ($employee->hasCorrectings as $correcting) {
+													$sum += date('H',strtotime($correcting->time)) * 60;
+													$sum += date('i',strtotime($correcting->time));
+												}
+												$sum_correcting = $sum / 60;
+											}
+
 											// Vraća broj dana godišnjeg ova godina    
 										@endphp
 										<tr class="tr_open_link tr" data-href="/absences/{{ $employee->id }} empl_{{ $employee->employee_id}}" >
@@ -86,7 +97,7 @@
 												@if ($employee->days_off == 1)
 													{!! $data_absence['afterHours'] == '00:00' ? '' : round($data_absence['afterHours'],2) . ' h' !!}
 												@else
-													{!! $data_absence['afterHoursNoPaid'] == '00:00' ? '' : round($data_absence['afterHoursNoPaid'],2) . ' h' !!}
+													{!! $data_absence['afterHoursNoPaid'] == '00:00' ? '' : round($data_absence['afterHoursNoPaid'],2) - $sum_correcting. ' h' !!}
 												@endif
 												
 											</td>

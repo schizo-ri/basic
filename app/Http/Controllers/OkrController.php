@@ -11,6 +11,7 @@ use App\Models\Employee;
 use App\Models\AnnualGoal;
 use App\Mail\OkrProgressMail;
 use App\Mail\OkrMail;
+use App\Mail\KeyResultReminderMail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ErrorMail;
 use Sentinel;
@@ -61,7 +62,7 @@ class OkrController extends Controller
                 $keyResultTasks = KeyResultTask::get();
             }
         } else {
-            $okrs = Okr::with('hasKeyResults')->get();
+            $okrs = Okr::where('progress', '<>', 100)->with('hasKeyResults')->get();
             $keyResults = KeyResult::get();
             $keyResultTasks = KeyResultTask::get();
         }
@@ -363,7 +364,7 @@ class OkrController extends Controller
         return "Uspješno spremljeno";
     }
 
-    public function exportOkr( Request $request)
+    public function exportOkr( Request $request )
     {
         if( $request['employee_id'] == '*') {
             $okrs = Okr::with('hasKeyResults')->get();
@@ -411,7 +412,6 @@ class OkrController extends Controller
                             $okr_arr = array();
                         }
                     }
-                    
                 }
             }
         }
@@ -419,5 +419,22 @@ class OkrController extends Controller
         $export = new OkrExport($okrs_arr);
         
         return Excel::download($export, 'okr.xlsx');
+    }
+
+    public function reminderOkr ( Request $request ) 
+    {
+        $okr = Okr::find( $request['okr_id'] );
+
+        $employee_mail = null;
+
+        foreach ($okr->hasKeyResults as $keyResult) {
+            if( $keyResult->employee ) {
+                $employee_mail = $keyResult->employee->email;
+              /*   $employee_mail = 'jelena.juras@duplico.hr'; */
+                Mail::to($employee_mail)->send(new KeyResultReminderMail( $keyResult ));
+            }
+        }
+       
+        return "Podsjetnik je poslan";
     }
 }

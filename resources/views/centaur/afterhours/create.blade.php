@@ -29,7 +29,7 @@
 		</div>
 		<div class="form-group select_project {{ ($errors->has('project_id')) ? 'has-error' : '' }}">
 			<label>@lang('basic.project')</label>
-			<select class="form-control" id="select_project" name="project_id" placeholder="Izaberi projekt..."  value="{{ old('project_id') }}" required>
+			<select class="form-control" id="select_project" name="project_id" placeholder="Izaberi projekt..."  value="{{ old('project_id') }}" required >
 				<option value="" disabled selected></option>
 				@if(isset($projects) &&  $projects)
 					@foreach ($projects as $project)

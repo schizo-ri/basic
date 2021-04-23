@@ -36,13 +36,13 @@
 					<span class="on_vacation col-4"><span class="green"></span>@lang('absence.absences')<span>{{ $count_days['dani_odmor'] }}</span></span>
 				</div>
 				<div class="col-4 float_left filtercontainer" >
-					<select class="change_view_calendar col-4">
+					<select class="change_view_calendar select_filter col-4">
 						<option value="month" selected>@lang('basic.view_monthly')</option>
 						<option value="week">@lang('basic.view_weekly')</option>
 						<option value="day">@lang('basic.view_daily')</option>
 						<option value="list" >@lang('basic.view_list')</option>
 					</select>
-					<select class="change_employee col-4">
+					<select class="change_employee select_filter col-4">
 						<option value="" selected>{{ __('basic.view_all')}} </option>
 						@foreach ($employees as $employee)
 							<option value="empl_{{ $employee->id }}">{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}</option>
@@ -196,12 +196,6 @@
 														<div class="show_event empl_{{ $event->employee_id }} col-12" >
 															<div class="event blue">
 																<p>{{ date('H:i',strtotime($event->time1)) . ' - ' . date('G:i',strtotime($event->time2)) . ' - ' . $event->employee->user->first_name . ' ' . $event->employee->user->last_name  . ' - ' . $event->title }}
-																	{{-- <a href="{{ route('events.edit', $event->id) }}" class="btn-edit" rel="modal:open" >
-																		<i class="far fa-edit"></i>
-																	</a>
-																	<a href="{{ route('events.destroy', $event->id) }}" class="action_confirm btn-delete danger" data-method="delete" data-token="{{ csrf_token() }}">
-																		<i class="far fa-trash-alt"></i>
-																	</a> --}}
 																</p>
 															</div>
 														</div>

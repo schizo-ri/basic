@@ -59,7 +59,7 @@ function validate_user_form () {
         }
         console.log('validate roles');
     });
-    $( "textarea" ).each(function( index ) {
+    $( "textarea" ).not('.td_evaluation textarea').each(function( index ) {
         if($(this).attr('required') == 'required' ) {
             if( $(this).val().length == 0 ) {
                 if( !$( this ).parent().find('.modal_form_group_danger').length) {

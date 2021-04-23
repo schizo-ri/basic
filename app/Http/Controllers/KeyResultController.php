@@ -7,8 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\KeyResult;
 use App\Models\Okr;
 use App\Models\Employee;
-use App\Mail\KeyResultProgressMail;
 use App\Mail\KeyResultMail;
+use App\Mail\KeyResultProgressMail;
+use App\Mail\KeyResultTaskReminderMail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ErrorMail;
 use Sentinel;
@@ -242,4 +243,23 @@ class KeyResultController extends Controller
 
         return "Uspješno spremljeno";
     }
+
+    public function reminderKeyResult ( Request $request ) 
+    {
+        $keyResult = KeyResult::find($request['keyResults_id']);
+
+        $employee_mail = null;
+        if (count($keyResult->hasTasks) > 0) {
+            foreach ($keyResult->hasTasks as $task ) {
+                if ( $task->employee ) {
+                    $employee_mail = $task->employee->email;
+                   /* $employee_mail = 'jelena.juras@duplico.hr'; */
+                    Mail::to($employee_mail)->send(new KeyResultTaskReminderMail( $task ));
+                }
+            }
+        }
+     
+        return "Podsjetnik je poslan";
+    }
+
 }

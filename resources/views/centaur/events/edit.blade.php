@@ -14,6 +14,11 @@
 			<input name="title" type="text" class="form-control" value="{{ $event->title }}" required>
 			{!! ($errors->has('title') ? $errors->first('title', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
+		<div class="form-group">
+			<label >Status</label>
+			<span><input type="radio" name="status" value="1" id="status1" {!! $event->status == 1 ? 'checked' : '' !!}  /><label for="status1"> @lang('basic.private')</label> </span>
+			<span><input type="radio" name="status" value="0" id="status0"  {!! $event->status == 0 ? 'checked' : '' !!}  /> <label for="status0">Duplico </label></span>
+		</div>
 		<div class="form-group datum {{ ($errors->has('prezime')) ? 'has-error' : '' }}">
 			<label>@lang('basic.date')</label>
 			<input name="date" type="date" class="form-control" value="{{  $event->date }}" required>
@@ -36,6 +41,7 @@
 			<textarea name="description" class="form-control" type="text" required >{{ $event->description }}</textarea>
 			{!! ($errors->has('description') ? $errors->first('description', '<p class="text-danger">:message</p>') : '') !!}
 		</div>
+		
 		<input name="type" type="hidden" value="{{ $type }}" id="event_type" />
 		{{ csrf_field() }}
 		@method('PUT')

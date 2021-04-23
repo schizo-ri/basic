@@ -2,9 +2,8 @@
 	<h3 class="panel-title">@lang('basic.add_customer')</h3>
 </div>
 <div class="modal-body">
-	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('customers.store') }}" enctype="multipart/form-data">
-		<fieldset>
-			<div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
+	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('customers.store') }}">
+		<fieldset>			<div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
 				<input class="form-control" placeholder="{{ __('basic.name')}}" name="name" type="text" maxlength="100" value="{{ old('name') }}" required />
 				{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
@@ -19,6 +18,10 @@
 			<div class="form-group {{ ($errors->has('oib')) ? 'has-error' : '' }}">
 				<input class="form-control" placeholder="{{ __('basic.oib')}}" name="oib" maxlength="20" type="text" value="{{ old('oib') }}" required />
 				{!! ($errors->has('oib') ? $errors->first('oib', '<p class="text-danger">:message</p>') : '') !!}
+			</div>
+			<div class="form-group {{ ($errors->has('representedBy')) ? 'has-error' : '' }}">
+				<input class="form-control" placeholder="{{ __('basic.director')}}" name="representedBy" maxlength="100" type="text" value="{{ old('representedBy') }}" required />
+				{!! ($errors->has('representedBy') ? $errors->first('representedBy', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
 			<div class="">
 				<label for="active_1">@lang('basic.active')</label>

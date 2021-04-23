@@ -55,9 +55,12 @@ class ImprovementRecommendationController extends Controller
 		
 		$improvementRecommendation = new ImprovementRecommendation();
         $improvementRecommendation->saveImprovementRecommendation($data);
-        
-        session()->flash('success',  __('ctrl.data_save'));
-		return redirect()->back();
+        $employee = $improvementRecommendation->employee;
+        $improvementRecommendations = $employee->hasImprovementRecommendation;
+        return $improvementRecommendations ;
+
+       /*  session()->flash('success',  __('ctrl.data_save'));
+		return redirect()->back(); */
     }
 
     /**
@@ -103,5 +106,16 @@ class ImprovementRecommendationController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getRecommendations ( Request $request) 
+    {
+        $improvementRecommendations = ImprovementRecommendation::where('employee_id', $request['employee_id'])->get();
+
+        foreach ($improvementRecommendations as $improvementRecommendation) {
+            $improvementRecommendation->mentor_name = $improvementRecommendation->isMentor ? $improvementRecommendation->isMentor->user->first_name . ' ' . $improvementRecommendation->isMentor->user->last_name : '';
+        }
+       
+        return $improvementRecommendations;
     }
 }

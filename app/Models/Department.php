@@ -17,6 +17,13 @@ class Department extends Model
 	];
 	
 	/*
+	* The Eloquent Department model name
+	* 
+	* @var string
+	*/
+	protected static $DepartmentModel = 'App\Models\Department'; 
+
+	/*
 	* The Eloquent company model name
 	* 
 	* @var string
@@ -64,6 +71,17 @@ class Department extends Model
 	public function employee()
 	{
 		return $this->belongsTo(static::$employeeModel,'employee_id');
+	}
+
+	/*
+	* Returns the company relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	*/
+	
+	public function roofLevel()
+	{
+		return $this->belongsTo(static::$DepartmentModel,'level2');
 	}
 	
 	/*
