@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://alteradvoco.myintranet.io'),
+    'url' => env('APP_URL', 'https://lib.myintranet.io'),
 
     'asset_url' => env('ASSET_URL', null),
 

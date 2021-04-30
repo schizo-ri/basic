@@ -173,6 +173,7 @@
                 </div>
             @endif
         @endif
+        
         @if (Sentinel::getUser()->employee )
             @if( Sentinel::getUser()->hasAccess(['energy_consumptions.view']) || in_array('energy_consumptions.view', $permission_dep) )
                 @if ( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasTask->where('energy_consumptions', 1)->where('active', 1) ) > 0  ) 

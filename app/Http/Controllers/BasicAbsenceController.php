@@ -651,7 +651,7 @@ class BasicAbsenceController extends Controller
 		}
 
 		// Računa broj radnih dana između dva datuma, ako je izlazak 
-		public static function daniGO( Request $zahtjev)
+		public static function daniGO(  $zahtjev)
 		{
 			$holidays = BasicAbsenceController::holidays();
 

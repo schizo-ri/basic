@@ -37,7 +37,7 @@ try {
     $('.template').on('change',function(){
         var template_id = $(this).val();
     
-        unlayer.loadTemplate(12187); 
+        unlayer.loadTemplate(16716); 
     });
 
     unlayer.addEventListener('design:updated', function(updates) {

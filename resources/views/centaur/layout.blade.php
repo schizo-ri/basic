@@ -165,7 +165,7 @@
 				// Enable pusher logging - don't include this in production
 				/* Pusher.logToConsole = true; */
 				var employee_id = $('#employee_id').text();
-				var pusher = new Pusher('4b20e15745cdd914985c', {
+				var pusher = new Pusher('e2a83c1f6169f1426069', {
 					cluster: 'eu'
 				});
 

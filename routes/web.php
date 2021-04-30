@@ -156,7 +156,7 @@ Route::resource('absence_types', 'AbsenceTypeController');
 // Absences
 Route::resource('absences', 'AbsenceController');
 Route::get('confirmation', ['as' => 'confirmation', 'uses' => 'AbsenceController@storeConf']); // Send absence confirmation mail
-Route::get('confirmation_update/{id}', ['as' => 'confirmation_update', 'uses' => 'AbsenceController@storeConf_update']);
+Route::get('confirmation_update', ['as' => 'confirmation_update', 'uses' => 'AbsenceController@storeConf_update']);
 Route::get('absence/confirmation_show', ['as' => 'confirmation_show', 'uses' => 'AbsenceController@confirmation_show']);// Open absence confirmation page
 Route::get('absence/absences_table', ['as' => 'absences_table', 'uses' => 'AbsenceController@absences_table']);
 Route::get('absence/absences_requests', ['as' => 'absences_requests', 'uses' => 'AbsenceController@absences_requests']);
