@@ -570,7 +570,7 @@ details .ocj {
 	transform: translateX(-50%);
 }
 
-th {
+.anketa  th {
 	text-align: center !important;
 /* 	font-size: 0.75rem; */
 }
@@ -5162,12 +5162,23 @@ span.hide, .preview_doc {
     height: auto;
     overflow-x: scroll;
     white-space: nowrap;
-
 }
 
 span.show i, span.show svg, span.hide i, span.hide svg {
     margin-left: 20px;
 } 
+.contract_name {
+    position: relative;
+}
+
+.contract_name span {
+    position: absolute;
+    line-height: 46px;
+    padding-left: 10px;
+}
+.modal .contract_name input[type=text] {
+    padding-left: 65px;
+}
 
 .header_document, .header_questionnaire {
     font-style: normal;
@@ -8649,8 +8660,10 @@ img{
 }
 
 table {
-	font-size: 0.875rem
+	font-size: 0.875rem;
+	min-width: 100%;
 }
+
 table thead tr {
 	font-size: 0.625rem;	
 }

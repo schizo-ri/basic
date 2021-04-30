@@ -14,5 +14,5 @@
     </form>
 </div>
 <script>
-    $.getScript('/../js/okr_store1.js');
+    $.getScript('/../js/okr.js');
 </script>

@@ -13,8 +13,10 @@ img{
 }
 
 table {
-	font-size: 0.875rem
+	font-size: 0.875rem;
+	min-width: 100%;
 }
+
 table thead tr {
 	font-size: 0.625rem;	
 }

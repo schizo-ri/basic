@@ -134,6 +134,7 @@ $(function() {
                 //$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 $(this).toggle($(this).hasClass(value));
             });
+           
             if(value == '') {
                 $(".show_event").show();
                 $(".month_event").show();
@@ -142,12 +143,14 @@ $(function() {
         
         $( ".change_car" ).on('change',function() {
             var value = $(this).val().toLowerCase();
-            $(".show_locco").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                
-            });
-            if(value == '') {
+           
+            if (value == '') {
                 $(".show_locco").show();
+            } else {
+                $(".show_locco").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    
+                });
             }
         });
         
@@ -206,8 +209,8 @@ $(function() {
             $('.main_calendar td>a').toggle();
             $('.main_calendar .show_event').toggle();
             $('.main_calendar .show_locco ').toggle();
-            $('.change_employee').toggle();
-            $('.change_car').toggle();
+            $('.filter_change_employee').toggle();
+            $('.filter_change_car').toggle();
 
         });
         

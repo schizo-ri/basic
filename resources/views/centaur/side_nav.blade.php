@@ -173,6 +173,16 @@
                 </div>
             @endif
         @endif
+        @if(in_array('Ugovori', $moduli))
+            @if(Sentinel::getUser()->hasAccess(['contracts.view']) || in_array('contracts.view', $permission_dep) )
+                <div class="">
+                    <a class="button_nav load_button contracts_button isDisabled {!! ! Sentinel::getUser()->employee ? 'not_employee' : '' !!}" href="{{ route('contracts.index') }}" title="{{ __('basic.contracts') }}">
+                        <span class="button_nav_img contracts"><i class="fas fa-file-contract"></i></span>
+                        <p class="button_nav_text">@lang('basic.contracts')</p>
+                    </a>	
+                </div>
+            @endif
+        @endif
         @if (Sentinel::getUser()->employee )
             @if( Sentinel::getUser()->hasAccess(['energy_consumptions.view']) || in_array('energy_consumptions.view', $permission_dep) )
                 @if ( Sentinel::inRole('administrator') || count(Sentinel::getUser()->employee->hasTask->where('energy_consumptions', 1)->where('active', 1) ) > 0  ) 

@@ -231,7 +231,7 @@ details .ocj {
 	transform: translateX(-50%);
 }
 
-th {
+.anketa  th {
 	text-align: center !important;
 /* 	font-size: 0.75rem; */
 }

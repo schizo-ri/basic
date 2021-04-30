@@ -17,7 +17,6 @@ $(function() {
         fadeDuration: null,     // Number of milliseconds the fade transition takes (null means no transition)
         fadeDelay: 0.5          // Point during the overlay's fade-in that the modal begins to fade in (.5 = 50%, 1.5 = 150%, etc.)
     };
-
     $('.btn-new:not(.create_notice), .add_new, a.create_user[rel="modal:open"], #add_event[rel="modal:open"], .oglasnik_button, .posts_button, .doc_button, .events_button').on('click',function(){
         $.modal.defaults = {
             closeExisting: false,    // Close existing modals. Set this to false if you need to stack multiple modal instances.
@@ -229,19 +228,8 @@ $(function() {
     });
     
     $('body').on($.modal.OPEN , function(event, modal) {
-            
-       /*  console.log("modal length" + $( ".modal" ).length);
-        $( ".modal" ).on('click',function( event ) {
-            if( event.target.rel != 'modal:close' ) {
-                console.log(event.target.nodeName);
-                console.log( "clicked: " + event.target.nodeName );
-                console.log(  event.target );
-                console.log(  event.target.rel );
-                console.log(  event.target.classList );
-            }
-        
-        });
- */
+        $.getScript('/../restfulizer.js');
+    
         $.getScript('/../select2-develop/dist/js/select2.min.js');
         selectSearchModal ();
     });
@@ -310,7 +298,5 @@ $(function() {
         return null;
         
     }
-
-
 
 }); 

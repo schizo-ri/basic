@@ -142,6 +142,6 @@ $( document ).ready(function() {
 		var end_date = $( "#end_date" );
 		end_date.val(start_date);
 	});
-	$.getScript('/../js/absence_create_new.js');
+	$.getScript('/../js/absence_create3.js');
 });
 </script>

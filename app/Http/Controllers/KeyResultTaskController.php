@@ -148,11 +148,12 @@ class KeyResultTaskController extends Controller
     public function edit($id)
     {
         $keyResultTask = KeyResultTask::find($id);
-       
+        $employee_ids = KeyResultTask::where('name', $keyResultTask->name )->get()->pluck('employee_id')->toArray();
+      
         $employees = Employee::employees_lastNameASCStatus(1);
         $keyResults = KeyResult::get();
 
-        return view('Centaur::key_result_tasks.edit', ['keyResults' => $keyResults,'employees' => $employees, 'keyResultTask' => $keyResultTask]);
+        return view('Centaur::key_result_tasks.edit', ['keyResults' => $keyResults,'employees' => $employees, 'employee_ids' => $employee_ids,'keyResultTask' => $keyResultTask]);
     }
 
     /**
@@ -165,17 +166,48 @@ class KeyResultTaskController extends Controller
     public function update(Request $request, $id)
     {
         $keyResultTask = KeyResultTask::find($id);
-
-        $data = array(
-			'employee_id'  	=> $request['employee_id'],
-			'keyresult_id'  => $request['keyresult_id'],
-			'name'  	    => $request['name'],
-			'comment'  		=> $request['comment'],
-			'end_date'  	=> $request['end_date'],
-			'progresss'  	=> $request['progresss'],
-		);
-			
-		$keyResultTask->updateKeyResultTask($data);
+        $keyResultTasks = KeyResultTask::where('keyresult_id', $keyResultTask->keyresult_id )->where('name', $keyResultTask->name )->get();
+        $ids = $keyResultTasks->pluck('employee_id');
+        if(  $request['employee_id'] && count( $request['employee_id'] )  > 0) {
+            foreach ( $request['employee_id'] as $employee_id) {
+                $task = $keyResultTasks->where('employee_id', $employee_id)->first();
+    
+                $data = array(
+                    'keyresult_id'  => $request['keyresult_id'],
+                    'employee_id'  	=> $employee_id,
+                    'name'  	    => $request['name'],
+                    'comment'  		=> $request['comment'],
+                    'end_date'  	=> $request['end_date'],
+                    'progresss'  	=> $request['progresss'] ? $request['progresss'] : '',
+                );
+    
+                if ( $task ) {
+                    $task->updateKeyResultTask($data);
+                } else {
+                    $task = new KeyResultTask();
+                    $task->saveKeyResultTask($data);
+                }
+            }
+        } else {
+            $data = array(
+                'keyresult_id'  => $request['keyresult_id'],
+                'employee_id'  	=> null,
+                'name'  	    => $request['name'],
+                'comment'  		=> $request['comment'],
+                'end_date'  	=> $request['end_date'],
+                'progresss'  	=> $request['progresss'] ? $request['progresss'] : '',
+            );
+            $keyResultTask->updateKeyResultTask($data);
+        }
+        if ( $ids &&  $request['employee_id']  ) {
+            foreach ($ids as $id) {
+                if ( ! in_array( $id, $request['employee_id'] )) {
+                  $task = $keyResultTasks->where('employee_id', $id )->first();
+                  $task->delete();
+                }
+              }
+        }
+       
 
         session()->flash('success',  __('ctrl.data_edit'));
 		

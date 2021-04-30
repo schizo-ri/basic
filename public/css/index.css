@@ -232,6 +232,7 @@ section.okrs .tabcontent {
     font-size: 0.875rem;
     font-weight: 600;
     overflow: hidden;
+   
 }
 
 .div_keyResults, .div_keyResultTasks{
@@ -483,7 +484,7 @@ main.index_main.locco_create_main>section >main {
     font-size: 0.75rem;
 }
 
-.index_main header {
+.index_main header:not(.contract_header) {
     width: 100%;
     height: 80px;
     min-height: 78px;
@@ -497,10 +498,63 @@ main.index_main.locco_create_main>section >main {
     overflow: hidden;
     display: flex;
 }
+.contract_preview {
+    padding: 20px;
+    font-size: 0.8275rem;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.contract_preview table {
+    font-size: 0.75rem;
+}
+.contract_preview th, .contract_preview td {
+    padding: 5px 10px;
+}
+.contract_preview td input[class^="counter"] {
+    width: auto;
+    margin-bottom: 5px;
+}
+.contract_preview h2 {
+    text-align: center;
+}
+.contract_preview .header_title {
+    margin: 30px 0;
+}
+.contract_preview  table .subject_name {
+    font-weight: bold;
+}
+.contract_preview input {
+    text-align: center;
+    width: auto;
+    border-color: #ccc;
+    background: aliceblue;
+}
+.contract_preview table input {
+    width: 100%;
+    text-align: left;
+}
+.signature {
+    height: 50px;
+    overflow: hidden;
+    border-bottom: 1px solid #ccc;
+    width: 200px;
+    margin: auto;
+}
+.contract_header .logo  {
+    padding: 0;
+    margin-bottom: 25px;
+}
+.contract_header .logo img {
+    min-width: 170px;
+}
 .admin_main .page-header {
     display: table;
 }
-
+.show_contract {
+    overflow: auto;
+    height: 100%;
+    position: relative;
+}
 .visibilyti_colums {
     font-size: 0.75rem;
     overflow: hidden;
@@ -1015,7 +1069,7 @@ img.doc_icons {
 .show_locco p {
     margin: 0;
 }
-.change_car {
+.filter_change_car {
     display: none;
 }
 .main_calendar_month .show_event div.event  {
@@ -1124,7 +1178,7 @@ img.doc_icons {
     display: inline-block;
     text-align: center;
     padding: 5px;
-    margin-right: 40px;
+    margin-right: 20px;
 }
 .notice_link {
     flex: 0 0 100%;
@@ -1167,18 +1221,19 @@ img.doc_icons {
 }
 
 .arrow img {
-    margin-right: 35px;
+    margin-right: 20px;
 }
 
 .header_calendar>div>span {
     float: left;
     display: block;
-    height: 50px;
-    line-height: 50px;
+    /* height: 50px; */
+    line-height: initial;
     padding: 0;
 }
 .header_calendar>div>span.arrow {
     padding: 0;
+    line-height: 50px;
 }
 
 .header_calendar_month>div>span, .header_calendar_week>div>span  {
@@ -1189,8 +1244,11 @@ img.doc_icons {
 }
 
 .header_calendar>div>span.month_year {
-    line-height: 50px;
     text-transform: capitalize;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
 .main_calendar_month table, .index_event_week table {
@@ -1258,7 +1316,7 @@ img.doc_icons {
 }
 .month_year {
     font-weight: 600;
-    font-size: 1.125rem;
+    font-size: 0.875rem;
     text-align: center;
     color: #071E57;
 }
@@ -2068,8 +2126,7 @@ table ul {
 }
 
 .select2-container:not( .index_absence .select2-container) {
-    min-width: fit-content;
-
+    min-width: unset;
 }
 
 .select2-container:not(.select2) { 
@@ -2189,6 +2246,12 @@ datalist option {
     max-width: 50%;
     padding: 0;
 }
+.filtercontainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0;
+}
 .index_table_filter div.div_select2, .filtercontainer div.div_select2 {
     width: auto;
     min-width: 80px;
@@ -2196,6 +2259,15 @@ datalist option {
     float: left;
     /* margin-right: 15px; */
     flex: none;
+}
+
+.filtercontainer div.div_select2 {
+    min-width: 80px;
+    max-width: 31%;
+    float: left;
+    padding: 0;
+    margin: 0;
+    padding-right: 10px;
 }
 #admin_page .index_table_filter div.div_select2, #admin_page .filtercontainer div.div_select2 {
     margin-left: 15px ;
@@ -2851,12 +2923,68 @@ span.hide, .preview_doc {
     height: auto;
     overflow-x: scroll;
     white-space: nowrap;
+}
 
+.form_contract {
+    max-width: 100%;
+    width: 600px;
+    margin: auto;
+    padding: 30px;
+    overflow: auto;
+    height: 100%;
+    font-size: 14px;
+    position: relative;
+}
+
+.form_contract  .form-control {
+    font-size: 14px;
+    width: 100%;
 }
 
 span.show i, span.show svg, span.hide i, span.hide svg {
     margin-left: 20px;
 } 
+.contract_name {
+    position: relative;
+}
+.main_create_contract {
+    height: 100%;
+    position: relative;
+}
+.contract_name span:not(.float_right) {
+    position: absolute;
+    line-height: 34px;
+    padding-left: 10px;
+}
+.modal .contract_name span {
+    line-height: 45px;
+}
+.contract_name span.float_right {
+    position: absolute;
+    line-height: 34px;
+    right: 10px;
+    top: 0;
+}
+.contract_title {
+    border: 1px solid #071e57;
+    box-shadow: 3px 3px 3px #071e57;
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+    background: #071e57;
+    color: white;
+}
+.subject_no {
+    text-align: center;
+}
+.contract_name input[type=text], .contract_name input[type=number]:not(.price),
+.modal .contract_name input[type=text], .modal .contract_name input[type=number]:not(.price)  {
+    padding-left: 65px;
+}
+
+.contract_name input.price, .contract_name input.price_col {
+   padding-right: 40px;
+}
 
 .header_document, .header_questionnaire {
     font-style: normal;
@@ -3275,7 +3403,15 @@ main.all_absences >section {
     padding: 0;
 
 }
-
+span.cursor.customer_confirme {
+    display: inline-block;
+    width: auto;
+    float: right;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px #ccc;
+}
 .check_all {
     font-size: 0.75rem;
     line-height: 38px;
@@ -3283,7 +3419,33 @@ main.all_absences >section {
     margin-left: 20px;
     cursor: pointer;
 }
-
+span.cursor {
+    padding-top: 10px;
+    color: #bbb;
+    width: 100%;
+    display: block;
+    text-align: right;
+}
+span.cursor.close_customer {
+    width: auto;
+    float: left;
+    font-size: 0.75rem;
+}
+.customer_form .submit_form {
+    width: auto;
+    height: 35px;
+    line-height: 35px;
+    background: #1594F0;
+    border-radius: 5px;
+    float: right;
+    font-weight: 600;
+    font-size: 0.6875rem;
+    text-align: center;
+    padding: 0 35px;
+    color: #FFFFFF;
+    border: none;
+    margin: 20px;
+}
 .info_abs>p>.go:not(:first-child), .info_abs>p>.bol:not(:first-child) {
     display: none;
 }
@@ -3736,12 +3898,11 @@ table.dataTable#index_table tbody td:last-child > a {
 }
 button.show_loccos {
     float: right;
-    line-height: 40px;
-    height: 40px;
+    line-height: 50px;
+    height: 50px;
     border: none;
     background: inherit;
-    margin: 5px 0;
-    margin-right: 15px;
+    outline: none;
     padding: 0 10px;
 }
  .change_view_calendar, .change_employee, .change_employee_work, .change_employee_afterhour, .change_car, .change_month, .change_month_afterhour{
@@ -4426,6 +4587,23 @@ a.modal_close {
     font-size: 0.875rem;
 }
 
+.customer_group, .location_group, .test_group {
+    display: none;
+    overflow: hidden;
+}
+
+.customer_group {
+    position: absolute;
+    top: 30px;
+    left: 10%;
+    right: 10%;
+    z-index: 1;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #ccc;
+    padding: 30px;
+}
+
 #style_items .form-group >div {
     display: flex;
     overflow: hidden;
@@ -4880,6 +5058,9 @@ p.eval_employee {
         height: 40px;
         line-height: 40px;
     }
+    .header_calendar>div>span.arrow {
+        line-height: 40px;
+    }
     .approve_buttons {
         margin-right: 0;
         padding: 3px 0;
@@ -4890,8 +5071,8 @@ p.eval_employee {
     }
     .header_calendar>div>span.month_year {
         height: 40px;
-        line-height: 40px;
-        font-size: 1rem;
+        line-height: initial;
+        font-size: 0.75rem;
     }
     .header_calendar span.orange, .header_calendar span.green, .header_calendar span.blue {
         display: block;
@@ -4903,12 +5084,24 @@ p.eval_employee {
         line-height: initial;
     }
     .arrow img {
-        margin-right: 20px;
+        margin-right: 10px;
+        height: 12px;
+    }
+    .select2-container:not( .index_absence .select2-container) {
+        min-width: inherit;
+    }
+    button.show_loccos {
+        line-height: 40px;
+        height: 40px;
     }
     .index_main header {
         padding: 10px 15px;
         min-height: 70px;
         height: 70px;
+    }
+    .index_main header.header_calendar {
+        min-height: 60px;
+        height: 60px;
     }
     .index_table_filter {
         padding: 5px 0;
@@ -4927,17 +5120,22 @@ p.eval_employee {
         padding: 0;
     }
     .header_calendar>div:nth-child(2) >span {
-        padding: 0;
+        padding: 0 1px;
         text-align: center;
         white-space: nowrap;
-        overflow: hidden;
         text-overflow: ellipsis;
+        display: flex;
+        flex-wrap: wrap;
+        align-self: center;
+        font-size: 0.6285rem;
+        justify-content: center;
     }
     .daycontainer {
         padding: 0;
     }
     .change_view_calendar {
         margin: 0;
+        height: 30px;
     }
     .header_ads>.filter>div:first-child {
         width: 40%;

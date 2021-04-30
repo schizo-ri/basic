@@ -26,6 +26,7 @@
 							<th>@lang('basic.address')</th>
 							<th>@lang('basic.city')</th>
 							<th>@lang('basic.oib')</th>
+							<th>@lang('basic.director')</th>
 							<th>@lang('basic.options')</th>
 						</tr>
 					</thead>
@@ -36,6 +37,7 @@
 								<td>{{ $customer->address }}</td>
 								<td>{{ $customer->city }}</td>
 								<td>{{ $customer->oib }}</td>
+								<td>{{ $customer->representedBy }}</td>
 								<td class="center">
 									@if(Sentinel::getUser()->hasAccess(['customers.update']) || in_array('customers.update', $permission_dep))
 										<a href="{{ route('customers.edit', $customer->id) }}" class="btn-edit"  title="{{ __('basic.edit')}}" rel="modal:open">
@@ -43,7 +45,7 @@
 										</a>
 									@endif
 									@if(Sentinel::getUser()->hasAccess(['customer_locations.create']) || in_array('customer_locations.create', $permission_dep))
-										<a href="{{ route('customer_locations.create',['customer_id' => $customer->id]) }}" class="btn-edit"  title="{{ __('basic.add_location')}}" rel="modal:open">
+										<a href="{{ route('customer_locations.show', $customer->id ) }}" class="btn-edit"  title="{{ __('basic.add_location')}}" rel="modal:open">
 											<i class="fas fa-map-marker-alt"></i>
 										</a>
 									@endif

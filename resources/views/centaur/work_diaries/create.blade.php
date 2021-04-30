@@ -80,7 +80,7 @@
 				</section>
 			</section>
 		@endfor
-		<div class="col-md-12 clear_l overflow_hidd padd_0 form-group time_group" >
+		<div class="col-md-12 clear_l clearfix overflow_hidd padd_0 form-group time_group" >
 			<div class="time {{ ($errors->has('start_time')) ? 'has-error' : '' }}" >
 				<label>@lang('absence.start_time')</label>
 				<input name="start_time" class="form-control" type="time" value="{!! old('start_time') ? old('start_time') : '00:00' !!}" required disabled >
@@ -91,12 +91,13 @@
 				<input name="end_time" class="form-control" type="time" value="{!! old('end_time') ? old('end_time') : '00:00' !!}" required disabled readonly>
 				{!! ($errors->has('end_time') ? $errors->first('end_time', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
-			<div class="form-group select_project {{ ($errors->has('project_overtime')) ? 'has-error' : '' }}">
+			<div class="form-group col-md-12 clear_l clearfix overflow_hidd select_project {{ ($errors->has('project_overtime')) ? 'has-error' : '' }}">
 				<label>Prekovremeni sati na projekt</label>
-				<select id="select_project_overtime" name="project_overtime" placeholder="Izaberi projekt..."  value="{{ old('project_overtime') }}" >
+				<select id="select_project_overtime" name="project_overtime" placeholder="Izaberi projekt..."  value="{{ old('project_overtime') }}" required >
 					@if(isset($projects_erp) && $projects_erp && count( $projects_erp ) > 0)
+						<option selected disabled></option>
 						@foreach ($projects_erp as $id => $project)
-							<option class="project_list" value="{{ $id }}" selected>{{ $project  }}</option>
+							<option class="project_list" value="{{ $id }}"  >{{ $project  }}</option>
 						@endforeach	
 					@endif
 				</select>
@@ -110,6 +111,6 @@
 
 <span hidden class="locale" >{{ App::getLocale() }}</span>
 <script>
-	$.getScript('/../js/absence_create_new.js');
+	$.getScript('/../js/absence_create3.js');
 
 </script>

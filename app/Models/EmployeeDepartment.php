@@ -76,7 +76,7 @@ class EmployeeDepartment extends Model
 		return EmployeeDepartment::join('employees','employees.id','employee_departments.employee_id')
 								 ->join('users','users.id','employees.user_id')
 								 ->join('departments','departments.id','employee_departments.department_id')
-								 ->select('employee_departments.*','employees.user_id','users.first_name','users.last_name','departments.name')
+								 ->select('employee_departments.*','employees.user_id','employees.checkout','users.first_name','users.last_name','departments.name')
 								 ->where('employees.checkout',null)
 								 ->orderBy('departments.name','ASC')
 								 ->orderBy('users.last_name','ASC')->get();

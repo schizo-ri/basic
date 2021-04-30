@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\CustomerLocation;
 
 class CustomerController extends Controller
 {
@@ -25,7 +26,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::where('active',1)->get();
+        $customers = Customer::orderBy('name','ASC')->where('active',1)->get();
 
 		return view('Centaur::customers.index', ['customers' => $customers]);
 
@@ -47,22 +48,65 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store( Request $request )
     {
-        $data = array(
-			'name'  		=> $request['name'],
-			'address'  		=> $request['address'],
-			'city'  		=> $request['city'],
-			'oib'  			=> $request['oib'],
-			'active'        => $request['active'],
-			'representedBy' => $request['representedBy'],
-		);
-		
-		$customer = new Customer();
-        $customer->saveCustomer($data);
-        
-        session()->flash('success',  __('ctrl.data_save'));
-		return redirect()->back();
+        if( $request['customer_name']) {
+            //unos iz ugovora
+            $data_customer = array(
+                'name'  		=> $request['customer_name'],
+                'address'  		=> $request['customer_address'],
+                'city'  		=> $request['customer_city'],
+                'oib'  			=> $request['customer_oib'],
+                'active'        => 1,
+                'representedBy' => $request['customer_representedBy'],
+            );
+            
+            $customer = new Customer();
+            $customer->saveCustomer($data_customer);
+
+            $data_location = array(
+                'customer_id'  	=> $customer->id,
+                'address'  		=> $customer->address,
+                'city'  		=> $customer->city,
+            );
+           
+            $customerLocation = new CustomerLocation();
+            $customerLocation->saveCustomerLocation($data_location);
+            
+            $data = array();
+            $data['customer_id'] =  $customer->id;
+            $data['locations'] =  $customer->hasLocations;
+
+            return $data;
+            /* session()->flash('success',  __('ctrl.data_save'));
+            return redirect()->route('contracts.index'); */
+        } else {
+            $data = array(
+                'name'  		=> $request['name'],
+                'address'  		=> $request['address'],
+                'city'  		=> $request['city'],
+                'oib'  			=> $request['oib'],
+                'active'        => isset($request['active']) ? $request['active'] : 1,
+                'representedBy' => $request['representedBy'],
+            );
+            
+            $customer = new Customer();
+            $customer->saveCustomer($data);
+           
+            if( $request['location']) {
+                $data = array(
+                    'customer_id'  	=> $customer->id,
+                    'address'  		=> $customer->address,
+                    'city'  		=> $customer->city,
+                );
+               
+                $customerLocation = new CustomerLocation();
+                $customerLocation->saveCustomerLocation($data);
+            }
+          
+            session()->flash('success',  __('ctrl.data_save'));
+            return redirect()->back();
+        }
     }
 
     /**

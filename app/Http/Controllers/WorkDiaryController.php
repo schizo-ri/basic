@@ -185,10 +185,9 @@ class WorkDiaryController extends Controller
                         $project = $erp_id ? Project::where('erp_id', $erp_id)->first() : null;
                         $project_id_overtime = $project ? $project->id : null;
                     }
-                    if( $project_id_overtime ==  $workDiary->project_id) {
+                    if( $project_id_overtime == $workDiary->project_id) {
                         $project_overtime = $workDiary;
                     }
-
                 }
                 foreach ( $request['task_id'][$proj_key] as $key => $task_id ) {
                     if($request['time'][$proj_key][$key] != null && $request['time'][$proj_key][$key] != '' && $request['time'][$proj_key][$key] != '00:00') {
@@ -209,19 +208,19 @@ class WorkDiaryController extends Controller
             }
             
            
-            if( in_array('Prekovremeni', $this->moduli)  ) {
-                
-                $afterhours =  $seconds - 28800;
-                $send_afterhourRequest = '';
-                Log::info('Dnevnik - prekovremeni' . $workDiary->employee->user->last_name . ' prekovremeni ' . $afterhours );
-                Log::info('project_overtime:' );
-                Log::info($project_overtime );
-                if( $afterhours > 0 && $project_overtime) {
-                    $send_afterhourRequest = AfterhourController::storeAfterHour( $project_overtime );
-                } 
-                session()->flash('success', __('ctrl.data_save') . " Spremljeno je ukupno " .  gmdate("H:i:s", $seconds)  . ' sati rada. ' . $send_afterhourRequest);
+            /* if( in_array('Prekovremeni', $this->moduli)  ) { */
+            
+            $afterhours =  $seconds - 28800;
+            $send_afterhourRequest = '';
+            Log::info('Dnevnik - prekovremeni' . $workDiary->employee->user->last_name . ' prekovremeni ' . $afterhours );
+            Log::info('project_overtime:' );
+            Log::info($project_overtime );
+            if( $afterhours > 0 && $project_overtime) {
+                $send_afterhourRequest = AfterhourController::storeAfterHour( $project_overtime );
+            } 
+            session()->flash('success', __('ctrl.data_save') . " Spremljeno je ukupno " .  gmdate("H:i:s", $seconds)  . ' sati rada. ' . $send_afterhourRequest);
 
-            }
+           /*  } */
            
             session()->flash('success', __('ctrl.data_save') );
           

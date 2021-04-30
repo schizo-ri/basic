@@ -30,10 +30,10 @@ mix.styles([
     'public/css/travel_show.css',
     'public/css/welcome.css',
     
-], 'public/css/css.css');
+], 'public/css/all_css1.css');
 mix.scripts([
     'public/js/absence.js',
-    'public/js/absence_create_new.js',
+    'public/js/absence_create3.js',
     'public/js/ads.js',
     'public/js/benefit.js',
     'public/js/calendar.js',
@@ -88,6 +88,6 @@ mix.scripts([
     'public/js/validate_user.js',
     'public/js/validate_user_edit.js',
     'public/js/work_records.js',
-], 'public/js/js.js');
+], 'public/js/all_js1.js');
 
 /* mix.js('resources/assets/laravel-echo-setup.js', 'public/js'); */

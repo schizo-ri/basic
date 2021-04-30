@@ -3,7 +3,8 @@
 </div>
 <div class="modal-body">
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('customers.store') }}">
-		<fieldset>			<div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
+		<fieldset>
+			<div class="form-group {{ ($errors->has('name')) ? 'has-error' : '' }}">
 				<input class="form-control" placeholder="{{ __('basic.name')}}" name="name" type="text" maxlength="100" value="{{ old('name') }}" required />
 				{!! ($errors->has('name') ? $errors->first('name', '<p class="text-danger">:message</p>') : '') !!}
 			</div>
@@ -28,6 +29,10 @@
 				<input name="active" type="radio" id="active_1" value="1" checked />
 				<label for="active_0">@lang('basic.inactive')</label>
 				<input  name="active" type="radio" id="active_0" value="0" />
+			</div>
+			<div class="">
+				<label for="addLocation">@lang('basic.add_location')</label>
+				<input name="location" type="radio" id="addLocation" value="1"  />
 			</div>
 			{{ csrf_field() }}
 			<input class="btn-submit" type="submit" value="{{ __('basic.save')}}">

@@ -248,12 +248,15 @@ class KeyResultController extends Controller
     {
         $keyResult = KeyResult::find($request['keyResults_id']);
 
-        $employee_mail = null;
         if (count($keyResult->hasTasks) > 0) {
             foreach ($keyResult->hasTasks as $task ) {
                 if ( $task->employee ) {
-                    $employee_mail = $task->employee->email;
-                   /* $employee_mail = 'jelena.juras@duplico.hr'; */
+                    if( $this->test_mail ) {
+                        $employee_mail = 'jelena.juras@duplico.hr';
+                    } else { 
+                        $employee_mail = $task->employee->email;
+                    }
+                    Log::info("reminder KeyResult " .  $employee_mail);
                     Mail::to($employee_mail)->send(new KeyResultTaskReminderMail( $task ));
                 }
             }

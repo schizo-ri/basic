@@ -52,7 +52,17 @@ class CustomerLocationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = array(
+			'customer_id'  	=> $request['customer_id'],
+			'address'  		=> $request['address'],
+			'city'  		=> $request['city'],
+		);
+
+		$customerLocation = new CustomerLocation();
+        $customerLocation->saveCustomerLocation($data);
+        
+        session()->flash('success',  __('ctrl.data_save'));
+		return redirect()->back();
     }
 
     /**
@@ -63,7 +73,14 @@ class CustomerLocationController extends Controller
      */
     public function show($id)
     {
-        //
+        $locations = null; 
+        $customer = Customer::find($id);
+
+        if( $customer ) {
+            $locations =  $customer->hasLocations;
+        }
+
+        return view('Centaur::customer_locations.show', ['locations' => $locations, 'customer' => $customer]);
     }
 
     /**
@@ -76,7 +93,7 @@ class CustomerLocationController extends Controller
     {
         $customer_location = CustomerLocation::find($id);
 
-        return view('Centaur::customers.create', ['customer_location' => $customer_location]);
+        return view('Centaur::customer_locations.edit', ['customer_location' => $customer_location]);
     }
 
     /**
@@ -88,7 +105,17 @@ class CustomerLocationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $customer_location = CustomerLocation::find($id);
+
+        $data = array(
+			'address'  		=> $request['address'],
+			'city'  		=> $request['city'],
+		);
+
+        $customer_location->updateCustomerLocation($data);
+        
+        session()->flash('success',  __('ctrl.data_edit'));
+		return redirect()->back();
     }
 
     /**
@@ -99,6 +126,18 @@ class CustomerLocationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $customer_location = CustomerLocation::find($id);
+        $customer_location->delete();
+
+        session()->flash('success',  __('ctrl.data_delete'));
+		return redirect()->back();
+    }
+
+    public function getCustomerLocation (Request $request) 
+    {
+        $customer = Customer::find($request['customer_id']);
+        $locations = $customer ? $customer->hasLocations : null;
+
+        return $locations;
     }
 }

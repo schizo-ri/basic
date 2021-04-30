@@ -55,7 +55,7 @@ function storeOkr () {
                         
                     }
                    
-                    $.getScript('/../js/okr1.js', function() {
+                    $.getScript('/../js/okr.js', function() {
                         open_element;
                     });
                 });

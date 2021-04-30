@@ -95,6 +95,11 @@
                         <a href="{{ route('projects.index') }}" class="line_height_45 admin_link {{ Request::is('projects*') ? 'active_admin' : '' }}" id="projects">@lang('basic.projects')</a>
                     </li>
                 @endif
+                @if(Sentinel::getUser()->hasAccess(["contracts.view"]))
+                    <li class="first_group project_links"><span class="space" ></span> 
+                        <a href="{{ route('contracts.index') }}" class="line_height_45 admin_link {{ Request::is('contracts*') ? 'active_admin' : '' }}" id="contracts">@lang('basic.contracts')</a>
+                    </li>
+                @endif
                 @if(Sentinel::getUser()->hasAccess(["customers.view"]))
                     <li class="first_group project_links"><span class="space" ></span> 
                         <a href="{{ route('customers.index') }}" class="line_height_45 admin_link {{ Request::is('customers*') ? 'active_admin' : '' }}" id="customers">@lang('basic.customers')</a>

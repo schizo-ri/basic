@@ -37,24 +37,31 @@ $(function(){
 	var bool;
 	var select_projects;
 	var select_tasks;
+	var work_tasks;
 	var id_parent;
-	
+	var select_project_overtime;
+
 	$('.btn-submit').on('click',function(){
 		$( this ).hide();
 	});
-	
 	$('input').on('change',function(){
 		$('.btn-submit').show();
 	});
-
 	$('select').on('change',function(){
 		$('.btn-submit').show();
 	});
-
+	$('#select_project1').on('change',function(){
+		$( this ).css('border-color','#F0F4FF');
+	});
+	$('#select_task1').on('change',function(){
+		$( this ).css('border-color','#F0F4FF');
+	});
+	$('#select_project_overtime').on('change',function(){
+		$( this ).css('border-color','#F0F4FF');
+	});
 	$('textarea').on('change',function(){
 		$('.btn-submit').show();
 	});
-
 	$('.show_button').on('click',function () {
 		$('.dt-buttons').show();
 	});
@@ -262,27 +269,55 @@ $(function(){
 
 	if($('form.form_afterhour').length > 0 || $('form.form_work_diary').length > 0) {
 		$('.btn-submit').on('click',function(e) {
-			start_date = $( "#date" ).val();
-			end_time = $("input[name=end_time]").val() + ':00';
-			console.log("end_time1 " +end_time);
-			if( end_time == '00:00:00') {
-				if( h == undefined ) {
-					end_time = '15:00:00';
-				} else {
-					end_time = (h.toString().length == 1 ? '0'+h.toString() : h) + ':'+ m + ':00';
-				}
-			}
-			
-			console.log("end_time2 " +end_time);
-			StartDate = new Date(start_date + ' ' + end_time);
-			console.log( date );
-			console.log(StartDate);
-			bool = (date >= StartDate);
-			console.log(bool);
-
-			if( StartDate != 'Invalid Date' && ! bool ) {
+		
+			select_projects = $('#select_project1').val();
+			select_tasks = $('#select_task1').val();
+			select_project_overtime = $('#select_project_overtime').val();
+			if( select_projects == null || select_tasks == null  ) {
 				e.preventDefault();
-				alert ("Nemoguće je poslati zahtjev unaprijed! ")
+				if(select_projects == null) {
+					$('#select_project1').css('border-color','red');
+				}
+				if(select_tasks == null) {
+					$('#select_task1').css('border-color','red');
+				}
+				alert ("Nije moguće spremiti zahtjev bez odabranog projekta i zadatka");
+			} else {
+				console.log("total_minute " + total_minute);
+				if ( total_minute == 0 || total_minute == null) {
+					e.preventDefault();
+					$('.btn-submit').hide();
+					alert ('Nemoguće poslati zahtjev bez upisanog vremena!');
+				}
+				console.log("select_project_overtime " + select_project_overtime);
+				if( total_minute > (8*60) && ( select_project_overtime == null || select_project_overtime == undefined) ) {
+					e.preventDefault();
+					$('#select_project_overtime').css('border-color','red');
+					$('.btn-submit').hide();
+					alert ("Nije moguće spremiti zahtjev bez odabranog projekta na prekovremenim satima");
+					
+				}
+				start_date = $( "#date" ).val();
+				end_time = $("input[name=end_time]").val() + ':00';
+				console.log("end_time1 " +end_time);
+				
+				if( end_time == '00:00:00') { 
+					if( h == undefined ) {
+						end_time = '15:00:00';
+					} else {
+						end_time = (h.toString().length == 1 ? '0'+h.toString() : h) + ':'+ m + ':00';
+					}
+				} else {
+
+				}
+				
+				StartDate = new Date(start_date + ' ' + end_time);
+				bool = (date >= StartDate);
+	
+				if( StartDate != 'Invalid Date' && ! bool ) {
+					e.preventDefault();
+					alert ("Nemoguće je poslati zahtjev unaprijed! ");
+				}
 			}
 		});
 
@@ -320,7 +355,6 @@ $(function(){
 		});
 	}
 
-
 	function select_project () {
 		$('select[id^="select_project"]').on('change', function(){
 			parent = $(this).parent().parent();
@@ -345,11 +379,8 @@ $(function(){
 						workDiaryItem = data.workDiaryItem;
 						project_id = data.project_id;
 						console.log(workDiaryItem);
-						console.log(workDiaryItem);
 						$.each(ProjectTasks, function( id, ProjectTask ) {
-							
 							total_time = 0;
-
 							$.each( workDiaryItem[ProjectTask.task_id], function( key, item ) {
 								time = item.time;
 								timeParts = time.split(":");
@@ -394,34 +425,40 @@ $(function(){
 
 	function getProjectEmpl ( employee_id, start_date ) {
 		url = location.origin + '/getProject';
-	
-		$.ajax({
-			url: url,
-			type: "get",
-			data:  { employee_id: employee_id, start_date: start_date },
-			success: function( projects ) {
-				console.log(projects);
-				if($.map(projects, function(n, i) { return i; }).length > 0 ) {
-					projectElement(projects);
+		try {
+			$.ajax({
+				url: url,
+				type: "get",
+				data:  { employee_id: employee_id, start_date: start_date },
+				success: function( projects ) {
+					console.log(projects);
+					$('.btn-submit').show();
+					if($.map(projects, function(n, i) { return i; }).length > 0 ) {
+						projectElement(projects);
+					}
+				},
+				error: function(jqXhr, json, errorThrown) {
+					alert ('Nema zapisanih projekata!');
+					$('.btn-submit').hide();
 				}
-			},
-			error: function(jqXhr, json, errorThrown) {
-				console.log(jqXhr);
-				console.log(json);
-				console.log(errorThrown);
-			}
-		}); 
+			}); 
+		} catch (error) {
+			alert ('Nema zapisanih projekata!');
+			$('.btn-submit').hide();
+		}
+		
 	}
 	
 	function getTasksEmpl ( employee_id, start_date, project, parent )	{
 		url = location.origin + '/getTasks';
-	/* 	console.log('getTasksEmpl: ' + 'employee_id '+employee_id + ' start_date '+start_date+ ' project '+project); */
+		/* 	console.log('getTasksEmpl: ' + 'employee_id '+employee_id + ' 	start_date '+start_date+ ' project '+project); */
 		$.ajax({
 			url: url,
 			type: "get",
 			data:  { employee_id: employee_id, start_date: start_date, project:project },
 			success: function( tasks ) {
-			/* 	console.log(tasks); */
+				$('.btn-submit').show();
+				console.log(tasks);
 				if($.map(tasks, function(n, i) { return i; }).length > 0 ) {
 					tastElement(tasks, parent);
 				} else {
@@ -429,9 +466,8 @@ $(function(){
 				}
 			},
 			error: function(jqXhr, json, errorThrown) {
-				console.log(jqXhr);
-				console.log(json);
-				console.log(errorThrown);
+				alert ('Nema zapisanih zadataka na projektu, nemoguće poslati zahtjev!');
+				$('.btn-submit').hide();
 			}
 		}); 
 	}
@@ -515,7 +551,6 @@ $(function(){
 			} 
 		});
 	}
-
 	
 	$('.add_project').on('click',function(){
 		$('section.project:hidden').first().show();
@@ -572,7 +607,7 @@ $(function(){
 				$( this ).parent().find('textarea').prop('required', false);
 			}
 			total_minute = 0;
-			end_time_minute=0;
+			end_time_minute= 0;
 			start_time = $('input[name=start_time]').val();
 			
 			$( "input.task_time[type=time]" ).each(function( index, element ) {
@@ -588,17 +623,18 @@ $(function(){
 					}
 				}
 			});
-		
+			
 			if(total_minute > (8*60) ) {
 				$('.time_group').show();
 				$('.error-modal').remove();
 				$('.time_group').append('<p class="alert error-modal">Upisano je vrijeme veće od 8 radnih sati. Obavezan upis vremena za prekovremeni rad!</p>');
 				
 				$('.time_group').find('input').attr('disabled',false);
+				$('.time_group').find('select').attr('disabled',false);
 				project = $('section.project:visible').last().find('section').find('.select_project').find('select').val();
-			
-				$('.time_group .select_project select').find('option[value='+project+']').prop('selected',true);
-
+				console.log(project);
+				/* $('.time_group .select_project select').find('option[value='+project+']').prop('selected',true); */
+				
 				if( start_time == '00:00') {
 					$('input[name=start_time]').val('15:00');
 					start_time = $('input[name=start_time]').val();
@@ -617,6 +653,7 @@ $(function(){
 			} else {
 				$('.time_group').hide();
 				$('.time_group').find('input').attr('disabled',true);
+				$('.time_group').find('select').attr('disabled',true);
 				$('.time_group p.alert').remove();
 			}
 		});

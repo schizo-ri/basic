@@ -17,12 +17,10 @@ if( $( '.section_okr' ).length > 0 ) {
     var status;
 
     $('.hover_open_comment ').on('mouseenter', function() {
-        console.log("hover_open_comment");
         console.log($( this ).find('.okr_comments').length);
         if( $( this ).find('.okr_comments').length > 0 )
             $( this ).find('.okr_comments').show();
      }).on('mouseleave', function() {
-        console.log("hover_hide_comment");
         if( $( this ).find('.okr_comments').length > 0 )
             $( this ).find('.okr_comments').hide();
      });

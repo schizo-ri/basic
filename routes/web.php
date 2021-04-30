@@ -277,6 +277,7 @@ Route::resource('customers', 'CustomerController');
 
 // Customer
 Route::resource('customer_locations', 'CustomerLocationController');
+Route::get('getCustomerLocation', ['as' => 'getCustomerLocation', 'uses' => 'CustomerLocationController@getCustomerLocation']);
 
 // EnergyLocation
 Route::resource('energy_locations', 'EnergyLocationController');
@@ -463,3 +464,16 @@ Route::get('getRecommendations', ['as' => 'getRecommendations', 'uses' => 'Impro
 // WorkCorrecting
 Route::resource('work_correctings', 'WorkCorrectingController');
 Route::get('confirmationWorkCorrecting', ['as' => 'confirmationWorkCorrecting', 'uses' => 'WorkCorrectingController@storeConf']);
+
+// Contract
+Route::resource('contracts', 'ContractController');
+Route::get('getConctract', ['as' => 'getConctract', 'uses' => 'ContractController@getConctract']);
+
+// Contract
+Route::resource('contract_subjects', 'ContractSubjectController');
+
+// ContractArticle
+Route::resource('contract_articles', 'ContractArticleController');
+
+// ContractTemplate
+Route::resource('contract_templates', 'ContractTemplateController');

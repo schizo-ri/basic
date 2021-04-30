@@ -27,33 +27,39 @@
 						<img class="img_button day_after" src="{{ URL::asset('icons/arrow_right.png') }}" alt="arrow"/>
 					</span>
 					<span class="month_year">
-						{{ $selected['month'] .' ' .  $selected['god_select'] . ', ' . __('calendar.wk') . ' ' .  $selected['tj_select'] }}
+						{{ $selected['month'] .' ' .  $selected['god_select'] }}<br> {{ __('calendar.wk') . ' ' .  $selected['tj_select'] }}
 					</span>
 				</div>
-				<div class="col-4 float_left padd_0 event_container">
+				<div class="col-3 float_left padd_0 event_container">
 					<span class="meeting col-4"><span class="blue"></span>@lang('basic.meeting')<span>{{ $count_days['dani_event'] }}</span></span>
 					<span class="tasks col-4"><span class="orange"></span>@lang('basic.birthdays')<span>{{ $count_days['dani_rodjendani'] }}</span></span>
 					<span class="on_vacation col-4"><span class="green"></span>@lang('absence.absences')<span>{{ $count_days['dani_odmor'] }}</span></span>
 				</div>
-				<div class="col-4 float_left filtercontainer" >
-					<select class="change_view_calendar select_filter col-4">
-						<option value="month" selected>@lang('basic.view_monthly')</option>
-						<option value="week">@lang('basic.view_weekly')</option>
-						<option value="day">@lang('basic.view_daily')</option>
-						<option value="list" >@lang('basic.view_list')</option>
-					</select>
-					<select class="change_employee select_filter col-4">
-						<option value="" selected>{{ __('basic.view_all')}} </option>
-						@foreach ($employees as $employee)
-							<option value="empl_{{ $employee->id }}">{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}</option>
-						@endforeach
-					</select>
-					<select class="change_car col-4">
-						<option value="" selected>{{ __('basic.view_all') }}</option>
-						@foreach ($cars as $car)
-							<option value="{{ $car->registration }}">{{ $car->registration }}</option>
-						@endforeach
-					</select>
+				<div class="col-5 float_left filtercontainer" >
+					<div class="div_select2 col-3">
+						<select class="change_view_calendar select_filter">
+							<option value="month" selected>@lang('basic.view_monthly')</option>
+							<option value="week">@lang('basic.view_weekly')</option>
+							<option value="day">@lang('basic.view_daily')</option>
+							<option value="list" >@lang('basic.view_list')</option>
+						</select>
+					</div>
+					<div class="div_select2 filter_change_employee col-3">
+						<select class="change_employee select_filter ">
+							<option value="" selected>{{ __('basic.view_all')}} </option>
+							@foreach ($employees as $employee)
+								<option value="empl_{{ $employee->id }}">{{ $employee->user['first_name'] . ' ' . $employee->user['last_name'] }}</option>
+							@endforeach
+						</select>
+					</div>
+					<div class="div_select2 filter_change_car col-3">
+						<select class="change_car select_filter">
+							<option value="" selected>{{ __('basic.view_all') }}</option>
+							@foreach ($cars as $car)
+								<option value="{{ $car->registration }}">{{ $car->registration }}</option>
+							@endforeach
+						</select>
+					</div>
 					<button class="show_loccos col-2"><i class="fas fa-car"></i></button>
 				</div>
 			</header>

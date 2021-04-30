@@ -45,47 +45,81 @@ class OkrController extends Controller
         $employee_key_results = null;
         $employee_key_result_tasks = null;
         $annualGoals = AnnualGoal::where('year', date('Y'))->get();
-        $employees = Okr::allEmployeeOnOKRs();
+        $employees = Okr::allEmployeeOnOKRs();  // svi djelatnici na okr-ovima
 
-        if( isset($request['status'] ) ) {
-            if( $request['status'] == 'finished' ) {
-                $okrs = Okr::where('progress', 100)->with('hasKeyResults')->get();
-                $keyResults = KeyResult::where('progress', 100)->get();
-                $keyResultTasks = KeyResultTask::where('progress', 100)->get();
-            } else if($request['status'] == 'unfinished' ) {
-                $okrs =  Okr::where('progress', '<>', 100)->with('hasKeyResults')->get();
-                $keyResults = KeyResult::where('progress', '<>', 100)->get();
-                $keyResultTasks = KeyResultTask::where('progress', '<>', 100)->get();
-            } else if($request['status'] == 'all' ) {
-                $okrs = Okr::with('hasKeyResults')->get();
-                $keyResults = KeyResult::get();
-                $keyResultTasks = KeyResultTask::get();
-            }
-        } else {
-            $okrs = Okr::where('progress', '<>', 100)->with('hasKeyResults')->get();
-            $keyResults = KeyResult::get();
-            $keyResultTasks = KeyResultTask::get();
-        }
-        
-        if( isset($request['tim'] ) ) {
-            if( $request['tim'] == 'tim' ) {
-                $okrs = $okrs->where('status', 1);
-            }
-            if( $request['tim'] == 'duplico' ) {
-                $okrs = $okrs->where('status', 0);
-            }
-        }
-        if( $okrs ) {
-            
-        }
+        $okrs = Okr::with('hasKeyResults')->get();
+        $keyResults = KeyResult::get();
+        $keyResultTasks = KeyResultTask::get();
+
         $unique_dates =  $okrs->pluck('start_date')->unique()->toArray();
-        
         $quarters = array();
         foreach ($unique_dates as $date) {
-            array_push($quarters,  'Q'.ceil(date("n", strtotime(date($date))) / 3) .' - '. date("Y", strtotime(date($date)))  );
+            array_push($quarters,  'Q'.ceil(date("n", strtotime(date($date))) / 3) .'-'. date("Y", strtotime(date($date)))  );
         }
-        $this_quarter = 'Q'.ceil(date("n", strtotime(date('Y-m-d'))) / 3) .' - '. date("Y", strtotime(date('Y-m-d'))) ;
+        $this_quarter = 'Q'.ceil(date("n", strtotime(date('Y-m-d'))) / 3) .'-'. date("Y", strtotime(date('Y-m-d')));
 
+        if( isset($request['status'] ) && $request['status'] != 'all' ) {
+            if( $request['status'] == 'finished' ) {
+                $okrs = $okrs->where('progress', 100);
+                $keyResults =  $keyResults->where('progress', 100);
+                $keyResultTasks = $keyResultTasks->where('progress', 100);
+            } else if($request['status'] == 'unfinished' ) {
+                $okrs = $okrs->where('progress', '<>', 100);
+                $keyResults = $keyResults->where('progress', '<>', 100);
+                $keyResultTasks = $keyResultTasks->where('progress', '<>', 100);
+            } 
+        } 
+      
+        if( isset($request['tim'] ) && $request['tim'] != 'all') {
+            
+            if( $request['tim'] == 'tim' ) {
+                $status = array(1);
+                $okrs = $okrs->whereIn('status', $status);
+                $keyResults = $keyResults->filter(function ($keyResult, $key) use ($status) {
+                    return $keyResult->okr->status == $status;
+                });
+                $keyResultTasks = $keyResultTasks->filter(function ($keyResultTask, $key) use ($status)  {
+                    return $keyResultTask->keyResult->okr->status == $status;
+                });
+            }
+            if( $request['tim'] == 'duplico' ) {
+                $status = array(0);
+                $okrs = $okrs->whereIn('status', $status);
+                $keyResults = $keyResults->filter(function ($keyResult, $key) use ($status) {
+                    return $keyResult->okr->status == $status;
+                });
+                $keyResultTasks = $keyResultTasks->filter(function ($keyResultTask, $key) use ($status) {
+                    return $keyResultTask->keyResult->okr->status == $status;
+                });
+            }
+        } else {
+            $status = array(0, 1);
+        }
+     
+        if( isset( $request['quarter'] ) && $request['quarter']  !='all' ) {
+            $okrs = $okrs->filter(function ($okr, $key) use ( $request)  {
+                return 'Q'.ceil(date("n", strtotime(date($okr->start_date))) / 3) .'-'. date("Y", strtotime(date($okr->start_date))) == $request['quarter'];
+            });
+            $keyResults = $keyResults->filter(function ($keyResult, $key) use ( $request )  {
+                return 'Q'.ceil(date("n", strtotime(date($keyResult->end_date))) / 3) .'-'. date("Y", strtotime(date($keyResult->end_date))) == $request['quarter'];
+            });
+            $keyResultTasks = $keyResultTasks->filter(function ($keyResultTask, $key) use ( $request )  {
+                return 'Q'.ceil(date("n", strtotime(date($keyResultTask->end_date))) / 3) .'-'. date("Y", strtotime(date($keyResultTask->end_date))) == $request['quarter'];
+            });
+        } else {
+            if( $request['quarter']  !='all' ) {
+                $okrs = $okrs->filter(function ($okr, $key) use ( $this_quarter )  {
+                    return 'Q'.ceil(date("n", strtotime(date($okr->start_date))) / 3) .'-'. date("Y", strtotime(date($okr->start_date))) == $this_quarter;
+                });
+                $keyResults = $keyResults->filter(function ($keyResult, $key) use ( $this_quarter )  {
+                    return 'Q'.ceil(date("n", strtotime(date($keyResult->end_date))) / 3) .'-'. date("Y", strtotime(date($keyResult->end_date))) == $this_quarter;
+                });
+                $keyResultTasks = $keyResultTasks->filter(function ($keyResultTask, $key) use ( $this_quarter )  {
+                    return 'Q'.ceil(date("n", strtotime(date($keyResultTask->end_date))) / 3) .'-'. date("Y", strtotime(date($keyResultTask->end_date))) == $this_quarter;
+                });
+            }
+        }
+       
         $user = Sentinel::getUser();
         $employee = $user->employee;
         if( $employee ) {
@@ -96,13 +130,44 @@ class OkrController extends Controller
             } else {
                 if( $request['status'] == 'finished' ) {
                     $employee_key_results = KeyResult::where('employee_id', $employee->id )->where('progress', 100)->get();
-                    $employee_key_result_tasks = KeyResultTask::where('employee_id', $employee->id )->where('progress', 100)->get();
+                    $employee_key_result_tasks = KeyResultTask::where('employee_id', $employee->id )->get();
                 } else if($request['status'] == 'unfinished' ) {
                     $employee_key_results = KeyResult::where('employee_id', $employee->id )->where('progress', '<>', 100)->get();
-                    $employee_key_result_tasks = KeyResultTask::where('employee_id', $employee->id )->where('progress', '<>', 100)->get();
+                    $employee_key_result_tasks = KeyResultTask::where('employee_id', $employee->id )->get();
                 } 
             }
         } 
+        
+        if( isset( $request['employee'] ) && $request['employee'] != 'all' ) {
+            $okrs = $okrs->where('employee_id', $request['employee']);
+            $keyResults = $keyResults->where('employee_id', $request['employee']);
+            $keyResultTasks = $keyResultTasks->where('employee_id', $request['employee']);
+            if( count( $keyResults ) > 0) {
+                foreach ($keyResults as $keyResult) {
+                    if ( in_array($keyResult->okr->status, $status) ) {
+                        $okr_id = $keyResult->okr->id;
+                        if( ! $okrs->find($okr_id) ) {
+                            $okrs = $okrs->push( $keyResult->okr ); 
+                        }
+                    }
+                }
+            }
+            if( count( $keyResultTasks ) > 0) {
+                foreach ($keyResultTasks as $keyResultTask) {
+                    $keyResult_id = $keyResultTask->keyResult->id;
+                  
+                    if ( in_array( $keyResultTask->keyResult->okr->status, $status) ) {
+                        $okr_id = $keyResultTask->keyResult->okr->id;
+                        if( ! $okrs->find($okr_id) ) {
+                            $okrs = $okrs->push( $keyResultTask->keyResult->okr ); 
+                        }
+                        if( ! $keyResults->find($keyResult_id) ) {
+                            $keyResults = $keyResults->push( $keyResultTask->keyResult); 
+                        }
+                    }
+                }
+            }
+        }
 
         return view('Centaur::okrs.index', ['okrs' => $okrs,'all_keyResults' => $keyResults,'all_keyResultTasks' => $keyResultTasks,'employees' => $employees,'this_quarter' => $this_quarter,'annualGoals' => $annualGoals,'quarters' => $quarters,'employee' => $employee,'employee_okrs' => $employee_okrs,'employee_key_results' => $employee_key_results,'employee_key_result_tasks' => $employee_key_result_tasks]);
     }
@@ -424,13 +489,17 @@ class OkrController extends Controller
     public function reminderOkr ( Request $request ) 
     {
         $okr = Okr::find( $request['okr_id'] );
-
-        $employee_mail = null;
-
+     
         foreach ($okr->hasKeyResults as $keyResult) {
             if( $keyResult->employee ) {
-                $employee_mail = $keyResult->employee->email;
-              /*   $employee_mail = 'jelena.juras@duplico.hr'; */
+                if( $this->test_mail ) {
+                    $employee_mail = 'jelena.juras@duplico.hr';
+                } else { 
+                    $employee_mail = $keyResult->employee->email;
+                }
+               
+                Log::info("reminder Okr " .  $employee_mail);
+            
                 Mail::to($employee_mail)->send(new KeyResultReminderMail( $keyResult ));
             }
         }

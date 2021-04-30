@@ -127,6 +127,10 @@
     border: 1px solid red !important;
 }
 
+.italic {
+    font-style: italic;
+}
+
 .height100 {
     height: 100%;
 }
@@ -196,15 +200,19 @@
 .display_flex {
     display: flex;
 }
+.font_8 {
+    font-size: 0.5rem !important;
+}
+.font_12 {
+    font-size: 0.75rem !important;
+}
 .font_14 {
     font-size: 0.875rem;
 }
 .font_15 {
     font-size: 0.9375rem;
 }
-.font_8 {
-    font-size: 0.5rem !important;
-}
+
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: #C9C9C9;
     font-size: 0.6875rem;

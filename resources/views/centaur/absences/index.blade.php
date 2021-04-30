@@ -101,7 +101,7 @@
 							<div class="col-2 col-sm-6 info_abs">
 								<span class="title align_c">@lang('basic.afterhours')</span>
 								<p class="col-12 float_l">
-									<span class="aft">{!! $data_absence['afterHours'] - $sum_correcting .'h - '. $data_absence['afterHoursNoPaid'].'h' !!}</span>
+									<span class="aft">{!! $data_absence['afterHours'].'h - '. ($data_absence['afterHoursNoPaid']  - $sum_correcting) .'h' !!}</span>
 									<span class="text-capitalize">@lang('absence.total') - @lang('absence.no_pay')</span>
 								</p>
 							</div>
@@ -440,6 +440,6 @@
 </div>
 <span class="selected_employee" hidden>{{ $selected_employee->user->last_name . ' ' . $selected_employee->user->first_name }}</span>
 <script>	
-	$.getScript('/../js/absence_create_new.js');
+	$.getScript('/../js/absence_create3.js');
 </script>
 @stop

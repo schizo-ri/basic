@@ -174,5 +174,5 @@
 			$('p.alert').remove();
 		}
 	}
-	$.getScript('/../js/absence_create_new.js');
+	$.getScript('/../js/absence_create3.js');
 </script>

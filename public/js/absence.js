@@ -384,7 +384,8 @@ $(function(){
 							$('.dt-buttons').show();
 						});
 						/* $.getScript( '/../restfulizer.js'); */
-						$(this).find('option[value="'+type+'"]').attr('selected',true);						
+						$(this).find('option[value="'+type+'"]').attr('selected',true);		
+						$('#filter_employees option').attr('selected',false);				
 						$('#filter_employees').find('option[value="'+employee_id+'"]').attr('selected',true);
 						$('#filter_years').find('option[value="'+month+'"]').attr('selected',true);
 						$('#filter_approve').find('option[value="'+approve+'"]').attr('selected',true);
@@ -469,7 +470,7 @@ $(function(){
 			month = $('#filter_years').val();
 			employee_id =  $('#filter_employees').val();
 			url = location.href + '?month='+month+'&type='+type+'&employee_id='+employee_id+'&approve='+approve;
-			/* console.log(url); */
+			console.log(url);
 			$.ajax({
 				url: url,
 				type: "get",
@@ -512,6 +513,7 @@ $(function(){
 				}
 			});
 		});	
+
 		$('.all_absences #index_table_filter').show(); 
 
 		if($(".all_absences #index_table_filter .show_button").length == 0) {

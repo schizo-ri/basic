@@ -771,6 +771,9 @@ modal-footer:after,.modal-footer:before,.nav:after,.nav:before,.navbar-collapse:
     font-size: 0.75rem;
     color: #1594F0;
 }
+.modal textarea {
+	padding: 5px 15px !important;
+}
 select option {
 	padding: 3px 0;
 }
@@ -892,7 +895,7 @@ input[type="time"]::-webkit-inner-spin-button {
 	width: 50px !important;
 }
 
-.modal textarea:not(.select2-search__field) {
+.modal textarea:not(.select2-search__field):not(.contract_article) {
 	width: 100%;
 	height: 71px;
 	padding: 15px;
@@ -2228,6 +2231,9 @@ body .blocker {
 
 input.form-control.date {
 	width: auto;
+}
+.modal .select2-container {
+	width: 100% !important;
 }
 .modal .select2-container:not(.select2) {
 	margin-top: 25px;

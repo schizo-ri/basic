@@ -58,11 +58,13 @@ class AbsenceController extends BasicAbsenceController
         $permission_dep = array();
 		$data_absence = array();
 		$bolovanje = array();
+		$afterhours = collect();
 		$correctings = collect();
 		$docs = '';
 		$ova_godina = date('Y');
 		$prosla_godina = $ova_godina - 1;
 		$type = null;
+		$types = AbsenceType::get();
 		
 		if(isset($request['year']) && $request['year']) {
 			$year = $request['year'];
@@ -83,9 +85,6 @@ class AbsenceController extends BasicAbsenceController
 			$year = date('Y');
 		}
 	
-		$afterhours = collect();
-
-		$types = AbsenceType::get();
 		if( isset($request['employee_id']) && $request['employee_id'] && $request['employee_id'] != 'all' ) {
 			$employee_id = $request['employee_id'];
 			$empl = Employee::find($employee_id);
@@ -98,7 +97,7 @@ class AbsenceController extends BasicAbsenceController
 			$voditelj_odjela = $this_empl->work->department;
 			$employees_department = EmployeeDepartment::DepartmentEmployees($voditelj_odjela->id)->pluck('employee_id')->unique()->toArray();
 		} */
-		
+
 		if( $empl ) { 
 			if( ! isset($request['type']) || ( isset($request['type']) && $request['type'] != 'afterhour' )) {
 				/* if( (isset($request['employee_id']) && $request['employee_id'] == 'all') || (Sentinel::inRole('administrator') && ! isset($request['employee_id'])) ) { */
@@ -136,6 +135,7 @@ class AbsenceController extends BasicAbsenceController
 						$absences = $absences->merge(Absence::whereYear('end_date', $year)
 															->orderBy('start_date','DESC')->get());
 					}
+					
 				} else {
 					if($month != null ) {
 						$absences = Absence::where('employee_id',$empl->id)
@@ -156,32 +156,28 @@ class AbsenceController extends BasicAbsenceController
 					}
 				}
 			} 
-			
+			$correctings = WorkCorrecting::where('employee_id', $empl->id )->get();
 			if(isset($request['type']) && $request['type'] && $request['type'] != 'all' ) {
-				
 				if( $request['type'] == 'afterhour' ||  $request['type'] == '12') {
 					if( $request['month'] != null ) {
 						$afterhours = Afterhour::whereMonth('date', $month)
 												->whereYear('date', $year)
 												->orderBy('date','DESC')->get();
-						$correctings = WorkCorrecting::whereMonth('date', $month)
-												->whereYear('date', $year)
-												->orderBy('date','DESC')->get();
 					} else {
 						$afterhours = Afterhour::whereYear('date', $year)
 												->orderBy('date','DESC')->get();
-						$correctings = WorkCorrecting::whereYear('date', $year)
-												->orderBy('date','DESC')->get();
 					}
-					if(isset($request['employee_id']) && $request['employee_id'] != 'all'	) {
+					if(isset($request['employee_id']) && $request['employee_id'] != 'all') {
 						$afterhours = $afterhours->where('employee_id',$request['employee_id']  );
-						$correctings = $correctings->where('employee_id',$request['employee_id']  );
+					
 					}
 					/* if ( Sentinel::inRole('voditelj') ) {
 						$afterhours = $afterhours->whereIn('employee_id', $employees_department);
-						$correctings = $correctings->whereIn('employee_id',$employees_department );
 					} */
 					$absences = collect();
+					Log::info($empl);
+					Log::info('type ' . $request['type'] );
+					Log::info($correctings);
 				} else {
 					$type = $types->where('id', $request['type'])->first();			 
 					$absences = $absences->where('type', $type->id); 
@@ -196,6 +192,8 @@ class AbsenceController extends BasicAbsenceController
 				} elseif( $request['approve'] == 'not_approved' ) {
 					$approve = NULL;
 				}
+				
+				Log::info($approve);
 				if($approve != NULL) {
 					if( count($absences)>0) {
 						$absences = $absences->where('approve', $approve );
@@ -242,7 +240,9 @@ class AbsenceController extends BasicAbsenceController
 				'afterHours' 	 => BasicAbsenceController::afterHours( $empl ), 
 				'afterHoursNoPaid' => BasicAbsenceController::afterHoursNoPaid( $empl ), 
 			);
-	
+			Log::info("afterHours " . $data_absence['afterHours'] );
+			Log::info("afterHoursNoPaid " . $data_absence['afterHoursNoPaid'] );
+
 			if($empl->work) {
 				$permission_dep = explode(',', count($empl->work->department->departmentRole) > 0 ? $empl->work->department->departmentRole->toArray()[0]['permissions'] : '');
 			}
@@ -261,7 +261,7 @@ class AbsenceController extends BasicAbsenceController
 				}
 				$sum_correcting = $sum / 60;
 			}
-			
+			Log::info("sum_correcting " . $sum_correcting);
 			return view('Centaur::absences.index', ['afterhours' => $afterhours,'absences' => $absences,'employees' => $employees, 'data_absence' => $data_absence, 'types' => $types , 'ova_godina' => $ova_godina,'years' => $years, 'years_all' => $years_all,'employee' => $empl, 'permission_dep' => $permission_dep, 'selected_employee' => $empl, 'sum_correcting' => $sum_correcting, 'correctings' => $correctings]);
 		} else {
 			$message = session()->flash('error',  __('ctrl.path_not_allow'));

@@ -16,6 +16,13 @@ class Customer extends Model
 	protected static $projectModel = 'App\Models\Project'; 
 
 	/*
+	* The Eloquent Contract model name
+	* 
+	* @var string
+	*/
+	protected static $contractModel = 'App\Models\Contract'; 
+
+	/*
 	* The Eloquent CustomerLocation model name
 	* 
 	* @var string
@@ -31,6 +38,17 @@ class Customer extends Model
 	public function project()
 	{
 		return $this->hasMany(static::$projectModel,'customer_id')->orderBy('created_at','DESC');
+	}	
+
+	/*
+	* Returns the Contract relationship
+	* 
+	* @return \Illuminate\Database\Eloquent\Relations\HasMany
+	*/
+	
+	public function hasContracts()
+	{
+		return $this->hasMany(static::$customerLocationModel,'customer_id');
 	}	
 
 	/*

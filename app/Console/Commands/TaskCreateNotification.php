@@ -53,9 +53,6 @@ class TaskCreateNotification extends Command
         $time_end = strlen($time_end) == 1 ? '0'. $time_end : $time_end;
         $time_end = $time_end.':00:00';
        
-        Log::info('***************** TaskCreateNotification *********************');
-        Log::info("time " . $time_start);
-        Log::info("time"  . $time_end);
         $tasks = Task::whereDate('end_date', '>=', date('Y-m-d'))->whereTime('time1', '>=', $time_start)->whereTime('time1', '<', $time_end)->where('active', 1)->get();
 
         /* $tasks = Task::whereDate('end_date', '>=', date('Y-m-d'))->where('active', 1)->get(); */
@@ -102,8 +99,6 @@ class TaskCreateNotification extends Command
             } else if(date_format($task_date, 'N') == 7 ) {
                 $task_date->modify('+1day');
             } 
-            Log::info( 'task_date ' . date_format($task_date, 'Y-m-d'));
-            Log::info( 'end_date ' . date_format($end_date, 'Y-m-d'));
 
             if( $end_date == null || strtotime(date_format($task_date, 'Y-m-d')) <= strtotime(date_format($end_date, 'Y-m-d'))) {
                 if( date_format($task_date, 'Y-m-d') == date_format($today, 'Y-m-d') ) {
@@ -121,7 +116,7 @@ class TaskCreateNotification extends Command
                             }
                         }
     
-                        $emails = array('jelena.juras@duplico.hr', $employee->email);
+                        $emails = array($employee->email);
                        
                         $data = array(
                             'task_id'  	    => $task->id,
@@ -143,7 +138,6 @@ class TaskCreateNotification extends Command
                 }
             }
         }
-        Log::info('***************** KRAJ  TaskCreateNotification *********************');
     }
 }
 
