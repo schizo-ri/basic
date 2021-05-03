@@ -2803,7 +2803,7 @@ main.index_main.locco_create_main>section >main {
     font-size: 0.75rem;
 }
 
-.index_main header:not(.contract_header) {
+.index_main header:not(header.contract_header):not(.main_absence  header ) {
     width: 100%;
     height: 80px;
     min-height: 78px;
@@ -2816,6 +2816,10 @@ main.index_main.locco_create_main>section >main {
     position: relative;
     overflow: hidden;
     display: flex;
+}
+.index_page .index_main.admin_main header.page-header {
+    height: auto;
+    flex-wrap: wrap;
 }
 .contract_preview {
     padding: 20px;
@@ -2832,6 +2836,7 @@ main.index_main.locco_create_main>section >main {
 .contract_preview td input[class^="counter"] {
     width: auto;
     margin-bottom: 5px;
+    text-align: center;
 }
 .contract_preview h2 {
     text-align: center;
@@ -2851,6 +2856,10 @@ main.index_main.locco_create_main>section >main {
 .contract_preview table input {
     width: 100%;
     text-align: left;
+}
+
+.contract_preview .a3, .contract_preview .test_option, .contract_preview .debenture {
+    display: none;
 }
 .signature {
     height: 50px;
@@ -4445,9 +4454,11 @@ table ul {
 }
 
 .select2-container:not( .index_absence .select2-container) {
-    min-width: unset;
+    min-width: unset;   
 }
-
+.select2.select2-container {
+    width: 100% ! important;
+}
 .select2-container:not(.select2) { 
     box-shadow: 3px 0 6px rgba(0, 0, 0, 0.15), -3px 0 6px rgba(0, 0, 0, 0.15);
     margin-left: 0;

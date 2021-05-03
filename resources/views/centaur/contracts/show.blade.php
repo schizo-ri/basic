@@ -96,17 +96,38 @@
 			var location =  $.grep(locations, function(e){ return e.id == subject.location_id; });
 			
 			if( index == 0 ) {
-				$('tbody tr').first().find('.subject_name').val(subject.name + ' ' + subject.serial_no);
-				$('tbody tr').first().find('.counter_bw').val(subject.counter_bw );
-				$('tbody tr').first().find('.counter_c').val(subject.counter_c);
-				$('tbody tr').first().find('.location_id').val(location[0].address + ", "+location[0].city);
+				$('.clanak_1 tbody tr').first().find('.subject_name').val(subject.name + ' ' + subject.serial_no);
+				$('.clanak_1 tbody tr').first().find('.counter_bw').val(subject.counter_bw );
+				$('.clanak_1 tbody tr').first().find('.counter_c').val(subject.counter_c);
+				$('.clanak_1 tbody tr').first().find('.location_id').val(location[0].address + ", "+location[0].city);
+				$('.clanak_2 tbody tr').first().find('.subject_name').val(subject.name + ' ' + subject.serial_no);
+				$('.clanak_2 tbody tr').first().find('.price_a4_bw').val(subject.price_a4_bw);
+				$('.clanak_2 tbody tr').first().find('.price_a4_c').val(subject.price_a4_c);
 			} else {
-				$('tbody tr').first().clone().appendTo('tbody');
-				$('tbody tr').last().find('.subject_name').val(subject.name+ ' ' + subject.serial_no);
-				$('tbody tr').last().find('.counter_bw').val(subject.counter_bw );
-				$('tbody tr').last().find('.counter_c').val(subject.counter_c);
-				$('tbody tr').last().find('.location_id').val(location[0].address + ", "+location[0].city);
+				$('.clanak_1 tbody tr').first().clone().appendTo('.clanak_1 tbody');
+				$('.clanak_1 tbody tr').last().find('.subject_name').val(subject.name+ ' ' + subject.serial_no);
+				$('.clanak_1 tbody tr').last().find('.counter_bw').val(subject.counter_bw );
+				$('.clanak_1 tbody tr').last().find('.counter_c').val(subject.counter_c);
+				$('.clanak_1 tbody tr').last().find('.location_id').val(location[0].address + ", "+location[0].city);
+				$('.clanak_2 tbody tr').first().clone().appendTo('.clanak_2 tbody');
+				$('.clanak_2 tbody tr').last().find('.subject_name').val(subject.name + ' ' + subject.serial_no);
+				$('.clanak_2 tbody tr').last().find('.price_a4_bw').val(subject.price_a4_bw);
+				$('.clanak_2 tbody tr').last().find('.price_a4_c').val(subject.price_a4_c);
 			}
+			if (contract.package_prints_bw || contract.package_prints_c ) {
+				$('.test_option').show();
+				$('.package_prints_bw').val(contract.package_prints_bw);
+				$('.package_prints_c').val(contract.package_prints_c);
+			}
+			if( contract.debenture_amount ) {
+				$('.debenture').show();
+				$('.debenture_amount').val(contract.debenture_amount);
+			}
+			if( contract.a3 == 1 ) {
+				$('.a3').show();
+			}
+
+
 		});
 	})
 		.done(function() {

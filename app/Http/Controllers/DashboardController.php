@@ -126,16 +126,17 @@ class DashboardController extends Controller
 		if(Sentinel::check()) {
             $employee = Sentinel::getUser()->employee;
             $permission_dep = array();
-
+          
             if($employee && isset($employee->work) && $employee->work->department->departmentRole->isNotEmpty()) {
                 $permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
+               
             } else {
                 $temporaryEmployee = Sentinel::getUser()->temporaryEmployee;
                 if($temporaryEmployee && isset($temporaryEmployee->work) && $temporaryEmployee->work->department->departmentRole->isNotEmpty()) {
                     $permission_dep = explode(',', count($employee->work->department->departmentRole) > 0 ? $employee->work->department->departmentRole->toArray()[0]['permissions'] : '');
                 }
             }
-            
+          
             return $permission_dep;	
         } 
     }

@@ -6,8 +6,8 @@
 	<form accept-charset="UTF-8" role="form" method="post" action="{{ route('department_roles.store') }}">
 		<div class="form-group {{ ($errors->has('department_id')) ? 'has-error' : '' }}" >
 			@if(isset($department))
-			<label>{{ $department->name }}</label>
-			<input hidden name="department_id" value="{{ $department->id }}">
+				<label>{{ $department->name }}</label>
+				<input hidden name="department_id" value="{{ $department->id }}">
 			@else
 				<label>@lang('basic.department')</label>
 				<select class="form-control" name="department_id" required value="{{ old('department_id') }}" required >

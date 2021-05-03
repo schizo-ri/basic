@@ -1,7 +1,9 @@
 @extends('Centaur::layout')
 
 @section('title', __('basic.contracts'))
-
+@php
+/* 	dd($permission_dep); */
+@endphp
 @section('content')
 <div class="index_page index_documents">
 	<main class="col-md-12 index_main main_documents float_right">

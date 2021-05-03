@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contract extends Model
 {
-    protected $fillable = ['customer_id','template_id','contract_no','date','duration','invoice_no','invoice_date','package_prints_bw','package_prints_c','debenture_amount'];
+    protected $fillable = ['customer_id','template_id','contract_no','date','duration','invoice_no','invoice_date','package_prints_bw','package_prints_c','debenture_amount','a3'];
 
     /*
 	* The Eloquent Customer model name

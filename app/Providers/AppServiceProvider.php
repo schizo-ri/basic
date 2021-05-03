@@ -30,9 +30,11 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         $permission_dep = DashboardController::getDepartmentPermission();
+        
         if ( ! $permission_dep ) {
             $permission_dep = array();
         }
+
         $moduli = CompanyController::getModules();
 
         view()->share('permission_dep', $permission_dep);

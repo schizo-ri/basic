@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DashboardController;
 use App\Models\WorkDiary;
 use App\Models\WorkTask;
 use App\Models\Employee;
@@ -42,7 +43,7 @@ class WorkDiaryController extends Controller
         $workDiaries_date = WorkDiary::get();
 
         $workTasks = WorkTask::get()->pluck('name','id');
-        
+      
         $hours = 0;
         $task = null;
         $employee_id = null;
@@ -248,7 +249,7 @@ class WorkDiaryController extends Controller
         
         if( ! Sentinel::inRole('administrator') ) {           
             $employee =  Sentinel::getUser()->employee; 
-            $workDiaries_date = WorkDiary::where('employee_id', $employee->id)->whereMonth('date', date('m', strtotime($date .'-01') ))->whereYear('date', date('Y', strtotime($date .'-01') ))->get();
+           $workDiaries_date = WorkDiary::where('employee_id', $employee->id)->whereMonth('date', date('m', strtotime($date .'-01') ))->whereYear('date', date('Y', strtotime($date .'-01') ))->get();
             $employee_id = $employee->id;
         }
       
@@ -282,7 +283,8 @@ class WorkDiaryController extends Controller
 
         $workDiaries = new WorkDiary();
         $workDiaries = $workDiaries->getTasks( $date, $task, $employee_id, $project );
-      
+        
+        
         $sum_time = WorkDiary::sumTasks( $workDiaries ); 
 
         return view('Centaur::work_diaries.show', ['workDiaries' => $workDiaries,'dates' => $dates,'projects' => $projects, 'employees' => $employees, 'sum_time' => $sum_time, 'workTasks' => $workTasks]);

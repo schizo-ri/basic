@@ -94,6 +94,13 @@
 									<p class="contract_name"><input class="form-control price" name="debenture_amount" type="number" step="0.01" min="0" value="{{ $contract->debenture_amount }}" /><span class="float_right">Kn</span></p>
 								</div>
 								<div class="form-group">
+									<label >Cijena otiska formata A3 jednaka je cijeni dva otiska formata A4</label>
+									<label for="a3_1">Da</label>
+									<input class="test" name="a3" type="radio" id="a3_1" value="1" {!! $contract->a3 == 1 ? 'checked' : '' !!} />
+									<label for="a3_0">Ne</label>
+									<input class="test" name="a3" type="radio" id="a3_0" value="0" {!! $contract->a3 == 0 ? 'checked' : '' !!}  />
+								</div>
+								<div class="form-group">
 									<label >Testiranje uređaja</label>
 									<label for="test1">Da</label>
 									<input class="test" name="test" type="radio" id="test1" value="1" {!! $contract->package_prints_bw || $contract->package_prints_c ? 'checked' : '' !!}/>

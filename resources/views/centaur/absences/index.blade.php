@@ -11,9 +11,10 @@
 	<main class="col-lg-12 col-xl-12 index_main main_absence float_right">
 		<section>
 			<header class="header_absence">
-				<a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a>
+				
 				@if (Sentinel::inRole('administrator')	)
-					<p>@lang('absence.all_requests')
+					<p><a class="link_back" href="{{ url()->previous() }}" ><span class="curve_arrow_left"></span></a>
+						@lang('absence.all_requests')
 						<a href="{{ route('absences_table') }}" class="view_all" title="{{ __('absence.absences')}}" >vidi izračune</a>						
 						{{-- <a href="{{ route('absences_requests') }}" class="view_all" title="{{ __('absence.absences')}}" >vidi zahtjeve za mjesec</a> --}}
 					</p>

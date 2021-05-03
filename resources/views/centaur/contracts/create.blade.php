@@ -62,11 +62,9 @@
 											@endforeach	
 										</select>
 									</div>
-									
 									{!! ($errors->has('customer_id') ? $errors->first('customer_id', '<p class="text-danger">:message</p>') : '') !!}
 									<span class="add_customer cursor">Unesi novog naručitelja</span>
 								</div>
-								
 								<div class="form-group {{ ($errors->has('contract_no')) ? 'has-error' : '' }}">
 									<label >@lang('basic.contract_no')</label>
 									<input class="form-control"  name="contract_no" type="text" maxlength="20" value="{{ old('contract_no') }}" required />
@@ -95,6 +93,13 @@
 								<div class="form-group ">
 									<label >Jamstvo  - Bianco zadužnica</label>
 									<p class="contract_name"><input class="form-control price" name="debenture_amount" type="number" step="0.01" min="0" value="{{ old('debenture_amount') }}" /><span class="float_right">Kn</span></p>
+								</div>
+								<div class="form-group">
+									<label >Cijena otiska formata A3 jednaka je cijeni dva otiska formata A4</label>
+									<label for="a3_1">Da</label>
+									<input class="test" name="a3" type="radio" id="a3_1" value="1"  />
+									<label for="a3_0">Ne</label>
+									<input class="test" name="a3" type="radio" id="a3_0" value="0"  />
 								</div>
 								<div class="form-group">
 									<label >Testiranje uređaja</label>

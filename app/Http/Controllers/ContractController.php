@@ -31,8 +31,9 @@ class ContractController extends Controller
     public function index()
     {
         $contracts = Contract::get();
-       
-		return view('Centaur::contracts.index', ['contracts' => $contracts]);
+        $permission_dep = DashboardController::getDepartmentPermission();
+
+		return view('Centaur::contracts.index', ['contracts' => $contracts, 'permission_dep' => $permission_dep]);
     }
 
     /**
@@ -68,6 +69,7 @@ class ContractController extends Controller
             'package_prints_bw' => $request['package_prints_bw'],
 			'package_prints_c'  => $request['package_prints_c'],
 			'debenture_amount'  => $request['debenture_amount'],
+            'a3'                => $request['a3'],
 		);
      
 		$contract = new Contract();
@@ -161,6 +163,7 @@ class ContractController extends Controller
             'package_prints_bw' => $request['package_prints_bw'],
 			'package_prints_c'  => $request['package_prints_c'],
 			'debenture_amount'  => $request['debenture_amount'],
+			'a3'                => $request['a3'],            
 		);
       
         $contract->updateContract($data);
